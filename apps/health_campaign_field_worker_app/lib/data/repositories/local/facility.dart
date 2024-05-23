@@ -72,6 +72,11 @@ class FacilityLocalRepository
                 type: address.type,
                 rowVersion: address.rowVersion,
               ),
+        additionalFields: facility.additionalFields == null
+            ? null
+            : FacilityAdditionalFieldsMapper.fromJson(
+                facility.additionalFields!,
+              ),
       );
     }).toList();
   }

@@ -51,8 +51,9 @@ class _HouseholdAcknowledgementPageState
               secondaryLabel: localizations.translate(
                 i18.householdDetails.viewHouseHoldDetailsAction,
               ),
-              actionLabel: localizations
-                  .translate(i18.acknowledgementSuccess.actionLabelText),
+              actionLabel: localizations.translate(
+                i18.acknowledgementSuccess.actionLabelTextHousehold,
+              ),
               description: localizations.translate(
                 i18.acknowledgementSuccess.acknowledgementDescriptionText,
               ),

@@ -407,11 +407,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     String? parentProjectId;
 
-    if (projects.isNotEmpty &&
-        projects.first.projectHierarchy != null &&
-        projects.first.projectHierarchy!.split('.').length >= 2) {
-      parentProjectId = projects.first.projectHierarchy?.split('.')[1];
-    }
+    // if (projects.isNotEmpty &&
+    //     projects.first.projectHierarchy != null &&
+    //     projects.first.projectHierarchy!.split('.').length >= 2) {
+    //   parentProjectId = projects.first.projectHierarchy?.split('.')[1];
+    // }
 
     for (final projectFacility in projectFacilities) {
       await projectFacilityLocalRepository.create(

@@ -299,6 +299,61 @@ bool checkEligibilityForActiveCycle(
 
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndSideEffect(
+  ProjectType? projectType,
+  TaskModel? tasks,
+  List<SideEffectModel>? sideEffects,
+  IndividualModel individual,
+) {
+  if (individual != null) {
+    final ageInYears = DigitDateUtils.calculateAge(
+      DigitDateUtils.getFormattedDateToDateTime(
+            individual.dateOfBirth!,
+          ) ??
+          DateTime.now(),
+    ).years;
+    final ageInMonths = DigitDateUtils.calculateAge(
+      DigitDateUtils.getFormattedDateToDateTime(
+            individual.dateOfBirth!,
+          ) ??
+          DateTime.now(),
+    ).months;
+    Cycle? currentCycle = getCurrentCycle(projectType);
+
+    // todo : implement check so that it works for both LF and SMC
+    if (true) {
+      return currentCycle == null || currentCycle.deliveries == null
+          ? false
+          : fetchProductVariant(currentCycle.deliveries!.first, individual) ==
+                  null
+              ? false
+              : true;
+    } else {
+      return checkEligibilityForAgeAndSideEffects(
+        DigitDOBAge(
+          years: ageInYears,
+          months: ageInMonths,
+        ),
+        projectType,
+        tasks,
+        sideEffects,
+      );
+    }
+  }
+
+  return false;
+}
+
+Cycle? getCurrentCycle(ProjectType? projectType) {
+  final currentCycle = projectType?.cycles?.firstWhereOrNull(
+    (e) =>
+        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+  );
+
+  return currentCycle;
+}
+
+bool checkEligibilityForAgeAndSideEffects(
   DigitDOBAge age,
   ProjectType? projectType,
   TaskModel? tasks,
@@ -337,7 +392,6 @@ bool checkEligibilityForAgeAndSideEffect(
       return true;
     }
   }
-
   return false;
 }
 
@@ -392,10 +446,7 @@ bool checkStatus(
         return isLastCycleRunning
             ? lastTask.status == Status.delivered.name
                 ? true
-                : diff.inHours >=
-                        24 //[TODO: Need to move gap between doses to config
-                    ? true
-                    : false
+                : false
             : true;
       } else {
         return false;
@@ -491,8 +542,15 @@ DoseCriteriaModel? fetchProductVariant(
     final individualAgeInMonths =
         individualAge.years * 12 + individualAge.months;
 
-    final height =
-        int.parse(individualModel.additionalFields?.fields.last.value ?? 0);
+    final height = int.parse(individualModel.additionalFields != null &&
+            individualModel.additionalFields!.fields
+                .where((element) => element.key == "height")
+                .isNotEmpty
+        ? individualModel.additionalFields?.fields
+            .where((element) => element.key == "height")
+            .first
+            .value
+        : 0);
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {

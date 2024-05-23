@@ -523,9 +523,6 @@ class MemberCard extends StatelessWidget {
                                             );
                                           },
                                   ),
-                                  const SizedBox(
-                                    height: kPadding * 2,
-                                  ),
                                   // Solution customization
                                   // DigitOutLineButton(
                                   //   label: localizations.translate(

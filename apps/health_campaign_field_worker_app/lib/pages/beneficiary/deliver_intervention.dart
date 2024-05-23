@@ -50,15 +50,22 @@ class _DeliverInterventionPageState
   // Variable to track dose administration status
   bool doseAdministered = false;
 
+  bool isCommentRequired = false;
+
   // List of controllers for form elements
   final List _controllers = [];
+
+  Map<String?, List<double?>> idVsSuggestedAndDistributedQuantity = {};
 
 // Initialize the currentStep variable to keep track of the current step in a process.
   int currentStep = 0;
 
+  bool interventionSubmitted = false;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final router = context.router;
 
     List<StepsModel> generateSteps(int numberOfDoses) {
       return List.generate(numberOfDoses, (index) {
@@ -69,6 +76,45 @@ class _DeliverInterventionPageState
         );
       });
     }
+
+    bool isCommentMandatory(
+      bool isCommentRequired,
+      List<ProductVariantsModel>? productVariants,
+      FormGroup form,
+      Map<String?, List<double?>> idVsSuggestedAndDistributedQuantity,
+    ) {
+      final resourcesDelivered =
+          (form.control(_resourceDeliveredKey) as FormArray).value;
+      final quantityDistributed =
+          (form.control(_quantityDistributedKey) as FormArray).value;
+      if (productVariants != null) {
+        for (var element in productVariants) {
+          var indexOfResource = -1;
+          for (int i = 0; i < resourcesDelivered!.length; i++) {
+            if (resourcesDelivered[i].id == element.productVariantId) {
+              indexOfResource = i;
+              break;
+            }
+          }
+          if (indexOfResource >= 0) {
+            List<double?> suggestedAndDistributed = [];
+            suggestedAndDistributed.add(element.quantity);
+            suggestedAndDistributed.add(quantityDistributed![indexOfResource]);
+            idVsSuggestedAndDistributedQuantity[element.productVariantId] =
+                suggestedAndDistributed;
+          }
+        }
+      }
+      for (var quantities in idVsSuggestedAndDistributedQuantity.values) {
+        if (quantities.length >= 2 && quantities[0] != quantities[1]) {
+          isCommentRequired = true;
+        }
+      }
+
+      return isCommentRequired;
+    }
+
+    ;
 
     return BlocBuilder<LocationBloc, LocationState>(
       builder: (context, locationState) {
@@ -110,7 +156,6 @@ class _DeliverInterventionPageState
                                       state.selectedIndividual,
                                     )?.productVariants)
                                   : projectState.projectType?.resources;
-
                           final int numberOfDoses = (projectState
                                       .projectType?.cycles?.isNotEmpty ==
                                   true)
@@ -219,6 +264,37 @@ class _DeliverInterventionPageState
                                                                   theme,
                                                                 ),
                                                               );
+                                                            } else if (isCommentMandatory(
+                                                                  isCommentRequired,
+                                                                  productVariants,
+                                                                  form,
+                                                                  idVsSuggestedAndDistributedQuantity,
+                                                                ) &&
+                                                                (form
+                                                                            .control(
+                                                                              _deliveryCommentKey,
+                                                                            )
+                                                                            .value ==
+                                                                        null ||
+                                                                    (form
+                                                                            .control(
+                                                                              _deliveryCommentKey,
+                                                                            )
+                                                                            .value as String)
+                                                                        .isEmpty)) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18
+                                                                          .deliverIntervention
+                                                                          .deliveryCommentRequired),
+                                                                  true,
+                                                                  theme,
+                                                                ),
+                                                              );
                                                             } else {
                                                               final lat =
                                                                   locationState
@@ -288,98 +364,168 @@ class _DeliverInterventionPageState
                                                                   false) {
                                                                 if (context
                                                                     .mounted) {
-                                                                  context
-                                                                      .read<
-                                                                          DeliverInterventionBloc>()
-                                                                      .add(
-                                                                        DeliverInterventionSubmitEvent(
-                                                                          _getTaskModel(
-                                                                            context,
-                                                                            form:
-                                                                                form,
-                                                                            oldTask:
-                                                                                null,
-                                                                            projectBeneficiaryClientReferenceId:
-                                                                                projectBeneficiary.first.clientReferenceId,
-                                                                            dose:
-                                                                                deliveryInterventionstate.dose,
-                                                                            cycle:
-                                                                                deliveryInterventionstate.cycle,
-                                                                            deliveryStrategy:
-                                                                                DeliverStrategyType.direct.toValue(),
-                                                                            address:
-                                                                                householdMemberWrapper.members.first.address?.first,
-                                                                            latitude:
-                                                                                lat,
-                                                                            longitude:
-                                                                                long,
-                                                                          ),
+                                                                  List<TaskModel>
+                                                                      taskData =
+                                                                      [];
+                                                                  taskData.add(
+                                                                    _getTaskModel(
+                                                                      context,
+                                                                      form:
+                                                                          form,
+                                                                      oldTask:
+                                                                          null,
+                                                                      projectBeneficiaryClientReferenceId: projectBeneficiary
+                                                                          .first
+                                                                          .clientReferenceId,
+                                                                      dose: deliveryInterventionstate
+                                                                          .dose,
+                                                                      cycle: deliveryInterventionstate
+                                                                          .cycle,
+                                                                      deliveryStrategy: DeliverStrategyType
+                                                                          .direct
+                                                                          .toValue(),
+                                                                      address: householdMemberWrapper
+                                                                          .members
+                                                                          .first
+                                                                          .address
+                                                                          ?.first,
+                                                                      latitude:
+                                                                          lat,
+                                                                      longitude:
+                                                                          long,
+                                                                    ),
+                                                                  );
+                                                                  DigitDialog
+                                                                      .show<
+                                                                          bool>(
+                                                                    context,
+                                                                    options:
+                                                                        DigitDialogOptions(
+                                                                      titleText: localizations.translate(i18
+                                                                          .deliverIntervention
+                                                                          .didYouObservePreviousAdvEventsTitle),
+                                                                      barrierDismissible:
                                                                           false,
-                                                                          context
-                                                                              .boundary,
+                                                                      enableRecordPast:
+                                                                          true,
+                                                                      dialogPadding:
+                                                                          const EdgeInsets
+                                                                              .fromLTRB(
+                                                                        kPadding,
+                                                                        kPadding,
+                                                                        kPadding,
+                                                                        0,
+                                                                      ),
+                                                                      primaryAction:
+                                                                          DigitDialogActions(
+                                                                        label: localizations
+                                                                            .translate(
+                                                                          i18.common
+                                                                              .coreCommonNo,
                                                                         ),
-                                                                      );
-
-                                                                  if (state
-                                                                              .futureDeliveries !=
-                                                                          null &&
-                                                                      state
-                                                                          .futureDeliveries!
-                                                                          .isNotEmpty &&
-                                                                      projectState
-                                                                              .projectType
-                                                                              ?.cycles
-                                                                              ?.isNotEmpty ==
-                                                                          true) {
-                                                                    context
-                                                                        .router
-                                                                        .popUntilRouteWithName(
-                                                                      BeneficiaryWrapperRoute
-                                                                          .name,
-                                                                    );
-                                                                    context
-                                                                        .router
-                                                                        .push(
-                                                                      SplashAcknowledgementRoute(
-                                                                        enableBackToSearch:
-                                                                            false,
+                                                                        action:
+                                                                            (ctx) {
+                                                                          if (!interventionSubmitted) {
+                                                                            interventionSubmitted =
+                                                                                true;
+                                                                            context.read<DeliverInterventionBloc>().add(
+                                                                                  DeliverInterventionSubmitEvent(
+                                                                                    taskData.first,
+                                                                                    false,
+                                                                                    context.boundary,
+                                                                                  ),
+                                                                                );
+                                                                            final reloadState =
+                                                                                context.read<HouseholdOverviewBloc>();
+                                                                            Future.delayed(
+                                                                              const Duration(
+                                                                                milliseconds: 1000,
+                                                                              ),
+                                                                              () {
+                                                                                reloadState.add(
+                                                                                  HouseholdOverviewReloadEvent(
+                                                                                    projectId: context.projectId,
+                                                                                    projectBeneficiaryType: context.beneficiaryType,
+                                                                                  ),
+                                                                                );
+                                                                              },
+                                                                            ).then(
+                                                                              (value) {
+                                                                                context.router.popAndPush(
+                                                                                  HouseholdAcknowledgementRoute(
+                                                                                    enableViewHousehold: true,
+                                                                                  ),
+                                                                                );
+                                                                                Navigator.pop(ctx);
+                                                                              },
+                                                                            );
+                                                                          }
+                                                                        },
                                                                       ),
-                                                                    );
-                                                                  } else {
-                                                                    final reloadState =
-                                                                        context.read<
-                                                                            HouseholdOverviewBloc>();
+                                                                      secondaryAction:
+                                                                          DigitDialogActions(
+                                                                        label: localizations
+                                                                            .translate(
+                                                                          i18.common
+                                                                              .coreCommonYes,
+                                                                        ),
+                                                                        action:
+                                                                            (ctx) async {
+                                                                          if (!interventionSubmitted) {
+                                                                            interventionSubmitted =
+                                                                                true;
+                                                                            context.read<DeliverInterventionBloc>().add(
+                                                                                  DeliverInterventionSubmitEvent(
+                                                                                    taskData.first,
+                                                                                    false,
+                                                                                    context.boundary,
+                                                                                  ),
+                                                                                );
+                                                                            Navigator.pop(
+                                                                              ctx,
+                                                                            );
+                                                                            final reloadState =
+                                                                                context.read<HouseholdOverviewBloc>();
+                                                                            final response =
+                                                                                await router.push(
+                                                                              SideEffectsRoute(
+                                                                                tasks: [
+                                                                                  (taskData).last,
+                                                                                ],
+                                                                                fromSurvey: true,
+                                                                              ),
+                                                                            );
 
-                                                                    Future
-                                                                        .delayed(
-                                                                      const Duration(
-                                                                        milliseconds:
-                                                                            1000,
+                                                                            if (response ==
+                                                                                null) {
+                                                                              Future.delayed(
+                                                                                const Duration(
+                                                                                  milliseconds: 1000,
+                                                                                ),
+                                                                                () {
+                                                                                  reloadState.add(
+                                                                                    HouseholdOverviewReloadEvent(
+                                                                                      projectId: context.projectId,
+                                                                                      projectBeneficiaryType: context.beneficiaryType,
+                                                                                    ),
+                                                                                  );
+                                                                                },
+                                                                              ).then(
+                                                                                (value) {
+                                                                                  context.router.popAndPush(
+                                                                                    HouseholdAcknowledgementRoute(
+                                                                                      enableViewHousehold: true,
+                                                                                    ),
+                                                                                  );
+                                                                                  Navigator.pop(ctx);
+                                                                                },
+                                                                              );
+                                                                            }
+                                                                          }
+                                                                        },
                                                                       ),
-                                                                      () {
-                                                                        reloadState
-                                                                            .add(
-                                                                          HouseholdOverviewReloadEvent(
-                                                                            projectId:
-                                                                                context.projectId,
-                                                                            projectBeneficiaryType:
-                                                                                context.beneficiaryType,
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                    ).then(
-                                                                      (value) {
-                                                                        context
-                                                                            .router
-                                                                            .popAndPush(
-                                                                          HouseholdAcknowledgementRoute(
-                                                                            enableViewHousehold:
-                                                                                true,
-                                                                          ),
-                                                                        );
-                                                                      },
-                                                                    );
-                                                                  }
+                                                                    ),
+                                                                  );
                                                                 }
                                                               }
                                                             }
@@ -406,81 +552,76 @@ class _DeliverInterventionPageState
                                         children: [
                                           Column(
                                             children: [
-                                              DigitCard(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Text(
-                                                      localizations.translate(
-                                                        i18.deliverIntervention
-                                                            .deliverInterventionLabel,
+                                              SizedBox(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                child: DigitCard(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Text(
+                                                        localizations.translate(
+                                                          i18.deliverIntervention
+                                                              .deliverInterventionLabel,
+                                                        ),
+                                                        style: theme.textTheme
+                                                            .displayMedium,
                                                       ),
-                                                      style: theme.textTheme
-                                                          .displayMedium,
-                                                    ),
-                                                    if (context
-                                                            .beneficiaryType ==
-                                                        BeneficiaryType
-                                                            .individual)
-                                                      DigitTextFormField(
-                                                        readOnly: true,
-                                                        formControlName:
-                                                            _doseAdministrationKey,
-                                                        keyboardType:
-                                                            TextInputType
-                                                                .number,
-                                                        label: localizations
-                                                            .translate(i18
-                                                                .deliverIntervention
-                                                                .currentCycle),
-                                                      ),
-                                                    DigitStepper(
-                                                      activeStep:
-                                                          deliveryInterventionstate
-                                                                  .dose -
-                                                              1,
-                                                      stepRadius: 12.5,
-                                                      steps: steps,
-                                                      maxStepReached: 3,
-                                                      lineLength: (MediaQuery.of(
-                                                                      context)
-                                                                  .size
-                                                                  .width -
-                                                              12.5 *
-                                                                  2 *
-                                                                  steps.length -
-                                                              50) /
-                                                          (steps.length - 1),
-                                                    ),
-                                                    // Solution Customizations
-                                                    // DigitDateFormPicker(
-                                                    //   isEnabled: false,
-                                                    //   formControlName:
-                                                    //       _dateOfAdministrationKey,
-                                                    //   label: localizations
-                                                    //       .translate(
-                                                    //     i18.householdDetails
-                                                    //         .dateOfRegistrationLabel,
-                                                    //   ),
-                                                    //   confirmText: localizations
-                                                    //       .translate(
-                                                    //     i18.common.coreCommonOk,
-                                                    //   ),
-                                                    //   cancelText: localizations
-                                                    //       .translate(
-                                                    //     i18.common
-                                                    //         .coreCommonCancel,
-                                                    //   ),
-                                                    //   isRequired: false,
-                                                    //   padding:
-                                                    //       const EdgeInsets.only(
-                                                    //     top: kPadding,
-                                                    //   ),
-                                                    // ),
-                                                  ],
+                                                      // if (context
+                                                      //         .beneficiaryType ==
+                                                      //     BeneficiaryType
+                                                      //         .individual)
+                                                      //   DigitStepper(
+                                                      //     activeStep:
+                                                      //         deliveryInterventionstate
+                                                      //                 .dose -
+                                                      //             1,
+                                                      //     stepRadius: 12.5,
+                                                      //     steps: steps,
+                                                      //     maxStepReached: 3,
+                                                      //     lineLength: (MediaQuery.of(
+                                                      //                     context)
+                                                      //                 .size
+                                                      //                 .width -
+                                                      //             12.5 *
+                                                      //                 2 *
+                                                      //                 steps
+                                                      //                     .length -
+                                                      //             50) /
+                                                      //         (steps.length - 1),
+                                                      //   ),
+                                                      // Solution Customizations
+                                                      // DigitDateFormPicker(
+                                                      //   isEnabled: false,
+                                                      //   formControlName:
+                                                      //       _dateOfAdministrationKey,
+                                                      //   label: localizations
+                                                      //       .translate(
+                                                      //     i18.householdDetails
+                                                      //         .dateOfRegistrationLabel,
+                                                      //   ),
+                                                      //   confirmText: localizations
+                                                      //       .translate(
+                                                      //     i18.common.coreCommonOk,
+                                                      //   ),
+                                                      //   cancelText: localizations
+                                                      //       .translate(
+                                                      //     i18.common
+                                                      //         .coreCommonCancel,
+                                                      //   ),
+                                                      //   isRequired: false,
+                                                      //   padding:
+                                                      //       const EdgeInsets.only(
+                                                      //     top: kPadding,
+                                                      //   ),
+                                                      // ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                               DigitCard(
@@ -601,10 +742,13 @@ class _DeliverInterventionPageState
                                                           }).toList(),
                                                           formControlName:
                                                               _deliveryCommentKey,
+                                                          isRequired:
+                                                              isCommentRequired,
                                                           valueMapper: (value) =>
                                                               localizations
                                                                   .translate(
-                                                                      value),
+                                                            value,
+                                                          ),
                                                           emptyText: localizations
                                                               .translate(i18
                                                                   .common
@@ -715,6 +859,8 @@ class _DeliverInterventionPageState
               ))
           .toList(),
       address: address?.copyWith(
+        latitude: latitude ?? address.latitude,
+        longitude: longitude ?? address.longitude,
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
@@ -790,19 +936,6 @@ class _DeliverInterventionPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: (bloc.tasks?.last.additionalFields?.fields
-                        .where((a) =>
-                            a.key ==
-                            AdditionalFieldsType.deliveryComment.toValue())
-                        .toList() ??
-                    [])
-                .isNotEmpty
-            ? bloc.tasks?.last.additionalFields?.fields
-                .where((a) =>
-                    a.key == AdditionalFieldsType.deliveryComment.toValue())
-                .first
-                .value
-            : '',
         validators: [],
       ),
       _dateOfAdministrationKey:

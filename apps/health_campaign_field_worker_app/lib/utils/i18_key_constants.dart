@@ -533,6 +533,10 @@ class AdverseEvents {
   String get didYouReAdministerLabel => 'DID_YOU_RE_ADMINISTER';
 
   String get noOfTimesReAdministered => 'NO_OF_TIMES_RE_ADMINISTERED';
+
+  String get sideEffectsAlertTitle => 'SIDE_EFFECTS_ALERT_TITLE';
+
+  String get sideEffectsAlertContent => 'SIDE_EFFECTS_ALERT_CONTENT';
 }
 
 class Login {
@@ -1083,6 +1087,9 @@ class AcknowledgementSuccess {
 
   String get actionLabelText => 'ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 
+  String get actionLabelTextHousehold =>
+      'HOUSEHOLD_ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
+
   String get stockActionLabelText =>
       'STOCK_ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 
@@ -1269,6 +1276,7 @@ class DeliverIntervention {
   String get viewPastCycles => 'DELIVER_INTERVENTION_VIEW_PAST_CYCLES';
   String get currentCycle => 'DELIVER_INTERVENTION_CURRENT_CYCLE';
   String get cycle => 'DELIVERY_CYCLE';
+  String get recordTreatment => 'DELIVERY_RECORD_TREATMENT';
   String get recordCycle => 'RECORD_CYCLE';
   String get recordPastDeliveryDeatils =>
       'DELIVER_INTERVENTION_PAST_DELIVERY_DETAILS';
@@ -1357,6 +1365,8 @@ class WarehouseDetails {
   String get usDetails => 'US_DETAILS';
 
   String get dateOfReceipt => 'WAREHOUSE_DETAILS_DATE_OF_RECEIPT';
+  String get dateOfIssue => 'WAREHOUSE_DETAILS_DATE_OF_ISSUE';
+  String get dateOfReturn => 'WAREHOUSE_DETAILS_DATE_OF_RETURN';
 
   String get administrativeUnit => 'WAREHOUSE_DETAILS_ADMINISTRATIVE_UNIT';
 

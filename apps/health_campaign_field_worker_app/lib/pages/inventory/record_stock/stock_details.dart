@@ -57,7 +57,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.number,
         Validators.required,
         Validators.min(0),
-        Validators.max(10000),
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
       _waybillNumberKey: FormControl<String>(
@@ -68,7 +67,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
           Validators.number,
           Validators.required,
           Validators.min(0),
-          Validators.max(10000000),
         ],
       ),
       _vehicleNumberKey: FormControl<String>(),
@@ -674,6 +672,93 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     '${module.selectProductLabel}_IS_REQUIRED',
                                                   ),
                                             },
+                                            onChanged: (control) {
+                                              if (form
+                                                          .control(
+                                                            _productVariantKey,
+                                                          )
+                                                          .value !=
+                                                      null &&
+                                                  (form.control(_productVariantKey).value
+                                                              as ProductVariantModel)
+                                                          .sku ==
+                                                      "Albendazole 400mg") {
+                                                setState(() {
+                                                  form
+                                                      .control(
+                                                    _transactionQuantityKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.number,
+                                                      Validators.required,
+                                                      Validators.min(0),
+                                                      Validators.max(context
+                                                          .maximumQuantityAlbendazole),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                  form
+                                                      .control(
+                                                    _waybillQuantityKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.number,
+                                                      Validators.required,
+                                                      Validators.min(0),
+                                                      Validators.max(context
+                                                          .maximumQuantityAlbendazole),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                });
+                                              } else if (form
+                                                          .control(
+                                                            _productVariantKey,
+                                                          )
+                                                          .value !=
+                                                      null &&
+                                                  (form.control(_productVariantKey).value
+                                                              as ProductVariantModel)
+                                                          .sku ==
+                                                      "Ivermectin 100mg") {
+                                                setState(() {
+                                                  form
+                                                      .control(
+                                                    _transactionQuantityKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.number,
+                                                      Validators.required,
+                                                      Validators.min(0),
+                                                      Validators.max(context
+                                                          .maximumQuantityIvermectin),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                  form
+                                                      .control(
+                                                    _waybillQuantityKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.number,
+                                                      Validators.required,
+                                                      Validators.min(0),
+                                                      Validators.max(context
+                                                          .maximumQuantityIvermectin),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                });
+                                              }
+                                            },
                                           );
                                         },
                                       );
@@ -696,7 +781,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   BlocBuilder<FacilityBloc, FacilityState>(
                                     builder: (context, state) {
                                       final facilities = state.whenOrNull(
-                                            fetched: (facilities, _, __) =>
+                                            fetched: (_, facilities, __) =>
                                                 facilities,
                                           ) ??
                                           [];
@@ -706,7 +791,33 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           .address
                                           ?.boundaryType;
 
-                                      print(entryType);
+                                      // print(entryType);
+                                      List<FacilityModel> filteredFacility = [];
+                                      if (entryType ==
+                                              StockRecordEntryType.receipt &&
+                                          (boundaryType != null &&
+                                              boundaryType.isNotEmpty)) {
+                                        filteredFacility =
+                                            getFilteredFacilities(
+                                          facilities,
+                                          boundaryType,
+                                          "childBoundaryType",
+                                        );
+                                      } else if ((entryType ==
+                                                  StockRecordEntryType
+                                                      .returned ||
+                                              entryType ==
+                                                  StockRecordEntryType
+                                                      .dispatch) &&
+                                          (boundaryType != null &&
+                                              boundaryType.isNotEmpty)) {
+                                        filteredFacility =
+                                            getFilteredFacilities(
+                                          facilities,
+                                          boundaryType,
+                                          "parentBoundaryType",
+                                        );
+                                      }
 
                                       //TODO below pseudocode
                                       // If entryType is received then filter facilities
@@ -723,7 +834,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           final facility =
                                               await parent.push<FacilityModel>(
                                             FacilitySelectionRoute(
-                                              facilities: facilities,
+                                              facilities: filteredFacility,
                                             ),
                                           );
 
@@ -776,7 +887,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               final facility = await parent
                                                   .push<FacilityModel>(
                                                 FacilitySelectionRoute(
-                                                  facilities: facilities,
+                                                  facilities: filteredFacility,
                                                 ),
                                               );
 
@@ -860,9 +971,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             '${quantityCountLabel}_VALIDATION',
                                           ),
                                       "max": (object) =>
-                                          localizations.translate(
+                                          "${localizations.translate(
                                             '${quantityCountLabel}_MAX_ERROR',
-                                          ),
+                                          )} ${form.control(_productVariantKey).value != null && (form.control(_productVariantKey).value as ProductVariantModel).sku == "Albendazole 400mg" ? context.maximumQuantityAlbendazole : context.maximumQuantityIvermectin}",
                                       "min": (object) =>
                                           localizations.translate(
                                             '${quantityCountLabel}_MIN_ERROR',
@@ -871,6 +982,69 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     label: localizations.translate(
                                       quantityCountLabel,
                                     ),
+                                    onChanged: (control) {
+                                      if (form
+                                                  .control(_productVariantKey)
+                                                  .value !=
+                                              null &&
+                                          (form.control(_productVariantKey).value
+                                                      as ProductVariantModel)
+                                                  .sku ==
+                                              "Albendazole 400mg") {
+                                        setState(() {
+                                          form
+                                              .control(
+                                            _transactionQuantityKey,
+                                          )
+                                              .setValidators(
+                                            [
+                                              Validators.number,
+                                              Validators.required,
+                                              Validators.min(0),
+                                              Validators.max(context
+                                                  .maximumQuantityAlbendazole),
+                                            ],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                          form
+                                              .control(
+                                                _transactionQuantityKey,
+                                              )
+                                              .touched;
+                                        });
+                                      } else if (form
+                                                  .control(_productVariantKey)
+                                                  .value !=
+                                              null &&
+                                          (form.control(_productVariantKey).value
+                                                      as ProductVariantModel)
+                                                  .sku ==
+                                              "Ivermectin 100mg") {
+                                        setState(() {
+                                          form
+                                              .control(
+                                            _transactionQuantityKey,
+                                          )
+                                              .setValidators(
+                                            [
+                                              Validators.number,
+                                              Validators.required,
+                                              Validators.min(0),
+                                              Validators.max(context
+                                                  .maximumQuantityIvermectin),
+                                            ],
+                                            updateParent: true,
+                                            autoValidate: true,
+                                          );
+                                          form
+                                              .control(
+                                                _transactionQuantityKey,
+                                              )
+                                              .touched;
+                                        });
+                                      }
+                                    },
                                   ),
                                   if (isWareHouseMgr)
                                     DigitTextFormField(
@@ -904,13 +1078,76 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               '${i18.stockDetails.quantityOfProductIndicatedOnWaybillLabel}_ERROR',
                                             ),
                                         "max": (object) =>
-                                            localizations.translate(
+                                            "${localizations.translate(
                                               '${quantityCountLabel}_MAX_ERROR',
-                                            ),
+                                            )} ${form.control(_productVariantKey).value != null && (form.control(_productVariantKey).value as ProductVariantModel).sku == "Albendazole 400mg" ? context.maximumQuantityAlbendazole : context.maximumQuantityIvermectin}",
                                         "min": (object) =>
                                             localizations.translate(
                                               '${quantityCountLabel}_MIN_ERROR',
                                             ),
+                                      },
+                                      onChanged: (control) {
+                                        if (form
+                                                    .control(_productVariantKey)
+                                                    .value !=
+                                                null &&
+                                            (form.control(_productVariantKey).value
+                                                        as ProductVariantModel)
+                                                    .sku ==
+                                                "Albendazole 400mg") {
+                                          setState(() {
+                                            form
+                                                .control(
+                                              _waybillQuantityKey,
+                                            )
+                                                .setValidators(
+                                              [
+                                                Validators.number,
+                                                Validators.required,
+                                                Validators.min(0),
+                                                Validators.max(context
+                                                    .maximumQuantityAlbendazole),
+                                              ],
+                                              updateParent: true,
+                                              autoValidate: true,
+                                            );
+                                            form
+                                                .control(
+                                                  _waybillQuantityKey,
+                                                )
+                                                .touched;
+                                          });
+                                        } else if (form
+                                                    .control(_productVariantKey)
+                                                    .value !=
+                                                null &&
+                                            (form.control(_productVariantKey).value
+                                                        as ProductVariantModel)
+                                                    .sku ==
+                                                "Ivermectin 100mg") {
+                                          setState(() {
+                                            form
+                                                .control(
+                                              _waybillQuantityKey,
+                                            )
+                                                .setValidators(
+                                              [
+                                                Validators.number,
+                                                Validators.required,
+                                                Validators.min(0),
+                                                Validators.max(context
+                                                    .maximumQuantityIvermectin),
+                                              ],
+                                              updateParent: true,
+                                              autoValidate: true,
+                                            );
+                                            form
+                                                .control(
+                                                  _waybillQuantityKey,
+                                                )
+                                                .touched;
+                                          });
+                                        }
                                       },
                                     ),
 
@@ -1042,6 +1279,35 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         ),
       ),
     );
+  }
+
+  List<FacilityModel> getFilteredFacilities(
+    List<FacilityModel> facilities,
+    String? boundaryType,
+    String requiredBoundaryType,
+  ) {
+    List<FacilityModel> filteredFacilities = [];
+
+    for (FacilityModel facility in facilities) {
+      FacilityAdditionalFields? additionalFields = facility.additionalFields;
+      if (additionalFields != null) {
+        bool hasRequiredKey = additionalFields.fields
+            .any((field) => field.key == requiredBoundaryType);
+        if (hasRequiredKey) {
+          bool hasBoundaryType = additionalFields.fields.any((field) =>
+              field.key == requiredBoundaryType && field.value == boundaryType);
+          if (hasBoundaryType) {
+            filteredFacilities.add(facility);
+          }
+        } else {
+          filteredFacilities.add(facility);
+        }
+      } else {
+        filteredFacilities.add(facility);
+      }
+    }
+
+    return filteredFacilities;
   }
 
   void clearQRCodes() {

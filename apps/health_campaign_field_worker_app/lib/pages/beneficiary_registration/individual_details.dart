@@ -105,6 +105,9 @@ class _IndividualDetailsPageState
                       onPressed: isClicked
                           ? null
                           : () async {
+                              if (form.control(_dobKey).value == null) {
+                                form.control(_dobKey).setErrors({'': true});
+                              }
                               final userId = context.loggedInUserUuid;
                               final projectId = context.projectId;
                               form.markAllAsTouched();
@@ -129,6 +132,35 @@ class _IndividualDetailsPageState
                                     form: form,
                                     oldIndividual: null,
                                   );
+
+                                  final locationBloc =
+                                      context.read<LocationBloc>();
+                                  final locationInitialState =
+                                      locationBloc.state;
+                                  final initialLat =
+                                      locationInitialState.latitude;
+                                  final initialLng =
+                                      locationInitialState.longitude;
+                                  final initialAccuracy =
+                                      locationInitialState.accuracy;
+                                  if (addressModel != null &&
+                                      (addressModel.latitude == null ||
+                                          addressModel.longitude == null ||
+                                          addressModel.locationAccuracy ==
+                                              null)) {
+                                    bloc.add(
+                                      BeneficiaryRegistrationSaveAddressEvent(
+                                        addressModel.copyWith(
+                                          latitude: initialLat ??
+                                              addressModel.locationAccuracy,
+                                          longitude: initialLng ??
+                                              addressModel.locationAccuracy,
+                                          locationAccuracy: initialAccuracy ??
+                                              addressModel.locationAccuracy,
+                                        ),
+                                      ),
+                                    );
+                                  }
 
                                   final boundary = context.boundary;
 
@@ -380,26 +412,32 @@ class _IndividualDetailsPageState
                                 },
                               ),
                             ),
-                            DigitTextFormField(
-                              formControlName: _individualLastNameKey,
-                              label: localizations.translate(
-                                i18.individualDetails.lastNameLabelText,
+                            individualDetailsShowcaseData.lastNameOfIndividual
+                                .buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _individualLastNameKey,
+                                label: localizations.translate(
+                                  i18.individualDetails.lastNameLabelText,
+                                ),
+                                maxLength: 200,
+                                isRequired: true,
+                                validationMessages: {
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameIsRequiredError,
+                                      ),
+                                  'min3': (object) => localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameLengthError,
+                                      ),
+                                  'maxLength': (object) =>
+                                      localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameLengthError,
+                                      ),
+                                },
                               ),
-                              maxLength: 200,
-                              isRequired: true,
-                              validationMessages: {
-                                'required': (object) => localizations.translate(
-                                      i18.individualDetails
-                                          .lastNameIsRequiredError,
-                                    ),
-                                'min3': (object) => localizations.translate(
-                                      i18.individualDetails.lastNameLengthError,
-                                    ),
-                                'maxLength': (object) =>
-                                    localizations.translate(
-                                      i18.individualDetails.lastNameLengthError,
-                                    ),
-                              },
                             ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
@@ -490,7 +528,13 @@ class _IndividualDetailsPageState
                                 },
                               ),
                             ),
-                            individualDetailsShowcaseData.mobile.buildWith(
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                kPadding / 2,
+                                kPadding,
+                                kPadding / 2,
+                                0,
+                              ),
                               child: DigitTextFormField(
                                 keyboardType: TextInputType.number,
                                 formControlName: _mobileNumberKey,
@@ -513,54 +557,69 @@ class _IndividualDetailsPageState
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        DigitTextFormField(
-                          keyboardType: TextInputType.number,
-                          isRequired: true,
-                          formControlName: _heightKey,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                              RegExp("[0-9]"),
-                            ),
-                          ],
-                          label: localizations.translate(
-                            i18.individualDetails.heightLabelText,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            kPadding / 2,
+                            0,
+                            kPadding / 2,
+                            0,
                           ),
-                          maxLength: 3,
-                          validationMessages: {
-                            'required': (object) => localizations
-                                .translate(i18.common.corecommonRequired),
-                          },
-                        ),
-                        BlocBuilder<AppInitializationBloc,
-                            AppInitializationState>(
-                          builder: (context, state) {
-                            if (state is! AppInitialized) {
-                              return const Offstage();
-                            }
-
-                            final disabilityTypes =
-                                state.appConfiguration.disabilityTypes ??
-                                    <DisabilityTypes>[];
-
-                            return DigitReactiveDropdown<String>(
-                              label: localizations.translate(
-                                i18.deliverIntervention.disabilityLabel,
+                          child: DigitTextFormField(
+                            keyboardType: TextInputType.number,
+                            isRequired: true,
+                            formControlName: _heightKey,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                RegExp("[0-9]"),
                               ),
-                              isRequired: true,
-                              valueMapper: (value) =>
-                                  localizations.translate(value),
-                              initialValue: disabilityTypes.firstOrNull?.code,
-                              menuItems: disabilityTypes.map((e) {
-                                return e.code;
-                              }).toList(),
-                              formControlName: _disabilityTypeKey,
-                              validationMessages: {
-                                'required': (object) => localizations
-                                    .translate(i18.common.corecommonRequired),
-                              },
-                            );
-                          },
+                            ],
+                            label: localizations.translate(
+                              i18.individualDetails.heightLabelText,
+                            ),
+                            maxLength: 3,
+                            validationMessages: {
+                              'required': (object) => localizations
+                                  .translate(i18.common.corecommonRequired),
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            kPadding / 2,
+                            0,
+                            kPadding / 2,
+                            0,
+                          ),
+                          child: BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                            builder: (context, state) {
+                              if (state is! AppInitialized) {
+                                return const Offstage();
+                              }
+
+                              final disabilityTypes =
+                                  state.appConfiguration.disabilityTypes ??
+                                      <DisabilityTypes>[];
+
+                              return DigitReactiveDropdown<String>(
+                                label: localizations.translate(
+                                  i18.deliverIntervention.disabilityLabel,
+                                ),
+                                isRequired: true,
+                                valueMapper: (value) =>
+                                    localizations.translate(value),
+                                initialValue: disabilityTypes.firstOrNull?.code,
+                                menuItems: disabilityTypes.map((e) {
+                                  return e.code;
+                                }).toList(),
+                                formControlName: _disabilityTypeKey,
+                                validationMessages: {
+                                  'required': (object) => localizations
+                                      .translate(i18.common.corecommonRequired),
+                                },
+                              );
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -682,6 +741,34 @@ class _IndividualDetailsPageState
               ],
             )
           : null,
+    );
+    final cycleIndex =
+        context.selectedCycle.id == 0 ? "" : "0${context.selectedCycle.id}";
+
+    final projectTypeId = context.selectedProjectType == null
+        ? ""
+        : context.selectedProjectType!.id;
+
+    individual = individual.copyWith(
+      additionalFields: individual.additionalFields!.copyWith(
+        fields: [
+          ...individual.additionalFields!.fields,
+          AdditionalField(
+            "projectId",
+            context.projectId,
+          ),
+          if (cycleIndex.isNotEmpty)
+            AdditionalField(
+              "cycleIndex",
+              cycleIndex,
+            ),
+          if (projectTypeId.isNotEmpty)
+            AdditionalField(
+              "projectTypeId",
+              projectTypeId,
+            ),
+        ],
+      ),
     );
 
     return individual;

@@ -32,16 +32,7 @@ class FacilityBloc extends Bloc<FacilityEvent, FacilityState> {
       ProjectFacilitySearchModel(projectId: [event.projectId]),
     );
 
-    List<FacilityModel> allFacilities = [
-      FacilityModel(
-        id: 'DT',
-        name: 'Delivery Team',
-        additionalFields: FacilityAdditionalFields(
-          version: 1,
-          fields: [const AdditionalField('type', 'DeliveryTeam')],
-        ),
-      ),
-    ];
+    List<FacilityModel> allFacilities = [];
 
     List<FacilityModel> facilities = [];
 

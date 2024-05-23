@@ -137,157 +137,6 @@ class _HouseholdOverviewPageState
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.max,
                                 children: [
-                                  BlocBuilder<ProjectBloc, ProjectState>(
-                                    builder: (context, projectState) {
-                                      return Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: DigitIconButton(
-                                          onPressed: () =>
-                                              DigitActionDialog.show(
-                                            context,
-                                            widget: ActionCard(
-                                              items: [
-                                                ActionCardModel(
-                                                  icon: Icons.edit,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.householdOverView
-                                                        .householdOverViewEditLabel,
-                                                  ),
-                                                  action: () async {
-                                                    final projectId =
-                                                        context.projectId;
-
-                                                    final bloc = context.read<
-                                                        HouseholdOverviewBloc>();
-                                                    Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop();
-
-                                                    HouseholdMemberWrapper
-                                                        wrapper = state
-                                                            .householdMemberWrapper;
-
-                                                    final timestamp = wrapper
-                                                        .projectBeneficiaries
-                                                        .first
-                                                        .dateOfRegistration;
-                                                    // [TODO ]
-                                                    final date = DateTime
-                                                        .fromMillisecondsSinceEpoch(
-                                                      timestamp,
-                                                    );
-
-                                                    final address = wrapper
-                                                        .household.address;
-
-                                                    if (address == null) return;
-
-                                                    final projectBeneficiary = state
-                                                        .householdMemberWrapper
-                                                        .projectBeneficiaries
-                                                        .firstWhereOrNull(
-                                                      (element) =>
-                                                          element
-                                                              .beneficiaryClientReferenceId ==
-                                                          wrapper.household
-                                                              .clientReferenceId,
-                                                    );
-
-                                                    await context.router.root
-                                                        .push(
-                                                      BeneficiaryRegistrationWrapperRoute(
-                                                        initialState:
-                                                            BeneficiaryRegistrationEditHouseholdState(
-                                                          addressModel: address,
-                                                          individualModel:
-                                                              wrapper.members,
-                                                          householdModel:
-                                                              wrapper.household,
-                                                          registrationDate:
-                                                              date,
-                                                          projectBeneficiaryModel:
-                                                              projectBeneficiary,
-                                                        ),
-                                                        children: [
-                                                          HouseholdLocationRoute(),
-                                                        ],
-                                                      ),
-                                                    );
-
-                                                    bloc.add(
-                                                      HouseholdOverviewReloadEvent(
-                                                        projectId: projectId,
-                                                        projectBeneficiaryType:
-                                                            beneficiaryType,
-                                                      ),
-                                                    );
-                                                  },
-                                                ),
-                                                // Solution customization
-                                                // ActionCardModel(
-                                                //   icon: Icons.delete,
-                                                //   label: localizations.translate(i18
-                                                //       .householdOverView
-                                                //       .householdOverViewDeleteLabel),
-                                                //   action: () =>
-                                                //       DigitDialog.show(
-                                                //     context,
-                                                //     options: DigitDialogOptions(
-                                                //       titleText: localizations
-                                                //           .translate(i18
-                                                //               .householdOverView
-                                                //               .householdOverViewActionCardTitle),
-                                                //       primaryAction:
-                                                //           DigitDialogActions(
-                                                //         label: localizations
-                                                //             .translate(i18
-                                                //                 .householdOverView
-                                                //                 .householdOverViewPrimaryActionLabel),
-                                                //         action: (ctx) {
-                                                //           Navigator.of(
-                                                //             ctx,
-                                                //             rootNavigator: true,
-                                                //           )
-                                                //             ..pop()
-                                                //             ..pop();
-                                                //           context.router.push(
-                                                //             ReasonForDeletionRoute(
-                                                //               isHousholdDelete:
-                                                //                   true,
-                                                //             ),
-                                                //           );
-                                                //         },
-                                                //       ),
-                                                //       secondaryAction:
-                                                //           DigitDialogActions(
-                                                //         label: localizations
-                                                //             .translate(i18
-                                                //                 .householdOverView
-                                                //                 .householdOverViewSecondaryActionLabel),
-                                                //         action: (context) {
-                                                //           Navigator.of(
-                                                //             context,
-                                                //             rootNavigator: true,
-                                                //           ).pop();
-                                                //         },
-                                                //       ),
-                                                //     ),
-                                                //   ),
-                                                // ),
-                                              ],
-                                            ),
-                                          ),
-                                          iconText: localizations.translate(
-                                            i18.householdOverView
-                                                .householdOverViewEditIconText,
-                                          ),
-                                          icon: Icons.edit,
-                                        ),
-                                      );
-                                    },
-                                  ),
                                   BlocBuilder<DeliverInterventionBloc,
                                       DeliverInterventionState>(
                                     builder: (ctx, state) => Offstage(
@@ -334,17 +183,184 @@ class _HouseholdOverviewPageState
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: kPadding,
-                                      right: kPadding,
-                                    ),
-                                    child: Text(
-                                      localizations.translate(i18
-                                          .householdOverView
-                                          .householdOverViewLabel),
-                                      style: theme.textTheme.displayMedium,
-                                    ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: kPadding - 1,
+                                            right: kPadding + 1,
+                                          ),
+                                          child: Text(
+                                            localizations.translate(i18
+                                                .householdOverView
+                                                .householdOverViewLabel),
+                                            style:
+                                                theme.textTheme.displayMedium,
+                                          ),
+                                        ),
+                                      ),
+                                      BlocBuilder<ProjectBloc, ProjectState>(
+                                        builder: (context, projectState) {
+                                          return Align(
+                                            alignment: Alignment.centerRight,
+                                            child: DigitIconButton(
+                                              onPressed: () =>
+                                                  DigitActionDialog.show(
+                                                context,
+                                                widget: ActionCard(
+                                                  items: [
+                                                    ActionCardModel(
+                                                      icon: Icons.edit,
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.householdOverView
+                                                            .householdOverViewEditLabel,
+                                                      ),
+                                                      action: () async {
+                                                        final projectId =
+                                                            context.projectId;
+
+                                                        final bloc = context.read<
+                                                            HouseholdOverviewBloc>();
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        ).pop();
+
+                                                        HouseholdMemberWrapper
+                                                            wrapper = state
+                                                                .householdMemberWrapper;
+
+                                                        final timestamp = wrapper
+                                                            .projectBeneficiaries
+                                                            .first
+                                                            .dateOfRegistration;
+                                                        // [TODO ]
+                                                        final date = DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                          timestamp,
+                                                        );
+
+                                                        final address = wrapper
+                                                            .household.address;
+
+                                                        if (address == null)
+                                                          return;
+
+                                                        final projectBeneficiary = state
+                                                            .householdMemberWrapper
+                                                            .projectBeneficiaries
+                                                            .firstWhereOrNull(
+                                                          (element) =>
+                                                              element
+                                                                  .beneficiaryClientReferenceId ==
+                                                              wrapper.household
+                                                                  .clientReferenceId,
+                                                        );
+
+                                                        await context
+                                                            .router.root
+                                                            .push(
+                                                          BeneficiaryRegistrationWrapperRoute(
+                                                            initialState:
+                                                                BeneficiaryRegistrationEditHouseholdState(
+                                                              addressModel:
+                                                                  address,
+                                                              individualModel:
+                                                                  wrapper
+                                                                      .members,
+                                                              householdModel:
+                                                                  wrapper
+                                                                      .household,
+                                                              registrationDate:
+                                                                  date,
+                                                              projectBeneficiaryModel:
+                                                                  projectBeneficiary,
+                                                            ),
+                                                            children: [
+                                                              HouseholdLocationRoute(),
+                                                            ],
+                                                          ),
+                                                        );
+
+                                                        bloc.add(
+                                                          HouseholdOverviewReloadEvent(
+                                                            projectId:
+                                                                projectId,
+                                                            projectBeneficiaryType:
+                                                                beneficiaryType,
+                                                          ),
+                                                        );
+                                                      },
+                                                    ),
+                                                    // Solution customization
+                                                    // ActionCardModel(
+                                                    //   icon: Icons.delete,
+                                                    //   label: localizations.translate(i18
+                                                    //       .householdOverView
+                                                    //       .householdOverViewDeleteLabel),
+                                                    //   action: () =>
+                                                    //       DigitDialog.show(
+                                                    //     context,
+                                                    //     options: DigitDialogOptions(
+                                                    //       titleText: localizations
+                                                    //           .translate(i18
+                                                    //               .householdOverView
+                                                    //               .householdOverViewActionCardTitle),
+                                                    //       primaryAction:
+                                                    //           DigitDialogActions(
+                                                    //         label: localizations
+                                                    //             .translate(i18
+                                                    //                 .householdOverView
+                                                    //                 .householdOverViewPrimaryActionLabel),
+                                                    //         action: (ctx) {
+                                                    //           Navigator.of(
+                                                    //             ctx,
+                                                    //             rootNavigator: true,
+                                                    //           )
+                                                    //             ..pop()
+                                                    //             ..pop();
+                                                    //           context.router.push(
+                                                    //             ReasonForDeletionRoute(
+                                                    //               isHousholdDelete:
+                                                    //                   true,
+                                                    //             ),
+                                                    //           );
+                                                    //         },
+                                                    //       ),
+                                                    //       secondaryAction:
+                                                    //           DigitDialogActions(
+                                                    //         label: localizations
+                                                    //             .translate(i18
+                                                    //                 .householdOverView
+                                                    //                 .householdOverViewSecondaryActionLabel),
+                                                    //         action: (context) {
+                                                    //           Navigator.of(
+                                                    //             context,
+                                                    //             rootNavigator: true,
+                                                    //           ).pop();
+                                                    //         },
+                                                    //       ),
+                                                    //     ),
+                                                    //   ),
+                                                    // ),
+                                                  ],
+                                                ),
+                                              ),
+                                              iconText: localizations.translate(
+                                                i18.householdOverView
+                                                    .householdOverViewEditIconText,
+                                              ),
+                                              icon: Icons.edit,
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ],
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.only(
@@ -449,22 +465,22 @@ class _HouseholdOverviewPageState
                                                             .clientReferenceId)
                                                     .toList()
                                                 : null;
-                                            final ageInYears =
-                                                DigitDateUtils.calculateAge(
-                                              DigitDateUtils
-                                                      .getFormattedDateToDateTime(
-                                                    e.dateOfBirth!,
-                                                  ) ??
-                                                  DateTime.now(),
-                                            ).years;
-                                            final ageInMonths =
-                                                DigitDateUtils.calculateAge(
-                                              DigitDateUtils
-                                                      .getFormattedDateToDateTime(
-                                                    e.dateOfBirth!,
-                                                  ) ??
-                                                  DateTime.now(),
-                                            ).months;
+                                            // final ageInYears =
+                                            //     DigitDateUtils.calculateAge(
+                                            //   DigitDateUtils
+                                            //           .getFormattedDateToDateTime(
+                                            //         e.dateOfBirth!,
+                                            //       ) ??
+                                            //       DateTime.now(),
+                                            // ).years;
+                                            // final ageInMonths =
+                                            //     DigitDateUtils.calculateAge(
+                                            //   DigitDateUtils
+                                            //           .getFormattedDateToDateTime(
+                                            //         e.dateOfBirth!,
+                                            //       ) ??
+                                            //       DateTime.now(),
+                                            // ).months;
                                             final currentCycle = projectState
                                                 .projectType?.cycles
                                                 ?.firstWhereOrNull(
@@ -665,19 +681,17 @@ class _HouseholdOverviewPageState
                                                           ?.cycles !=
                                                       null
                                                   ? !checkEligibilityForAgeAndSideEffect(
-                                                      DigitDOBAge(
-                                                        years: ageInYears,
-                                                        months: ageInMonths,
-                                                      ),
                                                       projectState.projectType,
                                                       (taskdata ?? [])
                                                               .isNotEmpty
                                                           ? taskdata?.last
                                                           : null,
                                                       sideEffectData,
+                                                      e,
                                                     )
                                                   : false,
-                                              name: e.name?.givenName ?? ' - ',
+                                              name:
+                                                  '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
                                               years: (e.dateOfBirth == null
                                                       ? null
                                                       : DigitDateUtils

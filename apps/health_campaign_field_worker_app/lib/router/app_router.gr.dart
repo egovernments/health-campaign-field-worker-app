@@ -394,6 +394,7 @@ class _$AppRouter extends RootStackRouter {
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
           isEditing: args.isEditing,
+          fromSurvey: args.fromSurvey,
         ),
       );
     },
@@ -2259,6 +2260,7 @@ class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
     AppLocalizations? appLocalizations,
     required List<TaskModel> tasks,
     bool isEditing = false,
+    bool fromSurvey = false,
   }) : super(
           SideEffectsRoute.name,
           path: 'side-effects',
@@ -2267,6 +2269,7 @@ class SideEffectsRoute extends PageRouteInfo<SideEffectsRouteArgs> {
             appLocalizations: appLocalizations,
             tasks: tasks,
             isEditing: isEditing,
+            fromSurvey: fromSurvey,
           ),
         );
 
@@ -2279,6 +2282,7 @@ class SideEffectsRouteArgs {
     this.appLocalizations,
     required this.tasks,
     this.isEditing = false,
+    this.fromSurvey = false,
   });
 
   final Key? key;
@@ -2289,9 +2293,11 @@ class SideEffectsRouteArgs {
 
   final bool isEditing;
 
+  final bool fromSurvey;
+
   @override
   String toString() {
-    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing}';
+    return 'SideEffectsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks, isEditing: $isEditing, fromSurvey: $fromSurvey}';
   }
 }
 

@@ -45,8 +45,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
       ),
     );
 
-    int?  boundaryNum = boundaryList.first.boundaryNum;
-
+    int? boundaryNum = boundaryList.first.boundaryNum;
 
     final List<String> boundaryLabelList = [];
     for (var element in boundaryList) {
@@ -148,8 +147,9 @@ class BoundaryEvent with _$BoundaryEvent {
     required BoundaryModel selectedBoundary,
   }) = BoundarySelectEvent;
 
-  const factory BoundaryEvent.findBoundary({required String code}) =
-      BoundaryFindEvent;
+  const factory BoundaryEvent.findBoundary({
+    required String code,
+  }) = BoundaryFindEvent;
 
   const factory BoundaryEvent.submit() = BoundarySubmitEvent;
 }

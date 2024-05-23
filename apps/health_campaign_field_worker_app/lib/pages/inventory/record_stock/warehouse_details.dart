@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import '../../../blocs/facility/facility.dart';
 import '../../../blocs/project/project.dart';
 import '../../../blocs/record_stock/record_stock.dart';
 import '../../../blocs/scanner/scanner.dart';
+import '../../../data/local_store/sql_store/tables/stock.dart';
 import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -34,6 +36,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   FacilityModel? prevFacility;
+  String? entryType;
+  bool isCommunityDistributor = false;
+  FacilityModel? filteredFacility;
 
   @override
   void initState() {
@@ -41,6 +46,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
     final stockState = context.read<RecordStockBloc>().state;
     setState(() {
       selectedFacilityId = stockState.primaryId;
+      entryType = stockState.entryType.toString();
     });
     super.initState();
   }
@@ -53,7 +59,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         ),
         _warehouseKey: FormControl<String>(
           validators: [Validators.required],
-          value: prevFacility?.name,
+          value: isCommunityDistributor && filteredFacility != null
+              ? filteredFacility!.name
+              : prevFacility?.name,
         ),
         _teamCodeKey: FormControl<String>(
           value: stockState.primaryId ?? '',
@@ -71,10 +79,14 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         .isNotEmpty;
     bool isWareHouseMgr = context.loggedInUserRoles
         .where(
-          (role) => role.code == RolesType.healthFacilitySupervisor.toValue(),
+          (role) =>
+              role.code == RolesType.healthFacilitySupervisor.toValue() ||
+              role.code == RolesType.warehouseManager.toValue(),
         )
         .toList()
         .isNotEmpty;
+
+    isCommunityDistributor = context.isCommunityDistributor;
 
     return BlocBuilder<ProjectBloc, ProjectState>(
       builder: (ctx, projectState) {
@@ -95,20 +107,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
           builder: (ctx, facilityState) {
             final facilities = facilityState.whenOrNull(
                   fetched: (facilities, _, __) {
-                    final teamFacilities = [
-                      FacilityModel(
-                        id: 'Delivery Team',
-                        additionalFields: FacilityAdditionalFields(
-                          version: 1,
-                          fields: [
-                            const AdditionalField(
-                              'type',
-                              'DeliveryTeam',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ];
+                    List<FacilityModel> teamFacilities = [];
                     teamFacilities.addAll(
                       facilities,
                     );
@@ -119,6 +118,18 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                   },
                 ) ??
                 [];
+            // get distribution facilities for communityDistributor , solution customisation
+            List<FacilityModel> filteredFacilities = [];
+            if (isCommunityDistributor) {
+              filteredFacilities = facilities
+                  .where(
+                    (element) => element.name == context.loggedInUser.userName,
+                  )
+                  .toList();
+              if (filteredFacilities.isNotEmpty) {
+                filteredFacility = filteredFacilities.first;
+              }
+            }
 
             prevFacility = facilityState.whenOrNull(
               fetched: (_, __, facility) => facility,
@@ -126,6 +137,8 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
             if (prevFacility != null) {
               selectedFacilityId = prevFacility?.id;
+            } else if (isCommunityDistributor && filteredFacility != null) {
+              selectedFacilityId = filteredFacility!.id;
             }
 
             return Scaffold(
@@ -272,9 +285,24 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     DigitDateFormPicker(
                                       isEnabled: true,
                                       formControlName: _dateOfEntryKey,
-                                      label: localizations.translate(
-                                        i18.warehouseDetails.dateOfReceipt,
-                                      ),
+                                      label: entryType ==
+                                              StockRecordEntryType.receipt
+                                                  .toString()
+                                          ? localizations.translate(
+                                              i18.warehouseDetails
+                                                  .dateOfReceipt,
+                                            )
+                                          : entryType ==
+                                                  StockRecordEntryType.dispatch
+                                                      .toString()
+                                              ? localizations.translate(
+                                                  i18.warehouseDetails
+                                                      .dateOfIssue,
+                                                )
+                                              : localizations.translate(
+                                                  i18.warehouseDetails
+                                                      .dateOfReturn,
+                                                ),
                                       isRequired: false,
                                       confirmText: localizations.translate(
                                         i18.common.coreCommonOk,
@@ -300,7 +328,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                       final facility =
                                           await parent.push<FacilityModel>(
                                         FacilitySelectionRoute(
-                                          facilities: facilities,
+                                          facilities: isCommunityDistributor &&
+                                                  filteredFacility != null
+                                              ? filteredFacilities
+                                              : facilities,
                                         ),
                                       );
 
