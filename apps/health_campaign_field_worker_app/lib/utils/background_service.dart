@@ -9,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -107,7 +106,7 @@ void onStart(ServiceInstance service) async {
     if (interval != null) {
       int i = 0;
       makePeriodicTimer(
-        Duration(seconds: 5),
+        Duration(seconds: interval),
         (timer) async {
           service.invoke('serviceRunning', {
             "enablesManualSync": false,
