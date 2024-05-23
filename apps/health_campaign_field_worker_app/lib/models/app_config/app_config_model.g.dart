@@ -280,7 +280,7 @@ _$BandWidthBatchSizeImpl _$$BandWidthBatchSizeImplFromJson(
     _$BandWidthBatchSizeImpl(
       minRange: (json['MIN_RANGE'] as num).toDouble(),
       maxRange: (json['MAX_RANGE'] as num).toDouble(),
-      batchSize: json['BATCH_SIZE'] as int,
+      batchSize: (json['BATCH_SIZE'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$BandWidthBatchSizeImplToJson(
@@ -334,9 +334,9 @@ Map<String, dynamic> _$$GenderOptionsImplToJson(_$GenderOptionsImpl instance) =>
 _$BackgroundServiceConfigImpl _$$BackgroundServiceConfigImplFromJson(
         Map<String, dynamic> json) =>
     _$BackgroundServiceConfigImpl(
-      batteryPercentCutOff: json['BATTERY_PERCENT_CUT_OFF'] as int,
-      serviceInterval: json['SERVICE_INTERVAL'] as int,
-      apiConcurrency: json['API_CONCURRENCY'] as int,
+      batteryPercentCutOff: (json['BATTERY_PERCENT_CUT_OFF'] as num).toInt(),
+      serviceInterval: (json['SERVICE_INTERVAL'] as num).toInt(),
+      apiConcurrency: (json['API_CONCURRENCY'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$BackgroundServiceConfigImplToJson(
@@ -390,7 +390,7 @@ Map<String, dynamic> _$$InterfacesImplToJson(_$InterfacesImpl instance) =>
     };
 
 _$ConfigImpl _$$ConfigImplFromJson(Map<String, dynamic> json) => _$ConfigImpl(
-      localStoreTTL: json['localStoreTTL'] as int,
+      localStoreTTL: (json['localStoreTTL'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$ConfigImplToJson(_$ConfigImpl instance) =>

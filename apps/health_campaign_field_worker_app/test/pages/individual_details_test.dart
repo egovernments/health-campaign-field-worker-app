@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:health_campaign_field_worker_app/blocs/app_initialization/app_initialization.dart';
-import 'package:health_campaign_field_worker_app/blocs/localization/app_localization.dart';
 import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/app_configuration.dart';
 import 'package:health_campaign_field_worker_app/router/app_router.dart';
 import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
@@ -15,7 +14,9 @@ import 'package:health_campaign_field_worker_app/utils/i18_key_constants.dart'
 import 'package:health_campaign_field_worker_app/utils/typedefs.dart';
 import 'package:health_campaign_field_worker_app/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 class MockNavigatorObserver extends Mock implements NavigatorObserver {}
 
@@ -61,7 +62,8 @@ class MockHouseholdMemberRepository extends Mock
 class MockProjectBeneficiaryRepository extends Mock
     implements ProjectBeneficiaryDataRepository {}
 
-class MockAppLocalization extends Mock implements AppLocalizations {}
+class MockAppLocalization extends Mock
+    implements RegistrationDeliveryLocalization {}
 
 class FakeRoute extends Fake implements Route {}
 
@@ -152,7 +154,9 @@ void main() {
             routerDelegate: AutoRouterDelegate.declarative(
               appRouter,
               navigatorObservers: () => [mockObserver],
-              routes: (PendingRoutesHandler handler) => [],
+              routes: (PendingRoutesHandler handler) => [
+                IndividualDetailsRoute(appLocalizations: mockLocalization),
+              ],
             ),
           ),
         ),
