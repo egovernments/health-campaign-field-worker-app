@@ -351,7 +351,7 @@ class MemberCard extends StatelessWidget {
                                           .read<DeliverInterventionBloc>()
                                           .add(
                                             DeliverInterventionSubmitEvent(
-                                              TaskModel(
+                                              task: TaskModel(
                                                 projectBeneficiaryClientReferenceId:
                                                     projectBeneficiaryClientReferenceId,
                                                 clientReferenceId:
@@ -400,9 +400,10 @@ class MemberCard extends StatelessWidget {
                                                 address:
                                                     individual.address?.first,
                                               ),
-                                              false,
-                                              RegistrationDeliverySingleton()
-                                                  .boundary!,
+                                              isEditing: false,
+                                              boundaryModel:
+                                                  RegistrationDeliverySingleton()
+                                                      .boundary!,
                                             ),
                                           );
                                       final reloadState =

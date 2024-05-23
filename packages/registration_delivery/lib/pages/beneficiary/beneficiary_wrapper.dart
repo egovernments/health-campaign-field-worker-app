@@ -131,7 +131,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
                 isEditing: isEditing,
               ),
               taskRepository: task,
-            )..add(DeliverInterventionSearchEvent(TaskSearchModel(
+            )..add(DeliverInterventionSearchEvent(
+                  taskSearch: TaskSearchModel(
                 projectBeneficiaryClientReferenceId: houseHoldOverviewState
                     .householdMemberWrapper.projectBeneficiaries
                     .map((e) => e.clientReferenceId)

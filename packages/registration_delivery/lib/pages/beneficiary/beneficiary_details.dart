@@ -94,20 +94,10 @@ class _BeneficiaryDetailsPageState
           if (RegistrationDeliverySingleton().projectType != null) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
-                taskData != null && taskData.isNotEmpty
-                    ? int.tryParse(
-                          lastDose,
-                        ) ??
-                        1
-                    : 0,
-                taskData != null && taskData.isNotEmpty
-                    ? int.tryParse(
-                          lastCycle,
-                        ) ??
-                        1
-                    : 1,
-                state.selectedIndividual,
-                RegistrationDeliverySingleton().projectType!,
+                individualModel: state.selectedIndividual,
+                projectType: RegistrationDeliverySingleton().projectType!,
+                lastCycle: int.parse(lastCycle),
+                lastDose: int.parse(lastDose),
               ),
             );
           }
@@ -154,14 +144,10 @@ class _BeneficiaryDetailsPageState
                                             bloc.add(
                                               DeliverInterventionEvent
                                                   .selectFutureCycleDose(
-                                                deliverState.dose,
-                                                RegistrationDeliverySingleton()
-                                                    .projectType!
-                                                    .cycles!
-                                                    .firstWhere((c) =>
-                                                        c.id ==
-                                                        deliverState.cycle),
-                                                state.selectedIndividual,
+                                                individualModel:
+                                                    state.selectedIndividual,
+                                                cycle: selectedCycle,
+                                                dose: deliverState.dose,
                                               ),
                                             );
                                             await DigitDialog.show<bool>(

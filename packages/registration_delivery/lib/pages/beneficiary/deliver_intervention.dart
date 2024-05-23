@@ -312,7 +312,8 @@ class _DeliverInterventionPageState
                                                                           DeliverInterventionBloc>()
                                                                       .add(
                                                                         DeliverInterventionSubmitEvent(
-                                                                          _getTaskModel(
+                                                                          task:
+                                                                              _getTaskModel(
                                                                             context,
                                                                             form:
                                                                                 form,
@@ -333,9 +334,10 @@ class _DeliverInterventionPageState
                                                                             longitude:
                                                                                 long,
                                                                           ),
-                                                                          false,
-                                                                          RegistrationDeliverySingleton()
-                                                                              .boundary!,
+                                                                          isEditing:
+                                                                              false,
+                                                                          boundaryModel:
+                                                                              RegistrationDeliverySingleton().boundary!,
                                                                         ),
                                                                       );
 
@@ -516,41 +518,37 @@ class _DeliverInterventionPageState
                                                       style: theme.textTheme
                                                           .headlineLarge,
                                                     ),
-                                                    ..._controllers
-                                                        .map((e) =>
-                                                            ResourceBeneficiaryCard(
-                                                              form: form,
-                                                              cardIndex:
-                                                                  _controllers
-                                                                      .indexOf(
-                                                                          e),
-                                                              totalItems:
-                                                                  _controllers
-                                                                      .length,
-                                                              onDelete:
-                                                                  (index) {
-                                                                (form.control(
-                                                                  _resourceDeliveredKey,
-                                                                ) as FormArray)
-                                                                    .removeAt(
-                                                                  index,
-                                                                );
-                                                                (form.control(
-                                                                  _quantityDistributedKey,
-                                                                ) as FormArray)
-                                                                    .removeAt(
-                                                                  index,
-                                                                );
-                                                                _controllers
-                                                                    .removeAt(
-                                                                  index,
-                                                                );
-                                                                setState(() {
-                                                                  _controllers;
-                                                                });
-                                                              },
-                                                            ))
-                                                        .toList(),
+                                                    ..._controllers.map((e) =>
+                                                        ResourceBeneficiaryCard(
+                                                          form: form,
+                                                          cardIndex:
+                                                              _controllers
+                                                                  .indexOf(e),
+                                                          totalItems:
+                                                              _controllers
+                                                                  .length,
+                                                          onDelete: (index) {
+                                                            (form.control(
+                                                              _resourceDeliveredKey,
+                                                            ) as FormArray)
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            (form.control(
+                                                              _quantityDistributedKey,
+                                                            ) as FormArray)
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            _controllers
+                                                                .removeAt(
+                                                              index,
+                                                            );
+                                                            setState(() {
+                                                              _controllers;
+                                                            });
+                                                          },
+                                                        )),
                                                     Center(
                                                       child: DigitIconButton(
                                                         onPressed: () async {

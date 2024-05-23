@@ -143,15 +143,15 @@ class __$$DeliverInterventionSubmitEventImplCopyWithImpl<$Res>
     Object? boundaryModel = null,
   }) {
     return _then(_$DeliverInterventionSubmitEventImpl(
-      null == task
+      task: null == task
           ? _value.task
           : task // ignore: cast_nullable_to_non_nullable
               as TaskModel,
-      null == isEditing
+      isEditing: null == isEditing
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
-      null == boundaryModel
+      boundaryModel: null == boundaryModel
           ? _value.boundaryModel
           : boundaryModel // ignore: cast_nullable_to_non_nullable
               as BoundaryModel,
@@ -164,7 +164,9 @@ class __$$DeliverInterventionSubmitEventImplCopyWithImpl<$Res>
 class _$DeliverInterventionSubmitEventImpl
     implements DeliverInterventionSubmitEvent {
   const _$DeliverInterventionSubmitEventImpl(
-      this.task, this.isEditing, this.boundaryModel);
+      {required this.task,
+      required this.isEditing,
+      required this.boundaryModel});
 
   @override
   final TaskModel task;
@@ -307,9 +309,10 @@ class _$DeliverInterventionSubmitEventImpl
 abstract class DeliverInterventionSubmitEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionSubmitEvent(
-      final TaskModel task,
-      final bool isEditing,
-      final BoundaryModel boundaryModel) = _$DeliverInterventionSubmitEventImpl;
+          {required final TaskModel task,
+          required final bool isEditing,
+          required final BoundaryModel boundaryModel}) =
+      _$DeliverInterventionSubmitEventImpl;
 
   TaskModel get task;
   bool get isEditing;
@@ -346,7 +349,7 @@ class __$$DeliverInterventionSearchEventImplCopyWithImpl<$Res>
     Object? taskSearch = null,
   }) {
     return _then(_$DeliverInterventionSearchEventImpl(
-      null == taskSearch
+      taskSearch: null == taskSearch
           ? _value.taskSearch
           : taskSearch // ignore: cast_nullable_to_non_nullable
               as TaskSearchModel,
@@ -358,7 +361,7 @@ class __$$DeliverInterventionSearchEventImplCopyWithImpl<$Res>
 
 class _$DeliverInterventionSearchEventImpl
     implements DeliverInterventionSearchEvent {
-  const _$DeliverInterventionSearchEventImpl(this.taskSearch);
+  const _$DeliverInterventionSearchEventImpl({required this.taskSearch});
 
   @override
   final TaskSearchModel taskSearch;
@@ -494,7 +497,8 @@ class _$DeliverInterventionSearchEventImpl
 abstract class DeliverInterventionSearchEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionSearchEvent(
-      final TaskSearchModel taskSearch) = _$DeliverInterventionSearchEventImpl;
+          {required final TaskSearchModel taskSearch}) =
+      _$DeliverInterventionSearchEventImpl;
 
   TaskSearchModel get taskSearch;
   @JsonKey(ignore: true)
@@ -536,15 +540,15 @@ class __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<$Res>
     Object? individualModel = freezed,
   }) {
     return _then(_$DeliverInterventionCycleFutureDoseSelectionEventImpl(
-      null == dose
+      dose: null == dose
           ? _value.dose
           : dose // ignore: cast_nullable_to_non_nullable
               as int,
-      null == cycle
+      cycle: null == cycle
           ? _value.cycle
           : cycle // ignore: cast_nullable_to_non_nullable
               as ProjectCycle,
-      freezed == individualModel
+      individualModel: freezed == individualModel
           ? _value.individualModel
           : individualModel // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
@@ -557,7 +561,7 @@ class __$$DeliverInterventionCycleFutureDoseSelectionEventImplCopyWithImpl<$Res>
 class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
     implements DeliverInterventionCycleFutureDoseSelectionEvent {
   const _$DeliverInterventionCycleFutureDoseSelectionEventImpl(
-      this.dose, this.cycle, this.individualModel);
+      {required this.dose, required this.cycle, required this.individualModel});
 
   @override
   final int dose;
@@ -700,8 +704,10 @@ class _$DeliverInterventionCycleFutureDoseSelectionEventImpl
 
 abstract class DeliverInterventionCycleFutureDoseSelectionEvent
     implements DeliverInterventionEvent {
-  const factory DeliverInterventionCycleFutureDoseSelectionEvent(final int dose,
-          final ProjectCycle cycle, final IndividualModel? individualModel) =
+  const factory DeliverInterventionCycleFutureDoseSelectionEvent(
+          {required final int dose,
+          required final ProjectCycle cycle,
+          required final IndividualModel? individualModel}) =
       _$DeliverInterventionCycleFutureDoseSelectionEventImpl;
 
   int get dose;
@@ -751,19 +757,19 @@ class __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl<$Res>
     Object? projectType = null,
   }) {
     return _then(_$DeliverInterventionActiveCycleDoseSelectionEventImpl(
-      null == lastDose
+      lastDose: null == lastDose
           ? _value.lastDose
           : lastDose // ignore: cast_nullable_to_non_nullable
               as int,
-      null == lastCycle
+      lastCycle: null == lastCycle
           ? _value.lastCycle
           : lastCycle // ignore: cast_nullable_to_non_nullable
               as int,
-      freezed == individualModel
+      individualModel: freezed == individualModel
           ? _value.individualModel
           : individualModel // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
-      null == projectType
+      projectType: null == projectType
           ? _value.projectType
           : projectType // ignore: cast_nullable_to_non_nullable
               as ProjectTypeModel,
@@ -776,7 +782,10 @@ class __$$DeliverInterventionActiveCycleDoseSelectionEventImplCopyWithImpl<$Res>
 class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
     implements DeliverInterventionActiveCycleDoseSelectionEvent {
   const _$DeliverInterventionActiveCycleDoseSelectionEventImpl(
-      this.lastDose, this.lastCycle, this.individualModel, this.projectType);
+      {required this.lastDose,
+      required this.lastCycle,
+      required this.individualModel,
+      required this.projectType});
 
   @override
   final int lastDose;
@@ -930,10 +939,10 @@ class _$DeliverInterventionActiveCycleDoseSelectionEventImpl
 abstract class DeliverInterventionActiveCycleDoseSelectionEvent
     implements DeliverInterventionEvent {
   const factory DeliverInterventionActiveCycleDoseSelectionEvent(
-          final int lastDose,
-          final int lastCycle,
-          final IndividualModel? individualModel,
-          final ProjectTypeModel projectType) =
+          {required final int lastDose,
+          required final int lastCycle,
+          required final IndividualModel? individualModel,
+          required final ProjectTypeModel projectType}) =
       _$DeliverInterventionActiveCycleDoseSelectionEventImpl;
 
   int get lastDose;
