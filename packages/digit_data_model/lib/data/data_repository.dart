@@ -3,16 +3,11 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 
-import '../models/oplog/oplog_entry.dart';
 import '../utils/constants.dart';
-import 'local_store/sql_store/sql_store.dart';
 
 /// `DataRepository` is an abstract class that defines the interface for a data repository.
 /// It has two type parameters: `D` for the entity model and `R` for the entity search model.
@@ -107,10 +102,6 @@ abstract class RemoteRepository<D extends EntityModel,
           );
         },
       );
-      AppLogger.instance.info(
-        'search Response Result: ${response.data}',
-        title: 'Data Repo',
-      );
     } catch (error) {
       return [];
     }
@@ -153,17 +144,10 @@ abstract class RemoteRepository<D extends EntityModel,
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
     var mapperRes = <D>[];
     try {
-      AppLogger.instance.error(
-        message: 'mappercontainer ${MapperContainer.globals}',
-        title: 'Mapper Contianer',
-      );
       mapperRes =
           entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
     } catch (e) {
-      AppLogger.instance.error(
-        message: e.toString(),
-        title: 'Data Repo',
-      );
+      rethrow ;
     }
 
     return mapperRes;
@@ -400,24 +384,8 @@ abstract class RemoteRepository<D extends EntityModel,
       } catch (_) {
         requestBody = 'Could not parse request body';
       }
-
-      AppLogger.instance.debug(
-        requestBody,
-        title: runtimeType.toString(),
-      );
-
-      AppLogger.instance.error(
-        message: '${error.error}\n$errorResponse',
-        title: '${runtimeType.toString()} | DIO_ERROR',
-      );
-
       rethrow;
     } catch (error) {
-      AppLogger.instance.error(
-        message: error.toString(),
-        title: runtimeType.toString(),
-      );
-
       rethrow;
     }
   }
