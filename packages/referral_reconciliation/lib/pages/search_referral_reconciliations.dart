@@ -255,7 +255,7 @@ class _SearchReferralReconciliationsPageState
                                       HFCreateReferralWrapperRoute(
                                         viewOnly: false,
                                         referralReconciliation: HFReferralModel(
-                                          clientReferenceId: '',
+                                          clientReferenceId: IdGen.i.identifier,
                                           name: state.searchQuery,
                                           beneficiaryId: state.tag,
                                         ),

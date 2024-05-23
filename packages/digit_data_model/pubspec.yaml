@@ -1,7 +1,7 @@
 name: digit_data_model
 description: "A new Flutter package project."
 version: 0.0.0-dev.1
-repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/HLM-5572/packages/digit_data_model
+repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/digit_data_model
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -25,7 +25,6 @@ dependencies:
   dio: ^5.1.2
   mocktail: ^1.0.2
   collection: ^1.16.0
-  digit_components: ^0.0.1
 
 dev_dependencies:
   flutter_test:
@@ -37,7 +36,11 @@ dev_dependencies:
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0
-  dart_mappable_builder: ^4.2.0
+  dart_mappable_builder:
+    git:
+      url: https://github.com/egovernments/health-campaign-field-worker-app/
+      ref: develop
+      path: ./packages/dart_mappable_builder
   isar_generator: ^3.0.5
 
 # For information on the generic Dart part of this file, see the

@@ -356,7 +356,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                   null
           ? DigitDateUtils.getFormattedDateToDateTime(
               DigitDateUtils.getDateFromTimestamp(
-                int.tryParse(value.hfReferralModel!.additionalFields!.fields
+                int.tryParse(value.hfReferralModel?.additionalFields?.fields
                             .where((e) =>
                                 e.key ==
                                 ReferralReconEnums.dateOfEvaluation.toValue())
