@@ -47,8 +47,6 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
 
   @override
   Widget build(BuildContext context) {
-    // final theme = Theme.of(context);
-    // final bloc = context.read<ProjectBloc>().state;
     final dateOfEvaluation = int.tryParse(hfReferralModel
             .additionalFields?.fields
             .where(

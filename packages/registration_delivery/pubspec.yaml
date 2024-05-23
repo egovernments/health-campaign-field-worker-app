@@ -37,6 +37,7 @@ dependencies:
   package_info_plus: ^5.0.1
   digit_showcase: ^0.0.1
   collection: ^1.16.0
+  flutter_keyboard_visibility: ^5.4.0
 
 
 dev_dependencies:

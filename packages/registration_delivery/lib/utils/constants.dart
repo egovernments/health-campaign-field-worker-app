@@ -5,6 +5,10 @@ class Constants {
   ];
 
   final String dateFormat = 'dd/MM/yyyy';
+  final String communityHealthWorker = 'Community Health Worker';
+  final String deliveryTeam = 'Delivery Team';
+  final String notAvailable = 'N/A';
+  final String dateTimeExtFormat = 'dd-MM-yyyy';
 }
 
 class KeyValue {

@@ -1,12 +1,10 @@
 // Importing necessary packages and files
-import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/project_type/project_type_model.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:registration_delivery/utils/constants.dart';
 
 import '../utils.dart';
 
@@ -34,10 +32,10 @@ extension DateAgeExtension on DateTime {
 
 // Extension to format a DateTime object to a string.
 extension DateTimeExtension on DateTime? {
-  String? getFormattedDate([String format = 'dd-MM-yyyy']) {
+  String? getFormattedDate() {
     if (this == null) return null;
 
-    return DateFormat(format).format(this!);
+    return DateFormat(Constants().dateTimeExtFormat).format(this!);
   }
 }
 
