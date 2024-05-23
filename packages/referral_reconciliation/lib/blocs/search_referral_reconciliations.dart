@@ -4,8 +4,11 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:stream_transform/stream_transform.dart';
+
+import '../models/entities/hf_referral.dart';
+import '../utils/typedefs.dart';
+import '../utils/utils.dart';
 
 part 'search_referral_reconciliations.freezed.dart';
 
@@ -20,8 +23,12 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 // Define the Bloc responsible for managing SearchReferrals events and states.
 class SearchReferralsBloc
     extends Bloc<SearchReferralsEvent, SearchReferralsState> {
+  HFReferralDataRepository referralReconDataRepository;
   // Constructor initializes the Bloc with an initial state and sets up event handlers.
-  SearchReferralsBloc() : super(const SearchReferralsState()) {
+  SearchReferralsBloc(
+    super.initialState, {
+    required this.referralReconDataRepository,
+  }) {
     on(_handleSearchByName);
     on(_handleClear);
     on(_handleSearchByTag);
@@ -37,9 +44,13 @@ class SearchReferralsBloc
       loading: true,
     ));
     // Fetch referrals based on the tag.
-    List<ReferralReconciliation>? beneficiaries = await ReferralReconSingleton()
-        .getReferralReconciliations(
-            SearchReferralReconciliationClass(tag: event.tag));
+    List<HFReferralModel>? beneficiaries =
+        await referralReconDataRepository.search(
+      HFReferralSearchModel(
+        projectId: ReferralReconSingleton().projectId,
+        beneficiaryId: event.tag,
+      ),
+    );
     // Update state with fetched referrals.
     emit(state.copyWith(
       referrals: beneficiaries ?? [],
@@ -72,13 +83,16 @@ class SearchReferralsBloc
     ));
 
     // Fetch referrals based on the name.
-    List<ReferralReconciliation>? hfReferrals = await ReferralReconSingleton()
-        .getReferralReconciliations(SearchReferralReconciliationClass(
-      name: event.searchText,
-    ));
+    List<HFReferralModel>? beneficiaries =
+        await referralReconDataRepository.search(
+      HFReferralSearchModel(
+        projectId: ReferralReconSingleton().projectId,
+        name: event.searchText,
+      ),
+    );
     // Update state with fetched referrals.
     emit(state.copyWith(
-      referrals: hfReferrals ?? [],
+      referrals: beneficiaries,
       loading: false,
     ));
   }
@@ -122,7 +136,7 @@ class SearchReferralsState with _$SearchReferralsState {
     @Default(false) bool loading,
     String? searchQuery,
     String? tag,
-    @Default([]) List<ReferralReconciliation> referrals,
+    @Default([]) List<HFReferralModel> referrals,
   }) = _SearchReferralsState;
 
   bool get resultsNotFound {

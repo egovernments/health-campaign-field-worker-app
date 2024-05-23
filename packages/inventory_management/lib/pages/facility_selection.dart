@@ -4,14 +4,14 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:digit_data_model/data_model.dart';
 
-import '../../models/entities/inventory_facility.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
 class InventoryFacilitySelectionPage extends StatelessWidget {
-  final List<InventoryFacilityModel> facilities;
+  final List<FacilityModel> facilities;
 
   const InventoryFacilitySelectionPage({
     super.key,
@@ -41,10 +41,11 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                 final filteredFacilities = facilities.where((element) {
                   final query = form.control(_facilityName).value as String?;
                   if (query == null || query.isEmpty) return true;
-                  if (element.id.toLowerCase().contains(query.toLowerCase())) {
-                    return true;
-                  }
-                  return false;
+                  final localizedFacilityIdWithPrefix = localizations
+                      .translate('FAC_${element.id}')
+                      .toLowerCase();
+                  final lowerCaseQuery = query.toLowerCase();
+                  return localizedFacilityIdWithPrefix.contains(lowerCaseQuery);
                 }).toList();
 
                 return ScrollableContent(
@@ -156,7 +157,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
   FormGroup _form() {
     return fb.group({
       _facilityName: FormControl<String>(),
-      _selectedFacility: FormControl<InventoryFacilityModel>(
+      _selectedFacility: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
     });
@@ -164,18 +165,18 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
 }
 
 class FacilityValueAccessor
-    extends ControlValueAccessor<InventoryFacilityModel, String> {
-  final List<InventoryFacilityModel> models;
+    extends ControlValueAccessor<FacilityModel, String> {
+  final List<FacilityModel> models;
 
   FacilityValueAccessor(this.models);
 
   @override
-  String? modelToViewValue(InventoryFacilityModel? modelValue) {
+  String? modelToViewValue(FacilityModel? modelValue) {
     return modelValue?.id;
   }
 
   @override
-  InventoryFacilityModel? viewToModelValue(String? viewValue) {
+  FacilityModel? viewToModelValue(String? viewValue) {
     return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }

@@ -1,6 +1,6 @@
 name: referral_reconciliation
 description: "This module will enable the health facility supervisors to track referrals made by on-field health workers to different health facilities digitally via the Digit HCM app"
-version: 0.0.1+1
+version: 0.0.0-dev.1
 homepage:
 
 environment:
@@ -35,6 +35,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.0
   auto_route: ^7.8.4
   collection: ^1.16.0
+  digit_data_model: ^0.0.0-dev.1
 
 dev_dependencies:
   flutter_test:

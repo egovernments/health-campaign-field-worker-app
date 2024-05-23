@@ -10,10 +10,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/boundary/boundary.dart';
-import '../blocs/search_households/project_beneficiaries_downsync.dart';
+import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
-import '../models/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -559,7 +559,7 @@ class _BoundarySelectionPageState
                                                             milliseconds: 100,
                                                           ),
                                                           () => context.router
-                                                              .pop(),
+                                                              .maybePop(),
                                                         );
                                                       }
                                                       clickedStatus.value =

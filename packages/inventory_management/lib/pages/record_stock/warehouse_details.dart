@@ -8,12 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:digit_data_model/data_model.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
-import '../../blocs/facility.dart';
 import '../../blocs/record_stock.dart';
-import '../../models/entities/inventory_facility.dart';
+import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../facility_selection.dart';
@@ -81,10 +81,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
             builder: (ctx, facilityState) {
               final facilities = facilityState.whenOrNull(
                     fetched: (
-                      facilities,
+                      facilities, allFacilities
                     ) {
                       final teamFacilities = [
-                        InventoryFacilityModel(
+                        FacilityModel(
                           id: 'Delivery Team',
                         ),
                       ];
@@ -151,17 +151,19 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                   .control(_teamCodeKey)
                                                   .value as String?;
 
-                                              final facility = deliveryTeamSelected
-                                                  ? InventoryFacilityModel(
-                                                      id: teamCode ??
-                                                          'Delivery Team',
-                                                    )
-                                                  : selectedFacilityId != null
-                                                      ? InventoryFacilityModel(
-                                                          id: selectedFacilityId
-                                                              .toString(),
+                                              final facility =
+                                                  deliveryTeamSelected
+                                                      ? FacilityModel(
+                                                          id: teamCode ??
+                                                              'Delivery Team',
                                                         )
-                                                      : null;
+                                                      : selectedFacilityId !=
+                                                              null
+                                                          ? FacilityModel(
+                                                              id: selectedFacilityId
+                                                                  .toString(),
+                                                            )
+                                                          : null;
 
                                               context
                                                   .read<DigitScannerBloc>()
@@ -207,7 +209,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                                 .isDistributor! &&
                                                             !InventorySingleton()
                                                                 .isWareHouseMgr!
-                                                        ? InventoryFacilityModel(
+                                                        ? FacilityModel(
                                                             id: teamCode
                                                                 .toString(),
                                                           )

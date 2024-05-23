@@ -1,10 +1,11 @@
 // Importing necessary packages and modules
 import 'package:bloc_test/bloc_test.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service_definition.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
-import 'package:referral_reconciliation/models/entities/referral_recon_service_definition.dart';
+import 'package:referral_reconciliation/utils/typedefs.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
 
 import '../constants/test_constants.dart';
 
@@ -12,18 +13,30 @@ import '../constants/test_constants.dart';
 class MockReferralReconSingleton extends Mock
     implements ReferralReconSingleton {}
 
+class MockServiceDataRepository extends Mock
+    implements ServiceDefinitionDataRepository {}
+
+// Fake classes for the search models.
+class FakeServiceDefinitionSearchModel extends Fake
+    implements ServiceDefinitionSearchModel {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(FakeServiceDefinitionSearchModel());
+  });
   group('ReferralReconServiceBloc', () {
     // Declare variables for MockInventorySingleton and FacilityBloc
     late MockReferralReconSingleton mockReferralReconSingleton;
     late ReferralReconServiceDefinitionBloc serviceBloc;
+    late MockServiceDataRepository serviceDefinitionDataRepository;
 
     setUp(() {
       // Initialize MockReferralReconSingleton and ReferralReconServiceBloc before each test
       mockReferralReconSingleton = MockReferralReconSingleton();
+      serviceDefinitionDataRepository = MockServiceDataRepository();
       serviceBloc = ReferralReconServiceDefinitionBloc(
         const ReferralReconServiceDefinitionState.empty(),
-        referralReconSingleton: mockReferralReconSingleton,
+        serviceDefinitionDataRepository: serviceDefinitionDataRepository,
       );
     });
 
@@ -33,9 +46,9 @@ void main() {
       // Description of the test
       'emits [ReferralReconServiceDefinitionState] when getServiceDefinitionsList returns null',
       build: () {
-        // Mock the method getServiceDefinitionsList to return null
-        when(() => mockReferralReconSingleton.getServiceDefinitionsList())
-            .thenAnswer((_) async => null);
+        // Mock the method getServiceDefinitionsList to return empty
+        when(() => serviceDefinitionDataRepository.search(any()))
+            .thenAnswer((_) async => []);
         return serviceBloc;
       },
       act: (bloc) => bloc.add(const ReferralReconServiceDefinitionFetchEvent()),
@@ -55,8 +68,7 @@ void main() {
       'emits [ReferralReconServiceDefinitionServiceFetchedState] when getServiceDefinitionsList returns non-null List',
       build: () {
         // Mock the method getServiceDefinitionsList to return a single List
-        when(() => mockReferralReconSingleton.getServiceDefinitionsList())
-            .thenAnswer(
+        when(() => serviceDefinitionDataRepository.search(any())).thenAnswer(
           (_) async => [
             ReferralReconTestConstants().referralReconServiceDefinitionModel,
           ],
@@ -80,22 +92,30 @@ void main() {
       'emits [ReferralReconServiceDefinitionServiceFetchedState] when getServiceDefinitionsList returns non-null List',
       build: () {
         // Mock the method getServiceDefinitions to return a saved checklist
-        when(() => mockReferralReconSingleton.getServiceDefinitions('123'))
-            .thenAnswer(
+        when(() => serviceDefinitionDataRepository.search(any())).thenAnswer(
           (_) async => [
-            ReferralReconServiceDefinitionModel(
+            ServiceDefinitionModel(
               code: ReferralReconTestConstants().serviceDefinitionCode,
             ),
           ],
         );
         return serviceBloc;
       },
-      act: (bloc) => bloc.add(ReferralReconServiceDefinitionSelectionEvent(
-        serviceDefinitionCode:
-            ReferralReconTestConstants().serviceDefinitionCode,
-      )),
+      act: (bloc) {
+        bloc.add(const ReferralReconServiceDefinitionFetchEvent());
+        bloc.add(ReferralReconServiceDefinitionSelectionEvent(
+          serviceDefinitionCode:
+              ReferralReconTestConstants().serviceDefinitionCode,
+        ));
+      },
       expect: () => <ReferralReconServiceDefinitionState>[
         // Expected states after the action
+        ReferralReconServiceDefinitionServiceFetchedState(
+          serviceDefinitionList: [
+            ReferralReconTestConstants().referralReconServiceDefinitionModel,
+          ],
+          selectedServiceDefinition: null,
+        ),
         ReferralReconServiceDefinitionServiceFetchedState(
           serviceDefinitionList: [
             ReferralReconTestConstants().referralReconServiceDefinitionModel,
@@ -104,6 +124,9 @@ void main() {
               ReferralReconTestConstants().referralReconServiceDefinitionModel,
         ),
       ],
+      verify: (_) {
+        verify(() => serviceDefinitionDataRepository.search(any())).called(1);
+      },
     );
   });
 }

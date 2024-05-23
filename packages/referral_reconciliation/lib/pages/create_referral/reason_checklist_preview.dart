@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
@@ -78,8 +79,8 @@ class _ReferralReasonChecklistPreviewPageState
                                       Align(
                                         alignment: Alignment.centerLeft,
                                         child: Text(
-                                          DateFormat('dd MMMM yyyy').format(
-                                            DateFormat('dd/MM/yyyy').parse(
+                                          DateFormat(defaultDateFormat).format(
+                                            DateFormat(defaultDateFormat).parse(
                                               e.createdAt.toString(),
                                             ),
                                           ),

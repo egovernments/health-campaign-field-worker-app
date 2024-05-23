@@ -1,6 +1,7 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
@@ -8,29 +9,12 @@ import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:registration_delivery/router/registration_delivery_router.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
-import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/search_households/search_households.dart';
-import '../models/data_model.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
-import '../pages/beneficiary/beneficiary_details.dart';
-import '../pages/beneficiary/beneficiary_wrapper.dart';
-import '../pages/beneficiary/deliver_intervention.dart';
-import '../pages/beneficiary/dose_administered.dart';
-import '../pages/beneficiary/facility_selection.dart';
-import '../pages/beneficiary/household_overview.dart';
-import '../pages/beneficiary/record_past_delivery_details.dart';
-import '../pages/beneficiary/refer_beneficiary.dart';
-import '../pages/beneficiary/side_effects.dart';
-import '../pages/beneficiary/widgets/household_acknowledgement.dart';
-import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
-import '../pages/beneficiary_registration/beneficiary_acknowledgement.dart';
-import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
-import '../pages/beneficiary_registration/household_details.dart';
-import '../pages/beneficiary_registration/household_location.dart';
-import '../pages/beneficiary_registration/individual_details.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';
@@ -49,16 +33,13 @@ import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
 import '../pages/home.dart';
-import '../pages/project_facility_selection.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
-import '../pages/reason_for_deletion.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
-import '../pages/search_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
@@ -71,6 +52,7 @@ part 'app_router.gr.dart';
     AttendanceRoute,
     ReferralReconciliationRoute,
     DigitScannerPackageRoute,
+    RegistrationDeliveryRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -98,12 +80,14 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
-        AutoRoute(
-            page: SearchBeneficiaryRoute.page, path: 'search-beneficiary'),
+        AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
         AutoRoute(
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
+
+        AutoRoute(
+            page: SearchBeneficiaryRoute.page, path: 'search-beneficiary'),
 
         /// Beneficiary Registration
         AutoRoute(
@@ -278,6 +262,10 @@ class AppRouter extends _$AppRouter {
           page: MarkAttendanceRoute.page,
           path: 'mark-attendance',
         ),
+        AutoRoute(
+          page: AttendanceAcknowledgementRoute.page,
+          path: 'attendance-acknowledgement',
+        ),
 
         //Inventory Route
         AutoRoute(
@@ -308,7 +296,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement'),
-        //Inventory Route
+
+        // Inventory Route
         AutoRoute(
             page: HFCreateReferralWrapperRoute.page,
             path: 'hf-referral',
@@ -342,6 +331,6 @@ class AppRouter extends _$AppRouter {
           path: 'search-referrals',
         ),
       ],
-    ),
+    )
   ];
 }

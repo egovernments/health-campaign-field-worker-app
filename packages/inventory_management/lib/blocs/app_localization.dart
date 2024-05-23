@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'inventory_localization_delegate.dart';
 
-// Class responsible for handling attendance localization
+// Class responsible for handling inventory localization
 class InventoryLocalization {
   final Locale locale;
   final Future<dynamic> localizedStrings;

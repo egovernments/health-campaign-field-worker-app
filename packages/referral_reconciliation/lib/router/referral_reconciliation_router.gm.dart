@@ -9,12 +9,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i9;
+import 'package:digit_data_model/data_model.dart' as _i13;
 import 'package:flutter/material.dart' as _i10;
 import 'package:referral_reconciliation/blocs/app_localization.dart' as _i12;
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart'
+    as _i14;
+import 'package:referral_reconciliation/models/entities/hf_referral.dart'
     as _i11;
-import 'package:referral_reconciliation/models/entities/referral_project_facility.dart'
-    as _i13;
 import 'package:referral_reconciliation/pages/acknowledgement.dart' as _i6;
 import 'package:referral_reconciliation/pages/create_referral/create_hf_referral_wrapper.dart'
     as _i1;
@@ -136,9 +137,13 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
           appVersion: args.appVersion,
           userName: args.userName,
           boundaryName: args.boundaryName,
+          boundaryCode: args.boundaryCode,
+          roleCode: args.roleCode,
+          userUUid: args.userUUid,
           genders: args.genders,
           tenantId: args.tenantId,
           checklistTypes: args.checklistTypes,
+          projectName: args.projectName,
         ),
       );
     },
@@ -153,7 +158,7 @@ class HFCreateReferralWrapperRoute
     _i10.Key? key,
     required String projectId,
     bool viewOnly = false,
-    _i11.ReferralReconciliation? referralReconciliation,
+    _i11.HFReferralModel? referralReconciliation,
     required List<String> cycles,
     List<_i9.PageRouteInfo>? children,
   }) : super(
@@ -189,7 +194,7 @@ class HFCreateReferralWrapperRouteArgs {
 
   final bool viewOnly;
 
-  final _i11.ReferralReconciliation? referralReconciliation;
+  final _i11.HFReferralModel? referralReconciliation;
 
   final List<String> cycles;
 
@@ -445,7 +450,7 @@ class ReferralReconProjectFacilitySelectionRoute
     extends _i9.PageRouteInfo<ReferralReconProjectFacilitySelectionRouteArgs> {
   ReferralReconProjectFacilitySelectionRoute({
     _i10.Key? key,
-    required List<_i13.ReferralProjectFacilityModel> projectFacilities,
+    required List<_i13.ProjectFacilityModel> projectFacilities,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           ReferralReconProjectFacilitySelectionRoute.name,
@@ -470,7 +475,7 @@ class ReferralReconProjectFacilitySelectionRouteArgs {
 
   final _i10.Key? key;
 
-  final List<_i13.ReferralProjectFacilityModel> projectFacilities;
+  final List<_i13.ProjectFacilityModel> projectFacilities;
 
   @override
   String toString() {
@@ -485,17 +490,21 @@ class SearchReferralReconciliationsRoute
   SearchReferralReconciliationsRoute({
     _i10.Key? key,
     _i12.ReferralReconLocalization? appLocalizations,
-    required _i11.ReferralReconListener referralReconListener,
+    required _i14.ReferralReconListener referralReconListener,
     required String projectId,
     required List<String> cycles,
-    required _i11.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
+    required _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
     required List<String> referralReasons,
     required String appVersion,
     required String userName,
     required String boundaryName,
+    required String boundaryCode,
+    required String roleCode,
+    required String userUUid,
     required List<String> genders,
     required String tenantId,
     required List<String> checklistTypes,
+    required String projectName,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           SearchReferralReconciliationsRoute.name,
@@ -510,9 +519,13 @@ class SearchReferralReconciliationsRoute
             appVersion: appVersion,
             userName: userName,
             boundaryName: boundaryName,
+            boundaryCode: boundaryCode,
+            roleCode: roleCode,
+            userUUid: userUUid,
             genders: genders,
             tenantId: tenantId,
             checklistTypes: checklistTypes,
+            projectName: projectName,
           ),
           initialChildren: children,
         );
@@ -535,22 +548,26 @@ class SearchReferralReconciliationsRouteArgs {
     required this.appVersion,
     required this.userName,
     required this.boundaryName,
+    required this.boundaryCode,
+    required this.roleCode,
+    required this.userUUid,
     required this.genders,
     required this.tenantId,
     required this.checklistTypes,
+    required this.projectName,
   });
 
   final _i10.Key? key;
 
   final _i12.ReferralReconLocalization? appLocalizations;
 
-  final _i11.ReferralReconListener referralReconListener;
+  final _i14.ReferralReconListener referralReconListener;
 
   final String projectId;
 
   final List<String> cycles;
 
-  final _i11.ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
+  final _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
 
   final List<String> referralReasons;
 
@@ -560,14 +577,22 @@ class SearchReferralReconciliationsRouteArgs {
 
   final String boundaryName;
 
+  final String boundaryCode;
+
+  final String roleCode;
+
+  final String userUUid;
+
   final List<String> genders;
 
   final String tenantId;
 
   final List<String> checklistTypes;
 
+  final String projectName;
+
   @override
   String toString() {
-    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, referralReconListener: $referralReconListener, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes}';
+    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, referralReconListener: $referralReconListener, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, boundaryCode: $boundaryCode, roleCode: $roleCode, userUUid: $userUUid, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes, projectName: $projectName}';
   }
 }

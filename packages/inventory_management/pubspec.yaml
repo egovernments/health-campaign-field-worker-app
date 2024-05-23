@@ -1,6 +1,6 @@
 name: inventory_management
 description: Provides features to manage inventory.
-version: 0.0.1
+version: 0.0.0-dev.1
 homepage:
 
 environment:
@@ -33,6 +33,8 @@ dependencies:
   digit_scanner: ^0.0.1+1
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
+  digit_data_model: ^0.0.0-dev.1
+  collection: ^1.16.0
 
 dev_dependencies:
   flutter_test:

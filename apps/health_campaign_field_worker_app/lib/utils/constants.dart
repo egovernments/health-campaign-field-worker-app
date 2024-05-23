@@ -1,66 +1,24 @@
+import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../data/data_repository.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/no_sql/schema/entity_mapper.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
-import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
-import '../data/local_store/sql_store/sql_store.dart';
-import '../data/repositories/local/attendance_logs.dart';
-import '../data/repositories/local/boundary.dart';
-import '../data/repositories/local/facility.dart';
-import '../data/repositories/local/hcm_attendance.dart';
-import '../data/repositories/local/hcm_hf_referral.dart';
-import '../data/repositories/local/household.dart';
-import '../data/repositories/local/houshold_member.dart';
-import '../data/repositories/local/individual.dart';
-import '../data/repositories/local/pgr_service.dart';
-import '../data/repositories/local/product_variant.dart';
-import '../data/repositories/local/project.dart';
-import '../data/repositories/local/project_beneficiary.dart';
-import '../data/repositories/local/project_facility.dart';
-import '../data/repositories/local/project_resource.dart';
-import '../data/repositories/local/project_staff.dart';
-import '../data/repositories/local/referral.dart';
-import '../data/repositories/local/service.dart';
-import '../data/repositories/local/service_definition.dart';
-import '../data/repositories/local/side_effect.dart';
-import '../data/repositories/local/stock.dart';
-import '../data/repositories/local/stock_reconciliation.dart';
-import '../data/repositories/local/task.dart';
-import '../data/repositories/oplog/oplog.dart';
-import '../data/repositories/remote/attendance_logs.dart';
-import '../data/repositories/remote/boundary.dart';
-import '../data/repositories/remote/downsync.dart';
-import '../data/repositories/remote/facility.dart';
-import '../data/repositories/remote/hcm_attendance.dart';
-import '../data/repositories/remote/hcm_hf_referral.dart';
-import '../data/repositories/remote/household.dart';
-import '../data/repositories/remote/household_member.dart';
-import '../data/repositories/remote/individual.dart';
-import '../data/repositories/remote/pgr_service.dart';
-import '../data/repositories/remote/product_variant.dart';
-import '../data/repositories/remote/project_beneficiary.dart';
-import '../data/repositories/remote/project_facility.dart';
-import '../data/repositories/remote/project_product_variant.dart';
-import '../data/repositories/remote/project_resource.dart';
-import '../data/repositories/remote/project_staff.dart';
-import '../data/repositories/remote/referral.dart';
-import '../data/repositories/remote/service.dart';
-import '../data/repositories/remote/service_definition.dart';
-import '../data/repositories/remote/side_effect.dart';
-import '../data/repositories/remote/stock.dart';
-import '../data/repositories/remote/stock_reconciliation.dart';
-import '../data/repositories/remote/task.dart';
-import '../models/data_model.dart';
-import '../models/data_model.init.dart';
+import 'environment_config.dart';
+import 'utils.dart';
 
 class Constants {
   late Future<Isar> _isar;
@@ -73,7 +31,8 @@ class Constants {
     return _instance;
   }
   Future initialize(version) async {
-    initializeMappers();
+    await initializeAllMappers();
+    setInitialDataOfPackages();
     await _initializeIsar(version);
   }
 
@@ -108,17 +67,27 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
+  static const String checklistPreviewDateFormat = 'dd MMMM yyyy';
+  static const String defaultDateFormat = 'dd/MM/yyyy';
+  static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
+  static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,
   ) {
     return [
-      IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       FacilityLocalRepository(sql, FacilityOpLogManager(isar)),
+      ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
+      ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
+      IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
       HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
-      ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
+      StockLocalRepository(sql, StockOpLogManager(isar)),
+      StockReconciliationLocalRepository(
+        sql,
+        StockReconciliationOpLogManager(isar),
+      ),
       ProjectBeneficiaryLocalRepository(
         sql,
         ProjectBeneficiaryOpLogManager(
@@ -126,15 +95,9 @@ class Constants {
         ),
       ),
       ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
-      ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
-      StockLocalRepository(sql, StockOpLogManager(isar)),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
-      StockReconciliationLocalRepository(
-        sql,
-        StockReconciliationOpLogManager(isar),
-      ),
       ServiceDefinitionLocalRepository(
         sql,
         ServiceDefinitionOpLogManager(isar),
@@ -159,10 +122,6 @@ class Constants {
         sql,
         PgrServiceOpLogManager(isar),
       ),
-      HFReferralLocalRepository(
-        sql,
-        HFReferralOpLogManager(isar),
-      ),
       AttendanceLocalRepository(
         sql,
         AttendanceOpLogManager(isar),
@@ -170,6 +129,10 @@ class Constants {
       AttendanceLogsLocalRepository(
         sql,
         AttendanceLogOpLogManager(isar),
+      ),
+      HFReferralLocalRepository(
+        sql,
+        HFReferralOpLogManager(isar),
       ),
     ];
   }
@@ -202,10 +165,6 @@ class Constants {
       remoteRepositories.addAll([
         if (value == DataModelType.facility)
           FacilityRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.household)
-          HouseholdRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.projectBeneficiary)
-          ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.complaints)
           PgrServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.productVariant)
@@ -218,12 +177,6 @@ class Constants {
           ProjectResourceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.service)
           ServiceRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.stockReconciliation)
-          StockReconciliationRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.task)
-          TaskRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.stock)
-          StockRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectStaff)
           ProjectStaffRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectProductVariant)
@@ -232,6 +185,16 @@ class Constants {
           ProjectFacilityRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.individual)
           IndividualRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stock)
+          StockRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stockReconciliation)
+          StockReconciliationRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.household)
+          HouseholdRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectBeneficiary)
+          ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.task)
+          TaskRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.householdMember)
           HouseholdMemberRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.sideEffect)
@@ -240,12 +203,12 @@ class Constants {
           ReferralRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.downsync)
           DownsyncRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.hFReferral)
-          HFReferralRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendanceRegister)
           AttendanceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendance)
           AttendanceLogRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.hFReferral)
+          HFReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -271,6 +234,18 @@ class Constants {
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
   ];
+
+  void setInitialDataOfPackages() {
+    DigitDataModelSingleton().setData(
+        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+        retryTimeInterval: envConfig.variables.retryTimeInterval,
+        tenantId: envConfig.variables.tenantId,
+        entityMapper: EntityMapper(),
+        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
+    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+    ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
+  }
 }
 
 /// By using this key, we can push pages without context
@@ -302,37 +277,6 @@ class RequestInfoData {
 
 class Modules {
   static const String localizationModule = "LOCALIZATION_MODULE";
-}
-
-class EntityPlurals {
-  static String getPluralForEntityName(String entity) {
-    switch (entity) {
-      case 'Beneficiary':
-        return 'Beneficiaries';
-      case 'ProjectBeneficiary':
-        return 'ProjectBeneficiaries';
-      case 'Address':
-        return 'Addresses';
-      case 'Facility':
-        return 'Facilities';
-      case 'ProjectFacility':
-        return 'ProjectFacilities';
-      case 'Project':
-        return 'Projects';
-      case 'Stock':
-        return 'Stock';
-      case 'StockReconciliation':
-        return 'StockReconciliation';
-      case 'User':
-        return 'user';
-      case 'AttendanceRegister':
-        return 'attendanceRegister';
-      case 'Attendance':
-        return 'attendance';
-      default:
-        return '${entity}s';
-    }
-  }
 }
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';

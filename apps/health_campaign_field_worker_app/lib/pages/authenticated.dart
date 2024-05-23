@@ -1,32 +1,22 @@
 import 'dart:async';
 
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/data/repositories/local/registration_delivery_address.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
-import '../blocs/boundary/boundary.dart';
-import '../blocs/household_details/household_details.dart';
+
 import '../blocs/localization/app_localization.dart';
-import '../blocs/search_households/project_beneficiaries_downsync.dart';
-import '../blocs/search_households/proximity_search.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_by_head.dart';
-import '../blocs/search_households/search_households.dart';
-import '../blocs/search_households/tag_by_search.dart';
-import '../blocs/service/service.dart';
+import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
-import '../data/data_repository.dart';
-import '../data/local_store/no_sql/schema/oplog.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../data/remote_client.dart';
-import '../data/repositories/local/address.dart';
-import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
-import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
@@ -111,10 +101,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           final isar = context.read<Isar>();
 
                           return SearchHouseholdsBloc(
-                            beneficiaryType: context.beneficiaryType,
+                            beneficiaryType: RegistrationDeliverySingleton()
+                                .beneficiaryType!,
                             userUid: context.loggedInUserUuid,
                             projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
+                            addressRepository: RegistrationDeliveryAddressRepo(
                               context.read<LocalSqlDataStore>(),
                               AddressOpLogManager(isar),
                             ),
@@ -142,10 +133,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           final isar = context.read<Isar>();
 
                           return SearchByHeadBloc(
-                            beneficiaryType: context.beneficiaryType,
+                            beneficiaryType: RegistrationDeliverySingleton()
+                                .beneficiaryType!,
                             userUid: context.loggedInUserUuid,
                             projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
+                            addressRepository: RegistrationDeliveryAddressRepo(
                               context.read<LocalSqlDataStore>(),
                               AddressOpLogManager(isar),
                             ),
@@ -173,10 +165,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           final isar = context.read<Isar>();
 
                           return ProximitySearchBloc(
-                            beneficiaryType: context.beneficiaryType,
+                            beneficiaryType: RegistrationDeliverySingleton()
+                                .beneficiaryType!,
                             userUid: context.loggedInUserUuid,
                             projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
+                            addressRepository: RegistrationDeliveryAddressRepo(
                               context.read<LocalSqlDataStore>(),
                               AddressOpLogManager(isar),
                             ),
@@ -204,10 +197,11 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           final isar = context.read<Isar>();
 
                           return TagSearchBloc(
-                            beneficiaryType: context.beneficiaryType,
+                            beneficiaryType: RegistrationDeliverySingleton()
+                                .beneficiaryType!,
                             userUid: context.loggedInUserUuid,
                             projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
+                            addressRepository: RegistrationDeliveryAddressRepo(
                               context.read<LocalSqlDataStore>(),
                               AddressOpLogManager(isar),
                             ),

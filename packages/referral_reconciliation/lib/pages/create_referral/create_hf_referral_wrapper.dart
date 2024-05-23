@@ -1,22 +1,25 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
+import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
-import '../../blocs/referral_reconciliation_listeners.dart';
-import '../../models/entities/referral_recon_service.dart';
+import '../../widgets/localizaed.dart';
 import '../../widgets/project_facility_bloc_wrapper.dart';
 
 @RoutePage()
-class HFCreateReferralWrapperPage extends StatelessWidget {
+class HFCreateReferralWrapperPage extends LocalizedStatefulWidget {
   final bool viewOnly;
-  final ReferralReconciliation? referralReconciliation;
+  final HFReferralModel? referralReconciliation;
   final List<String> cycles;
   final String projectId;
+
   const HFCreateReferralWrapperPage({
     super.key,
     required this.projectId,
@@ -26,38 +29,52 @@ class HFCreateReferralWrapperPage extends StatelessWidget {
   });
 
   @override
+  State<HFCreateReferralWrapperPage> createState() =>
+      _HFCreateReferralWrapperPageState();
+}
+
+class _HFCreateReferralWrapperPageState
+    extends State<HFCreateReferralWrapperPage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (cycles.isEmpty) {
+    if (widget.cycles.isEmpty) {
       return Center(
         child: Text(ReferralReconLocalization.of(context)
             .translate(i18.referralReconciliation.noCyclesFound)),
       );
     } else {
       return ProjectFacilityBlocWrapper(
-        projectId: projectId,
+        projectId: widget.projectId,
         child: BlocProvider(
           create: (_) => ReferralReconServiceDefinitionBloc(
             const ReferralReconServiceDefinitionEmptyState(),
-            referralReconSingleton: ReferralReconSingleton(),
+            serviceDefinitionDataRepository: context.repository<
+                ServiceDefinitionModel, ServiceDefinitionSearchModel>(context),
           )..add(const ReferralReconServiceDefinitionFetchEvent()),
           child: BlocProvider(
             create: (_) => ReferralReconServiceBloc(
               const ReferralReconServiceEmptyState(),
-              referralReconSingleton: ReferralReconSingleton(),
+              serviceDataRepository:
+                  context.repository<ServiceModel, ServiceSearchModel>(context),
             )..add(ReferralReconServiceSearchEvent(
-                  serviceSearchModel: ReferralReconServiceSearchModel(
-                clientId:
-                    referralReconciliation?.hfReferralModel?.clientReferenceId,
+                  serviceSearchModel: ServiceSearchModel(
+                clientId: widget.referralReconciliation?.clientReferenceId,
               ))),
             child: BlocProvider(
               create: (_) => RecordHFReferralBloc(
                 RecordHFReferralState.create(
-                  projectId: projectId,
-                  viewOnly: viewOnly,
-                  hfReferralModel: referralReconciliation?.hfReferralModel,
-                  additionalData: referralReconciliation?.additionalData,
+                  projectId: widget.projectId,
+                  viewOnly: widget.viewOnly,
+                  hfReferralModel: widget.referralReconciliation,
                 ),
-                referralReconSingleton: ReferralReconSingleton(),
+                referralReconDataRepository:
+                    context.repository<HFReferralModel, HFReferralSearchModel>(
+                        context),
               ),
               child: const AutoRouter(),
             ),

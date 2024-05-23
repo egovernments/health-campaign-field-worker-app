@@ -1,11 +1,13 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
+import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 
-import '../models/entities/h_f_referral.dart';
+import '../models/entities/hf_referral.dart';
+import '../utils/typedefs.dart';
 
 // ODE: This file contains the implementation of the RecordHFReferralBloc, which manages the state related to recording and viewing health facility referrals.
 
@@ -17,11 +19,8 @@ typedef RecordHFReferralEmitter = Emitter<RecordHFReferralState>;
 // ODE: The RecordHFReferralBloc is responsible for managing the state related to recording and viewing health facility referrals.
 class RecordHFReferralBloc
     extends Bloc<RecordHFReferralEvent, RecordHFReferralState> {
-  final ReferralReconSingleton referralReconSingleton;
-  RecordHFReferralBloc(
-    super.initialState, {
-    required this.referralReconSingleton,
-  }) {
+  final HFReferralDataRepository? referralReconDataRepository;
+  RecordHFReferralBloc(super.initialState, {this.referralReconDataRepository}) {
     on(_handleSaveFacilityDetails);
     on(_handleCreateHFReferralEntry);
     on(_handleViewHFReferralEntry);
@@ -47,6 +46,16 @@ class RecordHFReferralBloc
     );
   }
 
+  getAdditionalData(Map<String, Object> additionalData) {
+    List<AdditionalField> additionalFields = [];
+
+    additionalData.forEach((key, value) {
+      additionalFields.add(AdditionalField(key, value));
+    });
+
+    return additionalFields;
+  }
+
   // ODE: This method handles creating a new health facility referral entry.
   FutureOr<void> _handleCreateHFReferralEntry(
     RecordHFReferralCreateEntryEvent event,
@@ -60,9 +69,14 @@ class RecordHFReferralBloc
       create: (value) async {
         if (!value.viewOnly) {
           final facilityId = event.hfReferralModel.projectFacilityId;
-          final dateOfEvaluation = int.tryParse(
-              event.additionalData?['dateOfEvaluation'].toString() ??
-                  DateTime.now().millisecondsSinceEpoch.toString());
+          final dateOfEvaluation = int.tryParse(event
+                  .hfReferralModel.additionalFields?.fields
+                  .where((e) =>
+                      e.key == ReferralReconEnums.dateOfEvaluation.toValue())
+                  .first
+                  .value
+                  .toString() ??
+              DateTime.now().millisecondsSinceEpoch.toString());
 
           if (facilityId == null || facilityId.trim().toString().isEmpty) {
             throw const InvalidRecordHFReferralStateException(
@@ -79,17 +93,10 @@ class RecordHFReferralBloc
 
           try {
             if (event.hfReferralModel != null) {
-              referralReconSingleton
-                  .saveReferralReconDetails(ReferralReconciliation(
-                hfReferralModel: event.hfReferralModel,
-                additionalData:
-                    event.additionalData != null ? event.additionalData! : {},
-              ));
-
+              referralReconDataRepository?.create(event.hfReferralModel);
               emit(
                 RecordHFReferralPersistedState(
                   hfReferralModel: event.hfReferralModel,
-                  additionalData: event.additionalData,
                   projectId: value.projectId,
                   facilityId: value.facilityId,
                   dateOfEvaluation: value.dateOfEvaluation,
@@ -106,7 +113,6 @@ class RecordHFReferralBloc
           emit(
             value.copyWith(
               hfReferralModel: value.hfReferralModel,
-              additionalData: value.additionalData,
               viewOnly: value.viewOnly,
             ),
           );
@@ -126,9 +132,14 @@ class RecordHFReferralBloc
       },
       view: (value) async {
         final facilityId = event.hfReferralModel.projectFacilityId;
-        final dateOfEvaluation = int.tryParse(
-            event.additionalData?['dateOfEvaluation'].toString() ??
-                DateTime.now().millisecondsSinceEpoch.toString());
+        final dateOfEvaluation = int.tryParse(event
+                .hfReferralModel.additionalFields?.fields
+                .where((e) =>
+                    e.key == ReferralReconEnums.dateOfEvaluation.toValue())
+                .first
+                .value
+                .toString() ??
+            DateTime.now().millisecondsSinceEpoch.toString());
 
         if (facilityId == null || facilityId.trim().toString().isEmpty) {
           throw const InvalidRecordHFReferralStateException(
@@ -145,7 +156,6 @@ class RecordHFReferralBloc
           emit(
             RecordHFReferralViewState(
               hfReferralModel: event.hfReferralModel,
-              additionalData: event.additionalData,
               projectId: value.projectId,
             ),
           );
@@ -170,12 +180,10 @@ class RecordHFReferralEvent with _$RecordHFReferralEvent {
 
   const factory RecordHFReferralEvent.createReferralEntry({
     required HFReferralModel hfReferralModel,
-    required Map<String, Object>? additionalData,
   }) = RecordHFReferralCreateEntryEvent;
 
   const factory RecordHFReferralEvent.viewReferral({
     required HFReferralModel hfReferralModel,
-    required Map<String, Object>? additionalData,
   }) = RecordHFReferralViewEvent;
 }
 
@@ -190,7 +198,6 @@ class RecordHFReferralState with _$RecordHFReferralState {
     String? healthFacilityCord,
     String? referredBy,
     HFReferralModel? hfReferralModel,
-    Map<String, Object>? additionalData,
     @Default(false) bool viewOnly,
   }) = RecordHFReferralCreateState;
 
@@ -202,7 +209,6 @@ class RecordHFReferralState with _$RecordHFReferralState {
     String? referredBy,
     HFReferralModel? hfReferralModel,
     @Default(false) bool viewOnly,
-    Map<String, Object>? additionalData,
   }) = RecordHFReferralPersistedState;
   const factory RecordHFReferralState.view({
     required String projectId,
@@ -212,7 +218,6 @@ class RecordHFReferralState with _$RecordHFReferralState {
     String? referredBy,
     HFReferralModel? hfReferralModel,
     @Default(false) bool viewOnly,
-    Map<String, Object>? additionalData,
   }) = RecordHFReferralViewState;
   const factory RecordHFReferralState.error({
     String? error,

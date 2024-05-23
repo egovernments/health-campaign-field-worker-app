@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
-import '../../../models/data_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
 
 class LocalSecureStore {

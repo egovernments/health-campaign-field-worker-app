@@ -4,6 +4,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:attendance_management/attendance_management.dart'
+    as attendance_mappers;
 import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
@@ -11,21 +13,29 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
-import 'package:drift/drift.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.init.dart'
+    as inventory_management;
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:uuid/uuid.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart'
+    as referral_reconciliation_mappers;
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/registration_delivery.init.dart'
+    as registration_delivery;
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/search_households/project_beneficiaries_downsync.dart';
-import '../blocs/search_households/search_households.dart';
+import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import '../models/app_config/app_config_model.dart';
 import '../models/data_model.dart';
+import '../models/data_model.init.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
@@ -34,35 +44,6 @@ import 'extensions/extensions.dart';
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
-
-Expression<bool> buildAnd(Iterable<Expression<bool>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value & element);
-
-  return result.equals(true);
-}
-
-Expression<bool> buildOr(Iterable<Expression<bool>> iterable) {
-  if (iterable.isEmpty) return const Constant(true);
-  final result = iterable.reduce((value, element) => value | element);
-
-  return result.equals(true);
-}
-
-class IdGen {
-  static const IdGen _instance = IdGen._internal();
-
-  static IdGen get instance => _instance;
-
-  /// Shorthand for [instance]
-  static IdGen get i => instance;
-
-  final Uuid uuid;
-
-  const IdGen._internal() : uuid = const Uuid();
-
-  String get identifier => uuid.v1();
-}
 
 class CustomValidator {
   /// Validates that control's value must be `true`
@@ -147,7 +128,7 @@ performBackgroundService({
       service.startService();
       if (context != null) {
         DigitToast.show(
-          context!,
+          context,
           options: DigitToastOptions(
             'Background Service Started',
             false,
@@ -205,6 +186,10 @@ double? calculateDistance(Coordinate? start, Coordinate? end) {
   }
 
   return null;
+}
+
+List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
+  return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
 }
 
 Timer makePeriodicTimer(
@@ -278,30 +263,12 @@ final requestData = {
   ],
 };
 
-/// This checks for if the active cycle is a new cycle or its the past cycle,
-/// If the active cycle is same as past cycle then all validations for tracking delivery applies, else validations do not get applied
-bool checkEligibilityForActiveCycle(
-  int activeCycle,
-  HouseholdMemberWrapper householdWrapper,
-) {
-  final pastCycle = (householdWrapper.tasks ?? []).isNotEmpty
-      ? householdWrapper.tasks?.last.additionalFields?.fields
-              .firstWhereOrNull(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
-              )
-              ?.value ??
-          '1'
-      : '1';
-
-  return (activeCycle == int.parse(pastCycle));
-}
-
 /*Check for if the individual falls on the valid age category*/
 
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndSideEffect(
   DigitDOBAge age,
-  ProjectTypeModel? projectType,
+  ProjectType? projectType,
   TaskModel? tasks,
   List<SideEffectModel>? sideEffects,
 ) {
@@ -357,13 +324,13 @@ bool checkIfBeneficiaryRefused(
 
 bool checkIfBeneficiaryReferred(
   List<ReferralModel>? referrals,
-  ProjectCycle? currentCycle,
+  Cycle currentCycle,
 ) {
-  if (currentCycle?.startDate != null && currentCycle?.endDate != null) {
+  if (currentCycle.startDate != null && currentCycle.endDate != null) {
     final isBeneficiaryReferred = (referrals != null &&
         (referrals ?? []).isNotEmpty &&
         referrals.last.clientAuditDetails!.createdTime >=
-            currentCycle!.startDate! &&
+            currentCycle.startDate! &&
         referrals.last.clientAuditDetails!.createdTime <=
             currentCycle.endDate!);
 
@@ -375,7 +342,7 @@ bool checkIfBeneficiaryReferred(
 
 bool checkStatus(
   List<TaskModel>? tasks,
-  ProjectCycle? currentCycle,
+  Cycle? currentCycle,
 ) {
   if (currentCycle != null &&
       currentCycle.startDate != null &&
@@ -411,7 +378,7 @@ bool checkStatus(
 }
 
 bool recordedSideEffect(
-  ProjectCycle? selectedCycle,
+  Cycle? selectedCycle,
   TaskModel? task,
   List<SideEffectModel>? sideEffects,
 ) {
@@ -435,7 +402,7 @@ bool recordedSideEffect(
 
 bool allDosesDelivered(
   List<TaskModel>? tasks,
-  ProjectCycle? selectedCycle,
+  Cycle? selectedCycle,
   List<SideEffectModel>? sideEffects,
   IndividualModel? individualModel,
 ) {
@@ -479,8 +446,8 @@ bool allDosesDelivered(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(
-  ProjectCycleDelivery? currentDelivery,
+DoseCriteriaModel? fetchProductVariant(
+  DeliveryModel? currentDelivery,
   IndividualModel? individualModel,
 ) {
   if (currentDelivery != null && individualModel != null) {
@@ -694,4 +661,16 @@ getSelectedLanguage(AppInitialized state, int index) {
       state.appConfiguration.languages![index].value == selectedLanguage;
 
   return isSelected;
+}
+
+initializeAllMappers() async {
+  List<Future> initializations = [
+    Future(() => initializeMappers()),
+    Future(() => digitDataModel.initializeMappers()),
+    Future(() => registration_delivery.initializeMappers()),
+    Future(() => inventory_management.initializeMappers()),
+    Future(() => attendance_mappers.initializeMappers()),
+    Future(() => referral_reconciliation_mappers.initializeMappers()),
+  ];
+  await Future.wait(initializations);
 }

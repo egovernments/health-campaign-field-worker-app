@@ -1,15 +1,16 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:inventory_management/blocs/inventory_listener.dart';
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/transaction_reason.dart';
-import 'package:inventory_management/models/entities/transaction_type.dart';
 
-import '../models/entities/inventory_facility.dart';
+import '../../utils/typedefs.dart';
+import '../models/entities/stock.dart';
 import '../models/entities/stock_reconciliation.dart';
+import '../models/entities/transaction_reason.dart';
+import '../models/entities/transaction_type.dart';
+import '../utils/utils.dart';
 
 part 'stock_reconciliation.freezed.dart';
 
@@ -18,11 +19,14 @@ typedef StockReconciliationEmitter = Emitter<StockReconciliationState>;
 // Bloc for handling stock reconciliation related events and states
 class StockReconciliationBloc
     extends Bloc<StockReconciliationEvent, StockReconciliationState> {
-  // Constructor for the bloc
+  final StockDataRepository stockRepository;
+  final StockReconciliationDataRepository stockReconciliationRepository;
+
   StockReconciliationBloc(
-    super.initialState,
-  ) {
-    // Registering the event handlers
+    super.initialState, {
+    required this.stockReconciliationRepository,
+    required this.stockRepository,
+  }) {
     on(_handleSelectFacility);
     on(_handleSelectProduct);
     on(_handleCalculate);
@@ -66,16 +70,33 @@ class StockReconciliationBloc
         (!event.isDistributor && facilityId == null)) return;
 
     // Fetching the stock reconciliation details
-    List<List<StockModel>> stocks =
-        await InventorySingleton().fetchStockReconciliationDetails(
-      productVariantId: productVariantId,
-      facilityId: facilityId!,
-    );
+    final receivedStocks = (await stockRepository.search(
+      StockSearchModel(
+        productVariantId: productVariantId,
+        receiverId: facilityId,
+      ),
+    ))
+        .where((element) =>
+            element.auditDetails != null &&
+            element.auditDetails?.createdBy ==
+                InventorySingleton().loggedInUserUuid)
+        .toList();
+    final sentStocks = (await stockRepository.search(
+      StockSearchModel(
+        productVariantId: productVariantId,
+        senderId: facilityId,
+      ),
+    ))
+        .where((element) =>
+            element.auditDetails != null &&
+            element.auditDetails?.createdBy ==
+                InventorySingleton().loggedInUserUuid)
+        .toList();
 
     // Emitting the state with the fetched stock reconciliation details
     emit(state.copyWith(
       loading: false,
-      stockModels: stocks.expand((e) => e).toList(),
+      stockModels: [...receivedStocks, ...sentStocks],
     ));
   }
 
@@ -86,28 +107,33 @@ class StockReconciliationBloc
   ) async {
     // Emitting the loading state
     emit(state.copyWith(loading: true));
-
     // Saving the stock reconciliation details
-    var isStockReconciliationSaved =
-        await InventorySingleton().saveStockReconciliationDetails(
-      SaveStockReconciliationModel(
-        stockReconciliationModel: event.stockReconciliationModel,
-        additionalData: {
-          'received': state.stockReceived,
-          'issued': state.stockIssued,
-          'returned': state.stockReturned,
-          'lost': state.stockLost,
-          'damaged': state.stockDamaged,
-          'inHand': state.stockInHand,
-        },
+    stockReconciliationRepository.create(
+      event.stockReconciliationModel.copyWith(
+        tenantId: InventorySingleton().tenantId,
+        referenceId: state.projectId,
+        referenceIdType: 'PROJECT',
+        additionalFields: StockReconciliationAdditionalFields(
+          version: 1,
+          fields: [
+            AdditionalField('received', state.stockReceived),
+            AdditionalField('issued', state.stockIssued),
+            AdditionalField('returned', state.stockReturned),
+            AdditionalField('lost', state.stockLost),
+            AdditionalField('damaged', state.stockDamaged),
+            AdditionalField('inHand', state.stockInHand),
+          ],
+        ),
+        rowVersion: 1,
       ),
     );
-
     // Emitting the state with the persisted stock reconciliation details
-    emit(state.copyWith(
-      loading: false,
-      persisted: isStockReconciliationSaved!,
-    ));
+    emit(
+      state.copyWith(
+        loading: false,
+        persisted: true,
+      ),
+    );
   }
 }
 
@@ -116,7 +142,7 @@ class StockReconciliationBloc
 class StockReconciliationEvent with _$StockReconciliationEvent {
   // Event for selecting a facility
   const factory StockReconciliationEvent.selectFacility(
-    InventoryFacilityModel facilityModel, {
+    FacilityModel facilityModel, {
     @Default(false) bool isDistributor,
   }) = StockReconciliationSelectFacilityEvent;
 
@@ -148,7 +174,7 @@ class StockReconciliationState with _$StockReconciliationState {
     @Default(false) bool persisted,
     required String projectId,
     required DateTime dateOfReconciliation,
-    InventoryFacilityModel? facilityModel,
+    FacilityModel? facilityModel,
     String? productVariantId,
     @Default([]) List<StockModel> stockModels,
     StockReconciliationModel? stockReconciliationModel,
@@ -164,21 +190,21 @@ class StockReconciliationState with _$StockReconciliationState {
   // Getter for issued stock
   num get stockIssued => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType! == TransactionType.dispatched &&
+            e.transactionType == TransactionType.dispatched &&
             e.transactionReason == null),
       );
 
   // Getter for returned stock
   num get stockReturned => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType! == TransactionType.received &&
+            e.transactionType == TransactionType.received &&
             e.transactionReason == TransactionReason.returned),
       );
 
   // Getter for lost stock
   num get stockLost => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType! == TransactionType.dispatched &&
+            e.transactionType == TransactionType.dispatched &&
             (e.transactionReason == TransactionReason.lostInTransit ||
                 e.transactionReason == TransactionReason.lostInStorage)),
       );
@@ -186,7 +212,7 @@ class StockReconciliationState with _$StockReconciliationState {
   // Getter for damaged stock
   num get stockDamaged => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType! == TransactionType.dispatched &&
+            e.transactionType == TransactionType.dispatched &&
             (e.transactionReason == TransactionReason.damagedInTransit ||
                 e.transactionReason == TransactionReason.damagedInStorage)),
       );

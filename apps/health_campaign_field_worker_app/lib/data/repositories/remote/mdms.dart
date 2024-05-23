@@ -74,9 +74,11 @@ class MdmsRepository {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
-      return app_configuration.AppConfigPrimaryWrapperModel.fromJson(
+      final appCon = app_configuration.AppConfigPrimaryWrapperModel.fromJson(
         json.decode(response.toString())['MdmsRes'],
       );
+
+      return appCon;
     } on DioError catch (e) {
       AppLogger.instance.error(
         title: 'MDMS Repository',
@@ -125,152 +127,166 @@ class MdmsRepository {
       rowVersionList.add(rowVersion);
     }
 
-    result.appConfig?.appConfiglist?.forEach((element) {
-      final backgroundServiceConfig = BackgroundServiceConfig()
-        ..apiConcurrency = element.backgroundServiceConfig?.apiConcurrency
-        ..batteryPercentCutOff =
-            element.backgroundServiceConfig?.batteryPercentCutOff
-        ..serviceInterval = element.backgroundServiceConfig?.serviceInterval;
+    final element = result.hcmWrapperModel;
+    final appConfig = result.hcmWrapperModel?.appConfig.first;
+    final commonMasters = result.commonMasters;
+    final backgroundServiceConfig = BackgroundServiceConfig()
+      ..apiConcurrency = element?.backgroundServiceConfig?.first.apiConcurrency
+      ..batteryPercentCutOff =
+          element?.backgroundServiceConfig?.first.batteryPercentCutOff
+      ..serviceInterval =
+          element?.backgroundServiceConfig?.first.serviceInterval;
 
-      appConfiguration
-        ..networkDetection = element.networkDetection
-        ..persistenceMode = element.persistenceMode
-        ..syncMethod = element.syncMethod
-        ..syncTrigger = element.syncTrigger
-        ..tenantId = element.tenantId
-        ..maxRadius = element.maxRadius
-        ..backgroundServiceConfig = backgroundServiceConfig;
+    appConfiguration
+      ..networkDetection = appConfig?.networkDetection
+      ..persistenceMode = appConfig?.persistenceMode
+      ..syncMethod = appConfig?.syncMethod
+      ..syncTrigger = appConfig?.syncTrigger
+      ..tenantId = appConfig?.tenantId
+      ..maxRadius = appConfig?.maxRadius
+      ..backgroundServiceConfig = backgroundServiceConfig;
 
-      final List<Languages> languageList = element.languages.map((element) {
-        final languages = Languages()
-          ..label = element.label
-          ..value = element.value;
+    final List<Languages>? languageList =
+        commonMasters?.stateInfo.first.languages.map((element) {
+      final languages = Languages()
+        ..label = element.label
+        ..value = element.value;
 
-        return languages;
-      }).toList();
+      return languages;
+    }).toList();
 
-      final List<BandwidthBatchSize> bandwidthBatchSize =
-          element.bandWidthBatchSize.map((e) {
-        final bandwithBatchSizeElement = BandwidthBatchSize()
-          ..batchSize = e.batchSize
-          ..maxRange = e.maxRange
-          ..minRange = e.minRange;
+    final List<BandwidthBatchSize>? bandwidthBatchSize =
+        element?.bandWidthBatchSize.map((e) {
+      final bandwidthBatchSizeElement = BandwidthBatchSize()
+        ..batchSize = e.batchSize
+        ..maxRange = e.maxRange
+        ..minRange = e.minRange;
 
-        return bandwithBatchSizeElement;
-      }).toList();
-      final List<CallSupportList> callSupportList =
-          element.callSupportOptions!.map((element) {
-        final callNumber = CallSupportList()
-          ..name = element.name
-          ..code = element.code;
+      return bandwidthBatchSizeElement;
+    }).toList();
 
-        return callNumber;
-      }).toList();
+    final List<BandwidthBatchSize>? downSyncBandWidthBatchSize =
+        element?.downSyncBandWidthBatchSize.map((e) {
+      final bandwidthBatchSizeElement = BandwidthBatchSize()
+        ..batchSize = e.batchSize
+        ..maxRange = e.maxRange
+        ..minRange = e.minRange;
 
-      final List<HouseholdDeletionReasonOptions>
-          householdDeletionReasonOptions =
-          element.householdDeletionReasonOptions.map((element) {
-        final deletionReasonOption = HouseholdDeletionReasonOptions()
-          ..name = element.value
-          ..code = element.code;
+      return bandwidthBatchSizeElement;
+    }).toList();
+    final List<CallSupportList>? callSupportList =
+        element?.callSupportOptions!.map((element) {
+      final callNumber = CallSupportList()
+        ..name = element.name
+        ..code = element.code;
 
-        return deletionReasonOption;
-      }).toList();
+      return callNumber;
+    }).toList();
 
-      final List<HouseholdMemberDeletionReasonOptions>
-          householdMemberDeletionReasonOptions =
-          element.householdMemberDeletionReasonOptions.map((element) {
-        final deletionReasonOption = HouseholdMemberDeletionReasonOptions()
-          ..name = element.value
-          ..code = element.code;
+    final List<HouseholdDeletionReasonOptions>? householdDeletionReasonOptions =
+        element?.householdDeletionReasonOptions.map((element) {
+      final deletionReasonOption = HouseholdDeletionReasonOptions()
+        ..name = element.value
+        ..code = element.code;
 
-        return deletionReasonOption;
-      }).toList();
+      return deletionReasonOption;
+    }).toList();
 
-      final List<GenderOptions> genderOptions =
-          element.genderOptions.map((element) {
-        final genderOption = GenderOptions()
-          ..name = element.name
-          ..code = element.code;
+    final List<HouseholdMemberDeletionReasonOptions>?
+        householdMemberDeletionReasonOptions =
+        element?.householdMemberDeletionReasonOptions.map((element) {
+      final deletionReasonOption = HouseholdMemberDeletionReasonOptions()
+        ..name = element.value
+        ..code = element.code;
 
-        return genderOption;
-      }).toList();
+      return deletionReasonOption;
+    }).toList();
 
-      final List<IdTypeOptions> idTypeOptions =
-          element.idTypeOptions.map((element) {
-        final idOption = IdTypeOptions()
-          ..name = element.name
-          ..code = element.code;
+    final List<GenderOptions>? genderOptions =
+        commonMasters?.genderType.map((element) {
+      final genderOption = GenderOptions()
+        ..name = element.name ?? ''
+        ..code = element.code;
 
-        return idOption;
-      }).toList();
+      return genderOption;
+    }).toList();
 
-      final List<ChecklistTypes> checklistTypes =
-          element.checklistTypes.map((e) {
-        final checklist = ChecklistTypes()
-          ..name = e.name
-          ..code = e.code;
+    final List<IdTypeOptions>? idTypeOptions =
+        element?.idTypeOptions.map((element) {
+      final idOption = IdTypeOptions()
+        ..name = element.name
+        ..code = element.code;
 
-        return checklist;
-      }).toList();
+      return idOption;
+    }).toList();
 
-      final List<TransportTypes> transportTypes =
-          element.transportTypes.map((e) {
-        final transportTypes = TransportTypes()
-          ..name = e.name
-          ..code = e.code;
+    final List<ChecklistTypes>? checklistTypes =
+        element?.checklistTypes.map((e) {
+      final checklist = ChecklistTypes()
+        ..name = e.name
+        ..code = e.code;
 
-        return transportTypes;
-      }).toList();
+      return checklist;
+    }).toList();
 
-      final List<DeliveryCommentOptions> deliveryCommentOptions =
-          element.deliveryCommentOptions.map((element) {
-        final deliveryCommentOption = DeliveryCommentOptions()
-          ..name = element.name
-          ..code = element.code;
+    final List<TransportTypes>? transportTypes =
+        element?.transportTypes.map((e) {
+      final transportTypes = TransportTypes()
+        ..name = e.name
+        ..code = e.code;
 
-        return deliveryCommentOption;
-      }).toList();
+      return transportTypes;
+    }).toList();
 
-      final List<Interfaces> interfaceList =
-          element.backendInterface.interface.map((e) {
-        final config = Config()..localStoreTTL = e.config.localStoreTTL;
+    final List<DeliveryCommentOptions>? deliveryCommentOptions =
+        element?.deliveryCommentOptions.map((element) {
+      final deliveryCommentOption = DeliveryCommentOptions()
+        ..name = element.name
+        ..code = element.code;
 
-        final interfaces = Interfaces()
-          ..name = e.name
-          ..type = e.type
-          ..confg = config;
+      return deliveryCommentOption;
+    }).toList();
 
-        return interfaces;
-      }).toList();
+    final List<Interfaces>? interfaceList =
+        element?.backendInterface.first.interface.map((e) {
+      final config = Config()..localStoreTTL = e.config.localStoreTTL;
 
-      final List<ComplaintTypes>? complaintTypesList =
-          pgrServiceDefinitions.serviceDefinitionWrapper?.definition.map((e) {
-        final types = ComplaintTypes()
-          ..name = e.name
-          ..code = e.serviceCode;
+      final interfaces = Interfaces()
+        ..name = e.name
+        ..type = e.type
+        ..confg = config;
 
-        return types;
-      }).toList();
+      return interfaces;
+    }).toList();
 
-      final backendInterface = BackendInterface()..interfaces = interfaceList;
-      appConfiguration.genderOptions = genderOptions;
-      appConfiguration.idTypeOptions = idTypeOptions;
-      appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
-      appConfiguration.householdDeletionReasonOptions =
-          householdDeletionReasonOptions;
-      appConfiguration.householdMemberDeletionReasonOptions =
-          householdMemberDeletionReasonOptions;
-      appConfiguration.checklistTypes = checklistTypes;
-      appConfiguration.transportTypes = transportTypes;
-      appConfiguration.backendInterface = backendInterface;
-      appConfiguration.callSupportOptions = callSupportList;
-      appConfiguration.languages = languageList;
-      appConfiguration.complaintTypes = complaintTypesList;
-      appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
-    });
+    final List<ComplaintTypes>? complaintTypesList =
+        pgrServiceDefinitions.serviceDefinitionWrapper?.definition.map((e) {
+      final types = ComplaintTypes()
+        ..name = e.name
+        ..code = e.serviceCode;
+
+      return types;
+    }).toList();
+
+    final backendInterface = BackendInterface()
+      ..interfaces = interfaceList ?? [];
+    appConfiguration.genderOptions = genderOptions;
+    appConfiguration.idTypeOptions = idTypeOptions;
+    appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
+    appConfiguration.householdDeletionReasonOptions =
+        householdDeletionReasonOptions;
+    appConfiguration.householdMemberDeletionReasonOptions =
+        householdMemberDeletionReasonOptions;
+    appConfiguration.checklistTypes = checklistTypes;
+    appConfiguration.transportTypes = transportTypes;
+    appConfiguration.backendInterface = backendInterface;
+    appConfiguration.callSupportOptions = callSupportList;
+    appConfiguration.languages = languageList;
+    appConfiguration.complaintTypes = complaintTypesList;
+    appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
+    appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
     appConfiguration.symptomsTypes =
-        result.symptomsTypes?.symptomsTypeList?.map((e) {
+        result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()
         ..name = e.name
         ..code = e.code
@@ -280,7 +296,7 @@ class MdmsRepository {
     }).toList();
 
     appConfiguration.referralReasons =
-        result.referralReasons?.referralReasonList?.map((e) {
+        result.hcmWrapperModel?.referralReasonList?.map((e) {
       final reasonTypes = ReferralReasons()
         ..name = e.name
         ..code = e.code

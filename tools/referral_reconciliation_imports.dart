@@ -1,3 +1,4 @@
+// Import the required Dart I/O package
 import 'dart:io';
 
 String createCaseCondition(String key, String value) {
@@ -12,132 +13,237 @@ void insertCaseCondition(List<String> lines, String caseCondition) {
   }
 }
 
+// Define the main function
 void main() {
+  // Get the current directory path
   var appDir = Directory.current.path;
 
-  // Define the paths
+  // Define the paths for the application root and the files to be modified
   var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
   var blocDirectoryPath = '$appRoot/blocs/referral_reconciliation';
-  var blocFilePath = '$blocDirectoryPath/hcm_referral_reconciliation_bloc.dart';
+  var blocFilePath = '$blocDirectoryPath/hcm_referral_reconciliation.dart';
   var networkManagerProviderWrapperFilePath =
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
-  var opLogPath =
-      '$appDir/apps/health_campaign_field_worker_app/lib/data/local_store/no_sql/schema/oplog.dart';
-  var typeDefPath = '$appRoot/utils/typedefs.dart';
+  var constantsFilePath = '$appRoot/utils/constants.dart';
+  var utilsFilePath = '$appRoot/utils/utils.dart';
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
-  _createStockBlocFile(
+  _createSkeletonBlocFile(
       blocDirectoryPath: blocDirectoryPath, blocFilePath: blocFilePath);
 
   _addRepoToNetworkManagerProviderWrapper(
-    networkManagerProviderWrapperFilePath:
-        networkManagerProviderWrapperFilePath,
-  );
+      networkManagerProviderWrapperFilePath:
+          networkManagerProviderWrapperFilePath);
 
-  _createOpLogCaseConditions(opLogPath: opLogPath);
+  _addReferralReconConstantsToConstantsFile(
+      constantsFilePath: constantsFilePath);
 
-  _createTypeDefFile(typeDefPath: typeDefPath);
+  _addReferralReconMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
-  // Run dart format on the oplog.dart file
+  // Run dart format on the localization_delegates.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
       .then((ProcessResult results) {
     print(results.stdout);
   });
 
+  // Run dart format on the blocFilePath file
   Process.run('dart', ['format', blocFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
 
+  // Run dart format on the network_manager_provider_wrapper.dart file
   Process.run('dart', ['format', networkManagerProviderWrapperFilePath])
       .then((ProcessResult results) {
     print(results.stdout);
   });
 
-  Process.run('dart', ['format', opLogPath]).then((ProcessResult results) {
+  // Run dart format on the constants.dart file
+  Process.run('dart', ['format', constantsFilePath])
+      .then((ProcessResult results) {
     print(results.stdout);
   });
 
-  Process.run('dart', ['format', typeDefPath]).then((ProcessResult results) {
+  // Run dart format on the utils.dart file
+  Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
 }
 
-void _createTypeDefFile({required String typeDefPath}) {
-  var typeDef = [
-    "typedef HFReferralDataRepository = DataRepository<HcmHFReferralModel, HcmHFReferralSearchModel>;",
+void _addReferralReconMapperToUtilsFile({required String utilsFilePath}) {
+  // Define the referral Reconciliation related lines
+  var referralReconciliationImportStatement = [
+    "import 'package:referral_reconciliation/referral_reconciliation.dart' as referral_reconciliation_mappers;"
+  ];
+  var referralReconciliationInitializationStatement =
+      "referral_reconciliation_mappers.initializeMappers();";
+
+  // Check if the utils.dart file exists
+  var utilsFile = File(utilsFilePath);
+
+  // Read the utils.dart file
+  var utilsFileContent = utilsFile.readAsStringSync();
+
+  // Normalize the whitespace in the file content
+  var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement and delegate already exist in the file
+  // If not, add them to the file
+  if (!normalizedFileContent.contains(
+      referralReconciliationInitializationStatement.replaceAll(
+          RegExp(r'\s'), ''))) {
+    utilsFileContent =
+        '$referralReconciliationInitializationStatement\n$utilsFileContent';
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  if (!utilsFileContent
+      .contains(referralReconciliationInitializationStatement)) {
+    // Add the referralReconciliation related initialization statement to the file
+    var initializeAllMappersIndex =
+        utilsFileContent.indexOf('initializeAllMappers() {');
+    if (initializeAllMappersIndex == -1) {
+      print(
+          'Error: Could not find a place to insert the referralReconciliation initialization statement.');
+      return;
+    }
+    var endOfInitializeAllMappers = initializeAllMappersIndex +
+        utilsFileContent.substring(initializeAllMappersIndex).indexOf('}') +
+        1;
+    utilsFileContent =
+        utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
+            '  ' +
+            referralReconciliationInitializationStatement +
+            '\n' +
+            utilsFileContent.substring(endOfInitializeAllMappers - 1);
+    print(
+        'Referral Reconciliation initialization statement added to utils.dart');
+  }
+
+  // Write the updated content back to the utils.dart file
+  utilsFile.writeAsStringSync(utilsFileContent);
+}
+
+void _addReferralReconConstantsToConstantsFile(
+    {required String constantsFilePath}) {
+  // Define the import statements
+  var importStatements = [
+    "import 'package:referral_reconciliation/referral_reconciliation.dart';",
   ];
 
-  // Read the typedefs file
-  var typedefFile = File(typeDefPath);
-  var typedefFileContent = typedefFile.readAsStringSync();
+  // Define the referralReconciliation configuration
+  var referralReconciliationConfiguration = '''
+// Referral Reconciliation related configuration
+ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
+  ''';
 
-  // Normalize the whitespace in the file content and the typedefs
-  var normalizedFileContent = typedefFileContent.replaceAll(RegExp(r'\s'), '');
+  // Define the referral_reconciliation related lines
+  var referralReconciliationLocalRepositories = [
+    'HFReferralLocalRepository(sql, HFReferralOpLogManager(isar)),',
+  ];
+  var referralReconciliationRemoteRepositories = [
+    'if (value == DataModelType.hFReferral) HFReferralRemoteRepository(dio, actionMap: actions),',
+  ];
 
-  // Check if the typedefs already exist in the file
-  for (var typedefStatement in typeDef) {
-    var normalizedTypedef = typedefStatement.replaceAll(RegExp(r'\s'), '');
+  // Read the constants.dart file
+  var constantsFile = File(constantsFilePath);
+  var constantsFileContent = constantsFile.readAsStringSync();
 
-    if (!normalizedFileContent.contains(normalizedTypedef)) {
-      // Add the typedef to the end of the file
-      typedefFileContent = '$typedefFileContent\n$typedefStatement';
-      print('The typedef was added: $typedefStatement');
-    } else {
-      print('The typedef already exists.');
+  // Normalize the whitespace in the file content and the referral reconciliation configuration
+  var normalizedFileContent =
+      constantsFileContent.replaceAll(RegExp(r'\s'), '');
+  var normalizedReferralReconciliationConfiguration =
+      referralReconciliationConfiguration.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statements already exist in the file
+  for (var importStatement in importStatements) {
+    if (!normalizedFileContent
+        .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+      // Add the import statement after the last import
+      constantsFileContent = constantsFileContent.substring(
+              0, constantsFileContent.indexOf(';') + 1) +
+          '\n' +
+          importStatement +
+          constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
+      print('The import statement was added: $importStatement');
     }
   }
 
-  // Write the updated content back to the file
-  typedefFile.writeAsStringSync(typedefFileContent);
-}
-
-void _createOpLogCaseConditions({required String opLogPath}) {
-  Process.run('chmod', ['+r', opLogPath]);
-
-  final filePath = opLogPath;
-
-  final caseConditions = {
-    'hFReferral':
-        'final entity = HcmHFReferralModelMapper.fromJson(entityString);\n    return entity;',
-  };
-
-  final file = File(filePath);
-  final lines = file.readAsLinesSync();
-
-  for (var entry in caseConditions.entries) {
-    final caseCondition = createCaseCondition(entry.key, entry.value);
-    insertCaseCondition(lines, caseCondition);
+  // Check if the referral reconciliation configuration already exists in the file
+  // If not, add it to the file
+  if (!normalizedFileContent
+      .contains(normalizedReferralReconciliationConfiguration)) {
+    constantsFileContent =
+        '$referralReconciliationConfiguration\n$constantsFileContent';
+    print('The referral reconciliation configuration was added.');
   }
 
-  file.writeAsStringSync(lines.join('\n'));
+  // Check if the referral reconciliation local repositories already exist in the file
+  for (var referralReconciliationLocalRepository
+      in referralReconciliationLocalRepositories) {
+    var normalizedReferralReconciliationLocalRepository =
+        referralReconciliationLocalRepository.replaceAll(RegExp(r'\s'), '');
+
+    if (!normalizedFileContent
+        .contains(normalizedReferralReconciliationLocalRepository)) {
+      // Add the referral reconciliation local repository to the file
+      constantsFileContent = constantsFileContent.replaceFirst(
+          '];', '  $referralReconciliationLocalRepository\n];');
+      print(
+          'The referral reconciliation local repository was added: $referralReconciliationLocalRepository');
+    } else {
+      print('The referral reconciliation local repository already exists.');
+    }
+  }
+
+  // Check if the referral reconciliation remote repositories already exist in the file
+  for (var referralReconciliationRemoteRepository
+      in referralReconciliationRemoteRepositories) {
+    var normalizedReferralReconciliationRemoteRepository =
+        referralReconciliationRemoteRepository.replaceAll(RegExp(r'\s'), '');
+
+    if (!normalizedFileContent
+        .contains(normalizedReferralReconciliationRemoteRepository)) {
+      // Add the referral reconciliation remote repository to the _getRemoteRepositories method
+      var replacementString = constantsFileContent.contains(']);')
+          ? '  $referralReconciliationRemoteRepository,\n]);'
+          : '  $referralReconciliationRemoteRepository\n]);';
+      constantsFileContent =
+          constantsFileContent.replaceFirst(']);', replacementString);
+      print(
+          'The referral reconciliation remote repository was added: $referralReconciliationRemoteRepository');
+    } else {
+      print('The referral reconciliation remote repository already exists.');
+    }
+  }
 }
 
 void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import '../data/repositories/local/hcm_hf_referral.dart';",
-    "import '../data/repositories/remote/hcm_hf_referral.dart';",
+    "import 'package:referral_reconciliation/referral_reconciliation.dart';",
   ];
   var localRepositories = [
-    "RepositoryProvider<\n          LocalRepository<HcmHFReferralModel,\n              HcmHFReferralSearchModel>>(\n        create: (_) => HFReferralLocalRepository(\n          sql,\n          HFReferralOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<HFReferralModel,\n              HFReferralSearchModel>>(\n        create: (_) => HFReferralLocalRepository(\n          sql,\n          HFReferralOpLogManager(isar),\n        ),\n      ),",
   ];
 
-  // Define the remote repositories of inventory
-  var remoteRepositoriesOfReferralRecon = [
+// Define the remote repositories of referral reconciliation
+  var remoteRepositoriesOfReferralReconciliation = [
     "if (value == DataModelType.hFReferral)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HcmHFReferralModel,\n"
-        "          HcmHFReferralSearchModel>>(\n"
+        "      RemoteRepository<HFReferralModel,\n"
+        "          HFReferralSearchModel>>(\n"
         "    create: (_) =>\n"
         "        HFReferralRemoteRepository(dio, actionMap: actions),\n"
-        "  )",
+        "  )"
   ];
 
-  // Read the network_manager_provider_wrapper.dart file
+// Read the network_manager_provider_wrapper.dart file
   var networkManagerProviderWrapperFile =
       File(networkManagerProviderWrapperFilePath);
   var networkManagerProviderWrapperFileContent =
@@ -171,16 +277,17 @@ void _addRepoToNetworkManagerProviderWrapper(
     }
   }
 
-  // Normalize the whitespace in the file content and the remote repository of inventory
+  // Normalize the whitespace in the file content and the remote repository of referral reconciliation
   var normalizedFileContent =
       networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
   for (var repositoryProvider in localRepositories) {
-    var normalizedLocalRepositoryOfInventory =
+    var normalizedLocalRepositoryOfReferralReconciliation =
         repositoryProvider.replaceAll(RegExp(r'\s'), '');
 
-    if (!normalizedFileContent.contains(normalizedLocalRepositoryOfInventory)) {
+    if (!normalizedFileContent
+        .contains(normalizedLocalRepositoryOfReferralReconciliation)) {
       // Add the local repository provider to the file
       networkManagerProviderWrapperFileContent =
           networkManagerProviderWrapperFileContent.replaceFirst(
@@ -191,24 +298,27 @@ void _addRepoToNetworkManagerProviderWrapper(
     }
   }
 
-  // Check if the remote repositories of inventory already exist in the file
-  for (var remoteRepositoryOfReferralRecon
-      in remoteRepositoriesOfReferralRecon) {
-    var normalizedRemoteRepositoryOfInventory =
-        remoteRepositoryOfReferralRecon.replaceAll(RegExp(r'\s'), '');
+// Check if the remote repository of referral reconciliation already exists in the file
+  for (var remoteRepositoryOfReferralReconciliation
+      in remoteRepositoriesOfReferralReconciliation) {
+    var normalizedRemoteRepositoryOfReferralReconciliation =
+        remoteRepositoryOfReferralReconciliation.replaceAll(RegExp(r'\s'), '');
 
     if (!normalizedFileContent
-        .contains(normalizedRemoteRepositoryOfInventory)) {
-      // Add the remote repository of inventory to the _getRemoteRepositories method
+        .contains(normalizedRemoteRepositoryOfReferralReconciliation)) {
+      // Add the remote repository of referral reconciliation to the _getRemoteRepositories method
       var replacementString =
           networkManagerProviderWrapperFileContent.contains(']);')
-              ? '  $remoteRepositoryOfReferralRecon,\n]);'
-              : '  $remoteRepositoryOfReferralRecon\n]);';
+              ? '  $remoteRepositoryOfReferralReconciliation,\n]);'
+              : '  $remoteRepositoryOfReferralReconciliation\n]);';
       networkManagerProviderWrapperFileContent =
           networkManagerProviderWrapperFileContent.replaceFirst(
               ']);', replacementString);
       print(
-          'The remote repository of referral reconciliation was added: $remoteRepositoryOfReferralRecon');
+          'The remote repository of referral reconciliation was added: $remoteRepositoryOfReferralReconciliation');
+    } else {
+      print(
+          'The remote repository of referral reconciliation  already exists.');
     }
   }
 
@@ -217,70 +327,22 @@ void _addRepoToNetworkManagerProviderWrapper(
       .writeAsStringSync(networkManagerProviderWrapperFileContent);
 }
 
-void _createStockBlocFile(
-    {required String blocDirectoryPath, required String blocFilePath}) {
-// Check if the Bloc file already exists
+void _createSkeletonBlocFile(
+    {required String blocFilePath, required String blocDirectoryPath}) {
+  // Check if the Bloc file already exists
+  // If not, create the directory and write the skeleton Bloc class to the file
   var blocFile = File(blocFilePath);
   if (!blocFile.existsSync()) {
-    // Create the directory
     Directory(blocDirectoryPath).createSync(recursive: true);
 
-    // Write the skeleton Bloc class to the file
     blocFile.writeAsStringSync('''
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/models/entities/referral_recon_attributes.dart';
-import 'package:referral_reconciliation/models/entities/referral_recon_service_attributes.dart';
-
 
 class HcmReferralReconBloc extends ReferralReconListener {
   @override
   void callSyncMethod() {
     // TODO: implement callSyncMethod
   }
-
-  @override
-  Future<List<ReferralProjectFacilityModel>>
-      fetchProjectFacilitiesForProjectId() async {
-    // TODO: implement get project facilities
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<ReferralReconServiceDefinitionModel>> fetchSelectedServiceDefinitions(
-      String code) async {
-    // TODO: implement search service definitions
-    throw UnimplementedError();
-  }
-  
-   @override
-  Future<List<ReferralReconServiceDefinitionModel>> fetchAllServiceDefinitions(
-      String code) async {
-    // TODO: implement search service definitions
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> saveReferralReconDetails(
-      ReferralReconciliation saveReferralReconciliation) async {
-    // TODO: implement saveReferralDetails
-  }
-  
-  @override
-  Future<bool> saveServiceRequestDetails(
-      SaveServiceRequest saveServiceRequest) async {
-      // TODO: implement saveServiceRequest
-      }
-      
-  @override
-  Future<List<ReferralReconciliation>> fetchReferralReconciliations(
-      SearchReferralReconciliationClass searchReferralReconciliation) async {
-        // TODO: implement search recorded referrals
-      }
-  @override
-  Future<ReferralReconServiceModel?> fetchSavedChecklist(
-      ReferralReconServiceSearchModel reconServiceSearchModel) async {
-      // TODO: implement search saved checklist for referrals
-      }
 }
 ''');
     print('File $blocFilePath created.');
@@ -292,9 +354,9 @@ class HcmReferralReconBloc extends ReferralReconListener {
 void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Define the import statement and delegate for localization
   var importStatement =
-      "import 'package:referral_reconciliation/blocs/app_localization.dart'\n    as referral_reconciliation_localization;";
+      "import 'package:referral_reconciliation/blocs/app_localization.dart' as referral_reconciliation_localization;";
   var delegate =
-      "referral_reconciliation_localization.ReferralReconLocalization.getDelegate(\n      getLocalizationString(\n        isar,\n        selectedLocale,\n      ),\n      appConfig.languages!,\n    ),";
+      "referral_reconciliation_localization.ReferralReconLocalization.getDelegate(getLocalizationString(isar,selectedLocale,),appConfig.languages!,),";
 
   // Read the localization delegates file
   var localizationDelegatesFile = File(localizationDelegatesFilePath);

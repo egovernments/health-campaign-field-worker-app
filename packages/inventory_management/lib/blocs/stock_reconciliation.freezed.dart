@@ -18,8 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$StockReconciliationEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            InventoryFacilityModel facilityModel, bool isDistributor)
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
@@ -30,7 +29,7 @@ mixin _$StockReconciliationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -41,7 +40,7 @@ mixin _$StockReconciliationEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -110,7 +109,7 @@ abstract class _$$StockReconciliationSelectFacilityEventImplCopyWith<$Res> {
           $Res Function(_$StockReconciliationSelectFacilityEventImpl) then) =
       __$$StockReconciliationSelectFacilityEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({InventoryFacilityModel facilityModel, bool isDistributor});
+  $Res call({FacilityModel facilityModel, bool isDistributor});
 }
 
 /// @nodoc
@@ -133,7 +132,7 @@ class __$$StockReconciliationSelectFacilityEventImplCopyWithImpl<$Res>
       null == facilityModel
           ? _value.facilityModel
           : facilityModel // ignore: cast_nullable_to_non_nullable
-              as InventoryFacilityModel,
+              as FacilityModel,
       isDistributor: null == isDistributor
           ? _value.isDistributor
           : isDistributor // ignore: cast_nullable_to_non_nullable
@@ -150,7 +149,7 @@ class _$StockReconciliationSelectFacilityEventImpl
       {this.isDistributor = false});
 
   @override
-  final InventoryFacilityModel facilityModel;
+  final FacilityModel facilityModel;
   @override
   @JsonKey()
   final bool isDistributor;
@@ -186,8 +185,7 @@ class _$StockReconciliationSelectFacilityEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            InventoryFacilityModel facilityModel, bool isDistributor)
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
@@ -201,7 +199,7 @@ class _$StockReconciliationSelectFacilityEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -215,7 +213,7 @@ class _$StockReconciliationSelectFacilityEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -277,11 +275,11 @@ class _$StockReconciliationSelectFacilityEventImpl
 abstract class StockReconciliationSelectFacilityEvent
     implements StockReconciliationEvent {
   const factory StockReconciliationSelectFacilityEvent(
-          final InventoryFacilityModel facilityModel,
+          final FacilityModel facilityModel,
           {final bool isDistributor}) =
       _$StockReconciliationSelectFacilityEventImpl;
 
-  InventoryFacilityModel get facilityModel;
+  FacilityModel get facilityModel;
   bool get isDistributor;
   @JsonKey(ignore: true)
   _$$StockReconciliationSelectFacilityEventImplCopyWith<
@@ -371,8 +369,7 @@ class _$StockReconciliationSelectProductEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            InventoryFacilityModel facilityModel, bool isDistributor)
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
@@ -386,7 +383,7 @@ class _$StockReconciliationSelectProductEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -400,7 +397,7 @@ class _$StockReconciliationSelectProductEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -545,8 +542,7 @@ class _$StockReconciliationCalculateEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            InventoryFacilityModel facilityModel, bool isDistributor)
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
@@ -560,7 +556,7 @@ class _$StockReconciliationCalculateEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -574,7 +570,7 @@ class _$StockReconciliationCalculateEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -717,8 +713,7 @@ class _$StockReconciliationCreateEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(
-            InventoryFacilityModel facilityModel, bool isDistributor)
+    required TResult Function(FacilityModel facilityModel, bool isDistributor)
         selectFacility,
     required TResult Function(String? productVariantId, bool isDistributor)
         selectProduct,
@@ -732,7 +727,7 @@ class _$StockReconciliationCreateEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult? Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult? Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -746,7 +741,7 @@ class _$StockReconciliationCreateEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(InventoryFacilityModel facilityModel, bool isDistributor)?
+    TResult Function(FacilityModel facilityModel, bool isDistributor)?
         selectFacility,
     TResult Function(String? productVariantId, bool isDistributor)?
         selectProduct,
@@ -824,8 +819,7 @@ mixin _$StockReconciliationState {
   bool get persisted => throw _privateConstructorUsedError;
   String get projectId => throw _privateConstructorUsedError;
   DateTime get dateOfReconciliation => throw _privateConstructorUsedError;
-  InventoryFacilityModel? get facilityModel =>
-      throw _privateConstructorUsedError;
+  FacilityModel? get facilityModel => throw _privateConstructorUsedError;
   String? get productVariantId => throw _privateConstructorUsedError;
   List<StockModel> get stockModels => throw _privateConstructorUsedError;
   StockReconciliationModel? get stockReconciliationModel =>
@@ -847,7 +841,7 @@ abstract class $StockReconciliationStateCopyWith<$Res> {
       bool persisted,
       String projectId,
       DateTime dateOfReconciliation,
-      InventoryFacilityModel? facilityModel,
+      FacilityModel? facilityModel,
       String? productVariantId,
       List<StockModel> stockModels,
       StockReconciliationModel? stockReconciliationModel});
@@ -896,7 +890,7 @@ class _$StockReconciliationStateCopyWithImpl<$Res,
       facilityModel: freezed == facilityModel
           ? _value.facilityModel
           : facilityModel // ignore: cast_nullable_to_non_nullable
-              as InventoryFacilityModel?,
+              as FacilityModel?,
       productVariantId: freezed == productVariantId
           ? _value.productVariantId
           : productVariantId // ignore: cast_nullable_to_non_nullable
@@ -927,7 +921,7 @@ abstract class _$$StockReconciliationStateImplCopyWith<$Res>
       bool persisted,
       String projectId,
       DateTime dateOfReconciliation,
-      InventoryFacilityModel? facilityModel,
+      FacilityModel? facilityModel,
       String? productVariantId,
       List<StockModel> stockModels,
       StockReconciliationModel? stockReconciliationModel});
@@ -975,7 +969,7 @@ class __$$StockReconciliationStateImplCopyWithImpl<$Res>
       facilityModel: freezed == facilityModel
           ? _value.facilityModel
           : facilityModel // ignore: cast_nullable_to_non_nullable
-              as InventoryFacilityModel?,
+              as FacilityModel?,
       productVariantId: freezed == productVariantId
           ? _value.productVariantId
           : productVariantId // ignore: cast_nullable_to_non_nullable
@@ -1018,7 +1012,7 @@ class _$StockReconciliationStateImpl extends _StockReconciliationState {
   @override
   final DateTime dateOfReconciliation;
   @override
-  final InventoryFacilityModel? facilityModel;
+  final FacilityModel? facilityModel;
   @override
   final String? productVariantId;
   final List<StockModel> _stockModels;
@@ -1087,7 +1081,7 @@ abstract class _StockReconciliationState extends StockReconciliationState {
           final bool persisted,
           required final String projectId,
           required final DateTime dateOfReconciliation,
-          final InventoryFacilityModel? facilityModel,
+          final FacilityModel? facilityModel,
           final String? productVariantId,
           final List<StockModel> stockModels,
           final StockReconciliationModel? stockReconciliationModel}) =
@@ -1103,7 +1097,7 @@ abstract class _StockReconciliationState extends StockReconciliationState {
   @override
   DateTime get dateOfReconciliation;
   @override
-  InventoryFacilityModel? get facilityModel;
+  FacilityModel? get facilityModel;
   @override
   String? get productVariantId;
   @override

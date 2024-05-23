@@ -1,21 +1,22 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
-import 'package:auto_route/auto_route.dart';
-import '../../models/entities/referral_project_facility.dart';
+
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
 class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
-  final List<ReferralProjectFacilityModel> projectFacilities;
+  final List<ProjectFacilityModel> projectFacilities;
 
   const ReferralReconProjectFacilitySelectionPage({
-    Key? key,
+    super.key,
     required this.projectFacilities,
-  }) : super(key: key);
+  });
 
   static const _facilityName = 'facilityKey';
   static const _selectedFacility = 'selectedFacilityKey';
@@ -175,7 +176,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
   FormGroup _form() {
     return fb.group({
       _facilityName: FormControl<String>(),
-      _selectedFacility: FormControl<ReferralProjectFacilityModel>(
+      _selectedFacility: FormControl<ProjectFacilityModel>(
         validators: [Validators.required],
       ),
     });
@@ -183,18 +184,18 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
 }
 
 class ProjectFacilityValueAccessor
-    extends ControlValueAccessor<ReferralProjectFacilityModel, String> {
-  final List<ReferralProjectFacilityModel> models;
+    extends ControlValueAccessor<ProjectFacilityModel, String> {
+  final List<ProjectFacilityModel> models;
 
   ProjectFacilityValueAccessor(this.models);
 
   @override
-  String? modelToViewValue(ReferralProjectFacilityModel? modelValue) {
+  String? modelToViewValue(ProjectFacilityModel? modelValue) {
     return modelValue?.id;
   }
 
   @override
-  ReferralProjectFacilityModel? viewToModelValue(String? viewValue) {
+  ProjectFacilityModel? viewToModelValue(String? viewValue) {
     return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }

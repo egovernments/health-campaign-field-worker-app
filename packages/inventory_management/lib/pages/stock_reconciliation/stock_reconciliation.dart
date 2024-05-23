@@ -1,9 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
@@ -11,12 +14,9 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
-import '../../blocs/facility.dart';
 import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
-import '../../models/entities/inventory_facility.dart';
-import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock_reconciliation.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/facility_bloc_wrapper.dart';
@@ -72,12 +72,6 @@ class _StockReconciliationPageState
 
   @override
   void initState() {
-    InventorySingleton().setInitialData(
-      inventoryListener: widget.inventoryListener,
-      projectId: widget.projectId,
-      isDistributor: widget.isDistributor!,
-      isWareHouseMgr: widget.isWareHouseMgr!,
-    );
     super.initState();
   }
 
@@ -100,6 +94,11 @@ class _StockReconciliationPageState
                     projectId: widget.projectId,
                     dateOfReconciliation: DateTime.now(),
                   ),
+                  stockRepository:
+                      context.repository<StockModel, StockSearchModel>(context),
+                  stockReconciliationRepository: context.repository<
+                      StockReconciliationModel,
+                      StockReconciliationSearchModel>(context),
                 ),
                 child: BlocConsumer<StockReconciliationBloc,
                     StockReconciliationState>(
@@ -146,11 +145,11 @@ class _StockReconciliationPageState
                                             final facilityId =
                                                 widget.isDistributor! &&
                                                         !widget.isWareHouseMgr!
-                                                    ? InventoryFacilityModel(
+                                                    ? FacilityModel(
                                                         id: widget
                                                             .loggedInUserUuid!,
                                                       )
-                                                    : InventoryFacilityModel(
+                                                    : FacilityModel(
                                                         id: selectedFacilityId
                                                             .toString(),
                                                       );
@@ -283,7 +282,8 @@ class _StockReconciliationPageState
                                                     child:
                                                         CircularProgressIndicator(),
                                                   ),
-                                              fetched: (facilities) {
+                                              fetched:
+                                                  (facilities, allFacilities) {
                                                 return InkWell(
                                                   onTap: () async {
                                                     final stockReconciliationBloc =
@@ -294,7 +294,7 @@ class _StockReconciliationPageState
                                                             .push(InventoryFacilitySelectionRoute(
                                                                 facilities:
                                                                     facilities))
-                                                        as InventoryFacilityModel?;
+                                                        as FacilityModel?;
 
                                                     if (facility == null)
                                                       return;
@@ -342,7 +342,7 @@ class _StockReconciliationPageState
                                                                 .push(InventoryFacilitySelectionRoute(
                                                                     facilities:
                                                                         facilities))
-                                                            as InventoryFacilityModel?;
+                                                            as FacilityModel?;
 
                                                         if (facility == null)
                                                           return;
@@ -371,8 +371,8 @@ class _StockReconciliationPageState
                                               });
                                         },
                                       ),
-                                    BlocBuilder<ProductVariantBloc,
-                                        ProductVariantState>(
+                                    BlocBuilder<InventoryProductVariantBloc,
+                                        InventoryProductVariantState>(
                                       builder: (context, state) {
                                         return state.maybeWhen(
                                           orElse: () => const Offstage(),

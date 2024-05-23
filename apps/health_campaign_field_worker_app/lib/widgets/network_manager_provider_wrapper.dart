@@ -1,71 +1,26 @@
 import 'dart:io';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:referral_reconciliation/data/repositories/local/hf_referral.dart';
+import 'package:referral_reconciliation/data/repositories/oplog/oplog.dart';
+import 'package:referral_reconciliation/data/repositories/remote/hf_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../data/data_repository.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
-import '../data/repositories/local/boundary.dart';
-import '../data/repositories/local/downsync.dart';
-import '../data/repositories/local/facility.dart';
-import '../data/repositories/local/hcm_attendance.dart';
-import '../data/repositories/local/hcm_hf_referral.dart';
-import '../data/repositories/local/household.dart';
-import '../data/repositories/local/houshold_member.dart';
-import '../data/repositories/local/individual.dart';
-import '../data/repositories/local/pgr_service.dart';
-import '../data/repositories/local/product_variant.dart';
-import '../data/repositories/local/project.dart';
-import '../data/repositories/local/project_beneficiary.dart';
-import '../data/repositories/local/project_facility.dart';
-import '../data/repositories/local/project_resource.dart';
-import '../data/repositories/local/project_staff.dart';
-import '../data/repositories/local/referral.dart';
-import '../data/repositories/local/service.dart';
-import '../data/repositories/local/service_definition.dart';
-import '../data/repositories/local/side_effect.dart';
-import '../data/repositories/local/task.dart';
-import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/auth.dart';
-import '../data/repositories/remote/boundary.dart';
-import '../data/repositories/remote/downsync.dart';
-import '../data/repositories/remote/facility.dart';
-import '../data/repositories/remote/hcm_attendance.dart';
-import '../data/repositories/remote/hcm_hf_referral.dart';
-import '../data/repositories/remote/household.dart';
-import '../data/repositories/remote/household_member.dart';
-import '../data/repositories/remote/individual.dart';
-import '../data/repositories/remote/pgr_service.dart';
-import '../data/repositories/remote/product.dart';
-import '../data/repositories/remote/product_variant.dart';
-import '../data/repositories/remote/project.dart';
-import '../data/repositories/remote/project_beneficiary.dart';
-import '../data/repositories/remote/project_facility.dart';
-import '../data/repositories/remote/project_product_variant.dart';
-import '../data/repositories/remote/project_resource.dart';
-import '../data/repositories/remote/project_staff.dart';
-import '../data/repositories/remote/referral.dart';
-import '../data/repositories/remote/service.dart';
-import '../data/repositories/remote/service_definition.dart';
-import '../data/repositories/remote/side_effect.dart';
-import '../data/repositories/remote/task.dart';
-import '../data/repositories/remote/user.dart';
-import '../models/data_model.dart';
-import '../data/repositories/local/attendance_logs.dart';
-import '../data/repositories/remote/attendance_logs.dart';
-import '../data/repositories/local/stock.dart';
-import '../data/repositories/local/stock_reconciliation.dart';
-import '../data/repositories/remote/stock.dart';
-import '../data/repositories/remote/stock_reconciliation.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -160,6 +115,26 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           FacilityOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<ProjectModel, ProjectSearchModel>>(
+        create: (_) => ProjectLocalRepository(
+          sql,
+          ProjectOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>>(
+        create: (_) => ProjectStaffLocalRepository(
+          sql,
+          ProjectStaffOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>(
+        create: (_) => ProjectFacilityLocalRepository(
+          sql,
+          ProjectFacilityOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
         create: (_) => HouseholdMemberLocalRepository(
@@ -173,12 +148,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           HouseholdOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<LocalRepository<ProjectModel, ProjectSearchModel>>(
-        create: (_) => ProjectLocalRepository(
-          sql,
-          ProjectOpLogManager(isar),
-        ),
-      ),
       RepositoryProvider<
           LocalRepository<ProjectBeneficiaryModel,
               ProjectBeneficiarySearchModel>>(
@@ -187,18 +156,10 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectBeneficiaryOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<
-          LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>(
-        create: (_) => ProjectFacilityLocalRepository(
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => TaskLocalRepository(
           sql,
-          ProjectFacilityOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<ProjectStaffModel, ProjectStaffSearchModel>>(
-        create: (_) => ProjectStaffLocalRepository(
-          sql,
-          ProjectStaffOpLogManager(isar),
+          TaskOpLogManager(isar),
         ),
       ),
       RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
@@ -214,10 +175,23 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
+          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
+        create: (_) => HFReferralLocalRepository(
+          sql,
+          HFReferralOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
           LocalRepository<SideEffectModel, SideEffectSearchModel>>(
         create: (_) => SideEffectLocalRepository(
           sql,
           SideEffectOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<DownsyncModel, DownsyncSearchModel>>(
+        create: (_) => DownsyncLocalRepository(
+          sql,
+          DownsyncOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -263,46 +237,44 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           PgrServiceOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<LocalRepository<DownsyncModel, DownsyncSearchModel>>(
-        create: (_) => DownsyncLocalRepository(
-          sql,
-          DownsyncOpLogManager(isar),
-        ),
+      RepositoryProvider<
+          LocalRepository<AttendanceRegisterModel,
+              AttendanceRegisterSearchModel>>(
+        create: (_) =>
+            AttendanceLocalRepository(sql, AttendanceOpLogManager(isar)),
       ),
       RepositoryProvider<
-          LocalRepository<HcmHFReferralModel, HcmHFReferralSearchModel>>(
-        create: (_) => HFReferralLocalRepository(
-          sql,
-          HFReferralOpLogManager(isar),
-        ),
+          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
+        create: (_) =>
+            AttendanceLogsLocalRepository(sql, AttendanceLogOpLogManager(isar)),
       ),
-      RepositoryProvider<
-          LocalRepository<HCMAttendanceRegisterModel,
-              HCMAttendanceSearchModel>>(
-        create: (_) => AttendanceLocalRepository(
-          sql,
-          AttendanceOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>>(
-        create: (_) => AttendanceLogsLocalRepository(
-          sql,
-          AttendanceLogOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<LocalRepository<HcmStockModel, HcmStockSearchModel>>(
+      RepositoryProvider<LocalRepository<StockModel, StockSearchModel>>(
         create: (_) => StockLocalRepository(
           sql,
           StockOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
-          LocalRepository<HcmStockReconciliationModel,
-              HcmStockReconciliationSearchModel>>(
+          LocalRepository<StockReconciliationModel,
+              StockReconciliationSearchModel>>(
         create: (_) => StockReconciliationLocalRepository(
           sql,
           StockReconciliationOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<AttendanceRegisterModel,
+              AttendanceRegisterSearchModel>>(
+        create: (_) => AttendanceLocalRepository(
+          sql,
+          AttendanceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
+        create: (_) => AttendanceLogsLocalRepository(
+          sql,
+          AttendanceLogOpLogManager(isar),
         ),
       ),
     ];
@@ -336,21 +308,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.household)
-          RepositoryProvider<
-              RemoteRepository<HouseholdModel, HouseholdSearchModel>>(
-            create: (_) => HouseholdRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.householdMember)
-          RepositoryProvider<
-              RemoteRepository<HouseholdMemberModel,
-                  HouseholdMemberSearchModel>>(
-            create: (_) =>
-                HouseholdMemberRemoteRepository(dio, actionMap: actions),
-          ),
         if (value == DataModelType.individual)
           RepositoryProvider<
               RemoteRepository<IndividualModel, IndividualSearchModel>>(
@@ -381,13 +338,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.projectBeneficiary)
-          RepositoryProvider<
-              RemoteRepository<ProjectBeneficiaryModel,
-                  ProjectBeneficiarySearchModel>>(
-            create: (_) =>
-                ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
-          ),
         if (value == DataModelType.projectFacility)
           RepositoryProvider<
               RemoteRepository<ProjectFacilityModel,
@@ -415,13 +365,27 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             create: (_) =>
                 ProjectResourceRemoteRepository(dio, actionMap: actions),
           ),
-        if (value == DataModelType.stock)
+        if (value == DataModelType.household)
           RepositoryProvider<
-              RemoteRepository<HcmStockModel, HcmStockSearchModel>>(
-            create: (_) => StockRemoteRepository(
+              RemoteRepository<HouseholdModel, HouseholdSearchModel>>(
+            create: (_) => HouseholdRemoteRepository(
               dio,
               actionMap: actions,
             ),
+          ),
+        if (value == DataModelType.householdMember)
+          RepositoryProvider<
+              RemoteRepository<HouseholdMemberModel,
+                  HouseholdMemberSearchModel>>(
+            create: (_) =>
+                HouseholdMemberRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.projectBeneficiary)
+          RepositoryProvider<
+              RemoteRepository<ProjectBeneficiaryModel,
+                  ProjectBeneficiarySearchModel>>(
+            create: (_) =>
+                ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
           ),
         if (value == DataModelType.task)
           RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
@@ -513,7 +477,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ),
         if (value == DataModelType.hFReferral)
           RepositoryProvider<
-              RemoteRepository<HcmHFReferralModel, HcmHFReferralSearchModel>>(
+              RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
             create: (_) => HFReferralRemoteRepository(
               dio,
               actionMap: actions,
@@ -521,26 +485,24 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ),
         if (value == DataModelType.attendanceRegister)
           RepositoryProvider<
-              RemoteRepository<HCMAttendanceRegisterModel,
-                  HCMAttendanceSearchModel>>(
+              RemoteRepository<AttendanceRegisterModel,
+                  AttendanceRegisterSearchModel>>(
             create: (_) => AttendanceRemoteRepository(dio, actionMap: actions),
           ),
         if (value == DataModelType.attendance)
           RepositoryProvider<
-              RemoteRepository<HCMAttendanceLogModel,
-                  HCMAttendanceLogSearchModel>>(
+              RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
             create: (_) =>
                 AttendanceLogRemoteRepository(dio, actionMap: actions),
           ),
         if (value == DataModelType.stock)
-          RepositoryProvider<
-              RemoteRepository<HcmStockModel, HcmStockSearchModel>>(
+          RepositoryProvider<RemoteRepository<StockModel, StockSearchModel>>(
             create: (_) => StockRemoteRepository(dio, actionMap: actions),
           ),
         if (value == DataModelType.stockReconciliation)
           RepositoryProvider<
-              RemoteRepository<HcmStockReconciliationModel,
-                  HcmStockReconciliationSearchModel>>(
+              RemoteRepository<StockReconciliationModel,
+                  StockReconciliationSearchModel>>(
             create: (_) =>
                 StockReconciliationRemoteRepository(dio, actionMap: actions),
           ),

@@ -1,4 +1,5 @@
-import 'package:health_campaign_field_worker_app/widgets/beneficiary/beneficiary_card.dart';
+
+import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
 
 import '../widget_app.dart';
 import 'package:flutter_test/flutter_test.dart';

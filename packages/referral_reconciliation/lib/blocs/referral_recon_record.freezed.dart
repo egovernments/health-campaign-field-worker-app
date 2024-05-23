@@ -21,12 +21,9 @@ mixin _$RecordHFReferralEvent {
     required TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)
         saveFacilityDetails,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
+    required TResult Function(HFReferralModel hfReferralModel)
         createReferralEntry,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
-        viewReferral,
+    required TResult Function(HFReferralModel hfReferralModel) viewReferral,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -34,12 +31,8 @@ mixin _$RecordHFReferralEvent {
     TResult? Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult? Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult? Function(HFReferralModel hfReferralModel)? viewReferral,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -47,12 +40,8 @@ mixin _$RecordHFReferralEvent {
     TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult Function(HFReferralModel hfReferralModel)? viewReferral,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -216,12 +205,9 @@ class _$RecordHFReferralSaveFacilityDetailsEventImpl
     required TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)
         saveFacilityDetails,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
+    required TResult Function(HFReferralModel hfReferralModel)
         createReferralEntry,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
-        viewReferral,
+    required TResult Function(HFReferralModel hfReferralModel) viewReferral,
   }) {
     return saveFacilityDetails(
         dateOfEvaluation, facilityId, healthFacilityCord, referredBy);
@@ -233,12 +219,8 @@ class _$RecordHFReferralSaveFacilityDetailsEventImpl
     TResult? Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult? Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult? Function(HFReferralModel hfReferralModel)? viewReferral,
   }) {
     return saveFacilityDetails?.call(
         dateOfEvaluation, facilityId, healthFacilityCord, referredBy);
@@ -250,12 +232,8 @@ class _$RecordHFReferralSaveFacilityDetailsEventImpl
     TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult Function(HFReferralModel hfReferralModel)? viewReferral,
     required TResult orElse(),
   }) {
     if (saveFacilityDetails != null) {
@@ -332,8 +310,7 @@ abstract class _$$RecordHFReferralCreateEntryEventImplCopyWith<$Res> {
           $Res Function(_$RecordHFReferralCreateEntryEventImpl) then) =
       __$$RecordHFReferralCreateEntryEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {HFReferralModel hfReferralModel, Map<String, Object>? additionalData});
+  $Res call({HFReferralModel hfReferralModel});
 }
 
 /// @nodoc
@@ -350,17 +327,12 @@ class __$$RecordHFReferralCreateEntryEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? hfReferralModel = null,
-    Object? additionalData = freezed,
   }) {
     return _then(_$RecordHFReferralCreateEntryEventImpl(
       hfReferralModel: null == hfReferralModel
           ? _value.hfReferralModel
           : hfReferralModel // ignore: cast_nullable_to_non_nullable
               as HFReferralModel,
-      additionalData: freezed == additionalData
-          ? _value._additionalData
-          : additionalData // ignore: cast_nullable_to_non_nullable
-              as Map<String, Object>?,
     ));
   }
 }
@@ -369,26 +341,14 @@ class __$$RecordHFReferralCreateEntryEventImplCopyWithImpl<$Res>
 
 class _$RecordHFReferralCreateEntryEventImpl
     implements RecordHFReferralCreateEntryEvent {
-  const _$RecordHFReferralCreateEntryEventImpl(
-      {required this.hfReferralModel,
-      required final Map<String, Object>? additionalData})
-      : _additionalData = additionalData;
+  const _$RecordHFReferralCreateEntryEventImpl({required this.hfReferralModel});
 
   @override
   final HFReferralModel hfReferralModel;
-  final Map<String, Object>? _additionalData;
-  @override
-  Map<String, Object>? get additionalData {
-    final value = _additionalData;
-    if (value == null) return null;
-    if (_additionalData is EqualUnmodifiableMapView) return _additionalData;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
 
   @override
   String toString() {
-    return 'RecordHFReferralEvent.createReferralEntry(hfReferralModel: $hfReferralModel, additionalData: $additionalData)';
+    return 'RecordHFReferralEvent.createReferralEntry(hfReferralModel: $hfReferralModel)';
   }
 
   @override
@@ -397,14 +357,11 @@ class _$RecordHFReferralCreateEntryEventImpl
         (other.runtimeType == runtimeType &&
             other is _$RecordHFReferralCreateEntryEventImpl &&
             (identical(other.hfReferralModel, hfReferralModel) ||
-                other.hfReferralModel == hfReferralModel) &&
-            const DeepCollectionEquality()
-                .equals(other._additionalData, _additionalData));
+                other.hfReferralModel == hfReferralModel));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, hfReferralModel,
-      const DeepCollectionEquality().hash(_additionalData));
+  int get hashCode => Object.hash(runtimeType, hfReferralModel);
 
   @JsonKey(ignore: true)
   @override
@@ -420,14 +377,11 @@ class _$RecordHFReferralCreateEntryEventImpl
     required TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)
         saveFacilityDetails,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
+    required TResult Function(HFReferralModel hfReferralModel)
         createReferralEntry,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
-        viewReferral,
+    required TResult Function(HFReferralModel hfReferralModel) viewReferral,
   }) {
-    return createReferralEntry(hfReferralModel, additionalData);
+    return createReferralEntry(hfReferralModel);
   }
 
   @override
@@ -436,14 +390,10 @@ class _$RecordHFReferralCreateEntryEventImpl
     TResult? Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult? Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult? Function(HFReferralModel hfReferralModel)? viewReferral,
   }) {
-    return createReferralEntry?.call(hfReferralModel, additionalData);
+    return createReferralEntry?.call(hfReferralModel);
   }
 
   @override
@@ -452,16 +402,12 @@ class _$RecordHFReferralCreateEntryEventImpl
     TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult Function(HFReferralModel hfReferralModel)? viewReferral,
     required TResult orElse(),
   }) {
     if (createReferralEntry != null) {
-      return createReferralEntry(hfReferralModel, additionalData);
+      return createReferralEntry(hfReferralModel);
     }
     return orElse();
   }
@@ -510,12 +456,10 @@ class _$RecordHFReferralCreateEntryEventImpl
 abstract class RecordHFReferralCreateEntryEvent
     implements RecordHFReferralEvent {
   const factory RecordHFReferralCreateEntryEvent(
-          {required final HFReferralModel hfReferralModel,
-          required final Map<String, Object>? additionalData}) =
+          {required final HFReferralModel hfReferralModel}) =
       _$RecordHFReferralCreateEntryEventImpl;
 
   HFReferralModel get hfReferralModel;
-  Map<String, Object>? get additionalData;
   @JsonKey(ignore: true)
   _$$RecordHFReferralCreateEntryEventImplCopyWith<
           _$RecordHFReferralCreateEntryEventImpl>
@@ -529,8 +473,7 @@ abstract class _$$RecordHFReferralViewEventImplCopyWith<$Res> {
           $Res Function(_$RecordHFReferralViewEventImpl) then) =
       __$$RecordHFReferralViewEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call(
-      {HFReferralModel hfReferralModel, Map<String, Object>? additionalData});
+  $Res call({HFReferralModel hfReferralModel});
 }
 
 /// @nodoc
@@ -547,17 +490,12 @@ class __$$RecordHFReferralViewEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? hfReferralModel = null,
-    Object? additionalData = freezed,
   }) {
     return _then(_$RecordHFReferralViewEventImpl(
       hfReferralModel: null == hfReferralModel
           ? _value.hfReferralModel
           : hfReferralModel // ignore: cast_nullable_to_non_nullable
               as HFReferralModel,
-      additionalData: freezed == additionalData
-          ? _value._additionalData
-          : additionalData // ignore: cast_nullable_to_non_nullable
-              as Map<String, Object>?,
     ));
   }
 }
@@ -565,26 +503,14 @@ class __$$RecordHFReferralViewEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$RecordHFReferralViewEventImpl implements RecordHFReferralViewEvent {
-  const _$RecordHFReferralViewEventImpl(
-      {required this.hfReferralModel,
-      required final Map<String, Object>? additionalData})
-      : _additionalData = additionalData;
+  const _$RecordHFReferralViewEventImpl({required this.hfReferralModel});
 
   @override
   final HFReferralModel hfReferralModel;
-  final Map<String, Object>? _additionalData;
-  @override
-  Map<String, Object>? get additionalData {
-    final value = _additionalData;
-    if (value == null) return null;
-    if (_additionalData is EqualUnmodifiableMapView) return _additionalData;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
 
   @override
   String toString() {
-    return 'RecordHFReferralEvent.viewReferral(hfReferralModel: $hfReferralModel, additionalData: $additionalData)';
+    return 'RecordHFReferralEvent.viewReferral(hfReferralModel: $hfReferralModel)';
   }
 
   @override
@@ -593,14 +519,11 @@ class _$RecordHFReferralViewEventImpl implements RecordHFReferralViewEvent {
         (other.runtimeType == runtimeType &&
             other is _$RecordHFReferralViewEventImpl &&
             (identical(other.hfReferralModel, hfReferralModel) ||
-                other.hfReferralModel == hfReferralModel) &&
-            const DeepCollectionEquality()
-                .equals(other._additionalData, _additionalData));
+                other.hfReferralModel == hfReferralModel));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, hfReferralModel,
-      const DeepCollectionEquality().hash(_additionalData));
+  int get hashCode => Object.hash(runtimeType, hfReferralModel);
 
   @JsonKey(ignore: true)
   @override
@@ -615,14 +538,11 @@ class _$RecordHFReferralViewEventImpl implements RecordHFReferralViewEvent {
     required TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)
         saveFacilityDetails,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
+    required TResult Function(HFReferralModel hfReferralModel)
         createReferralEntry,
-    required TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)
-        viewReferral,
+    required TResult Function(HFReferralModel hfReferralModel) viewReferral,
   }) {
-    return viewReferral(hfReferralModel, additionalData);
+    return viewReferral(hfReferralModel);
   }
 
   @override
@@ -631,14 +551,10 @@ class _$RecordHFReferralViewEventImpl implements RecordHFReferralViewEvent {
     TResult? Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult? Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult? Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult? Function(HFReferralModel hfReferralModel)? viewReferral,
   }) {
-    return viewReferral?.call(hfReferralModel, additionalData);
+    return viewReferral?.call(hfReferralModel);
   }
 
   @override
@@ -647,16 +563,12 @@ class _$RecordHFReferralViewEventImpl implements RecordHFReferralViewEvent {
     TResult Function(DateTime dateOfEvaluation, String facilityId,
             String? healthFacilityCord, String? referredBy)?
         saveFacilityDetails,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        createReferralEntry,
-    TResult Function(HFReferralModel hfReferralModel,
-            Map<String, Object>? additionalData)?
-        viewReferral,
+    TResult Function(HFReferralModel hfReferralModel)? createReferralEntry,
+    TResult Function(HFReferralModel hfReferralModel)? viewReferral,
     required TResult orElse(),
   }) {
     if (viewReferral != null) {
-      return viewReferral(hfReferralModel, additionalData);
+      return viewReferral(hfReferralModel);
     }
     return orElse();
   }
@@ -704,12 +616,10 @@ class _$RecordHFReferralViewEventImpl implements RecordHFReferralViewEvent {
 
 abstract class RecordHFReferralViewEvent implements RecordHFReferralEvent {
   const factory RecordHFReferralViewEvent(
-          {required final HFReferralModel hfReferralModel,
-          required final Map<String, Object>? additionalData}) =
+          {required final HFReferralModel hfReferralModel}) =
       _$RecordHFReferralViewEventImpl;
 
   HFReferralModel get hfReferralModel;
-  Map<String, Object>? get additionalData;
   @JsonKey(ignore: true)
   _$$RecordHFReferralViewEventImplCopyWith<_$RecordHFReferralViewEventImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -727,7 +637,6 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)
         create,
     required TResult Function(
@@ -737,8 +646,7 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         persisted,
     required TResult Function(
             String projectId,
@@ -747,8 +655,7 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         view,
     required TResult Function(String? error) error,
   }) =>
@@ -763,7 +670,6 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult? Function(
@@ -773,8 +679,7 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult? Function(
             String projectId,
@@ -783,8 +688,7 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult? Function(String? error)? error,
   }) =>
@@ -799,7 +703,6 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult Function(
@@ -809,8 +712,7 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult Function(
             String projectId,
@@ -819,8 +721,7 @@ mixin _$RecordHFReferralState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult Function(String? error)? error,
     required TResult orElse(),
@@ -887,7 +788,6 @@ abstract class _$$RecordHFReferralCreateStateImplCopyWith<$Res> {
       String? healthFacilityCord,
       String? referredBy,
       HFReferralModel? hfReferralModel,
-      Map<String, Object>? additionalData,
       bool viewOnly});
 }
 
@@ -911,7 +811,6 @@ class __$$RecordHFReferralCreateStateImplCopyWithImpl<$Res>
     Object? healthFacilityCord = freezed,
     Object? referredBy = freezed,
     Object? hfReferralModel = freezed,
-    Object? additionalData = freezed,
     Object? viewOnly = null,
   }) {
     return _then(_$RecordHFReferralCreateStateImpl(
@@ -943,10 +842,6 @@ class __$$RecordHFReferralCreateStateImplCopyWithImpl<$Res>
           ? _value.hfReferralModel
           : hfReferralModel // ignore: cast_nullable_to_non_nullable
               as HFReferralModel?,
-      additionalData: freezed == additionalData
-          ? _value._additionalData
-          : additionalData // ignore: cast_nullable_to_non_nullable
-              as Map<String, Object>?,
       viewOnly: null == viewOnly
           ? _value.viewOnly
           : viewOnly // ignore: cast_nullable_to_non_nullable
@@ -966,9 +861,7 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
       this.healthFacilityCord,
       this.referredBy,
       this.hfReferralModel,
-      final Map<String, Object>? additionalData,
-      this.viewOnly = false})
-      : _additionalData = additionalData;
+      this.viewOnly = false});
 
   @override
   @JsonKey()
@@ -985,23 +878,13 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
   final String? referredBy;
   @override
   final HFReferralModel? hfReferralModel;
-  final Map<String, Object>? _additionalData;
-  @override
-  Map<String, Object>? get additionalData {
-    final value = _additionalData;
-    if (value == null) return null;
-    if (_additionalData is EqualUnmodifiableMapView) return _additionalData;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
-
   @override
   @JsonKey()
   final bool viewOnly;
 
   @override
   String toString() {
-    return 'RecordHFReferralState.create(loading: $loading, projectId: $projectId, facilityId: $facilityId, dateOfEvaluation: $dateOfEvaluation, healthFacilityCord: $healthFacilityCord, referredBy: $referredBy, hfReferralModel: $hfReferralModel, additionalData: $additionalData, viewOnly: $viewOnly)';
+    return 'RecordHFReferralState.create(loading: $loading, projectId: $projectId, facilityId: $facilityId, dateOfEvaluation: $dateOfEvaluation, healthFacilityCord: $healthFacilityCord, referredBy: $referredBy, hfReferralModel: $hfReferralModel, viewOnly: $viewOnly)';
   }
 
   @override
@@ -1022,8 +905,6 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
                 other.referredBy == referredBy) &&
             (identical(other.hfReferralModel, hfReferralModel) ||
                 other.hfReferralModel == hfReferralModel) &&
-            const DeepCollectionEquality()
-                .equals(other._additionalData, _additionalData) &&
             (identical(other.viewOnly, viewOnly) ||
                 other.viewOnly == viewOnly));
   }
@@ -1038,7 +919,6 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
       healthFacilityCord,
       referredBy,
       hfReferralModel,
-      const DeepCollectionEquality().hash(_additionalData),
       viewOnly);
 
   @JsonKey(ignore: true)
@@ -1059,7 +939,6 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)
         create,
     required TResult Function(
@@ -1069,8 +948,7 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         persisted,
     required TResult Function(
             String projectId,
@@ -1079,21 +957,12 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         view,
     required TResult Function(String? error) error,
   }) {
-    return create(
-        loading,
-        projectId,
-        facilityId,
-        dateOfEvaluation,
-        healthFacilityCord,
-        referredBy,
-        hfReferralModel,
-        additionalData,
-        viewOnly);
+    return create(loading, projectId, facilityId, dateOfEvaluation,
+        healthFacilityCord, referredBy, hfReferralModel, viewOnly);
   }
 
   @override
@@ -1107,7 +976,6 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult? Function(
@@ -1117,8 +985,7 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult? Function(
             String projectId,
@@ -1127,21 +994,12 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult? Function(String? error)? error,
   }) {
-    return create?.call(
-        loading,
-        projectId,
-        facilityId,
-        dateOfEvaluation,
-        healthFacilityCord,
-        referredBy,
-        hfReferralModel,
-        additionalData,
-        viewOnly);
+    return create?.call(loading, projectId, facilityId, dateOfEvaluation,
+        healthFacilityCord, referredBy, hfReferralModel, viewOnly);
   }
 
   @override
@@ -1155,7 +1013,6 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult Function(
@@ -1165,8 +1022,7 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult Function(
             String projectId,
@@ -1175,23 +1031,14 @@ class _$RecordHFReferralCreateStateImpl implements RecordHFReferralCreateState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (create != null) {
-      return create(
-          loading,
-          projectId,
-          facilityId,
-          dateOfEvaluation,
-          healthFacilityCord,
-          referredBy,
-          hfReferralModel,
-          additionalData,
-          viewOnly);
+      return create(loading, projectId, facilityId, dateOfEvaluation,
+          healthFacilityCord, referredBy, hfReferralModel, viewOnly);
     }
     return orElse();
   }
@@ -1243,7 +1090,6 @@ abstract class RecordHFReferralCreateState implements RecordHFReferralState {
       final String? healthFacilityCord,
       final String? referredBy,
       final HFReferralModel? hfReferralModel,
-      final Map<String, Object>? additionalData,
       final bool viewOnly}) = _$RecordHFReferralCreateStateImpl;
 
   bool get loading;
@@ -1253,7 +1099,6 @@ abstract class RecordHFReferralCreateState implements RecordHFReferralState {
   String? get healthFacilityCord;
   String? get referredBy;
   HFReferralModel? get hfReferralModel;
-  Map<String, Object>? get additionalData;
   bool get viewOnly;
   @JsonKey(ignore: true)
   _$$RecordHFReferralCreateStateImplCopyWith<_$RecordHFReferralCreateStateImpl>
@@ -1274,8 +1119,7 @@ abstract class _$$RecordHFReferralPersistedStateImplCopyWith<$Res> {
       String? healthFacilityCord,
       String? referredBy,
       HFReferralModel? hfReferralModel,
-      bool viewOnly,
-      Map<String, Object>? additionalData});
+      bool viewOnly});
 }
 
 /// @nodoc
@@ -1298,7 +1142,6 @@ class __$$RecordHFReferralPersistedStateImplCopyWithImpl<$Res>
     Object? referredBy = freezed,
     Object? hfReferralModel = freezed,
     Object? viewOnly = null,
-    Object? additionalData = freezed,
   }) {
     return _then(_$RecordHFReferralPersistedStateImpl(
       projectId: null == projectId
@@ -1329,10 +1172,6 @@ class __$$RecordHFReferralPersistedStateImplCopyWithImpl<$Res>
           ? _value.viewOnly
           : viewOnly // ignore: cast_nullable_to_non_nullable
               as bool,
-      additionalData: freezed == additionalData
-          ? _value._additionalData
-          : additionalData // ignore: cast_nullable_to_non_nullable
-              as Map<String, Object>?,
     ));
   }
 }
@@ -1348,9 +1187,7 @@ class _$RecordHFReferralPersistedStateImpl
       this.healthFacilityCord,
       this.referredBy,
       this.hfReferralModel,
-      this.viewOnly = false,
-      final Map<String, Object>? additionalData})
-      : _additionalData = additionalData;
+      this.viewOnly = false});
 
   @override
   final String projectId;
@@ -1367,19 +1204,10 @@ class _$RecordHFReferralPersistedStateImpl
   @override
   @JsonKey()
   final bool viewOnly;
-  final Map<String, Object>? _additionalData;
-  @override
-  Map<String, Object>? get additionalData {
-    final value = _additionalData;
-    if (value == null) return null;
-    if (_additionalData is EqualUnmodifiableMapView) return _additionalData;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
 
   @override
   String toString() {
-    return 'RecordHFReferralState.persisted(projectId: $projectId, facilityId: $facilityId, dateOfEvaluation: $dateOfEvaluation, healthFacilityCord: $healthFacilityCord, referredBy: $referredBy, hfReferralModel: $hfReferralModel, viewOnly: $viewOnly, additionalData: $additionalData)';
+    return 'RecordHFReferralState.persisted(projectId: $projectId, facilityId: $facilityId, dateOfEvaluation: $dateOfEvaluation, healthFacilityCord: $healthFacilityCord, referredBy: $referredBy, hfReferralModel: $hfReferralModel, viewOnly: $viewOnly)';
   }
 
   @override
@@ -1400,9 +1228,7 @@ class _$RecordHFReferralPersistedStateImpl
             (identical(other.hfReferralModel, hfReferralModel) ||
                 other.hfReferralModel == hfReferralModel) &&
             (identical(other.viewOnly, viewOnly) ||
-                other.viewOnly == viewOnly) &&
-            const DeepCollectionEquality()
-                .equals(other._additionalData, _additionalData));
+                other.viewOnly == viewOnly));
   }
 
   @override
@@ -1414,8 +1240,7 @@ class _$RecordHFReferralPersistedStateImpl
       healthFacilityCord,
       referredBy,
       hfReferralModel,
-      viewOnly,
-      const DeepCollectionEquality().hash(_additionalData));
+      viewOnly);
 
   @JsonKey(ignore: true)
   @override
@@ -1436,7 +1261,6 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)
         create,
     required TResult Function(
@@ -1446,8 +1270,7 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         persisted,
     required TResult Function(
             String projectId,
@@ -1456,20 +1279,12 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         view,
     required TResult Function(String? error) error,
   }) {
-    return persisted(
-        projectId,
-        facilityId,
-        dateOfEvaluation,
-        healthFacilityCord,
-        referredBy,
-        hfReferralModel,
-        viewOnly,
-        additionalData);
+    return persisted(projectId, facilityId, dateOfEvaluation,
+        healthFacilityCord, referredBy, hfReferralModel, viewOnly);
   }
 
   @override
@@ -1483,7 +1298,6 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult? Function(
@@ -1493,8 +1307,7 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult? Function(
             String projectId,
@@ -1503,20 +1316,12 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult? Function(String? error)? error,
   }) {
-    return persisted?.call(
-        projectId,
-        facilityId,
-        dateOfEvaluation,
-        healthFacilityCord,
-        referredBy,
-        hfReferralModel,
-        viewOnly,
-        additionalData);
+    return persisted?.call(projectId, facilityId, dateOfEvaluation,
+        healthFacilityCord, referredBy, hfReferralModel, viewOnly);
   }
 
   @override
@@ -1530,7 +1335,6 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult Function(
@@ -1540,8 +1344,7 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult Function(
             String projectId,
@@ -1550,22 +1353,14 @@ class _$RecordHFReferralPersistedStateImpl
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (persisted != null) {
-      return persisted(
-          projectId,
-          facilityId,
-          dateOfEvaluation,
-          healthFacilityCord,
-          referredBy,
-          hfReferralModel,
-          viewOnly,
-          additionalData);
+      return persisted(projectId, facilityId, dateOfEvaluation,
+          healthFacilityCord, referredBy, hfReferralModel, viewOnly);
     }
     return orElse();
   }
@@ -1610,15 +1405,13 @@ class _$RecordHFReferralPersistedStateImpl
 
 abstract class RecordHFReferralPersistedState implements RecordHFReferralState {
   const factory RecordHFReferralPersistedState(
-          {required final String projectId,
-          final String? facilityId,
-          final DateTime? dateOfEvaluation,
-          final String? healthFacilityCord,
-          final String? referredBy,
-          final HFReferralModel? hfReferralModel,
-          final bool viewOnly,
-          final Map<String, Object>? additionalData}) =
-      _$RecordHFReferralPersistedStateImpl;
+      {required final String projectId,
+      final String? facilityId,
+      final DateTime? dateOfEvaluation,
+      final String? healthFacilityCord,
+      final String? referredBy,
+      final HFReferralModel? hfReferralModel,
+      final bool viewOnly}) = _$RecordHFReferralPersistedStateImpl;
 
   String get projectId;
   String? get facilityId;
@@ -1627,7 +1420,6 @@ abstract class RecordHFReferralPersistedState implements RecordHFReferralState {
   String? get referredBy;
   HFReferralModel? get hfReferralModel;
   bool get viewOnly;
-  Map<String, Object>? get additionalData;
   @JsonKey(ignore: true)
   _$$RecordHFReferralPersistedStateImplCopyWith<
           _$RecordHFReferralPersistedStateImpl>
@@ -1648,8 +1440,7 @@ abstract class _$$RecordHFReferralViewStateImplCopyWith<$Res> {
       String? healthFacilityCord,
       String? referredBy,
       HFReferralModel? hfReferralModel,
-      bool viewOnly,
-      Map<String, Object>? additionalData});
+      bool viewOnly});
 }
 
 /// @nodoc
@@ -1672,7 +1463,6 @@ class __$$RecordHFReferralViewStateImplCopyWithImpl<$Res>
     Object? referredBy = freezed,
     Object? hfReferralModel = freezed,
     Object? viewOnly = null,
-    Object? additionalData = freezed,
   }) {
     return _then(_$RecordHFReferralViewStateImpl(
       projectId: null == projectId
@@ -1703,10 +1493,6 @@ class __$$RecordHFReferralViewStateImplCopyWithImpl<$Res>
           ? _value.viewOnly
           : viewOnly // ignore: cast_nullable_to_non_nullable
               as bool,
-      additionalData: freezed == additionalData
-          ? _value._additionalData
-          : additionalData // ignore: cast_nullable_to_non_nullable
-              as Map<String, Object>?,
     ));
   }
 }
@@ -1721,9 +1507,7 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
       this.healthFacilityCord,
       this.referredBy,
       this.hfReferralModel,
-      this.viewOnly = false,
-      final Map<String, Object>? additionalData})
-      : _additionalData = additionalData;
+      this.viewOnly = false});
 
   @override
   final String projectId;
@@ -1740,19 +1524,10 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
   @override
   @JsonKey()
   final bool viewOnly;
-  final Map<String, Object>? _additionalData;
-  @override
-  Map<String, Object>? get additionalData {
-    final value = _additionalData;
-    if (value == null) return null;
-    if (_additionalData is EqualUnmodifiableMapView) return _additionalData;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(value);
-  }
 
   @override
   String toString() {
-    return 'RecordHFReferralState.view(projectId: $projectId, facilityId: $facilityId, dateOfEvaluation: $dateOfEvaluation, healthFacilityCord: $healthFacilityCord, referredBy: $referredBy, hfReferralModel: $hfReferralModel, viewOnly: $viewOnly, additionalData: $additionalData)';
+    return 'RecordHFReferralState.view(projectId: $projectId, facilityId: $facilityId, dateOfEvaluation: $dateOfEvaluation, healthFacilityCord: $healthFacilityCord, referredBy: $referredBy, hfReferralModel: $hfReferralModel, viewOnly: $viewOnly)';
   }
 
   @override
@@ -1773,9 +1548,7 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             (identical(other.hfReferralModel, hfReferralModel) ||
                 other.hfReferralModel == hfReferralModel) &&
             (identical(other.viewOnly, viewOnly) ||
-                other.viewOnly == viewOnly) &&
-            const DeepCollectionEquality()
-                .equals(other._additionalData, _additionalData));
+                other.viewOnly == viewOnly));
   }
 
   @override
@@ -1787,8 +1560,7 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
       healthFacilityCord,
       referredBy,
       hfReferralModel,
-      viewOnly,
-      const DeepCollectionEquality().hash(_additionalData));
+      viewOnly);
 
   @JsonKey(ignore: true)
   @override
@@ -1808,7 +1580,6 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)
         create,
     required TResult Function(
@@ -1818,8 +1589,7 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         persisted,
     required TResult Function(
             String projectId,
@@ -1828,13 +1598,12 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         view,
     required TResult Function(String? error) error,
   }) {
     return view(projectId, facilityId, dateOfEvaluation, healthFacilityCord,
-        referredBy, hfReferralModel, viewOnly, additionalData);
+        referredBy, hfReferralModel, viewOnly);
   }
 
   @override
@@ -1848,7 +1617,6 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult? Function(
@@ -1858,8 +1626,7 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult? Function(
             String projectId,
@@ -1868,20 +1635,12 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult? Function(String? error)? error,
   }) {
-    return view?.call(
-        projectId,
-        facilityId,
-        dateOfEvaluation,
-        healthFacilityCord,
-        referredBy,
-        hfReferralModel,
-        viewOnly,
-        additionalData);
+    return view?.call(projectId, facilityId, dateOfEvaluation,
+        healthFacilityCord, referredBy, hfReferralModel, viewOnly);
   }
 
   @override
@@ -1895,7 +1654,6 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult Function(
@@ -1905,8 +1663,7 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult Function(
             String projectId,
@@ -1915,15 +1672,14 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult Function(String? error)? error,
     required TResult orElse(),
   }) {
     if (view != null) {
       return view(projectId, facilityId, dateOfEvaluation, healthFacilityCord,
-          referredBy, hfReferralModel, viewOnly, additionalData);
+          referredBy, hfReferralModel, viewOnly);
     }
     return orElse();
   }
@@ -1968,15 +1724,13 @@ class _$RecordHFReferralViewStateImpl implements RecordHFReferralViewState {
 
 abstract class RecordHFReferralViewState implements RecordHFReferralState {
   const factory RecordHFReferralViewState(
-          {required final String projectId,
-          final String? facilityId,
-          final DateTime? dateOfEvaluation,
-          final String? healthFacilityCord,
-          final String? referredBy,
-          final HFReferralModel? hfReferralModel,
-          final bool viewOnly,
-          final Map<String, Object>? additionalData}) =
-      _$RecordHFReferralViewStateImpl;
+      {required final String projectId,
+      final String? facilityId,
+      final DateTime? dateOfEvaluation,
+      final String? healthFacilityCord,
+      final String? referredBy,
+      final HFReferralModel? hfReferralModel,
+      final bool viewOnly}) = _$RecordHFReferralViewStateImpl;
 
   String get projectId;
   String? get facilityId;
@@ -1985,7 +1739,6 @@ abstract class RecordHFReferralViewState implements RecordHFReferralState {
   String? get referredBy;
   HFReferralModel? get hfReferralModel;
   bool get viewOnly;
-  Map<String, Object>? get additionalData;
   @JsonKey(ignore: true)
   _$$RecordHFReferralViewStateImplCopyWith<_$RecordHFReferralViewStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -2067,7 +1820,6 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)
         create,
     required TResult Function(
@@ -2077,8 +1829,7 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         persisted,
     required TResult Function(
             String projectId,
@@ -2087,8 +1838,7 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)
+            bool viewOnly)
         view,
     required TResult Function(String? error) error,
   }) {
@@ -2106,7 +1856,6 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult? Function(
@@ -2116,8 +1865,7 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult? Function(
             String projectId,
@@ -2126,8 +1874,7 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult? Function(String? error)? error,
   }) {
@@ -2145,7 +1892,6 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            Map<String, Object>? additionalData,
             bool viewOnly)?
         create,
     TResult Function(
@@ -2155,8 +1901,7 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         persisted,
     TResult Function(
             String projectId,
@@ -2165,8 +1910,7 @@ class _$RecordHFReferralErrorStateImpl implements RecordHFReferralErrorState {
             String? healthFacilityCord,
             String? referredBy,
             HFReferralModel? hfReferralModel,
-            bool viewOnly,
-            Map<String, Object>? additionalData)?
+            bool viewOnly)?
         view,
     TResult Function(String? error)? error,
     required TResult orElse(),

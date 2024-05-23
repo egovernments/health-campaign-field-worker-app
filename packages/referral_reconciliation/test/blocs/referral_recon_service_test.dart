@@ -1,10 +1,11 @@
 // Importing necessary packages and modules
 import 'package:bloc_test/bloc_test.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_service.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
-import 'package:referral_reconciliation/models/entities/referral_recon_service.dart';
+import 'package:referral_reconciliation/utils/typedefs.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
 
 import '../constants/test_constants.dart';
 
@@ -12,21 +13,31 @@ import '../constants/test_constants.dart';
 class MockReferralReconSingleton extends Mock
     implements ReferralReconSingleton {}
 
+class MockServiceDataRepository extends Mock implements ServiceDataRepository {}
+
+// Fake classes for the search models.
+class FakeServiceSearchModel extends Fake implements ServiceSearchModel {}
+
 void main() {
+  setUpAll(() {
+    registerFallbackValue(FakeServiceSearchModel());
+  });
   group('ReferralReconServiceBloc', () {
     // Declare variables for MockInventorySingleton and FacilityBloc
     late MockReferralReconSingleton mockReferralReconSingleton;
     late ReferralReconServiceBloc serviceBloc;
+    late MockServiceDataRepository mockServiceDataRepository;
     late String mockProjectId;
-    late ReferralReconServiceSearchModel mockServiceSearchModel;
-    late ReferralReconServiceModel mockServiceModel;
+    late ServiceSearchModel mockServiceSearchModel;
+    late ServiceModel mockServiceModel;
 
     setUp(() {
       // Initialize MockReferralReconSingleton and ReferralReconServiceBloc before each test
       mockReferralReconSingleton = MockReferralReconSingleton();
+      mockServiceDataRepository = MockServiceDataRepository();
       serviceBloc = ReferralReconServiceBloc(
         const ReferralReconServiceState.empty(),
-        referralReconSingleton: mockReferralReconSingleton,
+        serviceDataRepository: mockServiceDataRepository,
       );
       mockServiceSearchModel =
           ReferralReconTestConstants().reconServiceSearchModel;
@@ -41,8 +52,8 @@ void main() {
       'emits [ReferralReconServiceSearchState] when getSavedChecklist returns null',
       build: () {
         // Mock the method getSavedChecklist to return null
-        when(() => mockReferralReconSingleton.getSavedChecklist(
-            mockServiceSearchModel)).thenAnswer((_) async => null);
+        when(() => mockServiceDataRepository.search(any()))
+            .thenAnswer((_) async => []);
         return serviceBloc;
       },
       act: (bloc) => bloc.add(ReferralReconServiceEvent.search(
@@ -59,10 +70,8 @@ void main() {
       'emits [ReferralReconServiceSearchState] when getSavedChecklist returns non-null List',
       build: () {
         // Mock the method getSavedChecklist to return a single List
-        when(() => mockReferralReconSingleton
-                .getSavedChecklist(mockServiceSearchModel))
-            .thenAnswer(
-                (_) async => ReferralReconTestConstants().reconServiceModel);
+        when(() => mockServiceDataRepository.search(any())).thenAnswer(
+            (_) async => [ReferralReconTestConstants().reconServiceModel]);
         return serviceBloc;
       },
       act: (bloc) => bloc.add(ReferralReconServiceEvent.search(

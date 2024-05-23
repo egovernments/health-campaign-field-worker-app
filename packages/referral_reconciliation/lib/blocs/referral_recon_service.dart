@@ -1,10 +1,9 @@
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
-
-import '../models/entities/referral_recon_service.dart';
+import 'package:referral_reconciliation/utils/typedefs.dart';
 
 part 'referral_recon_service.freezed.dart';
 
@@ -14,12 +13,10 @@ typedef ReferralReconServiceEmitter = Emitter<ReferralReconServiceState>;
 // Define the Bloc responsible for managing ReferralReconService events and states.
 class ReferralReconServiceBloc
     extends Bloc<ReferralReconServiceEvent, ReferralReconServiceState> {
-  final ReferralReconSingleton referralReconSingleton;
+  final ServiceDataRepository serviceDataRepository;
   // Constructor initializes the Bloc with an initial state and sets up event handlers.
-  ReferralReconServiceBloc(
-    super.initialState, {
-    required this.referralReconSingleton,
-  }) {
+  ReferralReconServiceBloc(super.initialState,
+      {required this.serviceDataRepository}) {
     on(_handleCreate);
     on(_multichecklistChanged);
     on(_handleSearch);
@@ -43,12 +40,11 @@ class ReferralReconServiceBloc
     ReferralReconServiceCreateEvent event,
     ReferralReconServiceEmitter emit,
   ) async {
-    bool? isServiceRequestSaved = false;
-    isServiceRequestSaved = await referralReconSingleton
-        .saveServiceRequestDetails(SaveServiceRequest(
-      serviceModel: event.serviceModel,
-      additionalData: null,
-    ));
+    try {
+      await serviceDataRepository.create(event.serviceModel);
+    } catch (e) {
+      print(e);
+    }
   }
 
   // Event handler for resetting selected services.
@@ -67,10 +63,10 @@ class ReferralReconServiceBloc
     ReferralReconServiceSearchEvent event,
     ReferralReconServiceEmitter emit,
   ) async {
-    final results = await referralReconSingleton
-        .getSavedChecklist(event.serviceSearchModel);
+    final selectedChecklist =
+        await serviceDataRepository.search(event.serviceSearchModel);
     emit(ReferralReconServiceSearchState(
-        serviceList: results != null ? [results] : []));
+        serviceList: selectedChecklist.isNotEmpty ? selectedChecklist : []));
   }
 
   // Event handler for selecting a service.
@@ -90,11 +86,10 @@ class ReferralReconServiceBloc
 @freezed
 class ReferralReconServiceEvent with _$ReferralReconServiceEvent {
   const factory ReferralReconServiceEvent.create(
-          {required ReferralReconServiceModel serviceModel}) =
-      ReferralReconServiceCreateEvent;
+      {required ServiceModel serviceModel}) = ReferralReconServiceCreateEvent;
 
   const factory ReferralReconServiceEvent.search({
-    required ReferralReconServiceSearchModel serviceSearchModel,
+    required ServiceSearchModel serviceSearchModel,
   }) = ReferralReconServiceSearchEvent;
 
   const factory ReferralReconServiceEvent.multichecklistChanged({
@@ -102,11 +97,11 @@ class ReferralReconServiceEvent with _$ReferralReconServiceEvent {
     required bool submitTriggered,
   }) = ReferralReconServiceChecklistEvent;
   const factory ReferralReconServiceEvent.selectService({
-    required ReferralReconServiceModel service,
+    required ServiceModel service,
   }) = ReferralReconServiceSelectionEvent;
 
   const factory ReferralReconServiceEvent.resetSelected({
-    required List<ReferralReconServiceModel> serviceList,
+    required List<ServiceModel> serviceList,
   }) = ReferralReconServiceResetEvent;
 }
 
@@ -125,15 +120,15 @@ class ReferralReconServiceState with _$ReferralReconServiceState {
   }) = ReferralReconServiceMultichecklistChangedState;
 
   const factory ReferralReconServiceState.serviceCreate({
-    required ReferralReconServiceModel serviceList,
-    ReferralReconServiceModel? selectedService,
+    required ServiceModel serviceList,
+    ServiceModel? selectedService,
     @Default(false) bool loading,
     @Default(false) bool isEditing,
   }) = ReferralReconServiceCreateState;
 
   const factory ReferralReconServiceState.serviceSearch({
-    required List<ReferralReconServiceModel> serviceList,
-    ReferralReconServiceModel? selectedService,
+    required List<ServiceModel> serviceList,
+    ServiceModel? selectedService,
     @Default(false) bool loading,
   }) = ReferralReconServiceSearchState;
 }
