@@ -1,7 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/referral_recon_enums.dart';

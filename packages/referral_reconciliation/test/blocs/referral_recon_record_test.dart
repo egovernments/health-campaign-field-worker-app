@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
 import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:referral_reconciliation/utils/utils.dart';
 
 import '../constants/test_constants.dart';

@@ -3,7 +3,7 @@ import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_li
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/models/entities/stock_reconciliation.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';

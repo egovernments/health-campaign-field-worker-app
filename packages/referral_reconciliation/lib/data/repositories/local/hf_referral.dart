@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 
 import '../../../models/entities/hf_additional_fields.dart';
 import '../../../utils/utils.dart';

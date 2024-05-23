@@ -15,7 +15,7 @@ import 'package:provider/provider.dart';
 import 'package:referral_reconciliation/data/repositories/local/hf_referral.dart';
 import 'package:referral_reconciliation/data/repositories/oplog/oplog.dart';
 import 'package:referral_reconciliation/data/repositories/remote/hf_referral.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';

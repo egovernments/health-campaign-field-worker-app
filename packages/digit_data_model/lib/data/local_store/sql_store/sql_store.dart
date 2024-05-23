@@ -25,7 +25,7 @@ import 'tables/name.dart';
 import 'tables/package_tables/attendance.dart';
 import 'tables/package_tables/attendance_register.dart';
 import 'tables/package_tables/attendee.dart';
-import 'tables/package_tables/h_f_referral.dart';
+import 'tables/package_tables/hf_referral.dart';
 import 'tables/package_tables/household.dart';
 import 'tables/package_tables/household_member.dart';
 import 'tables/package_tables/referral.dart';
