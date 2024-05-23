@@ -18,7 +18,7 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import 'environment_config.dart';
-import 'utils 'environment_config.dart';
+import 'utils.dart';
 
 class Constants {
   late Future<Isar> _isar;
@@ -67,12 +67,10 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
-  static const  String checklistPreviewDateFormat = 'dd MMMM yyyy';
-  static const  String defaultDateFormat = 'dd/MM/yyyy';
+  static const String checklistPreviewDateFormat = 'dd MMMM yyyy';
+  static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
-  static const  String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
-
-
+  static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
