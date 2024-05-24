@@ -20,8 +20,6 @@ class DigitCheckboxTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: padding ?? const EdgeInsets.all(0),
       child: InkWell(
@@ -40,7 +38,7 @@ class DigitCheckboxTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   label,
-                  style: Theme.of(context).textTheme.bodyLarge,
+                  style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
                 ),
               ),
             ],

@@ -37,3 +37,7 @@
 ## 0.0.2+1
 
 * Updated digit_components missing utils and components
+
+## 0.0.3+1
+
+* Synced digit_components with flutter 3.16.5 version

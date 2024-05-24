@@ -1,6 +1,8 @@
 import 'package:digit_components/widgets/atoms/checkbox_icon.dart';
 import 'package:flutter/material.dart';
 
+import '../../theme/digit_theme.dart';
+
 /*A single checkbox component */
 class DigitCheckbox extends StatelessWidget {
   final bool value;
@@ -19,8 +21,6 @@ class DigitCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Padding(
       padding: padding,
       child: InkWell(
@@ -29,16 +29,15 @@ class DigitCheckbox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: 24,
-              width: 24,
-              child: CheckboxIcon(
-                value: value,
-              )
-            ),
+                height: 24,
+                width: 24,
+                child: CheckboxIcon(
+                  value: value,
+                )),
             const SizedBox(width: 16),
             Text(
               label,
-              style: Theme.of(context).textTheme.bodyLarge,
+              style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
             ),
           ],
         ),
