@@ -6,31 +6,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
 import '../../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../../widgets/localized.dart';
-import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/stock_reconciliation.dart';
-import '../../models/entities/stock_reconciliation.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/facility_bloc_wrapper.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 @RoutePage()
 class StockReconciliationPage extends LocalizedStatefulWidget {
-  final InventoryListener inventoryListener;
   final String projectId;
   final bool? isDistributor;
   final bool? isWareHouseMgr;
   final String? loggedInUserUuid;
   const StockReconciliationPage({
-    required this.inventoryListener,
     required this.projectId,
     required this.isDistributor,
     required this.isWareHouseMgr,

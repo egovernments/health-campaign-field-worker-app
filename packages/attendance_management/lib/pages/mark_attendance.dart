@@ -15,9 +15,7 @@ import 'package:location/location.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
-import '../models/entities/enum_values.dart';
 import '../router/attendance_router.gm.dart';
-import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';
@@ -222,9 +220,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             header: BackNavigationHelpHeaderWidget(
                               showHelp: true,
-                              handleBack: () {
-                                AttendanceSingleton().callSync();
-                              },
                             ),
                             children: [
                               Padding(
@@ -533,13 +528,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             .translate(i18.attendance.attendanceSubmittedSuccessMsg),
         actionLabel: localizations.translate(i18.attendance.goHome),
         action: () {
-          AttendanceSingleton().callSync();
           context.router.popUntilRoot();
         },
         secondaryLabel:
             localizations.translate(i18.attendance.goToAttendanceRegisters),
         secondaryAction: () {
-          AttendanceSingleton().callSync();
           context.router.popUntilRouteWithName(ManageAttendanceRoute.name);
         },
       ),

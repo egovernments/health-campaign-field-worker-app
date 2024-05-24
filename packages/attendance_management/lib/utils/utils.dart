@@ -1,7 +1,4 @@
 import 'package:digit_data_model/utils/utils.dart';
-import 'package:drift/drift.dart';
-
-import '../blocs/attendance_listeners.dart';
 
 // Singleton class for managing attendance operations
 class AttendanceSingleton {
@@ -13,7 +10,6 @@ class AttendanceSingleton {
 
   AttendanceSingleton._internal();
 
-  AttendanceListeners? _attendanceListeners;
   String _projectId = '';
   String _loggedInIndividualId = '';
   String _loggedInUserUuid = '';
@@ -24,12 +20,10 @@ class AttendanceSingleton {
 
   // Method to set attendance listeners and other information
   void setAttendanceListeners(
-      {required AttendanceListeners attendanceListeners,
-      required String projectId,
+      {required String projectId,
       required String loggedInIndividualId,
       required String loggedInUserUuid,
       required String appVersion}) {
-    _attendanceListeners = attendanceListeners;
     _projectId = projectId;
     _loggedInIndividualId = loggedInIndividualId;
     _loggedInUserUuid = loggedInUserUuid;
@@ -49,9 +43,5 @@ class AttendanceSingleton {
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
     _persistenceConfiguration = configuration;
-  }
-
-  void callSync() {
-    _attendanceListeners?.callSyncMethod();
   }
 }

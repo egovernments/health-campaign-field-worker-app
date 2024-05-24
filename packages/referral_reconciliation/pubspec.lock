@@ -436,7 +436,7 @@ packages:
       path: "../digit_scanner"
       relative: true
     source: path
-    version: "0.0.1+1"
+    version: "0.0.0-dev.1"
   dio:
     dependency: transitive
     description:

@@ -21,9 +21,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
-import '../blocs/inventory/hcm_inventory_bloc.dart';
 import '../blocs/registration_delivery/hcm_registration_delivery.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -358,11 +356,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
             context.router.push(StockReconciliationRoute(
-              inventoryListener: HcmInventoryBloc(
-                context: context,
-                userId: context.loggedInUserUuid,
-                projectId: context.projectId,
-              ),
               projectId: context.projectId,
               isDistributor: context.loggedInUserRoles
                   .where(
@@ -489,11 +482,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                   )
                   .toList()
                   .isNotEmpty,
-              inventoryListener: HcmInventoryBloc(
-                context: context,
-                userId: context.loggedInUserUuid,
-                projectId: context.projectId,
-              ),
               projectId: context.projectId,
               loggedInUserUuid: context.loggedInUserUuid,
             ));
@@ -714,9 +702,6 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         AttendanceSingleton().setAttendanceListeners(
-          attendanceListeners: HCMAttendanceBloc(
-            context: context,
-          ),
           projectId: context.projectId,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
@@ -758,11 +743,6 @@ void setPackagesSingleton(BuildContext context) {
               )
               .toList()
               .isNotEmpty,
-          inventoryListener: HcmInventoryBloc(
-            context: context,
-            userId: context.loggedInUserUuid,
-            projectId: context.projectId,
-          ),
           projectId: context.projectId,
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
