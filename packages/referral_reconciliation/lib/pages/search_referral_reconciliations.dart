@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -11,7 +11,7 @@ import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../blocs/referral_recon_service.dart';
 import '../blocs/search_referral_reconciliations.dart';
-import '../models/entities/h_f_referral.dart';
+import '../models/entities/hf_referral.dart';
 import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -255,7 +255,7 @@ class _SearchReferralReconciliationsPageState
                                       HFCreateReferralWrapperRoute(
                                         viewOnly: false,
                                         referralReconciliation: HFReferralModel(
-                                          clientReferenceId: '',
+                                          clientReferenceId: IdGen.i.identifier,
                                           name: state.searchQuery,
                                           beneficiaryId: state.tag,
                                         ),
@@ -291,17 +291,11 @@ class _SearchReferralReconciliationsPageState
                             context.read<DigitScannerBloc>().add(
                                   const DigitScannerEvent.handleScanner(),
                                 );
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const DigitScannerPage(
-                                  quantity: 1,
-                                  isGS1code: false,
-                                  singleValue: true,
-                                ),
-                                settings:
-                                    const RouteSettings(name: '/qr-scanner'),
-                              ),
-                            );
+                            context.router.push(DigitScannerRoute(
+                              quantity: 1,
+                              isGS1code: false,
+                              singleValue: true,
+                            ));
                           },
                           icon: Icons.qr_code,
                           label: localizations.translate(

@@ -121,6 +121,7 @@ class Scanner {
   String get flashOn => 'FLASH_ON';
   String get flashOff => 'FLASH_OFF';
   String get scannerLabel => 'SCANNER_LABEL';
+  String get barCodeScannerLabel => 'BARCODE_SCANNER';
   String get manualScan => 'MANUAL_SCAN';
   String get enterManualCode => 'ENTER_MANUAL_CODE';
   String get resourcesScanned => 'RESOURCE_SCANNED';
@@ -132,4 +133,6 @@ class Scanner {
   String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
   String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
   String get scannedResourceCountMisMatch => 'SCANNED_RESOURCE_COUNT_MISMATCH';
+  String get barCodesFound => 'BARCODES_FOUND';
+  String get barCode => 'BARCODE';
 }

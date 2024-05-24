@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_record.dart';
@@ -62,8 +63,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
     final theme = Theme.of(context);
     // final router = context.router;
 
-    return BlocConsumer<ProjectFacilityBloc,
-        ProjectFacilityState>(
+    return BlocConsumer<ProjectFacilityBloc, ProjectFacilityState>(
       listener: (context, state) {
         state.whenOrNull(
           empty: () => false,
@@ -356,7 +356,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                   null
           ? DigitDateUtils.getFormattedDateToDateTime(
               DigitDateUtils.getDateFromTimestamp(
-                int.tryParse(value.hfReferralModel!.additionalFields!.fields
+                int.tryParse(value.hfReferralModel?.additionalFields?.fields
                             .where((e) =>
                                 e.key ==
                                 ReferralReconEnums.dateOfEvaluation.toValue())
@@ -365,7 +365,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                             .toString() ??
                         '') ??
                     DateTime.now().millisecondsSinceEpoch,
-                dateFormat: 'dd/MM/yyyy',
+                dateFormat: defaultDateFormat,
               ),
             )
           : DateTime.now(),

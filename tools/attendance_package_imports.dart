@@ -334,31 +334,12 @@ void _createSkeletonBlocFile(
     Directory(blocDirectoryPath).createSync(recursive: true);
 
     blocFile.writeAsStringSync('''
-import 'package:attendance_management/blocs/attendance_listeners.dart';
-import 'package:attendance_management/models/attendance_log.dart';
-import 'package:attendance_management/models/attendance_register.dart';
+import 'package:attendance_management/blocs/attendance_management.dart';
 
 class HcmAttendanceBloc extends AttendanceListeners {
   @override
   void callSyncMethod() {
     // TODO: implement callSyncMethod
-  }
-
-  @override
-  Future<List<AttendanceRegisterModel>> getAttendanceRegisters() {
-    // TODO: implement getAttendanceRegisters
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<AttendanceLogModel>> searchAttendanceLog({required String registerId, required String tenantId, required int entryTime, required int exitTime, required int currentDate}) {
-    // TODO: implement searchAttendanceLog
-    throw UnimplementedError();
-  }
-
-  @override
-  void submitAttendanceDetails(SubmitAttendanceDetails attendanceLogs) {
-    // TODO: implement submitAttendanceDetails
   }
 }
 ''');

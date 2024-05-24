@@ -416,7 +416,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           ),
                         ),
                       )
-                          .toList(),
+                          ,
                       downSyncList.isEmpty
                           ? NoResultCard(
                         align: Alignment.center,

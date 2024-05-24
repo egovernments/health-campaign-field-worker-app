@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
 
-import '../models/entities/h_f_referral.dart';
+import '../models/entities/hf_referral.dart';
 import '../utils/typedefs.dart';
 
 // ODE: This file contains the implementation of the RecordHFReferralBloc, which manages the state related to recording and viewing health facility referrals.

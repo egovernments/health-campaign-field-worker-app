@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +71,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                   },
                 ),
                 const SizedBox(
-                  height: 12,
+                  height: kPadding + 4,
                 ),
                 DigitOutLineButton(
                   onPressed: () {

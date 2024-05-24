@@ -50,7 +50,8 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
               kPadding,
             ),
             child: Text(
-              RegistrationDeliveryLocalization.of(context).translate(i18.common.coreCommonHelp),
+              RegistrationDeliveryLocalization.of(context)
+                  .translate(i18.common.coreCommonHelp),
               overflow: TextOverflow.ellipsis,
             ),
           ),

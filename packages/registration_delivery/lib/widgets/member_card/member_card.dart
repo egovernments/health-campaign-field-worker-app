@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -244,7 +243,8 @@ class MemberCard extends StatelessWidget {
                                       .projectId!,
                                   projectBeneficiaryType:
                                       RegistrationDeliverySingleton()
-                                          .beneficiaryType!,
+                                              .beneficiaryType ??
+                                          BeneficiaryType.individual,
                                 ));
 
                                 final futureTaskList = tasks
@@ -351,7 +351,7 @@ class MemberCard extends StatelessWidget {
                                           .read<DeliverInterventionBloc>()
                                           .add(
                                             DeliverInterventionSubmitEvent(
-                                              task: TaskModel(
+                                              TaskModel(
                                                 projectBeneficiaryClientReferenceId:
                                                     projectBeneficiaryClientReferenceId,
                                                 clientReferenceId:
@@ -400,10 +400,9 @@ class MemberCard extends StatelessWidget {
                                                 address:
                                                     individual.address?.first,
                                               ),
-                                              isEditing: false,
-                                              boundaryModel:
-                                                  RegistrationDeliverySingleton()
-                                                      .boundary!,
+                                              false,
+                                              RegistrationDeliverySingleton()
+                                                  .boundary!,
                                             ),
                                           );
                                       final reloadState =

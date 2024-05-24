@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
-import 'package:referral_reconciliation/models/entities/h_f_referral.dart';
+import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;

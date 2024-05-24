@@ -1,10 +1,10 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:disk_space/disk_space.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -83,6 +83,7 @@ class BeneficiaryDownSyncBloc
       int configuredBatchSize = getBatchSizeToBandwidth(
         sum / speedArray.length,
         event.appConfiguration,
+        isDownSync: true,
       );
       emit(BeneficiaryDownSyncState.getBatchSize(
         configuredBatchSize * 10 > 100 ? 100 : configuredBatchSize * 10,
@@ -96,8 +97,6 @@ class BeneficiaryDownSyncBloc
       emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
     }
   }
-
-
 
   FutureOr<void> _handleCheckTotalCount(
     DownSyncCheckTotalCountEvent event,

@@ -191,7 +191,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           ),
                         );
 
-                        (router.parent() as StackRouter).pop();
+                        (router.parent() as StackRouter).maybePop();
                       },
                     );
                   },

@@ -461,13 +461,12 @@ class _HouseholdOverviewPageState
                                                 ?.cycles
                                                 ?.firstWhereOrNull(
                                                   (e) =>
-                                                      (e.startDate!) <
+                                                      (e.startDate) <
                                                           DateTime.now()
                                                               .millisecondsSinceEpoch &&
-                                                      (e.endDate!) >
+                                                      (e.endDate) >
                                                           DateTime.now()
                                                               .millisecondsSinceEpoch,
-                                                  // Return null when no matching cycle is found
                                                 );
 
                                         final isBeneficiaryRefused =

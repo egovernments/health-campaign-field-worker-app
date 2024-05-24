@@ -124,10 +124,9 @@ class _RecordPastDeliveryDetailsPageState
 
                               // Add the updated task to the event
                               event.add(DeliverInterventionSubmitEvent(
-                                task: result,
-                                isEditing: true,
-                                boundaryModel:
-                                    RegistrationDeliverySingleton().boundary!,
+                                result,
+                                true,
+                                RegistrationDeliverySingleton().boundary!,
                               ));
                             }
                             final bloc = context.read<HouseholdOverviewBloc>();
@@ -141,7 +140,7 @@ class _RecordPastDeliveryDetailsPageState
                             ));
 
                             event.add(DeliverInterventionSearchEvent(
-                              taskSearch: TaskSearchModel(
+                              TaskSearchModel(
                                 projectBeneficiaryClientReferenceId: bloc.state
                                     .householdMemberWrapper.projectBeneficiaries
                                     .map((e) => e.clientReferenceId)
@@ -198,10 +197,9 @@ class _RecordPastDeliveryDetailsPageState
 
                               // Add the updated task to the event
                               event.add(DeliverInterventionSubmitEvent(
-                                task: result,
-                                isEditing: true,
-                                boundaryModel:
-                                    RegistrationDeliverySingleton().boundary!,
+                                result,
+                                true,
+                                RegistrationDeliverySingleton().boundary!,
                               ));
                             }
                             context.router.popUntilRouteWithName(

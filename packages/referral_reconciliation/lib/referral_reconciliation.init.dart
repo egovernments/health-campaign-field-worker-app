@@ -3,8 +3,8 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element
 
-import 'models/entities/h_f_referral.dart' as p0;
 import 'models/entities/hf_additional_fields.dart' as p1;
+import 'models/entities/hf_referral.dart' as p0;
 import 'models/entities/referral_recon_enums.dart' as p2;
 
 void initializeMappers() {

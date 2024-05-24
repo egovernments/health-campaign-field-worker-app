@@ -56,6 +56,9 @@ class AttendeeModel extends EntityModel with AttendeeModelMappable {
     this.identifierID,
     this.individualNumber,
     this.status = -1,
+    super.auditDetails,
+    super.clientAuditDetails,
+    super.isDeleted = false,
   }) : super();
 }
 

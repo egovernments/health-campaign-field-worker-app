@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -412,7 +413,7 @@ class _IndividualDetailsPageState
                                   .idTypeOptions!
                                   .map(
                                 (e) {
-                                  return localizations.translate(e['label']!);
+                                  return localizations.translate(e);
                                 },
                               ).toList(),
                               formControlName: _idTypeKey,
@@ -525,7 +526,7 @@ class _IndividualDetailsPageState
                               menuItems: RegistrationDeliverySingleton()
                                   .genderOptions!
                                   .map(
-                                    (e) => e['label']!,
+                                    (e) => e,
                                   )
                                   .toList(),
                               formControlName: _genderKey,
@@ -663,7 +664,7 @@ class _IndividualDetailsPageState
     final dob = form.control(_dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {
-      dobString = DateFormat('dd/MM/yyyy').format(dob);
+      dobString = DateFormat(Constants().dateFormat).format(dob);
     }
 
     var individual = oldIndividual;
@@ -783,7 +784,7 @@ class _IndividualDetailsPageState
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
-            ? DateFormat('dd/MM/yyyy').parse(
+            ? DateFormat(Constants().dateFormat).parse(
                 individual!.dateOfBirth!,
               )
             : null,
@@ -799,8 +800,8 @@ class _IndividualDetailsPageState
   getGenderOptions(IndividualModel? individual) {
     final options = RegistrationDeliverySingleton().genderOptions;
 
-    return options?.map((e) => e['code']).firstWhereOrNull(
-          (element) => element?.toLowerCase() == individual?.gender?.name,
+    return options?.map((e) => e).firstWhereOrNull(
+          (element) => element.toLowerCase() == individual?.gender?.name,
         );
   }
 }

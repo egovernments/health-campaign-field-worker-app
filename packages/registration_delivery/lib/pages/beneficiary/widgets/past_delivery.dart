@@ -48,6 +48,8 @@ Widget buildTableContent(
   const rowHeight = 82;
   const paddingHeight = kPadding * 2;
   final containerHeight = (numRows + 1) * rowHeight + paddingHeight;
+  const columnWidth = 150.0;
+  const cellHeight = 59.5;
 
   return Container(
     padding: const EdgeInsets.only(
@@ -112,13 +114,13 @@ Widget buildTableContent(
               },
             ),
           ],
-          columnWidth: 150,
+          columnWidth: columnWidth,
           height:
               ((fetchProductVariant(item, individualModel)!.productVariants ??
                               [])
                           .length +
                       1) *
-                  59.5,
+                  cellHeight,
         ),
       ],
     ),

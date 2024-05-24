@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: archive
-      sha256: ecf4273855368121b1caed0d10d4513c7241dfc813f7d3c8933b36622ae9b265
+      sha256: "6bd38d335f0954f5fad9c79e614604fbf03a0e5b975923dd001b6ea965ef5b4b"
       url: "https://pub.dev"
     source: hosted
-    version: "3.5.1"
+    version: "3.6.0"
   args:
     dependency: transitive
     description:
@@ -57,13 +57,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  attendance_management:
-    dependency: "direct overridden"
-    description:
-      path: "../attendance_management"
-      relative: true
-    source: path
-    version: "0.0.0-dev.1"
   audioplayers:
     dependency: transitive
     description:
@@ -236,10 +229,10 @@ packages:
     dependency: transitive
     description:
       name: camera_android
-      sha256: "7b0aba6398afa8475e2bc9115d976efb49cf8db781e922572d443795c04a4f4f"
+      sha256: b350ac087f111467e705b2b76cc1322f7f5bdc122aa83b4b243b0872f390d229
       url: "https://pub.dev"
     source: hosted
-    version: "0.10.9+1"
+    version: "0.10.9+2"
   camera_avfoundation:
     dependency: transitive
     description:
@@ -320,22 +313,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
-  connectivity_plus:
-    dependency: transitive
-    description:
-      name: connectivity_plus
-      sha256: "224a77051d52a11fbad53dd57827594d3bd24f945af28bd70bab376d68d437f0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.2"
-  connectivity_plus_platform_interface:
-    dependency: transitive
-    description:
-      name: connectivity_plus_platform_interface
-      sha256: cf1d1c28f4416f8c654d7dc3cd638ec586076255d407cef3ddbdaf178272a71a
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.4"
   convert:
     dependency: transitive
     description:
@@ -431,14 +408,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  dbus:
-    dependency: transitive
-    description:
-      name: dbus
-      sha256: "365c771ac3b0e58845f39ec6deebc76e3276aa9922b0cc60840712094d9047ac"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.10"
   diff_match_patch:
     dependency: transitive
     description:
@@ -468,13 +437,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1+1"
-  digit_showcase:
-    dependency: "direct overridden"
-    description:
-      path: "../digit_showcase"
-      relative: true
-    source: path
-    version: "0.0.1"
   dio:
     dependency: transitive
     description:
@@ -807,13 +769,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.1"
-  inventory_management:
-    dependency: "direct overridden"
-    description:
-      path: "../inventory_management"
-      relative: true
-    source: path
-    version: "0.0.0-dev.1"
   io:
     dependency: transitive
     description:
@@ -958,14 +913,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  nm:
-    dependency: transitive
-    description:
-      name: nm
-      sha256: "2c9aae4127bdc8993206464fcc063611e0e36e72018696cd9631023a31b24254"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.0"
   node_preamble:
     dependency: transitive
     description:
@@ -1182,13 +1129,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  registration_delivery:
-    dependency: "direct overridden"
-    description:
-      path: "../registration_delivery"
-      relative: true
-    source: path
-    version: "0.0.0-dev.1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

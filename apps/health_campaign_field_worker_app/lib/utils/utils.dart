@@ -33,6 +33,7 @@ import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.da
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
+import '../models/app_config/app_config_model.dart';
 import '../models/data_model.dart';
 import '../models/data_model.init.dart';
 import '../router/app_router.dart';
@@ -185,6 +186,10 @@ double? calculateDistance(Coordinate? start, Coordinate? end) {
   }
 
   return null;
+}
+
+List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
+  return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
 }
 
 Timer makePeriodicTimer(
@@ -658,11 +663,14 @@ getSelectedLanguage(AppInitialized state, int index) {
   return isSelected;
 }
 
-initializeAllMappers() {
-  initializeMappers();
-  digitDataModel.initializeMappers();
-  registration_delivery.initializeMappers();
-  inventory_management.initializeMappers();
-  attendance_mappers.initializeMappers();
-  referral_reconciliation_mappers.initializeMappers();
+initializeAllMappers() async {
+  List<Future> initializations = [
+    Future(() => initializeMappers()),
+    Future(() => digitDataModel.initializeMappers()),
+    Future(() => registration_delivery.initializeMappers()),
+    Future(() => inventory_management.initializeMappers()),
+    Future(() => attendance_mappers.initializeMappers()),
+    Future(() => referral_reconciliation_mappers.initializeMappers()),
+  ];
+  await Future.wait(initializations);
 }

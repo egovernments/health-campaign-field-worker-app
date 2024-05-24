@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:battery_plus/battery_plus.dart';
@@ -47,19 +48,20 @@ Future<void> initializeService(dio, isar) async {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestExactAlarmsPermission();
-  flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.requestNotificationsPermission();
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
+  if (Platform.isAndroid) {
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestExactAlarmsPermission();
+    flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+  }
 
   await service.configure(
     androidConfiguration: AndroidConfiguration(
@@ -261,11 +263,15 @@ getActionMap(List<ServiceRegistry> serviceRegistryList) {
 
 int getBatchSizeToBandwidth(
   double speed,
-  List<AppConfiguration> appConfiguration,
-) {
+  List<AppConfiguration> appConfiguration, {
+  bool isDownSync = false,
+}) {
   int batchSize = 1;
+  final bandwidthBatchSizeConfig = isDownSync
+      ? appConfiguration.first.downSyncBandwidthBatchSize
+      : appConfiguration.first.bandwidthBatchSize;
 
-  final batchResult = appConfiguration.first.bandwidthBatchSize
+  final batchResult = bandwidthBatchSizeConfig
       ?.where(
         (element) => speed >= element.minRange && speed <= element.maxRange,
       )

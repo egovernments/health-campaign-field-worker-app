@@ -2,6 +2,8 @@
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
+import '../data/local_store/no_sql/schema/entity_mapper_listener.dart';
+
 /// This function takes an iterable of boolean expressions and builds an AND expression from them.
 /// If the iterable is empty, it returns a constant true expression.
 /// Otherwise, it reduces the iterable to a single expression using the & operator, and checks if the result equals true.
@@ -54,15 +56,18 @@ class DigitDataModelSingleton {
   int? _syncDownRetryCount;
   int? _retryTimeInterval;
   String? _tenantId, _errorDumpApiPath;
+  EntityMapperListener? _entityListener;
 
   /// Sets the environment configuration variables.
   void setData(
       {required int syncDownRetryCount,
       required int retryTimeInterval,
       required String tenantId,
+      required EntityMapperListener entityMapper,
       required String errorDumpApiPath}) {
     _syncDownRetryCount = syncDownRetryCount;
     _retryTimeInterval = retryTimeInterval;
+    _entityListener = entityMapper;
     _tenantId = tenantId;
     _errorDumpApiPath = errorDumpApiPath;
   }
@@ -72,6 +77,7 @@ class DigitDataModelSingleton {
   get retryTimeInterval => _retryTimeInterval;
   get tenantId => _tenantId;
   get errorDumpApiPath => _errorDumpApiPath;
+  EntityMapperListener? get entityMapper => _entityListener;
 }
 
 /// `PersistenceConfiguration` is an enum that represents the different types of persistence configurations.

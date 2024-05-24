@@ -229,7 +229,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     boundaryBloc.add(BoundaryFindEvent(code: boundary));
     try {
       await boundaryBloc.stream
-          .firstWhere((element) => element.selectedBoundaryMap.isNotEmpty);
+          .firstWhere((element) => element.boundaryList.isNotEmpty);
       context.router.replaceAll([
         HomeRoute(),
         BoundarySelectionRoute(),

@@ -4,10 +4,8 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_scanner/utils/extensions/extensions.dart';
+import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
-import 'package:digit_scanner/widgets/vision_detector_views/painters/barcode_detector_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
@@ -80,11 +78,13 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                         Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.height,
-                          color: Colors.green[300],
+                          color: theme.colorScheme.onSurfaceVariant
+                              .withOpacity(0.5),
                           child: DetectorView(
                             cameraController: _cameraController,
                             cameras: _cameras,
-                            title: 'Barcode Scanner',
+                            title: localizations
+                                .translate(i18.scanner.barCodeScannerLabel),
                             customPaint: _customPaint,
                             text: _text,
                             onImage: _processImage,
@@ -145,8 +145,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               localizations.translate(
                                 i18.scanner.scannerLabel,
                               ),
-                              style: const TextStyle(
-                                color: Colors.white,
+                              style: TextStyle(
+                                color: theme.colorScheme.onError,
                                 fontSize: 16,
                               ),
                             ),
@@ -166,8 +166,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                 localizations.translate(
                                   i18.scanner.manualScan,
                                 ),
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: theme.colorScheme.onError,
                                   fontSize: 20,
                                 ),
                               ),
@@ -203,7 +203,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                   ),
                                   style: TextStyle(
                                     color: theme.colorScheme.secondary,
-                                    fontSize: 20,
+                                    fontSize: theme
+                                        .textTheme.headlineMedium?.fontSize,
                                     decoration: TextDecoration.underline,
                                   ),
                                 ),
@@ -225,7 +226,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               onPressed: () async {
                                 if (widget.isGS1code &&
                                     result.length < widget.quantity) {
-                                  buildDialog();
+                                  DigitScannerUtils()
+                                      .buildDialog(context, localizations);
                                 } else {
                                   final bloc = context.read<DigitScannerBloc>();
                                   bloc.add(DigitScannerEvent.handleScanner(
@@ -254,11 +256,11 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           child: Container(
                             width: 100,
                             height: 120,
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(12.0),
-                                topRight: Radius.circular(12.0),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.onError,
+                              borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(kPadding + 4),
+                                topRight: Radius.circular(kPadding + 4),
                               ),
                             ),
                             child: Column(
@@ -266,9 +268,9 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               mainAxisSize: MainAxisSize.max,
                               children: <Widget>[
                                 Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.only(
+                                  decoration: BoxDecoration(
+                                    color: theme.colorScheme.onError,
+                                    borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(kPadding * 2),
                                       topRight: Radius.circular(kPadding * 2),
                                     ),
@@ -338,9 +340,10 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                                           .value
                                                           .data
                                                           .toString()
-                                                      : trimString(state
-                                                          .qrCodes[index]
-                                                          .toString()),
+                                                      : DigitScannerUtils()
+                                                          .trimString(state
+                                                              .qrCodes[index]
+                                                              .toString()),
                                                 ),
                                               ),
                                               IconButton(
@@ -403,7 +406,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                     )
                   : DigitCard(
                       child: ScrollableContent(
-                        backgroundColor: Colors.white,
+                        backgroundColor: theme.colorScheme.onError,
                         header: GestureDetector(
                           onTap: () {
                             setState(() {
@@ -431,7 +434,10 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             );
                             if (widget.isGS1code &&
                                 result.length < widget.quantity) {
-                              buildDialog();
+                              DigitScannerUtils().buildDialog(
+                                context,
+                                localizations,
+                              );
                             }
                           },
                         ),
@@ -471,195 +477,70 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
     );
   }
 
-  void buildDialog() async {
-    await DigitDialog.show<bool>(
-      context,
-      options: DigitDialogOptions(
-        titleText: localizations.translate(
-          i18.scanner.scannerDialogTitle,
-        ),
-        contentText: localizations.translate(
-          i18.scanner.scannerDialogContent,
-        ),
-        primaryAction: DigitDialogActions(
-          label: localizations.translate(
-            i18.scanner.scannerDialogPrimaryAction,
-          ),
-          action: (ctx) {
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop(false);
-          },
-        ),
-        secondaryAction: DigitDialogActions(
-          label: localizations.translate(
-            i18.scanner.scannerDialogSecondaryAction,
-          ),
-          action: (ctx) {
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop(true);
-
-            Navigator.of(
-              context,
-            ).pop();
-          },
-        ),
-      ),
-    );
-  }
-
   Future<void> _processImage(InputImage inputImage) async {
-    if (!_canProcess) return;
-    if (_isBusy) return;
-    _isBusy = true;
-    setState(() {
-      _text = '';
-    });
-    final barcodes = await _barcodeScanner.processImage(inputImage);
-
-    if (inputImage.metadata?.size != null &&
-        inputImage.metadata?.rotation != null) {
-      if (barcodes.isNotEmpty) {
-        final bloc = context.read<DigitScannerBloc>();
-        if (widget.isGS1code) {
-          try {
-            final parser = GS1BarcodeParser.defaultParser();
-            final parsedResult =
-                parser.parse(barcodes.first.displayValue.toString());
-            final alreadyScanned = bloc.state.barCodes.any((element) =>
-                element.elements.entries.last.value.data ==
-                parsedResult.elements.entries.last.value.data);
-            if (alreadyScanned) {
-              await handleError(
-                i18.scanner.resourceAlreadyScanned,
-              );
-            } else if (widget.quantity > result.length) {
-              await storeValue(parsedResult);
-            } else {
-              await handleError(
-                i18.scanner.scannedResourceCountMisMatch,
-              );
-            }
-          } catch (e) {
-            await handleError(
-              i18.scanner.scannedResourceCountMisMatch,
-            );
-          }
-        } else {
-          if (bloc.state.qrCodes.contains(barcodes.first.displayValue)) {
-            await handleError(
-              i18.scanner.resourceAlreadyScanned,
-            );
-            return;
-          } else {
-            await storeCode(barcodes.first.displayValue.toString());
-          }
-        }
-      }
-
-      final painter = BarcodeDetectorPainter(
-        barcodes,
-        inputImage.metadata!.size,
-        inputImage.metadata!.rotation,
-        _cameraLensDirection,
-      );
-      _customPaint = CustomPaint(painter: painter);
-    } else {
-      String text = 'Barcodes found: ${barcodes.length}\n\n';
-      for (final barcode in barcodes) {
-        text += 'Barcode: ${barcode.rawValue}\n\n';
-      }
-      _text = text;
-      // TODO: set _customPaint to draw boundingRect on top of image
-      _customPaint = null;
-    }
-    _isBusy = false;
-    if (mounted) {
-      setState(() {});
-    }
+    await DigitScannerUtils().processImage(
+      context: context,
+      inputImage: inputImage,
+      canProcess: _canProcess,
+      isBusy: _isBusy,
+      setBusy: (busy) => setState(() => _isBusy = busy),
+      setText: (text) => setState(() => _text = text),
+      updateCustomPaint: (customPaint) => _customPaint = customPaint,
+      isGS1code: widget.isGS1code,
+      quantity: widget.quantity,
+      result: result,
+      handleError: handleErrorWrapper,
+      storeValue: storeValueWrapper,
+      storeCode: storeCodeWrapper,
+      cameraLensDirection: _cameraLensDirection,
+      barcodeScanner: _barcodeScanner,
+      localizations: localizations,
+    );
   }
 
-// need to remove this
-
-  Future handleError(String message) async {
-    player.play(AssetSource("audio/buzzer.wav"));
-
-    if (player.state == PlayerState.completed || result.isEmpty) {
-      DigitToast.show(
-        context,
-        options: DigitToastOptions(
-          localizations.translate(message),
-          true,
-          Theme.of(context),
-        ),
-      );
-    }
-    await Future.delayed(
-      const Duration(seconds: 2),
+  Future<void> handleErrorWrapper(String message) async {
+    await DigitScannerUtils().handleError(
+      context: context,
+      message: message,
+      player: player,
+      result: result,
+      setStateCallback: () {
+        setState(() {
+          _canProcess = true;
+          _isBusy = false;
+        });
+      },
+      localizations: localizations,
     );
-    setState(() {
-      _canProcess = true;
-      _isBusy = false;
-    });
   }
 
-  Future storeCode(
-    String code,
-  ) async {
-    player.play(AssetSource("audio/add.wav"));
-    final bloc = context.read<DigitScannerBloc>();
-    codes = List.from(bloc.state.qrCodes);
-    if (widget.singleValue) {
-      codes = [];
-    }
-
-    codes.add(code);
-
-    setState(() {
-      codes = codes;
-    });
-
-    bloc.add(DigitScannerEvent.handleScanner(
-      barCode: bloc.state.barCodes,
-      qrCode: codes,
-    ));
-    await Future.delayed(
-      const Duration(seconds: 5),
+  Future<void> storeCodeWrapper(String code) async {
+    await DigitScannerUtils().storeCode(
+      context: context,
+      code: code,
+      player: player,
+      singleValue: widget.singleValue,
+      updateCodes: (newCodes) {
+        setState(() {
+          codes = newCodes;
+        });
+      },
+      initialCodes: codes,
     );
-
-    return;
   }
 
-  Future storeValue(
-    GS1Barcode scanData,
-  ) async {
-    final parsedResult = scanData;
-    final bloc = context.read<DigitScannerBloc>();
-
-    player.play(AssetSource("audio/add.wav"));
-    await Future.delayed(const Duration(seconds: 3));
-
-    result = List.from(bloc.state.barCodes);
-    result.removeDuplicates(
-      (element) => element.elements.entries.last.value.data,
+  Future<void> storeValueWrapper(GS1Barcode scanData) async {
+    await DigitScannerUtils().storeValue(
+      context: context,
+      scanData: scanData,
+      player: player,
+      updateResult: (newResult) {
+        setState(() {
+          result = newResult;
+        });
+      },
+      initialResult: result,
     );
-
-    result.add(parsedResult);
-    bloc.add(DigitScannerEvent.handleScanner(
-      barCode: result,
-      qrCode: bloc.state.qrCodes,
-    ));
-    setState(() {
-      result = result;
-    });
-    await Future.delayed(
-      const Duration(seconds: 5),
-    );
-
-    return;
   }
 
   @override
@@ -667,10 +548,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
     _cameraController?.dispose();
     _barcodeScanner.close();
     super.dispose();
-  }
-
-  String trimString(String input) {
-    return input.length > 20 ? '${input.substring(0, 20)}...' : input;
   }
 
   void initializeCameras() async {

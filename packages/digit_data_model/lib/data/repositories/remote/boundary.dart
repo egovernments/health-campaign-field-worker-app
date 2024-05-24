@@ -4,7 +4,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 
 class BoundaryRemoteRepository
@@ -28,8 +27,8 @@ class BoundaryRemoteRepository
         return await dio.post(
           searchPath,
           queryParameters: {
-            'offset': 0,
-            'limit': 100,
+            'offset': offSet ?? 0,
+            'limit': limit ?? 100,
             'tenantId': DigitDataModelSingleton().tenantId,
             ...query.toMap(),
           },

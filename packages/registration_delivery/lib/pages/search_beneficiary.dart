@@ -1,21 +1,20 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/blocs/registraton_delivery_listener.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
-import '../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../router/registration_delivery_router.gm.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/localized.dart';
-import '../../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class SearchBeneficiaryPage extends LocalizedStatefulWidget {
@@ -84,6 +83,7 @@ class _SearchBeneficiaryPageState
                   isProximityEnabled &&
                   searchController.text == '' &&
                   metrics.pixels != 0) {
+                // [TODO: Handle the null check at Bloc level for Event parameters
                 blocWrapper.proximitySearchBloc
                     .add(SearchHouseholdsEvent.searchByProximity(
                   latitude: lat,

@@ -135,7 +135,7 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         // Create and dispatch a DeliverInterventionSubmitEvent with a new TaskModel
                                         event
                                             .add(DeliverInterventionSubmitEvent(
-                                          task: TaskModel(
+                                          TaskModel(
                                             projectId:
                                                 RegistrationDeliverySingleton()
                                                     .projectId,
@@ -268,10 +268,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                               ],
                                             ),
                                           ),
-                                          isEditing: false,
-                                          boundaryModel:
-                                              RegistrationDeliverySingleton()
-                                                  .boundary!,
+                                          false,
+                                          RegistrationDeliverySingleton()
+                                              .boundary!,
                                         ));
                                       }
                                     }

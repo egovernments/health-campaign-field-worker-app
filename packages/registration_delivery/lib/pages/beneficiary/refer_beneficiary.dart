@@ -48,7 +48,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   @override
   void initState() {
     reasons = (RegistrationDeliverySingleton().referralReasons ?? [])
-        .map((e) => KeyValue(e.code, e.code))
+        .map((e) => KeyValue(e, e))
         .toList();
     super.initState();
   }
@@ -73,10 +73,12 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
         final facilities = facilityState.whenOrNull(
               fetched: (_, facilities) {
                 final projectFacilities = facilities
-                    .where((e) => e.id != 'N/A' && e.id != 'Delivery Team')
+                    .where((e) =>
+                        e.id != Constants().notAvailable &&
+                        e.id != Constants().deliveryTeam)
                     .toList();
                 final healthFacilities = [
-                  FacilityModel(id: 'Community Health Worker'),
+                  FacilityModel(id: Constants().communityHealthWorker),
                 ];
                 healthFacilities.addAll(projectFacilities);
 

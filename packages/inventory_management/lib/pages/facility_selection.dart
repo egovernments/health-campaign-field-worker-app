@@ -41,10 +41,11 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                 final filteredFacilities = facilities.where((element) {
                   final query = form.control(_facilityName).value as String?;
                   if (query == null || query.isEmpty) return true;
-                  if (element.id.toLowerCase().contains(query.toLowerCase())) {
-                    return true;
-                  }
-                  return false;
+                  final localizedFacilityIdWithPrefix = localizations
+                      .translate('FAC_${element.id}')
+                      .toLowerCase();
+                  final lowerCaseQuery = query.toLowerCase();
+                  return localizedFacilityIdWithPrefix.contains(lowerCaseQuery);
                 }).toList();
 
                 return ScrollableContent(

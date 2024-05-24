@@ -331,55 +331,12 @@ void _createStockBlocFile(
 
     // Write the skeleton Bloc class to the file
     blocFile.writeAsStringSync('''
-import 'package:inventory_management/blocs/inventory_report.dart';
 import 'package:inventory_management/inventory_management.dart';
 
 class HcmInventoryBloc extends InventoryListener {
   @override
   void callSyncMethod() {
     // TODO: implement callSyncMethod
-  }
-
-  @override
-  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() {
-    // TODO: implement fetchFacilitiesForProjectId
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<String, List<StockModel>>> fetchInventoryReports({required InventoryReportType reportType, required String facilityId, required String productVariantId}) {
-    // TODO: implement fetchInventoryReports
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<ProductVariantModel>> fetchProductVariants() {
-    // TODO: implement fetchProductVariants
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<List<StockModel>>> fetchStockReconciliationDetails({required String productVariantId, required String facilityId}) {
-    // TODO: implement fetchStockReconciliationDetails
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<StockReconciliationReport> handleStockReconciliationReport({required String facilityId, required String productVariantId}) {
-    // TODO: implement handleStockReconciliationReport
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> saveStockDetails(SaveStockDetails saveStockDetails) {
-    // TODO: implement saveStockDetails
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> saveStockReconciliationDetails(SaveStockReconciliationModel stockReconciliationModel) {
-    // TODO: implement saveStockReconciliationDetails
-    throw UnimplementedError();
   }
 }
 ''');

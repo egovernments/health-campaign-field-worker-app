@@ -210,11 +210,14 @@ class AttendeeModelMapper extends ClassMapperBase<AttendeeModel> {
       Field('status', _$status, opt: true, def: -1);
   static AuditDetails? _$auditDetails(AttendeeModel v) => v.auditDetails;
   static const Field<AttendeeModel, AuditDetails> _f$auditDetails =
-      Field('auditDetails', _$auditDetails, mode: FieldMode.member);
+      Field('auditDetails', _$auditDetails, opt: true);
   static ClientAuditDetails? _$clientAuditDetails(AttendeeModel v) =>
       v.clientAuditDetails;
   static const Field<AttendeeModel, ClientAuditDetails> _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+  static bool? _$isDeleted(AttendeeModel v) => v.isDeleted;
+  static const Field<AttendeeModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
 
   @override
   final MappableFields<AttendeeModel> fields = const {
@@ -233,6 +236,7 @@ class AttendeeModelMapper extends ClassMapperBase<AttendeeModel> {
     #status: _f$status,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
+    #isDeleted: _f$isDeleted,
   };
   @override
   final bool ignoreNull = true;
@@ -251,7 +255,10 @@ class AttendeeModelMapper extends ClassMapperBase<AttendeeModel> {
         name: data.dec(_f$name),
         identifierID: data.dec(_f$identifierID),
         individualNumber: data.dec(_f$individualNumber),
-        status: data.dec(_f$status));
+        status: data.dec(_f$status),
+        auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails),
+        isDeleted: data.dec(_f$isDeleted));
   }
 
   @override
@@ -312,6 +319,11 @@ abstract class AttendeeModelCopyWith<$R, $In extends AttendeeModel, $Out>
   AttendeeAdditionalFieldsCopyWith<$R, AttendeeAdditionalFields,
       AttendeeAdditionalFields>? get additionalFields;
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
+  @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  @override
   $R call(
       {AttendeeAdditionalFields? additionalFields,
       String? id,
@@ -325,7 +337,10 @@ abstract class AttendeeModelCopyWith<$R, $In extends AttendeeModel, $Out>
       String? name,
       String? identifierID,
       String? individualNumber,
-      double? status});
+      double? status,
+      AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails,
+      bool? isDeleted});
   AttendeeModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(Then<$Out2, $R2> t);
 }
 
@@ -343,6 +358,13 @@ class _AttendeeModelCopyWithImpl<$R, $Out>
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
   @override
+  AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
+      $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
+  @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
+  @override
   $R call(
           {Object? additionalFields = $none,
           Object? id = $none,
@@ -356,7 +378,10 @@ class _AttendeeModelCopyWithImpl<$R, $Out>
           Object? name = $none,
           Object? identifierID = $none,
           Object? individualNumber = $none,
-          Object? status = $none}) =>
+          Object? status = $none,
+          Object? auditDetails = $none,
+          Object? clientAuditDetails = $none,
+          Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
@@ -371,7 +396,11 @@ class _AttendeeModelCopyWithImpl<$R, $Out>
         if (name != $none) #name: name,
         if (identifierID != $none) #identifierID: identifierID,
         if (individualNumber != $none) #individualNumber: individualNumber,
-        if (status != $none) #status: status
+        if (status != $none) #status: status,
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none)
+          #clientAuditDetails: clientAuditDetails,
+        if (isDeleted != $none) #isDeleted: isDeleted
       }));
   @override
   AttendeeModel $make(CopyWithData data) => AttendeeModel(
@@ -390,7 +419,11 @@ class _AttendeeModelCopyWithImpl<$R, $Out>
       identifierID: data.get(#identifierID, or: $value.identifierID),
       individualNumber:
           data.get(#individualNumber, or: $value.individualNumber),
-      status: data.get(#status, or: $value.status));
+      status: data.get(#status, or: $value.status),
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
+      isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 
   @override
   AttendeeModelCopyWith<$R2, AttendeeModel, $Out2> $chain<$R2, $Out2>(

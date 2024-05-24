@@ -117,10 +117,10 @@ class DeliverInterventionBloc
     DeliveryInterventionEmitter emit,
   ) async {
     // Calculate the current running cycle based on start and end dates
-    final currentRunningCycle = (event.projectType.cycles?.firstWhere(
+    final currentRunningCycle = (event.projectType?.cycles?.firstWhere(
           (e) =>
-              (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate) > DateTime.now().millisecondsSinceEpoch,
+              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
         ))?.id ??
         0;
 
@@ -238,28 +238,28 @@ class DeliverInterventionBloc
 
 @freezed
 class DeliverInterventionEvent with _$DeliverInterventionEvent {
-  const factory DeliverInterventionEvent.handleSubmit({
-    required TaskModel task,
-    required bool isEditing,
-    required BoundaryModel boundaryModel,
-  }) = DeliverInterventionSubmitEvent;
+  const factory DeliverInterventionEvent.handleSubmit(
+    TaskModel task,
+    bool isEditing,
+    BoundaryModel boundaryModel,
+  ) = DeliverInterventionSubmitEvent;
 
-  const factory DeliverInterventionEvent.handleSearch({
-    required TaskSearchModel taskSearch,
-  }) = DeliverInterventionSearchEvent;
+  const factory DeliverInterventionEvent.handleSearch(
+    TaskSearchModel taskSearch,
+  ) = DeliverInterventionSearchEvent;
 
-  const factory DeliverInterventionEvent.selectFutureCycleDose({
-    required int dose,
-    required ProjectCycle cycle,
-    required IndividualModel? individualModel,
-  }) = DeliverInterventionCycleFutureDoseSelectionEvent;
+  const factory DeliverInterventionEvent.selectFutureCycleDose(
+    int dose,
+    ProjectCycle cycle,
+    IndividualModel? individualModel,
+  ) = DeliverInterventionCycleFutureDoseSelectionEvent;
 
-  const factory DeliverInterventionEvent.setActiveCycleDose({
-    required int lastDose,
-    required int lastCycle,
-    required IndividualModel? individualModel,
-    required ProjectTypeModel projectType,
-  }) = DeliverInterventionActiveCycleDoseSelectionEvent;
+  const factory DeliverInterventionEvent.setActiveCycleDose(
+    int lastDose,
+    int lastCycle,
+    IndividualModel? individualModel,
+    ProjectTypeModel projectType,
+  ) = DeliverInterventionActiveCycleDoseSelectionEvent;
 }
 
 @freezed

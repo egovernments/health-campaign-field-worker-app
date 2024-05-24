@@ -1,9 +1,14 @@
 class Constants {
-
   static List<KeyValue> yesNo = [
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
   ];
+
+  final String dateFormat = 'dd/MM/yyyy';
+  final String communityHealthWorker = 'Community Health Worker';
+  final String deliveryTeam = 'Delivery Team';
+  final String notAvailable = 'N/A';
+  final String dateTimeExtFormat = 'dd-MM-yyyy';
 }
 
 class KeyValue {

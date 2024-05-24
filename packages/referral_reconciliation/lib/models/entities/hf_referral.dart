@@ -3,7 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-part 'h_f_referral.mapper.dart';
+part 'hf_referral.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class HFReferralSearchModel extends EntitySearchModel

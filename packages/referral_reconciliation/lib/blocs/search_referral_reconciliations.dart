@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
-import '../models/entities/h_f_referral.dart';
+import '../models/entities/hf_referral.dart';
 import '../utils/typedefs.dart';
 import '../utils/utils.dart';
 

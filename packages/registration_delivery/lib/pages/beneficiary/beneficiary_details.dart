@@ -94,10 +94,20 @@ class _BeneficiaryDetailsPageState
           if (RegistrationDeliverySingleton().projectType != null) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
-                individualModel: state.selectedIndividual,
-                projectType: RegistrationDeliverySingleton().projectType!,
-                lastCycle: int.parse(lastCycle),
-                lastDose: int.parse(lastDose),
+                taskData != null && taskData.isNotEmpty
+                    ? int.tryParse(
+                          lastDose,
+                        ) ??
+                        1
+                    : 0,
+                taskData != null && taskData.isNotEmpty
+                    ? int.tryParse(
+                          lastCycle,
+                        ) ??
+                        1
+                    : 1,
+                state.selectedIndividual,
+                RegistrationDeliverySingleton().projectType!,
               ),
             );
           }
@@ -144,10 +154,14 @@ class _BeneficiaryDetailsPageState
                                             bloc.add(
                                               DeliverInterventionEvent
                                                   .selectFutureCycleDose(
-                                                individualModel:
-                                                    state.selectedIndividual,
-                                                cycle: selectedCycle,
-                                                dose: deliverState.dose,
+                                                deliverState.dose,
+                                                RegistrationDeliverySingleton()
+                                                    .projectType!
+                                                    .cycles!
+                                                    .firstWhere((c) =>
+                                                        c.id ==
+                                                        deliverState.cycle),
+                                                state.selectedIndividual,
                                               ),
                                             );
                                             await DigitDialog.show<bool>(

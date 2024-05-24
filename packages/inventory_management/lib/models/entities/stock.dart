@@ -1,10 +1,7 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
-import 'package:inventory_management/models/entities/transaction_reason.dart';
-import 'package:inventory_management/models/entities/transaction_type.dart';
+import 'package:drift/drift.dart';
 
 part 'stock.mapper.dart';
 
@@ -23,8 +20,8 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final String? senderId;
   final String? senderType;
   final List<String>? clientReferenceId;
-  final List<TransactionType>? transactionType;
-  final List<TransactionReason>? transactionReason;
+  final List<String>? transactionType;
+  final List<String>? transactionReason;
 
   StockSearchModel({
     this.id,
@@ -88,8 +85,8 @@ class StockModel extends EntityModel with StockModelMappable {
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final int? rowVersion;
-  final TransactionType? transactionType;
-  final TransactionReason? transactionReason;
+  final String? transactionType;
+  final String? transactionReason;
   final StockAdditionalFields? additionalFields;
 
   StockModel({

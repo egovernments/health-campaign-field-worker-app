@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -26,7 +25,7 @@ int i = 0;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  initializeAllMappers();
+  await initializeAllMappers();
   final info = await PackageInfo.fromPlatform();
 
   Bloc.observer = AppBlocObserver();
