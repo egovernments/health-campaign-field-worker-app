@@ -44,7 +44,7 @@ Navigating to DigitScanner Page
 ```
 
 
-```
+
 Wrap the DigitScannerListener or DigitScannerBuilder in your widget tree wherever you need the Scanned codes.
 ```
 BlocListener<DigitScannerBloc, DigitScannerState>(
