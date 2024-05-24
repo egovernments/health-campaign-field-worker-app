@@ -8,15 +8,6 @@ import '../constants/digit_scanner_test_constants.dart';
 void main() {
   // Grouping tests related to DigitScannerBloc
   group('DigitScannerBloc', () {
-    // Declaring variables for mock and bloc
-    late DigitScannerBloc digitScannerBloc;
-
-    // Setting up the mock and the bloc for each test
-    setUp(() {
-      digitScannerBloc = DigitScannerBloc(
-        const DigitScannerState(),
-      );
-    });
 
     // Test for Clearing the Scanner state
     blocTest<DigitScannerBloc, DigitScannerState>(

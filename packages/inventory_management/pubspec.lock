@@ -449,9 +449,10 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: "5e42e083a6cdd29c5a007e38d66764167042efceec35639d473d090dc0ceff44"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.0-dev.1"
   digit_showcase:
     dependency: "direct overridden"
@@ -1517,5 +1518,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.3 <4.0.0"
   flutter: ">=3.16.0"
