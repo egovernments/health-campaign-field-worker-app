@@ -31,7 +31,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
     Widget buildPasswordVisibility() {
       return IconButton(
         icon: Icon(
-          passwordVisible ? Icons.visibility : Icons.visibility_off,
+          passwordVisible ? Icons.visibility_off : Icons.visibility,
         ),
         onPressed: () {
           setState(() {
@@ -55,7 +55,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
               DigitToast.show(
                 context,
                 options: DigitToastOptions(
-                  message ?? 'Unable to login',
+                  message ?? localizations.translate('UNABLE_TO_LOGIN'),
                   true,
                   theme,
                 ),
@@ -85,7 +85,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         ),
                         validationMessages: {
                           "required": (control) {
-                            return '${localizations.translate(i18.login.userIdPlaceholder)} is Required';
+                            return localizations.translate(
+                              '${i18.login.userIdPlaceholder}_IS_REQUIRED',
+                            );
                           },
                         },
                         textCapitalization: TextCapitalization.none,
@@ -99,7 +101,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         ),
                         validationMessages: {
                           "required": (control) {
-                            return '${localizations.translate(i18.login.passwordPlaceholder)} is Required';
+                            return localizations.translate(
+                              '${i18.login.passwordPlaceholder}_IS_REQUIRED',
+                            );
                           },
                         },
                         formControlName: _password,
@@ -142,6 +146,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           );
                         },
                       ),
+                      const SizedBox(
+                        height: 16,
+                      ),
                       TextButton(
                         onPressed: () => DigitDialog.show(
                           context,
@@ -161,6 +168,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                       .pop(),
                             ),
                           ),
+                        ),
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          minimumSize: const Size(0, 0),
                         ),
                         child: Center(
                           child: Text(
@@ -183,10 +195,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
 
   FormGroup buildForm() => fb.group(<String, Object>{
         _userId: FormControl<String>(
+          value: '',
           validators: [Validators.required],
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
+          value: 'eGov@1234',
         ),
       });
 }

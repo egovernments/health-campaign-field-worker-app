@@ -5,22 +5,30 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class DocumentSearchModel extends EntitySearchModel {
+part 'document.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DocumentSearchModel extends EntitySearchModel with DocumentSearchModelMappable {
   final List<String>? clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   
   DocumentSearchModel({
     this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  DocumentSearchModel.ignoreDeleted({
+    this.clientReferenceId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class DocumentModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DocumentModel extends EntityModel with DocumentModelMappable {
 
   static const schemaName = 'Document';
 
@@ -28,9 +36,9 @@ class DocumentModel extends EntityModel {
   final String? documentType;
   final String? fileStoreId;
   final String? documentUid;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final DocumentAdditionalFields? additionalFields;
 
@@ -40,11 +48,12 @@ class DocumentModel extends EntityModel {
     this.documentType,
     this.fileStoreId,
     this.documentUid,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   DocumentCompanion get companion {
@@ -52,25 +61,31 @@ class DocumentModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       documentType: Value(documentType),
       fileStoreId: Value(fileStoreId),
       documentUid: Value(documentUid),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class DocumentAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class DocumentAdditionalFields extends AdditionalFields with DocumentAdditionalFieldsMappable {
   DocumentAdditionalFields({
     super.schema = 'Document',
     required super.version,
     super.fields,
   });
 }
+

@@ -5,30 +5,38 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ProjectProductVariantSearchModel extends EntitySearchModel {
+part 'project_product_variant.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectProductVariantSearchModel extends EntitySearchModel with ProjectProductVariantSearchModelMappable {
   final String? productVariantId;
   final String? tenantId;
-  final bool? isDeleted;
   
   ProjectProductVariantSearchModel({
     this.productVariantId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ProjectProductVariantSearchModel.ignoreDeleted({
+    this.productVariantId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectProductVariantModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectProductVariantModel extends EntityModel with ProjectProductVariantModelMappable {
 
   static const schemaName = 'ProjectProductVariant';
 
   final String productVariantId;
   final String? type;
   final bool? isBaseUnitVariant;
+  final bool? nonRecoverableError;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final ProjectProductVariantAdditionalFields? additionalFields;
 
@@ -37,10 +45,11 @@ class ProjectProductVariantModel extends EntityModel {
     required this.productVariantId,
     this.type,
     this.isBaseUnitVariant,
+    this.nonRecoverableError = false,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   ProjectProductVariantCompanion get companion {
@@ -48,23 +57,29 @@ class ProjectProductVariantModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       productVariantId: Value(productVariantId),
       type: Value(type),
       isBaseUnitVariant: Value(isBaseUnitVariant),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectProductVariantAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectProductVariantAdditionalFields extends AdditionalFields with ProjectProductVariantAdditionalFieldsMappable {
   ProjectProductVariantAdditionalFields({
     super.schema = 'ProjectProductVariant',
     required super.version,
     super.fields,
   });
 }
+

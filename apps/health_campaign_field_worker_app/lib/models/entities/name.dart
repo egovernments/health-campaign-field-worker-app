@@ -5,14 +5,15 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class NameSearchModel extends EntitySearchModel {
+part 'name.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class NameSearchModel extends EntitySearchModel with NameSearchModelMappable {
   final String? id;
   final String? givenName;
   final String? familyName;
   final String? otherNames;
   final String? tenantId;
-  final bool? isDeleted;
   
   NameSearchModel({
     this.id,
@@ -20,13 +21,23 @@ class NameSearchModel extends EntitySearchModel {
     this.familyName,
     this.otherNames,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  NameSearchModel.ignoreDeleted({
+    this.id,
+    this.givenName,
+    this.familyName,
+    this.otherNames,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class NameModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class NameModel extends EntityModel with NameModelMappable {
 
   static const schemaName = 'Name';
 
@@ -35,8 +46,8 @@ class NameModel extends EntityModel {
   final String? givenName;
   final String? familyName;
   final String? otherNames;
+  final bool? nonRecoverableError;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final NameAdditionalFields? additionalFields;
 
@@ -47,10 +58,11 @@ class NameModel extends EntityModel {
     this.givenName,
     this.familyName,
     this.otherNames,
+    this.nonRecoverableError = false,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   NameCompanion get companion {
@@ -58,25 +70,31 @@ class NameModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       individualClientReferenceId: Value(individualClientReferenceId),
       givenName: Value(givenName),
       familyName: Value(familyName),
       otherNames: Value(otherNames),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class NameAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class NameAdditionalFields extends AdditionalFields with NameAdditionalFieldsMappable {
   NameAdditionalFields({
     super.schema = 'Name',
     required super.version,
     super.fields,
   });
 }
+

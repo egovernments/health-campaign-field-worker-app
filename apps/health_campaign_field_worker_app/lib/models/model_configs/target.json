@@ -1,8 +1,5 @@
 {
   "name": "target",
-  "ignoreFields": [
-    "clientReferenceId"
-  ],
   "attributes": [
     {
       "name": "id",
@@ -11,16 +8,23 @@
       "isPk": true
     },
     {
+      "name": "clientReferenceId",
+      "type": "String"
+    },
+    {
+      "name": "totalNo",
+      "type": "double"
+    },
+    {
+      "name": "targetNo",
+      "type": "double"
+    }
+  ],
+  "customAttributes": [
+    {
       "name": "beneficiaryType",
-      "type": "String"
-    },
-    {
-      "name": "baseline",
-      "type": "String"
-    },
-    {
-      "name": "target",
-      "type": "String"
+      "type": "beneficiaryType",
+      "isEnum": true
     }
   ],
   "isEnum": false

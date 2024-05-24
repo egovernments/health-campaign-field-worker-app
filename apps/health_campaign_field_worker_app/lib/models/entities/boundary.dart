@@ -4,24 +4,41 @@ import 'package:drift/drift.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 import '../data_model.dart';
 
-@MappableClass(ignoreNull: true)
-class BoundarySearchModel extends EntitySearchModel {
+part 'boundary.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMappable {
   final String? boundaryType;
   final String? tenantId;
-  final bool? isDeleted;
   final String? code;
+  final int? boundaryNum;
+  final bool? isSingle;
 
   BoundarySearchModel({
     this.boundaryType,
     this.tenantId,
-    this.isDeleted,
     this.code,
+    this.boundaryNum,
+    this.isSingle,
     super.boundaryCode,
+    super.isDeleted,
   }) : super();
+
+  @MappableConstructor()
+  BoundarySearchModel.ignoreDeleted({
+    this.boundaryType,
+    this.tenantId,
+    this.code,
+    this.boundaryNum,
+    this.isSingle,
+    super.boundaryCode,
+    super.additionalFields,
+    super.auditDetails,
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true)
-class BoundaryModel extends EntityModel {
+class BoundaryModel extends EntityModel with BoundaryModelMappable {
   final String? code;
   final String? name;
   final String? label;
@@ -30,7 +47,6 @@ class BoundaryModel extends EntityModel {
   final String? longitude;
   final String? materializedPath;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final List<BoundaryModel> children;
 
@@ -42,11 +58,11 @@ class BoundaryModel extends EntityModel {
     this.longitude,
     this.materializedPath,
     this.tenantId,
-    this.isDeleted,
     this.boundaryNum,
     this.rowVersion,
     this.children = const [],
     super.auditDetails,
+    super.isDeleted = false,
   }) : super();
 
   BoundaryCompanion get companion {

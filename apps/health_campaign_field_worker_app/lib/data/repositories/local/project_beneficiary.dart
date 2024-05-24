@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -15,7 +17,15 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
     final select = sql.select(sql.projectBeneficiary)
       ..where(
         (tbl) => buildOr([
-          if (query.projectId != null) tbl.projectId.equals(query.projectId),
+          if (query.projectId != null) tbl.projectId.equals(query.projectId!),
+          if (query.beneficiaryRegistrationDateGte != null)
+            tbl.dateOfRegistration.isBiggerOrEqualValue(
+              query.beneficiaryRegistrationDateGte!.millisecondsSinceEpoch,
+            ),
+          if (query.beneficiaryRegistrationDateLte != null)
+            tbl.dateOfRegistration.isSmallerOrEqualValue(
+              query.beneficiaryRegistrationDateLte!.millisecondsSinceEpoch,
+            ),
         ]),
       );
 
@@ -28,6 +38,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
           tenantId: e.tenantId,
           beneficiaryClientReferenceId: e.beneficiaryClientReferenceId,
           id: e.id,
+          tag: e.tag,
           rowVersion: e.rowVersion,
           isDeleted: e.isDeleted,
           beneficiaryId: e.beneficiaryId,
@@ -35,6 +46,22 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
       }).toList();
 
       listener(data);
+    });
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<ProjectBeneficiaryModel> entities,
+  ) async {
+    final projectBeneficiaryCompanions =
+        entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.projectBeneficiary,
+        projectBeneficiaryCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
     });
   }
 
@@ -48,29 +75,32 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
           ..where(
             buildAnd(
               [
+                if (query.tag != null)
+                  sql.projectBeneficiary.tag.equals(
+                    query.tag!,
+                  ),
                 if (query.clientReferenceId != null)
                   sql.projectBeneficiary.clientReferenceId.isIn(
                     query.clientReferenceId!,
                   ),
                 if (query.beneficiaryClientReferenceId != null)
-                  sql.projectBeneficiary.beneficiaryClientReferenceId.equals(
-                    query.beneficiaryClientReferenceId,
-                  ),
+                  sql.projectBeneficiary.beneficiaryClientReferenceId
+                      .isIn(query.beneficiaryClientReferenceId!),
                 if (query.id != null)
                   sql.projectBeneficiary.id.equals(
-                    query.id,
+                    query.id!,
                   ),
                 if (query.projectId != null)
                   sql.projectBeneficiary.projectId.equals(
-                    query.projectId,
+                    query.projectId!,
                   ),
                 if (query.beneficiaryId != null)
                   sql.projectBeneficiary.beneficiaryId.equals(
-                    query.beneficiaryId,
+                    query.beneficiaryId!,
                   ),
                 if (query.dateOfRegistrationTime != null)
                   sql.projectBeneficiary.dateOfRegistration.equals(
-                    query.dateOfRegistration,
+                    query.dateOfRegistration!,
                   ),
                 if (userId != null)
                   sql.projectBeneficiary.auditCreatedBy.equals(
@@ -96,10 +126,22 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
             beneficiaryId: projectBeneficiary.beneficiaryId,
             dateOfRegistration: projectBeneficiary.dateOfRegistration,
             projectId: projectBeneficiary.projectId,
+            tag: projectBeneficiary.tag,
             auditDetails: AuditDetails(
               createdTime: projectBeneficiary.auditCreatedTime!,
               createdBy: projectBeneficiary.auditCreatedBy!,
+              lastModifiedBy: projectBeneficiary.auditModifiedBy,
+              lastModifiedTime: projectBeneficiary.auditModifiedTime,
             ),
+            clientAuditDetails: (projectBeneficiary.clientCreatedBy != null &&
+                    projectBeneficiary.clientCreatedTime != null)
+                ? ClientAuditDetails(
+                    createdBy: projectBeneficiary.clientCreatedBy!,
+                    createdTime: projectBeneficiary.clientCreatedTime!,
+                    lastModifiedBy: projectBeneficiary.clientModifiedBy,
+                    lastModifiedTime: projectBeneficiary.clientModifiedTime,
+                  )
+                : null,
           );
         })
         .where((element) => element.isDeleted != true)
@@ -148,6 +190,15 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
     final updated = entity.copyWith(
       isDeleted: true,
       rowVersion: entity.rowVersion,
+      clientAuditDetails: (entity.clientAuditDetails?.createdBy != null &&
+              entity.clientAuditDetails!.createdTime != null)
+          ? ClientAuditDetails(
+              createdBy: entity.clientAuditDetails!.createdBy,
+              createdTime: entity.clientAuditDetails!.createdTime,
+              lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            )
+          : null,
     );
     await sql.batch((batch) {
       batch.update(

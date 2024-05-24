@@ -2,6 +2,8 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import '../../router/app_router.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/household_overview/household_overview.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -9,7 +11,6 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../../router/app_router.dart';
 
 class ReasonForDeletionPage extends LocalizedStatefulWidget {
   final bool isHousholdDelete;
@@ -48,13 +49,15 @@ class _ReasonForDeletionPageState
 
                   return DigitElevatedButton(
                     onPressed: () {
-                      widget.isHousholdDelete
+                      !widget.isHousholdDelete
                           ? context.read<HouseholdOverviewBloc>().add(
                                 HouseholdOverviewDeleteIndividualEvent(
                                   projectId: ctx.projectId,
                                   householdModel:
                                       state.householdMemberWrapper.household,
                                   individualModel: state.selectedIndividual!,
+                                  projectBeneficiaryType:
+                                      context.beneficiaryType,
                                 ),
                               )
                           : context.read<HouseholdOverviewBloc>().add(
@@ -65,14 +68,17 @@ class _ReasonForDeletionPageState
                                   members: state.householdMemberWrapper.members,
                                   projectBeneficiaryModel: state
                                       .householdMemberWrapper
-                                      .projectBeneficiary,
+                                      .projectBeneficiaries
+                                      .first,
+                                  projectBeneficiaryType:
+                                      context.beneficiaryType,
                                 ),
                               );
 
                       context.router.pop();
 
                       if (widget.isHousholdDelete) {
-                        context.router.pop();
+                        (context.router.parent() as StackRouter).pop();
                       }
                       context.router.push(AcknowledgementRoute());
                     },
@@ -86,7 +92,7 @@ class _ReasonForDeletionPageState
                 },
               ),
             ),
-            header: Column(children: const [
+            header: const Column(children: [
               BackNavigationHelpHeaderWidget(),
             ]),
             children: [
@@ -108,7 +114,7 @@ class _ReasonForDeletionPageState
                     return Column(
                       children: [
                         Align(
-                          alignment: Alignment.centerLeft,
+                          alignment: Alignment.topLeft,
                           child: Text(
                             localizations.translate(
                               i18.reasonForDeletion.reasonForDeletionLabel,
@@ -132,7 +138,9 @@ class _ReasonForDeletionPageState
                                     .toList()
                                 : householdMemberDeletionReasonOptions
                                     .map((e) => ReactiveRadioListTile(
-                                          title: Text(e.name),
+                                          title: Text(
+                                            localizations.translate(e.name),
+                                          ),
                                           value: e.code,
                                           formControlName:
                                               _reasonForDeletionKey,

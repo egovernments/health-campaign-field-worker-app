@@ -1,0 +1,46 @@
+name: attendance_management
+description: Digit UI attendance_management specification
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  digit_components: ^0.0.1
+  flutter_bloc: ^8.1.1
+  freezed_annotation: ^2.1.0
+  build_runner: ^2.2.1
+  reactive_forms: ^14.1.0
+  flutter_localizations:
+    sdk: flutter
+  fluttertoast: ^8.1.2
+  overlay_builder: ^1.1.0
+  intl: ^0.18.0
+  flutter_svg: ^2.0.8
+  dart_mappable: ^4.2.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  json_serializable: ^6.4.0
+  freezed: ^2.2.0
+  bloc_test: ^9.1.0
+  mocktail: ^0.3.0
+  dart_mappable_builder: ^1.2.1
+
+flutter:
+  assets:
+    - assets/images/
+    - assets/icons/svg/
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
+    - family: RobotoCondensed
+      fonts:
+        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf

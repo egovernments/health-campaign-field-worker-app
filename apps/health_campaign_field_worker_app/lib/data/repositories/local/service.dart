@@ -48,7 +48,21 @@ class ServiceLocalRepository
       tenantId: entity.tenantId,
       isDeleted: entity.isDeleted,
       rowVersion: entity.rowVersion,
+      additionalFields: ServiceAdditionalFields(
+        version: 1,
+        fields: [
+          AdditionalField(
+            'clientCreatedTime',
+            DateTime.now().millisecondsSinceEpoch.toString(),
+          ),
+          AdditionalField(
+            'clientCreatedBy',
+            entity.auditDetails?.createdBy,
+          ),
+        ],
+      ),
       auditDetails: entity.auditDetails,
+      clientAuditDetails: entity.clientAuditDetails,
       attributes: entity.attributes?.map((e) {
         return e.dataType == 'Number'
             ? e.copyWith(value: int.tryParse(e.value))
@@ -85,7 +99,11 @@ class ServiceLocalRepository
           ..where(buildAnd([
             if (query.id != null)
               sql.service.serviceDefId.equals(
-                query.id,
+                query.id!,
+              ),
+            if (query.clientId != null)
+              sql.service.clientId.equals(
+                query.clientId!,
               ),
           ])))
         .get();
@@ -109,6 +127,7 @@ class ServiceLocalRepository
             clientReferenceId: attribute.clientReferenceId,
             attributeCode: attribute.attributeCode,
             value: attribute.value,
+            referenceId: attribute.referenceId,
             dataType: attribute.dataType,
             additionalDetails: attribute.additionalDetails,
             tenantId: attribute.tenantId,

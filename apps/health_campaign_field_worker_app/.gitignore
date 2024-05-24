@@ -30,6 +30,7 @@ migrate_working_dir/
 .pub/
 /build/
 **.apk
+.env
 
 # Symbolication related
 app.*.symbols

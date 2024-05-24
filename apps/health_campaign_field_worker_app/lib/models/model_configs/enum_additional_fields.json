@@ -1,0 +1,74 @@
+{
+  "name": "AdditionalFieldsType",
+  "enumValues": [
+    {
+      "name": "DeliveryStrategy",
+      "value": "deliveryStrategy"
+    },
+    {
+      "name": "CycleIndex",
+      "value": "cycleIndex"
+    },
+    {
+      "name": "DoseIndex",
+      "value": "doseIndex"
+    },
+    {
+      "name": "DateOfVerification",
+      "value": "dateOfVerification"
+    },
+    {
+      "name": "DateOfAdministration",
+      "value": "dateOfAdministration"
+    },
+    {
+      "name": "DateOfDelivery",
+      "value": "dateOfDelivery"
+    },
+    {
+      "name": "ReferralComments",
+      "value": "referralComments"
+    },
+    {
+      "name": "Cycle",
+      "value": "cycle"
+    },
+    {
+      "name": "HFCoordinator",
+      "value": "hfCoordinator"
+    },
+    {
+      "name": "ReferredBy",
+      "value": "referredBy"
+    },
+    {
+      "name": "DateOfEvaluation",
+      "value": "dateOfEvaluation"
+    },
+    {
+      "name": "NameOfReferral",
+      "value": "nameOfReferral"
+    },
+    {
+      "name": "Gender",
+      "value": "gender"
+    },
+    {
+      "name": "Age",
+      "value": "age"
+    },
+    {
+      "name": "deliveryComment",
+      "value": "deliveryComment"
+    },
+    {
+      "name": "latitude",
+      "value": "latitude"
+    },
+    {
+      "name": "longitude",
+      "value": "longitude"
+    }
+  ],
+  "isEnum": true
+}

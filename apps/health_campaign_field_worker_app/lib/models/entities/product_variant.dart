@@ -5,14 +5,15 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ProductVariantSearchModel extends EntitySearchModel {
+part 'product_variant.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProductVariantSearchModel extends EntitySearchModel with ProductVariantSearchModelMappable {
   final List<String>? id;
   final String? productId;
   final String? sku;
   final String? variation;
   final String? tenantId;
-  final bool? isDeleted;
   
   ProductVariantSearchModel({
     this.id,
@@ -20,13 +21,23 @@ class ProductVariantSearchModel extends EntitySearchModel {
     this.sku,
     this.variation,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ProductVariantSearchModel.ignoreDeleted({
+    this.id,
+    this.productId,
+    this.sku,
+    this.variation,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class ProductVariantModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProductVariantModel extends EntityModel with ProductVariantModelMappable {
 
   static const schemaName = 'ProductVariant';
 
@@ -34,8 +45,8 @@ class ProductVariantModel extends EntityModel {
   final String? productId;
   final String? sku;
   final String? variation;
+  final bool? nonRecoverableError;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final ProductVariantAdditionalFields? additionalFields;
 
@@ -45,10 +56,11 @@ class ProductVariantModel extends EntityModel {
     this.productId,
     this.sku,
     this.variation,
+    this.nonRecoverableError = false,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   ProductVariantCompanion get companion {
@@ -56,24 +68,30 @@ class ProductVariantModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       productId: Value(productId),
       sku: Value(sku),
       variation: Value(variation),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ProductVariantAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProductVariantAdditionalFields extends AdditionalFields with ProductVariantAdditionalFieldsMappable {
   ProductVariantAdditionalFields({
     super.schema = 'ProductVariant',
     required super.version,
     super.fields,
   });
 }
+

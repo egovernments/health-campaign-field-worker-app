@@ -20,7 +20,7 @@ class JsonSchemaDropdownBuilder extends JsonSchemaBuilder<String> {
         if (hint != null)
           Text(
             hint!,
-            style: Theme.of(context).textTheme.caption,
+            style: Theme.of(context).textTheme.bodySmall,
           ),
         ReactiveDropdownField(
           formControlName: formControlName,

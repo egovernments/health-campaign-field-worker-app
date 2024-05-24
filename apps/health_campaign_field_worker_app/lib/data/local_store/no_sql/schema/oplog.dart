@@ -10,7 +10,53 @@ class OpLog {
   late String entityString;
 
   @ignore
-  T getEntity<T extends EntityModel>() => Mapper.fromJson<T>(entityString);
+  getEntity<T extends EntityModel>() {
+    switch (entityType.name) {
+      case "household":
+        final entity = HouseholdModelMapper.fromJson(entityString);
+        return entity;
+
+      case "householdMember":
+        final entity = HouseholdMemberModelMapper.fromJson(entityString);
+        return entity;
+
+      case "individual":
+        final entity = IndividualModelMapper.fromJson(entityString);
+        return entity;
+
+      case "projectBeneficiary":
+        final entity = ProjectBeneficiaryModelMapper.fromJson(entityString);
+        return entity;
+
+      case "task":
+        final entity = TaskModelMapper.fromJson(entityString);
+        return entity;
+
+      case "sideEffect":
+        final entity = SideEffectModelMapper.fromJson(entityString);
+        return entity;
+
+      case "referral":
+        final entity = ReferralModelMapper.fromJson(entityString);
+        return entity;
+
+      case "attendance":
+        final entity = HCMAttendanceLogModelMapper.fromJson(entityString);
+        return entity;
+
+      case "stock":
+        final entity = StockModelMapper.fromJson(entityString);
+        return entity;
+
+      case "hFReferral":
+        final entity = HFReferralModelMapper.fromJson(entityString);
+        return entity;
+
+      default:
+        final entity = EntityModelMapper.fromJson(entityString);
+        return entity;
+    }
+  }
 
   void entity<T extends EntityModel>(T entity) {
     entityString = entity.toJson();
@@ -39,6 +85,12 @@ class OpLog {
   late bool syncedDown;
 
   late List<AdditionalId> additionalIds;
+
+  late int rowVersion;
+
+  late int syncDownRetryCount;
+
+  late bool nonRecoverableError;
 }
 
 @embedded

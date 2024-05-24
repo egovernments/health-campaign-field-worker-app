@@ -3,6 +3,8 @@ import '../models/data_model.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
+typedef AddressDataRepository
+    = DataRepository<AddressModel, AddressSearchModel>;
 typedef HouseholdDataRepository
     = DataRepository<HouseholdModel, HouseholdSearchModel>;
 typedef HouseholdMemberDataRepository
@@ -37,3 +39,17 @@ typedef ServiceDataRepository
     = DataRepository<ServiceModel, ServiceSearchModel>;
 typedef PgrServiceDataRepository
     = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
+
+typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
+typedef SideEffectDataRepository
+    = DataRepository<SideEffectModel, SideEffectSearchModel>;
+typedef ReferralDataRepository
+    = DataRepository<ReferralModel, ReferralSearchModel>;
+typedef DownsyncDataRepository
+    = DataRepository<DownsyncModel, DownsyncSearchModel>;
+typedef HFReferralDataRepository
+    = DataRepository<HFReferralModel, HFReferralSearchModel>;
+typedef AttendanceDataRepository
+    = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;
+    typedef AttendanceLogDataRepository
+    = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;

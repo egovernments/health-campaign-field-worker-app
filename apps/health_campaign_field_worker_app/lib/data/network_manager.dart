@@ -1,21 +1,20 @@
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:health_campaign_field_worker_app/data/repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
+import '../models/bandwidth/bandwidth_model.dart';
 import '../models/data_model.dart';
+import '../utils/constants.dart';
 import 'data_repository.dart';
-import 'repositories/oplog/oplog.dart';
-import 'repositories/remote/pgr_service.dart';
+import 'local_store/secure_store/secure_store.dart';
+import 'repositories/sync/sync_down.dart';
+import 'repositories/sync/sync_up.dart';
 
 class NetworkManager {
-  static const _taskResourceIdKey = 'taskResourceId';
-  static const _individualIdentifierIdKey = 'individualIdentifierId';
-  static const _householdAddressIdKey = 'householdAddressId';
-  static const _individualAddressIdKey = 'individualAddressId';
-
   final NetworkManagerConfiguration configuration;
 
   const NetworkManager({required this.configuration});
@@ -32,606 +31,150 @@ class NetworkManager {
     }
   }
 
-  Future<void> performSync({
+/* This function will read the params and get the records which are not synced
+ and pushes to the sync-up and sync-down methods */
+
+  FutureOr<bool> performSync({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
-    required String userId,
+    required BandwidthModel bandwidthModel,
+    ServiceInstance? service,
   }) async {
     if (configuration.persistenceConfig ==
         PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync up is not valid for online only configuration');
     }
+    bool isSyncCompleted = false;
 
-    await syncDown(
-      createdBy: userId,
-      localRepositories: localRepositories.toSet().toList(),
-      remoteRepositories: remoteRepositories.toSet().toList(),
+    final futuresSyncDown = await Future.wait(
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
     );
+    final pendingSyncDownEntries = futuresSyncDown.expand((e) => e).toList();
 
-    final futures = await Future.wait(
-      localRepositories.map((e) => e.getItemsToBeSyncedUp(userId)),
+    final futuresSyncUp = await Future.wait(
+      localRepositories
+          .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
     );
+    final pendingSyncUpEntries = futuresSyncUp.expand((e) => e).toList();
 
-    final pendingSyncEntries = futures.expand((e) => e).toList();
+    SyncError? syncError;
 
-    final groupedEntries = pendingSyncEntries.groupListsBy(
-      (element) => element.type,
-    );
+// Perform the sync Down Operation
 
-    for (final typeGroupedEntity in groupedEntries.entries) {
-      final groupedOperations = typeGroupedEntity.value.groupListsBy(
-        (element) => element.operation,
+    try {
+      await PerformSyncDown.syncDown(
+        bandwidthModel: bandwidthModel,
+        localRepositories: localRepositories.toSet().toList(),
+        remoteRepositories: remoteRepositories.toSet().toList(),
+        configuration: configuration,
       );
-
-      final remote = _getRemoteForType(
-        typeGroupedEntity.key,
-        remoteRepositories,
-      );
-
-      final local = _getLocalForType(
-        typeGroupedEntity.key,
-        localRepositories,
-      );
-
-      for (final operationGroupedEntity in groupedOperations.entries) {
-        final entities = operationGroupedEntity.value
-            .map((e) {
-              final oplogEntryEntity = e.entity;
-
-              final serverGeneratedId = e.serverGeneratedId;
-              if (serverGeneratedId != null) {
-                var updatedEntity =
-                    local.opLogManager.applyServerGeneratedIdToEntity(
-                  oplogEntryEntity,
-                  serverGeneratedId,
-                );
-
-                if (updatedEntity is HouseholdModel) {
-                  final addressId = e.additionalIds.firstWhereOrNull(
-                    (element) {
-                      return element.idType == _householdAddressIdKey;
-                    },
-                  )?.id;
-
-                  updatedEntity = updatedEntity.copyWith(
-                    address: updatedEntity.address?.copyWith(
-                      id: addressId,
-                    ),
-                  );
-                }
-
-                if (updatedEntity is IndividualModel) {
-                  final identifierId = e.additionalIds.firstWhereOrNull(
-                    (element) {
-                      return element.idType == _individualIdentifierIdKey;
-                    },
-                  )?.id;
-
-                  final addressId = e.additionalIds.firstWhereOrNull(
-                    (element) {
-                      return element.idType == _individualAddressIdKey;
-                    },
-                  )?.id;
-
-                  updatedEntity = updatedEntity.copyWith(
-                    // TODO: Modify this to work with multiple identifiers
-                    identifiers: updatedEntity.identifiers?.map((e) {
-                      return e.copyWith(
-                        id: identifierId,
-                      );
-                    }).toList(),
-
-                    // TODO: Modify this to work with multiple addresses
-                    address: updatedEntity.address?.map((e) {
-                      return e.copyWith(
-                        id: addressId,
-                      );
-                    }).toList(),
-                  );
-                }
-
-                if (updatedEntity is TaskModel) {
-                  final resourceId = e.additionalIds
-                      .firstWhereOrNull(
-                        (element) => element.idType == _taskResourceIdKey,
-                      )
-                      ?.id;
-
-                  updatedEntity = updatedEntity.copyWith(
-                    resources: updatedEntity.resources?.map((e) {
-                      if (resourceId != null) {
-                        return e.copyWith(
-                          taskId: serverGeneratedId,
-                          id: resourceId,
-                        );
-                      }
-
-                      return e.copyWith(taskId: serverGeneratedId);
-                    }).toList(),
-                  );
-                }
-
-                return updatedEntity;
-              }
-
-              return oplogEntryEntity;
-            })
-            .whereNotNull()
-            .toList();
-
-        if (operationGroupedEntity.key == DataOperation.create) {
-          await Future.delayed(const Duration(seconds: 1));
-
-          switch (typeGroupedEntity.key) {
-            case DataModelType.complaints:
-              for (final entity in entities) {
-                if (remote is PgrServiceRemoteRepository &&
-                    entity is PgrServiceModel) {
-                  final response = await remote.create(entity);
-                  final responseData = response.data;
-                  if (responseData is! Map<String, dynamic>) {
-                    AppLogger.instance.error(
-                      title: 'NetworkManager : PgrServiceRemoteRepository',
-                      message: responseData,
-                      stackTrace: StackTrace.current,
-                    );
-                    continue;
-                  }
-
-                  PgrServiceCreateResponseModel pgrServiceCreateResponseModel;
-                  PgrComplaintResponseModel pgrComplaintModel;
-                  try {
-                    pgrServiceCreateResponseModel =
-                        Mapper.fromMap<PgrServiceCreateResponseModel>(
-                      responseData,
-                    );
-                    pgrComplaintModel =
-                        pgrServiceCreateResponseModel.serviceWrappers.first;
-                  } catch (e) {
-                    rethrow;
-                  }
-
-                  final service = pgrComplaintModel.service;
-                  final serviceRequestId = service.serviceRequestId;
-
-                  if (serviceRequestId == null || serviceRequestId.isEmpty) {
-                    AppLogger.instance.error(
-                      title: 'NetworkManager : PgrServiceRemoteRepository',
-                      message: 'Service Request ID is null',
-                      stackTrace: StackTrace.current,
-                    );
-                    continue;
-                  }
-
-                  await local.markSyncedUp(
-                    clientReferenceId: entity.clientReferenceId,
-                  );
-
-                  await local.opLogManager.updateServerGeneratedIds(
-                    model: UpdateServerGeneratedIdModel(
-                      clientReferenceId: entity.clientReferenceId,
-                      serverGeneratedId: serviceRequestId,
-                      dataOperation: operationGroupedEntity.key,
-                    ),
-                  );
-
-                  await local.update(
-                    entity.copyWith(
-                      serviceRequestId: serviceRequestId,
-                      id: service.id,
-                      applicationStatus: service.applicationStatus,
-                      accountId: service.accountId,
-                    ),
-                    createOpLog: false,
-                  );
-                }
-              }
-              break;
-            default:
-              await remote.bulkCreate(entities);
-          }
-        } else if (operationGroupedEntity.key == DataOperation.update) {
-          await remote.bulkUpdate(entities);
-        } else if (operationGroupedEntity.key == DataOperation.delete) {
-          await remote.bulkDelete(entities);
-        }
-        if (operationGroupedEntity.key == DataOperation.singleCreate) {
-          for (var element in entities) {
-            await remote.singleCreate(element);
-          }
-        }
-
-        for (final syncedEntity in operationGroupedEntity.value) {
-          if (syncedEntity.type == DataModelType.complaints) continue;
-          local.markSyncedUp(entry: syncedEntity);
-        }
-      }
+    } catch (e) {
+      syncError = SyncDownError(e);
+      service?.stopSelf();
     }
+
+// Perform the sync up Operation
+
+    try {
+      await PerformSyncUp.syncUp(
+        bandwidthModel: bandwidthModel,
+        localRepositories: localRepositories.toSet().toList(),
+        remoteRepositories: remoteRepositories.toSet().toList(),
+      );
+    } catch (e) {
+      syncError ??= SyncUpError(e);
+      service?.stopSelf();
+    }
+
+    if (syncError != null) throw syncError;
+
+    // Recursive function which will call the Perfom Sync
+
+    if (pendingSyncUpEntries.isNotEmpty || pendingSyncDownEntries.isNotEmpty) {
+      await Future.delayed(const Duration(seconds: 3));
+      isSyncCompleted = await performSync(
+        bandwidthModel: bandwidthModel,
+        localRepositories: localRepositories,
+        remoteRepositories: remoteRepositories,
+      );
+    } else if (pendingSyncUpEntries.isEmpty && pendingSyncDownEntries.isEmpty) {
+      await LocalSecureStore.instance.setManualSyncTrigger(false);
+      isSyncCompleted = true;
+    }
+
+    return isSyncCompleted;
   }
 
-  FutureOr<void> syncDown({
-    required String createdBy,
-    required List<LocalRepository> localRepositories,
-    required List<RemoteRepository> remoteRepositories,
-  }) async {
-    if (configuration.persistenceConfig ==
-        PersistenceConfiguration.onlineOnly) {
-      throw Exception('Sync down is not valid for online only configuration');
-    }
+  //
+  FutureOr<void> writeToEntityDB(
+    Map<String, dynamic> response,
+    List<LocalRepository> localRepositories,
+  ) async {
+    try {
+      for (int i = 0; i <= response.keys.length - 1; i++) {
+        if (response.keys.elementAt(i) != 'DownsyncCriteria') {
+          final local = RepositoryType.getLocalForType(
+            DataModels.getDataModelForEntityName(response.keys.elementAt(i)),
+            localRepositories,
+          );
+          final List<dynamic> entityResponse =
+              response[response.keys.elementAt(i)] ?? [];
 
-    final futures = await Future.wait(
-      localRepositories.map((e) => e.getItemsToBeSyncedDown(createdBy)),
-    );
+          final entityList =
+              entityResponse.whereType<Map<String, dynamic>>().toList();
 
-    final pendingSyncEntries = futures.expand((e) => e).toList();
-
-    final groupedEntries = pendingSyncEntries.groupListsBy(
-      (element) => element.type,
-    );
-
-    for (final typeGroupedEntity in groupedEntries.entries) {
-      final groupedOperations = typeGroupedEntity.value.groupListsBy(
-        (element) => element.operation,
-      );
-
-      final remote = _getRemoteForType(
-        typeGroupedEntity.key,
-        remoteRepositories,
-      );
-
-      final local = _getLocalForType(
-        typeGroupedEntity.key,
-        localRepositories,
-      );
-
-      for (final operationGroupedEntity in groupedOperations.entries) {
-        final entities = operationGroupedEntity.value.map((e) {
-          final serverGeneratedId = e.serverGeneratedId;
-          if (serverGeneratedId != null) {
-            return local.opLogManager.applyServerGeneratedIdToEntity(
-              e.entity,
-              serverGeneratedId,
-            );
+          switch (response.keys.elementAt(i)) {
+            case "Households":
+              final entity = entityList
+                  .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "HouseholdMembers":
+              final entity = entityList
+                  .map(
+                    (e) => HouseholdMemberModelMapper.fromJson(
+                      jsonEncode(e),
+                    ),
+                  )
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Individuals":
+              final entity = entityList
+                  .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "ProjectBeneficiaries":
+              final entity = entityList
+                  .map((e) =>
+                      ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Tasks":
+              final entity = entityList
+                  .map((e) => TaskModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "SideEffects":
+              final entity = entityList
+                  .map((e) => SideEffectModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "Referrals":
+              final entity = entityList
+                  .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            default:
+              final entity = entityList
+                  .map((e) => EntityModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
           }
-
-          return e.entity;
-        }).toList();
-
-        List<EntityModel> responseEntities = [];
-
-        switch (typeGroupedEntity.key) {
-          case DataModelType.household:
-            responseEntities = await remote.search(HouseholdSearchModel(
-              clientReferenceId: entities
-                  .whereType<HouseholdModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as HouseholdModel;
-              final responseEntity =
-                  responseEntities.whereType<HouseholdModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-
-              if (serverGeneratedId != null) {
-                final addressAdditionalId = responseEntity?.address?.id == null
-                    ? null
-                    : AdditionalId(
-                        idType: _householdAddressIdKey,
-                        id: responseEntity!.address!.id!,
-                      );
-
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    additionalIds: [
-                      if (addressAdditionalId != null) addressAdditionalId,
-                    ],
-                    dataOperation: element.operation,
-                  ),
-                );
-              }
-            }
-
-            break;
-
-          case DataModelType.individual:
-            responseEntities = await remote.search(IndividualSearchModel(
-              clientReferenceId: entities
-                  .whereType<IndividualModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as IndividualModel;
-              final responseEntity = responseEntities
-                  .whereType<IndividualModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-
-              final serverGeneratedId = responseEntity?.id;
-
-              if (serverGeneratedId != null) {
-                final identifierAdditionalIds = responseEntity?.identifiers
-                    ?.map((e) {
-                      final id = e.id;
-
-                      if (id == null) return null;
-
-                      return AdditionalId(
-                        idType: _individualIdentifierIdKey,
-                        id: id,
-                      );
-                    })
-                    .whereNotNull()
-                    .toList();
-
-                final addressAdditionalIds = responseEntity?.address
-                    ?.map((e) {
-                      final id = e.id;
-
-                      if (id == null) return null;
-
-                      return AdditionalId(
-                        idType: _individualAddressIdKey,
-                        id: id,
-                      );
-                    })
-                    .whereNotNull()
-                    .toList();
-
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    additionalIds: [
-                      if (identifierAdditionalIds != null)
-                        ...identifierAdditionalIds,
-                      if (addressAdditionalIds != null) ...addressAdditionalIds,
-                    ],
-                    dataOperation: element.operation,
-                  ),
-                );
-              }
-            }
-
-            break;
-          case DataModelType.projectBeneficiary:
-            responseEntities =
-                await remote.search(ProjectBeneficiarySearchModel(
-              clientReferenceId: entities
-                  .whereType<ProjectBeneficiaryModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as ProjectBeneficiaryModel;
-              final responseEntity = responseEntities
-                  .whereType<ProjectBeneficiaryModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-              final serverGeneratedId = responseEntity?.id;
-
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                  ),
-                );
-              }
-            }
-
-            break;
-          case DataModelType.task:
-            responseEntities = await remote.search(TaskSearchModel(
-              clientReferenceId: entities
-                  .whereType<TaskModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final taskModel = element.entity as TaskModel;
-              var responseEntity =
-                  responseEntities.whereType<TaskModel>().firstWhereOrNull(
-                        (e) =>
-                            e.clientReferenceId == taskModel.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: taskModel.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    additionalIds: responseEntity?.resources
-                        ?.map((e) {
-                          final id = e.id;
-                          if (id == null) return null;
-
-                          return AdditionalId(
-                            idType: _taskResourceIdKey,
-                            id: id,
-                          );
-                        })
-                        .whereNotNull()
-                        .toList(),
-                    dataOperation: element.operation,
-                  ),
-                );
-              }
-            }
-
-            break;
-
-          case DataModelType.stock:
-            responseEntities = await remote.search(
-              StockSearchModel(
-                clientReferenceId: entities
-                    .whereType<StockModel>()
-                    .map((e) => e.clientReferenceId)
-                    .whereNotNull()
-                    .toList(),
-              ),
-            );
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as StockModel;
-              final responseEntity =
-                  responseEntities.whereType<StockModel>().firstWhereOrNull(
-                        (e) => e.clientReferenceId == entity.clientReferenceId,
-                      );
-
-              final serverGeneratedId = responseEntity?.id;
-
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                  ),
-                );
-              }
-            }
-
-            break;
-
-          case DataModelType.stockReconciliation:
-            responseEntities =
-                await remote.search(StockReconciliationSearchModel(
-              clientReferenceId: entities
-                  .whereType<StockReconciliationModel>()
-                  .map((e) => e.clientReferenceId)
-                  .whereNotNull()
-                  .toList(),
-            ));
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as StockReconciliationModel;
-              final responseEntity = responseEntities
-                  .whereType<StockReconciliationModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-
-              final serverGeneratedId = responseEntity?.id;
-
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                  ),
-                );
-              }
-            }
-
-            break;
-
-          case DataModelType.complaints:
-            if (remote is! PgrServiceRemoteRepository) continue;
-
-            final futures = entities
-                .whereType<PgrServiceModel>()
-                .map((e) => e.serviceRequestId)
-                .whereNotNull()
-                .map(
-              (e) {
-                final future = remote.searchWithoutClientReferenceId(
-                  PgrServiceSearchModel(
-                    serviceRequestId: e,
-                  ),
-                );
-
-                return Future.sync(() => future);
-              },
-            );
-
-            final resolvedFutures = await Future.wait(futures);
-
-            final updatedPgrModel = resolvedFutures
-                .expand((element) => element)
-                .whereType<PgrServiceResponseModel>()
-                .map((e) {})
-                .toList();
-
-            responseEntities = resolvedFutures
-                .expand((element) => element)
-                .whereType<PgrServiceResponseModel>()
-                // We only need serviceRequestId and application status
-                .map((e) => PgrServiceModel(
-                      clientReferenceId: '',
-                      tenantId: e.tenantId ?? '',
-                      serviceCode: e.serviceCode ?? '',
-                      description: e.description ?? '',
-                      serviceRequestId: e.serviceRequestId,
-                      applicationStatus: e.applicationStatus ??
-                          PgrServiceApplicationStatus.pendingAssignment,
-                      user: PgrComplainantModel(
-                        clientReferenceId: '',
-                        tenantId: '',
-                        complaintClientReferenceId: e.serviceRequestId ?? '',
-                      ),
-                      address: PgrAddressModel(),
-                    ))
-                .toList();
-
-            for (var element in typeGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as PgrServiceModel;
-              final responseEntity = responseEntities
-                  .whereType<PgrServiceModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-
-              final serverGeneratedId = responseEntity?.serviceRequestId;
-
-              if (serverGeneratedId != null) {
-                local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                  ),
-                );
-              }
-            }
-
-            break;
-
-          default:
-            continue;
-        }
-
-        for (var element in responseEntities) {
-          await local.update(element, createOpLog: false);
         }
       }
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -644,40 +187,34 @@ class NetworkManager {
       })))
           .expand((element) => element)
           .length;
+}
 
-  RemoteRepository _getRemoteForType(
-    DataModelType type,
-    List<RemoteRepository> remoteRepositories,
-  ) {
-    final repository = remoteRepositories.firstWhereOrNull(
-      (e) => e.type == type,
-    );
+FutureOr<List<EntityModel>> filterEntitybyBandwidth(
+  int batchSize,
+  List<EntityModel> entities,
+) async {
+  final List<EntityModel> items = [];
+  final int size = batchSize < entities.length ? batchSize : entities.length;
 
-    if (repository == null) {
-      throw Exception(
-        'Remote repository is not configured in the network manager',
-      );
-    }
-
-    return repository;
+  for (var i = 0; i < size; i++) {
+    items.add(entities[i]);
   }
 
-  LocalRepository _getLocalForType(
-    DataModelType type,
-    List<LocalRepository> localRepositories,
-  ) {
-    final repository = localRepositories.firstWhereOrNull(
-      (e) => e.type == type,
-    );
+  return items;
+}
 
-    if (repository == null) {
-      throw Exception(
-        'Remote repository is not configured in the network manager',
-      );
-    }
+Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
+  int batchSize,
+  List<OpLogEntry<EntityModel>> entities,
+) async {
+  final List<OpLogEntry<EntityModel>> items = [];
+  final int size = batchSize < entities.length ? batchSize : entities.length;
 
-    return repository;
+  for (var i = 0; i < size; i++) {
+    items.add(entities[i]);
   }
+
+  return items;
 }
 
 class NetworkManagerConfiguration {
@@ -689,3 +226,17 @@ class NetworkManagerConfiguration {
 }
 
 enum PersistenceConfiguration { offlineFirst, onlineOnly }
+
+abstract class SyncError implements Exception {
+  final dynamic error;
+
+  const SyncError([this.error]);
+}
+
+class SyncUpError extends SyncError {
+  const SyncUpError([dynamic error]) : super(error);
+}
+
+class SyncDownError extends SyncError {
+  const SyncDownError([dynamic error]) : super(error);
+}

@@ -52,6 +52,8 @@ class Variables {
   static const _connectTimeoutValue = 6000;
   static const _receiveTimeoutValue = 6000;
   static const _sendTimeoutValue = 6000;
+  static const _retryTimeIntervalValue = 5;
+  static const _syncDownRetryCountValue = 3;
 
   static const _envName = EnvEntry(
     'ENV_NAME',
@@ -68,6 +70,20 @@ class Variables {
     '$_connectTimeoutValue',
   );
 
+  static const _dumpErrorApi = EnvEntry(
+    'DUMP_ERROR_PATH',
+    'error-handler/handle-error',
+  );
+
+  static const _syncDownRetryCount = EnvEntry(
+    'SYNC_DOWN_RETRY_COUNT',
+    '$_syncDownRetryCountValue',
+  );
+
+  static const _retryTimeInterval = EnvEntry(
+    'RETRY_TIME_INTERVAL',
+    '$_retryTimeIntervalValue',
+  );
   static const _sendTimeout = EnvEntry(
     'SEND_TIMEOUT',
     '$_connectTimeoutValue',
@@ -76,6 +92,11 @@ class Variables {
   static const _baseUrl = EnvEntry(
     'BASE_URL',
     'https://health-dev.digit.org/',
+  );
+
+  static const _checkBandwidthApi = EnvEntry(
+    'CHECK_BANDWIDTH_API',
+    '/health-project/check/bandwidth',
   );
 
   static const _mdmsApi = EnvEntry(
@@ -88,6 +109,11 @@ class Variables {
     'default',
   );
 
+  static const _actionMapUrl = EnvEntry(
+    'ACTIONS_API_PATH',
+    'access/v1/actions/mdms/_get',
+  );
+
   const Variables({
     this.useFallbackValues = false,
     required DotEnv dotEnv,
@@ -97,13 +123,25 @@ class Variables {
       ? _baseUrl.value
       : _dotEnv.get(_baseUrl.key, fallback: _baseUrl.value);
 
+  String get checkBandwidthApiPath => useFallbackValues
+      ? _checkBandwidthApi.value
+      : _dotEnv.get(_checkBandwidthApi.key, fallback: _checkBandwidthApi.value);
+
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
 
+  String get actionMapApiPath => useFallbackValues
+      ? _actionMapUrl.value
+      : _dotEnv.get(_actionMapUrl.key, fallback: _actionMapUrl.value);
+
   String get tenantId => useFallbackValues
       ? _tenantId.value
       : _dotEnv.get(_tenantId.key, fallback: _tenantId.value);
+
+  String get dumpErrorApiPath => useFallbackValues
+      ? _dumpErrorApi.value
+      : _dotEnv.get(_dumpErrorApi.key, fallback: _dumpErrorApi.value);
 
   int get connectTimeout => useFallbackValues
       ? int.tryParse(_connectTimeout.value) ?? _connectTimeoutValue
@@ -128,6 +166,22 @@ class Variables {
             fallback: _sendTimeout.value,
           )) ??
           _sendTimeoutValue;
+
+  int get syncDownRetryCount => useFallbackValues
+      ? int.tryParse(_syncDownRetryCount.value) ?? _syncDownRetryCountValue
+      : int.tryParse(_dotEnv.get(
+            _syncDownRetryCount.key,
+            fallback: _syncDownRetryCount.value,
+          )) ??
+          _syncDownRetryCountValue;
+
+  int get retryTimeInterval => useFallbackValues
+      ? int.tryParse(_retryTimeInterval.value) ?? _retryTimeIntervalValue
+      : int.tryParse(_dotEnv.get(
+            _retryTimeInterval.key,
+            fallback: _retryTimeInterval.value,
+          )) ??
+          _retryTimeIntervalValue;
 
   EnvType get envType {
     final envName = useFallbackValues

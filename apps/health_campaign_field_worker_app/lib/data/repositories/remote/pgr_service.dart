@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
-import 'package:health_campaign_field_worker_app/utils/environment_config.dart';
 
 import '../../../models/data_model.dart';
+import '../../../utils/environment_config.dart';
 import '../../data_repository.dart';
 
 class PgrServiceRemoteRepository
@@ -78,7 +78,7 @@ class PgrServiceRemoteRepository
     List<PgrComplaintResponseModel> pgrComplaintModel;
     try {
       pgrServiceCreateResponseModel =
-          Mapper.fromMap<PgrServiceCreateResponseModel>(
+          PgrServiceCreateResponseModelMapper.fromMap(
         responseMap,
       );
       pgrComplaintModel = pgrServiceCreateResponseModel.serviceWrappers;
@@ -102,7 +102,11 @@ class PgrServiceRemoteRepository
   FutureOr<Response> delete(EntityModel entity) => throw UnimplementedError();
 
   @override
-  FutureOr<List<PgrServiceModel>> search(PgrServiceSearchModel query) =>
+  FutureOr<List<PgrServiceModel>> search(
+    PgrServiceSearchModel query, {
+    int? offSet,
+    int? limit,
+  }) =>
       throw UnimplementedError();
 
   @override

@@ -30,6 +30,7 @@ class AppInitializationBloc
     on(_onAppInitializeSetup);
   }
 
+  //App Initialization event to setup the app config and init data
   FutureOr<void> _onAppInitializeSetup(
     AppInitializationSetupEvent event,
     AppInitializationEmitter emit,
@@ -40,7 +41,8 @@ class AppInitializationBloc
       if (event.retriesLeft == 0) {
         throw const AppInitializationException('Unable to fetch MDMS Config');
       }
-      final config = await _loadOfflineData();
+
+      final config = await _loadOfflineData(emit);
       emit(AppInitialized(
         appConfiguration: config.appConfigs.first,
         serviceRegistryList: config.serviceRegistryList,
@@ -49,70 +51,100 @@ class AppInitializationBloc
       emit(const AppUninitialized());
       rethrow;
     } catch (error) {
-      final result = await mdmsRepository.searchServiceRegistry(
-        envConfig.variables.mdmsApiPath,
-        MdmsRequestModel(
-          mdmsCriteria: MdmsCriteriaModel(
-            tenantId: envConfig.variables.tenantId,
-            moduleDetails: [
-              const MdmsModuleDetailModel(
-                moduleName: 'HCM-SERVICE-REGISTRY',
-                masterDetails: [
-                  MdmsMasterDetailModel('serviceRegistry'),
-                ],
-              ),
-            ],
+      try {
+        final result = await mdmsRepository.searchServiceRegistry(
+          envConfig.variables.mdmsApiPath,
+          MdmsRequestModel(
+            mdmsCriteria: MdmsCriteriaModel(
+              tenantId: envConfig.variables.tenantId,
+              moduleDetails: [
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-SERVICE-REGISTRY',
+                  masterDetails: [
+                    MdmsMasterDetailModel('serviceRegistry'),
+                  ],
+                ),
+              ],
+            ),
+          ).toJson(),
+        );
+        await mdmsRepository.writeToRegistryDB(result, isar);
+
+        final configResult = await mdmsRepository.searchAppConfig(
+          envConfig.variables.mdmsApiPath,
+          MdmsRequestModel(
+            mdmsCriteria: MdmsCriteriaModel(
+              tenantId: envConfig.variables.tenantId,
+              moduleDetails: [
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-FIELD-APP-CONFIG',
+                  masterDetails: [
+                    MdmsMasterDetailModel('appConfig'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'module-version',
+                  masterDetails: [
+                    MdmsMasterDetailModel('ROW_VERSIONS'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-SYMPTOMS-TYPES',
+                  masterDetails: [
+                    MdmsMasterDetailModel('symptomsTypes'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-REFERRAL-REASONS',
+                  masterDetails: [
+                    MdmsMasterDetailModel('referralReasons'),
+                  ],
+                ),
+              ],
+            ),
+          ).toJson(),
+        );
+
+        final pgrServiceDefinitions =
+            await mdmsRepository.searchPGRServiceDefinitions(
+          envConfig.variables.mdmsApiPath,
+          MdmsRequestModel(
+            mdmsCriteria: MdmsCriteriaModel(
+              tenantId: envConfig.variables.tenantId,
+              moduleDetails: [
+                const MdmsModuleDetailModel(
+                  moduleName: 'RAINMAKER-PGR',
+                  masterDetails: [
+                    MdmsMasterDetailModel('ServiceDefs'),
+                  ],
+                ),
+              ],
+            ),
+          ).toJson(),
+        );
+
+        await mdmsRepository.writeToAppConfigDB(
+          configResult,
+          pgrServiceDefinitions,
+          isar,
+        );
+
+        add(
+          AppInitializationSetupEvent(
+            retriesLeft: event.retriesLeft - 1,
           ),
-        ).toJson(),
-      );
-      await mdmsRepository.writeToRegistryDB(result, isar);
-
-      final configResult = await mdmsRepository.searchAppConfig(
-        envConfig.variables.mdmsApiPath,
-        MdmsRequestModel(
-          mdmsCriteria: MdmsCriteriaModel(
-            tenantId: envConfig.variables.tenantId,
-            moduleDetails: [
-              const MdmsModuleDetailModel(
-                moduleName: 'HCM-FIELD-APP-CONFIG',
-                masterDetails: [
-                  MdmsMasterDetailModel('appConfig'),
-                ],
-              ),
-            ],
-          ),
-        ).toJson(),
-      );
-
-      final pgrServiceDefinitions = await mdmsRepository.searchPGRServiceDefinitions(
-        envConfig.variables.mdmsApiPath,
-        MdmsRequestModel(
-          mdmsCriteria: MdmsCriteriaModel(
-            tenantId: envConfig.variables.tenantId,
-            moduleDetails: [
-              const MdmsModuleDetailModel(
-                moduleName: 'RAINMAKER-PGR',
-                masterDetails: [
-                  MdmsMasterDetailModel('ServiceDefs'),
-                ],
-              ),
-            ],
-          ),
-        ).toJson(),
-      );
-
-      await mdmsRepository.writeToAppConfigDB(configResult, pgrServiceDefinitions, isar);
-
-      add(
-        AppInitializationSetupEvent(
-          retriesLeft: event.retriesLeft - 1,
-        ),
-      );
-      emit(const AppUninitialized());
+        );
+        emit(const AppUninitialized());
+      } catch (e) {
+        /*Checks for if app initialization failed due to no internet or no retries left */
+        emit(const AppInitializationState.failed());
+      }
     }
   }
 
-  Future<MdmsConfig> _loadOfflineData() async {
+  Future<MdmsConfig> _loadOfflineData(
+    Emitter<AppInitializationState> emit,
+  ) async {
     final serviceRegistryList = await isar.serviceRegistrys.where().findAll();
     final configs = await isar.appConfigurations.where().findAll();
 
@@ -144,6 +176,7 @@ class AppInitializationState with _$AppInitializationState {
   const factory AppInitializationState.uninitialized() = AppUninitialized;
 
   const factory AppInitializationState.loading() = AppInitializing;
+  const factory AppInitializationState.failed() = AppInitializationFailed;
 
   const factory AppInitializationState.initialized({
     required AppConfiguration appConfiguration,
@@ -154,6 +187,7 @@ class AppInitializationState with _$AppInitializationState {
     return when(
       uninitialized: () => {},
       loading: () => {},
+      failed: () => {},
       initialized: (appConfiguration, serviceRegistryList) =>
           serviceRegistryList
               .map((e) => e.actions.map((e) {
@@ -199,6 +233,7 @@ class AppInitializationState with _$AppInitializationState {
     return when<String>(
       uninitialized: () => 'Uninitialized',
       loading: () => 'Loading',
+      failed: () => 'Failed',
       initialized: (appConfiguration, serviceRegistryList) =>
           'tenantId: ${appConfiguration.tenantId}\n'
           'serviceCount: ${serviceRegistryList.length}',

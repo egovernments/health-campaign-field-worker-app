@@ -20,7 +20,7 @@ class RequestInfoModel with _$RequestInfoModel {
   const factory RequestInfoModel({
     final String? apiId,
     final String? ver,
-    final String? ts,
+    final num? ts,
     final String? action,
     final String? did,
     final String? key,

@@ -1,3 +1,9 @@
+import 'dart:io';
+
+import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_components/widgets/digit_card.dart';
+import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +14,12 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../data/data_repository.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/attendance_logs.dart';
 import '../data/repositories/local/boundary.dart';
+import '../data/repositories/local/downsync.dart';
 import '../data/repositories/local/facility.dart';
+import '../data/repositories/local/h_f_referral.dart';
+import '../data/repositories/local/hcm_attendance.dart';
 import '../data/repositories/local/household.dart';
 import '../data/repositories/local/houshold_member.dart';
 import '../data/repositories/local/individual.dart';
@@ -20,15 +30,21 @@ import '../data/repositories/local/project_beneficiary.dart';
 import '../data/repositories/local/project_facility.dart';
 import '../data/repositories/local/project_resource.dart';
 import '../data/repositories/local/project_staff.dart';
+import '../data/repositories/local/referral.dart';
 import '../data/repositories/local/service.dart';
 import '../data/repositories/local/service_definition.dart';
+import '../data/repositories/local/side_effect.dart';
 import '../data/repositories/local/stock.dart';
 import '../data/repositories/local/stock_reconciliation.dart';
 import '../data/repositories/local/task.dart';
 import '../data/repositories/oplog/oplog.dart';
+import '../data/repositories/remote/attendance_logs.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/boundary.dart';
+import '../data/repositories/remote/downsync.dart';
 import '../data/repositories/remote/facility.dart';
+import '../data/repositories/remote/h_f_referral.dart';
+import '../data/repositories/remote/hcm_attendance.dart';
 import '../data/repositories/remote/household.dart';
 import '../data/repositories/remote/household_member.dart';
 import '../data/repositories/remote/individual.dart';
@@ -42,11 +58,14 @@ import '../data/repositories/remote/project_product_variant.dart';
 import '../data/repositories/remote/project_resource.dart';
 import '../data/repositories/remote/project_staff.dart';
 import '../data/repositories/remote/project_type.dart';
+import '../data/repositories/remote/referral.dart';
 import '../data/repositories/remote/service.dart';
 import '../data/repositories/remote/service_definition.dart';
+import '../data/repositories/remote/side_effect.dart';
 import '../data/repositories/remote/stock.dart';
 import '../data/repositories/remote/stock_reconciliation.dart';
 import '../data/repositories/remote/task.dart';
+import '../data/repositories/remote/user.dart';
 import '../models/data_model.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
@@ -72,9 +91,41 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       builder: (context, state) {
         final actionMap = state.entityActionMapping;
         if (actionMap.isEmpty) {
-          return const Offstage();
+          return MaterialApp(
+            theme: DigitTheme.instance.mobileTheme,
+            home: Scaffold(
+              appBar: AppBar(),
+              body: state.maybeWhen(
+                orElse: () => const Center(
+                  child: Text('Unable to initialize the application'),
+                ),
+                /*Returns Loading state while app initialization is in progress*/
+                loading: () => const Center(
+                  child: Text('Loading'),
+                ),
+                /*Returns No Internet Connection warning if its failed to initialize after all retries
+                  and shows a button to close the app*/
+                failed: () => ScrollableContent(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  footer: DigitCard(
+                    child: DigitElevatedButton(
+                      onPressed: () => exit(0),
+                      child: const Center(
+                        child: Text('Close'),
+                      ),
+                    ),
+                  ),
+                  children: const [
+                    Center(
+                      child: Text('Internet not available. Try later.'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
         }
-
         final remote = _getRemoteRepositories(dio, actionMap);
         final local = _getLocalRepositories(sql, isar);
 
@@ -163,6 +214,19 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           TaskOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
+        create: (_) => ReferralLocalRepository(
+          sql,
+          ReferralOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<SideEffectModel, SideEffectSearchModel>>(
+        create: (_) => SideEffectLocalRepository(
+          sql,
+          SideEffectOpLogManager(isar),
+        ),
+      ),
       RepositoryProvider<
           LocalRepository<StockReconciliationModel,
               StockReconciliationSearchModel>>(
@@ -212,6 +276,34 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => PgrServiceLocalRepository(
           sql,
           PgrServiceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<DownsyncModel, DownsyncSearchModel>>(
+        create: (_) => DownsyncLocalRepository(
+          sql,
+          DownsyncOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
+        create: (_) => HFReferralLocalRepository(
+          sql,
+          HFReferralOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HCMAttendanceRegisterModel,
+              HCMAttendanceSearchModel>>(
+        create: (_) => AttendanceLocalRepository(
+          sql,
+          AttendanceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>>(
+        create: (_) => AttendanceLogsLocalRepository(
+          sql,
+          AttendanceLogOpLogManager(isar),
         ),
       ),
     ];
@@ -346,6 +438,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
+        if (value == DataModelType.referral)
+          RepositoryProvider<
+              RemoteRepository<ReferralModel, ReferralSearchModel>>(
+            create: (_) => ReferralRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
         if (value == DataModelType.stockReconciliation)
           RepositoryProvider<
               RemoteRepository<StockReconciliationModel,
@@ -401,6 +501,55 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
             create: (_) => PgrServiceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.user)
+          RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
+            create: (_) => UserRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.sideEffect)
+          RepositoryProvider<
+              RemoteRepository<SideEffectModel, SideEffectSearchModel>>(
+            create: (_) => SideEffectRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.downsync)
+          RepositoryProvider<
+              RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
+            create: (_) => DownsyncRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.hFReferral)
+          RepositoryProvider<
+              RemoteRepository<HFReferralModel, HFReferralSearchModel>>(
+            create: (_) => HFReferralRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.attendanceRegister)
+          RepositoryProvider<
+              RemoteRepository<HCMAttendanceRegisterModel,
+                  HCMAttendanceSearchModel>>(
+            create: (_) => AttendanceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.attendance)
+          RepositoryProvider<
+              RemoteRepository<HCMAttendanceLogModel,
+                  HCMAttendanceLogSearchModel>>(
+            create: (_) => AttendanceLogRemoteRepository(
               dio,
               actionMap: actions,
             ),

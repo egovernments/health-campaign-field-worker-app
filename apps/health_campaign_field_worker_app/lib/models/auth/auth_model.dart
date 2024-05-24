@@ -44,6 +44,7 @@ class UserRequestModel with _$UserRequestModel {
     bool? active,
     String? tenantId,
     String? permanentCity,
+    String? gender,
     @Default([]) List<UserRoleModel> roles,
   }) = _UserRequestModel;
 
@@ -54,32 +55,11 @@ class UserRequestModel with _$UserRequestModel {
 @freezed
 class UserRoleModel with _$UserRoleModel {
   const factory UserRoleModel({
-    required String name,
-    required UserRoleCodeEnum code,
+    @Default('') String? name,
+    required String code,
     String? tenantId,
   }) = _UserRoleModel;
 
   factory UserRoleModel.fromJson(Map<String, dynamic> json) =>
       _$UserRoleModelFromJson(json);
-}
-
-enum UserRoleCodeEnum {
-  @JsonValue('REGISTRAR')
-  registrar,
-  @JsonValue('WAREHOUSE_MANAGER')
-  warehouseManager,
-  @JsonValue('SYSTEM_ADMINISTRATOR')
-  systemAdministrator,
-  @JsonValue('SUPERVISOR')
-  supervisor,
-  @JsonValue('DISTRIBUTOR')
-  distributor,
-  @JsonValue('NATIONAL_SUPERVISOR')
-  nationalSupervisor,
-  @JsonValue('PROVINCIAL_SUPERVISOR')
-  provincialSupervisor,
-  @JsonValue('DISTRICT_SUPERVISOR')
-  districtSupervisor,
-  @JsonValue('FIELD_SUPERVISOR')
-  fieldSupervisor,
 }

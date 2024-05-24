@@ -5,34 +5,44 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ProjectFacilitySearchModel extends EntitySearchModel {
+part 'project_facility.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectFacilitySearchModel extends EntitySearchModel with ProjectFacilitySearchModelMappable {
   final String? id;
   final List<String>? facilityId;
   final List<String>? projectId;
   final String? tenantId;
-  final bool? isDeleted;
   
   ProjectFacilitySearchModel({
     this.id,
     this.facilityId,
     this.projectId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ProjectFacilitySearchModel.ignoreDeleted({
+    this.id,
+    this.facilityId,
+    this.projectId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectFacilityModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectFacilityModel extends EntityModel with ProjectFacilityModelMappable {
 
   static const schemaName = 'ProjectFacility';
 
   final String id;
   final String facilityId;
   final String projectId;
+  final bool? nonRecoverableError;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final ProjectFacilityAdditionalFields? additionalFields;
 
@@ -41,10 +51,11 @@ class ProjectFacilityModel extends EntityModel {
     required this.id,
     required this.facilityId,
     required this.projectId,
+    this.nonRecoverableError = false,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   ProjectFacilityCompanion get companion {
@@ -52,23 +63,29 @@ class ProjectFacilityModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       facilityId: Value(facilityId),
       projectId: Value(projectId),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectFacilityAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectFacilityAdditionalFields extends AdditionalFields with ProjectFacilityAdditionalFieldsMappable {
   ProjectFacilityAdditionalFields({
     super.schema = 'ProjectFacility',
     required super.version,
     super.fields,
   });
 }
+

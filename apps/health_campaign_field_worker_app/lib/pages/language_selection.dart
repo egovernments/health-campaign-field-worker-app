@@ -2,12 +2,13 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../router/app_router.dart';
-import '../utils/constants.dart';
+import '../utils/utils.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
 class LanguageSelectionPage extends StatelessWidget {
@@ -44,10 +45,15 @@ class LanguageSelectionPage extends StatelessWidget {
                               return DigitRowCardModel(
                                 label: e.label,
                                 value: e.value,
-                                isSelected: index == localizationState.index,
+                                isSelected: getSelectedLanguage(
+                                  state,
+                                  index,
+                                ),
                               );
                             }).toList(),
                             onLanguageChange: (value) async {
+                              final info = await PackageInfo.fromPlatform();
+                              Constants().initialize(info.version);
                               int index = languages.indexWhere(
                                 (ele) =>
                                     ele.value.toString() ==
@@ -84,7 +90,6 @@ class LanguageSelectionPage extends StatelessWidget {
                 );
               },
             ),
-            const PoweredByDigit(isWhiteLogo: true),
           ],
         ),
       ),

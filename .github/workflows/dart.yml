@@ -7,9 +7,9 @@ name: Run analysis and tests
 
 on:
   push:
-    branches: [ "develop", "master", "qa", "demo", "uat" ]
+    branches: ['develop', 'master', 'qa', 'demo', 'uat']
   pull_request:
-    branches: [ "develop", "master", "qa", "demo", "uat" ]
+    branches: ['develop', 'master', 'qa', 'demo', 'uat']
 
 jobs:
   build:
@@ -17,16 +17,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: dart-lang/setup-dart@9a04e6d73cca37bd455e0608d7e5092f881fd603
+      - uses: dart-lang/setup-dart@v1
 
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
+        with:
+          flutter-version: "3.16.5"
 
       - name: Generate models
         run: ./tools/install_bricks.sh
 
       - name: Analyze code
         run: melos run analyze
-
-
-

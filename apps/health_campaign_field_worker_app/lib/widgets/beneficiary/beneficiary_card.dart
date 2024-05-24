@@ -2,6 +2,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/localization/app_localization.dart';
+import '../../models/data_model.dart';
 
 class BeneficiaryCard extends StatelessWidget {
   final String title;
@@ -36,7 +37,7 @@ class BeneficiaryCard extends StatelessWidget {
         ),
         Offstage(
           offstage: status == null,
-          child: status == 'delivered'
+          child: status == Status.visited.toValue()
               ? DigitIconButton(
                   icon: Icons.check_circle,
                   iconText:

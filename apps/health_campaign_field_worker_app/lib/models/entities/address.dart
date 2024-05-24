@@ -5,22 +5,45 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class AddressSearchModel extends EntitySearchModel {
+part 'address.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class AddressSearchModel extends EntitySearchModel with AddressSearchModelMappable {
   final String? id;
+  final double? latitude;
+  final double? longitude;
+  final int? limit;
+  final int? offset;
+  final double? maxRadius;
   final String? tenantId;
-  final bool? isDeleted;
   
   AddressSearchModel({
     this.id,
+    this.latitude,
+    this.longitude,
+    this.limit,
+    this.offset,
+    this.maxRadius,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  AddressSearchModel.ignoreDeleted({
+    this.id,
+    this.latitude,
+    this.longitude,
+    this.limit,
+    this.offset,
+    this.maxRadius,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class AddressModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class AddressModel extends EntityModel with AddressModelMappable {
 
   static const schemaName = 'Address';
 
@@ -39,8 +62,8 @@ class AddressModel extends EntityModel {
   final String? street;
   final String? boundaryType;
   final String? boundary;
+  final bool? nonRecoverableError;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final AddressType? type;
   final LocalityModel? locality;
@@ -63,12 +86,13 @@ class AddressModel extends EntityModel {
     this.street,
     this.boundaryType,
     this.boundary,
+    this.nonRecoverableError = false,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     this.type,
     this.locality,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   AddressCompanion get companion {
@@ -78,8 +102,13 @@ class AddressModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       relatedClientReferenceId: Value(relatedClientReferenceId),
       doorNo: Value(doorNo),
@@ -95,19 +124,20 @@ class AddressModel extends EntityModel {
       street: Value(street),
       boundaryType: Value(boundaryType),
       boundary: Value(boundary),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       type: Value(type),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class AddressAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class AddressAdditionalFields extends AdditionalFields with AddressAdditionalFieldsMappable {
   AddressAdditionalFields({
     super.schema = 'Address',
     required super.version,
     super.fields,
   });
 }
+

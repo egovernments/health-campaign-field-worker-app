@@ -18,7 +18,11 @@ class BoundaryRemoteRepository
   });
 
   @override
-  FutureOr<List<BoundaryModel>> search(BoundarySearchModel query) async {
+  FutureOr<List<BoundaryModel>> search(
+    BoundarySearchModel query, {
+    int? offSet,
+    int? limit,
+  }) async {
     Response response;
 
     response = await executeFuture(
@@ -118,7 +122,7 @@ class BoundaryRemoteRepository
     Iterable<Map<String, dynamic>> entityList,
   ) {
     final boundaryModelList = entityList.map((e) {
-      return Mapper.fromMap<BoundaryModel>(e);
+      return BoundaryModelMapper.fromMap(e);
     }).toList();
 
     return boundaryModelList;

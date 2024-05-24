@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -64,8 +65,10 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<List<D>> search(
-    R query,
-  ) async {
+    R query, {
+    int? offSet,
+    int? limit,
+  }) async {
     Response response;
 
     try {
@@ -74,19 +77,29 @@ abstract class RemoteRepository<D extends EntityModel,
           return await dio.post(
             searchPath,
             queryParameters: {
-              'offset': 0,
-              'limit': 100,
+              'offset': offSet ?? 0,
+              'limit': limit ?? 100,
               'tenantId': envConfig.variables.tenantId,
+              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
             },
-            data: {
-              isPlural
-                  ? entityNamePlural
-                  : entityName == 'ServiceDefinition'
-                      ? 'ServiceDefinitionCriteria'
-                      : entityName: isPlural ? [query.toMap()] : query.toMap(),
-            },
+            data: entityName == 'User'
+                ? query.toMap()
+                : {
+                    isPlural
+                            ? entityNamePlural
+                            : entityName == 'ServiceDefinition'
+                                ? 'ServiceDefinitionCriteria'
+                                : entityName == 'Downsync'
+                                    ? 'DownsyncCriteria'
+                                    : entityName:
+                        isPlural ? [query.toMap()] : query.toMap(),
+                  },
           );
         },
+      );
+      AppLogger.instance.info(
+        'search Response Result: ${response.data}',
+        title: 'Data Repo',
       );
     } catch (error) {
       return [];
@@ -118,6 +131,7 @@ abstract class RemoteRepository<D extends EntityModel,
         (isSearchResponsePlural || entityName == 'ServiceDefinition')
             ? entityNamePlural
             : entityName];
+
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
         data: query.toMap(),
@@ -127,8 +141,22 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     final entityList = entityResponse.whereType<Map<String, dynamic>>();
+    var mapperRes = <D>[];
+    try {
+      AppLogger.instance.error(
+        message: 'mappercontainer ${MapperContainer.globals}',
+        title: 'Mapper Contianer',
+      );
+      mapperRes = entityList.map((e) =>
+          MapperContainer.globals.fromMap<D>(e)).toList();
+    } catch (e) {
+      AppLogger.instance.error(
+        message: e.toString(),
+        title: 'Data Repo',
+      );
+    }
 
-    return entityList.map((e) => Mapper.fromMap<D>(e)).toList();
+    return mapperRes;
   }
 
   FutureOr<Response> singleCreate(D entity) async {
@@ -139,6 +167,50 @@ abstract class RemoteRepository<D extends EntityModel,
         "apiOperation": "CREATE",
       },
     );
+  }
+
+  FutureOr<Map<String, dynamic>> downSync(
+    R query, {
+    int? offSet,
+    int? limit,
+  }) async {
+    Response response;
+
+    try {
+      response = await executeFuture(
+        future: () async {
+          return await dio.post(
+            searchPath,
+            queryParameters: {
+              'offset': offSet ?? 0,
+              'limit': limit ?? 100,
+              'tenantId': envConfig.variables.tenantId,
+              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+            },
+            data: {
+              entityName == 'Downsync' ? 'DownsyncCriteria' : entityName:
+                  query.toMap(),
+            },
+          );
+        },
+      );
+    } catch (error) {
+      return {};
+    }
+
+    final responseMap = response.data;
+
+    if (!responseMap.containsKey(
+      entityName,
+    )) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
+
+    return responseMap[entityName];
   }
 
   @override
@@ -204,6 +276,58 @@ abstract class RemoteRepository<D extends EntityModel,
     );
   }
 
+  FutureOr<Response> dumpError(
+    List<EntityModel> entities,
+    DataOperation operation,
+  ) async {
+    return executeFuture(
+      future: () async {
+        String url = "";
+
+        if (operation == DataOperation.create) {
+          url = bulkCreatePath;
+        } else if (operation == DataOperation.update) {
+          url = bulkUpdatePath;
+        } else if (operation == DataOperation.delete) {
+          url = bulkDeletePath;
+        } else if (operation == DataOperation.singleCreate) {
+          url = createPath;
+        } else if (operation == DataOperation.singleCreate) {
+          url = searchPath;
+        }
+
+        return await dio.post(
+          envConfig.variables.dumpErrorApiPath,
+          options: Options(headers: {
+            "content-type": 'application/json',
+          }),
+          data: {
+            'errorDetail': {
+              "apiDetails": {
+                "id": null,
+                "url": url,
+                "contentType": null,
+                "methodType": null,
+                "requestBody": _getMap(entities).toString(),
+                "requestHeaders": null,
+                "additionalDetails": null,
+              },
+              "errors": [
+                {
+                  "exception": null,
+                  "type": "NON_RECOVERABLE",
+                  "errorCode": null,
+                  "errorMessage": "UPLOAD_ERROR_FROM_APP",
+                  "additionalDetails": null,
+                },
+              ],
+            },
+          },
+        );
+      },
+    );
+  }
+
   FutureOr<Response> bulkDelete(List<EntityModel> entities) async {
     return executeFuture(
       future: () async {
@@ -227,17 +351,19 @@ abstract class RemoteRepository<D extends EntityModel,
       future: () async {
         return await dio.post(
           updatePath,
-          data: {
-            entityName: [entity.toMap()],
-            "apiOperation": "UPDATE",
-          },
+          data: entityName == 'User'
+              ? {entityName: entity.toMap()}
+              : {
+                  entityName: [entity.toMap()],
+                  "apiOperation": "UPDATE",
+                },
         );
       },
     );
   }
 
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
-    return entities.map((e) => Mapper.toMap(e)).toList();
+return entities.map((e) => MapperContainer.globals.toMap(e)).toList();
   }
 
   FutureOr<T> executeFuture<T>({
@@ -327,7 +453,7 @@ abstract class LocalRepository<D extends EntityModel,
       entity,
       operation,
       createdAt: DateTime.now(),
-      createdBy: auditDetails.createdBy,
+      createdBy: entity.clientAuditDetails?.lastModifiedBy ?? '',
       type: type,
     );
 
@@ -346,11 +472,13 @@ abstract class LocalRepository<D extends EntityModel,
     OpLogEntry<D>? entry,
     String? clientReferenceId,
     int? id,
+    bool? nonRecoverableError,
   }) async {
-    return opLogManager.markSyncUp(
+    await opLogManager.markSyncUp(
       entry: entry,
       clientReferenceId: clientReferenceId,
       id: id,
+      nonRecoverableError: nonRecoverableError,
     );
   }
 }

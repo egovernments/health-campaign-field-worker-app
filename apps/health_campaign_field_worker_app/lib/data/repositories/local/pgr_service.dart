@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:drift/drift.dart';
 
@@ -110,28 +109,28 @@ class PgrServiceLocalRepository
           ..where(
             buildAnd(
               [
-                if(userId != null)
+                if (userId != null)
                   sql.pgrService.auditCreatedBy.equals(userId),
                 if (query.tenantId != null)
-                  sql.pgrService.tenantId.equals(query.tenantId),
+                  sql.pgrService.tenantId.equals(query.tenantId!),
                 if (query.clientReferenceId != null)
                   sql.pgrService.clientReferenceId
-                      .equals(query.clientReferenceId),
+                      .equals(query.clientReferenceId!),
                 if (query.serviceRequestId != null)
                   sql.pgrService.serviceRequestId
-                      .equals(query.serviceRequestId),
+                      .equals(query.serviceRequestId!),
                 if (query.complaintAssignedTo != null) ...[
                   if (query.complaintAssignedTo ==
                       "COMPLAINTS_ASSIGNED_TO_SELF") ...[
-                    sql.pgrComplainant.name.equals(query.currentUserName),
+                    sql.pgrComplainant.name.equals(query.currentUserName!),
                   ] else ...[
-                    sql.pgrComplainant.name.equals(query.currentUserName).not(),
+                    sql.pgrComplainant.name.equals(query.currentUserName!).not(),
                   ],
                 ],
                 if (query.complaintTypeCode != null)
-                  sql.pgrService.serviceCode.equals(query.complaintTypeCode),
+                  sql.pgrService.serviceCode.equals(query.complaintTypeCode!),
                 if (query.locality != null)
-                  sql.address.boundary.equals(query.locality),
+                  sql.address.boundary.equals(query.locality!),
                 if (query.complaintStatus != null)
                   if (query.complaintStatus?.isNotEmpty ?? false)
                     sql.pgrService.applicationStatus
@@ -208,6 +207,7 @@ class PgrServiceLocalRepository
         active: pgrService.active,
         source: pgrService.source,
         additionalDetail: pgrService.additionalFields,
+    
       );
     }).toList();
   }

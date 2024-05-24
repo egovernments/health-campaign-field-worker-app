@@ -1,3 +1,5 @@
+import 'package:attendance_management/blocs/app_localization.dart'
+    as attendance_localization;
 import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +14,10 @@ import 'blocs/boundary/boundary.dart';
 import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/scanner/scanner.dart';
+import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
+import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
@@ -20,11 +25,11 @@ import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
-import 'utils/constants.dart';
 import 'utils/environment_config.dart';
+import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
-class MainApplication extends StatelessWidget {
+class MainApplication extends StatefulWidget {
   final Dio client;
   final AppRouter appRouter;
   final Isar isar;
@@ -39,24 +44,32 @@ class MainApplication extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<StatefulWidget> createState() {
+    return MainApplicationState();
+  }
+}
+
+class MainApplicationState extends State<MainApplication>
+    with WidgetsBindingObserver {
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<LocalSqlDataStore>.value(value: sql),
-        RepositoryProvider<Isar>.value(value: isar),
+        RepositoryProvider<LocalSqlDataStore>.value(value: widget.sql),
+        RepositoryProvider<Isar>.value(value: widget.isar),
       ],
       child: BlocProvider(
         create: (context) => AppInitializationBloc(
-          isar: isar,
-          mdmsRepository: MdmsRepository(client),
+          isar: widget.isar,
+          mdmsRepository: MdmsRepository(widget.client),
         )..add(const AppInitializationSetupEvent()),
         child: NetworkManagerProviderWrapper(
-          isar: isar,
+          isar: widget.isar,
           configuration: const NetworkManagerConfiguration(
             persistenceConfig: PersistenceConfiguration.offlineFirst,
           ),
-          dio: client,
-          sql: sql,
+          dio: widget.client,
+          sql: widget.sql,
           child: MultiBlocProvider(
             providers: [
               BlocProvider(
@@ -67,12 +80,38 @@ class MainApplication extends StatelessWidget {
                 lazy: false,
               ),
               BlocProvider(
-                create: (ctx) => AuthBloc(authRepository: ctx.read())
-                  ..add(
+                create: (context) {
+                  return UserBloc(
+                    const UserEmptyState(),
+                    userRemoteRepository: context
+                        .read<RemoteRepository<UserModel, UserSearchModel>>(),
+                  );
+                },
+              ),
+              BlocProvider(
+                create: (ctx) => AuthBloc(
+                  authRepository: ctx.read(),
+                  mdmsRepository: MdmsRepository(widget.client),
+                  individualRemoteRepository: ctx.read<
+                      RemoteRepository<IndividualModel,
+                          IndividualSearchModel>>(),
+                )..add(
                     AuthAutoLoginEvent(
                       tenantId: envConfig.variables.tenantId,
                     ),
                   ),
+              ),
+              BlocProvider(
+                create: (ctx) => ScannerBloc(
+                  const ScannerState(),
+                  projectBeneficiaryRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<ProjectBeneficiaryModel,
+                          ProjectBeneficiarySearchModel>(ctx),
+                  hfReferralDataRepository: ctx
+                      .read<NetworkManager>()
+                      .repository<HFReferralModel, HFReferralSearchModel>(ctx),
+                ),
               ),
               BlocProvider(
                 create: (ctx) => BoundaryBloc(
@@ -85,8 +124,6 @@ class MainApplication extends StatelessWidget {
             ],
             child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
               builder: (context, appConfigState) {
-                const defaultLocale = Locale('en', 'IN');
-
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, authState) {
                     if (appConfigState is! AppInitialized) {
@@ -102,7 +139,8 @@ class MainApplication extends StatelessWidget {
                     final appConfig = appConfigState.appConfiguration;
 
                     final localizationModulesList = appConfig.backendInterface;
-                    final firstLanguage = appConfig.languages?.first.value;
+                    var firstLanguage;
+                    firstLanguage = appConfig.languages?.last.value;
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(
@@ -112,8 +150,11 @@ class MainApplication extends StatelessWidget {
                                   firstLanguage != null)
                               ? (context) => LocalizationBloc(
                                     const LocalizationState(),
-                                    LocalizationRepository(client, isar),
-                                    isar,
+                                    LocalizationRepository(
+                                      widget.client,
+                                      widget.isar,
+                                    ),
+                                    widget.isar,
                                   )..add(
                                       LocalizationEvent.onLoadLocalization(
                                         module: localizationModulesList
@@ -131,12 +172,16 @@ class MainApplication extends StatelessWidget {
                                     )
                               : (context) => LocalizationBloc(
                                     const LocalizationState(),
-                                    LocalizationRepository(client, isar),
-                                    isar,
+                                    LocalizationRepository(
+                                      widget.client,
+                                      widget.isar,
+                                    ),
+                                    widget.isar,
                                   ),
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            mdmsRepository: MdmsRepository(widget.client),
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),
@@ -164,7 +209,7 @@ class MainApplication extends StatelessWidget {
                             serviceDefinitionRemoteRepository: ctx.read<
                                 RemoteRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),
-                            isar: isar,
+                            isar: widget.isar,
                             serviceDefinitionLocalRepository: ctx.read<
                                 LocalRepository<ServiceDefinitionModel,
                                     ServiceDefinitionSearchModel>>(),
@@ -186,11 +231,34 @@ class MainApplication extends StatelessWidget {
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceRegisterModel,
+                                    HCMAttendanceSearchModel>>(),
+                            individualLocalRepository: ctx.read<
+                                LocalRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            individualRemoteRepository: ctx.read<
+                                RemoteRepository<IndividualModel,
+                                    IndividualSearchModel>>(),
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<HCMAttendanceLogModel,
+                                    HCMAttendanceLogSearchModel>>(),
+                            context: context,
                           ),
                         ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(
                         builder: (context, langState) {
+                          final selectedLocale =
+                              AppSharedPreferences().getSelectedLocale ??
+                                  firstLanguage;
+
                           return MaterialApp.router(
                             debugShowCheckedModeBanner: false,
                             builder: (context, child) {
@@ -221,39 +289,44 @@ class MainApplication extends StatelessWidget {
 
                                     return results.isNotEmpty
                                         ? Locale(results.first, results.last)
-                                        : defaultLocale;
+                                        : firstLanguage;
                                   })
-                                : [defaultLocale],
+                                : [firstLanguage],
                             localizationsDelegates: [
-                              AppLocalizations.getDelegate(appConfig, isar),
+                              AppLocalizations.getDelegate(
+                                appConfig,
+                                widget.isar,
+                              ),
                               GlobalWidgetsLocalizations.delegate,
                               GlobalCupertinoLocalizations.delegate,
                               GlobalMaterialLocalizations.delegate,
+                              attendance_localization.AttendanceLocalization
+                                  .getDelegate(
+                                getLocalizationString(
+                                  widget.isar,
+                                  selectedLocale,
+                                ),
+                                appConfig.languages!,
+                              ),
                             ],
                             locale: languages != null
                                 ? Locale(
-                                    languages[langState.index]
-                                        .value
-                                        .split('_')
-                                        .first,
-                                    languages[langState.index]
-                                        .value
-                                        .split('_')
-                                        .last,
+                                    selectedLocale!.split("_").first,
+                                    selectedLocale.split("_").last,
                                   )
-                                : defaultLocale,
+                                : firstLanguage,
                             theme: DigitTheme.instance.mobileTheme,
                             routeInformationParser:
-                                appRouter.defaultRouteParser(),
+                                widget.appRouter.defaultRouteParser(),
                             scaffoldMessengerKey: scaffoldMessengerKey,
                             routerDelegate: AutoRouterDelegate.declarative(
-                              appRouter,
+                              widget.appRouter,
                               navigatorObservers: () => [AppRouterObserver()],
                               routes: (handler) => authState.maybeWhen(
                                 orElse: () => [
                                   const UnauthenticatedRouteWrapper(),
                                 ],
-                                authenticated: (_, __, ___) => [
+                                authenticated: (_, __, ___, ____, _____) => [
                                   AuthenticatedRouteWrapper(),
                                 ],
                               ),

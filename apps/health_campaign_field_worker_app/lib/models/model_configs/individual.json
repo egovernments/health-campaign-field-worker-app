@@ -4,12 +4,35 @@
   "attributes": [
     {
       "name": "id",
+      "type": "String"
+    },
+    {
+      "name": "id",
       "type": "String",
-      "includeForQuery": true
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
+    },
+    {
+      "name": "individualId",
+      "type": "String"
     },
     {
       "name": "userId",
       "type": "String"
+    },
+    {
+      "name": "userUuid",
+      "type": "String"
+    },
+    {
+      "name": "userUuid",
+      "type": "String",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false,
+      "isList": true
     },
     {
       "name": "dateOfBirth",

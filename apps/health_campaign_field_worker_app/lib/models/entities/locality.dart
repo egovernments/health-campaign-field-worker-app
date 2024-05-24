@@ -5,31 +5,40 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class LocalitySearchModel extends EntitySearchModel {
+part 'locality.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class LocalitySearchModel extends EntitySearchModel with LocalitySearchModelMappable {
   final String? code;
   final String? name;
   final String? tenantId;
-  final bool? isDeleted;
   
   LocalitySearchModel({
     this.code,
     this.name,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  LocalitySearchModel.ignoreDeleted({
+    this.code,
+    this.name,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class LocalityModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class LocalityModel extends EntityModel with LocalityModelMappable {
 
   static const schemaName = 'Locality';
 
   final String code;
   final String? name;
+  final bool? nonRecoverableError;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final LocalityAdditionalFields? additionalFields;
 
@@ -37,10 +46,11 @@ class LocalityModel extends EntityModel {
     this.additionalFields,
     required this.code,
     this.name,
+    this.nonRecoverableError = false,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   LocalityCompanion get companion {
@@ -48,22 +58,28 @@ class LocalityModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       code: Value(code),
       name: Value(name),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class LocalityAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class LocalityAdditionalFields extends AdditionalFields with LocalityAdditionalFieldsMappable {
   LocalityAdditionalFields({
     super.schema = 'Locality',
     required super.version,
     super.fields,
   });
 }
+

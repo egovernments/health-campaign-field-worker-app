@@ -21,17 +21,41 @@
       "includeForEntity": false,
       "includeForTable": false
     },
+    
     {
       "name": "doorNo",
       "type": "String"
     },
     {
       "name": "latitude",
-      "type": "double"
+      "type": "double",
+      "includeForQuery": true
     },
     {
       "name": "longitude",
-      "type": "double"
+      "type": "double",
+      "includeForQuery": true
+    },
+    {
+      "name": "limit",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "offset",
+      "type": "int",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
+    },
+    {
+      "name": "maxRadius",
+      "type": "double",
+      "includeForQuery": true,
+      "includeForEntity": false,
+      "includeForTable": false
     },
     {
       "name": "locationAccuracy",

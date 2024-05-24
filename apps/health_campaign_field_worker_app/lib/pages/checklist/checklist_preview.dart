@@ -27,7 +27,7 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
 
     return Scaffold(
       body: ScrollableContent(
-        header: Column(children: const [
+        header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
         footer: BlocBuilder<ServiceBloc, ServiceState>(
@@ -106,6 +106,14 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                         ),
                                                       );
                                                 },
+                                                buttonStyle:
+                                                    OutlinedButton.styleFrom(
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.zero,
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ),
@@ -133,91 +141,106 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.start,
                                       children: [
-                                        Text(localizations
-                                            .translate(item2!.code.toString())),
                                         Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             localizations.translate(
-                                              i18.checklist.checklist,
+                                              item2?.code ?? '',
                                             ),
                                             style:
                                                 theme.textTheme.displayMedium,
                                           ),
                                         ),
-                                        ...value2.attributes!.map(
-                                          (e) => Padding(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              children: [
-                                                Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(
-                                                    localizations.translate(
-                                                      "${item2.code}.${e.attributeCode!}",
+                                        ...(value2.attributes ?? [])
+                                            .where((a) =>
+                                                a.value !=
+                                                    i18.checklist
+                                                        .notSelectedKey &&
+                                                a.value != '')
+                                            .map(
+                                              (e) => Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        localizations.translate(
+                                                          "${item2?.code ?? ''}.${e.attributeCode!}",
+                                                        ),
+                                                        style: theme.textTheme
+                                                            .headlineSmall,
+                                                      ),
                                                     ),
-                                                    style: theme.textTheme
-                                                        .headlineSmall,
-                                                  ),
-                                                ),
-                                                Container(
-                                                  margin:
-                                                      const EdgeInsets.only()
+                                                    Container(
+                                                      margin: const EdgeInsets
+                                                              .only()
                                                           .copyWith(
-                                                    top: kPadding,
-                                                    bottom: kPadding,
-                                                  ),
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerLeft,
-                                                    child: Text(
-                                                      localizations
-                                                          .translate(e.value),
+                                                        top: kPadding,
+                                                        bottom: kPadding,
+                                                      ),
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .centerLeft,
+                                                        child: Text(
+                                                          e.dataType ==
+                                                                  'SingleValueList'
+                                                              ? localizations
+                                                                  .translate(
+                                                                  'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                                )
+                                                              : e.value ?? "",
+                                                        ),
+                                                      ),
                                                     ),
-                                                  ),
+                                                    e.additionalDetails != '' &&
+                                                            e.additionalDetails !=
+                                                                null
+                                                        ? Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only()
+                                                                    .copyWith(
+                                                              top: kPadding,
+                                                              bottom: kPadding,
+                                                            ),
+                                                            child: Column(
+                                                              children: [
+                                                                Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    localizations
+                                                                        .translate(
+                                                                      "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Align(
+                                                                  alignment:
+                                                                      Alignment
+                                                                          .centerLeft,
+                                                                  child: Text(
+                                                                    localizations
+                                                                        .translate(
+                                                                      e.additionalDetails,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          )
+                                                        : const Offstage(),
+                                                    const DigitDivider(),
+                                                  ],
                                                 ),
-                                                e.additionalDetails != ''
-                                                    ? Container(
-                                                        margin: const EdgeInsets
-                                                                .only()
-                                                            .copyWith(
-                                                          top: kPadding,
-                                                          bottom: kPadding,
-                                                        ),
-                                                        child: Column(
-                                                          children: [
-                                                            Align(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                localizations
-                                                                    .translate(
-                                                                  "${item2.code}.${e.attributeCode!}.ADDITIONAL_FIELD",
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            Align(
-                                                              alignment: Alignment
-                                                                  .centerLeft,
-                                                              child: Text(
-                                                                localizations
-                                                                    .translate(
-                                                                  e.additionalDetails,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      )
-                                                    : const Offstage(),
-                                                const DigitDivider(),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ),
                                       ].toList(),
                                     ),
                                   ),

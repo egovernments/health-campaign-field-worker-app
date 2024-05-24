@@ -5,22 +5,30 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ServiceAttributesSearchModel extends EntitySearchModel {
+part 'service_attributes.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ServiceAttributesSearchModel extends EntitySearchModel with ServiceAttributesSearchModelMappable {
   final List<String>? clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   
   ServiceAttributesSearchModel({
     this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  ServiceAttributesSearchModel.ignoreDeleted({
+    this.clientReferenceId,
+    this.tenantId,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class ServiceAttributesModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ServiceAttributesModel extends EntityModel with ServiceAttributesModelMappable {
 
   static const schemaName = 'ServiceAttributes';
 
@@ -29,9 +37,9 @@ class ServiceAttributesModel extends EntityModel {
   final String? dataType;
   final String? referenceId;
   final dynamic? additionalDetails;
+  final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final ServiceAttributesAdditionalFields? additionalFields;
 
@@ -42,11 +50,12 @@ class ServiceAttributesModel extends EntityModel {
     this.dataType,
     this.referenceId,
     this.additionalDetails,
+    this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   ServiceAttributesCompanion get companion {
@@ -54,26 +63,32 @@ class ServiceAttributesModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       attributeCode: Value(attributeCode),
       value: Value(value),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
       additionalDetails: Value(additionalDetails),
+      nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ServiceAttributesAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ServiceAttributesAdditionalFields extends AdditionalFields with ServiceAttributesAdditionalFieldsMappable {
   ServiceAttributesAdditionalFields({
     super.schema = 'ServiceAttributes',
     required super.version,
     super.fields,
   });
 }
+

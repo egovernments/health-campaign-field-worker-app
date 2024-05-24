@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class ProjectSearchModel extends EntitySearchModel {
+part 'project.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectSearchModel extends EntitySearchModel with ProjectSearchModelMappable {
   final String? id;
   final String? projectTypeId;
   final String? projectNumber;
@@ -16,7 +18,6 @@ class ProjectSearchModel extends EntitySearchModel {
   final String? department;
   final String? referenceId;
   final String? tenantId;
-  final bool? isDeleted;
   final DateTime? startDateTime;
   final DateTime? endDateTime;
   
@@ -30,10 +31,10 @@ class ProjectSearchModel extends EntitySearchModel {
     this.department,
     this.referenceId,
     this.tenantId,
-    this.isDeleted,
     int? startDate,
     int? endDate,
     super.boundaryCode,
+    super.isDeleted,
   }): startDateTime = startDate == null
       ? null
       : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -42,6 +43,28 @@ class ProjectSearchModel extends EntitySearchModel {
       : DateTime.fromMillisecondsSinceEpoch(endDate),
    super();
 
+  @MappableConstructor()
+  ProjectSearchModel.ignoreDeleted({
+    this.id,
+    this.projectTypeId,
+    this.projectNumber,
+    this.subProjectTypeId,
+    this.isTaskEnabled,
+    this.parent,
+    this.department,
+    this.referenceId,
+    this.tenantId,
+    int? startDate,
+    int? endDate,
+    super.boundaryCode,
+  }): startDateTime = startDate == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(startDate),
+  endDateTime = endDate == null
+  ? null
+      : DateTime.fromMillisecondsSinceEpoch(endDate),
+   super(isDeleted: false);
+
   int? get startDate => startDateTime?.millisecondsSinceEpoch;
   
 
@@ -49,8 +72,8 @@ class ProjectSearchModel extends EntitySearchModel {
   
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectModel extends EntityModel with ProjectModelMappable {
 
   static const schemaName = 'Project';
 
@@ -65,8 +88,8 @@ class ProjectModel extends EntityModel {
   final String? description;
   final String? referenceId;
   final String? projectHierarchy;
+  final bool? nonRecoverableError;
   final String? tenantId;
-  final bool? isDeleted;
   final int? rowVersion;
   final AddressModel? address;
   final List<TargetModel>? targets;
@@ -88,15 +111,16 @@ class ProjectModel extends EntityModel {
     this.description,
     this.referenceId,
     this.projectHierarchy,
+    this.nonRecoverableError = false,
     this.tenantId,
-    this.isDeleted,
     this.rowVersion,
     this.address,
     this.targets,
     this.documents,
     int? startDate,
     int? endDate,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): startDateTime = startDate == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(startDate),
@@ -116,8 +140,13 @@ class ProjectModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       projectTypeId: Value(projectTypeId),
       projectNumber: Value(projectNumber),
@@ -129,8 +158,8 @@ class ProjectModel extends EntityModel {
       description: Value(description),
       referenceId: Value(referenceId),
       projectHierarchy: Value(projectHierarchy),
+      nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
-      isDeleted: Value(isDeleted),
       rowVersion: Value(rowVersion),
       startDate: Value(startDate),
       endDate: Value(endDate),
@@ -138,11 +167,12 @@ class ProjectModel extends EntityModel {
   }
 }
 
-@MappableClass(ignoreNull: true)
-class ProjectAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class ProjectAdditionalFields extends AdditionalFields with ProjectAdditionalFieldsMappable {
   ProjectAdditionalFields({
     super.schema = 'Project',
     required super.version,
     super.fields,
   });
 }
+

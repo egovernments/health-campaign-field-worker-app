@@ -4,8 +4,10 @@ import '../../data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 import '../../data/local_store/no_sql/schema/oplog.dart' as o show AdditionalId;
 import '../data_model.dart';
 
+part 'oplog_entry.mapper.dart';
+
 @MappableClass()
-class OpLogEntry<T extends EntityModel> {
+class OpLogEntry<T extends EntityModel> with OpLogEntryMappable {
   final int? id;
   final T entity;
   final DataModelType type;
@@ -19,6 +21,9 @@ class OpLogEntry<T extends EntityModel> {
   final String? serverGeneratedId;
   final String? clientReferenceId;
   final List<AdditionalId> additionalIds;
+  final int syncDownRetryCount;
+  final int rowVersion;
+  final bool nonRecoverableError;
 
   const OpLogEntry(
     this.entity,
@@ -34,6 +39,9 @@ class OpLogEntry<T extends EntityModel> {
     this.serverGeneratedId,
     this.clientReferenceId,
     this.additionalIds = const [],
+    this.syncDownRetryCount = 0,
+    this.rowVersion = 1,
+    this.nonRecoverableError = false,
   });
 
   static OpLogEntry<T> fromOpLog<T extends EntityModel>(OpLog e) {
@@ -46,6 +54,7 @@ class OpLogEntry<T extends EntityModel> {
       serverGeneratedId: e.serverGeneratedId,
       id: e.id,
       clientReferenceId: e.clientReferenceId,
+      nonRecoverableError: e.nonRecoverableError,
       syncedDown: e.syncedDown,
       syncedDownOn: e.syncedDownOn,
       syncedUp: e.syncedUp,
@@ -53,6 +62,8 @@ class OpLogEntry<T extends EntityModel> {
       additionalIds: e.additionalIds
           .map((e) => AdditionalId(idType: e.idType, id: e.id))
           .toList(),
+      syncDownRetryCount: e.syncDownRetryCount,
+      rowVersion: e.rowVersion,
     );
   }
 
@@ -68,12 +79,15 @@ class OpLogEntry<T extends EntityModel> {
       ..createdBy = createdBy
       ..createdAt = createdAt
       ..syncedUp = syncedUp
+      ..nonRecoverableError = nonRecoverableError
       ..additionalIds = additionalIds
           .map((e) => o.AdditionalId()
             ..id = e.id
             ..idType = e.idType)
           .toList()
-      ..syncedDown = syncedDown;
+      ..syncedDown = syncedDown
+      ..syncDownRetryCount = syncDownRetryCount
+      ..rowVersion = rowVersion;
 
     if (id != null) {
       oplog.id = id!;
@@ -84,7 +98,7 @@ class OpLogEntry<T extends EntityModel> {
 }
 
 @MappableClass()
-class AdditionalId {
+class AdditionalId with AdditionalIdMappable {
   final String idType;
   final String id;
 

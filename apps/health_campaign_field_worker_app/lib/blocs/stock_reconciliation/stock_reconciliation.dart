@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/local_store/secure_store/secure_store.dart';
 import '../../models/data_model.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
@@ -41,7 +42,9 @@ class StockReconciliationBloc
     StockReconciliationEmitter emit,
   ) async {
     emit(state.copyWith(productVariantId: event.productVariantId));
-    add(const StockReconciliationCalculateEvent());
+    add(StockReconciliationCalculateEvent(
+      isDistributor: event.isDistributor,
+    ));
   }
 
   FutureOr<void> _handleCalculate(
@@ -53,16 +56,36 @@ class StockReconciliationBloc
     final productVariantId = state.productVariantId;
     final facilityId = state.facilityModel?.id;
 
-    if (productVariantId == null || facilityId == null) return;
+    if ((productVariantId == null) ||
+        (!event.isDistributor && facilityId == null)) return;
 
-    final stocks = await stockRepository.search(
+    final user = await LocalSecureStore.instance.userRequestModel;
+
+    final receivedStocks = (await stockRepository.search(
       StockSearchModel(
         productVariantId: productVariantId,
-        facilityId: facilityId,
+        receiverId: facilityId,
       ),
-    );
+    ))
+        .where((element) =>
+            element.auditDetails != null &&
+            element.auditDetails?.createdBy == user?.uuid)
+        .toList();
+    final sentStocks = (await stockRepository.search(
+      StockSearchModel(
+        productVariantId: productVariantId,
+        senderId: facilityId,
+      ),
+    ))
+        .where((element) =>
+            element.auditDetails != null &&
+            element.auditDetails?.createdBy == user?.uuid)
+        .toList();
 
-    emit(state.copyWith(loading: false, stockModels: stocks));
+    emit(state.copyWith(
+      loading: false,
+      stockModels: [...receivedStocks, ...sentStocks],
+    ));
   }
 
   FutureOr<void> _handleCreate(
@@ -75,6 +98,17 @@ class StockReconciliationBloc
         tenantId: envConfig.variables.tenantId,
         referenceId: state.projectId,
         referenceIdType: 'PROJECT',
+        additionalFields: StockReconciliationAdditionalFields(
+          version: 1,
+          fields: [
+            AdditionalField('received', state.stockReceived),
+            AdditionalField('issued', state.stockIssued),
+            AdditionalField('returned', state.stockReturned),
+            AdditionalField('lost', state.stockLost),
+            AdditionalField('damaged', state.stockDamaged),
+            AdditionalField('inHand', state.stockInHand),
+          ],
+        ),
         rowVersion: 1,
       ),
     );
@@ -90,15 +124,18 @@ class StockReconciliationBloc
 @freezed
 class StockReconciliationEvent with _$StockReconciliationEvent {
   const factory StockReconciliationEvent.selectFacility(
-    FacilityModel facilityModel,
-  ) = StockReconciliationSelectFacilityEvent;
+    FacilityModel facilityModel, {
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationSelectFacilityEvent;
 
   const factory StockReconciliationEvent.selectProduct(
-    String? productVariantId,
-  ) = StockReconciliationSelectProductEvent;
+    String? productVariantId, {
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationSelectProductEvent;
 
-  const factory StockReconciliationEvent.calculate() =
-      StockReconciliationCalculateEvent;
+  const factory StockReconciliationEvent.calculate({
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationCalculateEvent;
 
   const factory StockReconciliationEvent.create(
     StockReconciliationModel stockReconciliationModel,

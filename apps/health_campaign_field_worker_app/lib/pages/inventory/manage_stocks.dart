@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/record_stock/record_stock.dart';
 import '../../router/app_router.dart';
@@ -23,7 +24,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
 
     return Scaffold(
       body: ScrollableContent(
-        header: Column(children: const [
+        header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
         children: [
@@ -32,7 +33,7 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.fromLTRB(kPadding*2, kPadding, kPadding*2, kPadding),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -44,73 +45,73 @@ class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
               ),
               Column(children: [
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordstockReceiptLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordstockReceiptDescription),
-                  prefixIcon: Icons.login,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.receipt,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReceiptLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockReceiptDescription),
+                    prefixIcon: Icons.file_download_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.receipt,
+                      ),
                     ),
                   ),
-                ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordstockIssuedLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordstockIssuedtDescription),
-                  prefixIcon: Icons.logout,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.dispatch,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockIssuedLabel),
+                    description: localizations.translate(
+                        i18.manageStock.recordStockIssuedDescription),
+                    prefixIcon: Icons.file_upload_outlined,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.dispatch,
+                      ),
                     ),
                   ),
-                ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordstockReturnedLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordstockReturnedtDescription,
-                  ),
-                  prefixIcon: Icons.settings_backup_restore,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.returned,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockReturnedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockReturnedDescription,
+                    ),
+                    prefixIcon: Icons.settings_backup_restore,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.returned,
+                      ),
                     ),
                   ),
-                ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordstockDamagedLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordstockDamagedDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.damaged,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockDamagedLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockDamagedDescription,
+                    ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.damaged,
+                      ),
                     ),
                   ),
-                ),
                 DigitListView(
-                  title: localizations
-                      .translate(i18.manageStock.recordstockLossLabel),
-                  description: localizations.translate(
-                    i18.manageStock.recordstockDamagedDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    RecordStockWrapperRoute(
-                      type: StockRecordEntryType.loss,
+                    title: localizations
+                        .translate(i18.manageStock.recordStockLossLabel),
+                    description: localizations.translate(
+                      i18.manageStock.recordStockDamagedDescription,
+                    ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      RecordStockWrapperRoute(
+                        type: StockRecordEntryType.loss,
+                      ),
                     ),
                   ),
-                ),
               ]),
               const SizedBox(height: 16),
             ],

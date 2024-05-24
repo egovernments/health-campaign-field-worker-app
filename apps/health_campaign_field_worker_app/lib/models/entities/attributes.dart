@@ -5,8 +5,10 @@ import 'package:drift/drift.dart';
 import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
-@MappableClass(ignoreNull: true)
-class AttributesSearchModel extends EntitySearchModel {
+part 'attributes.mapper.dart';
+
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class AttributesSearchModel extends EntitySearchModel with AttributesSearchModelMappable {
   final String? id;
   final String? dataType;
   final String? referenceId;
@@ -16,7 +18,6 @@ class AttributesSearchModel extends EntitySearchModel {
   final bool? required;
   final String? regex;
   final int? order;
-  final bool? isDeleted;
   
   AttributesSearchModel({
     this.id,
@@ -28,13 +29,27 @@ class AttributesSearchModel extends EntitySearchModel {
     this.required,
     this.regex,
     this.order,
-    this.isDeleted,
     super.boundaryCode,
+    super.isDeleted,
   }):  super();
+
+  @MappableConstructor()
+  AttributesSearchModel.ignoreDeleted({
+    this.id,
+    this.dataType,
+    this.referenceId,
+    this.tenantId,
+    this.code,
+    this.isActive,
+    this.required,
+    this.regex,
+    this.order,
+    super.boundaryCode,
+  }):  super(isDeleted: false);
 }
 
-@MappableClass(ignoreNull: true)
-class AttributesModel extends EntityModel {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class AttributesModel extends EntityModel with AttributesModelMappable {
 
   static const schemaName = 'Attributes';
 
@@ -48,7 +63,7 @@ class AttributesModel extends EntityModel {
   final bool? required;
   final String? regex;
   final int? order;
-  final bool? isDeleted;
+  final bool? nonRecoverableError;
   final int? rowVersion;
   final AttributesAdditionalFields? additionalFields;
 
@@ -64,9 +79,10 @@ class AttributesModel extends EntityModel {
     this.required,
     this.regex,
     this.order,
-    this.isDeleted,
+    this.nonRecoverableError = false,
     this.rowVersion,
-    super.auditDetails,
+    super.auditDetails,super.clientAuditDetails,
+    super.isDeleted = false,
   }): super();
 
   AttributesCompanion get companion {
@@ -74,8 +90,13 @@ class AttributesModel extends EntityModel {
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
       auditModifiedTime: Value(auditDetails?.lastModifiedTime),
       additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
       id: Value(id),
       dataType: Value(dataType),
       referenceId: Value(referenceId),
@@ -86,17 +107,18 @@ class AttributesModel extends EntityModel {
       required: Value(required),
       regex: Value(regex),
       order: Value(order),
-      isDeleted: Value(isDeleted),
+      nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
       );
   }
 }
 
-@MappableClass(ignoreNull: true)
-class AttributesAdditionalFields extends AdditionalFields {
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class AttributesAdditionalFields extends AdditionalFields with AttributesAdditionalFieldsMappable {
   AttributesAdditionalFields({
     super.schema = 'Attributes',
     required super.version,
     super.fields,
   });
 }
+

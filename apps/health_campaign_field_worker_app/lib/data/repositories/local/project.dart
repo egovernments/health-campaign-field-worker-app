@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/data_model.dart';
@@ -17,6 +18,8 @@ class ProjectLocalRepository
     DataOperation dataOperation = DataOperation.create,
   }) async {
     final projectCompanion = entity.companion;
+
+    final targets = entity.targets;
     final addressCompanion =
         entity.address?.copyWith(relatedClientReferenceId: entity.id).companion;
     await sql.batch((batch) {
@@ -29,6 +32,17 @@ class ProjectLocalRepository
         batch.insert(
           sql.address,
           addressCompanion,
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+      if (targets != null) {
+        final targetsCompanions = targets.map((e) {
+          return e.copyWith(clientReferenceId: entity.id).companion;
+        }).toList();
+
+        batch.insertAll(
+          sql.target,
+          targetsCompanions,
           mode: InsertMode.insertOrReplace,
         );
       }
@@ -53,12 +67,16 @@ class ProjectLocalRepository
         ),
       ),
     ]);
+
     final results = await (selectQuery
+          ..where(
+            buildAnd([if (query.id != null) sql.project.id.equals(query.id!)]),
+          ))
+        .get();
+
+    final targetResults = await (selectQuery
           ..where(buildAnd([
-            if (query.id != null)
-              sql.project.id.equals(
-                query.id,
-              ),
+            if (query.id != null) sql.target.clientReferenceId.equals(query.id!),
           ])))
         .get();
 
@@ -88,9 +106,23 @@ class ProjectLocalRepository
                 pincode: address.pincode,
                 type: address.type,
                 boundary: address.boundary,
-                boundaryType: address.boundary,
+                boundaryType: address.boundaryType,
                 rowVersion: address.rowVersion,
               ),
+        targets: targetResults.isEmpty
+            ? null
+            : targetResults
+                .map((e) {
+                  final target = e.readTableOrNull(sql.target);
+                  if (target == null) return null;
+
+                  return TargetModel(
+                    id: target.id,
+                    beneficiaryType: target.beneficiaryType,
+                  );
+                })
+                .whereNotNull()
+                .toList(),
       );
     }).toList();
   }

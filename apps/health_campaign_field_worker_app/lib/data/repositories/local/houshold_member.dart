@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:drift/drift.dart';
+
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../data_repository.dart';
@@ -18,25 +20,33 @@ class HouseholdMemberLocalRepository
           ..where(
             buildAnd(
               [
+                                if (query.householdClientReferenceIds != null)
+                  sql.householdMember.householdClientReferenceId.isIn(
+                    query.householdClientReferenceIds!,
+                  ),
+                       if (query.individualClientReferenceIds != null)
+                  sql.householdMember.individualClientReferenceId.isIn(
+                    query.individualClientReferenceIds!,
+                  ),
                 if (query.householdClientReferenceId != null)
                   sql.householdMember.householdClientReferenceId.equals(
-                    query.householdClientReferenceId,
+                    query.householdClientReferenceId!,
                   ),
                 if (query.individualClientReferenceId != null)
                   sql.householdMember.individualClientReferenceId.equals(
-                    query.individualClientReferenceId,
+                    query.individualClientReferenceId!,
                   ),
                 if (query.householdId != null)
                   sql.householdMember.householdId.equals(
-                    query.householdId,
+                    query.householdId!,
                   ),
                 if (query.individualId != null)
                   sql.householdMember.individualId.equals(
-                    query.individualId,
+                    query.individualId!,
                   ),
                 if (query.isHeadOfHousehold != null)
                   sql.householdMember.isHeadOfHousehold.equals(
-                    query.isHeadOfHousehold,
+                    query.isHeadOfHousehold!,
                   ),
                 if (userId != null)
                   sql.householdMember.auditCreatedBy.equals(
@@ -52,6 +62,7 @@ class HouseholdMemberLocalRepository
           final householdMember = e.readTable(sql.householdMember);
 
           return HouseholdMemberModel(
+            id: householdMember.id,
             householdId: householdMember.householdId,
             householdClientReferenceId:
                 householdMember.householdClientReferenceId,
@@ -62,6 +73,24 @@ class HouseholdMemberLocalRepository
             isDeleted: householdMember.isDeleted,
             tenantId: householdMember.tenantId,
             rowVersion: householdMember.rowVersion,
+            auditDetails: (householdMember.auditCreatedBy != null &&
+                    householdMember.auditCreatedTime != null)
+                ? AuditDetails(
+                    createdBy: householdMember.auditCreatedBy!,
+                    createdTime: householdMember.auditCreatedTime!,
+                    lastModifiedBy: householdMember.auditModifiedBy,
+                    lastModifiedTime: householdMember.auditModifiedTime,
+                  )
+                : null,
+            clientAuditDetails: (householdMember.clientCreatedBy != null &&
+                    householdMember.clientCreatedTime != null)
+                ? ClientAuditDetails(
+                    createdBy: householdMember.clientCreatedBy!,
+                    createdTime: householdMember.clientCreatedTime!,
+                    lastModifiedBy: householdMember.clientModifiedBy,
+                    lastModifiedTime: householdMember.clientModifiedTime,
+                  )
+                : null,
             clientReferenceId: householdMember.clientReferenceId,
           );
         })
@@ -81,6 +110,21 @@ class HouseholdMemberLocalRepository
     });
 
     await super.create(entity);
+  }
+
+  @override
+  FutureOr<void> bulkCreate(
+    List<HouseholdMemberModel> entities,
+  ) async {
+    final householdMemberCompanions = entities.map((e) => e.companion).toList();
+
+    await sql.batch((batch) async {
+      batch.insertAll(
+        sql.householdMember,
+        householdMemberCompanions,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
   }
 
   @override
@@ -110,6 +154,15 @@ class HouseholdMemberLocalRepository
   }) async {
     final updated = entity.copyWith(
       isDeleted: true,
+      clientAuditDetails: (entity.clientAuditDetails?.createdBy != null &&
+              entity.clientAuditDetails?.createdTime != null)
+          ? ClientAuditDetails(
+              createdBy: entity.clientAuditDetails!.createdBy,
+              createdTime: entity.clientAuditDetails!.createdTime,
+              lastModifiedBy: entity.clientAuditDetails!.lastModifiedBy,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            )
+          : null,
       rowVersion: entity.rowVersion.increment,
     );
     await sql.batch((batch) {
