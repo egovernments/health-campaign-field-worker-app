@@ -1,10 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 
-abstract class ReferralReconListener {
-  void callSyncMethod();
-}
-
 // Class to store the service request recorded data
 class SaveServiceRequest {
   final ServiceModel serviceModel;

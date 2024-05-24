@@ -129,7 +129,6 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
         child: _i8.SearchReferralReconciliationsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          referralReconListener: args.referralReconListener,
           projectId: args.projectId,
           cycles: args.cycles,
           validIndividualAgeForCampaign: args.validIndividualAgeForCampaign,
@@ -490,7 +489,6 @@ class SearchReferralReconciliationsRoute
   SearchReferralReconciliationsRoute({
     _i10.Key? key,
     _i12.ReferralReconLocalization? appLocalizations,
-    required _i14.ReferralReconListener referralReconListener,
     required String projectId,
     required List<String> cycles,
     required _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
@@ -511,7 +509,6 @@ class SearchReferralReconciliationsRoute
           args: SearchReferralReconciliationsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            referralReconListener: referralReconListener,
             projectId: projectId,
             cycles: cycles,
             validIndividualAgeForCampaign: validIndividualAgeForCampaign,
@@ -540,7 +537,6 @@ class SearchReferralReconciliationsRouteArgs {
   const SearchReferralReconciliationsRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.referralReconListener,
     required this.projectId,
     required this.cycles,
     required this.validIndividualAgeForCampaign,
@@ -560,8 +556,6 @@ class SearchReferralReconciliationsRouteArgs {
   final _i10.Key? key;
 
   final _i12.ReferralReconLocalization? appLocalizations;
-
-  final _i14.ReferralReconListener referralReconListener;
 
   final String projectId;
 
@@ -593,6 +587,6 @@ class SearchReferralReconciliationsRouteArgs {
 
   @override
   String toString() {
-    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, referralReconListener: $referralReconListener, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, boundaryCode: $boundaryCode, roleCode: $roleCode, userUUid: $userUUid, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes, projectName: $projectName}';
+    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, boundaryCode: $boundaryCode, roleCode: $roleCode, userUUid: $userUUid, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes, projectName: $projectName}';
   }
 }

@@ -18,7 +18,7 @@ import '../../blocs/referral_recon_service_definition.dart';
 import '../../models/entities/hf_referral.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localizaed.dart';
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class RecordReferralDetailsPage extends LocalizedStatefulWidget {

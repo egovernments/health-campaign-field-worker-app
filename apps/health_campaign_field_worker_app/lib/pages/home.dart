@@ -24,7 +24,6 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/attendance/hcm_attendance_bloc.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/inventory/hcm_inventory_bloc.dart';
-import '../blocs/referral_reconciliation/hcm_referral_reconciliation_bloc.dart';
 import '../blocs/registration_delivery/hcm_registration_delivery.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -440,17 +439,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     context.router.push(SearchReferralReconciliationsRoute(
                       projectId: context.projectId,
                       cycles: context.cycles,
-                      referralReconListener: HcmReferralReconBloc(
-                        context: context,
-                        userName: context.loggedInUser.name ?? '',
-                        userId: context.loggedInUserUuid,
-                        tenantId: envConfig.variables.tenantId,
-                        selectedProject: context.selectedProject,
-                        checklistTypes: appConfiguration.checklistTypes
-                                ?.map((e) => e.code)
-                                .toList() ??
-                            [],
-                      ),
                       validIndividualAgeForCampaign:
                           ValidIndividualAgeForCampaign(
                         validMinAge:
@@ -736,16 +724,6 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         ReferralReconSingleton().setInitialData(
-          referralReconListener: HcmReferralReconBloc(
-            context: context,
-            userName: context.loggedInUser.name ?? '',
-            userId: context.loggedInUserUuid,
-            tenantId: envConfig.variables.tenantId,
-            selectedProject: context.selectedProject,
-            checklistTypes:
-                appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
-                    [],
-          ),
           userName: context.loggedInUser.name ?? '',
           userUUid: context.loggedInUserUuid,
           projectId: context.selectedProject.id,

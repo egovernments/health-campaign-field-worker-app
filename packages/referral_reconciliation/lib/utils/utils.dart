@@ -23,7 +23,6 @@ class ReferralReconSingleton {
 
   ReferralReconSingleton._internal();
 
-  ReferralReconListener? _referralReconListener;
   String _projectId = '';
   String _projectName = '';
   String _userName = '';
@@ -42,7 +41,6 @@ class ReferralReconSingleton {
       ValidIndividualAgeForCampaign(validMinAge: 0, validMaxAge: 0);
 
   void setInitialData({
-    required ReferralReconListener referralReconListener,
     required String userName,
     required String userUUid,
     required String projectId,
@@ -56,7 +54,6 @@ class ReferralReconSingleton {
     required List<String> referralReasons,
     required List<String> checklistTypes,
   }) {
-    _referralReconListener = referralReconListener;
     _projectId = projectId;
     _projectName = projectName;
     _userName = userName;
@@ -97,10 +94,5 @@ class ReferralReconSingleton {
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
-  }
-
-  // Calls the main sync method on Go to Home
-  void callSync() {
-    _referralReconListener?.callSyncMethod();
   }
 }
