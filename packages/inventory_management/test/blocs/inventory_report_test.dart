@@ -4,7 +4,6 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/utils/typedefs.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:inventory_management/blocs/inventory_report.dart';
-import 'package:intl/intl.dart';
 
 import '../constants/test_constants.dart';
 
@@ -53,7 +52,7 @@ void main() {
         const InventoryReportLoadingState(),
         InventoryReportStockReconciliationState(
           data: {
-            DateFormat('dd MMM yyyy').format(DateTime(2021, 1, 1)): [
+            InventoryReportConstants.dateFormat: [
               InventoryReportConstants.stockReconciliationModel,
             ],
           },
