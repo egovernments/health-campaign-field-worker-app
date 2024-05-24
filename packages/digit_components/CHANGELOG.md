@@ -45,3 +45,7 @@
 ## 0.0.3+2
 
 * Updated repository URL and dart doc
+
+## 0.0.3+3
+
+* Updated intl version 0.18.1
