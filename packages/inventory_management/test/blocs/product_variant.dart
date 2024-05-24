@@ -1,77 +1,86 @@
-// Importing necessary packages and modules
-import 'package:digit_data_model/models/entities/product_variant.dart';
-import 'package:digit_data_model/models/entities/project_resource.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:inventory_management/utils/typedefs.dart';
-import 'package:inventory_management/blocs/product_variant.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:inventory_management/utils/utils.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/utils/typedefs.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:inventory_management/blocs/product_variant.dart';
 
-class MockProductVariantDataRepository extends Mock
-    implements ProductVariantDataRepository {}
+import '../constants/test_constants.dart';
 
 class MockProjectResourceDataRepository extends Mock
     implements ProjectResourceDataRepository {}
 
-// Mock class for InventorySingleton
-class MockInventorySingleton extends Mock implements InventorySingleton {}
-
-class MockProductVariantModel extends Mock implements ProductVariantModel {
-  @override
-  String get id => 'product1';
-}
+class MockProductVariantDataRepository extends Mock
+    implements ProductVariantDataRepository {}
 
 void main() {
-  // Grouping tests related to ProductVariantBloc
-  group('ProductVariantBloc', () {
-    // Declaring variables for mock and bloc
-    late MockInventorySingleton mockInventorySingleton;
-    late InventoryProductVariantBloc productVariantBloc;
-    late MockProductVariantModel mockProductVariantModel;
+  group('InventoryProductVariantBloc', () {
+    late MockProjectResourceDataRepository mockProjectResourceDataRepository;
+    late MockProductVariantDataRepository mockProductVariantDataRepository;
+    late InventoryProductVariantBloc inventoryProductVariantBloc;
 
-    // Setting up the mock and the bloc for each test
     setUp(() {
-      mockInventorySingleton = MockInventorySingleton();
-      productVariantBloc = InventoryProductVariantBloc(
-          projectResourceDataRepository: MockProjectResourceDataRepository(),
-          productVariantDataRepository: MockProductVariantDataRepository());
-      mockProductVariantModel = MockProductVariantModel();
+      mockProjectResourceDataRepository = MockProjectResourceDataRepository();
+      mockProductVariantDataRepository = MockProductVariantDataRepository();
+      inventoryProductVariantBloc = InventoryProductVariantBloc(
+        projectResourceDataRepository: mockProjectResourceDataRepository,
+        productVariantDataRepository: mockProductVariantDataRepository,
+      );
     });
 
-    // Test for load event when product variants are returned
+    setUpAll(() {
+      registerFallbackValue(ProjectResourceSearchModel());
+      registerFallbackValue(ProductVariantSearchModel());
+    });
+
     blocTest<InventoryProductVariantBloc, InventoryProductVariantState>(
-      'emits [ProductVariantLoadingState, ProductVariantFetchedState] when load event is added',
+      'emits [ProductVariantLoadingState, ProductVariantFetchedState] when ProductVariantLoadEvent is added and product variants are found',
       build: () {
-        // Mocking the getProductVariants method to return a list with one product variant
-        when(() => mockInventorySingleton.getProductVariants())
-            .thenAnswer((_) async => [mockProductVariantModel]);
-        return productVariantBloc;
+        when(() => mockProjectResourceDataRepository.search(any())).thenAnswer(
+          (_) async => [
+            InventoryReportConstants.projectResourceModel,
+          ],
+        );
+        when(() => mockProductVariantDataRepository.search(any())).thenAnswer(
+          (_) async => [
+            InventoryReportConstants.productVariantModel,
+          ],
+        );
+        return inventoryProductVariantBloc;
       },
-      act: (bloc) => bloc.add(InventoryProductVariantEvent.load(
-          query: ProjectResourceSearchModel())),
-      // Expecting the bloc to emit a loading state and then a fetched state with the returned product variants
-      expect: () => <InventoryProductVariantState>[
-        const ProductVariantLoadingState(),
-        ProductVariantFetchedState(productVariants: [mockProductVariantModel]),
+      act: (bloc) => bloc.add(
+        InventoryProductVariantEvent.load(query: ProjectResourceSearchModel()),
+      ),
+      expect: () => [
+        const InventoryProductVariantState.loading(),
+        InventoryProductVariantState.fetched(productVariants: [
+          InventoryReportConstants.productVariantModel,
+        ]),
       ],
+      verify: (_) {
+        verify(() => mockProjectResourceDataRepository.search(any())).called(1);
+        verify(() => mockProductVariantDataRepository.search(any())).called(1);
+      },
     );
 
-    // Test for load event when no product variants are returned
     blocTest<InventoryProductVariantBloc, InventoryProductVariantState>(
-      'emits [ProductVariantLoadingState, ProductVariantEmptyState] when load event is added and no product variants are returned',
+      'emits [ProductVariantLoadingState, ProductVariantEmptyState] when ProductVariantLoadEvent is added and no product variants are found',
       build: () {
-        // Mocking the getProductVariants method to return an empty list
-        when(() => mockInventorySingleton.getProductVariants())
-            .thenAnswer((_) async => []);
-        return productVariantBloc;
+        when(() => mockProjectResourceDataRepository.search(any())).thenAnswer(
+          (_) async => [
+            InventoryReportConstants.projectResourceModel,
+          ],
+        );
+        when(() => mockProductVariantDataRepository.search(any())).thenAnswer(
+          (_) async => [],
+        );
+        return inventoryProductVariantBloc;
       },
       act: (bloc) => bloc.add(InventoryProductVariantEvent.load(
           query: ProjectResourceSearchModel())),
-      // Expecting the bloc to emit a loading state and then an empty state
-      expect: () => <InventoryProductVariantState>[
-        const ProductVariantLoadingState(),
-        const ProductVariantEmptyState(),
+      expect: () => [
+        const InventoryProductVariantState.loading(),
+        const InventoryProductVariantState.empty(),
       ],
     );
   });
