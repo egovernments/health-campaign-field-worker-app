@@ -22,3 +22,8 @@ To use this package, add the following dependency to your `pubspec.yaml` file:
 dependencies:
   inventory_management: ^0.0.0-dev.1
 ```
+Below are the flow diagrams of flow:
+
+![record_stock](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/b0817363-6ead-4b7e-8791-e719c0f2ae8c)
+![stock_recon](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/ccc4b50b-5e43-4784-9bdb-17ece68022a7)
+![report_selection](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/2e9affca-e82d-41bf-83a2-7241b44cbe56)
