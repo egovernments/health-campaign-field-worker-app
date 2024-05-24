@@ -2,6 +2,11 @@
 
 A Scanner package used for scanning QR Codes and GS1 Barcodes.
 
+![Scanner](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/851f4192-22b1-4fb2-b8f5-fb773bdedf69)
+
+
+
+
 ## Getting Started
 
 To use this package, add the following dependency to your `pubspec.yaml` file:
