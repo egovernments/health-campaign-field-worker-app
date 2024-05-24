@@ -22,6 +22,29 @@ To use this package, add the following dependency to your `pubspec.yaml` file:
 dependencies:
   inventory_management: ^0.0.0-dev.1
 ```
+
+To Navigate to any screens of the package: 
+
+First add inventory_router to your main app router
+
+Navigate to the required screen using the below code:
+
+```dart
+context.router.push(ManageStocksRoute());
+```
+Inventory Management package requires below data to be passed from main app:
+
+```dart
+String _projectId;
+String? _loggedInUserUuid;
+String? _boundaryName;
+String? _tenantId;
+bool _isDistributor;
+bool _isWareHouseMgr;
+List<InventoryTransportTypes>? _transportType;
+PersistenceConfiguration _persistenceConfiguration;
+```
+
 Below are the flow diagrams of flow:
 
 ![record_stock](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/b0817363-6ead-4b7e-8791-e719c0f2ae8c)
