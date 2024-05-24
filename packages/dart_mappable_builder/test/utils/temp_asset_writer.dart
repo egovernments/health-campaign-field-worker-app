@@ -46,7 +46,7 @@ class TempAssetWriter implements RecordingAssetWriter {
   }
 
   Stream<dynamic> _run(String code) async* {
-    var main = File(path.join(dir.path, 'lib/main.dart'));
+    var main = File(path.join(dir.path, 'lib/example.dart'));
 
     main.writeAsStringSync(code);
 

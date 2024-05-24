@@ -49,3 +49,7 @@
 ## 0.0.3+3
 
 * Updated intl version 0.18.1
+
+## 0.0.3+4
+
+* Updated example folder
