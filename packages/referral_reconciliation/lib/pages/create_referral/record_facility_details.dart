@@ -14,7 +14,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_record.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localizaed.dart';
+import '../../widgets/localized.dart';
 import '../project_facility/project_facility_selection.dart';
 
 @RoutePage()

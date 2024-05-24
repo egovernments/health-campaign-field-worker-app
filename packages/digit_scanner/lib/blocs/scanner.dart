@@ -1,7 +1,6 @@
 // part 'auth.freezed.dart' need to be added to auto generate the files for freezed model
 import 'dart:async';
 
-import 'package:digit_scanner/blocs/scanner_listeners.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -22,10 +21,6 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
   ) async {
     try {
       emit(state.copyWith(barCodes: event.barCode, qrCodes: event.qrCode));
-      ScannerSingleton().setScannedCodes(SetScannedCodes(
-          barCodes: event.barCode,
-          qrCodes: event.qrCode,
-          onScanned: (bool isDuplicate) => isDuplicate));
     } catch (error) {
       rethrow;
     } finally {

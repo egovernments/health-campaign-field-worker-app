@@ -1,8 +1,6 @@
 // Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
 import 'package:digit_data_model/data_model.dart';
 
-import '../blocs/referral_reconciliation_listeners.dart';
-
 dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   for (var map in data) {
     if (map["key"] == key) {
@@ -11,6 +9,17 @@ dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   }
 
   return null; // Key not found
+}
+
+// Class to store the valid max and min age for a campaign
+class ValidIndividualAgeForCampaign {
+  final int validMinAge;
+  final int validMaxAge;
+
+  ValidIndividualAgeForCampaign({
+    required this.validMinAge,
+    required this.validMaxAge,
+  });
 }
 
 class ReferralReconSingleton {
@@ -23,7 +32,6 @@ class ReferralReconSingleton {
 
   ReferralReconSingleton._internal();
 
-  ReferralReconListener? _referralReconListener;
   String _projectId = '';
   String _projectName = '';
   String _userName = '';
@@ -42,7 +50,6 @@ class ReferralReconSingleton {
       ValidIndividualAgeForCampaign(validMinAge: 0, validMaxAge: 0);
 
   void setInitialData({
-    required ReferralReconListener referralReconListener,
     required String userName,
     required String userUUid,
     required String projectId,
@@ -56,7 +63,6 @@ class ReferralReconSingleton {
     required List<String> referralReasons,
     required List<String> checklistTypes,
   }) {
-    _referralReconListener = referralReconListener;
     _projectId = projectId;
     _projectName = projectName;
     _userName = userName;
@@ -97,10 +103,5 @@ class ReferralReconSingleton {
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
-  }
-
-  // Calls the main sync method on Go to Home
-  void callSync() {
-    _referralReconListener?.callSyncMethod();
   }
 }

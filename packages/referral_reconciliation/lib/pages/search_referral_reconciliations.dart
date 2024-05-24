@@ -6,7 +6,6 @@ import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../blocs/referral_recon_service.dart';
@@ -16,12 +15,11 @@ import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
-import '../widgets/localizaed.dart';
+import '../widgets/localized.dart';
 import '../widgets/view_referral_card.dart';
 
 @RoutePage()
 class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
-  final ReferralReconListener referralReconListener;
   final List<String> cycles;
   final String projectId;
   final String projectName;
@@ -40,7 +38,6 @@ class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
   const SearchReferralReconciliationsPage({
     super.key,
     super.appLocalizations,
-    required this.referralReconListener,
     required this.projectId,
     required this.cycles,
     required this.validIndividualAgeForCampaign,

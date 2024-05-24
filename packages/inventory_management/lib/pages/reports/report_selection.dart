@@ -5,20 +5,17 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
-import '../../blocs/inventory_listener.dart';
 import '../../blocs/inventory_report.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
 class InventoryReportSelectionPage extends LocalizedStatefulWidget {
-  final InventoryListener inventoryListener;
   final String projectId;
   final bool? isDistributor;
   final bool? isWareHouseMgr;
   final String? loggedInUserUuid;
 
   const InventoryReportSelectionPage({
-    required this.inventoryListener,
     required this.projectId,
     required this.isDistributor,
     required this.isWareHouseMgr,

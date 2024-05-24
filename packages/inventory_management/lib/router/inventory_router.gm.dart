@@ -12,10 +12,8 @@ import 'package:auto_route/auto_route.dart' as _i10;
 import 'package:digit_data_model/data_model.dart' as _i13;
 import 'package:flutter/material.dart' as _i11;
 import 'package:inventory_management/blocs/app_localization.dart' as _i12;
-import 'package:inventory_management/blocs/inventory_listener.dart' as _i15;
 import 'package:inventory_management/blocs/inventory_report.dart' as _i14;
-import 'package:inventory_management/blocs/record_stock.dart' as _i16;
-import 'package:inventory_management/inventory_management.dart' as _i17;
+import 'package:inventory_management/blocs/record_stock.dart' as _i15;
 import 'package:inventory_management/pages/acknowledgement.dart' as _i1;
 import 'package:inventory_management/pages/facility_selection.dart' as _i2;
 import 'package:inventory_management/pages/manage_stocks.dart' as _i5;
@@ -75,7 +73,6 @@ abstract class $InventoryRoute extends _i10.AutoRouterModule {
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.InventoryReportSelectionPage(
-          inventoryListener: args.inventoryListener,
           projectId: args.projectId,
           isDistributor: args.isDistributor,
           isWareHouseMgr: args.isWareHouseMgr,
@@ -123,7 +120,6 @@ abstract class $InventoryRoute extends _i10.AutoRouterModule {
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i8.StockReconciliationPage(
-          inventoryListener: args.inventoryListener,
           projectId: args.projectId,
           isDistributor: args.isDistributor,
           isWareHouseMgr: args.isWareHouseMgr,
@@ -294,7 +290,6 @@ class InventoryReportDetailsRouteArgs {
 class InventoryReportSelectionRoute
     extends _i10.PageRouteInfo<InventoryReportSelectionRouteArgs> {
   InventoryReportSelectionRoute({
-    required _i15.InventoryListener inventoryListener,
     required String projectId,
     required bool? isDistributor,
     required bool? isWareHouseMgr,
@@ -305,7 +300,6 @@ class InventoryReportSelectionRoute
   }) : super(
           InventoryReportSelectionRoute.name,
           args: InventoryReportSelectionRouteArgs(
-            inventoryListener: inventoryListener,
             projectId: projectId,
             isDistributor: isDistributor,
             isWareHouseMgr: isWareHouseMgr,
@@ -324,7 +318,6 @@ class InventoryReportSelectionRoute
 
 class InventoryReportSelectionRouteArgs {
   const InventoryReportSelectionRouteArgs({
-    required this.inventoryListener,
     required this.projectId,
     required this.isDistributor,
     required this.isWareHouseMgr,
@@ -332,8 +325,6 @@ class InventoryReportSelectionRouteArgs {
     this.key,
     this.appLocalizations,
   });
-
-  final _i15.InventoryListener inventoryListener;
 
   final String projectId;
 
@@ -349,7 +340,7 @@ class InventoryReportSelectionRouteArgs {
 
   @override
   String toString() {
-    return 'InventoryReportSelectionRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
+    return 'InventoryReportSelectionRouteArgs{projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -397,7 +388,7 @@ class RecordStockWrapperRoute
     extends _i10.PageRouteInfo<RecordStockWrapperRouteArgs> {
   RecordStockWrapperRoute({
     _i11.Key? key,
-    required _i16.StockRecordEntryType type,
+    required _i15.StockRecordEntryType type,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           RecordStockWrapperRoute.name,
@@ -422,7 +413,7 @@ class RecordStockWrapperRouteArgs {
 
   final _i11.Key? key;
 
-  final _i16.StockRecordEntryType type;
+  final _i15.StockRecordEntryType type;
 
   @override
   String toString() {
@@ -473,7 +464,6 @@ class StockDetailsRouteArgs {
 class StockReconciliationRoute
     extends _i10.PageRouteInfo<StockReconciliationRouteArgs> {
   StockReconciliationRoute({
-    required _i17.InventoryListener inventoryListener,
     required String projectId,
     required bool? isDistributor,
     required bool? isWareHouseMgr,
@@ -484,7 +474,6 @@ class StockReconciliationRoute
   }) : super(
           StockReconciliationRoute.name,
           args: StockReconciliationRouteArgs(
-            inventoryListener: inventoryListener,
             projectId: projectId,
             isDistributor: isDistributor,
             isWareHouseMgr: isWareHouseMgr,
@@ -503,7 +492,6 @@ class StockReconciliationRoute
 
 class StockReconciliationRouteArgs {
   const StockReconciliationRouteArgs({
-    required this.inventoryListener,
     required this.projectId,
     required this.isDistributor,
     required this.isWareHouseMgr,
@@ -511,8 +499,6 @@ class StockReconciliationRouteArgs {
     this.key,
     this.appLocalizations,
   });
-
-  final _i17.InventoryListener inventoryListener;
 
   final String projectId;
 
@@ -528,7 +514,7 @@ class StockReconciliationRouteArgs {
 
   @override
   String toString() {
-    return 'StockReconciliationRouteArgs{inventoryListener: $inventoryListener, projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
+    return 'StockReconciliationRouteArgs{projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
