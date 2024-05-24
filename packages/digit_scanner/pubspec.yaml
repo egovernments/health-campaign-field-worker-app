@@ -4,8 +4,6 @@ description: "A Scanner package used for scanning QR Codes and GS1 Barcodes."
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/digit_scanner
 
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
 # followed by an optional build number separated by a +.
@@ -47,6 +45,9 @@ dependencies:
   flutter_svg: ^2.0.8
   audioplayers: ^5.2.0
   auto_route: ^7.8.4
+  path_provider: ^2.0.11
+  path: ^1.8.2
+  google_mlkit_commons: ^0.6.0
 
 dev_dependencies:
   flutter_test:

@@ -340,10 +340,11 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "0.0.1+8"
+      name: digit_components
+      sha256: "8e1531fb33b746138819f3fe645c797a19f21149adb7fd61e603cadf59f08499"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3+4"
   easy_stepper:
     dependency: transitive
     description:
@@ -565,7 +566,7 @@ packages:
     source: hosted
     version: "0.10.0"
   google_mlkit_commons:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: google_mlkit_commons
       sha256: "046586b381cdd139f7f6a05ad6998f7e339d061bd70158249907358394b5f496"
@@ -797,7 +798,7 @@ packages:
     source: hosted
     version: "2.0.1"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "8829d8a55c13fc0e37127c29fedf290c102f4e40ae94ada574091fe0ff96c917"
@@ -813,7 +814,7 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       sha256: b27217933eeeba8ff24845c34003b003b2b22151de3c908d0e679e8fe1aa078b
@@ -948,14 +949,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.0"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   shelf:
     dependency: transitive
     description:
@@ -1242,5 +1235,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.3 <4.0.0"
+  dart: ">=3.2.3 <=3.9.0"
   flutter: ">=3.16.0"
