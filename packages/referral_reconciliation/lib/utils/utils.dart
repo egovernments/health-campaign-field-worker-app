@@ -1,8 +1,6 @@
 // Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
 import 'package:digit_data_model/data_model.dart';
 
-import '../blocs/referral_reconciliation_listeners.dart';
-
 dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   for (var map in data) {
     if (map["key"] == key) {
@@ -11,6 +9,17 @@ dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
   }
 
   return null; // Key not found
+}
+
+// Class to store the valid max and min age for a campaign
+class ValidIndividualAgeForCampaign {
+  final int validMinAge;
+  final int validMaxAge;
+
+  ValidIndividualAgeForCampaign({
+    required this.validMinAge,
+    required this.validMaxAge,
+  });
 }
 
 class ReferralReconSingleton {
