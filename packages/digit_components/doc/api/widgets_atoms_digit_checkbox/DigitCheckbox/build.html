@@ -51,7 +51,11 @@
 </header>
 <main>
 
-  <div id="dartdoc-main-content" class="main-content">
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="widgets_atoms_digit_checkbox&#47;DigitCheckbox-class-sidebar.html"
+      data-below-sidebar="">
       <div>
 <h1><span class="kind-method">build</span> method 
 </h1></div>
@@ -114,43 +118,23 @@ and</li>
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 Widget build(BuildContext context) {
-  final theme = Theme.of(context);
-
   return Padding(
-    padding: const EdgeInsets.only(top: 4),
+    padding: padding,
     child: InkWell(
       onTap: () =&gt; onChanged?.call(!value),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: 24,
-            width: 24,
-            child: Checkbox(
-              value: value,
-              side: MaterialStateBorderSide.resolveWith((states) {
-                if (states.contains(MaterialState.selected)) {
-                  return BorderSide(
-                    width: 2.0,
-                    color: theme.colorScheme.secondary,
-                  );
-                }
-                return const BorderSide(width: 1.0);
-              }),
-              fillColor: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.selected)) {
-                  return theme.colorScheme.surface;
-                }
-                return theme.colorScheme.secondary;
-              }),
-              checkColor: theme.colorScheme.secondary,
-              onChanged: onChanged,
-            ),
-          ),
+              height: 24,
+              width: 24,
+              child: CheckboxIcon(
+                value: value,
+              )),
           const SizedBox(width: 16),
           Text(
             label,
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
           ),
         ],
       ),
@@ -163,57 +147,23 @@ Widget build(BuildContext context) {
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../../index.html">digit_components</a></li>
-  <li><a href="../../widgets_atoms_digit_checkbox/widgets_atoms_digit_checkbox-library.html">digit_checkbox</a></li>
-  <li><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox-class.html">DigitCheckbox</a></li>
-  <li class="self-crumb">build method</li>
+    <li><a href="../../index.html">digit_components</a></li>
+    <li><a href="../../widgets_atoms_digit_checkbox/widgets_atoms_digit_checkbox-library.html">digit_checkbox</a></li>
+    <li><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox-class.html">DigitCheckbox</a></li>
+    <li class="self-crumb">build method</li>
 </ol>
 
 
     <h5>DigitCheckbox class</h5>
-    <ol>
-
-        <li class="section-title"><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox-class.html#constructors">Constructors</a></li>
-          <li><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox/DigitCheckbox.html">DigitCheckbox</a></li>
-
-
-        <li class="section-title">
-          <a href="../../widgets_atoms_digit_checkbox/DigitCheckbox-class.html#instance-properties">Properties</a>
-        </li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
-          <li><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox/label.html">label</a></li>
-          <li><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox/onChanged.html">onChanged</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-          <li><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox/value.html">value</a></li>
-
-        <li class="section-title"><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox-class.html#instance-methods">Methods</a></li>
-          <li><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox/build.html">build</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget/createElement.html">createElement</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toDiagnosticsNode.html">toDiagnosticsNode</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/Diagnosticable/toString.html">toString</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringDeep.html">toStringDeep</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></li>
-
-        <li class="section-title inherited"><a href="../../widgets_atoms_digit_checkbox/DigitCheckbox-class.html#operators">Operators</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></li>
-
-
-
-
-</ol>
-
+    <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -224,7 +174,7 @@ Widget build(BuildContext context) {
 <footer>
   <span class="no-break">
     digit_components
-      0.0.1+4
+      0.0.3+1
   </span>
 
   

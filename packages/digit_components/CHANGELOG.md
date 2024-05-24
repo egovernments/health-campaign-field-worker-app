@@ -41,3 +41,7 @@
 ## 0.0.3+1
 
 * Synced digit_components with flutter 3.16.5 version
+
+## 0.0.3+2
+
+* Updated repository URL and dart doc

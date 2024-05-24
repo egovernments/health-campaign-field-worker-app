@@ -51,7 +51,11 @@
 </header>
 <main>
 
-  <div id="dartdoc-main-content" class="main-content">
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="widgets_scrollable_content&#47;ScrollableContent-class-sidebar.html"
+      data-below-sidebar="">
       <div>
 <h1><span class="kind-constructor">ScrollableContent</span> constructor 
 </h1></div>
@@ -66,7 +70,9 @@
 <li><span class="parameter" id="-param-mainAxisAlignment"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/rendering/MainAxisAlignment.html">MainAxisAlignment</a></span> <span class="parameter-name">mainAxisAlignment</span> = <span class="default-value">MainAxisAlignment.start</span>, </span></li>
 <li><span class="parameter" id="-param-crossAxisAlignment"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/rendering/CrossAxisAlignment.html">CrossAxisAlignment</a></span> <span class="parameter-name">crossAxisAlignment</span> = <span class="default-value">CrossAxisAlignment.start</span>, </span></li>
 <li><span class="parameter" id="-param-children"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>&gt;</span></span> <span class="parameter-name">children</span> = <span class="default-value">const &lt;Widget&gt;[]</span>, </span></li>
-<li><span class="parameter" id="-param-slivers"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>&gt;</span></span> <span class="parameter-name">slivers</span> = <span class="default-value">const []</span>}</span></li>
+<li><span class="parameter" id="-param-slivers"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span>&gt;</span></span> <span class="parameter-name">slivers</span> = <span class="default-value">const []</span>, </span></li>
+<li><span class="parameter" id="-param-backgroundColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a>?</span> <span class="parameter-name">backgroundColor</span>, </span></li>
+<li><span class="parameter" id="-param-enableFixedButton"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enableFixedButton</span> = <span class="default-value">false</span>}</span></li>
 </ol>)
     </section>
 
@@ -76,79 +82,30 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">const ScrollableContent({
-  super.key,
-  this.footer,
-  this.header,
-  this.primary,
-  this.controller,
-  this.mainAxisAlignment = MainAxisAlignment.start,
-  this.crossAxisAlignment = CrossAxisAlignment.start,
-  this.children = const &lt;Widget&gt;[],
-  this.slivers = const [],
-});</code></pre>
+  <pre class="language-dart"><code class="language-dart">const ScrollableContent</code></pre>
 </section>
 
 
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../../index.html">digit_components</a></li>
-  <li><a href="../../widgets_scrollable_content/widgets_scrollable_content-library.html">scrollable_content</a></li>
-  <li><a href="../../widgets_scrollable_content/ScrollableContent-class.html">ScrollableContent</a></li>
-  <li class="self-crumb">ScrollableContent const constructor</li>
+    <li><a href="../../index.html">digit_components</a></li>
+    <li><a href="../../widgets_scrollable_content/widgets_scrollable_content-library.html">scrollable_content</a></li>
+    <li><a href="../../widgets_scrollable_content/ScrollableContent-class.html">ScrollableContent</a></li>
+    <li class="self-crumb">ScrollableContent const constructor</li>
 </ol>
 
 
     <h5>ScrollableContent class</h5>
-    <ol>
-
-        <li class="section-title"><a href="../../widgets_scrollable_content/ScrollableContent-class.html#constructors">Constructors</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/ScrollableContent.html">ScrollableContent</a></li>
-
-
-        <li class="section-title">
-          <a href="../../widgets_scrollable_content/ScrollableContent-class.html#instance-properties">Properties</a>
-        </li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/children.html">children</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/controller.html">controller</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/crossAxisAlignment.html">crossAxisAlignment</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/footer.html">footer</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/header.html">header</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/mainAxisAlignment.html">mainAxisAlignment</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/primary.html">primary</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/slivers.html">slivers</a></li>
-
-        <li class="section-title"><a href="../../widgets_scrollable_content/ScrollableContent-class.html#instance-methods">Methods</a></li>
-          <li><a href="../../widgets_scrollable_content/ScrollableContent/build.html">build</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget/createElement.html">createElement</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toDiagnosticsNode.html">toDiagnosticsNode</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/Diagnosticable/toString.html">toString</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringDeep.html">toStringDeep</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></li>
-
-        <li class="section-title inherited"><a href="../../widgets_scrollable_content/ScrollableContent-class.html#operators">Operators</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></li>
-
-
-
-
-</ol>
-
+    <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -159,7 +116,7 @@
 <footer>
   <span class="no-break">
     digit_components
-      0.0.1+4
+      0.0.3+1
   </span>
 
   

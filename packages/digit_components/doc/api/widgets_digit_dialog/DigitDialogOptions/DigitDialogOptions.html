@@ -51,7 +51,11 @@
 </header>
 <main>
 
-  <div id="dartdoc-main-content" class="main-content">
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="widgets_digit_dialog&#47;DigitDialogOptions-class-sidebar.html"
+      data-below-sidebar="">
       <div>
 <h1><span class="kind-constructor">DigitDialogOptions</span> constructor 
 </h1></div>
@@ -66,10 +70,13 @@
 <li><span class="parameter" id="-param-primaryAction"><span class="type-annotation"><a href="../../widgets_digit_dialog/DigitDialogActions-class.html">DigitDialogActions</a>?</span> <span class="parameter-name">primaryAction</span>, </span></li>
 <li><span class="parameter" id="-param-secondaryAction"><span class="type-annotation"><a href="../../widgets_digit_dialog/DigitDialogActions-class.html">DigitDialogActions</a>?</span> <span class="parameter-name">secondaryAction</span>, </span></li>
 <li><span class="parameter" id="-param-barrierDismissible"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">barrierDismissible</span> = <span class="default-value">false</span>, </span></li>
-<li><span class="parameter" id="-param-titlePadding"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a></span> <span class="parameter-name">titlePadding</span> = <span class="default-value">const EdgeInsets.all(kPadding)</span>, </span></li>
+<li><span class="parameter" id="-param-enableRecordPast"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a>?</span> <span class="parameter-name">enableRecordPast</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="-param-isScrollable"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isScrollable</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="-param-titlePadding"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a></span> <span class="parameter-name">titlePadding</span> = <span class="default-value">const EdgeInsets.only(top: kPadding, bottom: kPadding)</span>, </span></li>
 <li><span class="parameter" id="-param-contentPadding"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a></span> <span class="parameter-name">contentPadding</span> = <span class="default-value">const EdgeInsets.all(kPadding)</span>, </span></li>
 <li><span class="parameter" id="-param-barrierColor"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Color-class.html">Color</a>?</span> <span class="parameter-name">barrierColor</span>, </span></li>
-<li><span class="parameter" id="-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>}</span></li>
+<li><span class="parameter" id="-param-key"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/foundation/Key-class.html">Key</a>?</span> <span class="parameter-name">key</span>, </span></li>
+<li><span class="parameter" id="-param-dialogPadding"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/painting/EdgeInsets-class.html">EdgeInsets</a>?</span> <span class="parameter-name">dialogPadding</span>}</span></li>
 </ol>)
     </section>
 
@@ -79,78 +86,30 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">const DigitDialogOptions({
-  this.titleText,
-  this.contentText,
-  this.titleIcon,
-  Widget? title,
-  Widget? content,
-  this.primaryAction,
-  this.secondaryAction,
-  this.barrierDismissible = false,
-  this.titlePadding = const EdgeInsets.all(kPadding),
-  this.contentPadding = const EdgeInsets.all(kPadding),
-  this.barrierColor,
-  this.key,
-})  : _titleWidget = title,
-      _contentWidget = content;</code></pre>
+  <pre class="language-dart"><code class="language-dart">const DigitDialogOptions</code></pre>
 </section>
 
 
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../../index.html">digit_components</a></li>
-  <li><a href="../../widgets_digit_dialog/widgets_digit_dialog-library.html">digit_dialog</a></li>
-  <li><a href="../../widgets_digit_dialog/DigitDialogOptions-class.html">DigitDialogOptions</a></li>
-  <li class="self-crumb">DigitDialogOptions const constructor</li>
+    <li><a href="../../index.html">digit_components</a></li>
+    <li><a href="../../widgets_digit_dialog/widgets_digit_dialog-library.html">digit_dialog</a></li>
+    <li><a href="../../widgets_digit_dialog/DigitDialogOptions-class.html">DigitDialogOptions</a></li>
+    <li class="self-crumb">DigitDialogOptions const constructor</li>
 </ol>
 
 
     <h5>DigitDialogOptions class</h5>
-    <ol>
-
-        <li class="section-title"><a href="../../widgets_digit_dialog/DigitDialogOptions-class.html#constructors">Constructors</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/DigitDialogOptions.html">DigitDialogOptions</a></li>
-
-
-        <li class="section-title">
-          <a href="../../widgets_digit_dialog/DigitDialogOptions-class.html#instance-properties">Properties</a>
-        </li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/barrierColor.html">barrierColor</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/barrierDismissible.html">barrierDismissible</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/content.html">content</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/contentPadding.html">contentPadding</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/contentText.html">contentText</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/key.html">key</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/primaryAction.html">primaryAction</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/secondaryAction.html">secondaryAction</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/title.html">title</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/titleIcon.html">titleIcon</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/titlePadding.html">titlePadding</a></li>
-          <li><a href="../../widgets_digit_dialog/DigitDialogOptions/titleText.html">titleText</a></li>
-
-        <li class="section-title inherited"><a href="../../widgets_digit_dialog/DigitDialogOptions-class.html#instance-methods">Methods</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
-
-        <li class="section-title inherited"><a href="../../widgets_digit_dialog/DigitDialogOptions-class.html#operators">Operators</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
-
-
-
-
-</ol>
-
+    <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-left-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -161,7 +120,7 @@
 <footer>
   <span class="no-break">
     digit_components
-      0.0.1+4
+      0.0.3+1
   </span>
 
   

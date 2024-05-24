@@ -51,7 +51,11 @@
 </header>
 <main>
 
-  <div id="dartdoc-main-content" class="main-content">
+  <div
+      id="dartdoc-main-content"
+      class="main-content"
+      data-above-sidebar="widgets_digit_dob_picker&#47;DigitDobPicker-class-sidebar.html"
+      data-below-sidebar="">
       <div>
 <h1><span class="kind-method">build</span> method 
 </h1></div>
@@ -117,9 +121,16 @@ Widget build(BuildContext context) {
   final theme = Theme.of(context);
 
   return Padding(
-    padding: const EdgeInsets.only(top: 16),
+    padding: const EdgeInsets.only(
+      top: 8,
+      bottom: 8,
+    ),
     child: Container(
-      padding: const EdgeInsets.only(left: 8, right: 8, bottom: 16),
+      padding: const EdgeInsets.only(
+        left: 8,
+        right: 8,
+        bottom: 8,
+      ),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(4),
@@ -128,39 +139,89 @@ Widget build(BuildContext context) {
       ),
       child: Column(
         children: [
+          &#47;&#47; Date picker component to select the date of birth
           DigitDateFormPicker(
             label: datePickerLabel,
+            start: initialDate,
             formControlName: datePickerFormControl,
+            cancelText: cancelText,
+            confirmText: confirmText,
+            onChangeOfFormControl: onChangeOfFormControl,
+            end: DateTime.now(),
           ),
           const SizedBox(height: 16),
+          &#47;&#47; Text widget to display a separator label between the date picker and age fields
           Text(
             separatorLabel,
             style: theme.textTheme.bodyLarge,
           ),
-          DigitTextFormField(
-            maxLength: 3,
-            valueAccessor: DobValueAccessor(),
-            formControlName: datePickerFormControl,
-            label: ageFieldLabel,
-            keyboardType: TextInputType.number,
-            readOnly: isVerified,
-            onChanged: (formControl) {
-              &#47;&#47;&#47; Validates that control&#39;s value must be `true`
-              Map&lt;String, dynamic&gt;? requiredTrue(
-                  AbstractControl&lt;dynamic&gt; control) {
-                String value =
-                    (DateTime.now().difference(formControl.value).inDays &#47;
-                            365)
-                        .round()
-                        .toStringAsFixed(0);
-                return int.parse(value) &lt;= 150
-                    ? null
-                    : {&#39;Age Shoud be less than 150&#39;: true};
+          Row(
+            children: [
+              Expanded(
+                &#47;&#47; Text form field for entering the age in years
+                child: DigitTextFormField(
+                    padding: EdgeInsets.zero,
+                    maxLength: 3,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    valueAccessor:
+                        DobValueAccessorYearsString(DobValueAccessor()),
+                    formControlName: datePickerFormControl,
+                    label: ageFieldLabel,
+                    keyboardType: TextInputType.number,
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        yearsHintLabel,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    readOnly: isVerified,
+                    onChanged: onChangeOfFormControl),
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              Expanded(
+                &#47;&#47; Text form field for entering the age in months
+                child: DigitTextFormField(
+                    padding: EdgeInsets.zero,
+                    maxLength: 2,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                    ],
+                    valueAccessor:
+                        DobValueAccessorMonthString(DobValueAccessor()),
+                    formControlName: datePickerFormControl,
+                    label: &#39;&#39;,
+                    keyboardType: TextInputType.number,
+                    suffix: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        monthsHintLabel,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    readOnly: isVerified,
+                    onChanged: onChangeOfFormControl),
+              ),
+            ],
+          ),
+          ReactiveFormConsumer(
+            builder: (context, form, child) {
+              final datePickerControl = form.control(datePickerFormControl);
+              if (datePickerControl.hasErrors) {
+                return Text(
+                  yearsAndMonthsErrMsg,
+                  style:
+                      TextStyle(color: DigitTheme.instance.colorScheme.error),
+                );
+              } else {
+                return const SizedBox.shrink();
               }
-
-              formControl.setValidators([requiredTrue]);
             },
-          )
+          ),
         ],
       ),
     ),
@@ -172,60 +233,23 @@ Widget build(BuildContext context) {
   </div> <!-- /.main-content -->
 
   <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
-    <header id="header-search-sidebar" class="hidden-l">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
   <form class="search-sidebar" role="search">
     <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
 </header>
 
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
-  <li><a href="../../index.html">digit_components</a></li>
-  <li><a href="../../widgets_digit_dob_picker/widgets_digit_dob_picker-library.html">digit_dob_picker</a></li>
-  <li><a href="../../widgets_digit_dob_picker/DigitDobPicker-class.html">DigitDobPicker</a></li>
-  <li class="self-crumb">build method</li>
+    <li><a href="../../index.html">digit_components</a></li>
+    <li><a href="../../widgets_digit_dob_picker/widgets_digit_dob_picker-library.html">digit_dob_picker</a></li>
+    <li><a href="../../widgets_digit_dob_picker/DigitDobPicker-class.html">DigitDobPicker</a></li>
+    <li class="self-crumb">build method</li>
 </ol>
 
 
     <h5>DigitDobPicker class</h5>
-    <ol>
-
-        <li class="section-title"><a href="../../widgets_digit_dob_picker/DigitDobPicker-class.html#constructors">Constructors</a></li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/DigitDobPicker.html">DigitDobPicker</a></li>
-
-
-        <li class="section-title">
-          <a href="../../widgets_digit_dob_picker/DigitDobPicker-class.html#instance-properties">Properties</a>
-        </li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/ageFieldLabel.html">ageFieldLabel</a></li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/datePickerFormControl.html">datePickerFormControl</a></li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/datePickerLabel.html">datePickerLabel</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/hashCode.html">hashCode</a></li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/isVerified.html">isVerified</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/key.html">key</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/separatorLabel.html">separatorLabel</a></li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/valueAccessor.html">valueAccessor</a></li>
-
-        <li class="section-title"><a href="../../widgets_digit_dob_picker/DigitDobPicker-class.html#instance-methods">Methods</a></li>
-          <li><a href="../../widgets_digit_dob_picker/DigitDobPicker/build.html">build</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/StatelessWidget/createElement.html">createElement</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/debugDescribeChildren.html">debugDescribeChildren</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/debugFillProperties.html">debugFillProperties</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toDiagnosticsNode.html">toDiagnosticsNode</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/Diagnosticable/toString.html">toString</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringDeep.html">toStringDeep</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/foundation/DiagnosticableTree/toStringShallow.html">toStringShallow</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/toStringShort.html">toStringShort</a></li>
-
-        <li class="section-title inherited"><a href="../../widgets_digit_dob_picker/DigitDobPicker-class.html#operators">Operators</a></li>
-          <li class="inherited"><a href="https://api.flutter.dev/flutter/widgets/Widget/operator_equals.html">operator ==</a></li>
-
-
-
-
-</ol>
-
+    <div id="dartdoc-sidebar-left-content"></div>
   </div><!--/.sidebar-offcanvas-->
 
   <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
@@ -236,7 +260,7 @@ Widget build(BuildContext context) {
 <footer>
   <span class="no-break">
     digit_components
-      0.0.1+4
+      0.0.3+1
   </span>
 
   
