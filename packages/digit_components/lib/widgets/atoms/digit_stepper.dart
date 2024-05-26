@@ -1,7 +1,6 @@
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:easy_stepper/easy_stepper.dart';
-import 'package:flutter/cupertino.dart';
 
 class DigitStepper extends StatelessWidget {
   final int activeStep;
