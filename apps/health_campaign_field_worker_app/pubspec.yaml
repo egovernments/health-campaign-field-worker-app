@@ -1,7 +1,7 @@
 name: health_campaign_field_worker_app
 description: A new Flutter project.
 publish_to: 'none'
-version: 1.2.2+3
+version: 1.3.0+0
 
 environment:
   sdk: '>=3.0.0 <=4.0.0'
@@ -20,7 +20,7 @@ dependencies:
   path: ^1.8.2
   forms_engine: ^0.0.1
   digit_components: ^0.0.1
-  auto_route: ^5.0.2
+  auto_route: ^7.8.4
   flutter_bloc: ^8.1.1
   collection: ^1.16.0
   reactive_forms: ^14.1.0
@@ -66,23 +66,31 @@ dependencies:
   disk_space: ^0.2.1
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
-  attendance_management: ^0.0.1
+  # TODO: Add pub dev version for below packages once published
+  attendance_management: ^0.0.0-dev.1
+  digit_scanner: ^0.0.1+1
+  inventory_management: ^0.0.0-dev.1
+  referral_reconciliation: ^0.0.0-dev.1
+  digit_data_model: ^0.0.0-dev.1
+  registration_delivery: ^0.0.0-dev.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  integration_test:
+    sdk: flutter
   flutter_lints: ^3.0.1
-  dart_code_metrics: ^5.7.6
   freezed: ^2.1.0+1
   build_runner: ^2.4.7
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
-  auto_route_generator: ^5.0.1
+  auto_route_generator: ^7.3.2
   bloc_test: ^9.1.0
   mocktail: ^1.0.2
   dart_mappable_builder: ^4.2.0
   isar_generator: ^3.0.5
   flutter_launcher_icons: ^0.13.1
+  hrk_flutter_test_batteries: ^0.8.0
 
 dependency_overrides:
   intl: ^0.18.0

@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
@@ -10,12 +11,12 @@ import 'package:recase/recase.dart';
 
 import '../../../blocs/auth/auth.dart';
 import '../../../blocs/complaints_inbox/complaints_inbox.dart';
-import '../../../models/pgr_complaints/pgr_complaints.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 
+@RoutePage()
 class ComplaintsInboxFilterPage extends LocalizedStatefulWidget {
   const ComplaintsInboxFilterPage({
     super.key,

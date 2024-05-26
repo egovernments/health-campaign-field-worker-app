@@ -9,6 +9,7 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 
+@RoutePage()
 class ComplaintsInboxSortPage extends LocalizedStatefulWidget {
   const ComplaintsInboxSortPage({
     super.key,

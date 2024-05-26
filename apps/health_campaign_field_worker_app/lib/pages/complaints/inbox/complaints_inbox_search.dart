@@ -8,7 +8,9 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
+import 'package:flutter/services.dart';
 
+@RoutePage()
 class ComplaintsInboxSearchPage extends LocalizedStatefulWidget {
   const ComplaintsInboxSearchPage({
     super.key,
@@ -77,7 +79,8 @@ class _ComplaintsInboxSearchPageState
                 footer: SizedBox(
                   child: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                    padding:
+                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -144,6 +147,9 @@ class _ComplaintsInboxSearchPageState
                                   ),
                                   maxLength: 10,
                                   keyboardType: TextInputType.number,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.digitsOnly,
+                                  ],
                                   validationMessages: {
                                     'mobileNumber': (object) =>
                                         localizations.translate(i18
