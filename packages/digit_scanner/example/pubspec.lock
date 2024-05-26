@@ -309,10 +309,10 @@ packages:
     dependency: transitive
     description:
       name: digit_components
-      sha256: "8e1531fb33b746138819f3fe645c797a19f21149adb7fd61e603cadf59f08499"
+      sha256: "50c6e0a855555f60b60036d5c521730472b10e2219dc9b46adc1a8c699aab2ba"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3+4"
+    version: "0.0.3+11"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -437,11 +437,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  flutter_localizations:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
