@@ -4,8 +4,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:referral_reconciliation/blocs/referral_recon_record.dart';
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart';
-import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:referral_reconciliation/utils/utils.dart';
 
 import '../constants/test_constants.dart';
@@ -19,18 +17,6 @@ class MockProjectFacilityModel extends Mock implements ProjectFacilityModel {
   String get id => ReferralReconTestConstants().projectFacilityId;
 }
 
-// Fake class for SaveReferralDetails for testing
-class SaveReferralReconDetailsFake extends Fake
-    implements ReferralReconciliation {
-  @override
-  HFReferralModel get hfReferralModel =>
-      ReferralReconTestConstants().hfReferralModel;
-
-  @override
-  Map<String, Object> get additionalData =>
-      ReferralReconTestConstants().additionalDataForReferralRecord;
-}
-
 void main() {
   late String mockProjectId;
   late DateTime mockDateOfRecord;
@@ -39,8 +25,6 @@ void main() {
 
   // Setting up the test environment
   setUpAll(() {
-    registerFallbackValue(SaveReferralReconDetailsFake());
-
     // Initializing the entryType and projectId
     mockProjectId = ReferralReconTestConstants().projectId;
     mockDateOfRecord = ReferralReconTestConstants().dateOfReferralRecord;
@@ -75,28 +59,28 @@ void main() {
         RecordHFReferralState.create(
           loading: true,
           projectId: mockProjectId,
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
           facilityId: mockProjectFacilityModel.id,
           healthFacilityCord: mockHealthFacilityCoordinator,
           dateOfEvaluation: mockDateOfRecord,
         ),
       ),
       act: (bloc) => bloc.add(RecordHFReferralEvent.createReferralEntry(
-        hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+        hfReferralModel: ReferralReconTestConstants().hfReferralModel,
       )),
       // Expecting the bloc to emit a state with the saved warehouse details
       expect: () => <RecordHFReferralState>[
         RecordHFReferralState.create(
           loading: true,
           projectId: mockProjectId,
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
           healthFacilityCord: mockHealthFacilityCoordinator,
           facilityId: mockProjectFacilityModel.id,
           dateOfEvaluation: mockDateOfRecord,
         ),
         RecordHFReferralState.persisted(
           projectId: mockProjectId,
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
           healthFacilityCord: mockHealthFacilityCoordinator,
           facilityId: mockProjectFacilityModel.id,
           dateOfEvaluation: mockDateOfRecord,
@@ -112,7 +96,7 @@ void main() {
           projectId: mockProjectId,
           dateOfEvaluation: mockDateOfRecord,
           facilityId: mockProjectFacilityModel.id,
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
         ),
       ),
       act: (bloc) {
@@ -126,7 +110,7 @@ void main() {
           projectId: mockProjectId,
           dateOfEvaluation: mockDateOfRecord,
           facilityId: mockProjectFacilityModel.id,
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
         ),
       ],
     );
@@ -137,19 +121,19 @@ void main() {
       build: () => RecordHFReferralBloc(
         RecordHFReferralState.view(
           projectId: mockProjectId,
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
         ),
       ),
       act: (bloc) {
         bloc.add(RecordHFReferralEvent.viewReferral(
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
         ));
       },
       // Expecting the bloc to emit a persisted state after the stock entry is created
       expect: () => <RecordHFReferralState>[
         RecordHFReferralState.view(
           projectId: mockProjectId,
-          hfReferralModel: SaveReferralReconDetailsFake().hfReferralModel,
+          hfReferralModel: ReferralReconTestConstants().hfReferralModel,
         ),
       ],
     );

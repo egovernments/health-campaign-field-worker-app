@@ -20,23 +20,33 @@ To use this package, add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  inventory_management: ^0.0.1
+  inventory_management: ^0.0.0-dev.1
 ```
 
-Here is how inventory package interacts with parent app
+To Navigate to any screens of the package: 
 
-![inventory_management](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/e22ba6a1-bb73-4ec2-b93d-8aada56590e8)
+First add inventory_router to your main app router
 
-New files or changes needed in HCM App:
+Navigate to the required screen using the below code:
 
-1. Create model classes which import inventory models and add companion class 
-2. Create repositories local and remote as per project requirements and structure 
-3. Run inventory_package_imports.dart file to import all the required files to work with inventory package 
-4. Add navigation to manage inventory page, stock recon and view reports from hcm app and pass the required fields
+```dart
+context.router.push(ManageStocksRoute());
+```
+Inventory Management package requires below data to be passed from main app:
 
-Below are the sequence diagrams on each feature on how it interacts with HCM App:
+```dart
+String _projectId;
+String? _loggedInUserUuid;
+String? _boundaryName;
+String? _tenantId;
+bool _isDistributor;
+bool _isWareHouseMgr;
+List<InventoryTransportTypes>? _transportType;
+PersistenceConfiguration _persistenceConfiguration;
+```
 
-![record_stock_inventory](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/f60a1106-f077-400f-b234-bc7634daf4dc)
-![stock_recon_flow](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/60b8037b-ff54-4f42-84d3-298216f70ecf)
-![stock_reports](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/5ca35c54-af62-49db-a238-fcff8640c9cf)
+Below are the flow diagrams of flow:
 
+![record_stock](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/b0817363-6ead-4b7e-8791-e719c0f2ae8c)
+![stock_recon](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/ccc4b50b-5e43-4784-9bdb-17ece68022a7)
+![report_selection](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/2e9affca-e82d-41bf-83a2-7241b44cbe56)

@@ -15,7 +15,7 @@ import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
-import '../../widgets/localizaed.dart';
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class ReferralReasonChecklistPage extends LocalizedStatefulWidget {

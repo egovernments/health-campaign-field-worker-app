@@ -12,8 +12,6 @@ import 'package:auto_route/auto_route.dart' as _i9;
 import 'package:digit_data_model/data_model.dart' as _i13;
 import 'package:flutter/material.dart' as _i10;
 import 'package:referral_reconciliation/blocs/app_localization.dart' as _i12;
-import 'package:referral_reconciliation/blocs/referral_reconciliation_listeners.dart'
-    as _i14;
 import 'package:referral_reconciliation/models/entities/hf_referral.dart'
     as _i11;
 import 'package:referral_reconciliation/pages/acknowledgement.dart' as _i6;
@@ -31,6 +29,7 @@ import 'package:referral_reconciliation/pages/project_facility/project_facility_
     as _i7;
 import 'package:referral_reconciliation/pages/search_referral_reconciliations.dart'
     as _i8;
+import 'package:referral_reconciliation/utils/utils.dart' as _i14;
 
 abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
   @override
@@ -129,7 +128,6 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
         child: _i8.SearchReferralReconciliationsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          referralReconListener: args.referralReconListener,
           projectId: args.projectId,
           cycles: args.cycles,
           validIndividualAgeForCampaign: args.validIndividualAgeForCampaign,
@@ -490,7 +488,6 @@ class SearchReferralReconciliationsRoute
   SearchReferralReconciliationsRoute({
     _i10.Key? key,
     _i12.ReferralReconLocalization? appLocalizations,
-    required _i14.ReferralReconListener referralReconListener,
     required String projectId,
     required List<String> cycles,
     required _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
@@ -511,7 +508,6 @@ class SearchReferralReconciliationsRoute
           args: SearchReferralReconciliationsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            referralReconListener: referralReconListener,
             projectId: projectId,
             cycles: cycles,
             validIndividualAgeForCampaign: validIndividualAgeForCampaign,
@@ -540,7 +536,6 @@ class SearchReferralReconciliationsRouteArgs {
   const SearchReferralReconciliationsRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.referralReconListener,
     required this.projectId,
     required this.cycles,
     required this.validIndividualAgeForCampaign,
@@ -560,8 +555,6 @@ class SearchReferralReconciliationsRouteArgs {
   final _i10.Key? key;
 
   final _i12.ReferralReconLocalization? appLocalizations;
-
-  final _i14.ReferralReconListener referralReconListener;
 
   final String projectId;
 
@@ -593,6 +586,6 @@ class SearchReferralReconciliationsRouteArgs {
 
   @override
   String toString() {
-    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, referralReconListener: $referralReconListener, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, boundaryCode: $boundaryCode, roleCode: $roleCode, userUUid: $userUUid, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes, projectName: $projectName}';
+    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, boundaryCode: $boundaryCode, roleCode: $roleCode, userUUid: $userUUid, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes, projectName: $projectName}';
   }
 }

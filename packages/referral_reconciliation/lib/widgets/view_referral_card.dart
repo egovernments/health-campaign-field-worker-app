@@ -7,7 +7,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/referral_recon_enums.dart';
 import '../utils/constants.dart';
 import 'beneficiary_card.dart';
-import 'localizaed.dart';
+import 'localized.dart';
 
 class ViewReferralCard extends LocalizedStatefulWidget {
   final HFReferralModel hfReferralModel;

@@ -3,7 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
-import '../widgets/localizaed.dart';
+import '../widgets/localized.dart';
 
 @RoutePage()
 class ReferralReconAcknowledgementPage extends LocalizedStatefulWidget {

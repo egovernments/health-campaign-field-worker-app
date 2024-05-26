@@ -10,7 +10,7 @@ import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
-import '../../widgets/localizaed.dart';
+import '../../widgets/localized.dart';
 import '../../widgets/project_facility_bloc_wrapper.dart';
 
 @RoutePage()
