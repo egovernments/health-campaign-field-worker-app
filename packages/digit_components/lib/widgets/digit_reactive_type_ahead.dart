@@ -51,7 +51,6 @@ class DigitReactiveTypeAhead<T, V> extends ReactiveFormField<T, V> {
     TextAlignVertical? textAlignVertical,
     bool autofocus = false,
     bool readOnly = false,
-    ToolbarOptions? toolbarOptions,
     bool? showCursor,
     bool obscureText = false,
     String obscuringCharacter = '•',

@@ -35,8 +35,8 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _DigitReactiveSearchDropdownState<T> createState() =>
-      _DigitReactiveSearchDropdownState<T>();
+  State<DigitReactiveSearchDropdown> createState() =>
+      _DigitReactiveSearchDropdownState();
 }
 
 class _DigitReactiveSearchDropdownState<T>
