@@ -1,10 +1,11 @@
 name: digit_components
 description: Digit UI Design specification
-version: 0.0.1+8
-homepage:
+version: 0.0.3+6
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_components
+repository: https://github.com/egovernments/health-campaign-field-worker-app
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=2.19.4 <3.9.0'
   flutter: ">=1.17.0"
 
 dependencies:
@@ -30,7 +31,7 @@ dependencies:
   overlay_builder: ^1.1.0
   package_info_plus: ^5.0.1
   easy_stepper: ^0.5.2+1
-  intl: ^0.18.0
+  intl: ^0.18.1
   flutter_focus_watcher: ^2.0.0
 
 
