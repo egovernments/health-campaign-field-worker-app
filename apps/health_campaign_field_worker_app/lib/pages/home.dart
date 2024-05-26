@@ -701,7 +701,7 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.referralReasons!.map((e) => e.code).toList(),
         );
 
-        AttendanceSingleton().setAttendanceListeners(
+        AttendanceSingleton().setInitialData(
           projectId: context.projectId,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,

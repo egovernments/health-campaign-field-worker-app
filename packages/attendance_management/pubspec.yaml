@@ -30,6 +30,7 @@ dependencies:
   auto_route: ^7.8.4
   digit_data_model: ^0.0.0-dev.1
   connectivity_plus: ^5.0.2
+  collection: ^1.16.0
 
 dev_dependencies:
   flutter_test:
@@ -47,10 +48,3 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/svg/
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
-    - family: RobotoCondensed
-      fonts:
-        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
