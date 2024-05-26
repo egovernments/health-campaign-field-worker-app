@@ -80,7 +80,7 @@
 
 * Updated homepage url
 
-##0.0.3+10
+##0.0.3+11
 
 * Removed flutter localizations dependency
 
