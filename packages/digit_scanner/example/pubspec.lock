@@ -319,7 +319,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.0-dev.1"
+    version: "0.0.0-dev.2"
   easy_stepper:
     dependency: transitive
     description:
@@ -1090,5 +1090,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.3 <=3.9.0"
+  dart: ">=3.2.3 <3.9.0"
   flutter: ">=3.16.0"
