@@ -57,3 +57,15 @@
 ##0.0.3+5
 
 * Updated flutter sdk version
+
+##0.0.3+6
+
+* Updated flutter repository url
+
+##0.0.3+7
+
+* Updated intl version and added pubspec_override
+
+##0.0.3+8
+
+* Updated intl version and added pubspec_override
