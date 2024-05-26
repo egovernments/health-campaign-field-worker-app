@@ -57,3 +57,7 @@
 ##0.0.3+5
 
 * Updated flutter sdk version
+
+##0.0.3+6
+
+* Updated flutter repository url
