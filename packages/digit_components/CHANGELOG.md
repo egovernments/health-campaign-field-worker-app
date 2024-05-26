@@ -53,3 +53,7 @@
 ## 0.0.3+4
 
 * Updated example folder
+
+##0.0.3+5
+
+* Updated flutter sdk version

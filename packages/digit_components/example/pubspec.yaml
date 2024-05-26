@@ -19,7 +19,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.19.4 <=3.9.0'
+  sdk: '>=2.19.4 <3.9.0'
+  flutter: ">=1.17.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -30,7 +31,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: 0.0.3+3
+  digit_components:
+    path: ../../digit_components
   collection: ^1.16.0
   reactive_forms: ^14.1.0
 
