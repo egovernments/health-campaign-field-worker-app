@@ -340,10 +340,11 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "0.0.1+8"
+      name: digit_components
+      sha256: "50c6e0a855555f60b60036d5c521730472b10e2219dc9b46adc1a8c699aab2ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3+11"
   easy_stepper:
     dependency: transitive
     description:
@@ -461,11 +462,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  flutter_localizations:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -940,14 +936,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.0"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   shelf:
     dependency: transitive
     description:
