@@ -19,7 +19,7 @@ class AttendanceSingleton {
       .offlineFirst; // Default to offline first persistence configuration
 
   // Method to set attendance listeners and other information
-  void setAttendanceListeners(
+  void setInitialData(
       {required String projectId,
       required String loggedInIndividualId,
       required String loggedInUserUuid,

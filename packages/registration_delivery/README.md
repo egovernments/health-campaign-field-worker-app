@@ -1,39 +1,68 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Registration and Delivery
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+This package provides a way to register a household and individual members and deliver the resources to the registered households.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+* Register new households and individuals.
+* Search existing households and individuals
+* Update details for existing households and individuals.
+* Record service delivery of healthcare interventions to households and individuals for a single round campaign.
+* Auto-calculation of resources to be delivered to a household or individuals based on the configured rule.
 
-## Getting started
+## Getting Started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this package, add the following dependency to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  registration_delivery: ^any
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+To Navigate to any screens of the package:
+
+First add registration_delivery_router to your main app router
+
+Navigate to the required screen using the below code and pass the required data:
 
 ```dart
-const like = 'sample';
+context.router.push(SearchBeneficiaryRoute(),);
 ```
 
-## Additional information
+To Consume any bloc of the package in main app:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+BlocProvider(create: (context) {return SearchBlocWrapper();},),
+```
+
+Registration Delivery package requires below data to be passed from main app:
+
+```dart
+RegistrationDeliveryListener? _registrationDeliveryListener;
+
+String? _tenantId;
+String? _loggedInUserUuid;
+
+double? _maxRadius;
+String? _projectId;
+BeneficiaryType? _beneficiaryType;
+ProjectTypeModel? _projectType;
+ProjectModel? _selectedProject;
+BoundaryModel? _boundaryModel;
+PersistenceConfiguration? _persistenceConfiguration;
+List<String>? _genderOptions;
+List<String>? _idTypeOptions;
+List<String>? _householdDeletionReasonOptions;
+List<String>? _householdMemberDeletionReasonOptions;
+List<String>? _deliveryCommentOptions;
+List<String>? _symptomsTypes;
+List<String>? _referralReasons;
+```
+
+To set the required data use:
+
+```dart
+RegistrationDeliverySingleton().setInitialData();
+```

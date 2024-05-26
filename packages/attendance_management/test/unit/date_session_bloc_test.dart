@@ -2,7 +2,9 @@
 import 'package:test/test.dart';
 import 'package:attendance_management/attendance_management.dart'; // Import your package for testing.
 import 'package:attendance_management/blocs/date_session_bloc.dart'; // Import the bloc to be tested.
-import 'package:mocktail/mocktail.dart'; // Import mocktail for mocking classes.
+import 'package:mocktail/mocktail.dart';
+
+import '../constants/test_constants.dart'; // Import mocktail for mocking classes.
 
 // Define a mock class for the DateSessionEmitter.
 class MockDateSessionEmitter extends Mock implements DateSessionEmitter {}
@@ -12,12 +14,9 @@ void main() {
   group('DateSessionBloc', () {
     late DateSessionBloc
         dateSessionBloc; // Declare a variable for the DateSessionBloc.
-    late MockDateSessionEmitter
-        mockEmitter; // Declare a mock emitter for testing.
 
     // Set up the test environment before each test.
     setUp(() {
-      mockEmitter = MockDateSessionEmitter(); // Initialize the mock emitter.
       dateSessionBloc = DateSessionBloc(
           const DateSessionLoading()); // Initialize the DateSessionBloc with a default state.
     });
@@ -47,14 +46,9 @@ void main() {
 
     // Test if the correct state is emitted when LoadSelectedRegisterData is added.
     test('emits DateSessionLoaded when LoadSelectedRegisterData is added', () {
-      final registerId = '1'; // Define a sample register ID.
-      final registers = [
-        // Define a list of sample registers.
-        AttendanceRegisterModel(id: '1', name: 'Register 1'),
-        AttendanceRegisterModel(id: '2', name: 'Register 2'),
-      ];
       final selectedRegister = // Find the selected register based on the given register ID.
-          registers.firstWhere((register) => register.id == registerId);
+          AttendanceTestConstants.registers.firstWhere(
+              (register) => register.id == AttendanceTestConstants.registerId);
 
       final expectedStates = [
         // Define the expected states.
@@ -68,8 +62,8 @@ void main() {
 
       dateSessionBloc.add(LoadSelectedRegisterData(
         // Add the LoadSelectedRegisterData event to the DateSessionBloc.
-        registerID: registerId,
-        registers: registers,
+        registerID: AttendanceTestConstants.registerId,
+        registers: AttendanceTestConstants.registers,
       ));
     });
   });

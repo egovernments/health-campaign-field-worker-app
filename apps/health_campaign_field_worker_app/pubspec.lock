@@ -489,9 +489,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: ca8a602305fb591329a95c1340805ace1577ef4146a2beea1991a0653a24040d
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.0-dev.1"
   digit_firebase_services:
     dependency: "direct main"
@@ -503,10 +504,11 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
-    version: "0.0.0-dev.1"
+      name: digit_scanner
+      sha256: af9a4e1ffb160646c3327b3e3dd73760839330969a50041ee4d187ee59509fe8
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.2"
   digit_showcase:
     dependency: "direct main"
     description:
