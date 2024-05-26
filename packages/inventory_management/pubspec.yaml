@@ -30,7 +30,7 @@ dependencies:
   uuid: ^3.0.6
   recase: ^4.1.0
   pluto_grid: ^7.0.1
-  digit_scanner: ^0.0.0-dev.1
+  digit_scanner: ^0.0.0-dev.2
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
   digit_data_model: ^0.0.0-dev.1
@@ -53,10 +53,3 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/svg/
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
-    - family: RobotoCondensed
-      fonts:
-        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf

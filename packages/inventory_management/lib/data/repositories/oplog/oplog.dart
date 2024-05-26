@@ -18,7 +18,7 @@ class StockOpLogManager extends OpLogManager<StockModel> {
       );
 
   @override
-  String getClientReferenceId(StockModel entity) => entity.clientReferenceId!;
+  String getClientReferenceId(StockModel entity) => entity.clientReferenceId;
 
   @override
   String? getServerGeneratedId(StockModel entity) => entity.id;

@@ -10,6 +10,5 @@ abstract class StockReconciliationLocalBaseRepository extends LocalRepository<
   @override
   DataModelType get type => DataModelType.stockReconciliation;
 
-  @override
   TableInfo get table => sql.stockReconciliation;
 }
