@@ -1,7 +1,7 @@
 name: registration_delivery
-description: "A new Flutter package project."
+description: "Registration and Delivery for Health Campaigns"
 version: 0.0.0-dev.1
-homepage:
+homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/registration_delivery"
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -15,11 +15,9 @@ dependencies:
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
   reactive_forms: ^14.1.0
-  flutter_localizations:
-    sdk: flutter
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
-  intl: ^0.18.0
+  intl: ^0.19.0
   flutter_svg: ^2.0.8
   dart_mappable: ^4.2.0
   drift: ^2.0.0
@@ -33,11 +31,13 @@ dependencies:
   digit_scanner: ^0.0.0-dev.2
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
-  digit_data_model: 0.0.0-dev.1
+  digit_data_model: ^0.0.0-dev.1
   package_info_plus: ^5.0.1
   digit_showcase: ^0.0.1
   collection: ^1.16.0
   flutter_keyboard_visibility: ^5.4.0
+  stream_transform: ^2.1.0
+  async: ^2.11.0
 
 
 dev_dependencies:

@@ -1,6 +1,5 @@
 // Import necessary packages for testing.
 import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/models/entities/attendee.dart';
 import 'package:attendance_management/utils/typedefs.dart';
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';

@@ -291,8 +291,9 @@ class _StockReconciliationPageState
                                                                     facilities))
                                                         as FacilityModel?;
 
-                                                    if (facility == null)
+                                                    if (facility == null) {
                                                       return;
+                                                    }
                                                     form
                                                             .control(_facilityKey)
                                                             .value =
@@ -339,8 +340,9 @@ class _StockReconciliationPageState
                                                                         facilities))
                                                             as FacilityModel?;
 
-                                                        if (facility == null)
+                                                        if (facility == null) {
                                                           return;
+                                                        }
                                                         form
                                                                 .control(
                                                                     _facilityKey)

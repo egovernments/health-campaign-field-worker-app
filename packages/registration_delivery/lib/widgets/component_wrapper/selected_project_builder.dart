@@ -27,7 +27,7 @@ class SelectedProjectBuilder extends StatelessWidget {
             child: Text(
               RegistrationDeliveryLocalization.of(context)
                   .translate(i18.common.noProjectSelected),
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           );
   }
