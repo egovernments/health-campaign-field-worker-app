@@ -81,7 +81,7 @@ class _ComplaintsInboxFilterPageState
                             foregroundColor: theme.colorScheme.onBackground,
                             padding: EdgeInsets.zero,
                           ),
-                          onPressed: () => context.router.pop(),
+                          onPressed: () => context.router.maybePop(),
                           child: const Row(
                             children: [
                               Icon(Icons.close),

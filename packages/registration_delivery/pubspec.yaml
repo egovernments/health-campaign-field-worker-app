@@ -33,7 +33,7 @@ dependencies:
   auto_route: ^7.8.4
   digit_data_model: ^0.0.0-dev.1
   package_info_plus: ^5.0.1
-  digit_showcase: ^0.0.1
+  digit_showcase: ^0.0.0-dev.1
   collection: ^1.16.0
   flutter_keyboard_visibility: ^5.4.0
   stream_transform: ^2.1.0
