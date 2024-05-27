@@ -61,7 +61,6 @@ class RecordHFReferralBloc
     RecordHFReferralCreateEntryEvent event,
     RecordHFReferralEmitter emit,
   ) async {
-    bool referralSaved = false;
     await state.maybeMap(
       orElse: () {
         throw const InvalidRecordHFReferralStateException();
