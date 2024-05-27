@@ -94,20 +94,20 @@ class _BeneficiaryDetailsPageState
           if (RegistrationDeliverySingleton().projectType != null) {
             bloc.add(
               DeliverInterventionEvent.setActiveCycleDose(
-                taskData != null && taskData.isNotEmpty
+                lastDose: taskData != null && taskData.isNotEmpty
                     ? int.tryParse(
                           lastDose,
                         ) ??
                         1
                     : 0,
-                taskData != null && taskData.isNotEmpty
+                lastCycle: taskData != null && taskData.isNotEmpty
                     ? int.tryParse(
                           lastCycle,
                         ) ??
                         1
                     : 1,
-                state.selectedIndividual,
-                RegistrationDeliverySingleton().projectType!,
+                individualModel: state.selectedIndividual,
+                projectType: RegistrationDeliverySingleton().projectType!,
               ),
             );
           }
@@ -154,14 +154,16 @@ class _BeneficiaryDetailsPageState
                                             bloc.add(
                                               DeliverInterventionEvent
                                                   .selectFutureCycleDose(
-                                                deliverState.dose,
-                                                RegistrationDeliverySingleton()
-                                                    .projectType!
-                                                    .cycles!
-                                                    .firstWhere((c) =>
-                                                        c.id ==
-                                                        deliverState.cycle),
-                                                state.selectedIndividual,
+                                                dose: deliverState.dose,
+                                                cycle:
+                                                    RegistrationDeliverySingleton()
+                                                        .projectType!
+                                                        .cycles!
+                                                        .firstWhere((c) =>
+                                                            c.id ==
+                                                            deliverState.cycle),
+                                                individualModel:
+                                                    state.selectedIndividual,
                                               ),
                                             );
                                             await DigitDialog.show<bool>(

@@ -6,3 +6,6 @@
 
 ## 0.0.0-dev.3
 * Updated intl package version
+
+## 0.0.0-dev.4
+* Removed fonts references from pubspec.yaml

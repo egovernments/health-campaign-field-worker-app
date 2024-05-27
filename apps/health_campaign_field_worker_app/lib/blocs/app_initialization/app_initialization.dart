@@ -47,7 +47,7 @@ class AppInitializationBloc
 
       final config = await _loadOfflineData(emit);
       emit(AppInitialized(
-        appConfiguration: config.appConfigs.first,
+        appConfiguration: config.appConfigs.firstOrNull!,
         serviceRegistryList: config.serviceRegistryList,
       ));
     } on AppInitializationException catch (_) {
