@@ -84,3 +84,7 @@
 
 * Removed flutter localizations dependency
 
+##0.0.3+12
+
+* Downgraded intl to 0.18.0
+
