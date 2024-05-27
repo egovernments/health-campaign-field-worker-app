@@ -117,10 +117,10 @@ class DeliverInterventionBloc
     DeliveryInterventionEmitter emit,
   ) async {
     // Calculate the current running cycle based on start and end dates
-    final currentRunningCycle = (event.projectType?.cycles?.firstWhere(
+    final currentRunningCycle = (event.projectType.cycles?.firstWhere(
           (e) =>
-              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+              (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+              (e.endDate) > DateTime.now().millisecondsSinceEpoch,
         ))?.id ??
         0;
 

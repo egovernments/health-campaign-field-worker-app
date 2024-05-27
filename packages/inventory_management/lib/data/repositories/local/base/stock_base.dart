@@ -10,6 +10,5 @@ abstract class StockLocalBaseRepository
   @override
   DataModelType get type => DataModelType.stock;
 
-  @override
   TableInfo get table => sql.stock;
 }

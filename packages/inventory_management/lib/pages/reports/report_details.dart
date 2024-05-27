@@ -222,8 +222,9 @@ class _InventoryReportDetailsPageState
                                                                     facilities))
                                                         as FacilityModel?;
 
-                                                    if (facility == null)
+                                                    if (facility == null) {
                                                       return;
+                                                    }
                                                     form
                                                         .control(_facilityKey)
                                                         .value = facility;
@@ -271,8 +272,9 @@ class _InventoryReportDetailsPageState
                                                                         facilities))
                                                             as FacilityModel?;
 
-                                                        if (facility == null)
+                                                        if (facility == null) {
                                                           return;
+                                                        }
                                                         form
                                                             .control(
                                                                 _facilityKey)
@@ -781,10 +783,9 @@ class _ReportDetailsContent extends StatelessWidget {
   final DigitGridData data;
 
   const _ReportDetailsContent({
-    Key? key,
     required this.title,
     required this.data,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -811,10 +812,9 @@ class _NoReportContent extends StatelessWidget {
   final String message;
 
   const _NoReportContent({
-    Key? key,
     required this.title,
     required this.message,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

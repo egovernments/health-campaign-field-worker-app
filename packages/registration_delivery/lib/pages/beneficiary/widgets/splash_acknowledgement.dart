@@ -45,7 +45,7 @@ class _SplashAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
-          context.router.pop();
+          context.router.maybePop();
         },
         enableBackToSearch: widget.enableBackToSearch ?? true,
         actionLabel:
