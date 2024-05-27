@@ -2,8 +2,8 @@ name: digit_scanner
 description: "A Scanner package used for scanning QR Codes and GS1 Barcodes."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/digit_scanner
-homepage: https://github.com/egovernments/health-campaign-field-worker-app
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/digit_scanner
+repository: https://github.com/egovernments/health-campaign-field-worker-app
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -17,7 +17,7 @@ homepage: https://github.com/egovernments/health-campaign-field-worker-app
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.0.0-dev.3
+version: 0.0.0-dev.4
 
 environment:
   sdk: '>=2.19.4 <3.9.0'
