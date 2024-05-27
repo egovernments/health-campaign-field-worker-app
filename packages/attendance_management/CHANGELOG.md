@@ -11,3 +11,7 @@
 
 ## 0.0.0-dev.3
 * Updated intl package version
+
+
+## 0.0.0-dev.4
+* Updated digit_components version for dropdown fix
