@@ -1,6 +1,6 @@
 name: attendance_management
 description: Digit UI attendance_management specification
-version: 0.0.0-dev.2
+version: 0.0.0-dev.3
 homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/attendance_management"
 
 environment:
@@ -17,7 +17,7 @@ dependencies:
   reactive_forms: ^14.1.0
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
-  intl: ^0.19.0
+  intl: ^0.18.0
   flutter_svg: ^2.0.8
   dart_mappable: ^4.2.0
   drift: ^2.0.0

@@ -8,3 +8,6 @@
 
 ## 0.0.0-dev.2
 * Removed unused dependencies from pubspec.yaml file.
+
+## 0.0.0-dev.3
+* Updated intl package version
