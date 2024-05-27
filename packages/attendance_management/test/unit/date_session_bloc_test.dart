@@ -1,7 +1,6 @@
 // Import necessary packages for testing.
-import 'package:test/test.dart';
-import 'package:attendance_management/attendance_management.dart'; // Import your package for testing.
 import 'package:attendance_management/blocs/date_session_bloc.dart'; // Import the bloc to be tested.
+import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../constants/test_constants.dart'; // Import mocktail for mocking classes.

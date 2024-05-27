@@ -16,9 +16,9 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
   final BeneficiaryRegistrationState initialState;
 
   const BeneficiaryRegistrationWrapperPage({
-    Key? key,
+    super.key,
     required this.initialState,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

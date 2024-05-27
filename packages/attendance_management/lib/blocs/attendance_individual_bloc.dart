@@ -247,7 +247,6 @@ class AttendanceIndividualBloc
       List<AttendanceLogModel> logResponse,
       List<AttendeeModel> attendees,
       AttendanceIndividualLogSearchEvent event) async {
-    bool uploadToServer = false;
     bool anyLogPresent = false;
     final currentDate = DateTime.fromMillisecondsSinceEpoch(event.currentDate);
     int twelvePM =
@@ -268,8 +267,7 @@ class AttendanceIndividualBloc
                   l.time == event.entryTime ||
                   (event.isSingleSession && l.time == twelvePM)))
           .toList();
-      uploadToServer =
-          entryLogList.any((entry) => entry.uploadToServer == true);
+      entryLogList.any((entry) => entry.uploadToServer == true);
       anyLogPresent = logResponse
           .where((l) =>
               (l.time == event.entryTime || l.time == event.exitTime) &&
@@ -338,7 +336,7 @@ class AttendanceIndividualBloc
 
         return e.copyWith(
           rowVersion: 1,
-          clientReferenceId: (existingLog ?? []).isNotEmpty
+          clientReferenceId: (existingLog).isNotEmpty
               ? existingLog.last.clientReferenceId
               : IdGen.i.identifier,
           clientAuditDetails: ClientAuditDetails(
