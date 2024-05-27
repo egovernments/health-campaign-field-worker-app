@@ -9,6 +9,8 @@ import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
 
+import 'constants/test_constants.dart';
+
 class MockIndividualDataRepository extends Mock
     implements IndividualDataRepository {}
 
@@ -28,48 +30,16 @@ void main() {
   late MockProjectBeneficiaryDataRepository
       mockProjectBeneficiaryDataRepository;
   late BeneficiaryRegistrationBloc beneficiaryRegistrationBloc;
-  var dateOfRegistration = DateTime.monday;
-  const testProjectId = '1d2e3f4g5h6i7j8k9l0m';
-  const testUserUuid = '1a2b3c4d5e6f7g8h9i0j';
-  var testBoundary = BoundaryModel(code: 'BAN005', name: 'HSR');
-  var registrationDate = DateTime.utc(2024, 5, 20);
-  var mockAddress = AddressModel(
-    addressLine1: '123, 4th Cross',
-    addressLine2: '5th Main',
-    city: 'Bangalore',
-    pincode: '560102',
-  );
-  var mockAddress1 = AddressModel(
-    addressLine1: '12, 4th Cross',
-    addressLine2: '5th Main',
-    city: 'Bangalore',
-    pincode: '560102',
-  );
-  var mockHousehold = HouseholdModel(
-    clientReferenceId: '123',
-    address: mockAddress,
-  );
-  var mockHouseholdMember = HouseholdMemberModel(
-    clientReferenceId: '123',
-    isHeadOfHousehold: true,
-  );
-  var mockIndividual = IndividualModel(
-    clientReferenceId: '123',
-    address: [mockAddress],
-  );
-  var mockProjectBeneficiary = ProjectBeneficiaryModel(
-    clientReferenceId: '123',
-    dateOfRegistration: DateTime.monday,
-  );
 
   setUpAll(() {
-    registerFallbackValue(AddressModel());
-    registerFallbackValue(HouseholdModel(clientReferenceId: '123'));
-    registerFallbackValue(HouseholdMemberModel(
-        clientReferenceId: '123', isHeadOfHousehold: true));
-    registerFallbackValue(IndividualModel(clientReferenceId: '123'));
-    registerFallbackValue(ProjectBeneficiaryModel(
-        clientReferenceId: '123', dateOfRegistration: dateOfRegistration));
+    registerFallbackValue(RegistrationDeliveryTestConstants.mockAddress);
+    registerFallbackValue(RegistrationDeliveryTestConstants.mockAddress1);
+    registerFallbackValue(RegistrationDeliveryTestConstants.mockHousehold);
+    registerFallbackValue(
+        RegistrationDeliveryTestConstants.mockHouseholdMember);
+    registerFallbackValue(RegistrationDeliveryTestConstants.mockIndividual);
+    registerFallbackValue(
+        RegistrationDeliveryTestConstants.mockProjectBeneficiary);
   });
 
   setUp(() {
@@ -103,11 +73,11 @@ void main() {
             .thenAnswer((_) async => HouseholdModel(clientReferenceId: '123'));
         return beneficiaryRegistrationBloc;
       },
-      act: (bloc) =>
-          bloc.add(BeneficiaryRegistrationSaveAddressEvent(mockAddress)),
+      act: (bloc) => bloc.add(BeneficiaryRegistrationSaveAddressEvent(
+          RegistrationDeliveryTestConstants.mockAddress)),
       expect: () => [
         BeneficiaryRegistrationState.create(
-          addressModel: mockAddress,
+          addressModel: RegistrationDeliveryTestConstants.mockAddress,
         ),
       ],
     );
@@ -118,22 +88,23 @@ void main() {
       build: () {
         beneficiaryRegistrationBloc.emit(
           BeneficiaryRegistrationState.editHousehold(
-            addressModel: mockAddress,
-            householdModel: mockHousehold,
-            individualModel: [mockIndividual],
-            registrationDate: registrationDate,
+            addressModel: RegistrationDeliveryTestConstants.mockAddress,
+            householdModel: RegistrationDeliveryTestConstants.mockHousehold,
+            individualModel: [RegistrationDeliveryTestConstants.mockIndividual],
+            registrationDate:
+                RegistrationDeliveryTestConstants.registrationDate,
           ),
         );
         return beneficiaryRegistrationBloc;
       },
-      act: (bloc) =>
-          bloc.add(BeneficiaryRegistrationSaveAddressEvent(mockAddress1)),
+      act: (bloc) => bloc.add(BeneficiaryRegistrationSaveAddressEvent(
+          RegistrationDeliveryTestConstants.mockAddress1)),
       expect: () => [
         BeneficiaryRegistrationState.editHousehold(
-          addressModel: mockAddress1,
-          householdModel: mockHousehold,
-          individualModel: [mockIndividual],
-          registrationDate: registrationDate,
+          addressModel: RegistrationDeliveryTestConstants.mockAddress1,
+          householdModel: RegistrationDeliveryTestConstants.mockHousehold,
+          individualModel: [RegistrationDeliveryTestConstants.mockIndividual],
+          registrationDate: RegistrationDeliveryTestConstants.registrationDate,
         ),
       ],
     );
@@ -156,10 +127,11 @@ void main() {
       },
       act: (bloc) =>
           bloc.add(BeneficiaryRegistrationEvent.saveIndividualDetails(
-        model: mockIndividual,
+        model: RegistrationDeliveryTestConstants.mockIndividual,
       )),
       expect: () => [
-        BeneficiaryRegistrationState.create(individualModel: mockIndividual)
+        BeneficiaryRegistrationState.create(
+            individualModel: RegistrationDeliveryTestConstants.mockIndividual)
       ],
     );
 
@@ -174,7 +146,7 @@ void main() {
           if (individualModel.clientReferenceId == '123') {
             return individualModel;
           } else {
-            return mockIndividual;
+            return RegistrationDeliveryTestConstants.mockIndividual;
           }
         });
         when(() => mockHouseholdDataRepository.create(any()))
@@ -184,7 +156,7 @@ void main() {
           if (householdModel.clientReferenceId == '123') {
             return householdModel;
           } else {
-            return mockHousehold;
+            return RegistrationDeliveryTestConstants.mockHousehold;
           }
         });
         when(() => mockHouseholdMemberDataRepository.create(any()))
@@ -194,7 +166,7 @@ void main() {
           if (householdMemberModel.clientReferenceId == '123') {
             return householdMemberModel;
           } else {
-            return mockHouseholdMember;
+            return RegistrationDeliveryTestConstants.mockHouseholdMember;
           }
         });
         when(() => mockProjectBeneficiaryDataRepository.create(any()))
@@ -204,27 +176,27 @@ void main() {
           if (projectBeneficiaryModel.clientReferenceId == '123') {
             return projectBeneficiaryModel;
           } else {
-            return mockProjectBeneficiary;
+            return RegistrationDeliveryTestConstants.mockProjectBeneficiary;
           }
         });
         return beneficiaryRegistrationBloc;
       },
       act: (bloc) {
         bloc.emit(BeneficiaryRegistrationState.create(
-          householdModel: mockHousehold,
-          individualModel: mockIndividual,
-          addressModel: mockAddress,
+          householdModel: RegistrationDeliveryTestConstants.mockHousehold,
+          individualModel: RegistrationDeliveryTestConstants.mockIndividual,
+          addressModel: RegistrationDeliveryTestConstants.mockAddress,
           isHeadOfHousehold: true,
-          registrationDate: registrationDate,
+          registrationDate: RegistrationDeliveryTestConstants.registrationDate,
         ));
       },
       expect: () => [
         BeneficiaryRegistrationState.create(
-          householdModel: mockHousehold,
-          individualModel: mockIndividual,
-          addressModel: mockAddress,
+          householdModel: RegistrationDeliveryTestConstants.mockHousehold,
+          individualModel: RegistrationDeliveryTestConstants.mockIndividual,
+          addressModel: RegistrationDeliveryTestConstants.mockAddress,
           isHeadOfHousehold: true,
-          registrationDate: registrationDate,
+          registrationDate: RegistrationDeliveryTestConstants.registrationDate,
           loading: false,
         ),
       ],

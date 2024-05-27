@@ -3,8 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
-import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+
+import 'constants/test_constants.dart';
 
 class MockTaskRepository extends Mock
     implements DataRepository<TaskModel, TaskSearchModel> {}
@@ -12,10 +13,6 @@ class MockTaskRepository extends Mock
 void main() {
   late MockTaskRepository mockTaskRepository;
   late DeliverInterventionBloc deliverInterventionBloc;
-
-  var testTaskModel = TaskModel(clientReferenceId: '123');
-  var testTaskSearchModel = TaskSearchModel(clientReferenceId: ['123']);
-  var testBoundaryModel = BoundaryModel(code: 'BAN005', name: 'HSR');
 
   setUp(() {
     mockTaskRepository = MockTaskRepository();
@@ -26,9 +23,10 @@ void main() {
   });
 
   setUpAll(() {
-    registerFallbackValue(TaskModel(clientReferenceId: '123'));
-    registerFallbackValue(TaskSearchModel(clientReferenceId: ['123']));
-    registerFallbackValue(BoundaryModel(code: 'BAN005', name: 'HSR'));
+    registerFallbackValue(RegistrationDeliveryTestConstants.testTaskModel);
+    registerFallbackValue(
+        RegistrationDeliveryTestConstants.testTaskSearchModel);
+    registerFallbackValue(RegistrationDeliveryTestConstants.testBoundary);
   });
 
   // Test case for _handleSubmit event
@@ -37,29 +35,32 @@ void main() {
     build: () {
       when(() => mockTaskRepository.create(any())).thenAnswer((task) async {
         final taskModel = task.positionalArguments[0] as TaskModel;
-        if (taskModel.clientReferenceId == '123') {
+        if (taskModel.clientReferenceId ==
+            RegistrationDeliveryTestConstants.testTaskModel.clientReferenceId) {
           return taskModel;
         } else {
-          return testTaskModel;
+          return RegistrationDeliveryTestConstants.testTaskModel;
         }
       });
       return deliverInterventionBloc;
     },
     act: (bloc) => bloc.add(DeliverInterventionSubmitEvent(
-      task: testTaskModel,
-      boundaryModel: testBoundaryModel,
+      task: RegistrationDeliveryTestConstants.testTaskModel,
+      boundaryModel: RegistrationDeliveryTestConstants.testBoundary,
       isEditing: false,
     )),
     expect: () => [
       const DeliverInterventionState(
           loading: true, oldTask: null, futureTask: null),
       DeliverInterventionState(
-          loading: true, oldTask: testTaskModel, futureTask: null),
+          loading: true,
+          oldTask: RegistrationDeliveryTestConstants.testTaskModel,
+          futureTask: null),
       const DeliverInterventionState(loading: false).copyWith(
           tasks: null,
           futureTask: null,
           futureDeliveries: null,
-          oldTask: testTaskModel),
+          oldTask: RegistrationDeliveryTestConstants.testTaskModel),
     ],
   );
 
@@ -69,8 +70,10 @@ void main() {
     build: () {
       when(() => mockTaskRepository.search(any())).thenAnswer((task) async {
         final taskSearchModel = task.positionalArguments[0] as TaskSearchModel;
-        if (taskSearchModel.clientReferenceId!.contains('123')) {
-          return [testTaskModel];
+        if (taskSearchModel.clientReferenceId!.contains(
+            RegistrationDeliveryTestConstants
+                .testTaskModel.clientReferenceId)) {
+          return [RegistrationDeliveryTestConstants.testTaskModel];
         } else {
           return [];
         }
@@ -78,20 +81,20 @@ void main() {
       return deliverInterventionBloc;
     },
     act: (bloc) => bloc.add(DeliverInterventionSearchEvent(
-      taskSearch: testTaskSearchModel,
+      taskSearch: RegistrationDeliveryTestConstants.testTaskSearchModel,
     )),
     expect: () => [
       const DeliverInterventionState(
           loading: true, oldTask: null, tasks: null, futureTask: null),
       DeliverInterventionState(
         loading: true,
-        tasks: [testTaskModel],
+        tasks: [RegistrationDeliveryTestConstants.testTaskModel],
         oldTask: null,
         futureTask: [],
       ),
       DeliverInterventionState(
         loading: false,
-        tasks: [testTaskModel],
+        tasks: [RegistrationDeliveryTestConstants.testTaskModel],
         oldTask: null,
         futureTask: [],
       ),
@@ -102,15 +105,15 @@ void main() {
     'emits [DeliverInterventionState with cycle and dose] when setActiveCycleDose is called',
     build: () => deliverInterventionBloc,
     act: (bloc) => bloc.add(DeliverInterventionActiveCycleDoseSelectionEvent(
-      lastDose: 1,
-      lastCycle: 1,
-      projectType: ProjectTypeModel(id: '1', name: 'Test'),
-      individualModel: IndividualModel(clientReferenceId: '123'),
+      lastDose: RegistrationDeliveryTestConstants.lastDose,
+      lastCycle: RegistrationDeliveryTestConstants.lastCycle,
+      projectType: RegistrationDeliveryTestConstants.projectTypeModel,
+      individualModel: RegistrationDeliveryTestConstants.individualModel,
     )),
     expect: () => [
-      const DeliverInterventionState(
-        cycle: 1,
-        dose: 1,
+      DeliverInterventionState(
+        cycle: RegistrationDeliveryTestConstants.lastCycle,
+        dose: RegistrationDeliveryTestConstants.lastDose,
         hasCycleArrived: false,
         pastCycles: null,
       ),
@@ -121,19 +124,16 @@ void main() {
     'emits [DeliverInterventionState with futureDeliveries] when selectFutureCycleDose is called',
     build: () => deliverInterventionBloc,
     act: (bloc) => bloc.add(DeliverInterventionCycleFutureDoseSelectionEvent(
-      dose: 1,
-      cycle: ProjectCycle(
-          id: 1,
-          startDate: DateTime.now().day - 2,
-          endDate: DateTime.now().day + 2),
-      individualModel: IndividualModel(clientReferenceId: '123'),
+      dose: RegistrationDeliveryTestConstants.lastDose,
+      cycle: RegistrationDeliveryTestConstants.projectCycle,
+      individualModel: RegistrationDeliveryTestConstants.individualModel,
     )),
     expect: () => [
-      const DeliverInterventionState(
+      DeliverInterventionState(
         loading: true,
         isEditing: false,
-        cycle: 1,
-        dose: 1,
+        cycle: RegistrationDeliveryTestConstants.lastCycle,
+        dose: RegistrationDeliveryTestConstants.lastDose,
         pastCycles: null,
         hasCycleArrived: true,
         isLastDoseOfCycle: false,
@@ -142,11 +142,11 @@ void main() {
         futureTask: null,
         oldTask: null,
       ),
-      const DeliverInterventionState(
+      DeliverInterventionState(
         loading: false,
         isEditing: false,
-        cycle: 1,
-        dose: 1,
+        cycle: RegistrationDeliveryTestConstants.lastCycle,
+        dose: RegistrationDeliveryTestConstants.lastDose,
         pastCycles: null,
         hasCycleArrived: true,
         isLastDoseOfCycle: false,

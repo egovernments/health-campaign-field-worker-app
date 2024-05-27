@@ -13,6 +13,8 @@ import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
 
+import 'constants/test_constants.dart';
+
 class MockHouseholdDataRepository extends Mock
     implements HouseholdDataRepository {}
 
@@ -44,20 +46,6 @@ void main() {
   late MockReferralDataRepository mockReferralDataRepository;
   late HouseholdOverviewBloc householdOverviewBloc;
 
-  var mockHouseholdModel = HouseholdModel(clientReferenceId: '123');
-  var mockIndividualModel = IndividualModel(clientReferenceId: '123');
-  var mockHouseholdMemberModel =
-      HouseholdMemberModel(clientReferenceId: '123', isHeadOfHousehold: true);
-  var mockProjectBeneficiaryModel = ProjectBeneficiaryModel(
-      clientReferenceId: '123', dateOfRegistration: DateTime.monday);
-  var testProjectId = '123';
-
-  var householdMemberWrapper = HouseholdMemberWrapper(
-      household: HouseholdModel(clientReferenceId: '123'),
-      headOfHousehold: IndividualModel(clientReferenceId: '123'),
-      members: [],
-      projectBeneficiaries: []);
-
   setUp(() {
     mockHouseholdDataRepository = MockHouseholdDataRepository();
     mockIndividualDataRepository = MockIndividualDataRepository();
@@ -68,7 +56,7 @@ void main() {
     mockSideEffectDataRepository = MockSideEffectDataRepository();
     mockReferralDataRepository = MockReferralDataRepository();
     householdOverviewBloc = HouseholdOverviewBloc(
-      HouseholdOverviewState(householdMemberWrapper: householdMemberWrapper),
+      HouseholdOverviewState(householdMemberWrapper: RegistrationDeliveryTestConstants.householdMemberWrapper),
       individualRepository: mockIndividualDataRepository,
       householdRepository: mockHouseholdDataRepository,
       householdMemberRepository: mockHouseholdMemberDataRepository,
