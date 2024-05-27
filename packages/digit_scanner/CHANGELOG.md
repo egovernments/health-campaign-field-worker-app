@@ -7,3 +7,8 @@ Added Flutter version constraints
 ## 0.0.0-dev.3
 Removed flutter localizations dependency
 
+
+## 0.0.0-dev.4
+Updated repository and homepage url
+
+
