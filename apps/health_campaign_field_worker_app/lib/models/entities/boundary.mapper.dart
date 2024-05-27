@@ -27,15 +27,21 @@ class BoundarySearchModelMapper
   static String? _$tenantId(BoundarySearchModel v) => v.tenantId;
   static const Field<BoundarySearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
-  static String? _$code(BoundarySearchModel v) => v.code;
-  static const Field<BoundarySearchModel, String> _f$code =
-      Field('code', _$code, opt: true);
+  static String? _$codes(BoundarySearchModel v) => v.codes;
+  static const Field<BoundarySearchModel, String> _f$codes =
+      Field('codes', _$codes, opt: true);
   static int? _$boundaryNum(BoundarySearchModel v) => v.boundaryNum;
   static const Field<BoundarySearchModel, int> _f$boundaryNum =
       Field('boundaryNum', _$boundaryNum, opt: true);
   static bool? _$isSingle(BoundarySearchModel v) => v.isSingle;
   static const Field<BoundarySearchModel, bool> _f$isSingle =
       Field('isSingle', _$isSingle, opt: true);
+  static String? _$hierarchyType(BoundarySearchModel v) => v.hierarchyType;
+  static const Field<BoundarySearchModel, String> _f$hierarchyType =
+      Field('hierarchyType', _$hierarchyType, opt: true);
+  static bool? _$includeChildren(BoundarySearchModel v) => v.includeChildren;
+  static const Field<BoundarySearchModel, bool> _f$includeChildren =
+      Field('includeChildren', _$includeChildren, opt: true);
   static String? _$boundaryCode(BoundarySearchModel v) => v.boundaryCode;
   static const Field<BoundarySearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -52,9 +58,11 @@ class BoundarySearchModelMapper
   final MappableFields<BoundarySearchModel> fields = const {
     #boundaryType: _f$boundaryType,
     #tenantId: _f$tenantId,
-    #code: _f$code,
+    #codes: _f$codes,
     #boundaryNum: _f$boundaryNum,
     #isSingle: _f$isSingle,
+    #hierarchyType: _f$hierarchyType,
+    #includeChildren: _f$includeChildren,
     #boundaryCode: _f$boundaryCode,
     #additionalFields: _f$additionalFields,
     #auditDetails: _f$auditDetails,
@@ -74,9 +82,11 @@ class BoundarySearchModelMapper
     return BoundarySearchModel.ignoreDeleted(
         boundaryType: data.dec(_f$boundaryType),
         tenantId: data.dec(_f$tenantId),
-        code: data.dec(_f$code),
+        codes: data.dec(_f$codes),
         boundaryNum: data.dec(_f$boundaryNum),
         isSingle: data.dec(_f$isSingle),
+        hierarchyType: data.dec(_f$hierarchyType),
+        includeChildren: data.dec(_f$includeChildren),
         boundaryCode: data.dec(_f$boundaryCode),
         additionalFields: data.dec(_f$additionalFields),
         auditDetails: data.dec(_f$auditDetails));
@@ -148,9 +158,11 @@ abstract class BoundarySearchModelCopyWith<$R, $In extends BoundarySearchModel,
   $R call(
       {String? boundaryType,
       String? tenantId,
-      String? code,
+      String? codes,
       int? boundaryNum,
       bool? isSingle,
+      String? hierarchyType,
+      bool? includeChildren,
       String? boundaryCode,
       AdditionalFields? additionalFields,
       AuditDetails? auditDetails});
@@ -177,31 +189,37 @@ class _BoundarySearchModelCopyWithImpl<$R, $Out>
   $R call(
           {Object? boundaryType = $none,
           Object? tenantId = $none,
-          Object? code = $none,
+          Object? codes = $none,
           Object? boundaryNum = $none,
           Object? isSingle = $none,
+          Object? hierarchyType = $none,
+          Object? includeChildren = $none,
           Object? boundaryCode = $none,
           Object? additionalFields = $none,
           Object? auditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (boundaryType != $none) #boundaryType: boundaryType,
         if (tenantId != $none) #tenantId: tenantId,
-        if (code != $none) #code: code,
+        if (codes != $none) #codes: codes,
         if (boundaryNum != $none) #boundaryNum: boundaryNum,
         if (isSingle != $none) #isSingle: isSingle,
+        if (hierarchyType != $none) #hierarchyType: hierarchyType,
+        if (includeChildren != $none) #includeChildren: includeChildren,
         if (boundaryCode != $none) #boundaryCode: boundaryCode,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (auditDetails != $none) #auditDetails: auditDetails
       }));
   @override
-  BoundarySearchModel $make(
-          CopyWithData data) =>
+  BoundarySearchModel $make(CopyWithData data) =>
       BoundarySearchModel.ignoreDeleted(
           boundaryType: data.get(#boundaryType, or: $value.boundaryType),
           tenantId: data.get(#tenantId, or: $value.tenantId),
-          code: data.get(#code, or: $value.code),
+          codes: data.get(#codes, or: $value.codes),
           boundaryNum: data.get(#boundaryNum, or: $value.boundaryNum),
           isSingle: data.get(#isSingle, or: $value.isSingle),
+          hierarchyType: data.get(#hierarchyType, or: $value.hierarchyType),
+          includeChildren:
+              data.get(#includeChildren, or: $value.includeChildren),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode),
           additionalFields:
               data.get(#additionalFields, or: $value.additionalFields),
@@ -255,6 +273,9 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
   static int? _$rowVersion(BoundaryModel v) => v.rowVersion;
   static const Field<BoundaryModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
+  static String? _$boundaryType(BoundaryModel v) => v.boundaryType;
+  static const Field<BoundaryModel, String> _f$boundaryType =
+      Field('boundaryType', _$boundaryType, opt: true);
   static List<BoundaryModel> _$children(BoundaryModel v) => v.children;
   static const Field<BoundaryModel, List<BoundaryModel>> _f$children =
       Field('children', _$children, opt: true, def: const []);
@@ -280,6 +301,7 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
     #tenantId: _f$tenantId,
     #boundaryNum: _f$boundaryNum,
     #rowVersion: _f$rowVersion,
+    #boundaryType: _f$boundaryType,
     #children: _f$children,
     #auditDetails: _f$auditDetails,
     #isDeleted: _f$isDeleted,
@@ -299,6 +321,7 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
         tenantId: data.dec(_f$tenantId),
         boundaryNum: data.dec(_f$boundaryNum),
         rowVersion: data.dec(_f$rowVersion),
+        boundaryType: data.dec(_f$boundaryType),
         children: data.dec(_f$children),
         auditDetails: data.dec(_f$auditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -374,6 +397,7 @@ abstract class BoundaryModelCopyWith<$R, $In extends BoundaryModel, $Out>
       String? tenantId,
       int? boundaryNum,
       int? rowVersion,
+      String? boundaryType,
       List<BoundaryModel>? children,
       AuditDetails? auditDetails,
       bool? isDeleted});
@@ -407,6 +431,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
           Object? tenantId = $none,
           Object? boundaryNum = $none,
           Object? rowVersion = $none,
+          Object? boundaryType = $none,
           List<BoundaryModel>? children,
           Object? auditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -420,6 +445,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (boundaryNum != $none) #boundaryNum: boundaryNum,
         if (rowVersion != $none) #rowVersion: rowVersion,
+        if (boundaryType != $none) #boundaryType: boundaryType,
         if (children != null) #children: children,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (isDeleted != $none) #isDeleted: isDeleted
@@ -436,6 +462,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
       tenantId: data.get(#tenantId, or: $value.tenantId),
       boundaryNum: data.get(#boundaryNum, or: $value.boundaryNum),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
+      boundaryType: data.get(#boundaryType, or: $value.boundaryType),
       children: data.get(#children, or: $value.children),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted));

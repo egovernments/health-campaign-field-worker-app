@@ -139,9 +139,10 @@ class _BoundarySelectionPageState
                                       menuItems: filteredItems,
                                       formControlName: label,
                                       valueMapper: (value) {
-                                        return value.name ??
+                                        return localizations
+                                              .translate (value.name ??
                                             value.code ??
-                                            'No Value';
+                                            'No Value');
                                       },
                                       onFieldTap: (value) {
                                         setState(() {
@@ -155,7 +156,7 @@ class _BoundarySelectionPageState
                                         context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
                                                 boundaryNum:
-                                                    (value).boundaryNum! + 1,
+                                                    (value).boundaryNum!,
                                                 code: (value).code!,
                                               ),
                                             );

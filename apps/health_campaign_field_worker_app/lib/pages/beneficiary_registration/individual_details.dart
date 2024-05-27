@@ -534,13 +534,14 @@ class _IndividualDetailsPageState
                                   return individualDetailsShowcaseData.gender
                                       .buildWith(
                                     child: DigitReactiveSearchDropdown<String>(
+                                      isRequired: true,
                                       label: localizations.translate(
                                         i18.individualDetails.genderLabelText,
                                       ),
                                       form: form,
                                       menuItems: genderOptions
                                           .map(
-                                            (e) => e.name,
+                                            (e) => e.code,
                                           )
                                           .toList(),
                                       formControlName: _genderKey,

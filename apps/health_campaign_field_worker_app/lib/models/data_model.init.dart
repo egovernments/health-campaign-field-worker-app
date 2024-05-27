@@ -56,10 +56,10 @@ import 'pgr_complaints/pgr_address.dart' as p49;
 import 'pgr_complaints/pgr_complaints.dart' as p50;
 import 'pgr_complaints/pgr_complaints_response.dart' as p51;
 import 'package:attendance_management/models/attendance_audit.dart' as p52;
+import 'package:attendance_management/models/staff.dart' as p53;
+import 'package:attendance_management/models/attendee.dart' as p54;
 import 'package:attendance_management/models/attendance_log.dart' as p55;
 import 'package:attendance_management/models/attendance_register.dart' as p56;
-import 'package:attendance_management/models/attendee.dart' as p54;
-import 'package:attendance_management/models/staff.dart' as p53;
 
 void initializeMappers() {
   p0.EntityModelMapper.ensureInitialized();
@@ -126,6 +126,7 @@ void initializeMappers() {
   p24.ProjectSearchModelMapper.ensureInitialized();
   p24.ProjectModelMapper.ensureInitialized();
   p24.ProjectAdditionalFieldsMapper.ensureInitialized();
+  p24.ProjectAdditionalDetailsMapper.ensureInitialized();
   p25.ProjectBeneficiarySearchModelMapper.ensureInitialized();
   p25.ProjectBeneficiaryModelMapper.ensureInitialized();
   p25.ProjectBeneficiaryAdditionalFieldsMapper.ensureInitialized();
@@ -141,9 +142,12 @@ void initializeMappers() {
   p29.ProjectStaffSearchModelMapper.ensureInitialized();
   p29.ProjectStaffModelMapper.ensureInitialized();
   p29.ProjectStaffAdditionalFieldsMapper.ensureInitialized();
-  p30.ProjectTypeSearchModelMapper.ensureInitialized();
   p30.ProjectTypeModelMapper.ensureInitialized();
   p30.ProjectTypeAdditionalFieldsMapper.ensureInitialized();
+  p30.ProjectCycleMapper.ensureInitialized();
+  p30.ProjectCycleDeliveryMapper.ensureInitialized();
+  p30.DeliveryDoseCriteriaMapper.ensureInitialized();
+  p30.DeliveryProductVariantMapper.ensureInitialized();
   p31.ReferralSearchModelMapper.ensureInitialized();
   p31.ReferralModelMapper.ensureInitialized();
   p31.ReferralAdditionalFieldsMapper.ensureInitialized();
@@ -203,9 +207,9 @@ void initializeMappers() {
   p51.PgrComplaintResponseModelMapper.ensureInitialized();
   p51.PgrComplainantResponseModelMapper.ensureInitialized();
   p51.PgrServiceResponseModelMapper.ensureInitialized();
-  p52.AttendanceAuditDetailsMapper.ensureInitialized();
-  p53.StaffModelMapper.ensureInitialized();
-  p54.AttendeeModelMapper.ensureInitialized();
-  p55.AttendanceLogModelMapper.ensureInitialized();
-  p56.AttendanceRegisterModelMapper.ensureInitialized();
+p52.AttendanceAuditDetailsMapper.ensureInitialized();
+p53.StaffModelMapper.ensureInitialized();
+p54.AttendeeModelMapper.ensureInitialized();
+p55.AttendanceLogModelMapper.ensureInitialized();
+p56.AttendanceRegisterModelMapper.ensureInitialized();
 }

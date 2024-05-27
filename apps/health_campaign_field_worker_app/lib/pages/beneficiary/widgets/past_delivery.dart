@@ -41,14 +41,14 @@ Widget buildTableContent(
   // Calculate the height of the container based on the number of items in the table
 
   final projectState = context.read<ProjectBloc>().state;
-  final item = projectState
-      .projectType!.cycles![currentCycle - 1].deliveries![currentDose - 1];
+  final item = projectState.selectedProject?.additionalDetails?.projectType!
+      .cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
       fetchProductVariant(item, individualModel)?.productVariants;
   final numRows = productVariants?.length ?? 0;
-  const rowHeight = 82;
-  const paddingHeight = kPadding * 2;
-  final containerHeight = (numRows + 1) * rowHeight + paddingHeight;
+  const rowHeight = 84;
+  const paddingHeight = (kPadding * 2);
+  final containerHeight = (numRows + 1) * rowHeight + (paddingHeight * 2);
 
   return Container(
     padding: const EdgeInsets.only(
@@ -62,8 +62,12 @@ Widget buildTableContent(
     child: BlocBuilder<ProjectBloc, ProjectState>(
       builder: (context, projectState) {
         // BlocBuilder to get project data based on the current cycle and dose
-        final item = projectState.projectType!.cycles![currentCycle - 1]
-            .deliveries![currentDose - 1];
+        final item = projectState
+            .selectedProject
+            ?.additionalDetails
+            ?.projectType
+            ?.cycles?[currentCycle - 1]
+            .deliveries?[currentDose - 1];
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,20 +79,24 @@ Widget buildTableContent(
               fraction: 2.5,
               element: {
                 localizations.translate(
-                  i18.beneficiaryDetails.beneficiaryAge,
-                  //[TODO: Condition need to be handled in generic way,]
-                ): '${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').first} - ${fetchProductVariant(item, individualModel)?.condition?.split('<=age<').last} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}',
+                  i18.beneficiaryDetails.beneficiaryAge,    
+                ):
+                fetchProductVariant(item, individualModel)?.condition != null ? localizations.translate(fetchProductVariant(item, individualModel)!.condition!):  null,
+          
               },
             ),
             const Divider(
               thickness: 1.0,
             ),
             // Build the DigitTable with the data
-            DigitTable(
+         fetchProductVariant(item, individualModel)?.productVariants 
+         
+         != null  ?   DigitTable(
               headerList: headerListResource,
               tableData: [
-                ...fetchProductVariant(item, individualModel)!
-                    .productVariants!
+             
+                ...fetchProductVariant(item, individualModel)
+                    !.productVariants!
                     .map(
                   (e) {
                     // Retrieve the SKU value for the product variant.
@@ -128,7 +136,7 @@ Widget buildTableContent(
                           .length +
                       1) *
                   59.5,
-            ),
+            ): Text(localizations.translate(i18.common.productMappedWrongly)),
           ],
         );
       },

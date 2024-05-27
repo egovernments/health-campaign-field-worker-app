@@ -147,8 +147,8 @@ abstract class RemoteRepository<D extends EntityModel,
         message: 'mappercontainer ${MapperContainer.globals}',
         title: 'Mapper Contianer',
       );
-      mapperRes = entityList.map((e) =>
-          MapperContainer.globals.fromMap<D>(e)).toList();
+      mapperRes =
+          entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
     } catch (e) {
       AppLogger.instance.error(
         message: e.toString(),
@@ -363,7 +363,7 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   List<Map<String, dynamic>> _getMap(List<EntityModel> entities) {
-return entities.map((e) => MapperContainer.globals.toMap(e)).toList();
+    return entities.map((e) => MapperContainer.globals.toMap(e)).toList();
   }
 
   FutureOr<T> executeFuture<T>({

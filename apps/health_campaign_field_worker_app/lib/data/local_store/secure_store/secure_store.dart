@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
 import '../../../models/data_model.dart';
-import '../../../models/project_type/project_type_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
 
 class LocalSecureStore {
@@ -86,19 +85,6 @@ class LocalSecureStore {
     }
   }
 
-  Future<ProjectType?> get selectedProjectType async {
-    final projectBody = await storage.read(key: selectedProjectTypeKey);
-    if (projectBody == null) return null;
-
-    try {
-      final projectType = ProjectType.fromJson(json.decode(projectBody));
-
-      return projectType;
-    } catch (_) {
-      return null;
-    }
-  }
-
   Future<bool> get isAppInActive async {
     final hasRun = await storage.read(key: isAppInActiveKey);
 
@@ -158,13 +144,6 @@ class LocalSecureStore {
     await storage.write(
       key: selectedIndividualKey,
       value: individualId,
-    );
-  }
-
-  Future<void> setSelectedProjectType(ProjectType? projectType) async {
-    await storage.write(
-      key: selectedProjectTypeKey,
-      value: json.encode(projectType),
     );
   }
 

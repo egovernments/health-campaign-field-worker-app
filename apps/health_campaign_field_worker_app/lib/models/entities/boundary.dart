@@ -10,16 +10,20 @@ part 'boundary.mapper.dart';
 class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMappable {
   final String? boundaryType;
   final String? tenantId;
-  final String? code;
+  final String? codes;
   final int? boundaryNum;
   final bool? isSingle;
+  final String? hierarchyType;
+  final bool? includeChildren;
 
   BoundarySearchModel({
     this.boundaryType,
     this.tenantId,
-    this.code,
+    this.codes,
     this.boundaryNum,
     this.isSingle,
+    this.hierarchyType,
+    this.includeChildren,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -28,9 +32,11 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
   BoundarySearchModel.ignoreDeleted({
     this.boundaryType,
     this.tenantId,
-    this.code,
+    this.codes,
     this.boundaryNum,
     this.isSingle,
+    this.hierarchyType,
+    this.includeChildren,
     super.boundaryCode,
     super.additionalFields,
     super.auditDetails,
@@ -47,6 +53,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
   final String? longitude;
   final String? materializedPath;
   final String? tenantId;
+  final String? boundaryType;
   final int? rowVersion;
   final List<BoundaryModel> children;
 
@@ -60,6 +67,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
     this.tenantId,
     this.boundaryNum,
     this.rowVersion,
+    this.boundaryType,
     this.children = const [],
     super.auditDetails,
     super.isDeleted = false,

@@ -397,17 +397,11 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           localizations.translate(
                                             i18.beneficiaryDetails
                                                 .beneficiaryAge,
-                                          ): '${fetchProductVariant(
-                                            deliveryState
+                                          ): fetchProductVariant(            deliveryState
                                                 .futureDeliveries?.first,
-                                            overViewBloc.selectedIndividual,
-                                          )?.condition?.split('<=age<').first} - ${fetchProductVariant(
-                                            deliveryState
-                                                .futureDeliveries?.first,
-                                            overViewBloc.selectedIndividual,
-                                          )?.condition?.split('<=age<').last} months',
+                                            overViewBloc.selectedIndividual,)?.condition,
                                         },
-                                        //[TODO:: Need to parse <=age< as an Expression
+
                                       ),
                                       const Divider(
                                         thickness: 2.0,

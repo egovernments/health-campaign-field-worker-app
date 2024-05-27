@@ -26,35 +26,28 @@ extension ContextUtilityExtensions on BuildContext {
 
   String get projectId => selectedProject.id;
 
-  Cycle get selectedCycle {
+  ProjectCycle? get selectedCycle {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
-    final selectedCycle = projectState.projectType?.cycles
-        ?.where(
-          (e) =>
-              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          // Return null when no matching cycle is found
-        )
-        .firstOrNull;
-
-    if (selectedCycle == null) {
-      return const Cycle();
-    }
+    final selectedCycle =
+        projectState.selectedProject?.additionalDetails?.projectType?.cycles
+            ?.where(
+              (e) =>
+                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
+            )
+            .first;
 
     return selectedCycle;
   }
 
-  ProjectType? get selectedProjectType {
+  ProjectTypeModel? get selectedProjectType {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
-    final projectType = projectState.projectType;
-
-    if (selectedCycle == null) {
-      return null;
-    }
+    final projectType =
+        projectState.selectedProject?.additionalDetails?.projectType;
 
     return projectType;
   }
@@ -64,12 +57,19 @@ extension ContextUtilityExtensions on BuildContext {
 
     final projectState = projectBloc.state;
 
-    if (projectState.projectType?.cycles != null &&
-        (projectState.projectType?.cycles?.length ?? 0) > 0) {
+    if (projectState.selectedProject?.additionalDetails?.projectType?.cycles !=
+            null &&
+        (projectState.selectedProject?.additionalDetails?.projectType?.cycles
+                    ?.length ??
+                0) >
+            0) {
       List<String> resultList = [];
 
       for (int i = 1;
-          i <= (projectState.projectType?.cycles?.length ?? 0);
+          i <=
+              (projectState.selectedProject?.additionalDetails?.projectType
+                      ?.cycles?.length ??
+                  0);
           i++) {
         resultList.add('0${i.toString()}');
       }
