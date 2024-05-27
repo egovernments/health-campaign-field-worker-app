@@ -24,7 +24,7 @@ class _ComplaintsAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
-          context.router.pop();
+          context.router.maybePop();
         },
         actionLabel:
             localizations.translate(i18.complaints.acknowledgementAction),
