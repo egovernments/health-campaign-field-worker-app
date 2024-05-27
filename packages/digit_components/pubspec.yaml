@@ -1,6 +1,6 @@
 name: digit_components
 description: Digit UI Design specification Flutter widgets. Import this package by adding digit_components <latest> in respective pubspec.yaml dependencies.
-version: 0.0.3+12
+version: 0.0.3+13
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/pub.dev/packages/digit_components
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -46,11 +46,3 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: assets/fonts/Roboto/Roboto-Regular.ttf
-    - family: RobotoCondensed
-      fonts:
-        - asset: assets/fonts/Roboto/RobotoCondensed-Regular.ttf
-

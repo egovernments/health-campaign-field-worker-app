@@ -54,37 +54,40 @@
 
 * Updated example folder
 
-##0.0.3+5
+## 0.0.3+5
 
 * Updated flutter sdk version
 
-##0.0.3+6
+## 0.0.3+6
 
 * Updated flutter repository url
 
-##0.0.3+7
+## 0.0.3+7
 
 * Updated intl version and added pubspec_override
 
-##0.0.3+8
+## 0.0.3+8
 
 * Updated intl version and added pubspec_override
 
 
-##0.0.3+9
+## 0.0.3+9
 
 * Updated homepage url
 
 
-##0.0.3+10
+## 0.0.3+10
 
 * Updated homepage url
 
-##0.0.3+11
+## 0.0.3+11
 
 * Removed flutter localizations dependency
 
-##0.0.3+12
+## 0.0.3+12
 
 * Downgraded intl to 0.18.0
 
+## 0.0.3+13
+
+* Fixed empty string issue in searchable_dropdown_field
