@@ -58,8 +58,8 @@ class _ReferralReasonChecklistPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return WillPopScope(
-      onWillPop: () async => false,
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: BlocBuilder<ReferralReconServiceDefinitionBloc,
             ReferralReconServiceDefinitionState>(

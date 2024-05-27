@@ -37,19 +37,8 @@ To use this package, add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  referral_reconciliation: ^0.0.1
+  referral_reconciliation: ^0.0.0-dev.1
 ```
-
-New files or changes needed in HCM App:
-
-1. Create model classes which import referral reconciliation models and add companion class
-2. Create repositories local and remote as per project requirements and structure
-3. Run referral_reconciliation_imports.dart file to import all the required files to work with inventory package
-4. Add navigation to search referral reconciliations page from hcm app and pass the required fields
-
-Below are the sequence diagrams on each feature on how it interacts with HCM App:
-
-![referral_reconciliation sequence diagram](https://github.com/egovernments/health-campaign-field-worker-app/assets/85437265/c095d55c-6752-4c24-a121-47511c226fd8)
 
 
 
