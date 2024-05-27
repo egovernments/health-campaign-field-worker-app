@@ -298,7 +298,7 @@ class AppRouter extends _$AppRouter {
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement'),
 
-        // Inventory Route
+        // Referral Reconciliation Route
         AutoRoute(
             page: HFCreateReferralWrapperRoute.page,
             path: 'hf-referral',

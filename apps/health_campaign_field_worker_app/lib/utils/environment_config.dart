@@ -101,7 +101,7 @@ class Variables {
 
   static const _mdmsApi = EnvEntry(
     'MDMS_API_PATH',
-    'mdms-v2/v1/_search',
+    'egov-mdms-service/v1/_search',
   );
 
   static const _tenantId = EnvEntry(
@@ -112,6 +112,11 @@ class Variables {
   static const _actionMapUrl = EnvEntry(
     'ACTIONS_API_PATH',
     'access/v1/actions/mdms/_get',
+  );
+
+  static const _hierarchyType = EnvEntry(
+    'HIERARCHY_TYPE',
+    'ADMIN',
   );
 
   const Variables({
@@ -130,6 +135,10 @@ class Variables {
   String get mdmsApiPath => useFallbackValues
       ? _mdmsApi.value
       : _dotEnv.get(_mdmsApi.key, fallback: _mdmsApi.value);
+
+  String get hierarchyType => useFallbackValues
+      ? _hierarchyType.value
+      : _dotEnv.get(_hierarchyType.key, fallback: _hierarchyType.value);
 
   String get actionMapApiPath => useFallbackValues
       ? _actionMapUrl.value

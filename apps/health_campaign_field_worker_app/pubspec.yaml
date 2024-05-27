@@ -18,7 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
-  digit_components: ^0.0.3+11
+  digit_components: ^0.0.3+13
   auto_route: ^7.8.4
   flutter_bloc: ^8.1.1
   collection: ^1.16.0
@@ -66,11 +66,11 @@ dependencies:
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
   attendance_management: ^0.0.0-dev.3
-  digit_scanner: ^0.0.0-dev.4
-  inventory_management: ^0.0.0-dev.4
-  referral_reconciliation: ^0.0.0-dev.1
-  digit_data_model: ^0.0.0-dev.1
-  registration_delivery: ^0.0.0-dev.1
+  digit_scanner: ^0.0.0-dev.5
+  inventory_management: ^0.0.0-dev.5
+  referral_reconciliation: ^0.0.0-boundary.2
+  digit_data_model: ^0.0.0-dev.2
+  registration_delivery: ^0.0.0-dev.2
 
 dev_dependencies:
   flutter_test:

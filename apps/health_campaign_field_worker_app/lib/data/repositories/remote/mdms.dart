@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 
@@ -57,7 +56,7 @@ class MdmsRepository {
       actions.add(Actions()
         ..entityName = 'Boundary'
         ..action = 'search'
-        ..path = '/egov-location/location/v11/boundarys/_search');
+        ..path = '/boundary-service/boundary-relationships/_search');
 
       newServiceRegistry.actions = actions;
       newServiceRegistryList.add(newServiceRegistry);

@@ -472,7 +472,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
+            codes: event.model.address?.boundary,
           ),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
@@ -497,14 +497,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         boundaries = await boundaryLocalRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
+            codes: event.model.address?.boundary,
           ),
         );
         if (boundaries.isEmpty) {
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
               boundaryType: event.model.address?.boundaryType,
-              code: event.model.address?.boundary,
+              codes: event.model.address?.boundary,
             ),
           );
         }

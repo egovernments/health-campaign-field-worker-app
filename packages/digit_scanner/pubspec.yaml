@@ -17,7 +17,7 @@ repository: https://github.com/egovernments/health-campaign-field-worker-app
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 0.0.0-dev.4
+version: 0.0.0-dev.5
 
 environment:
   sdk: '>=2.19.4 <3.9.0'
@@ -38,7 +38,7 @@ dependencies:
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
   gs1_barcode_parser: ^1.0.5
-  digit_components: ^0.0.3+11
+  digit_components: ^0.0.3+13
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
   overlay_builder: ^1.1.0

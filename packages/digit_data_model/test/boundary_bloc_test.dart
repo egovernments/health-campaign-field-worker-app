@@ -47,7 +47,7 @@ void main() {
             .thenAnswer((invocation) async {
           final searchModel =
               invocation.positionalArguments[0] as BoundarySearchModel;
-          if (searchModel.code == testBoundaries.first.code) {
+          if (searchModel.codes == testBoundaries.first.code) {
             return testBoundaries;
           } else {
             return [];

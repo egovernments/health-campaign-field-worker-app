@@ -40,7 +40,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
   ) async {
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(
-        code: event.code,
+        codes: event.code,
         isSingle: true,
       ),
     );
@@ -71,7 +71,7 @@ class BoundaryBloc extends Bloc<BoundaryEvent, BoundaryState> {
     emit(state.copyWith(loading: true));
     List<BoundaryModel> boundaryList = await boundaryRepository.search(
       BoundarySearchModel(
-        code: event.code,
+        codes: event.code,
         boundaryNum: event.boundaryNum,
         isSingle: false,
       ),

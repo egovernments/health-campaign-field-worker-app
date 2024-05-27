@@ -1,6 +1,6 @@
 name: registration_delivery
 description: "Registration and Delivery for Health Campaigns"
-version: 0.0.0-dev.1
+version: 0.0.0-dev.2
 homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/registration_delivery"
 
 environment:
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: ^0.0.1
+  digit_components: ^0.0.3+13
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
@@ -38,6 +38,7 @@ dependencies:
   flutter_keyboard_visibility: ^5.4.0
   stream_transform: ^2.1.0
   async: ^2.11.0
+  formula_parser: ^2.0.1
 
 
 dev_dependencies:

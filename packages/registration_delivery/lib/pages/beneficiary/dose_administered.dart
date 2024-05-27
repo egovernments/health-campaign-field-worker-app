@@ -26,8 +26,8 @@ import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/constants.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class DoseAdministeredPage extends LocalizedStatefulWidget {
@@ -416,17 +416,12 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           localizations.translate(
                                             i18.beneficiaryDetails
                                                 .beneficiaryAge,
-                                          ): '${fetchProductVariant(
+                                          ): fetchProductVariant(
                                             deliveryState
                                                 .futureDeliveries?.first,
                                             overViewBloc.selectedIndividual,
-                                          )?.condition?.split('<=age<').first} - ${fetchProductVariant(
-                                            deliveryState
-                                                .futureDeliveries?.first,
-                                            overViewBloc.selectedIndividual,
-                                          )?.condition?.split('<=age<').last} months',
+                                          )?.condition,
                                         },
-                                        //[TODO:: Need to parse <=age< as an Expression
                                       ),
                                       const Divider(
                                         thickness: 2.0,

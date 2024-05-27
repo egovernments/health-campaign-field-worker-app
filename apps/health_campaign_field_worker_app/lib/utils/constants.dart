@@ -241,7 +241,9 @@ class Constants {
         retryTimeInterval: envConfig.variables.retryTimeInterval,
         tenantId: envConfig.variables.tenantId,
         entityMapper: EntityMapper(),
-        errorDumpApiPath: envConfig.variables.dumpErrorApiPath);
+        errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
+      hierarchyType: envConfig.variables.hierarchyType
+    );
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
