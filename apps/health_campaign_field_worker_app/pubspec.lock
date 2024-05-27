@@ -68,10 +68,11 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
-    version: "0.0.0-dev.3"
+      name: attendance_management
+      sha256: a37af7332bd47c81f008e081602fd2b438f0b3f5751b43080bd493156dd9c554
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.4"
   audioplayers:
     dependency: "direct main"
     description:
@@ -419,10 +420,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
-    version: "4.2.0"
+      name: dart_mappable_builder
+      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -482,17 +484,19 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_components"
-      relative: true
-    source: path
-    version: "0.0.1+8"
+      name: digit_components
+      sha256: "00642b6c6195d75987f43f8e6c32a417c0bb75b36e15cf9c5b130466d556de91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3+13"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "0.0.0-dev.1"
+      name: digit_data_model
+      sha256: ed3c4938b77777b764497fa7ac7be8ba34212d2925a853b5ccbb77f716dacb5e
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -503,16 +507,18 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
-    version: "0.0.0-dev.4"
+      name: digit_scanner
+      sha256: "5af0318e92a1373677141bd174f64bbc126f9ad64f1d333774205ac684fe40dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.5"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "75380c35b3e819d04690336eb1682d085882f372daea7a26724470bbc36e3555"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.0-dev.1"
   dio:
     dependency: "direct main"
@@ -915,13 +921,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.5"
-  forms_engine:
-    dependency: "direct overridden"
-    description:
-      path: "../../packages/forms_engine"
-      relative: true
-    source: path
-    version: "0.0.1"
   formula_parser:
     dependency: transitive
     description:
@@ -1095,10 +1094,11 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
-    version: "0.0.0-dev.4"
+      name: inventory_management
+      sha256: "07a8a1558601f58524bff189052340b634b412e1643766e0b7e487e05f69b09b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.5"
   io:
     dependency: transitive
     description:
@@ -1510,25 +1510,19 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      path: "../../packages/referral_reconciliation"
-      relative: true
-    source: path
-    version: "0.0.0-dev.1"
+      name: referral_reconciliation
+      sha256: b8852d90b9b2105b374583aa11f42b00fa823b1689b9b397293c269ba9f5a1bb
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.2"
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
-    version: "0.0.0-dev.1"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
+      name: registration_delivery
+      sha256: cb61c12e3766998c63ac930d993dc28140dde2ef3211b9d1b3adff8dc8b20738
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1+1"
+    version: "0.0.0-dev.2"
   rxdart:
     dependency: transitive
     description:
@@ -2055,5 +2049,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.0 <3.9.0"
   flutter: ">=3.16.0"

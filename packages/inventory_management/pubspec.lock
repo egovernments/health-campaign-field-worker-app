@@ -429,18 +429,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: ca8a602305fb591329a95c1340805ace1577ef4146a2beea1991a0653a24040d
+      sha256: ed3c4938b77777b764497fa7ac7be8ba34212d2925a853b5ccbb77f716dacb5e
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.1"
+    version: "0.0.0-dev.2"
   digit_scanner:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "5e42e083a6cdd29c5a007e38d66764167042efceec35639d473d090dc0ceff44"
+      sha256: "5af0318e92a1373677141bd174f64bbc126f9ad64f1d333774205ac684fe40dc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.1"
+    version: "0.0.0-dev.5"
   dio:
     dependency: transitive
     description:
@@ -590,11 +590,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
-  flutter_localizations:
-    dependency: transitive
-    description: flutter
-    source: sdk
-    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -1443,5 +1438,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.3 <3.9.0"
+  dart: ">=3.2.0 <3.9.0"
   flutter: ">=3.16.0"
