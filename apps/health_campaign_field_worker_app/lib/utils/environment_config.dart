@@ -101,7 +101,7 @@ class Variables {
 
   static const _mdmsApi = EnvEntry(
     'MDMS_API_PATH',
-    'egov-mdms-service/v1/_search',
+    'mdms-v2/v1/_search',
   );
 
   static const _tenantId = EnvEntry(
