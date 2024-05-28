@@ -116,6 +116,9 @@ class _IndividualDetailsPageState
                               if (form.control(_idTypeKey).value == null) {
                                 form.control(_idTypeKey).setErrors({'': true});
                               }
+                              if (form.control(_genderKey).value == null) {
+                                form.control(_genderKey).setErrors({'': true});
+                              }
                               final userId = RegistrationDeliverySingleton()
                                   .loggedInUserUuid;
                               final projectId =
@@ -533,6 +536,10 @@ class _IndividualDetailsPageState
                               valueMapper: (value) {
                                 return localizations.translate(value);
                               },
+                              isRequired: true,
+                              validationMessage: localizations.translate(
+                                i18.common.corecommonRequired,
+                              ),
                               emptyText: localizations
                                   .translate(i18.common.noMatchFound),
                             ),
