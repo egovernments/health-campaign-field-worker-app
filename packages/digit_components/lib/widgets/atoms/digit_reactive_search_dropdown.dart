@@ -14,8 +14,8 @@ class DigitReactiveSearchDropdown<T> extends StatefulWidget {
   final String Function(T value) valueMapper;
   final String? validationMessage;
   final EdgeInsets? padding;
-  final void Function(dynamic)? onSelected;
-  final void Function(dynamic)? onFieldTap;
+  final void Function(T)? onSelected;
+  final void Function(T)? onFieldTap;
   final String emptyText;
 
   const DigitReactiveSearchDropdown({
@@ -74,13 +74,13 @@ class _DigitReactiveSearchDropdownState<T>
                       : const DigitColors().woodsmokeBlack),
             ),
             findFn: (dynamic str) async => widget.menuItems,
-            filterFn: (dynamic item, str) => widget
+            filterFn: (T item, str) => widget
                 .valueMapper(item)
                 .toLowerCase()
                 .contains(str.toLowerCase()),
             dropdownItemSeparator: const DigitDivider(),
-            dropdownItemFn:
-                (dynamic item, position, focused, selected, onTap) => ListTile(
+            dropdownItemFn: (T item, position, focused, selected, onTap) =>
+                ListTile(
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -130,7 +130,7 @@ class _DigitReactiveSearchDropdownState<T>
                           .setErrors({'': true});
                     }
                     if (widget.onFieldTap != null) {
-                      widget.onFieldTap!(null);
+                      widget.onFieldTap!;
                     }
                   },
           ),
