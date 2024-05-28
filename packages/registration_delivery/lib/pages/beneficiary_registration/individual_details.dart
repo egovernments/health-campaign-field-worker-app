@@ -416,12 +416,12 @@ class _IndividualDetailsPageState
                                   .idTypeOptions!
                                   .map(
                                 (e) {
-                                  return localizations.translate(e);
+                                  return e;
                                 },
                               ).toList(),
                               formControlName: _idTypeKey,
                               valueMapper: (value) {
-                                return value;
+                                return localizations.translate(value);
                               },
                               onSelected: (value) {
                                 setState(() {
