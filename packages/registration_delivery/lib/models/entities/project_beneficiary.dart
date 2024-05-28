@@ -9,9 +9,9 @@ part 'project_beneficiary.mapper.dart';
 class ProjectBeneficiarySearchModel extends EntitySearchModel
     with ProjectBeneficiarySearchModelMappable {
   final List<String>? id;
-  final String? projectId;
+  final List<String>? projectId;
   final List<String>? beneficiaryId;
-  final String? tag;
+  final List<String>? tag;
   final List<String>? beneficiaryClientReferenceId;
   final DateTime? beneficiaryRegistrationDateLte;
   final DateTime? beneficiaryRegistrationDateGte;

@@ -47,8 +47,8 @@ class SearchReferralsBloc
     List<HFReferralModel>? beneficiaries =
         await referralReconDataRepository.search(
       HFReferralSearchModel(
-        projectId: ReferralReconSingleton().projectId,
-        beneficiaryId: event.tag,
+        projectId: [ReferralReconSingleton().projectId],
+        beneficiaryId: [event.tag],
       ),
     );
     // Update state with fetched referrals.
@@ -86,7 +86,7 @@ class SearchReferralsBloc
     List<HFReferralModel>? beneficiaries =
         await referralReconDataRepository.search(
       HFReferralSearchModel(
-        projectId: ReferralReconSingleton().projectId,
+        projectId: [ReferralReconSingleton().projectId],
         name: event.searchText,
       ),
     );

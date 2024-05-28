@@ -11,13 +11,13 @@ class HFReferralSearchModel extends EntitySearchModel
   final List<String>? id;
   final String? tenantId;
   final String? name;
-  final String? projectId;
-  final String? projectFacilityId;
-  final String? symptomSurveyId;
-  final String? beneficiaryId;
-  final String? referralCode;
-  final String? nationalLevelId;
-  final String? symptom;
+  final List<String>? projectId;
+  final List<String>? projectFacilityId;
+  final List<String>? symptomSurveyId;
+  final List<String>? beneficiaryId;
+  final List<String>? referralCode;
+  final List<String>? nationalLevelId;
+  final List<String>? symptom;
   final List<String>? clientReferenceId;
 
   HFReferralSearchModel({

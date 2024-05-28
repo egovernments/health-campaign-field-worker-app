@@ -71,7 +71,6 @@ Widget buildTableContent(
           element: {
             localizations.translate(
               i18.beneficiaryDetails.beneficiaryAge,
-              //[TODO: Condition need to be handled in generic way,]
             ): fetchProductVariant(item, individualModel)?.condition != null
                 ? localizations.translate(
                     fetchProductVariant(item, individualModel)!.condition!)

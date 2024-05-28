@@ -30,29 +30,31 @@ class HFReferralSearchModelMapper
   static String? _$name(HFReferralSearchModel v) => v.name;
   static const Field<HFReferralSearchModel, String> _f$name =
       Field('name', _$name, opt: true);
-  static String? _$projectId(HFReferralSearchModel v) => v.projectId;
-  static const Field<HFReferralSearchModel, String> _f$projectId =
+  static List<String>? _$projectId(HFReferralSearchModel v) => v.projectId;
+  static const Field<HFReferralSearchModel, List<String>> _f$projectId =
       Field('projectId', _$projectId, opt: true);
-  static String? _$projectFacilityId(HFReferralSearchModel v) =>
+  static List<String>? _$projectFacilityId(HFReferralSearchModel v) =>
       v.projectFacilityId;
-  static const Field<HFReferralSearchModel, String> _f$projectFacilityId =
+  static const Field<HFReferralSearchModel, List<String>> _f$projectFacilityId =
       Field('projectFacilityId', _$projectFacilityId, opt: true);
-  static String? _$symptomSurveyId(HFReferralSearchModel v) =>
+  static List<String>? _$symptomSurveyId(HFReferralSearchModel v) =>
       v.symptomSurveyId;
-  static const Field<HFReferralSearchModel, String> _f$symptomSurveyId =
+  static const Field<HFReferralSearchModel, List<String>> _f$symptomSurveyId =
       Field('symptomSurveyId', _$symptomSurveyId, opt: true);
-  static String? _$beneficiaryId(HFReferralSearchModel v) => v.beneficiaryId;
-  static const Field<HFReferralSearchModel, String> _f$beneficiaryId =
+  static List<String>? _$beneficiaryId(HFReferralSearchModel v) =>
+      v.beneficiaryId;
+  static const Field<HFReferralSearchModel, List<String>> _f$beneficiaryId =
       Field('beneficiaryId', _$beneficiaryId, opt: true);
-  static String? _$referralCode(HFReferralSearchModel v) => v.referralCode;
-  static const Field<HFReferralSearchModel, String> _f$referralCode =
+  static List<String>? _$referralCode(HFReferralSearchModel v) =>
+      v.referralCode;
+  static const Field<HFReferralSearchModel, List<String>> _f$referralCode =
       Field('referralCode', _$referralCode, opt: true);
-  static String? _$nationalLevelId(HFReferralSearchModel v) =>
+  static List<String>? _$nationalLevelId(HFReferralSearchModel v) =>
       v.nationalLevelId;
-  static const Field<HFReferralSearchModel, String> _f$nationalLevelId =
+  static const Field<HFReferralSearchModel, List<String>> _f$nationalLevelId =
       Field('nationalLevelId', _$nationalLevelId, opt: true);
-  static String? _$symptom(HFReferralSearchModel v) => v.symptom;
-  static const Field<HFReferralSearchModel, String> _f$symptom =
+  static List<String>? _$symptom(HFReferralSearchModel v) => v.symptom;
+  static const Field<HFReferralSearchModel, List<String>> _f$symptom =
       Field('symptom', _$symptom, opt: true);
   static List<String>? _$clientReferenceId(HFReferralSearchModel v) =>
       v.clientReferenceId;
@@ -175,6 +177,18 @@ abstract class HFReferralSearchModelCopyWith<
     $In extends HFReferralSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get projectFacilityId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get symptomSurveyId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get beneficiaryId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get referralCode;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get nationalLevelId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get symptom;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
@@ -182,13 +196,13 @@ abstract class HFReferralSearchModelCopyWith<
       {List<String>? id,
       String? tenantId,
       String? name,
-      String? projectId,
-      String? projectFacilityId,
-      String? symptomSurveyId,
-      String? beneficiaryId,
-      String? referralCode,
-      String? nationalLevelId,
-      String? symptom,
+      List<String>? projectId,
+      List<String>? projectFacilityId,
+      List<String>? symptomSurveyId,
+      List<String>? beneficiaryId,
+      List<String>? referralCode,
+      List<String>? nationalLevelId,
+      List<String>? symptom,
       List<String>? clientReferenceId,
       String? boundaryCode});
   HFReferralSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
@@ -208,6 +222,62 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
       $value.id != null
           ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(id: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId =>
+      $value.projectId != null
+          ? ListCopyWith(
+              $value.projectId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(projectId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get projectFacilityId => $value.projectFacilityId != null
+          ? ListCopyWith(
+              $value.projectFacilityId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(projectFacilityId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get symptomSurveyId => $value.symptomSurveyId != null
+          ? ListCopyWith(
+              $value.symptomSurveyId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(symptomSurveyId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get beneficiaryId => $value.beneficiaryId != null
+          ? ListCopyWith(
+              $value.beneficiaryId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(beneficiaryId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get referralCode => $value.referralCode != null
+          ? ListCopyWith(
+              $value.referralCode!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(referralCode: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get nationalLevelId => $value.nationalLevelId != null
+          ? ListCopyWith(
+              $value.nationalLevelId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(nationalLevelId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get symptom =>
+      $value.symptom != null
+          ? ListCopyWith(
+              $value.symptom!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(symptom: v))
           : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?

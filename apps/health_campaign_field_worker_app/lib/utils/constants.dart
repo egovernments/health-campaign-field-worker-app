@@ -242,8 +242,7 @@ class Constants {
         tenantId: envConfig.variables.tenantId,
         entityMapper: EntityMapper(),
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
-      hierarchyType: envConfig.variables.hierarchyType
-    );
+        hierarchyType: envConfig.variables.hierarchyType);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
@@ -325,29 +324,4 @@ class DownloadBeneficiary {
     this.prefixLabel,
     this.suffixLabel,
   });
-}
-
-class DataModels {
-  static DataModelType getDataModelForEntityName(String entity) {
-    switch (entity) {
-      case 'Households':
-        return DataModelType.household;
-      case 'HouseholdMembers':
-        return DataModelType.householdMember;
-      case 'Individuals':
-        return DataModelType.individual;
-      case 'ProjectBeneficiaries':
-        return DataModelType.projectBeneficiary;
-      case 'Tasks':
-        return DataModelType.task;
-      case 'SideEffects':
-        return DataModelType.sideEffect;
-      case 'Referrals':
-        return DataModelType.referral;
-      case 'HFReferrals':
-        return DataModelType.hFReferral;
-      default:
-        return DataModelType.householdMember;
-    }
-  }
 }

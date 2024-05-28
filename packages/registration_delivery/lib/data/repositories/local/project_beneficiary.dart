@@ -15,7 +15,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
     final select = sql.select(sql.projectBeneficiary)
       ..where(
         (tbl) => buildOr([
-          if (query.projectId != null) tbl.projectId.equals(query.projectId!),
+          if (query.projectId != null) tbl.projectId.isIn(query.projectId!),
           if (query.beneficiaryRegistrationDateGte != null)
             tbl.dateOfRegistration.isBiggerOrEqualValue(
               query.beneficiaryRegistrationDateGte!.millisecondsSinceEpoch,
@@ -77,7 +77,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
             buildAnd(
               [
                 if (query.tag != null)
-                  sql.projectBeneficiary.tag.equals(
+                  sql.projectBeneficiary.tag.isIn(
                     query.tag!,
                   ),
                 if (query.clientReferenceId != null)
@@ -92,7 +92,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                     query.id!,
                   ),
                 if (query.projectId != null)
-                  sql.projectBeneficiary.projectId.equals(
+                  sql.projectBeneficiary.projectId.isIn(
                     query.projectId!,
                   ),
                 if (query.beneficiaryId != null)

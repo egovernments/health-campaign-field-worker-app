@@ -69,8 +69,9 @@ class HouseholdOverviewBloc
     // Retrieve household members based on certain criteria.
     final members = await householdMemberRepository.search(
       HouseholdMemberSearchModel(
-        householdClientReferenceId:
-            state.householdMemberWrapper.household.clientReferenceId,
+        householdClientReferenceId: [
+          state.householdMemberWrapper.household.clientReferenceId
+        ],
       ),
     );
 
@@ -127,7 +128,7 @@ class HouseholdOverviewBloc
             event.projectBeneficiaryType == BeneficiaryType.individual
                 ? individualIds
                 : [resultHousehold.clientReferenceId],
-        projectId: event.projectId,
+        projectId: [event.projectId],
         // [TODO] Need to pass as a  based on Beneficiary Type
       ),
     );
@@ -234,8 +235,8 @@ class HouseholdOverviewBloc
       // Search for household members associated with the deleted individual.
       final householdMember =
           await householdMemberRepository.search(HouseholdMemberSearchModel(
-        householdClientReferenceId: event.householdModel.clientReferenceId,
-        individualClientReferenceId: i.clientReferenceId,
+        householdClientReferenceId: [event.householdModel.clientReferenceId],
+        individualClientReferenceId: [i.clientReferenceId],
       ));
 
       // Delete the associated household members.
@@ -267,8 +268,8 @@ class HouseholdOverviewBloc
     // Search for household members associated with the deleted individual.
     final householdMembers = await householdMemberRepository.search(
       HouseholdMemberSearchModel(
-        individualClientReferenceId: event.individualModel.clientReferenceId,
-        householdClientReferenceId: event.householdModel.clientReferenceId,
+        individualClientReferenceId: [event.individualModel.clientReferenceId],
+        householdClientReferenceId: [event.householdModel.clientReferenceId],
       ),
     );
 
@@ -305,7 +306,7 @@ class HouseholdOverviewBloc
     // Retrieve household members based on certain criteria.
     final members = await householdMemberRepository.search(
       HouseholdMemberSearchModel(
-        householdClientReferenceId: event.householdModel.clientReferenceId,
+        householdClientReferenceId: [event.householdModel.clientReferenceId],
       ),
     );
 

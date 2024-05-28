@@ -206,11 +206,12 @@ DeliveryDoseCriteria? fetchProductVariant(
               'gender': individualModel.gender?.index,
             },
           );
-          expressionParser.add(!expression.error);
+          final error = expression.parse;
+          expressionParser.add(error["value"]);
         }
 
         return expressionParser.where((element) => element == true).length ==
-            expressionParser.length;
+            conditions.length;
       }
 
       return false;

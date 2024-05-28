@@ -54,7 +54,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
 
     repository.listenToChanges(
       query: ProjectBeneficiarySearchModel(
-        projectId: RegistrationDeliverySingleton().projectId,
+        projectId: [RegistrationDeliverySingleton().projectId.toString()],
       ),
       listener: (data) {
         if (mounted) {
