@@ -3,13 +3,7 @@ import '../showcase_wrappers.dart';
 
 part 'checklist_data.dart';
 part 'checklist_list.dart';
-part 'deliver_intervention.dart';
 part 'home_showcase.dart';
-part 'household_details.dart';
-part 'household_location.dart';
-part 'household_overview.dart';
-part 'individual_details.dart';
-part 'search_beneficiaries_showcase.dart';
 part 'select_checklist.dart';
 part 'select_stock_showcase.dart';
 part 'stock_details.dart';
@@ -21,12 +15,6 @@ part 'complaint_type.dart';
 part 'complaints_details.dart';
 
 final homeShowcaseData = _HomePageShowcaseData();
-final searchBeneficiariesShowcaseData = _SearchBeneficiariesShowcaseData();
-final householdLocationShowcaseData = _HouseholdLocationShowcaseData();
-final householdDetailsShowcaseData = _HouseholdDetailsShowcaseData();
-final individualDetailsShowcaseData = _IndividualDetailsShowcaseData();
-final householdOverviewShowcaseData = _HouseholdOverviewShowcaseData();
-final deliverInterventionShowcaseData = _DeliverInterventionShowcaseData();
 final selectStockShowcaseData = _SelectStockShowcaseData();
 final warehouseDetailsShowcaseData = _WarehouseDetailsShowcaseData();
 final stockDetailsShowcaseData = _StockDetailsShowcaseData();

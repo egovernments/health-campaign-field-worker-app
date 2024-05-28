@@ -1326,6 +1326,8 @@ class StockDetails {
   /// Select Product label
   String get selectProductLabel => 'STOCK_DETAILS_SELECT_PRODUCT';
 
+  String get scannedResources => 'STOCK_SCANNED_RESOURCES';
+
   /// Select Transacting party label
   String get selectTransactingPartyReceived => 'STOCK_DETAILS_RECEIVED_FROM';
 

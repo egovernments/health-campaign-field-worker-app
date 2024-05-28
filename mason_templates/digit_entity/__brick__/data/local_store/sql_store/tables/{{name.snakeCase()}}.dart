@@ -1,6 +1,8 @@
 // Generated using mason. Do not modify by hand
 
-{{^isEnum}}import 'package:drift/drift.dart';
+{{^isEnum}}
+import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 {{#sqlAttributes}}{{#isEnum}}import '../../../../models/entities/{{type.snakeCase()}}.dart';
 {{/isEnum}}{{/sqlAttributes}}{{#referenceAttributes}}{{#references}}import '{{table.snakeCase()}}.dart';

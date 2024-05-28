@@ -2,7 +2,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 {{^isEnum}}import 'package:drift/drift.dart';
 
-import '../data_model.dart';
+import 'package:digit_data_model/data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
 
 part '{{name.snakeCase()}}.mapper.dart';

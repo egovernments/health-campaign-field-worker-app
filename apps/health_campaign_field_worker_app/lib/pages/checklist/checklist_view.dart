@@ -2,20 +2,23 @@ import 'dart:math';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:registration_delivery/blocs/service/service.dart';
+import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
-import '../../blocs/service/service.dart';
-import '../../blocs/service_definition/service_definition.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class ChecklistViewPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
   const ChecklistViewPage({
@@ -63,7 +66,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
           ? () async => false
           : () async => _onBackPressed(context),
-        child: Scaffold(
+      child: Scaffold(
         body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
           builder: (context, state) {
             state.mapOrNull(
@@ -211,7 +214,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             DateTime.now()
                                                 .toLocal()
                                                 .millisecondsSinceEpoch,
-                                            dateFormat: "dd/MM/yyyy hh:mm a",
+                                            dateFormat: Constants
+                                                .checklistViewDateFormat,
                                           ),
                                           tenantId: value
                                               .selectedServiceDefinition!
@@ -268,12 +272,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          if (isHealthFacilityWorker &&
-                              widget.referralClientRefId != null) {
-                            router.navigate(SearchReferralsRoute());
-                          } else {
-                            router.navigate(ChecklistRoute());
-                          }
+                          router.navigate(ChecklistRoute());
+
                           router.push(AcknowledgementRoute());
                         }
                       },
@@ -444,7 +444,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   ),
                               ],
                             ]);
-                          }).toList(),
+                          }),
                           const SizedBox(
                             height: 15,
                           ),
@@ -641,6 +641,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: DigitTextField(
+          maxLength: 1000,
           onChange: (value) {
             checklistFormKey.currentState?.validate();
           },

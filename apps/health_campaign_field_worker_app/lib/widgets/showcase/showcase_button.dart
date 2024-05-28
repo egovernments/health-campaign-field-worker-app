@@ -61,39 +61,15 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
 
   Iterable<GlobalKey>? _showcasePathsForRoute(String routeName) {
     switch (routeName) {
-      case SearchBeneficiaryRoute.name:
-        return searchBeneficiariesShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case HouseholdLocationRoute.name:
-        return householdLocationShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case HouseHoldDetailsRoute.name:
-        return householdDetailsShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case IndividualDetailsRoute.name:
-        return individualDetailsShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case HouseholdOverviewRoute.name:
-        return householdOverviewShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case DeliverInterventionRoute.name:
-        return deliverInterventionShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ManageStocksRoute.name:
+      case "ManageStocksRoute":
         return selectStockShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      case WarehouseDetailsRoute.name:
+      case "WarehouseDetailsRoute":
         return warehouseDetailsShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      case StockReconciliationRoute.name:
+      case "StockReconciliationRoute":
         return stockReconciliationShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
