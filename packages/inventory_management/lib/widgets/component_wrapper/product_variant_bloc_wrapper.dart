@@ -3,9 +3,8 @@ import 'package:digit_data_model/models/entities/project_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
-import '../../blocs/inventory_listener.dart';
+
 import '../../blocs/product_variant.dart';
-import '../../utils/utils.dart';
 
 class ProductVariantBlocWrapper extends StatelessWidget {
   final Widget child;
@@ -29,7 +28,7 @@ class ProductVariantBlocWrapper extends StatelessWidget {
       )..add(
           ProductVariantLoadEvent(
             query: ProjectResourceSearchModel(
-              projectId: projectId,
+              projectId: [projectId],
             ),
           ),
         ),

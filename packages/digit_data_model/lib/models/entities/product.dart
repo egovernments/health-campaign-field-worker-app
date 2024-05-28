@@ -10,8 +10,8 @@ class ProductSearchModel extends EntitySearchModel
     with ProductSearchModelMappable {
   final String? id;
   final String? type;
-  final String? name;
-  final String? manufacturer;
+  final List<String>? name;
+  final List<String>? manufacturer;
   final List<String>? clientReferenceId;
   final String? tenantId;
 

@@ -11,7 +11,7 @@ class ProjectStaffSearchModel extends EntitySearchModel with ProjectStaffSearchM
   final String? id;
   final List<String>? staffId;
   final String? userId;
-  final String? projectId;
+  final List<String>? projectId;
   final String? tenantId;
   final DateTime? startDateTime;
   final DateTime? endDateTime;

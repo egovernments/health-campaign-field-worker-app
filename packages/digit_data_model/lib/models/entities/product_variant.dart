@@ -11,7 +11,7 @@ part 'product_variant.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProductVariantSearchModel extends EntitySearchModel with ProductVariantSearchModelMappable {
   final List<String>? id;
-  final String? productId;
+  final List<String>? productId;
   final String? sku;
   final String? variation;
   final String? tenantId;

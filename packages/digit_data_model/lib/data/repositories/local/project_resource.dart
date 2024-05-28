@@ -24,8 +24,7 @@ class ProjectResourceLocalRepository
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.projectId != null)
-              sql.projectResource.projectId
-                  .equals(query.projectId!),
+              sql.projectResource.projectId.isIn(query.projectId!),
           ])))
         .get();
 

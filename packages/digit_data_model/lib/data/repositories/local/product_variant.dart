@@ -17,7 +17,7 @@ class ProductVariantLocalRepository
           ..where(buildAnd([
             if (query.id != null) sql.productVariant.id.isIn(query.id!),
             if (query.productId != null)
-              sql.productVariant.productId.equals(query.productId!),
+              sql.productVariant.productId.isIn(query.productId!),
           ])))
         .get();
 

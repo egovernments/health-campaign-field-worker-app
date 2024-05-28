@@ -44,14 +44,13 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
                           final query =
                               form.control(_facilityName).value as String?;
                           if (query == null || query.isEmpty) return true;
-                          if (element.id
-                              .toLowerCase()
-                              .contains(query.toLowerCase())) {
-                            return true;
-                          }
-
-                          return false;
-                        })
+                          final localizedFacilityIdWithPrefix = localizations
+                              .translate('PJ_FAC_${element.id}')
+                              .toLowerCase();
+                          final lowerCaseQuery = query.toLowerCase();
+                          return localizedFacilityIdWithPrefix
+                              .contains(lowerCaseQuery);
+                        }).toList()
                       : null;
 
               return ScrollableContent(

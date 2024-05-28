@@ -87,7 +87,7 @@ void main() {
         return productVariantBloc;
       },
       act: (bloc) => bloc.add(ProductVariantEvent.load(
-          query: ProjectResourceSearchModel(projectId: testProjectId))),
+          query: ProjectResourceSearchModel(projectId: [testProjectId]))),
       expect: () => [
         const ProductVariantLoadingState(),
         ProductVariantFetchedState(productVariants: testProductVariants),
@@ -109,7 +109,7 @@ void main() {
         return productVariantBloc;
       },
       act: (bloc) => bloc.add(ProductVariantEvent.load(
-          query: ProjectResourceSearchModel(projectId: testProjectId))),
+          query: ProjectResourceSearchModel(projectId: [testProjectId]))),
       expect: () => [
         const ProductVariantLoadingState(),
         const ProductVariantEmptyState(),
