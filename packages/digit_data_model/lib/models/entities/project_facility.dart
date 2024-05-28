@@ -1,20 +1,18 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
-
-import '../../data/local_store/sql_store/sql_store.dart';
+import 'package:drift/drift.dart';
 
 part 'project_facility.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectFacilitySearchModel extends EntitySearchModel with ProjectFacilitySearchModelMappable {
-  final String? id;
+class ProjectFacilitySearchModel extends EntitySearchModel
+    with ProjectFacilitySearchModelMappable {
+  final List<String>? id;
   final List<String>? facilityId;
   final List<String>? projectId;
   final String? tenantId;
-  
+
   ProjectFacilitySearchModel({
     this.id,
     this.facilityId,
@@ -22,7 +20,7 @@ class ProjectFacilitySearchModel extends EntitySearchModel with ProjectFacilityS
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   ProjectFacilitySearchModel.ignoreDeleted({
@@ -31,12 +29,12 @@ class ProjectFacilitySearchModel extends EntitySearchModel with ProjectFacilityS
     this.projectId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectFacilityModel extends EntityModel with ProjectFacilityModelMappable {
-
+class ProjectFacilityModel extends EntityModel
+    with ProjectFacilityModelMappable {
   static const schemaName = 'ProjectFacility';
 
   final String id;
@@ -55,9 +53,10 @@ class ProjectFacilityModel extends EntityModel with ProjectFacilityModelMappable
     this.nonRecoverableError = false,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   ProjectFacilityCompanion get companion {
     return ProjectFacilityCompanion(
@@ -77,16 +76,16 @@ class ProjectFacilityModel extends EntityModel with ProjectFacilityModelMappable
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectFacilityAdditionalFields extends AdditionalFields with ProjectFacilityAdditionalFieldsMappable {
+class ProjectFacilityAdditionalFields extends AdditionalFields
+    with ProjectFacilityAdditionalFieldsMappable {
   ProjectFacilityAdditionalFields({
     super.schema = 'ProjectFacility',
     required super.version,
     super.fields,
   });
 }
-

@@ -1,12 +1,8 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-
-import '../../../utils/utils.dart';
-
 
 class ProjectBeneficiaryLocalRepository extends LocalRepository<
     ProjectBeneficiaryModel, ProjectBeneficiarySearchModel> {
@@ -89,11 +85,10 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                     query.clientReferenceId!,
                   ),
                 if (query.beneficiaryClientReferenceId != null)
-                  sql
-                      .projectBeneficiary.beneficiaryClientReferenceId
+                  sql.projectBeneficiary.beneficiaryClientReferenceId
                       .isIn(query.beneficiaryClientReferenceId!),
                 if (query.id != null)
-                  sql.projectBeneficiary.id.equals(
+                  sql.projectBeneficiary.id.isIn(
                     query.id!,
                   ),
                 if (query.projectId != null)
@@ -101,7 +96,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
                     query.projectId!,
                   ),
                 if (query.beneficiaryId != null)
-                  sql.projectBeneficiary.beneficiaryId.equals(
+                  sql.projectBeneficiary.beneficiaryId.isIn(
                     query.beneficiaryId!,
                   ),
                 if (query.dateOfRegistrationTime != null)
@@ -119,8 +114,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
 
     return results
         .map((e) {
-          final projectBeneficiary =
-              e.readTable(sql.projectBeneficiary);
+          final projectBeneficiary = e.readTable(sql.projectBeneficiary);
 
           return ProjectBeneficiaryModel(
             clientReferenceId: projectBeneficiary.clientReferenceId,
@@ -163,8 +157,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
   }) async {
     final projectBeneficiaryCompanion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(
-          sql.projectBeneficiary, projectBeneficiaryCompanion);
+      batch.insert(sql.projectBeneficiary, projectBeneficiaryCompanion);
     });
 
     await super.create(entity);

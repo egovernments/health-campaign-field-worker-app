@@ -8,7 +8,7 @@ part 'hf_referral.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class HFReferralSearchModel extends EntitySearchModel
     with HFReferralSearchModelMappable {
-  final String? id;
+  final List<String>? id;
   final String? tenantId;
   final String? name;
   final String? projectId;

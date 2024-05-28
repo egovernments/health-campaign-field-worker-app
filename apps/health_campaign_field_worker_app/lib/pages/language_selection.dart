@@ -13,7 +13,7 @@ import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class LanguageSelectionPage extends StatelessWidget {
-  const LanguageSelectionPage({Key? key}) : super(key: key);
+  const LanguageSelectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {

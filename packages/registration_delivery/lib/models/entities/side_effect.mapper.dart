@@ -21,8 +21,8 @@ class SideEffectSearchModelMapper
   @override
   final String id = 'SideEffectSearchModel';
 
-  static String? _$id(SideEffectSearchModel v) => v.id;
-  static const Field<SideEffectSearchModel, String> _f$id =
+  static List<String>? _$id(SideEffectSearchModel v) => v.id;
+  static const Field<SideEffectSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
   static List<String>? _$taskClientReferenceId(SideEffectSearchModel v) =>
       v.taskClientReferenceId;
@@ -153,6 +153,7 @@ abstract class SideEffectSearchModelCopyWith<
     $R,
     $In extends SideEffectSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get taskClientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get symptoms;
@@ -160,7 +161,7 @@ abstract class SideEffectSearchModelCopyWith<
       get clientReferenceId;
   @override
   $R call(
-      {String? id,
+      {List<String>? id,
       List<String>? taskClientReferenceId,
       String? projectId,
       int? reAttempts,
@@ -180,6 +181,12 @@ class _SideEffectSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<SideEffectSearchModel> $mapper =
       SideEffectSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id =>
+      $value.id != null
+          ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(id: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get taskClientReferenceId => $value.taskClientReferenceId != null

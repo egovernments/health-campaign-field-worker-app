@@ -21,8 +21,8 @@ class HFReferralSearchModelMapper
   @override
   final String id = 'HFReferralSearchModel';
 
-  static String? _$id(HFReferralSearchModel v) => v.id;
-  static const Field<HFReferralSearchModel, String> _f$id =
+  static List<String>? _$id(HFReferralSearchModel v) => v.id;
+  static const Field<HFReferralSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
   static String? _$tenantId(HFReferralSearchModel v) => v.tenantId;
   static const Field<HFReferralSearchModel, String> _f$tenantId =
@@ -174,11 +174,12 @@ abstract class HFReferralSearchModelCopyWith<
     $R,
     $In extends HFReferralSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
   $R call(
-      {String? id,
+      {List<String>? id,
       String? tenantId,
       String? name,
       String? projectId,
@@ -202,6 +203,12 @@ class _HFReferralSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<HFReferralSearchModel> $mapper =
       HFReferralSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id =>
+      $value.id != null
+          ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(id: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId => $value.clientReferenceId != null

@@ -2,16 +2,15 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
-
-import '../../../utils/utils.dart';
 
 class ReferralLocalRepository
     extends LocalRepository<ReferralModel, ReferralSearchModel> {
   ReferralLocalRepository(
-      super.sql, super.opLogManager,);
+    super.sql,
+    super.opLogManager,
+  );
 
   void listenToChanges({
     required ReferralSearchModel query,
@@ -21,13 +20,11 @@ class ReferralLocalRepository
       ..where(
         buildOr([
           if (query.id != null)
-            sql.referral.id.equals(
+            sql.referral.id.isIn(
               query.id!,
             ),
           if (query.projectBeneficiaryClientReferenceId != null)
-            sql
-                .referral.projectBeneficiaryClientReferenceId
-                .isIn(
+            sql.referral.projectBeneficiaryClientReferenceId.isIn(
               query.projectBeneficiaryClientReferenceId!,
             ),
         ]),
@@ -36,8 +33,7 @@ class ReferralLocalRepository
     select.watch().listen((results) {
       final data = results
           .map((e) {
-            final referral =
-                e.readTableOrNull(sql.referral);
+            final referral = e.readTableOrNull(sql.referral);
             if (referral == null) return null;
 
             return ReferralModel(
@@ -63,8 +59,7 @@ class ReferralLocalRepository
     ReferralSearchModel query, [
     String? userId,
   ]) async {
-    final selectQuery =
-        sql.select(sql.referral).join([]);
+    final selectQuery = sql.select(sql.referral).join([]);
 
     final results = await (selectQuery
           ..where(buildAnd([
@@ -73,9 +68,7 @@ class ReferralLocalRepository
                 query.clientReferenceId!,
               ),
             if (query.projectBeneficiaryClientReferenceId != null)
-              sql
-                  .referral.projectBeneficiaryClientReferenceId
-                  .isIn(
+              sql.referral.projectBeneficiaryClientReferenceId.isIn(
                 query.projectBeneficiaryClientReferenceId!,
               ),
             if (userId != null)
@@ -87,8 +80,7 @@ class ReferralLocalRepository
 
     return results
         .map((e) {
-          final referral =
-              e.readTableOrNull(sql.referral);
+          final referral = e.readTableOrNull(sql.referral);
           if (referral == null) return null;
 
           return ReferralModel(

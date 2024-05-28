@@ -1,18 +1,16 @@
-
 import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 
-import '../../../utils/utils.dart';
-
-
 class SideEffectLocalRepository
     extends LocalRepository<SideEffectModel, SideEffectSearchModel> {
-  SideEffectLocalRepository(super.sql, super.opLogManager,);
+  SideEffectLocalRepository(
+    super.sql,
+    super.opLogManager,
+  );
 
   void listenToChanges({
     required SideEffectSearchModel query,
@@ -22,7 +20,7 @@ class SideEffectLocalRepository
       ..where(
         buildOr([
           if (query.id != null)
-            sql.sideEffect.id.equals(
+            sql.sideEffect.id.isIn(
               query.id!,
             ),
         ]),

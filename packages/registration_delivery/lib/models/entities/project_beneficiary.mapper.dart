@@ -22,16 +22,16 @@ class ProjectBeneficiarySearchModelMapper
   @override
   final String id = 'ProjectBeneficiarySearchModel';
 
-  static String? _$id(ProjectBeneficiarySearchModel v) => v.id;
-  static const Field<ProjectBeneficiarySearchModel, String> _f$id =
+  static List<String>? _$id(ProjectBeneficiarySearchModel v) => v.id;
+  static const Field<ProjectBeneficiarySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
   static String? _$projectId(ProjectBeneficiarySearchModel v) => v.projectId;
   static const Field<ProjectBeneficiarySearchModel, String> _f$projectId =
       Field('projectId', _$projectId, opt: true);
-  static String? _$beneficiaryId(ProjectBeneficiarySearchModel v) =>
+  static List<String>? _$beneficiaryId(ProjectBeneficiarySearchModel v) =>
       v.beneficiaryId;
-  static const Field<ProjectBeneficiarySearchModel, String> _f$beneficiaryId =
-      Field('beneficiaryId', _$beneficiaryId, opt: true);
+  static const Field<ProjectBeneficiarySearchModel, List<String>>
+      _f$beneficiaryId = Field('beneficiaryId', _$beneficiaryId, opt: true);
   static String? _$tag(ProjectBeneficiarySearchModel v) => v.tag;
   static const Field<ProjectBeneficiarySearchModel, String> _f$tag =
       Field('tag', _$tag, opt: true);
@@ -206,15 +206,18 @@ abstract class ProjectBeneficiarySearchModelCopyWith<
     $R,
     $In extends ProjectBeneficiarySearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get beneficiaryId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get beneficiaryClientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
   $R call(
-      {String? id,
+      {List<String>? id,
       String? projectId,
-      String? beneficiaryId,
+      List<String>? beneficiaryId,
       String? tag,
       List<String>? beneficiaryClientReferenceId,
       DateTime? beneficiaryRegistrationDateLte,
@@ -240,6 +243,20 @@ class _ProjectBeneficiarySearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ProjectBeneficiarySearchModel> $mapper =
       ProjectBeneficiarySearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id =>
+      $value.id != null
+          ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(id: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get beneficiaryId => $value.beneficiaryId != null
+          ? ListCopyWith(
+              $value.beneficiaryId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(beneficiaryId: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get beneficiaryClientReferenceId =>
