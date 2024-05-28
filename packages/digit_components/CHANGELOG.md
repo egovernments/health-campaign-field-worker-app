@@ -91,3 +91,6 @@
 ## 0.0.3+13
 
 * Fixed empty string issue in searchable_dropdown_field
+
+## 0.0.3+14
+* Reactive Drop down fix
