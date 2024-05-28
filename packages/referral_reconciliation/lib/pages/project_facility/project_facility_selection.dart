@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
@@ -45,7 +46,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
                               form.control(_facilityName).value as String?;
                           if (query == null || query.isEmpty) return true;
                           final localizedFacilityIdWithPrefix = localizations
-                              .translate('PJ_FAC_${element.id}')
+                              .translate('$projectFacilityPrefix${element.id}')
                               .toLowerCase();
                           final lowerCaseQuery = query.toLowerCase();
                           return localizedFacilityIdWithPrefix
@@ -149,7 +150,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
                                   ),
                                   child: Text(projectFacility != null
                                       ? localizations.translate(
-                                          'PJ_FAC_${projectFacility.id}',
+                                          '$projectFacilityPrefix${projectFacility.id}',
                                         )
                                       : ''),
                                 ),
