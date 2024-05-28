@@ -203,7 +203,8 @@ DeliveryDoseCriteria? fetchProductVariant(
             element,
             {
               'age': individualAgeInMonths,
-              'gender': individualModel.gender?.index,
+              if (individualModel.gender != null)
+                'gender': individualModel.gender?.index,
             },
           );
           final error = expression.parse;
