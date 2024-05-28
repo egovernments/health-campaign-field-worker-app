@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: ^0.0.1
+  digit_components: ^0.0.3+13
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1

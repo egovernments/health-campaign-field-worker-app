@@ -5,6 +5,12 @@ The `attendance_management` package is a comprehensive solution for managing att
 ## Features
 
 - **Attendance Pages**: The package includes several pages like `mark_attendance.dart`, `manage_attendance.dart`, and `session_select.dart` that provide the user interface for managing attendance.
+
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/dc86902d-de04-4f36-b972-825a301dd782" width="280" height="480">
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/9cacba51-f6f4-4331-9a0c-e7cdfa9883d0" width="280" height="480">
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/3e131131-9edf-4118-88ef-080d112d2c42" width="280" height="480">
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/27f31af0-c6fc-46f3-8f5a-2aa9a9b5e300" width="280" height="480">
+
 - **Attendance Blocs**: It provides various BLoCs for state management using the BLoC pattern. These BLoCs handle the business logic for the attendance management.
 - **Attendance Models**: It defines various data models like `AttendanceRegisterModel`, `AttendanceLogModel`, etc. used in the attendance management process.
 - **Attendance Repositories**: The package provides abstract classes for data repositories, `AttendanceRepository`, `RemoteAttendanceRepository`, and `LocalAttendanceRepository`, which can be extended to create repositories for different attendance models. It also includes error handling with `InvalidApiResponseException`.

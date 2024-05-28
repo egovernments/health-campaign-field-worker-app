@@ -6,7 +6,6 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../blocs/registraton_delivery_listener.dart';
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
 import '../models/entities/reg_form_validations_type.dart';
@@ -271,8 +270,6 @@ class RegistrationDeliverySingleton {
 
   RegistrationDeliverySingleton._internal();
 
-  RegistrationDeliveryListener? _registrationDeliveryListener;
-
   String? _tenantId;
   String? _loggedInUserUuid;
 
@@ -299,11 +296,6 @@ class RegistrationDeliverySingleton {
   void setPersistenceConfiguration(
       {required PersistenceConfiguration persistenceConfiguration}) {
     _persistenceConfiguration = persistenceConfiguration;
-  }
-
-  void setRegistrationDeliveryListener(
-      RegistrationDeliveryListener registrationDeliveryListener) {
-    _registrationDeliveryListener = registrationDeliveryListener;
   }
 
   void setInitialData(
@@ -359,12 +351,6 @@ class RegistrationDeliverySingleton {
   List<String>? get deliveryCommentOptions => _deliveryCommentOptions;
   List<String>? get symptomsTypes => _symptomsTypes;
   List<String>? get referralReasons => _referralReasons;
-  RegistrationDeliveryListener? get registrationDeliveryListener =>
-      _registrationDeliveryListener;
-
-  void navigateToBoundaryPage() {
-    _registrationDeliveryListener?.navigateToBoundaryPage();
-  }
 }
 
 bool allDosesDelivered(

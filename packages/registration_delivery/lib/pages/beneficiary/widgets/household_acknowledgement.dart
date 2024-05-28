@@ -37,10 +37,7 @@ class _HouseholdAcknowledgementPageState
                 final parent = context.router.parent() as StackRouter;
                 // Pop twice to navigate back to the previous screen
                 parent.popUntilRoot();
-                parent.push(SearchBeneficiaryRoute(
-                  registrationDeliveryListener: RegistrationDeliverySingleton()
-                      .registrationDeliveryListener!,
-                ));
+                parent.push(const RegistrationDeliveryWrapperRoute());
               },
               secondaryAction: () {
                 final wrapper = context

@@ -483,11 +483,10 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: e8d774ff945bc6e5c0453e7100e03e6cd1133e4a8585549abe1b4c7a772d5bea
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3+12"
+      path: "../../packages/digit_components"
+      relative: true
+    source: path
+    version: "0.0.1+8"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -1509,11 +1508,18 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: "905297b1e2d047ff8168f2887cfbcff96743afc86960f52afaf7840e76bd3294"
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
+    version: "0.0.0-dev.1"
+  remove_emoji_input_formatter:
+    dependency: transitive
+    description:
+      name: remove_emoji_input_formatter
+      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.1"
+    version: "0.0.1+1"
   rxdart:
     dependency: transitive
     description:

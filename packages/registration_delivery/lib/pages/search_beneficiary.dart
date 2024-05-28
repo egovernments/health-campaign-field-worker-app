@@ -6,7 +6,6 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:registration_delivery/blocs/registraton_delivery_listener.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -18,11 +17,9 @@ import '../widgets/localized.dart';
 
 @RoutePage()
 class SearchBeneficiaryPage extends LocalizedStatefulWidget {
-  final RegistrationDeliveryListener registrationDeliveryListener;
   const SearchBeneficiaryPage({
     super.key,
     super.appLocalizations,
-    required this.registrationDeliveryListener,
   });
 
   @override
