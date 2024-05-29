@@ -72,7 +72,8 @@ class _IndividualDetailsPageState
                 if (value.navigateToRoot) {
                   (router.parent() as StackRouter).maybePop();
                 } else {
-                  (router.parent() as StackRouter).maybePop();
+                  router.popUntil(
+                      (route) => route.settings.name == 'search-beneficiary');
                   context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsEvent.searchByHousehold(
                           householdModel: value.householdModel,

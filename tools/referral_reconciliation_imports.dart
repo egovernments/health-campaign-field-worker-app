@@ -22,17 +22,12 @@ void main() {
   var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
-  var blocDirectoryPath = '$appRoot/blocs/referral_reconciliation';
-  var blocFilePath = '$blocDirectoryPath/hcm_referral_reconciliation.dart';
   var networkManagerProviderWrapperFilePath =
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
   var constantsFilePath = '$appRoot/utils/constants.dart';
   var utilsFilePath = '$appRoot/utils/utils.dart';
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
-
-  _createSkeletonBlocFile(
-      blocDirectoryPath: blocDirectoryPath, blocFilePath: blocFilePath);
 
   _addRepoToNetworkManagerProviderWrapper(
       networkManagerProviderWrapperFilePath:
@@ -46,11 +41,6 @@ void main() {
   // Run dart format on the localization_delegates.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
       .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the blocFilePath file
-  Process.run('dart', ['format', blocFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
 
@@ -92,36 +82,41 @@ void _addReferralReconMapperToUtilsFile({required String utilsFilePath}) {
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent.contains(
-      referralReconciliationInitializationStatement.replaceAll(
-          RegExp(r'\s'), ''))) {
-    utilsFileContent =
-        '$referralReconciliationInitializationStatement\n$utilsFileContent';
-    print('The import statement was added.');
+      referralReconciliationImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
+    var libraryIndex = utilsFileContent.indexOf('library app_utils;');
+    if (libraryIndex != -1) {
+      var endOfLibrary = libraryIndex +
+          utilsFileContent.substring(libraryIndex).indexOf(';') +
+          1;
+      utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
+          '\n' +
+          referralReconciliationImportStatement[0] +
+          utilsFileContent.substring(endOfLibrary + 1);
+      print('The import statement was added.');
+    }
   } else {
     print('The import statement already exists.');
   }
 
   if (!utilsFileContent
       .contains(referralReconciliationInitializationStatement)) {
-    // Add the referralReconciliation related initialization statement to the file
+    // Add the inventory related initialization statement to the file
     var initializeAllMappersIndex =
-        utilsFileContent.indexOf('initializeAllMappers() {');
+        utilsFileContent.indexOf('initializeAllMappers() async {');
     if (initializeAllMappersIndex == -1) {
       print(
-          'Error: Could not find a place to insert the referralReconciliation initialization statement.');
+          'Error: Could not find a place to insert the inventory initialization statement.');
       return;
     }
     var endOfInitializeAllMappers = initializeAllMappersIndex +
-        utilsFileContent.substring(initializeAllMappersIndex).indexOf('}') +
+        utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
         1;
     utilsFileContent =
         utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
-            '  ' +
+            '\n    ' +
             referralReconciliationInitializationStatement +
-            '\n' +
             utilsFileContent.substring(endOfInitializeAllMappers - 1);
-    print(
-        'Referral Reconciliation initialization statement added to utils.dart');
+    print('Inventory initialization statement added to utils.dart');
   }
 
   // Write the updated content back to the utils.dart file
@@ -325,30 +320,6 @@ void _addRepoToNetworkManagerProviderWrapper(
   // Write the updated content back to the file
   networkManagerProviderWrapperFile
       .writeAsStringSync(networkManagerProviderWrapperFileContent);
-}
-
-void _createSkeletonBlocFile(
-    {required String blocFilePath, required String blocDirectoryPath}) {
-  // Check if the Bloc file already exists
-  // If not, create the directory and write the skeleton Bloc class to the file
-  var blocFile = File(blocFilePath);
-  if (!blocFile.existsSync()) {
-    Directory(blocDirectoryPath).createSync(recursive: true);
-
-    blocFile.writeAsStringSync('''
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-
-class HcmReferralReconBloc extends ReferralReconListener {
-  @override
-  void callSyncMethod() {
-    // TODO: implement callSyncMethod
-  }
-}
-''');
-    print('File $blocFilePath created.');
-  } else {
-    print('File $blocFilePath already exists. Not modifying the content.');
-  }
 }
 
 void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {

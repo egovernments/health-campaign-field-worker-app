@@ -5,12 +5,16 @@ This enables the user to manage the stocks of the health campaign. The user can 
 ## Features
 
 - Manage Stocks: Receipt, Issued, Returned, Damaged and Loss of stocks and send the data to parent application.
-  ![manage_stocks](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/884566db-51c1-4712-b09c-cda508adb401)
-  ![warehouse_details](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/48b272b5-45f5-401c-b775-2fa5ded07602)
-  ![record_stock](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/9202691e-550c-4a6c-9c3f-56c95a2f3479)
+
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/884566db-51c1-4712-b09c-cda508adb401" width="280" height="480">
+
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/48b272b5-45f5-401c-b775-2fa5ded07602" width="280" height="480">
+
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/9202691e-550c-4a6c-9c3f-56c95a2f3479" width="280" height="480">
 
 - Stock Reconciliation: Reconcile the stock data with the parent application.
-  ![stock_recon](https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/f2df8d87-2000-44ac-a90b-b52d6689b3aa)
+
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/f2df8d87-2000-44ac-a90b-b52d6689b3aa" width="280" height="480">
 
 - View Reports: View the reports of the stocks.
 

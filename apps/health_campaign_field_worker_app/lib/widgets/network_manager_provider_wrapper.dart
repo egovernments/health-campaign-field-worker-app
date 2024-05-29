@@ -16,6 +16,7 @@ import 'package:referral_reconciliation/data/repositories/local/hf_referral.dart
 import 'package:referral_reconciliation/data/repositories/oplog/oplog.dart';
 import 'package:referral_reconciliation/data/repositories/remote/hf_referral.dart';
 import 'package:referral_reconciliation/models/entities/hf_referral.dart';
+import 'package:registration_delivery/data/repositories/local/registration_delivery_address.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -277,6 +278,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           AttendanceLogOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<RegistrationDeliveryAddressRepo>(
+        create: (_) => RegistrationDeliveryAddressRepo(
+          sql,
+          AddressOpLogManager(isar),
+        ),
+      )
     ];
   }
 
