@@ -29,7 +29,6 @@ import 'package:referral_reconciliation/pages/project_facility/project_facility_
     as _i7;
 import 'package:referral_reconciliation/pages/search_referral_reconciliations.dart'
     as _i8;
-import 'package:referral_reconciliation/utils/utils.dart' as _i14;
 
 abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
   @override
@@ -122,26 +121,13 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
       );
     },
     SearchReferralReconciliationsRoute.name: (routeData) {
-      final args = routeData.argsAs<SearchReferralReconciliationsRouteArgs>();
+      final args = routeData.argsAs<SearchReferralReconciliationsRouteArgs>(
+          orElse: () => const SearchReferralReconciliationsRouteArgs());
       return _i9.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i8.SearchReferralReconciliationsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          projectId: args.projectId,
-          cycles: args.cycles,
-          validIndividualAgeForCampaign: args.validIndividualAgeForCampaign,
-          referralReasons: args.referralReasons,
-          appVersion: args.appVersion,
-          userName: args.userName,
-          boundaryName: args.boundaryName,
-          boundaryCode: args.boundaryCode,
-          roleCode: args.roleCode,
-          userUUid: args.userUUid,
-          genders: args.genders,
-          tenantId: args.tenantId,
-          checklistTypes: args.checklistTypes,
-          projectName: args.projectName,
         ),
       );
     },
@@ -488,40 +474,12 @@ class SearchReferralReconciliationsRoute
   SearchReferralReconciliationsRoute({
     _i10.Key? key,
     _i12.ReferralReconLocalization? appLocalizations,
-    required String projectId,
-    required List<String> cycles,
-    required _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign,
-    required List<String> referralReasons,
-    required String appVersion,
-    required String userName,
-    required String boundaryName,
-    required String boundaryCode,
-    required String roleCode,
-    required String userUUid,
-    required List<String> genders,
-    required String tenantId,
-    required List<String> checklistTypes,
-    required String projectName,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           SearchReferralReconciliationsRoute.name,
           args: SearchReferralReconciliationsRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            projectId: projectId,
-            cycles: cycles,
-            validIndividualAgeForCampaign: validIndividualAgeForCampaign,
-            referralReasons: referralReasons,
-            appVersion: appVersion,
-            userName: userName,
-            boundaryName: boundaryName,
-            boundaryCode: boundaryCode,
-            roleCode: roleCode,
-            userUUid: userUUid,
-            genders: genders,
-            tenantId: tenantId,
-            checklistTypes: checklistTypes,
-            projectName: projectName,
           ),
           initialChildren: children,
         );
@@ -536,56 +494,14 @@ class SearchReferralReconciliationsRouteArgs {
   const SearchReferralReconciliationsRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.projectId,
-    required this.cycles,
-    required this.validIndividualAgeForCampaign,
-    required this.referralReasons,
-    required this.appVersion,
-    required this.userName,
-    required this.boundaryName,
-    required this.boundaryCode,
-    required this.roleCode,
-    required this.userUUid,
-    required this.genders,
-    required this.tenantId,
-    required this.checklistTypes,
-    required this.projectName,
   });
 
   final _i10.Key? key;
 
   final _i12.ReferralReconLocalization? appLocalizations;
 
-  final String projectId;
-
-  final List<String> cycles;
-
-  final _i14.ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
-
-  final List<String> referralReasons;
-
-  final String appVersion;
-
-  final String userName;
-
-  final String boundaryName;
-
-  final String boundaryCode;
-
-  final String roleCode;
-
-  final String userUUid;
-
-  final List<String> genders;
-
-  final String tenantId;
-
-  final List<String> checklistTypes;
-
-  final String projectName;
-
   @override
   String toString() {
-    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations, projectId: $projectId, cycles: $cycles, validIndividualAgeForCampaign: $validIndividualAgeForCampaign, referralReasons: $referralReasons, appVersion: $appVersion, userName: $userName, boundaryName: $boundaryName, boundaryCode: $boundaryCode, roleCode: $roleCode, userUUid: $userUUid, genders: $genders, tenantId: $tenantId, checklistTypes: $checklistTypes, projectName: $projectName}';
+    return 'SearchReferralReconciliationsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }

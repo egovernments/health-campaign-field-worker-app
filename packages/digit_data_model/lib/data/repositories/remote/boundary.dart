@@ -27,9 +27,9 @@ class BoundaryRemoteRepository
         return await dio.post(
           searchPath,
           queryParameters: {
-            'offset': offSet ?? 0,
-            'limit': limit ?? 100,
             'tenantId': DigitDataModelSingleton().tenantId,
+            'includeChildren': true,
+            'hierarchyType': DigitDataModelSingleton().hierarchyType,
             ...query.toMap(),
           },
           data: {},
@@ -85,7 +85,10 @@ class BoundaryRemoteRepository
     List<BoundaryModel> boundaryModelList = _castToBoundaryModel(
       List.castFrom(boundaryList),
     );
-    boundaryModelList = _flattenBoundaryMap(boundaryModelList);
+    boundaryModelList = _flattenBoundaryMap(
+      boundaryModelList,
+      i: 1,
+    );
 
     return boundaryModelList;
   }
@@ -96,18 +99,23 @@ class BoundaryRemoteRepository
   List<BoundaryModel> _flattenBoundaryMap(
     List<BoundaryModel> boundaryList, {
     BoundaryModel? parent,
+    required int i,
   }) {
     List<BoundaryModel> boundaryModelList = [];
     for (final e in boundaryList) {
       final materializedPath = parent?.materializedPath?.split('.') ?? [];
       final boundary = e.copyWith(
         materializedPath: [...materializedPath, e.code ?? ''].join('.'),
+        boundaryNum: [...materializedPath, e.code ?? ''].length,
+        label: e.boundaryType,
+        name: e.code?.split('_').lastOrNull ?? e.code,
       );
 
       boundaryModelList.add(boundary.copyWith(children: []));
       boundaryModelList.addAll(_flattenBoundaryMap(
         boundary.children,
         parent: boundary,
+        i: i,
       ));
     }
 

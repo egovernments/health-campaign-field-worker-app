@@ -1,10 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
+import 'package:inventory_management/utils/constants.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
@@ -42,7 +43,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                   final query = form.control(_facilityName).value as String?;
                   if (query == null || query.isEmpty) return true;
                   final localizedFacilityIdWithPrefix = localizations
-                      .translate('FAC_${element.id}')
+                      .translate('$facilityPrefix${element.id}')
                       .toLowerCase();
                   final lowerCaseQuery = query.toLowerCase();
                   return localizedFacilityIdWithPrefix.contains(lowerCaseQuery);
@@ -132,8 +133,8 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
                                   child: Padding(
                                     padding: const EdgeInsets.all(kPadding * 2),
                                     child: Text(
-                                      localizations
-                                          .translate('FAC_${facility.id}'),
+                                      localizations.translate(
+                                          '$facilityPrefix${facility.id}'),
                                     ),
                                   ),
                                 ),

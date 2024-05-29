@@ -39,21 +39,25 @@ class HouseholdMemberSearchModelMapper
       _f$householdClientReferenceIds = Field(
           'householdClientReferenceIds', _$householdClientReferenceIds,
           opt: true);
-  static String? _$householdId(HouseholdMemberSearchModel v) => v.householdId;
-  static const Field<HouseholdMemberSearchModel, String> _f$householdId =
+  static List<String>? _$householdId(HouseholdMemberSearchModel v) =>
+      v.householdId;
+  static const Field<HouseholdMemberSearchModel, List<String>> _f$householdId =
       Field('householdId', _$householdId, opt: true);
-  static String? _$householdClientReferenceId(HouseholdMemberSearchModel v) =>
+  static List<String>? _$householdClientReferenceId(
+          HouseholdMemberSearchModel v) =>
       v.householdClientReferenceId;
-  static const Field<HouseholdMemberSearchModel, String>
+  static const Field<HouseholdMemberSearchModel, List<String>>
       _f$householdClientReferenceId = Field(
           'householdClientReferenceId', _$householdClientReferenceId,
           opt: true);
-  static String? _$individualId(HouseholdMemberSearchModel v) => v.individualId;
-  static const Field<HouseholdMemberSearchModel, String> _f$individualId =
+  static List<String>? _$individualId(HouseholdMemberSearchModel v) =>
+      v.individualId;
+  static const Field<HouseholdMemberSearchModel, List<String>> _f$individualId =
       Field('individualId', _$individualId, opt: true);
-  static String? _$individualClientReferenceId(HouseholdMemberSearchModel v) =>
+  static List<String>? _$individualClientReferenceId(
+          HouseholdMemberSearchModel v) =>
       v.individualClientReferenceId;
-  static const Field<HouseholdMemberSearchModel, String>
+  static const Field<HouseholdMemberSearchModel, List<String>>
       _f$individualClientReferenceId = Field(
           'individualClientReferenceId', _$individualClientReferenceId,
           opt: true);
@@ -189,6 +193,13 @@ abstract class HouseholdMemberSearchModelCopyWith<
       get individualClientReferenceIds;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get householdClientReferenceIds;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get householdId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get householdClientReferenceId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get individualId;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get individualClientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
@@ -196,10 +207,10 @@ abstract class HouseholdMemberSearchModelCopyWith<
       {String? id,
       List<String>? individualClientReferenceIds,
       List<String>? householdClientReferenceIds,
-      String? householdId,
-      String? householdClientReferenceId,
-      String? individualId,
-      String? individualClientReferenceId,
+      List<String>? householdId,
+      List<String>? householdClientReferenceId,
+      List<String>? individualId,
+      List<String>? individualClientReferenceId,
       bool? isHeadOfHousehold,
       List<String>? clientReferenceId,
       String? tenantId,
@@ -235,6 +246,40 @@ class _HouseholdMemberSearchModelCopyWithImpl<$R, $Out>
                   $value.householdClientReferenceIds!,
                   (v, t) => ObjectCopyWith(v, $identity, t),
                   (v) => call(householdClientReferenceIds: v))
+              : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get householdId => $value.householdId != null
+          ? ListCopyWith(
+              $value.householdId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(householdId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get householdClientReferenceId =>
+          $value.householdClientReferenceId != null
+              ? ListCopyWith(
+                  $value.householdClientReferenceId!,
+                  (v, t) => ObjectCopyWith(v, $identity, t),
+                  (v) => call(householdClientReferenceId: v))
+              : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get individualId => $value.individualId != null
+          ? ListCopyWith(
+              $value.individualId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(individualId: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get individualClientReferenceId =>
+          $value.individualClientReferenceId != null
+              ? ListCopyWith(
+                  $value.individualClientReferenceId!,
+                  (v, t) => ObjectCopyWith(v, $identity, t),
+                  (v) => call(individualClientReferenceId: v))
               : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?

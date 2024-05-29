@@ -17,6 +17,10 @@ class KeyValue {
   KeyValue(this.label, this.key);
 }
 
+const String age = "age";
+const String height = "height";
+const String gender = "gender";
+
 class StatusKeys {
   bool isNotEligible;
   bool isBeneficiaryRefused;

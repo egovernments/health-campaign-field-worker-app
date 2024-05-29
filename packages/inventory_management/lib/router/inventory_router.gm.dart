@@ -69,14 +69,11 @@ abstract class $InventoryRoute extends _i10.AutoRouterModule {
       );
     },
     InventoryReportSelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<InventoryReportSelectionRouteArgs>();
+      final args = routeData.argsAs<InventoryReportSelectionRouteArgs>(
+          orElse: () => const InventoryReportSelectionRouteArgs());
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.InventoryReportSelectionPage(
-          projectId: args.projectId,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          loggedInUserUuid: args.loggedInUserUuid,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -116,14 +113,11 @@ abstract class $InventoryRoute extends _i10.AutoRouterModule {
       );
     },
     StockReconciliationRoute.name: (routeData) {
-      final args = routeData.argsAs<StockReconciliationRouteArgs>();
+      final args = routeData.argsAs<StockReconciliationRouteArgs>(
+          orElse: () => const StockReconciliationRouteArgs());
       return _i10.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i8.StockReconciliationPage(
-          projectId: args.projectId,
-          isDistributor: args.isDistributor,
-          isWareHouseMgr: args.isWareHouseMgr,
-          loggedInUserUuid: args.loggedInUserUuid,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -290,20 +284,12 @@ class InventoryReportDetailsRouteArgs {
 class InventoryReportSelectionRoute
     extends _i10.PageRouteInfo<InventoryReportSelectionRouteArgs> {
   InventoryReportSelectionRoute({
-    required String projectId,
-    required bool? isDistributor,
-    required bool? isWareHouseMgr,
-    required String? loggedInUserUuid,
     _i11.Key? key,
     _i12.InventoryLocalization? appLocalizations,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           InventoryReportSelectionRoute.name,
           args: InventoryReportSelectionRouteArgs(
-            projectId: projectId,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            loggedInUserUuid: loggedInUserUuid,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -318,21 +304,9 @@ class InventoryReportSelectionRoute
 
 class InventoryReportSelectionRouteArgs {
   const InventoryReportSelectionRouteArgs({
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
     this.key,
     this.appLocalizations,
   });
-
-  final String projectId;
-
-  final bool? isDistributor;
-
-  final bool? isWareHouseMgr;
-
-  final String? loggedInUserUuid;
 
   final _i11.Key? key;
 
@@ -340,7 +314,7 @@ class InventoryReportSelectionRouteArgs {
 
   @override
   String toString() {
-    return 'InventoryReportSelectionRouteArgs{projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
+    return 'InventoryReportSelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -464,20 +438,12 @@ class StockDetailsRouteArgs {
 class StockReconciliationRoute
     extends _i10.PageRouteInfo<StockReconciliationRouteArgs> {
   StockReconciliationRoute({
-    required String projectId,
-    required bool? isDistributor,
-    required bool? isWareHouseMgr,
-    required String? loggedInUserUuid,
     _i11.Key? key,
     _i12.InventoryLocalization? appLocalizations,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           StockReconciliationRoute.name,
           args: StockReconciliationRouteArgs(
-            projectId: projectId,
-            isDistributor: isDistributor,
-            isWareHouseMgr: isWareHouseMgr,
-            loggedInUserUuid: loggedInUserUuid,
             key: key,
             appLocalizations: appLocalizations,
           ),
@@ -492,21 +458,9 @@ class StockReconciliationRoute
 
 class StockReconciliationRouteArgs {
   const StockReconciliationRouteArgs({
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
     this.key,
     this.appLocalizations,
   });
-
-  final String projectId;
-
-  final bool? isDistributor;
-
-  final bool? isWareHouseMgr;
-
-  final String? loggedInUserUuid;
 
   final _i11.Key? key;
 
@@ -514,7 +468,7 @@ class StockReconciliationRouteArgs {
 
   @override
   String toString() {
-    return 'StockReconciliationRouteArgs{projectId: $projectId, isDistributor: $isDistributor, isWareHouseMgr: $isWareHouseMgr, loggedInUserUuid: $loggedInUserUuid, key: $key, appLocalizations: $appLocalizations}';
+    return 'StockReconciliationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

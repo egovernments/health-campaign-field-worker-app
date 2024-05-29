@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:digit_data_model/data_model.dart';
 
 import '../../models/entities/household.dart';
@@ -32,8 +33,8 @@ class TagSearchBloc extends SearchHouseholdsBloc {
     List<ProjectBeneficiaryModel> beneficiaries =
         await projectBeneficiary.search(
       ProjectBeneficiarySearchModel(
-        tag: event.tag,
-        projectId: event.projectId,
+        tag: [event.tag],
+        projectId: [event.projectId],
       ),
     );
 
@@ -79,18 +80,20 @@ class TagSearchBloc extends SearchHouseholdsBloc {
 
       final members = await householdMember.search(
         HouseholdMemberSearchModel(
-          householdClientReferenceId: member.householdClientReferenceId,
+          householdClientReferenceId: [
+            member.householdClientReferenceId.toString()
+          ],
         ),
       );
-      final headMember = members.where((element) => element.isHeadOfHousehold).first;
+      final headMember =
+          members.where((element) => element.isHeadOfHousehold).first;
 
       final individualList = await individual.search(
-              IndividualSearchModel(
-                clientReferenceId: members
-                    .map((e) => e.individualClientReferenceId!)
-                    .toList(),
-              ),
-            );
+        IndividualSearchModel(
+          clientReferenceId:
+              members.map((e) => e.individualClientReferenceId!).toList(),
+        ),
+      );
 
       final householdList = await household.search(HouseholdSearchModel(
         clientReferenceId: [members.first.householdClientReferenceId!],
@@ -112,8 +115,11 @@ class TagSearchBloc extends SearchHouseholdsBloc {
 
       containers.add(
         HouseholdMemberWrapper(
-          household: householdList.firstWhere((element) => element.clientReferenceId == member.householdClientReferenceId) ,
-          headOfHousehold: individualList.firstWhere((element) => headMember.individualClientReferenceId == element.clientReferenceId),
+          household: householdList.firstWhere((element) =>
+              element.clientReferenceId == member.householdClientReferenceId),
+          headOfHousehold: individualList.firstWhere((element) =>
+              headMember.individualClientReferenceId ==
+              element.clientReferenceId),
           members: individualList,
           projectBeneficiaries: beneficiaries,
           tasks: tasks.isEmpty ? null : tasks,

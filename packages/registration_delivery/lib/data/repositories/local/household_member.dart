@@ -1,72 +1,57 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
-import '../../../utils/utils.dart';
-
 class HouseholdMemberLocalRepository
     extends LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel> {
   HouseholdMemberLocalRepository(
-      super.sql, super.opLogManager,);
+    super.sql,
+    super.opLogManager,
+  );
 
   @override
   FutureOr<List<HouseholdMemberModel>> search(
     HouseholdMemberSearchModel query, [
     String? userId,
   ]) async {
-    final selectQuery =
-        sql.select(sql.householdMember).join([]);
+    final selectQuery = sql.select(sql.householdMember).join([]);
     final results = await (selectQuery
           ..where(
             buildAnd(
               [
                 if (query.householdClientReferenceIds != null)
-                  sql
-                      .householdMember.householdClientReferenceId
-                      .isIn(
+                  sql.householdMember.householdClientReferenceId.isIn(
                     query.householdClientReferenceIds!,
                   ),
                 if (query.individualClientReferenceIds != null)
-                  sql
-                      .householdMember.individualClientReferenceId
-                      .isIn(
+                  sql.householdMember.individualClientReferenceId.isIn(
                     query.individualClientReferenceIds!,
                   ),
                 if (query.householdClientReferenceId != null)
-                  sql
-                      .householdMember.householdClientReferenceId
-                      .equals(
+                  sql.householdMember.householdClientReferenceId.isIn(
                     query.householdClientReferenceId!,
                   ),
                 if (query.individualClientReferenceId != null)
-                  sql
-                      .householdMember.individualClientReferenceId
-                      .equals(
+                  sql.householdMember.individualClientReferenceId.isIn(
                     query.individualClientReferenceId!,
                   ),
                 if (query.householdId != null)
-                  sql.householdMember.householdId
-                      .equals(
+                  sql.householdMember.householdId.isIn(
                     query.householdId!,
                   ),
                 if (query.individualId != null)
-                  sql.householdMember.individualId
-                      .equals(
+                  sql.householdMember.individualId.isIn(
                     query.individualId!,
                   ),
                 if (query.isHeadOfHousehold != null)
-                  sql
-                      .householdMember.isHeadOfHousehold
-                      .equals(
+                  sql.householdMember.isHeadOfHousehold.equals(
                     query.isHeadOfHousehold!,
                   ),
                 if (userId != null)
-                  sql.householdMember.auditCreatedBy
-                      .equals(
+                  sql.householdMember.auditCreatedBy.equals(
                     userId,
                   ),
               ],
@@ -76,8 +61,7 @@ class HouseholdMemberLocalRepository
 
     return results
         .map((e) {
-          final householdMember =
-              e.readTable(sql.householdMember);
+          final householdMember = e.readTable(sql.householdMember);
 
           return HouseholdMemberModel(
             id: householdMember.id,
@@ -124,8 +108,7 @@ class HouseholdMemberLocalRepository
   }) async {
     final householdMemberCompanion = entity.companion;
     await sql.batch((batch) {
-      batch.insert(sql.householdMember,
-          householdMemberCompanion);
+      batch.insert(sql.householdMember, householdMemberCompanion);
     });
 
     await super.create(entity);

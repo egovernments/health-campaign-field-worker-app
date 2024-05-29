@@ -21,8 +21,8 @@ class HouseholdSearchModelMapper
   @override
   final String id = 'HouseholdSearchModel';
 
-  static String? _$id(HouseholdSearchModel v) => v.id;
-  static const Field<HouseholdSearchModel, String> _f$id =
+  static List<String>? _$id(HouseholdSearchModel v) => v.id;
+  static const Field<HouseholdSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
   static int? _$memberCount(HouseholdSearchModel v) => v.memberCount;
   static const Field<HouseholdSearchModel, int> _f$memberCount =
@@ -156,11 +156,12 @@ abstract class HouseholdSearchModelCopyWith<
     $R,
     $In extends HouseholdSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
   $R call(
-      {String? id,
+      {List<String>? id,
       int? memberCount,
       double? latitude,
       double? longitude,
@@ -181,6 +182,12 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<HouseholdSearchModel> $mapper =
       HouseholdSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id =>
+      $value.id != null
+          ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(id: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId => $value.clientReferenceId != null

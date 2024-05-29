@@ -65,13 +65,13 @@ class BoundaryLocalRepository
     } else {
       (selectQuery
         ..where(buildAnd([
-          if (query.code != null)
-            sql.boundary.materializedPath.like('${query.code}%'),
+          if (query.codes != null)
+            sql.boundary.materializedPath.like('%${query.codes}%'),
           sql.boundary.materializedPath.isNotNull(),
           if (query.boundaryType != null && query.boundaryType!.isNotEmpty)
             sql.boundary.label.equals(query.boundaryType!),
           if (query.boundaryNum != null)
-            sql.boundary.boundaryNum.equals(query.boundaryNum!),
+            sql.boundary.boundaryNum.equals(query.boundaryNum!+1),
           sql.boundary.materializedPath.isNotIn(['']),
           sql.boundary.code.isNotNull(),
           sql.boundary.code.isNotIn(['']),

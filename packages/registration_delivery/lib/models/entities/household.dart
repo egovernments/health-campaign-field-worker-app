@@ -8,7 +8,7 @@ part 'household.mapper.dart';
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class HouseholdSearchModel extends EntitySearchModel
     with HouseholdSearchModelMappable {
-  final String? id;
+  final List<String>? id;
   final int? memberCount;
   final double? latitude;
   final double? longitude;

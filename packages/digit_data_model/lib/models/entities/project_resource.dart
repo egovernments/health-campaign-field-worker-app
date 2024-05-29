@@ -1,26 +1,24 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
-
-import '../../data/local_store/sql_store/sql_store.dart';
+import 'package:drift/drift.dart';
 
 part 'project_resource.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectResourceSearchModel extends EntitySearchModel with ProjectResourceSearchModelMappable {
+class ProjectResourceSearchModel extends EntitySearchModel
+    with ProjectResourceSearchModelMappable {
   final List<String>? id;
-  final String? projectId;
+  final List<String>? projectId;
   final String? tenantId;
-  
+
   ProjectResourceSearchModel({
     this.id,
     this.projectId,
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   ProjectResourceSearchModel.ignoreDeleted({
@@ -28,12 +26,12 @@ class ProjectResourceSearchModel extends EntitySearchModel with ProjectResourceS
     this.projectId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectResourceModel extends EntityModel with ProjectResourceModelMappable {
-
+class ProjectResourceModel extends EntityModel
+    with ProjectResourceModelMappable {
   static const schemaName = 'ProjectResource';
 
   final String? id;
@@ -52,9 +50,10 @@ class ProjectResourceModel extends EntityModel with ProjectResourceModelMappable
     this.tenantId,
     this.rowVersion,
     required this.resource,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   ProjectResourceCompanion get companion {
     return ProjectResourceCompanion(
@@ -79,11 +78,11 @@ class ProjectResourceModel extends EntityModel with ProjectResourceModelMappable
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ProjectResourceAdditionalFields extends AdditionalFields with ProjectResourceAdditionalFieldsMappable {
+class ProjectResourceAdditionalFields extends AdditionalFields
+    with ProjectResourceAdditionalFieldsMappable {
   ProjectResourceAdditionalFields({
     super.schema = 'ProjectResource',
     required super.version,
     super.fields,
   });
 }
-

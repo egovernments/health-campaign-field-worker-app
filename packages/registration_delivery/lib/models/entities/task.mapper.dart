@@ -20,15 +20,15 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
   @override
   final String id = 'TaskSearchModel';
 
-  static String? _$id(TaskSearchModel v) => v.id;
-  static const Field<TaskSearchModel, String> _f$id =
+  static List<String>? _$id(TaskSearchModel v) => v.id;
+  static const Field<TaskSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
   static String? _$projectId(TaskSearchModel v) => v.projectId;
   static const Field<TaskSearchModel, String> _f$projectId =
       Field('projectId', _$projectId, opt: true);
-  static String? _$projectBeneficiaryId(TaskSearchModel v) =>
+  static List<String>? _$projectBeneficiaryId(TaskSearchModel v) =>
       v.projectBeneficiaryId;
-  static const Field<TaskSearchModel, String> _f$projectBeneficiaryId =
+  static const Field<TaskSearchModel, List<String>> _f$projectBeneficiaryId =
       Field('projectBeneficiaryId', _$projectBeneficiaryId, opt: true);
   static List<String>? _$projectBeneficiaryClientReferenceId(
           TaskSearchModel v) =>
@@ -209,15 +209,18 @@ extension TaskSearchModelValueCopy<$R, $Out>
 
 abstract class TaskSearchModelCopyWith<$R, $In extends TaskSearchModel, $Out>
     implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get projectBeneficiaryId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get projectBeneficiaryClientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
   $R call(
-      {String? id,
+      {List<String>? id,
       String? projectId,
-      String? projectBeneficiaryId,
+      List<String>? projectBeneficiaryId,
       List<String>? projectBeneficiaryClientReferenceId,
       String? createdBy,
       String? status,
@@ -242,6 +245,20 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<TaskSearchModel> $mapper =
       TaskSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id =>
+      $value.id != null
+          ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(id: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get projectBeneficiaryId => $value.projectBeneficiaryId != null
+          ? ListCopyWith(
+              $value.projectBeneficiaryId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(projectBeneficiaryId: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get projectBeneficiaryClientReferenceId =>

@@ -25,8 +25,8 @@ class ProductVariantSearchModelMapper
   static List<String>? _$id(ProductVariantSearchModel v) => v.id;
   static const Field<ProductVariantSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
-  static String? _$productId(ProductVariantSearchModel v) => v.productId;
-  static const Field<ProductVariantSearchModel, String> _f$productId =
+  static List<String>? _$productId(ProductVariantSearchModel v) => v.productId;
+  static const Field<ProductVariantSearchModel, List<String>> _f$productId =
       Field('productId', _$productId, opt: true);
   static String? _$sku(ProductVariantSearchModel v) => v.sku;
   static const Field<ProductVariantSearchModel, String> _f$sku =
@@ -144,10 +144,11 @@ abstract class ProductVariantSearchModelCopyWith<
     $In extends ProductVariantSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get productId;
   @override
   $R call(
       {List<String>? id,
-      String? productId,
+      List<String>? productId,
       String? sku,
       String? variation,
       String? tenantId,
@@ -170,6 +171,14 @@ class _ProductVariantSearchModelCopyWithImpl<$R, $Out>
       $value.id != null
           ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
               (v) => call(id: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get productId =>
+      $value.productId != null
+          ? ListCopyWith(
+              $value.productId!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(productId: v))
           : null;
   @override
   $R call(

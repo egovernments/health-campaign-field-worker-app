@@ -32,7 +32,7 @@ class ProductVariantBlocWrapper extends StatelessWidget {
           )..add(
               ProductVariantLoadEvent(
                 query: ProjectResourceSearchModel(
-                  projectId: RegistrationDeliverySingleton().projectId,
+                  projectId: [RegistrationDeliverySingleton().projectId!],
                 ),
               ),
             ),

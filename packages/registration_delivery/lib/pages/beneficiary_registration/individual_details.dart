@@ -117,6 +117,9 @@ class _IndividualDetailsPageState
                               if (form.control(_idTypeKey).value == null) {
                                 form.control(_idTypeKey).setErrors({'': true});
                               }
+                              if (form.control(_genderKey).value == null) {
+                                form.control(_genderKey).setErrors({'': true});
+                              }
                               final userId = RegistrationDeliverySingleton()
                                   .loggedInUserUuid;
                               final projectId =
@@ -414,12 +417,12 @@ class _IndividualDetailsPageState
                                   .idTypeOptions!
                                   .map(
                                 (e) {
-                                  return localizations.translate(e);
+                                  return e;
                                 },
                               ).toList(),
                               formControlName: _idTypeKey,
                               valueMapper: (value) {
-                                return value;
+                                return localizations.translate(value);
                               },
                               onSelected: (value) {
                                 setState(() {
@@ -534,6 +537,10 @@ class _IndividualDetailsPageState
                               valueMapper: (value) {
                                 return localizations.translate(value);
                               },
+                              isRequired: true,
+                              validationMessage: localizations.translate(
+                                i18.common.corecommonRequired,
+                              ),
                               emptyText: localizations
                                   .translate(i18.common.noMatchFound),
                             ),

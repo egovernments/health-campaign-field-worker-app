@@ -403,7 +403,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
-        ProjectResourceSearchModel(projectId: project.id),
+        ProjectResourceSearchModel(projectId: [project.id]),
       );
 
       for (final projectResource in projectResources) {
@@ -472,7 +472,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
+            codes: event.model.address?.boundary,
           ),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
@@ -497,14 +497,14 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         boundaries = await boundaryLocalRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
+            codes: event.model.address?.boundary,
           ),
         );
         if (boundaries.isEmpty) {
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
               boundaryType: event.model.address?.boundaryType,
-              code: event.model.address?.boundary,
+              codes: event.model.address?.boundary,
             ),
           );
         }

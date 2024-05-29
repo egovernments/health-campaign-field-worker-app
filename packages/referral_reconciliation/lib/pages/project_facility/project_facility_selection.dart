@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
+import 'package:referral_reconciliation/utils/constants.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
@@ -44,14 +45,13 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
                           final query =
                               form.control(_facilityName).value as String?;
                           if (query == null || query.isEmpty) return true;
-                          if (element.id
-                              .toLowerCase()
-                              .contains(query.toLowerCase())) {
-                            return true;
-                          }
-
-                          return false;
-                        })
+                          final localizedFacilityIdWithPrefix = localizations
+                              .translate('$projectFacilityPrefix${element.id}')
+                              .toLowerCase();
+                          final lowerCaseQuery = query.toLowerCase();
+                          return localizedFacilityIdWithPrefix
+                              .contains(lowerCaseQuery);
+                        }).toList()
                       : null;
 
               return ScrollableContent(
@@ -150,7 +150,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
                                   ),
                                   child: Text(projectFacility != null
                                       ? localizations.translate(
-                                          'PJ_FAC_${projectFacility.id}',
+                                          '$projectFacilityPrefix${projectFacility.id}',
                                         )
                                       : ''),
                                 ),

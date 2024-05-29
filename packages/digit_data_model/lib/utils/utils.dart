@@ -55,21 +55,24 @@ class DigitDataModelSingleton {
 
   int? _syncDownRetryCount;
   int? _retryTimeInterval;
-  String? _tenantId, _errorDumpApiPath;
+  String? _tenantId, _errorDumpApiPath, _hierarchyType;
   EntityMapperListener? _entityListener;
 
   /// Sets the environment configuration variables.
-  void setData(
-      {required int syncDownRetryCount,
-      required int retryTimeInterval,
-      required String tenantId,
-      required EntityMapperListener entityMapper,
-      required String errorDumpApiPath}) {
+  void setData({
+    required int syncDownRetryCount,
+    required int retryTimeInterval,
+    required String tenantId,
+    required EntityMapperListener entityMapper,
+    required String errorDumpApiPath,
+    required String hierarchyType,
+  }) {
     _syncDownRetryCount = syncDownRetryCount;
     _retryTimeInterval = retryTimeInterval;
     _entityListener = entityMapper;
     _tenantId = tenantId;
     _errorDumpApiPath = errorDumpApiPath;
+    _hierarchyType = hierarchyType;
   }
 
   // Getters for the environment configuration variables.
@@ -77,6 +80,7 @@ class DigitDataModelSingleton {
   get retryTimeInterval => _retryTimeInterval;
   get tenantId => _tenantId;
   get errorDumpApiPath => _errorDumpApiPath;
+  get hierarchyType => _hierarchyType;
   EntityMapperListener? get entityMapper => _entityListener;
 }
 

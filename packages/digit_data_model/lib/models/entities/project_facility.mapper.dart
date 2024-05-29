@@ -22,8 +22,8 @@ class ProjectFacilitySearchModelMapper
   @override
   final String id = 'ProjectFacilitySearchModel';
 
-  static String? _$id(ProjectFacilitySearchModel v) => v.id;
-  static const Field<ProjectFacilitySearchModel, String> _f$id =
+  static List<String>? _$id(ProjectFacilitySearchModel v) => v.id;
+  static const Field<ProjectFacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
   static List<String>? _$facilityId(ProjectFacilitySearchModel v) =>
       v.facilityId;
@@ -139,11 +139,12 @@ abstract class ProjectFacilitySearchModelCopyWith<
     $R,
     $In extends ProjectFacilitySearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get facilityId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get projectId;
   @override
   $R call(
-      {String? id,
+      {List<String>? id,
       List<String>? facilityId,
       List<String>? projectId,
       String? tenantId,
@@ -162,6 +163,12 @@ class _ProjectFacilitySearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ProjectFacilitySearchModel> $mapper =
       ProjectFacilitySearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id =>
+      $value.id != null
+          ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(id: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get facilityId => $value.facilityId != null

@@ -2,11 +2,11 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../../data/repositories/local/registration_delivery_address.dart';
 import '../../models/entities/household.dart';
@@ -66,7 +66,7 @@ class SearchHouseholdsBloc
     try {
       final householdMembers = await householdMember.search(
         HouseholdMemberSearchModel(
-          householdClientReferenceId: event.householdModel.clientReferenceId,
+          householdClientReferenceId: [event.householdModel.clientReferenceId],
         ),
       );
 
@@ -162,8 +162,8 @@ class SearchHouseholdsBloc
   ) async {
     return await householdMember.search(
       HouseholdMemberSearchModel(
-        householdClientReferenceId: householdClientReferenceId,
-        individualClientReferenceId: individualClientReferenceId,
+        householdClientReferenceId: [householdClientReferenceId.toString()],
+        individualClientReferenceId: [individualClientReferenceId.toString()],
         isHeadOfHousehold: isHeadOfHousehold,
       ),
     );
@@ -197,7 +197,7 @@ class SearchHouseholdsBloc
   ) async {
     return await projectBeneficiary.search(
       ProjectBeneficiarySearchModel(
-        projectId: projectId,
+        projectId: [projectId],
         beneficiaryClientReferenceId: projectBeneficiariesIds,
       ),
     );

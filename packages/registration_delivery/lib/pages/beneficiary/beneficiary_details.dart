@@ -281,8 +281,9 @@ class _BeneficiaryDetailsPageState
                                       return '--';
                                     }
 
-                                    return identifiers.first.identifierType ??
-                                        '--';
+                                    return localizations.translate(
+                                        identifiers.first.identifierType ??
+                                            '--');
                                   }(),
                                   localizations.translate(
                                     i18.deliverIntervention.idNumberText,

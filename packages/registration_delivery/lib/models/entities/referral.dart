@@ -1,14 +1,14 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'referral.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ReferralSearchModel extends EntitySearchModel with ReferralSearchModelMappable {
-  final String? id;
+class ReferralSearchModel extends EntitySearchModel
+    with ReferralSearchModelMappable {
+  final List<String>? id;
   final List<String>? projectBeneficiaryClientReferenceId;
   final String? projectId;
   final String? referrerId;
@@ -17,7 +17,7 @@ class ReferralSearchModel extends EntitySearchModel with ReferralSearchModelMapp
   final List<String>? reasons;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  
+
   ReferralSearchModel({
     this.id,
     this.projectBeneficiaryClientReferenceId,
@@ -30,7 +30,7 @@ class ReferralSearchModel extends EntitySearchModel with ReferralSearchModelMapp
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   ReferralSearchModel.ignoreDeleted({
@@ -44,12 +44,11 @@ class ReferralSearchModel extends EntitySearchModel with ReferralSearchModelMapp
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ReferralModel extends EntityModel with ReferralModelMappable {
-
   static const schemaName = 'Referral';
 
   final String? id;
@@ -78,9 +77,10 @@ class ReferralModel extends EntityModel with ReferralModelMappable {
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   ReferralCompanion get companion {
     return ReferralCompanion(
@@ -96,7 +96,8 @@ class ReferralModel extends EntityModel with ReferralModelMappable {
       isDeleted: Value(isDeleted),
       id: Value(id),
       projectId: Value(projectId),
-      projectBeneficiaryClientReferenceId: Value(projectBeneficiaryClientReferenceId),
+      projectBeneficiaryClientReferenceId:
+          Value(projectBeneficiaryClientReferenceId),
       referrerId: Value(referrerId),
       recipientType: Value(recipientType),
       recipientId: Value(recipientId),
@@ -105,16 +106,16 @@ class ReferralModel extends EntityModel with ReferralModelMappable {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ReferralAdditionalFields extends AdditionalFields with ReferralAdditionalFieldsMappable {
+class ReferralAdditionalFields extends AdditionalFields
+    with ReferralAdditionalFieldsMappable {
   ReferralAdditionalFields({
     super.schema = 'Referral',
     required super.version,
     super.fields,
   });
 }
-

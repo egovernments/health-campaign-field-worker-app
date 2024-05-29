@@ -26,11 +26,11 @@ class ProductSearchModelMapper extends SubClassMapperBase<ProductSearchModel> {
   static String? _$type(ProductSearchModel v) => v.type;
   static const Field<ProductSearchModel, String> _f$type =
       Field('type', _$type, opt: true);
-  static String? _$name(ProductSearchModel v) => v.name;
-  static const Field<ProductSearchModel, String> _f$name =
+  static List<String>? _$name(ProductSearchModel v) => v.name;
+  static const Field<ProductSearchModel, List<String>> _f$name =
       Field('name', _$name, opt: true);
-  static String? _$manufacturer(ProductSearchModel v) => v.manufacturer;
-  static const Field<ProductSearchModel, String> _f$manufacturer =
+  static List<String>? _$manufacturer(ProductSearchModel v) => v.manufacturer;
+  static const Field<ProductSearchModel, List<String>> _f$manufacturer =
       Field('manufacturer', _$manufacturer, opt: true);
   static List<String>? _$clientReferenceId(ProductSearchModel v) =>
       v.clientReferenceId;
@@ -141,14 +141,17 @@ extension ProductSearchModelValueCopy<$R, $Out>
 
 abstract class ProductSearchModelCopyWith<$R, $In extends ProductSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get name;
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get manufacturer;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
   @override
   $R call(
       {String? id,
       String? type,
-      String? name,
-      String? manufacturer,
+      List<String>? name,
+      List<String>? manufacturer,
       List<String>? clientReferenceId,
       String? tenantId,
       String? boundaryCode});
@@ -164,6 +167,20 @@ class _ProductSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ProductSearchModel> $mapper =
       ProductSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get name =>
+      $value.name != null
+          ? ListCopyWith($value.name!,
+              (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(name: v))
+          : null;
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
+      get manufacturer => $value.manufacturer != null
+          ? ListCopyWith(
+              $value.manufacturer!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(manufacturer: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId => $value.clientReferenceId != null

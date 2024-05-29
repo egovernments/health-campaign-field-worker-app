@@ -10,16 +10,7 @@ import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
 class InventoryReportSelectionPage extends LocalizedStatefulWidget {
-  final String projectId;
-  final bool? isDistributor;
-  final bool? isWareHouseMgr;
-  final String? loggedInUserUuid;
-
   const InventoryReportSelectionPage({
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
     super.key,
     super.appLocalizations,
   });

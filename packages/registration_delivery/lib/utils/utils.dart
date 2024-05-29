@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/entities/additional_fields_type.dart';
@@ -189,16 +190,28 @@ DeliveryDoseCriteria? fetchProductVariant(
     );
     final individualAgeInMonths =
         individualAge.years * 12 + individualAge.months;
+
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {
-        //{TODO: Expression package need to be parsed
-        final ageRange = condition.split("<=age<");
-        final minAge = int.parse(ageRange.first);
-        final maxAge = int.parse(ageRange.last);
+        final conditions = condition.split('and');
 
-        return individualAgeInMonths >= minAge &&
-            individualAgeInMonths <= maxAge;
+        List expressionParser = [];
+        for (var element in conditions) {
+          final expression = FormulaParser(
+            element,
+            {
+              'age': individualAgeInMonths,
+              if (individualModel.gender != null)
+                'gender': individualModel.gender?.index,
+            },
+          );
+          final error = expression.parse;
+          expressionParser.add(error["value"]);
+        }
+
+        return expressionParser.where((element) => element == true).length ==
+            conditions.length;
       }
 
       return false;

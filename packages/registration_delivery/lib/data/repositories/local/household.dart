@@ -34,7 +34,7 @@ class HouseholdLocalRepository
             if (query.clientReferenceId != null)
               sql.household.clientReferenceId.isIn(query.clientReferenceId!),
             if (query.id != null)
-              sql.household.id.equals(
+              sql.household.id.isIn(
                 query.id!,
               ),
             if (query.tenantId != null)

@@ -1,3 +1,5 @@
+import 'package:digit_data_model/data_model.dart';
+
 /// The `EntityPlurals` class provides a utility method to get the plural form of an entity name.
 /// This can be useful when working with collections of entities, for example when naming database tables or generating URLs.
 class EntityPlurals {
@@ -33,6 +35,31 @@ class EntityPlurals {
         return 'attendance';
       default:
         return '${entity}s';
+    }
+  }
+}
+
+class DataModels {
+  static DataModelType getDataModelForEntityName(String entity) {
+    switch (entity) {
+      case 'Households':
+        return DataModelType.household;
+      case 'HouseholdMembers':
+        return DataModelType.householdMember;
+      case 'Individuals':
+        return DataModelType.individual;
+      case 'ProjectBeneficiaries':
+        return DataModelType.projectBeneficiary;
+      case 'Tasks':
+        return DataModelType.task;
+      case 'SideEffects':
+        return DataModelType.sideEffect;
+      case 'Referrals':
+        return DataModelType.referral;
+      case 'HFReferrals':
+        return DataModelType.hFReferral;
+      default:
+        return DataModelType.householdMember;
     }
   }
 }

@@ -31,11 +31,11 @@ class HFReferralLocalRepository
                 query.name!,
               ),
             if (query.beneficiaryId != null)
-              sql.hFReferral.beneficiaryId.equals(
+              sql.hFReferral.beneficiaryId.isIn(
                 query.beneficiaryId!,
               ),
             if (query.projectId != null)
-              sql.hFReferral.projectId.contains(
+              sql.hFReferral.projectId.isIn(
                 query.projectId!,
               ),
             if (userId != null)

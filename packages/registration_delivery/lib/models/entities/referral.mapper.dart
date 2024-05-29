@@ -21,8 +21,8 @@ class ReferralSearchModelMapper
   @override
   final String id = 'ReferralSearchModel';
 
-  static String? _$id(ReferralSearchModel v) => v.id;
-  static const Field<ReferralSearchModel, String> _f$id =
+  static List<String>? _$id(ReferralSearchModel v) => v.id;
+  static const Field<ReferralSearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
   static List<String>? _$projectBeneficiaryClientReferenceId(
           ReferralSearchModel v) =>
@@ -165,6 +165,7 @@ extension ReferralSearchModelValueCopy<$R, $Out>
 
 abstract class ReferralSearchModelCopyWith<$R, $In extends ReferralSearchModel,
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get projectBeneficiaryClientReferenceId;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get reasons;
@@ -172,7 +173,7 @@ abstract class ReferralSearchModelCopyWith<$R, $In extends ReferralSearchModel,
       get clientReferenceId;
   @override
   $R call(
-      {String? id,
+      {List<String>? id,
       List<String>? projectBeneficiaryClientReferenceId,
       String? projectId,
       String? referrerId,
@@ -194,6 +195,12 @@ class _ReferralSearchModelCopyWithImpl<$R, $Out>
   @override
   late final ClassMapperBase<ReferralSearchModel> $mapper =
       ReferralSearchModelMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id =>
+      $value.id != null
+          ? ListCopyWith($value.id!, (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(id: v))
+          : null;
   @override
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get projectBeneficiaryClientReferenceId =>

@@ -604,7 +604,9 @@ class _DeliverInterventionPageState
                                                               .map((e) {
                                                         return localizations
                                                             .translate(e);
-                                                      }).toList(),
+                                                      }).toList()
+                                                            ..sort((a, b) =>
+                                                                a.compareTo(b)),
                                                       formControlName:
                                                           _deliveryCommentKey,
                                                       valueMapper: (value) =>
@@ -781,19 +783,22 @@ class _DeliverInterventionPageState
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
-        value: (bloc.tasks?.last.additionalFields?.fields
-                        .where((a) =>
-                            a.key ==
-                            AdditionalFieldsType.deliveryComment.toValue())
-                        .toList() ??
-                    [])
-                .isNotEmpty
-            ? bloc.tasks?.last.additionalFields?.fields
-                .where((a) =>
-                    a.key == AdditionalFieldsType.deliveryComment.toValue())
-                .first
-                .value
-            : '',
+        value: RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? (bloc.tasks?.last.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.last.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
+            : null,
         validators: [],
       ),
       _dateOfAdministrationKey:

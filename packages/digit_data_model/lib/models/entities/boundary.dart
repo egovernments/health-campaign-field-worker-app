@@ -1,25 +1,29 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../../data/local_store/sql_store/sql_store.dart';
 import '../../data_model.dart';
 
 part 'boundary.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMappable {
+class BoundarySearchModel extends EntitySearchModel
+    with BoundarySearchModelMappable {
   final String? boundaryType;
   final String? tenantId;
-  final String? code;
+  final String? codes;
   final int? boundaryNum;
   final bool? isSingle;
+  final String? hierarchyType;
+  final bool? includeChildren;
 
   BoundarySearchModel({
     this.boundaryType,
     this.tenantId,
-    this.code,
+    this.codes,
     this.boundaryNum,
     this.isSingle,
+    this.hierarchyType,
+    this.includeChildren,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -28,9 +32,11 @@ class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMapp
   BoundarySearchModel.ignoreDeleted({
     this.boundaryType,
     this.tenantId,
-    this.code,
+    this.codes,
     this.boundaryNum,
     this.isSingle,
+    this.hierarchyType,
+    this.includeChildren,
     super.boundaryCode,
     super.additionalFields,
     super.auditDetails,
@@ -48,6 +54,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
   final String? materializedPath;
   final String? tenantId;
   final int? rowVersion;
+  final String? boundaryType;
   final List<BoundaryModel> children;
 
   BoundaryModel({
@@ -61,6 +68,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
     this.boundaryNum,
     this.rowVersion,
     this.children = const [],
+    this.boundaryType,
     super.auditDetails,
     super.isDeleted = false,
   }) : super();

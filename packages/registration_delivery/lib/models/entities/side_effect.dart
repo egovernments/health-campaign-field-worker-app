@@ -1,21 +1,21 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'side_effect.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class SideEffectSearchModel extends EntitySearchModel with SideEffectSearchModelMappable {
-  final String? id;
+class SideEffectSearchModel extends EntitySearchModel
+    with SideEffectSearchModelMappable {
+  final List<String>? id;
   final List<String>? taskClientReferenceId;
   final String? projectId;
   final int? reAttempts;
   final List<String>? symptoms;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  
+
   SideEffectSearchModel({
     this.id,
     this.taskClientReferenceId,
@@ -26,7 +26,7 @@ class SideEffectSearchModel extends EntitySearchModel with SideEffectSearchModel
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   SideEffectSearchModel.ignoreDeleted({
@@ -38,12 +38,11 @@ class SideEffectSearchModel extends EntitySearchModel with SideEffectSearchModel
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class SideEffectModel extends EntityModel with SideEffectModelMappable {
-
   static const schemaName = 'SideEffect';
 
   final String? id;
@@ -68,9 +67,10 @@ class SideEffectModel extends EntityModel with SideEffectModelMappable {
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   SideEffectCompanion get companion {
     return SideEffectCompanion(
@@ -93,16 +93,16 @@ class SideEffectModel extends EntityModel with SideEffectModelMappable {
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class SideEffectAdditionalFields extends AdditionalFields with SideEffectAdditionalFieldsMappable {
+class SideEffectAdditionalFields extends AdditionalFields
+    with SideEffectAdditionalFieldsMappable {
   SideEffectAdditionalFields({
     super.schema = 'SideEffect',
     required super.version,
     super.fields,
   });
 }
-

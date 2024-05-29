@@ -1,5 +1,8 @@
 library app_utils;
 
+import 'package:registration_delivery/registration_delivery.init.dart'
+    as registration_delivery_mappers;
+import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
 import 'dart:async';
@@ -13,7 +16,6 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -379,11 +381,12 @@ getSelectedLanguage(AppInitialized state, int index) {
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
-    Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
+    Future(() => data_model_mappers.initializeMappers()),
+    Future(() => registration_delivery_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

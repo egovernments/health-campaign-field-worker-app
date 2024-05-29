@@ -41,7 +41,6 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
-import '../pages/reports/beneficiary/beneficaries_report.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -311,7 +310,7 @@ class AppRouter extends _$AppRouter {
             page: InventoryAcknowledgementRoute.page,
             path: 'inventory-acknowledgement'),
 
-        // Inventory Route
+        // Referral Reconciliation Route
         AutoRoute(
             page: HFCreateReferralWrapperRoute.page,
             path: 'hf-referral',
