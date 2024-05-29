@@ -34,27 +34,10 @@ dependencies:
 
 Here are some examples of how to use the DataModel package in your project:
 
-Extend the `LocalRepository` class and implement the required methods.
+Extend the `EntityModel` or `EntitySearchModel` class and implement the required methods.
 
 ```dart
-    class ExampleLocalRepository
-        extends LocalRepository<ExampleExampleModel, ExampleExampleSearchModel> {
-    ExampleExamplesLocalRepository(super.sql, super.opLogManager);
-    }
-```
-Extend the `RemoteRepository` class and implement the required methods.
-
-```dart
-    class ExampleExamplesRemoteRepository
-        extends RemoteRepository<ExampleExampleModel, ExampleExampleSearchModel> {
-    ExampleExamplesRemoteRepository(super.apiClient, super.opLogManager);
-    }
-```
-
-Extend the `DataRepository` class and implement the required methods.
-
-```dart
-    class ExampleExampleSearchModel extends EntitySearchModel {
+    class ExampleSearchModel extends EntitySearchModel {
   ExampleSearchModel({
     required this.employeeId,
     required this.attendanceDate,
@@ -69,4 +52,20 @@ Extend the `DataRepository` class and implement the required methods.
     required this.field2,
   });
 }
+```
+Extend the `LocalRepository` class and implement the required methods.
+
+```dart
+    class ExampleLocalRepository
+        extends LocalRepository<ExampleModel, ExampleSearchModel> {
+    ExampleLocalRepository(super.sql, super.opLogManager);
+    }
+```
+Extend the `RemoteRepository` class and implement the required methods.
+
+```dart
+    class ExampleRemoteRepository
+        extends RemoteRepository<ExampleModel, ExampleSearchModel> {
+  ExampleRemoteRepository(super.apiClient, super.opLogManager);
+    }
 ```
