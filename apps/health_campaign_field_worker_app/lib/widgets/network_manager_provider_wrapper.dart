@@ -163,12 +163,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           TaskOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
-        create: (_) => TaskLocalRepository(
-          sql,
-          TaskOpLogManager(isar),
-        ),
-      ),
       RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
         create: (_) => ReferralLocalRepository(
           sql,
@@ -413,15 +407,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           RepositoryProvider<
               RemoteRepository<ServiceModel, ServiceSearchModel>>(
             create: (_) => ServiceRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.projectResource)
-          RepositoryProvider<
-              RemoteRepository<ProjectResourceModel,
-                  ProjectResourceSearchModel>>(
-            create: (_) => ProjectResourceRemoteRepository(
               dio,
               actionMap: actions,
             ),

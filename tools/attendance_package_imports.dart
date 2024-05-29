@@ -67,7 +67,7 @@ void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
     "import 'package:attendance_management/attendance_management.dart' as attendance_mappers;"
   ];
   var attendanceInitializationStatement =
-      "attendance_mappers.initializeMappers();";
+      "Future(() => attendance_mappers.initializeMappers()),";
 
   // Check if the utils.dart file exists
   var utilsFile = File(utilsFilePath);

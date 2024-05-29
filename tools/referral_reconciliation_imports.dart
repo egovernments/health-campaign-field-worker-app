@@ -68,7 +68,7 @@ void _addReferralReconMapperToUtilsFile({required String utilsFilePath}) {
     "import 'package:referral_reconciliation/referral_reconciliation.dart' as referral_reconciliation_mappers;"
   ];
   var referralReconciliationInitializationStatement =
-      "referral_reconciliation_mappers.initializeMappers();";
+      "Future(() => referral_reconciliation_mappers.initializeMappers()),";
 
   // Check if the utils.dart file exists
   var utilsFile = File(utilsFilePath);

@@ -604,7 +604,9 @@ class _DeliverInterventionPageState
                                                               .map((e) {
                                                         return localizations
                                                             .translate(e);
-                                                      }).toList(),
+                                                      }).toList()
+                                                            ..sort((a, b) =>
+                                                                a.compareTo(b)),
                                                       formControlName:
                                                           _deliveryCommentKey,
                                                       valueMapper: (value) =>
