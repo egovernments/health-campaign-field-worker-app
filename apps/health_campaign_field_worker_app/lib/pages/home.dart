@@ -22,7 +22,6 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
-import '../blocs/registration_delivery/hcm_registration_delivery.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
@@ -322,15 +321,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            final searchBloc = context.read<SearchBlocWrapper>();
-            await context.router.push(
-              SearchBeneficiaryRoute(
-                  registrationDeliveryListener: HcmRegistrationDelivery(
-                context: context,
-              )),
-            );
-            searchBloc.searchHouseholdsBloc
-                .add(const SearchHouseholdsClearEvent());
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),

@@ -29,3 +29,4 @@ export 'pages/reports/report_selection.dart';
 export 'pages/stock_reconciliation/stock_reconciliation.dart';
 export 'router/inventory_router.dart';
 export 'utils/utils.dart';
+export 'inventory_management.init.dart';

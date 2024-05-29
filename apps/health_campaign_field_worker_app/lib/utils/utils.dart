@@ -1,32 +1,28 @@
 library app_utils;
 
+import 'package:inventory_management/inventory_management.init.dart'
+    as inventory_mappers;
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
-import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/data_model.init.dart' as digitDataModel;
+import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.init.dart'
-    as inventory_management;
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
-import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_delivery;
+    as registration_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -34,7 +30,6 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/app_config/app_config_model.dart';
-import '../models/data_model.dart';
 import '../models/data_model.init.dart';
 import '../router/app_router.dart';
 import '../widgets/progress_indicator/progress_indicator.dart';
@@ -71,23 +66,6 @@ class CustomValidator {
     if (control.value.toString().length < 10) return {'mobileNumber': true};
 
     return {'mobileNumber': true};
-  }
-
-  static Map<String, dynamic>? validStockCount(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return {'required': true};
-    }
-
-    var parsed = int.tryParse(control.value) ?? 0;
-    if (parsed < 0) {
-      return {'min': true};
-    } else if (parsed > 10000) {
-      return {'max': true};
-    }
-
-    return null;
   }
 }
 
@@ -149,43 +127,6 @@ String maskString(String input) {
       List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
-}
-
-class Coordinate {
-  final double? latitude;
-  final double? longitude;
-
-  Coordinate(this.latitude, this.longitude);
-}
-
-double? calculateDistance(Coordinate? start, Coordinate? end) {
-  const double earthRadius = 6371.0; // Earth's radius in kilometers
-
-  double toRadians(double degrees) {
-    return degrees * pi / 180.0;
-  }
-
-  if (start?.latitude != null &&
-      start?.longitude != null &&
-      end?.latitude != null &&
-      end?.longitude != null) {
-    double lat1Rad = toRadians(start!.latitude!);
-    double lon1Rad = toRadians(start.longitude!);
-    double lat2Rad = toRadians(end!.latitude!);
-    double lon2Rad = toRadians(end.longitude!);
-
-    double dLat = lat2Rad - lat1Rad;
-    double dLon = lon2Rad - lon1Rad;
-
-    double a = pow(sin(dLat / 2), 2) +
-        cos(lat1Rad) * cos(lat2Rad) * pow(sin(dLon / 2), 2);
-    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    double distance = earthRadius * c;
-
-    return distance;
-  }
-
-  return null;
 }
 
 List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
@@ -262,223 +203,6 @@ final requestData = {
     // ... Repeat the above structure to reach approximately 100KB in size
   ],
 };
-
-/*Check for if the individual falls on the valid age category*/
-
-///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
-bool checkEligibilityForAgeAndSideEffect(
-  DigitDOBAge age,
-  ProjectType? projectType,
-  TaskModel? tasks,
-  List<SideEffectModel>? sideEffects,
-) {
-  int totalAgeMonths = age.years * 12 + age.months;
-  final currentCycle = projectType?.cycles?.firstWhereOrNull(
-    (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-    // Return null when no matching cycle is found
-  );
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
-    bool recordedSideEffect = false;
-    if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
-      final lastTaskTime =
-          tasks.clientReferenceId == sideEffects.last.taskClientReferenceId
-              ? tasks.clientAuditDetails?.createdTime
-              : null;
-      recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate! &&
-              lastTaskTime <= currentCycle.endDate!);
-
-      return projectType?.validMinAge != null &&
-              projectType?.validMaxAge != null
-          ? totalAgeMonths >= projectType!.validMinAge! &&
-                  totalAgeMonths <= projectType.validMaxAge!
-              ? recordedSideEffect && !checkStatus([tasks], currentCycle)
-                  ? false
-                  : true
-              : false
-          : false;
-    } else {
-      return totalAgeMonths >= projectType!.validMinAge! &&
-              totalAgeMonths <= projectType.validMaxAge!
-          ? true
-          : false;
-    }
-  }
-
-  return false;
-}
-
-bool checkIfBeneficiaryRefused(
-  List<TaskModel>? tasks,
-) {
-  final isBeneficiaryRefused = (tasks != null &&
-      (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.toValue());
-
-  return isBeneficiaryRefused;
-}
-
-bool checkIfBeneficiaryReferred(
-  List<ReferralModel>? referrals,
-  Cycle currentCycle,
-) {
-  if (currentCycle.startDate != null && currentCycle.endDate != null) {
-    final isBeneficiaryReferred = (referrals != null &&
-        (referrals ?? []).isNotEmpty &&
-        referrals.last.clientAuditDetails!.createdTime >=
-            currentCycle.startDate! &&
-        referrals.last.clientAuditDetails!.createdTime <=
-            currentCycle.endDate!);
-
-    return isBeneficiaryReferred;
-  } else {
-    return false;
-  }
-}
-
-bool checkStatus(
-  List<TaskModel>? tasks,
-  Cycle? currentCycle,
-) {
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
-    if (tasks != null && tasks.isNotEmpty) {
-      final lastTask = tasks.last;
-      final lastTaskCreatedTime = lastTask.clientAuditDetails?.createdTime;
-      // final lastDose = lastTask.additionalFields?.fields.where((e) => e.key = AdditionalFieldsType.doseIndex)
-      if (lastTaskCreatedTime != null) {
-        final date = DateTime.fromMillisecondsSinceEpoch(lastTaskCreatedTime);
-        final diff = DateTime.now().difference(date);
-        final isLastCycleRunning =
-            lastTaskCreatedTime >= currentCycle.startDate! &&
-                lastTaskCreatedTime <= currentCycle.endDate!;
-
-        return isLastCycleRunning
-            ? lastTask.status == Status.delivered.name
-                ? true
-                : diff.inHours >=
-                        24 //[TODO: Need to move gap between doses to config
-                    ? true
-                    : false
-            : true;
-      } else {
-        return false;
-      }
-    } else {
-      return true;
-    }
-  } else {
-    return false;
-  }
-}
-
-bool recordedSideEffect(
-  Cycle? selectedCycle,
-  TaskModel? task,
-  List<SideEffectModel>? sideEffects,
-) {
-  if (selectedCycle != null &&
-      selectedCycle.startDate != null &&
-      selectedCycle.endDate != null) {
-    if ((task != null) && (sideEffects ?? []).isNotEmpty) {
-      final lastTaskCreatedTime =
-          task.clientReferenceId == sideEffects?.last.taskClientReferenceId
-              ? task.clientAuditDetails?.createdTime
-              : null;
-
-      return lastTaskCreatedTime != null &&
-          lastTaskCreatedTime >= selectedCycle.startDate! &&
-          lastTaskCreatedTime <= selectedCycle.endDate!;
-    }
-  }
-
-  return false;
-}
-
-bool allDosesDelivered(
-  List<TaskModel>? tasks,
-  Cycle? selectedCycle,
-  List<SideEffectModel>? sideEffects,
-  IndividualModel? individualModel,
-) {
-  if (selectedCycle == null ||
-      selectedCycle.id == 0 ||
-      (selectedCycle.deliveries ?? []).isEmpty) {
-    return true;
-  } else {
-    if ((tasks ?? []).isNotEmpty) {
-      final lastCycle = int.tryParse(tasks?.last.additionalFields?.fields
-              .where(
-                (e) => e.key == AdditionalFieldsType.cycleIndex.name,
-              )
-              .firstOrNull
-              ?.value ??
-          '');
-      final lastDose = int.tryParse(tasks?.last.additionalFields?.fields
-              .where(
-                (e) => e.key == AdditionalFieldsType.doseIndex.name,
-              )
-              .firstOrNull
-              ?.value ??
-          '');
-      if (lastDose != null &&
-          lastDose == selectedCycle.deliveries?.length &&
-          lastCycle != null &&
-          lastCycle == selectedCycle.id &&
-          tasks?.last.status != Status.delivered.name) {
-        return true;
-      } else if (selectedCycle.id == lastCycle &&
-          tasks?.last.status == Status.delivered.name) {
-        return false;
-      } else if ((sideEffects ?? []).isNotEmpty) {
-        return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-}
-
-DoseCriteriaModel? fetchProductVariant(
-  DeliveryModel? currentDelivery,
-  IndividualModel? individualModel,
-) {
-  if (currentDelivery != null && individualModel != null) {
-    final individualAge = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            individualModel.dateOfBirth!,
-          ) ??
-          DateTime.now(),
-    );
-    final individualAgeInMonths =
-        individualAge.years * 12 + individualAge.months;
-    final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
-      final condition = criteria.condition;
-      if (condition != null) {
-        //{TODO: Expression package need to be parsed
-        final ageRange = condition.split("<=age<");
-        final minAge = int.parse(ageRange.first);
-        final maxAge = int.parse(ageRange.last);
-
-        return individualAgeInMonths >= minAge &&
-            individualAgeInMonths <= maxAge;
-      }
-
-      return false;
-    }).toList();
-
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
-  }
-
-  return null;
-}
 
 Future<bool> getIsConnected() async {
   try {
@@ -622,17 +346,6 @@ void showDownloadDialog(
   }
 }
 
-// Returns value of the Additional Field Model, by passing the key and additional Fields list as <Map<String, dynamic>>
-dynamic getValueByKey(List<Map<String, dynamic>> data, String key) {
-  for (var map in data) {
-    if (map["key"] == key) {
-      return map["value"];
-    }
-  }
-
-  return null; // Key not found
-}
-
 //Function to read the localizations from ISAR,
 getLocalizationString(Isar isar, String selectedLocale) async {
   List<dynamic> localizationValues = [];
@@ -666,11 +379,36 @@ getSelectedLanguage(AppInitialized state, int index) {
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
-    Future(() => digitDataModel.initializeMappers()),
-    Future(() => registration_delivery.initializeMappers()),
-    Future(() => inventory_management.initializeMappers()),
+    Future(() => data_model_mappers.initializeMappers()),
+    Future(() => registration_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
+    Future(() => inventory_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
+}
+
+int getSyncCount(List<OpLog> oplogs) {
+  int count = oplogs.where((element) {
+    switch (element.entityType) {
+      case DataModelType.household:
+      case DataModelType.individual:
+      case DataModelType.householdMember:
+      case DataModelType.projectBeneficiary:
+      case DataModelType.task:
+      case DataModelType.stock:
+      case DataModelType.stockReconciliation:
+      case DataModelType.service:
+      case DataModelType.complaints:
+      case DataModelType.sideEffect:
+      case DataModelType.referral:
+      case DataModelType.hFReferral:
+      case DataModelType.attendance:
+        return true;
+      default:
+        return false;
+    }
+  }).length;
+
+  return count;
 }
