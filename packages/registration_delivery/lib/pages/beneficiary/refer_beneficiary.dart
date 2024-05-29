@@ -44,6 +44,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   static const _referralComments = 'referralComments';
   final clickedStatus = ValueNotifier<bool>(false);
   late final List<KeyValue> reasons;
+  String? selectedProjectFacilityId;
 
   @override
   void initState() {
@@ -117,21 +118,19 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                 return;
                               } else {
                                 clickedStatus.value = true;
-                                final recipient = form
-                                    .control(_referredToKey)
-                                    .value as FacilityModel;
                                 final reason = form
                                     .control(_referralReason)
                                     .value as KeyValue;
                                 final recipientType =
-                                    recipient.id == 'Community Health Worker'
+                                    selectedProjectFacilityId ==
+                                            'Community Health Worker'
                                         ? 'STAFF'
                                         : 'FACILITY';
-                                final recipientId =
-                                    recipient.id == 'Community Health Worker'
-                                        ? RegistrationDeliverySingleton()
-                                            .loggedInUserUuid
-                                        : recipient.id;
+                                final recipientId = selectedProjectFacilityId ==
+                                        'Community Health Worker'
+                                    ? RegistrationDeliverySingleton()
+                                        .loggedInUserUuid
+                                    : selectedProjectFacilityId;
                                 final referralComment =
                                     form.control(_referralComments).value;
 
@@ -291,14 +290,15 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                               ) as FacilityModel?;
 
                               if (facility == null) return;
-                              form.control(_referredToKey).value = facility;
+                              form.control(_referredToKey).value =
+                                  localizations.translate('FAC_${facility.id}');
+                              setState(() {
+                                selectedProjectFacilityId = facility.id;
+                              });
                             },
                             child: IgnorePointer(
                               child: DigitTextFormField(
                                 hideKeyboard: true,
-                                valueAccessor: FacilityValueAccessor(
-                                  facilities,
-                                ),
                                 label: localizations.translate(
                                   i18.referBeneficiary.referredToLabel,
                                 ),
@@ -325,7 +325,13 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                   ) as FacilityModel?;
 
                                   if (facility == null) return;
-                                  form.control(_referredToKey).value = facility;
+                                  form.control(_referredToKey).value =
+                                      localizations
+                                          .translate('FAC_${facility.id}');
+
+                                  setState(() {
+                                    selectedProjectFacilityId = facility.id;
+                                  });
                                 },
                               ),
                             ),
@@ -378,8 +384,7 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
         value: RegistrationDeliverySingleton().loggedInUserUuid,
         validators: [Validators.required],
       ),
-      _referredToKey:
-          FormControl<FacilityModel>(validators: [Validators.required]),
+      _referredToKey: FormControl<String>(validators: [Validators.required]),
       _referralReason: FormControl<KeyValue>(value: null),
       _referralComments: FormControl<String>(value: null),
     });

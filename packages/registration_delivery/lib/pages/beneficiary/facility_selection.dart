@@ -42,9 +42,11 @@ class FacilitySelectionPage extends StatelessWidget {
                 final filteredFacilities = facilities.where((element) {
                   final query = form.control(_facilityName).value as String?;
                   if (query == null || query.isEmpty) return true;
-                  if (element.id.toLowerCase().contains(query.toLowerCase())) {
-                    return true;
-                  }
+                  final localizedFacilityIdWithPrefix = localizations
+                      .translate('FAC_${element.id}')
+                      .toLowerCase();
+                  final lowerCaseQuery = query.toLowerCase();
+                  return localizedFacilityIdWithPrefix.contains(lowerCaseQuery);
                   return false;
                 }).toList();
 

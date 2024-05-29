@@ -20,38 +20,9 @@ import '../widgets/view_referral_card.dart';
 
 @RoutePage()
 class SearchReferralReconciliationsPage extends LocalizedStatefulWidget {
-  final List<String> cycles;
-  final String projectId;
-  final String projectName;
-  final String boundaryName;
-  final String boundaryCode;
-  final String roleCode;
-  final String userName;
-  final String userUUid;
-  final String appVersion;
-  final ValidIndividualAgeForCampaign validIndividualAgeForCampaign;
-  final List<String> genders;
-  final List<String> referralReasons;
-  final String tenantId;
-  final List<String> checklistTypes;
-
   const SearchReferralReconciliationsPage({
     super.key,
     super.appLocalizations,
-    required this.projectId,
-    required this.cycles,
-    required this.validIndividualAgeForCampaign,
-    required this.referralReasons,
-    required this.appVersion,
-    required this.userName,
-    required this.boundaryName,
-    required this.boundaryCode,
-    required this.roleCode,
-    required this.userUUid,
-    required this.genders,
-    required this.tenantId,
-    required this.checklistTypes,
-    required this.projectName,
   });
 
   @override
@@ -209,7 +180,7 @@ class _SearchReferralReconciliationsPageState
                                               projectId:
                                                   ReferralReconSingleton()
                                                       .projectId,
-                                              cycles: widget.cycles,
+                                              cycles: ReferralReconSingleton().cycles,
                                             ),
                                           );
                                         },
@@ -258,7 +229,7 @@ class _SearchReferralReconciliationsPageState
                                         ),
                                         projectId:
                                             ReferralReconSingleton().projectId,
-                                        cycles: widget.cycles,
+                                        cycles: ReferralReconSingleton().cycles,
                                       ),
                                     );
                                     searchController.clear();

@@ -346,22 +346,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
-            context.router.push(StockReconciliationRoute(
-              projectId: context.projectId,
-              isDistributor: context.loggedInUserRoles
-                  .where(
-                    (role) => role.code == RolesType.distributor.toValue(),
-                  )
-                  .toList()
-                  .isNotEmpty,
-              isWareHouseMgr: context.loggedInUserRoles
-                  .where(
-                    (role) => role.code == RolesType.warehouseManager.toValue(),
-                  )
-                  .toList()
-                  .isNotEmpty,
-              loggedInUserUuid: context.loggedInUserUuid,
-            ));
+            context.router.push(StockReconciliationRoute());
           },
         ),
       ),
@@ -420,37 +405,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _) {
-                    context.router.push(SearchReferralReconciliationsRoute(
-                      projectId: context.projectId,
-                      cycles: context.cycles,
-                      validIndividualAgeForCampaign:
-                          ValidIndividualAgeForCampaign(
-                        validMinAge:
-                            context.selectedProjectType?.validMinAge ?? 0,
-                        validMaxAge:
-                            context.selectedProjectType?.validMaxAge ?? 64,
-                      ),
-                      referralReasons: appConfiguration.referralReasons
-                              ?.map((r) => r.code)
-                              .toList() ??
-                          [],
-                      appVersion: Constants().version,
-                      userName: context.loggedInUser.name ?? '',
-                      boundaryName: context.boundary.code ?? '',
-                      genders: appConfiguration.genderOptions
-                              ?.map((g) => g.code)
-                              .toList() ??
-                          [],
-                      tenantId: envConfig.variables.tenantId,
-                      checklistTypes: appConfiguration.checklistTypes
-                              ?.map((e) => e.code)
-                              .toList() ??
-                          [],
-                      boundaryCode: context.boundary.code ?? '',
-                      roleCode: RolesType.healthFacilityWorker.toValue(),
-                      userUUid: context.loggedInUserUuid,
-                      projectName: context.selectedProject.name,
-                    ));
+                    context.router.push(SearchReferralReconciliationsRoute());
                   },
                 );
           },
@@ -461,21 +416,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () {
-            context.router.push(InventoryReportSelectionRoute(
-              isWareHouseMgr: context.loggedInUserRoles
-                  .where((role) =>
-                      role.code == RolesType.warehouseManager.toValue())
-                  .toList()
-                  .isNotEmpty,
-              isDistributor: context.loggedInUserRoles
-                  .where(
-                    (role) => role.code == RolesType.distributor.toValue(),
-                  )
-                  .toList()
-                  .isNotEmpty,
-              projectId: context.projectId,
-              loggedInUserUuid: context.loggedInUserUuid,
-            ));
+            context.router.push(InventoryReportSelectionRoute());
           },
         ),
       ),

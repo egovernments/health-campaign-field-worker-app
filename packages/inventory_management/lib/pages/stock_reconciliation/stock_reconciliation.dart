@@ -21,15 +21,7 @@ import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 
 @RoutePage()
 class StockReconciliationPage extends LocalizedStatefulWidget {
-  final String projectId;
-  final bool? isDistributor;
-  final bool? isWareHouseMgr;
-  final String? loggedInUserUuid;
   const StockReconciliationPage({
-    required this.projectId,
-    required this.isDistributor,
-    required this.isWareHouseMgr,
-    required this.loggedInUserUuid,
     super.key,
     super.appLocalizations,
   });
@@ -74,19 +66,19 @@ class _StockReconciliationPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return widget.projectId.isEmpty
+    return InventorySingleton().projectId.isEmpty
         ? Center(
             child: Text(localizations
                 .translate(i18.stockReconciliationDetails.noProjectSelected)),
           )
         : FacilityBlocWrapper(
-            projectId: widget.projectId,
+            projectId: InventorySingleton().projectId,
             child: ProductVariantBlocWrapper(
-              projectId: widget.projectId,
+              projectId: InventorySingleton().projectId,
               child: BlocProvider(
                 create: (context) => StockReconciliationBloc(
                   StockReconciliationState(
-                    projectId: widget.projectId,
+                    projectId: InventorySingleton().projectId,
                     dateOfReconciliation: DateTime.now(),
                   ),
                   stockRepository:
@@ -106,8 +98,8 @@ class _StockReconciliationPageState
                   },
                   builder: (context, stockState) {
                     return ReactiveFormBuilder(
-                      form: () => _form(
-                          widget.isDistributor! && !widget.isWareHouseMgr!),
+                      form: () => _form(InventorySingleton().isDistributor! &&
+                          !InventorySingleton().isWareHouseMgr!),
                       builder: (ctx, form, child) {
                         return Scaffold(
                           body: ScrollableContent(
@@ -138,10 +130,12 @@ class _StockReconciliationPageState
                                                 StockReconciliationBloc>();
 
                                             final facilityId =
-                                                widget.isDistributor! &&
-                                                        !widget.isWareHouseMgr!
+                                                InventorySingleton()
+                                                            .isDistributor! &&
+                                                        !InventorySingleton()
+                                                            .isWareHouseMgr!
                                                     ? FacilityModel(
-                                                        id: widget
+                                                        id: InventorySingleton()
                                                             .loggedInUserUuid!,
                                                       )
                                                     : FacilityModel(
@@ -260,7 +254,7 @@ class _StockReconciliationPageState
                                           .textTheme
                                           .displayMedium,
                                     ),
-                                    if (widget.isWareHouseMgr!)
+                                    if (InventorySingleton().isWareHouseMgr!)
                                       BlocConsumer<FacilityBloc, FacilityState>(
                                         listener: (context, state) =>
                                             state.whenOrNull(
@@ -405,9 +399,9 @@ class _StockReconciliationPageState
                                                     .add(
                                                       StockReconciliationSelectProductEvent(
                                                         value.id,
-                                                        isDistributor: widget
+                                                        isDistributor: InventorySingleton()
                                                                 .isDistributor! &&
-                                                            !widget
+                                                            !InventorySingleton()
                                                                 .isWareHouseMgr!,
                                                       ),
                                                     );
