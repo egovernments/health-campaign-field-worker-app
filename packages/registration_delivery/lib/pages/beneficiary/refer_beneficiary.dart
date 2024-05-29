@@ -284,11 +284,11 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                             onTap: () async {
                               final parent =
                                   context.router.parent() as StackRouter;
-                              final facility = await parent.push<FacilityModel>(
+                              final facility = await parent.push(
                                 FacilitySelectionRoute(
                                   facilities: facilities,
                                 ),
-                              );
+                              ) as FacilityModel?;
 
                               if (facility == null) return;
                               form.control(_referredToKey).value = facility;
@@ -318,12 +318,11 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                 onTap: () async {
                                   final parent =
                                       context.router.parent() as StackRouter;
-                                  final facility =
-                                      await parent.push<FacilityModel>(
+                                  final facility = await parent.push(
                                     FacilitySelectionRoute(
                                       facilities: facilities,
                                     ),
-                                  );
+                                  ) as FacilityModel?;
 
                                   if (facility == null) return;
                                   form.control(_referredToKey).value = facility;

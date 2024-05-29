@@ -416,11 +416,13 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           localizations.translate(
                                             i18.beneficiaryDetails
                                                 .beneficiaryAge,
-                                          ): fetchProductVariant(
+                                          ): localizations
+                                              .translate(fetchProductVariant(
                                             deliveryState
                                                 .futureDeliveries?.first,
                                             overViewBloc.selectedIndividual,
-                                          )?.condition,
+                                          )!
+                                                  .condition!),
                                         },
                                       ),
                                       const Divider(
