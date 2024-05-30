@@ -262,7 +262,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           sql,
           AddressOpLogManager(isar),
         ),
-      )
+      ),
     ];
   }
 
