@@ -20,7 +20,6 @@ const searchBeneficiary = SearchBeneficiary();
 const individualDetails = IndividualDetails();
 const beneficiaryDetails = BeneficiaryDetails();
 
-
 const selectStockShowcase = SelectStockShowcase();
 const warehouseDetailsShowcase = WarehouseDetailsShowcase();
 const stockDetailsReceiptShowcase = StockDetailsReceiptShowcase();
@@ -544,6 +543,8 @@ class Checklist {
 
   String get checklistBackDialogSecondaryAction =>
       'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
+
+  String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
 }
 
 class ForgotPassword {
@@ -594,7 +595,6 @@ class Home {
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 }
-
 
 class AcknowledgementSuccess {
   const AcknowledgementSuccess();
