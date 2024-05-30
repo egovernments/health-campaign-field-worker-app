@@ -58,7 +58,7 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
   // Select product
   await widgetTester.tap(find.byKey(const Key('productVariant')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
-  await widgetTester.tap(find.bySemanticsLabel(RegExp('Bednet Grade 1')).last);
+  await widgetTester.tap(find.bySemanticsLabel(RegExp(testVariables['productName'])).last);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
   // Fetch stock details
