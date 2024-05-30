@@ -257,21 +257,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           StockReconciliationOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<
-          LocalRepository<AttendanceRegisterModel,
-              AttendanceRegisterSearchModel>>(
-        create: (_) => AttendanceLocalRepository(
-          sql,
-          AttendanceOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
-        create: (_) => AttendanceLogsLocalRepository(
-          sql,
-          AttendanceLogOpLogManager(isar),
-        ),
-      ),
       RepositoryProvider<RegistrationDeliveryAddressRepo>(
         create: (_) => RegistrationDeliveryAddressRepo(
           sql,
