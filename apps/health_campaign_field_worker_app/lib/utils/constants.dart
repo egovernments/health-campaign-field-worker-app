@@ -247,6 +247,7 @@ class Constants {
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
+    InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
   }
 }
 
