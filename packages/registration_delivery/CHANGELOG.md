@@ -6,3 +6,6 @@
 
 ## 0.0.0-dev.3
 * Updated digit_data_model to latest version
+
+## 0.0.0-dev.4
+* Added null check for fetching product variants
