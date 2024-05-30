@@ -86,7 +86,7 @@ class BeneficiaryDownSyncBloc
         isDownSync: true,
       );
       emit(BeneficiaryDownSyncState.getBatchSize(
-        configuredBatchSize * 10 > 100 ? 100 : configuredBatchSize * 10,
+        configuredBatchSize,
         event.projectId,
         event.boundaryCode,
         event.pendingSyncCount,
