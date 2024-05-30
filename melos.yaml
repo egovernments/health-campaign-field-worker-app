@@ -84,15 +84,6 @@ scripts:
     packageFilters:
       flutter: true
       dirExists: test
-  
-  integration-test:
-    description: Run integration tests.
-    run: flutter drive --driver=test_driver/integration_test.dart
-    exec:
-      concurrency: 1
-    packageFilters:
-      flutter: true
-      dirExists: integration_test
 
   upgrade-dependencies:
     description: Upgrade all dependencies to their latest major versions.
