@@ -73,24 +73,27 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                     child: SizedBox(
                                       width: MediaQuery.of(context).size.width -
                                           60,
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Flexible(
-                                            child: Text(
-                                              boundaryName,
-                                              overflow: TextOverflow.ellipsis,
-                                              style: TextStyle(
-                                                color:
-                                                    theme.colorScheme.surface,
-                                                fontSize: 16,
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                boundaryName,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color:
+                                                      theme.colorScheme.surface,
+                                                  fontSize: 16,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_drop_down_outlined,
-                                          ),
-                                        ],
+                                            const Icon(
+                                              Icons.arrow_drop_down_outlined,
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
