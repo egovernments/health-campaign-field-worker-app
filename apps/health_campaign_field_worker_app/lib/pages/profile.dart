@@ -69,8 +69,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
           value: context.read<AppInitializationBloc>().state.maybeWhen(
                 orElse: () => null,
                 initialized: (appConfiguration, serviceRegistryList) {
-                  return appConfiguration.genderOptions!
-                      .map((e) => localizations.translate(e.name))
+                  return appConfiguration.genderOptions
+                      ?.map((e) => e.code)
                       .firstWhereOrNull((element) => element == user?.gender);
                 },
               ),
@@ -179,7 +179,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                     name: formGroup.control(_name).value
                                         as String,
                                     emailId: formGroup.control(_emailId).value
-                                        as String,
+                                        as String?,
                                   );
 
                                   ctx.read<UserBloc>().add(

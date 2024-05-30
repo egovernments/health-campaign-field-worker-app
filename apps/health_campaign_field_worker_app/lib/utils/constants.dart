@@ -71,6 +71,7 @@ class Constants {
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
+  static const String healthFacilityChecklistPrefix = 'HF_RF';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -246,6 +247,7 @@ class Constants {
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
+    InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
   }
 }
 

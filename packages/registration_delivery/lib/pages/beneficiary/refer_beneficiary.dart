@@ -18,7 +18,6 @@ import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/inventory/no_facilities_assigned_dialog.dart';
 import '../../widgets/localized.dart';
-import 'facility_selection.dart';
 
 @RoutePage()
 class ReferBeneficiaryPage extends LocalizedStatefulWidget {
@@ -67,7 +66,9 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
     return BlocConsumer<FacilityBloc, FacilityState>(
       listener: (context, state) {
         state.whenOrNull(
-          empty: () => NoFacilitiesAssignedDialog.show(context),
+          fetched: (_, facilities) => facilities.isEmpty
+              ? NoFacilitiesAssignedDialog.show(context)
+              : null,
         );
       },
       builder: (ctx, facilityState) {

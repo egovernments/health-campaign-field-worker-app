@@ -420,26 +420,30 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           ),
                         ),
                         footer: DigitElevatedButton(
+                          onPressed: _resourceController.value.text
+                                  .trim()
+                                  .isNotEmpty
+                              ? () async {
+                                  final bloc = context.read<DigitScannerBloc>();
+                                  codes.add(_resourceController.value.text);
+                                  bloc.add(
+                                    DigitScannerEvent.handleScanner(
+                                      barCode: state.barCodes,
+                                      qrCode: codes,
+                                    ),
+                                  );
+                                  if (widget.isGS1code &&
+                                      result.length < widget.quantity) {
+                                    DigitScannerUtils().buildDialog(
+                                      context,
+                                      localizations,
+                                    );
+                                  }
+                                }
+                              : null,
                           child: Text(localizations.translate(
                             i18.common.coreCommonSubmit,
                           )),
-                          onPressed: () async {
-                            final bloc = context.read<DigitScannerBloc>();
-                            codes.add(_resourceController.value.text);
-                            bloc.add(
-                              DigitScannerEvent.handleScanner(
-                                barCode: state.barCodes,
-                                qrCode: codes,
-                              ),
-                            );
-                            if (widget.isGS1code &&
-                                result.length < widget.quantity) {
-                              DigitScannerUtils().buildDialog(
-                                context,
-                                localizations,
-                              );
-                            }
-                          },
                         ),
                         children: [
                           Align(

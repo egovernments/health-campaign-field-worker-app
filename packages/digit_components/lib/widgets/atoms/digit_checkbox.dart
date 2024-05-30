@@ -28,12 +28,11 @@ class DigitCheckbox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: 24,
-              width: 24,
-              child: CheckboxIcon(
-                value: value,
-              )
-            ),
+                height: 24,
+                width: 24,
+                child: CheckboxIcon(
+                  value: value,
+                )),
             const SizedBox(width: 16),
             Text(
               label,

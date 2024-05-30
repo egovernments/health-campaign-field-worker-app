@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -90,19 +91,19 @@ Widget buildTableContent(
                       .map(
                     (e) {
                       // Retrieve the SKU value for the product variant.
-                      final value = variant!
-                          .firstWhere(
+                      final value = variant
+                          ?.firstWhereOrNull(
                             (element) => element.id == e.productVariantId,
                           )
-                          .sku;
+                          ?.sku;
                       final quantity = e.quantity;
 
                       return TableDataRow([
                         // Display the dose information in the first column if it's the first row,
                         // otherwise, display an empty cell.
 
-                        fetchProductVariant(item, individualModel)!
-                                    .productVariants
+                        fetchProductVariant(item, individualModel)
+                                    ?.productVariants
                                     ?.indexOf(e) ==
                                 0
                             ? TableData(
@@ -119,13 +120,13 @@ Widget buildTableContent(
                     },
                   ),
                 ],
-                columnWidth: 150,
-                height: ((fetchProductVariant(item, individualModel)!
-                                    .productVariants ??
+                columnWidth: columnWidth,
+                height: ((fetchProductVariant(item, individualModel)
+                                    ?.productVariants ??
                                 [])
                             .length +
                         1) *
-                    59.5,
+                    cellHeight,
               )
             : Text(localizations.translate(i18.common.noProjectSelected))
       ],

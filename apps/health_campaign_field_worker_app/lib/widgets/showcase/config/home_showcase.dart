@@ -38,10 +38,6 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.distributorFileComplaint,
   );
 
-  final beneficiaryReferral = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.homeShowcase.beneficiaryReferral,
-  );
-
   final distributorSyncData = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.distributorSyncData,
   );

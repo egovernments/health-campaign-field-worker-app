@@ -54,11 +54,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 if (selectedBoundary == null) {
                                   return const SizedBox.shrink();
                                 } else {
-                                  final boundaryName = selectedBoundary.name ??
-                                      selectedBoundary.code ??
+                                  final boundaryName =
                                       AppLocalizations.of(context).translate(
+                                    selectedBoundary.name ??
+                                        selectedBoundary.code ??
                                         i18.projectSelection.onProjectMapped,
-                                      );
+                                  );
 
                                   final theme = Theme.of(context);
 
@@ -69,20 +70,31 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                         BoundarySelectionRoute(),
                                       ]);
                                     },
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          boundaryName,
-                                          style: TextStyle(
-                                            color: theme.colorScheme.surface,
-                                            fontSize: 16,
-                                          ),
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          60,
+                                      child: Align(
+                                        alignment: Alignment.centerRight,
+                                        child: Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Flexible(
+                                              child: Text(
+                                                boundaryName,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                  color:
+                                                      theme.colorScheme.surface,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
+                                            ),
+                                            const Icon(
+                                              Icons.arrow_drop_down_outlined,
+                                            ),
+                                          ],
                                         ),
-                                        const Icon(
-                                          Icons.arrow_drop_down_outlined,
-                                        ),
-                                      ],
+                                      ),
                                     ),
                                   );
                                 }
