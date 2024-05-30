@@ -162,13 +162,13 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                               i18.forgotPassword.contentText,
                             ),
                             primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.forgotPassword.primaryActionLabel,
-                              ),
-                              action: (ctx) =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                            ),
+                                label: localizations.translate(
+                                  i18.forgotPassword.primaryActionLabel,
+                                ),
+                                action: (ctx) {
+                                  Navigator.of(ctx).pop();
+                                  context.router.popUntilRoot();
+                                }),
                           ),
                         ),
                         style: TextButton.styleFrom(

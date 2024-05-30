@@ -4,14 +4,14 @@ import 'dart:math';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/models/entities/downsync.dart';
 
 import '../../../blocs/app_initialization/app_initialization.dart';
-import '../../../blocs/search_households/project_beneficiaries_downsync.dart';
+import '../../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../../../blocs/sync/sync.dart';
-import '../../../models/entities/boundary.dart';
-import '../../../models/entities/downsync.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
@@ -50,8 +50,8 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
   @override
   void deactivate() {
     context.read<BeneficiaryDownSyncBloc>().add(
-          const DownSyncResetStateEvent(),
-        );
+      const DownSyncResetStateEvent(),
+    );
     super.deactivate();
   }
 
@@ -109,21 +109,21 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           ),
                         },
                         getBatchSize: (
-                          batchSize,
-                          projectId,
-                          boundaryCode,
-                          pendingSync,
-                          boundaryName,
-                        ) =>
+                            batchSize,
+                            projectId,
+                            boundaryCode,
+                            pendingSync,
+                            boundaryName,
+                            ) =>
                             context.read<BeneficiaryDownSyncBloc>().add(
-                                  DownSyncCheckTotalCountEvent(
-                                    projectId: context.projectId,
-                                    boundaryCode: boundaryCode,
-                                    pendingSyncCount: pendingSyncCount,
-                                    boundaryName: boundaryName,
-                                    batchSize: batchSize,
-                                  ),
-                                ),
+                              DownSyncCheckTotalCountEvent(
+                                projectId: context.projectId,
+                                boundaryCode: boundaryCode,
+                                pendingSyncCount: pendingSyncCount,
+                                boundaryName: boundaryName,
+                                batchSize: batchSize,
+                              ),
+                            ),
                         report: (downSyncCriteriaList) {
                           setState(() {
                             downSyncList = downSyncCriteriaList;
@@ -153,39 +153,39 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                         ),
                         dataFound: (initialServerCount, batchSize) =>
                             showDownloadDialog(
-                          context,
-                          model: DownloadBeneficiary(
-                            title: localizations.translate(
-                              initialServerCount > 0
-                                  ? i18.beneficiaryDetails.dataFound
-                                  : i18.beneficiaryDetails.noDataFound,
-                            ),
-                            projectId: context.projectId,
-                            appConfiguartion: appConfiguration,
-                            boundary: selectedBoundary!.code.toString(),
-                            batchSize: 5,
-                            totalCount: initialServerCount,
-                            content: localizations.translate(
-                              initialServerCount > 0
-                                  ? i18.beneficiaryDetails.dataFoundContent
-                                  : i18.beneficiaryDetails.noDataFoundContent,
-                            ),
-                            primaryButtonLabel: localizations.translate(
-                              initialServerCount > 0
-                                  ? i18.common.coreCommonDownload
-                                  : i18.common.coreCommonGoback,
-                            ),
-                            secondaryButtonLabel: localizations.translate(
-                              initialServerCount > 0
-                                  ? i18.beneficiaryDetails
+                              context,
+                              model: DownloadBeneficiary(
+                                title: localizations.translate(
+                                  initialServerCount > 0
+                                      ? i18.beneficiaryDetails.dataFound
+                                      : i18.beneficiaryDetails.noDataFound,
+                                ),
+                                projectId: context.projectId,
+                                appConfiguartion: appConfiguration,
+                                boundary: selectedBoundary!.code.toString(),
+                                batchSize: 5,
+                                totalCount: initialServerCount,
+                                content: localizations.translate(
+                                  initialServerCount > 0
+                                      ? i18.beneficiaryDetails.dataFoundContent
+                                      : i18.beneficiaryDetails.noDataFoundContent,
+                                ),
+                                primaryButtonLabel: localizations.translate(
+                                  initialServerCount > 0
+                                      ? i18.common.coreCommonDownload
+                                      : i18.common.coreCommonGoback,
+                                ),
+                                secondaryButtonLabel: localizations.translate(
+                                  initialServerCount > 0
+                                      ? i18.beneficiaryDetails
                                       .proceedWithoutDownloading
-                                  : i18.acknowledgementSuccess.goToHome,
+                                      : i18.acknowledgementSuccess.goToHome,
+                                ),
+                                boundaryName: selectedBoundary!.name.toString(),
+                              ),
+                              dialogType: DigitProgressDialogType.dataFound,
+                              isPop: true,
                             ),
-                            boundaryName: selectedBoundary!.name.toString(),
-                          ),
-                          dialogType: DigitProgressDialogType.dataFound,
-                          isPop: true,
-                        ),
                         inProgress: (syncCount, totalCount) {
                           downloadProgress.add(
                             min(
@@ -320,7 +320,7 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                             boundaryName: selectedBoundary!.name.toString(),
                           ),
                           dialogType:
-                              DigitProgressDialogType.insufficientStorage,
+                          DigitProgressDialogType.insufficientStorage,
                           isPop: true,
                         ),
                       );
@@ -342,88 +342,88 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                       ...downSyncList
                           .map(
                             (e) => DigitCard(
-                              child: Column(
-                                children: [
-                                  DigitTableCard(
-                                    element: {
-                                      localizations.translate(
-                                        i18.beneficiaryDetails.boundary,
-                                      ): e.boundaryName!,
-                                      localizations.translate(
-                                        i18.beneficiaryDetails.status,
-                                      ): e.offset == 0 && e.limit == 0
-                                          ? localizations.translate(
-                                              i18.beneficiaryDetails
-                                                  .downloadcompleted,
-                                            )
-                                          : localizations.translate(
-                                              i18.beneficiaryDetails
-                                                  .partialdownloaded,
-                                            ),
-                                      localizations.translate(
-                                        i18.beneficiaryDetails.downloadtime,
-                                      ): e.lastSyncedTime != null
-                                          ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
-                                          : '--',
-                                      localizations.translate(
-                                        i18.beneficiaryDetails
-                                            .totalrecorddownload,
-                                      ): e.offset == 0 && e.limit == 0
-                                          ? '${e.totalCount}/${e.totalCount}'
-                                          : '${e.offset}/${e.totalCount}',
-                                    },
+                          child: Column(
+                            children: [
+                              DigitTableCard(
+                                element: {
+                                  localizations.translate(
+                                    i18.beneficiaryDetails.boundary,
+                                  ): e.boundaryName!,
+                                  localizations.translate(
+                                    i18.beneficiaryDetails.status,
+                                  ): e.offset == 0 && e.limit == 0
+                                      ? localizations.translate(
+                                    i18.beneficiaryDetails
+                                        .downloadcompleted,
+                                  )
+                                      : localizations.translate(
+                                    i18.beneficiaryDetails
+                                        .partialdownloaded,
                                   ),
-                                  DigitOutLineButton(
-                                    label: localizations.translate(
-                                      i18.beneficiaryDetails.download,
-                                    ),
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      backgroundColor: Colors.white,
-                                      side: BorderSide(
-                                        width: 1.0,
-                                        color: theme.colorScheme.secondary,
-                                      ),
-                                      minimumSize: Size(
-                                        MediaQuery.of(context).size.width,
-                                        50,
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        selectedBoundary = BoundaryModel(
-                                          code: e.locality,
-                                          name: e.boundaryName,
-                                        );
-                                      });
-                                      context
-                                          .read<BeneficiaryDownSyncBloc>()
-                                          .add(
-                                            DownSyncGetBatchSizeEvent(
-                                              appConfiguration: [
-                                                appConfiguration,
-                                              ],
-                                              projectId: context.projectId,
-                                              boundaryCode: e.locality!,
-                                              pendingSyncCount:
-                                                  pendingSyncCount,
-                                              boundaryName:
-                                                  e.boundaryName.toString(),
-                                            ),
-                                          );
-                                    },
-                                  ),
-                                ],
+                                  localizations.translate(
+                                    i18.beneficiaryDetails.downloadtime,
+                                  ): e.lastSyncedTime != null
+                                      ? '${DigitDateUtils.getTimeFromTimestamp(e.lastSyncedTime!)} on ${DigitDateUtils.getDateFromTimestamp(e.lastSyncedTime!)}'
+                                      : '--',
+                                  localizations.translate(
+                                    i18.beneficiaryDetails
+                                        .totalrecorddownload,
+                                  ): e.offset == 0 && e.limit == 0
+                                      ? '${e.totalCount}/${e.totalCount}'
+                                      : '${e.offset}/${e.totalCount}',
+                                },
                               ),
-                            ),
-                          )
-                          .toList(),
+                              DigitOutLineButton(
+                                label: localizations.translate(
+                                  i18.beneficiaryDetails.download,
+                                ),
+                                buttonStyle: OutlinedButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  side: BorderSide(
+                                    width: 1.0,
+                                    color: theme.colorScheme.secondary,
+                                  ),
+                                  minimumSize: Size(
+                                    MediaQuery.of(context).size.width,
+                                    50,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    selectedBoundary = BoundaryModel(
+                                      code: e.locality,
+                                      name: e.boundaryName,
+                                    );
+                                  });
+                                  context
+                                      .read<BeneficiaryDownSyncBloc>()
+                                      .add(
+                                    DownSyncGetBatchSizeEvent(
+                                      appConfiguration: [
+                                        appConfiguration,
+                                      ],
+                                      projectId: context.projectId,
+                                      boundaryCode: e.locality!,
+                                      pendingSyncCount:
+                                      pendingSyncCount,
+                                      boundaryName:
+                                      e.boundaryName.toString(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                          ,
                       downSyncList.isEmpty
                           ? NoResultCard(
-                              align: Alignment.center,
-                              label: localizations.translate(
-                                i18.common.noResultsFound,
-                              ),
-                            )
+                        align: Alignment.center,
+                        label: localizations.translate(
+                          i18.common.noResultsFound,
+                        ),
+                      )
                           : const SizedBox.shrink(),
                     ]),
                   ),

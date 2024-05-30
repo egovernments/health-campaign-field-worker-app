@@ -1,25 +1,22 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:recase/recase.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
-import '../../blocs/facility.dart';
-import '../../blocs/inventory_listener.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
-import '../../models/entities/inventory_facility.dart';
 import '../../models/entities/inventory_transport_type.dart';
-import '../../models/entities/product_variant.dart';
 import '../../models/entities/stock.dart';
 import '../../models/entities/transaction_reason.dart';
 import '../../models/entities/transaction_type.dart';
@@ -63,7 +60,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.min(0),
         Validators.max(10000),
       ]),
-      _transactionReasonKey: FormControl<TransactionReason>(),
+      _transactionReasonKey: FormControl<String>(),
       _waybillNumberKey: FormControl<String>(),
       _waybillQuantityKey: FormControl<String>(),
       _vehicleNumberKey: FormControl<String>(),
@@ -124,10 +121,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 String transactionPartyLabel;
                 String quantityCountLabel;
                 String? transactionReasonLabel;
-                TransactionReason? transactionReason;
-                TransactionType transactionType;
+                String? transactionReason;
+                String transactionType;
 
-                List<TransactionReason>? reasons;
+                List<String>? reasons;
 
                 switch (entryType) {
                   case StockRecordEntryType.receipt:
@@ -135,14 +132,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                     transactionPartyLabel =
                         module.selectTransactingPartyReceived;
                     quantityCountLabel = module.quantityReceivedLabel;
-                    transactionType = TransactionType.received;
+                    transactionType = TransactionType.received.toValue();
 
                     break;
                   case StockRecordEntryType.dispatch:
                     pageTitle = module.issuedPageTitle;
                     transactionPartyLabel = module.selectTransactingPartyIssued;
                     quantityCountLabel = module.quantitySentLabel;
-                    transactionType = TransactionType.dispatched;
+                    transactionType = TransactionType.dispatched.toValue();
 
                     break;
                   case StockRecordEntryType.returned:
@@ -150,17 +147,17 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                     transactionPartyLabel =
                         module.selectTransactingPartyReturned;
                     quantityCountLabel = module.quantityReturnedLabel;
-                    transactionType = TransactionType.received;
+                    transactionType = TransactionType.received.toValue();
                     break;
                   case StockRecordEntryType.loss:
                     pageTitle = module.lostPageTitle;
                     quantityCountLabel = module.quantityLostLabel;
                     transactionReasonLabel = module.transactionReasonLost;
-                    transactionType = TransactionType.dispatched;
+                    transactionType = TransactionType.dispatched.toValue();
 
                     reasons = [
-                      TransactionReason.lostInStorage,
-                      TransactionReason.lostInTransit,
+                      TransactionReason.lostInStorage.toValue(),
+                      TransactionReason.lostInTransit.toValue(),
                     ];
                     break;
                   case StockRecordEntryType.damaged:
@@ -169,11 +166,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                         module.selectTransactingPartyReceivedFromDamaged;
                     quantityCountLabel = module.quantityDamagedLabel;
                     transactionReasonLabel = module.transactionReasonDamaged;
-                    transactionType = TransactionType.dispatched;
+                    transactionType = TransactionType.dispatched.toValue();
 
                     reasons = [
-                      TransactionReason.damagedInStorage,
-                      TransactionReason.damagedInTransit,
+                      TransactionReason.damagedInStorage.toValue(),
+                      TransactionReason.damagedInTransit.toValue(),
                     ];
                     break;
                 }
@@ -229,7 +226,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       ).state.primaryId;
                                       final secondaryParty =
                                           selectedFacilityId != null
-                                              ? InventoryFacilityModel(
+                                              ? FacilityModel(
                                                   id: selectedFacilityId
                                                       .toString(),
                                                 )
@@ -289,21 +286,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         switch (entryType) {
                                           case StockRecordEntryType.receipt:
                                             transactionReason =
-                                                TransactionReason.received;
+                                                TransactionReason.received
+                                                    .toValue();
                                             break;
                                           case StockRecordEntryType.dispatch:
                                             transactionReason = null;
                                             break;
                                           case StockRecordEntryType.returned:
                                             transactionReason =
-                                                TransactionReason.returned;
+                                                TransactionReason.returned
+                                                    .toValue();
                                             break;
                                           default:
                                             transactionReason = form
                                                 .control(
                                                   _transactionReasonKey,
                                                 )
-                                                .value as TransactionReason?;
+                                                .value as String?;
                                             break;
                                         }
 
@@ -394,55 +393,85 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           receiverType: receiverType,
                                           senderId: senderId,
                                           senderType: senderType,
-                                        );
-
-                                        bloc.add(
-                                          RecordStockSaveStockDetailsEvent(
-                                            stockModel: stockModel,
-                                            additionalData: [
-                                                      waybillQuantity,
-                                                      vehicleNumber,
-                                                      comments,
-                                                    ].any((element) =>
-                                                        element != null) ||
-                                                    hasLocationData
-                                                ? {
+                                          auditDetails: AuditDetails(
+                                            createdBy: InventorySingleton()
+                                                .loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          clientAuditDetails:
+                                              ClientAuditDetails(
+                                            createdBy: InventorySingleton()
+                                                .loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy: InventorySingleton()
+                                                .loggedInUserUuid,
+                                            lastModifiedTime: context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          additionalFields: [
+                                                    waybillQuantity,
+                                                    vehicleNumber,
+                                                    comments,
+                                                  ].any((element) =>
+                                                      element != null) ||
+                                                  hasLocationData
+                                              ? StockAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
                                                     if (waybillQuantity !=
                                                             null &&
                                                         waybillQuantity
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'waybill_quantity':
-                                                          waybillQuantity,
+                                                      AdditionalField(
+                                                        'waybill_quantity',
+                                                        waybillQuantity,
+                                                      ),
                                                     if (vehicleNumber != null &&
                                                         vehicleNumber
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'vehicle_number':
-                                                          vehicleNumber,
+                                                      AdditionalField(
+                                                        'vehicle_number',
+                                                        vehicleNumber,
+                                                      ),
                                                     if (comments != null &&
                                                         comments
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'comments': comments,
+                                                      AdditionalField(
+                                                        'comments',
+                                                        comments,
+                                                      ),
                                                     if (deliveryTeamName !=
                                                             null &&
                                                         deliveryTeamName
                                                             .trim()
                                                             .isNotEmpty)
-                                                      'deliveryTeam':
-                                                          deliveryTeamName,
-                                                    if (hasLocationData) ...{
-                                                      'lat': lat,
-                                                      'lng': lng,
-                                                    },
-                                                    if (scannerState
-                                                        .barCodes.isNotEmpty)
-                                                      ...addBarCodesToFields(
-                                                          scannerState
-                                                              .barCodes),
-                                                  }
-                                                : null,
+                                                      AdditionalField(
+                                                        'deliveryTeam',
+                                                        deliveryTeamName,
+                                                      ),
+                                                    if (hasLocationData) ...[
+                                                      AdditionalField(
+                                                        'lat',
+                                                        lat,
+                                                      ),
+                                                      AdditionalField(
+                                                        'lng',
+                                                        lng,
+                                                      ),
+                                                    ],
+                                                  ],
+                                                )
+                                              : null,
+                                        );
+
+                                        bloc.add(
+                                          RecordStockSaveStockDetailsEvent(
+                                            stockModel: stockModel,
                                           ),
                                         );
 
@@ -507,8 +536,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   localizations.translate(pageTitle),
                                   style: theme.textTheme.displayMedium,
                                 ),
-                                BlocBuilder<ProductVariantBloc,
-                                    ProductVariantState>(
+                                BlocBuilder<InventoryProductVariantBloc,
+                                    InventoryProductVariantState>(
                                   builder: (context, state) {
                                     return state.maybeWhen(
                                       orElse: () => const Offstage(),
@@ -555,8 +584,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     ),
                                     menuItems: reasons ?? [],
                                     formControlName: _transactionReasonKey,
-                                    valueMapper: (value) =>
-                                        value.name.titleCase,
+                                    valueMapper: (value) => value,
                                     isRequired: true,
                                   ),
                                 BlocBuilder<FacilityBloc, FacilityState>(
@@ -567,7 +595,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                               child:
                                                   CircularProgressIndicator(),
                                             ),
-                                        fetched: (facilities) {
+                                        fetched: (facilities, allFacilities) {
                                           return InkWell(
                                             onTap: () async {
                                               clearQRCodes();
@@ -575,13 +603,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   .control(_deliveryTeamKey)
                                                   .value = '';
 
-                                              final facility = await context
-                                                      .router
-                                                      .push(
+                                              final facility =
+                                                  await context.router.push(
                                                           InventoryFacilitySelectionRoute(
                                                               facilities:
                                                                   facilities))
-                                                  as InventoryFacilityModel?;
+                                                      as FacilityModel?;
 
                                               if (facility == null) return;
                                               form
@@ -638,7 +665,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     InventoryFacilitySelectionRoute(
                                                       facilities: facilities,
                                                     ),
-                                                  ) as InventoryFacilityModel?;
+                                                  ) as FacilityModel?;
 
                                                   if (facility == null) return;
                                                   form

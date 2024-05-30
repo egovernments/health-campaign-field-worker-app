@@ -1,8 +1,10 @@
+import 'package:digit_data_model/models/entities/product_variant.dart';
+import 'package:digit_data_model/models/entities/project_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/inventory_listener.dart';
+import 'package:inventory_management/utils/extensions/extensions.dart';
+
 import '../../blocs/product_variant.dart';
-import '../../models/entities/project_resource.dart';
 
 class ProductVariantBlocWrapper extends StatelessWidget {
   final Widget child;
@@ -16,14 +18,17 @@ class ProductVariantBlocWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<ProductVariantBloc>(
-      create: (_) => ProductVariantBloc(
-        const ProductVariantEmptyState(),
-        inventorySingleton: InventorySingleton(),
+    return BlocProvider<InventoryProductVariantBloc>(
+      create: (_) => InventoryProductVariantBloc(
+        productVariantDataRepository:
+            context.repository<ProductVariantModel, ProductVariantSearchModel>(
+                context),
+        projectResourceDataRepository: context.repository<ProjectResourceModel,
+            ProjectResourceSearchModel>(context),
       )..add(
           ProductVariantLoadEvent(
             query: ProjectResourceSearchModel(
-              projectId: projectId,
+              projectId: [projectId],
             ),
           ),
         ),

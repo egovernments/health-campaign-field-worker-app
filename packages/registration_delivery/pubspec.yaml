@@ -1,0 +1,60 @@
+name: registration_delivery
+description: "Registration and Delivery for Health Campaigns"
+version: 0.0.0-dev.5
+homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/registration_delivery"
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  digit_components: ^0.0.3+16
+  flutter_bloc: ^8.1.1
+  freezed_annotation: ^2.1.0
+  build_runner: ^2.2.1
+  reactive_forms: ^14.1.0
+  fluttertoast: ^8.1.2
+  overlay_builder: ^1.1.0
+  intl: ^0.18.0
+  flutter_svg: ^2.0.8
+  dart_mappable: ^4.2.0
+  drift: ^2.0.0
+  sqlite3_flutter_libs: ^0.5.10
+  path_provider: ^2.0.11
+  path: ^1.8.2
+  drift_db_viewer: ^2.0.0
+  uuid: ^3.0.6
+  recase: ^4.1.0
+  pluto_grid: ^7.0.1
+  digit_scanner: ^0.0.0-dev.5
+  gs1_barcode_parser: ^1.0.5
+  auto_route: ^7.8.4
+  digit_data_model: ^0.0.0-dev.3
+  package_info_plus: ^5.0.1
+  digit_showcase: ^0.0.0-dev.1
+  collection: ^1.16.0
+  flutter_keyboard_visibility: ^5.4.0
+  stream_transform: ^2.1.0
+  async: ^2.11.0
+  formula_parser: ^2.0.1
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+  dart_code_metrics: ^5.7.6
+  freezed: ^2.1.0+1
+  json_serializable: ^6.4.0
+  drift_dev: ^2.14.1
+  bloc_test: ^9.1.0
+  mocktail: ^1.0.2
+  dart_mappable_builder: ^4.2.0
+  auto_route_generator: ^7.3.2
+
+flutter:
+  assets:
+    - assets/images/
+    - assets/icons/svg/

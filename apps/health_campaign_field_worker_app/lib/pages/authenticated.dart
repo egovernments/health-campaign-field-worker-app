@@ -1,33 +1,20 @@
 import 'dart:async';
 
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
-import '../blocs/boundary/boundary.dart';
-import '../blocs/household_details/household_details.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/search_households/project_beneficiaries_downsync.dart';
-import '../blocs/search_households/proximity_search.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_by_head.dart';
-import '../blocs/search_households/search_households.dart';
-import '../blocs/search_households/tag_by_search.dart';
-import '../blocs/search_referrals/search_referrals.dart';
-import '../blocs/service/service.dart';
+import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
-import '../data/data_repository.dart';
-import '../data/local_store/no_sql/schema/oplog.dart';
-import '../data/local_store/sql_store/sql_store.dart';
 import '../data/remote_client.dart';
-import '../data/repositories/local/address.dart';
-import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
-import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
@@ -37,7 +24,7 @@ import '../widgets/sidebar/side_bar.dart';
 
 @RoutePage()
 class AuthenticatedPageWrapper extends StatelessWidget {
-  AuthenticatedPageWrapper({Key? key}) : super(key: key);
+  AuthenticatedPageWrapper({super.key});
 
   final StreamController<bool> _drawerVisibilityController =
       StreamController.broadcast();
@@ -67,11 +54,12 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 if (selectedBoundary == null) {
                                   return const SizedBox.shrink();
                                 } else {
-                                  final boundaryName = selectedBoundary.name ??
-                                      selectedBoundary.code ??
+                                  final boundaryName =
                                       AppLocalizations.of(context).translate(
+                                    selectedBoundary.name ??
+                                        selectedBoundary.code ??
                                         i18.projectSelection.onProjectMapped,
-                                      );
+                                  );
 
                                   final theme = Theme.of(context);
 
@@ -82,20 +70,28 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                         BoundarySelectionRoute(),
                                       ]);
                                     },
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          boundaryName,
-                                          style: TextStyle(
-                                            color: theme.colorScheme.surface,
-                                            fontSize: 16,
+                                    child: SizedBox(
+                                      width: MediaQuery.of(context).size.width -
+                                          60,
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Flexible(
+                                            child: Text(
+                                              boundaryName,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                color:
+                                                    theme.colorScheme.surface,
+                                                fontSize: 16,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        const Icon(
-                                          Icons.arrow_drop_down_outlined,
-                                        ),
-                                      ],
+                                          const Icon(
+                                            Icons.arrow_drop_down_outlined,
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   );
                                 }
@@ -107,142 +103,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                   drawer: showDrawer ? const Drawer(child: SideBar()) : null,
                   body: MultiBlocProvider(
                     providers: [
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return SearchHouseholdsBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return SearchByHeadBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return ProximitySearchBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          final isar = context.read<Isar>();
-
-                          return TagSearchBloc(
-                            beneficiaryType: context.beneficiaryType,
-                            userUid: context.loggedInUserUuid,
-                            projectId: context.projectId,
-                            addressRepository: AddressLocalRepository(
-                              context.read<LocalSqlDataStore>(),
-                              AddressOpLogManager(isar),
-                            ),
-                            projectBeneficiary: context.repository<
-                                ProjectBeneficiaryModel,
-                                ProjectBeneficiarySearchModel>(),
-                            householdMember: context.repository<
-                                HouseholdMemberModel,
-                                HouseholdMemberSearchModel>(),
-                            household: context.repository<HouseholdModel,
-                                HouseholdSearchModel>(),
-                            individual: context.repository<IndividualModel,
-                                IndividualSearchModel>(),
-                            taskDataRepository: context
-                                .repository<TaskModel, TaskSearchModel>(),
-                            sideEffectDataRepository: context.repository<
-                                SideEffectModel, SideEffectSearchModel>(),
-                            referralDataRepository: context.repository<
-                                ReferralModel, ReferralSearchModel>(),
-                          );
-                        },
-                      ),
-                      BlocProvider(
-                        create: (context) {
-                          return SearchBlocWrapper(
-                            searchHouseholdsBloc:
-                                context.read<SearchHouseholdsBloc>(),
-                            searchByHeadBloc: context.read<SearchByHeadBloc>(),
-                            proximitySearchBloc:
-                                context.read<ProximitySearchBloc>(),
-                            tagSearchBloc: context.read<TagSearchBloc>(),
-                          );
-                        },
-                      ),
                       BlocProvider(
                         create: (context) {
                           final userId = context.loggedInUserUuid;
@@ -269,26 +129,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 bloc.add(
                                   SyncRefreshEvent(
                                     userId,
-                                    event.where((element) {
-                                      switch (element.entityType) {
-                                        case DataModelType.household:
-                                        case DataModelType.individual:
-                                        case DataModelType.householdMember:
-                                        case DataModelType.projectBeneficiary:
-                                        case DataModelType.task:
-                                        case DataModelType.stock:
-                                        case DataModelType.stockReconciliation:
-                                        case DataModelType.service:
-                                        case DataModelType.complaints:
-                                        case DataModelType.sideEffect:
-                                        case DataModelType.referral:
-                                        case DataModelType.hFReferral:
-                                        case DataModelType.attendance:
-                                          return true;
-                                        default:
-                                          return false;
-                                      }
-                                    }).length,
+                                    getSyncCount(event),
                                   ),
                                 );
                               }
@@ -307,25 +148,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 bloc.add(
                                   SyncRefreshEvent(
                                     userId,
-                                    event.where((element) {
-                                      switch (element.entityType) {
-                                        case DataModelType.household:
-                                        case DataModelType.householdMember:
-                                        case DataModelType.individual:
-                                        case DataModelType.projectBeneficiary:
-                                        case DataModelType.task:
-                                        case DataModelType.stock:
-                                        case DataModelType.stockReconciliation:
-                                        case DataModelType.complaints:
-                                        case DataModelType.sideEffect:
-                                        case DataModelType.referral:
-                                        case DataModelType.hFReferral:
-                                        case DataModelType.attendance:
-                                          return true;
-                                        default:
-                                          return false;
-                                      }
-                                    }).length,
+                                    getSyncCount(event),
                                   ),
                                 );
                               }
@@ -378,15 +201,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                   DownsyncSearchModel>>(),
                           networkManager: ctx.read(),
                         ),
-                      ),
-                      BlocProvider(
-                        create: (_) => SearchReferralsBloc(
-                          userUid: context.loggedInUserUuid,
-                          projectId: context.projectId,
-                          beneficiaryType: context.beneficiaryType,
-                          hfReferralDataRepository: context.repository<
-                              HFReferralModel, HFReferralSearchModel>(),
-                        )..add(const SearchReferralsClearEvent()),
                       ),
                       BlocProvider(
                         create: (_) => ServiceBloc(

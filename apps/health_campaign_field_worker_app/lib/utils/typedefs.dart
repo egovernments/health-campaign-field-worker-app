@@ -1,14 +1,10 @@
-import '../data/data_repository.dart';
-import '../models/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:inventory_management/inventory_management.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
 typedef AddressDataRepository
     = DataRepository<AddressModel, AddressSearchModel>;
-typedef HouseholdDataRepository
-    = DataRepository<HouseholdModel, HouseholdSearchModel>;
-typedef HouseholdMemberDataRepository
-    = DataRepository<HouseholdMemberModel, HouseholdMemberSearchModel>;
 typedef IndividualDataRepository
     = DataRepository<IndividualModel, IndividualSearchModel>;
 typedef ProductDataRepository
@@ -17,8 +13,6 @@ typedef ProductVariantDataRepository
     = DataRepository<ProductVariantModel, ProductVariantSearchModel>;
 typedef ProjectDataRepository
     = DataRepository<ProjectModel, ProjectSearchModel>;
-typedef ProjectBeneficiaryDataRepository
-    = DataRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>;
 typedef ProjectFacilityDataRepository
     = DataRepository<ProjectFacilityModel, ProjectFacilitySearchModel>;
 typedef ProjectProductVariantDataRepository = DataRepository<
@@ -27,9 +21,6 @@ typedef ProjectResourceDataRepository
     = DataRepository<ProjectResourceModel, ProjectResourceSearchModel>;
 typedef ProjectStaffDataRepository
     = DataRepository<ProjectStaffModel, ProjectStaffSearchModel>;
-typedef ProjectTypeDataRepository
-    = DataRepository<ProjectTypeModel, ProjectTypeSearchModel>;
-typedef TaskDataRepository = DataRepository<TaskModel, TaskSearchModel>;
 typedef ServiceDefinitionDataRepository
     = DataRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>;
 typedef ServiceDataRepository
@@ -38,21 +29,7 @@ typedef PgrServiceDataRepository
     = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
 
 typedef UserDataRepository = DataRepository<UserModel, UserSearchModel>;
-typedef SideEffectDataRepository
-    = DataRepository<SideEffectModel, SideEffectSearchModel>;
-typedef ReferralDataRepository
-    = DataRepository<ReferralModel, ReferralSearchModel>;
-typedef DownsyncDataRepository
-    = DataRepository<DownsyncModel, DownsyncSearchModel>;
-typedef HFReferralDataRepository
-    = DataRepository<HFReferralModel, HFReferralSearchModel>;
 
-typedef AttendanceDataRepository
-    = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;
-typedef AttendanceLogDataRepository
-    = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;
-
-typedef StockDataRepository
-    = DataRepository<HcmStockModel, HcmStockSearchModel>;
-typedef StockReconciliationDataRepository = DataRepository<
-    HcmStockReconciliationModel, HcmStockReconciliationSearchModel>;
+typedef StockDataRepository = DataRepository<StockModel, StockSearchModel>;
+typedef StockReconciliationDataRepository
+    = DataRepository<StockReconciliationModel, StockReconciliationSearchModel>;

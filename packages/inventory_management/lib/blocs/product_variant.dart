@@ -3,24 +3,25 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:inventory_management/blocs/inventory_listener.dart';
+import 'package:digit_data_model/data_model.dart';
 
-import '../models/entities/product_variant.dart';
-import '../models/entities/project_resource.dart';
+import '../utils/typedefs.dart';
 
 part 'product_variant.freezed.dart';
 
-typedef ProductVariantEmitter = Emitter<ProductVariantState>;
+typedef ProductVariantEmitter = Emitter<InventoryProductVariantState>;
 
 // Bloc for handling product variant related events and states
-class ProductVariantBloc
-    extends Bloc<ProductVariantEvent, ProductVariantState> {
-  final InventorySingleton inventorySingleton;
+class InventoryProductVariantBloc
+    extends Bloc<InventoryProductVariantEvent, InventoryProductVariantState> {
+  final ProjectResourceDataRepository projectResourceDataRepository;
+  final ProductVariantDataRepository productVariantDataRepository;
 
-  // Constructor for the bloc
-  ProductVariantBloc(super.initialState, {required this.inventorySingleton}) {
-    // Registering the event handler for loading product variants
-    on(_handleLoad);
+  InventoryProductVariantBloc(
+      {required this.projectResourceDataRepository,
+      required this.productVariantDataRepository})
+      : super(const InventoryProductVariantState.loading()) {
+    on<ProductVariantLoadEvent>(_handleLoad);
   }
 
   // Event handler for loading product variants
@@ -31,40 +32,51 @@ class ProductVariantBloc
     // Emitting the loading state
     emit(const ProductVariantLoadingState());
     // Fetching the product variants
-    List<ProductVariantModel>? productVariants =
-        await inventorySingleton.getProductVariants();
+    final projectResources = await projectResourceDataRepository.search(
+      event.query,
+    );
+
+    final productVariants = await productVariantDataRepository.search(
+      ProductVariantSearchModel(
+        id: projectResources.map((e) {
+          return e.resource.productVariantId;
+        }).toList(),
+      ),
+    );
 
     // Checking if the product variants are null
-    if (productVariants == null || productVariants.isEmpty) {
+    if (productVariants.isEmpty) {
       // Emitting the empty state if product variants are null
       emit((const ProductVariantEmptyState()));
     } else {
       // Emitting the fetched state with the fetched product variants
-      emit(ProductVariantState.fetched(productVariants: productVariants));
+      emit(InventoryProductVariantState.fetched(
+          productVariants: productVariants));
     }
   }
 }
 
 // Freezed union class for product variant events
 @freezed
-class ProductVariantEvent with _$ProductVariantEvent {
+class InventoryProductVariantEvent with _$InventoryProductVariantEvent {
   // Event for loading product variants
-  const factory ProductVariantEvent.load({
+  const factory InventoryProductVariantEvent.load({
     required ProjectResourceSearchModel query,
   }) = ProductVariantLoadEvent;
 }
 
 // Freezed union class for product variant states
 @freezed
-class ProductVariantState with _$ProductVariantState {
+class InventoryProductVariantState with _$InventoryProductVariantState {
   // State for when the product variants are being loaded
-  const factory ProductVariantState.loading() = ProductVariantLoadingState;
+  const factory InventoryProductVariantState.loading() =
+      ProductVariantLoadingState;
 
   // State for when there are no product variants
-  const factory ProductVariantState.empty() = ProductVariantEmptyState;
+  const factory InventoryProductVariantState.empty() = ProductVariantEmptyState;
 
   // State for when the product variants have been fetched
-  const factory ProductVariantState.fetched({
+  const factory InventoryProductVariantState.fetched({
     required List<ProductVariantModel> productVariants,
   }) = ProductVariantFetchedState;
 }

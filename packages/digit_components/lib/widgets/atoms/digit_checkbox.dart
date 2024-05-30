@@ -19,7 +19,6 @@ class DigitCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
 
     return Padding(
       padding: padding,
@@ -29,12 +28,11 @@ class DigitCheckbox extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              height: 24,
-              width: 24,
-              child: CheckboxIcon(
-                value: value,
-              )
-            ),
+                height: 24,
+                width: 24,
+                child: CheckboxIcon(
+                  value: value,
+                )),
             const SizedBox(width: 16),
             Text(
               label,

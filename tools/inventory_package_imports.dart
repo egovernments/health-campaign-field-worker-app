@@ -19,132 +19,222 @@ void main() {
   var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
-  var blocDirectoryPath = '$appRoot/blocs/inventory';
-  var blocFilePath = '$blocDirectoryPath/hcm_inventory_bloc.dart';
   var networkManagerProviderWrapperFilePath =
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
-  var opLogPath =
-      '$appDir/apps/health_campaign_field_worker_app/lib/data/local_store/no_sql/schema/oplog.dart';
-  var typeDefPath = '$appRoot/utils/typedefs.dart';
+  var constantsFilePath = '$appRoot/utils/constants.dart';
+  var utilsFilePath = '$appRoot/utils/utils.dart';
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
-
-  _createStockBlocFile(
-      blocDirectoryPath: blocDirectoryPath, blocFilePath: blocFilePath);
 
   _addRepoToNetworkManagerProviderWrapper(
     networkManagerProviderWrapperFilePath:
         networkManagerProviderWrapperFilePath,
   );
 
-  _createOpLogCaseConditions(opLogPath: opLogPath);
+  _addInventoryConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
-  _createTypeDefFile(typeDefPath: typeDefPath);
+  _addInventoryMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
-  // Run dart format on the oplog.dart file
+  // Run dart format on the hcm_oplog.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
       .then((ProcessResult results) {
     print(results.stdout);
   });
 
-  Process.run('dart', ['format', blocFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
+  // Run dart format on the network_manager_provider_wrapper.dart file
   Process.run('dart', ['format', networkManagerProviderWrapperFilePath])
       .then((ProcessResult results) {
     print(results.stdout);
   });
 
-  Process.run('dart', ['format', opLogPath]).then((ProcessResult results) {
+  // Run dart format on the constants.dart file
+  Process.run('dart', ['format', constantsFilePath])
+      .then((ProcessResult results) {
     print(results.stdout);
   });
 
-  Process.run('dart', ['format', typeDefPath]).then((ProcessResult results) {
+  // Run dart format on the utils.dart file
+  Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
 }
 
-void _createTypeDefFile({required String typeDefPath}) {
-  var typeDef = [
-    "typedef StockDataRepository = DataRepository<HcmStockModel, HcmStockSearchModel>;",
-    "typedef StockReconciliationDataRepository = DataRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel>;"
+void _addInventoryMapperToUtilsFile({required String utilsFilePath}) {
+  // Define the inventory related lines
+  var inventoryImportStatement = [
+    "import 'package:inventory_management/inventory_management.init.dart' as inventory_mappers;"
+  ];
+  var inventoryInitializationStatement =
+      "Future(() => inventory_mappers.initializeMappers()),";
+
+  // Check if the utils.dart file exists
+  var utilsFile = File(utilsFilePath);
+
+  // Read the utils.dart file
+  var utilsFileContent = utilsFile.readAsStringSync();
+
+  // Normalize the whitespace in the file content
+  var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement and delegate already exist in the file
+  // If not, add them to the file
+  if (!normalizedFileContent
+      .contains(inventoryImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
+    var libraryIndex = utilsFileContent.indexOf('library app_utils;');
+    if (libraryIndex != -1) {
+      var endOfLibrary = libraryIndex +
+          utilsFileContent.substring(libraryIndex).indexOf(';') +
+          1;
+      utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
+          '\n' +
+          inventoryImportStatement[0] +
+          utilsFileContent.substring(endOfLibrary + 1);
+      print('The import statement was added.');
+    }
+  } else {
+    print('The import statement already exists.');
+  }
+
+  if (!utilsFileContent.contains(inventoryInitializationStatement)) {
+    // Add the inventory related initialization statement to the file
+    var initializeAllMappersIndex =
+        utilsFileContent.indexOf('initializeAllMappers() async {');
+    if (initializeAllMappersIndex == -1) {
+      print(
+          'Error: Could not find a place to insert the inventory initialization statement.');
+      return;
+    }
+    var endOfInitializeAllMappers = initializeAllMappersIndex +
+        utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
+        1;
+    utilsFileContent =
+        utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
+            '\n    ' +
+            inventoryInitializationStatement +
+            utilsFileContent.substring(endOfInitializeAllMappers - 1);
+    print('Inventory initialization statement added to utils.dart');
+  }
+
+  // Write the updated content back to the utils.dart file
+  utilsFile.writeAsStringSync(utilsFileContent);
+}
+
+void _addInventoryConstantsToConstantsFile(
+    {required String constantsFilePath}) {
+  // Define the import statements
+  var importStatements = [
+    "import 'package:inventory_management/inventory_management.dart';",
   ];
 
-  // Read the typedefs file
-  var typedefFile = File(typeDefPath);
-  var typedefFileContent = typedefFile.readAsStringSync();
+  // Define the inventory configuration
+  var inventoryConfiguration = '''
+// inventory related configuration
+InventorySingleton().setTenantId(envConfig.variables.tenantId);
+  ''';
 
-  // Normalize the whitespace in the file content and the typedefs
-  var normalizedFileContent = typedefFileContent.replaceAll(RegExp(r'\s'), '');
+  // Define the inventory related lines
+  var inventoryLocalRepositories = [
+    'StockLocalRepository(sql, StockOpLogManager(isar)),',
+    'StockReconciliationLocalRepository(sql,StockReconciliationOpLogManager(isar),),',
+  ];
+  var inventoryRemoteRepositories = [
+    'if (value == DataModelType.stock) StockRemoteRepository(dio, actionMap: actions),',
+    'if (value == DataModelType.stockReconciliation) StockReconciliationRemoteRepository(dio, actionMap: actions),',
+  ];
 
-  // Check if the typedefs already exist in the file
-  for (var typedefStatement in typeDef) {
-    var normalizedTypedef = typedefStatement.replaceAll(RegExp(r'\s'), '');
+  // Read the constants.dart file
+  var constantsFile = File(constantsFilePath);
+  var constantsFileContent = constantsFile.readAsStringSync();
 
-    if (!normalizedFileContent.contains(normalizedTypedef)) {
-      // Add the typedef to the end of the file
-      typedefFileContent = '$typedefFileContent\n$typedefStatement';
-      print('The typedef was added: $typedefStatement');
-    } else {
-      print('The typedef already exists.');
+  // Normalize the whitespace in the file content and the inventory configuration
+  var normalizedFileContent =
+      constantsFileContent.replaceAll(RegExp(r'\s'), '');
+  var normalizedInventoryConfiguration =
+      inventoryConfiguration.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statements already exist in the file
+  for (var importStatement in importStatements) {
+    if (!normalizedFileContent
+        .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+      // Add the import statement after the last import
+      constantsFileContent = constantsFileContent.substring(
+              0, constantsFileContent.indexOf(';') + 1) +
+          '\n' +
+          importStatement +
+          constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
+      print('The import statement was added: $importStatement');
     }
   }
 
-  // Write the updated content back to the file
-  typedefFile.writeAsStringSync(typedefFileContent);
-}
-
-void _createOpLogCaseConditions({required String opLogPath}) {
-  Process.run('chmod', ['+r', opLogPath]);
-
-  final filePath = opLogPath;
-
-  final caseConditions = {
-    'stock':
-        'final entity = HcmStockModelMapper.fromJson(entityString);\n    return entity;',
-    'stockReconciliation':
-        'final entity = HcmStockReconciliationModelMapper.fromJson(entityString);\n    return entity;',
-  };
-
-  final file = File(filePath);
-  final lines = file.readAsLinesSync();
-
-  for (var entry in caseConditions.entries) {
-    final caseCondition = createCaseCondition(entry.key, entry.value);
-    insertCaseCondition(lines, caseCondition);
+  // Check if the inventory configuration already exists in the file
+  // If not, add it to the file
+  if (!normalizedFileContent.contains(normalizedInventoryConfiguration)) {
+    constantsFileContent = '$inventoryConfiguration\n$constantsFileContent';
+    print('The inventory configuration was added.');
   }
 
-  file.writeAsStringSync(lines.join('\n'));
+  // Check if the inventory local repositories already exist in the file
+  for (var inventoryLocalRepository in inventoryLocalRepositories) {
+    var normalizedinventoryLocalRepository =
+        inventoryLocalRepository.replaceAll(RegExp(r'\s'), '');
+
+    if (!normalizedFileContent.contains(normalizedinventoryLocalRepository)) {
+      // Add the inventory local repository to the file
+      constantsFileContent = constantsFileContent.replaceFirst(
+          '];', '  $inventoryLocalRepository\n];');
+      print(
+          'The inventory local repository was added: $inventoryLocalRepository');
+    } else {
+      print('The inventory local repository already exists.');
+    }
+  }
+
+  // Check if the inventory remote repositories already exist in the file
+  for (var inventoryRemoteRepository in inventoryRemoteRepositories) {
+    var normalizedInventoryRemoteRepository =
+        inventoryRemoteRepository.replaceAll(RegExp(r'\s'), '');
+
+    if (!normalizedFileContent.contains(normalizedInventoryRemoteRepository)) {
+      // Add the inventory remote repository to the _getRemoteRepositories method
+      var replacementString = constantsFileContent.contains(']);')
+          ? '  $inventoryRemoteRepository,\n]);'
+          : '  $inventoryRemoteRepository\n]);';
+      constantsFileContent =
+          constantsFileContent.replaceFirst(']);', replacementString);
+      print(
+          'The inventory remote repository was added: $inventoryRemoteRepository');
+    } else {
+      print('The inventory remote repository already exists.');
+    }
+  }
 }
 
 void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import '../data/repositories/local/stock.dart';",
-    "import '../data/repositories/local/stock_reconciliation.dart';",
+    "import 'package:inventory_management/inventory_management.dart';",
     "import '../data/repositories/remote/stock.dart';",
     "import '../data/repositories/remote/stock_reconciliation.dart';"
   ];
   var localRepositories = [
-    "RepositoryProvider<\n          LocalRepository<HcmStockModel,\n              HcmStockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
-    "RepositoryProvider<\n          LocalRepository<HcmStockReconciliationModel, HcmStockReconciliationSearchModel>>(\n        create: (_) => StockReconciliationLocalRepository(\n          sql,\n          StockReconciliationOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<StockModel,\n              StockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<StockReconciliationModel, StockReconciliationSearchModel>>(\n        create: (_) => StockReconciliationLocalRepository(\n          sql,\n          StockReconciliationOpLogManager(isar),\n        ),\n      ),",
   ];
 
   // Define the remote repositories of inventory
   var remoteRepositoriesOfInventory = [
     "if (value == DataModelType.stock)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HcmStockModel,\n"
-        "          HcmStockSearchModel>>(\n"
+        "      RemoteRepository<StockModel,\n"
+        "          StockSearchModel>>(\n"
         "    create: (_) =>\n"
         "        StockRemoteRepository(dio, actionMap: actions),\n"
         "  )",
     "if (value == DataModelType.stockReconciliation)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HcmStockReconciliationModel,\n"
-        "          HcmStockReconciliationSearchModel>>(\n"
+        "      RemoteRepository<StockReconciliationModel,\n"
+        "          StockReconciliationSearchModel>>(\n"
         "    create: (_) =>\n"
         "        StockReconciliationRemoteRepository(dio, actionMap: actions),\n"
         "  )"
@@ -229,74 +319,6 @@ void _addRepoToNetworkManagerProviderWrapper(
       .writeAsStringSync(networkManagerProviderWrapperFileContent);
 }
 
-void _createStockBlocFile(
-    {required String blocDirectoryPath, required String blocFilePath}) {
-// Check if the Bloc file already exists
-  var blocFile = File(blocFilePath);
-  if (!blocFile.existsSync()) {
-    // Create the directory
-    Directory(blocDirectoryPath).createSync(recursive: true);
-
-    // Write the skeleton Bloc class to the file
-    blocFile.writeAsStringSync('''
-import 'package:inventory_management/blocs/inventory_report.dart';
-import 'package:inventory_management/inventory_management.dart';
-
-class HcmInventoryBloc extends InventoryListener {
-  @override
-  void callSyncMethod() {
-    // TODO: implement callSyncMethod
-  }
-
-  @override
-  Future<List<InventoryFacilityModel>> fetchFacilitiesForProjectId() {
-    // TODO: implement fetchFacilitiesForProjectId
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Map<String, List<StockModel>>> fetchInventoryReports({required InventoryReportType reportType, required String facilityId, required String productVariantId}) {
-    // TODO: implement fetchInventoryReports
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<ProductVariantModel>> fetchProductVariants() {
-    // TODO: implement fetchProductVariants
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<List<StockModel>>> fetchStockReconciliationDetails({required String productVariantId, required String facilityId}) {
-    // TODO: implement fetchStockReconciliationDetails
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<StockReconciliationReport> handleStockReconciliationReport({required String facilityId, required String productVariantId}) {
-    // TODO: implement handleStockReconciliationReport
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> saveStockDetails(SaveStockDetails saveStockDetails) {
-    // TODO: implement saveStockDetails
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<bool> saveStockReconciliationDetails(SaveStockReconciliationModel stockReconciliationModel) {
-    // TODO: implement saveStockReconciliationDetails
-    throw UnimplementedError();
-  }
-}
-''');
-    print('File $blocFilePath created.');
-  } else {
-    print('File $blocFilePath already exists. Not modifying the content.');
-  }
-}
-
 void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Define the import statement and delegate for localization
   var importStatement =
@@ -307,23 +329,23 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Read the localization delegates file
   var localizationDelegatesFile = File(localizationDelegatesFilePath);
   var localizationDelegatesFileContent =
-  localizationDelegatesFile.readAsStringSync();
+      localizationDelegatesFile.readAsStringSync();
 
   var normalizedFileContent =
-  localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
+      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     localizationDelegatesFileContent =
-    '$importStatement\n$localizationDelegatesFileContent';
+        '$importStatement\n$localizationDelegatesFileContent';
     print('The import statement was added.');
   }
 
   if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
     var lastDelegateIndex =
-    localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
     if (lastDelegateIndex != -1) {
       localizationDelegatesFileContent =
           localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +

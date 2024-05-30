@@ -1,7 +1,21 @@
-## 0.0.1
+## 0.0.0-dev.1
+* Inventory Management Initial Release
 
-* With this package, you can manage the inventory of your application.
-* Features:
-  - Manage Stocks: Receipt, Issued, Returned, Damaged and Loss of stocks and send the data to parent application.
-  - Stock Reconciliation: Reconcile the stock data with the parent application.
-  - View Reports: View the reports of the stocks.
+## 0.0.0-dev.2
+* Removed unused package dependencies from pubspec.yaml
+
+## 0.0.0-dev.3
+* Updated intl package version
+
+## 0.0.0-dev.4
+* Removed fonts references from pubspec.yaml
+
+## 0.0.0-dev.5
+* Updated digit_components version for dropdown fix
+
+## 0.0.0-dev.6
+* Updated digit_data_model to latest version
+* Fixed Report Type mapping to value
+
+## 0.0.0-dev.7
+* Fixed Lost report type mapping to value

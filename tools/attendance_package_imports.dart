@@ -22,40 +22,24 @@ void main() {
   var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
-  var blocDirectoryPath = '$appRoot/blocs/attendance';
-  var blocFilePath = '$blocDirectoryPath/hcm_attendance_bloc.dart';
   var networkManagerProviderWrapperFilePath =
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
-  var opLogPath =
-      '$appDir/apps/health_campaign_field_worker_app/lib/data/local_store/no_sql/schema/oplog.dart';
-  var typeDefPath = '$appRoot/utils/typedefs.dart';
+  var constantsFilePath = '$appRoot/utils/constants.dart';
+  var utilsFilePath = '$appRoot/utils/utils.dart';
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
-
-  _createSkeletonBlocFile(
-      blocDirectoryPath: blocDirectoryPath, blocFilePath: blocFilePath);
 
   _addRepoToNetworkManagerProviderWrapper(
       networkManagerProviderWrapperFilePath:
           networkManagerProviderWrapperFilePath);
 
-  _createOpLogCaseConditions(opLogPath: opLogPath);
+  _addAttendanceConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
-  _createTypeDefFile(typeDefPath: typeDefPath);
+  _addAttendanceMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
   // Run dart format on the localization_delegates.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
       .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the blocFilePath file
-  Process.run('dart', ['format', blocFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the oplog.dart file
-  Process.run('dart', ['format', opLogPath]).then((ProcessResult results) {
     print(results.stdout);
   });
 
@@ -65,90 +49,192 @@ void main() {
     print(results.stdout);
   });
 
-  // Run dart format on the typedefs.dart file
-  Process.run('dart', ['format', typeDefPath]).then((ProcessResult results) {
+  // Run dart format on the constants.dart file
+  Process.run('dart', ['format', constantsFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the utils.dart file
+  Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
 }
 
-void _createTypeDefFile({required String typeDefPath}) {
-  var typeDef = [
-    "typedef AttendanceDataRepository = DataRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>;",
-    "typedef AttendanceLogDataRepository = DataRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>;"
+void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
+  // Define the attendance related lines
+  var attendanceImportStatement = [
+    "import 'package:attendance_management/attendance_management.dart' as attendance_mappers;"
+  ];
+  var attendanceInitializationStatement =
+      "Future(() => attendance_mappers.initializeMappers()),";
+
+  // Check if the utils.dart file exists
+  var utilsFile = File(utilsFilePath);
+
+  // Read the utils.dart file
+  var utilsFileContent = utilsFile.readAsStringSync();
+
+  // Normalize the whitespace in the file content
+  var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement and delegate already exist in the file
+  // If not, add them to the file
+  if (!normalizedFileContent
+      .contains(attendanceImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
+    var libraryIndex = utilsFileContent.indexOf('library app_utils;');
+    if (libraryIndex != -1) {
+      var endOfLibrary = libraryIndex +
+          utilsFileContent.substring(libraryIndex).indexOf(';') +
+          1;
+      utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
+          '\n' +
+          attendanceImportStatement[0] +
+          utilsFileContent.substring(endOfLibrary + 1);
+      print('The import statement was added.');
+    }
+  } else {
+    print('The import statement already exists.');
+  }
+
+  if (!utilsFileContent.contains(attendanceInitializationStatement)) {
+    // Add the inventory related initialization statement to the file
+    var initializeAllMappersIndex =
+        utilsFileContent.indexOf('initializeAllMappers() async {');
+    if (initializeAllMappersIndex == -1) {
+      print(
+          'Error: Could not find a place to insert the inventory initialization statement.');
+      return;
+    }
+    var endOfInitializeAllMappers = initializeAllMappersIndex +
+        utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
+        1;
+    utilsFileContent =
+        utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
+            '\n    ' +
+            attendanceInitializationStatement +
+            utilsFileContent.substring(endOfInitializeAllMappers - 1);
+    print('Inventory initialization statement added to utils.dart');
+  }
+
+  // Write the updated content back to the utils.dart file
+  utilsFile.writeAsStringSync(utilsFileContent);
+}
+
+void _addAttendanceConstantsToConstantsFile(
+    {required String constantsFilePath}) {
+  // Define the import statements
+  var importStatements = [
+    "import 'package:attendance_management/attendance_management.dart';",
   ];
 
-  // Read the typedefs file
-  var typedefFile = File(typeDefPath);
-  var typedefFileContent = typedefFile.readAsStringSync();
+  // Define the attendance configuration
+  var attendanceConfiguration = '''
+// Attendance related configuration
+AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+  ''';
 
-  // Normalize the whitespace in the file content and the typedefs
-  var normalizedFileContent = typedefFileContent.replaceAll(RegExp(r'\s'), '');
+  // Define the attendance related lines
+  var attendanceLocalRepositories = [
+    'AttendanceLocalRepository(sql, AttendanceOpLogManager(isar)),',
+    'AttendanceLogsLocalRepository(sql, AttendanceLogOpLogManager(isar)),',
+  ];
+  var attendanceRemoteRepositories = [
+    'if (value == DataModelType.attendanceRegister) AttendanceRemoteRepository(dio, actionMap: actions),',
+    'if (value == DataModelType.attendance) AttendanceLogRemoteRepository(dio, actionMap: actions),',
+  ];
 
-  // Check if the typedefs already exist in the file
-  for (var typedefStatement in typeDef) {
-    var normalizedTypedef = typedefStatement.replaceAll(RegExp(r'\s'), '');
+  // Read the constants.dart file
+  var constantsFile = File(constantsFilePath);
+  var constantsFileContent = constantsFile.readAsStringSync();
 
-    if (!normalizedFileContent.contains(normalizedTypedef)) {
-      // Add the typedef to the end of the file
-      typedefFileContent = '$typedefFileContent\n$typedefStatement';
-      print('The typedef was added: $typedefStatement');
-    } else {
-      print('The typedef already exists.');
+  // Normalize the whitespace in the file content and the attendance configuration
+  var normalizedFileContent =
+      constantsFileContent.replaceAll(RegExp(r'\s'), '');
+  var normalizedAttendanceConfiguration =
+      attendanceConfiguration.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statements already exist in the file
+  for (var importStatement in importStatements) {
+    if (!normalizedFileContent
+        .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+      // Add the import statement after the last import
+      constantsFileContent = constantsFileContent.substring(
+              0, constantsFileContent.indexOf(';') + 1) +
+          '\n' +
+          importStatement +
+          constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
+      print('The import statement was added: $importStatement');
     }
   }
 
-  // Write the updated content back to the file
-  typedefFile.writeAsStringSync(typedefFileContent);
-}
-
-void _createOpLogCaseConditions({required String opLogPath}) {
-  Process.run('chmod', ['+r', opLogPath]);
-
-  final filePath = opLogPath;
-
-  final caseConditions = {
-    'attendance':
-        'final entity = HCMAttendanceLogModelMapper.fromJson(entityString);\n    return entity;',
-  };
-
-  final file = File(filePath);
-  final lines = file.readAsLinesSync();
-
-  for (var entry in caseConditions.entries) {
-    final caseCondition = createCaseCondition(entry.key, entry.value);
-    insertCaseCondition(lines, caseCondition);
+  // Check if the attendance configuration already exists in the file
+  // If not, add it to the file
+  if (!normalizedFileContent.contains(normalizedAttendanceConfiguration)) {
+    constantsFileContent = '$attendanceConfiguration\n$constantsFileContent';
+    print('The attendance configuration was added.');
   }
 
-  file.writeAsStringSync(lines.join('\n'));
+  // Check if the attendance local repositories already exist in the file
+  for (var attendanceLocalRepository in attendanceLocalRepositories) {
+    var normalizedAttendanceLocalRepository =
+        attendanceLocalRepository.replaceAll(RegExp(r'\s'), '');
+
+    if (!normalizedFileContent.contains(normalizedAttendanceLocalRepository)) {
+      // Add the attendance local repository to the file
+      constantsFileContent = constantsFileContent.replaceFirst(
+          '];', '  $attendanceLocalRepository\n];');
+      print(
+          'The attendance local repository was added: $attendanceLocalRepository');
+    } else {
+      print('The attendance local repository already exists.');
+    }
+  }
+
+  // Check if the attendance remote repositories already exist in the file
+  for (var attendanceRemoteRepository in attendanceRemoteRepositories) {
+    var normalizedAttendanceRemoteRepository =
+        attendanceRemoteRepository.replaceAll(RegExp(r'\s'), '');
+
+    if (!normalizedFileContent.contains(normalizedAttendanceRemoteRepository)) {
+      // Add the attendance remote repository to the _getRemoteRepositories method
+      var replacementString = constantsFileContent.contains(']);')
+          ? '  $attendanceRemoteRepository,\n]);'
+          : '  $attendanceRemoteRepository\n]);';
+      constantsFileContent =
+          constantsFileContent.replaceFirst(']);', replacementString);
+      print(
+          'The attendance remote repository was added: $attendanceRemoteRepository');
+    } else {
+      print('The attendance remote repository already exists.');
+    }
+  }
 }
 
 void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import '../data/repositories/local/attendance_logs.dart';",
-    "import '../data/repositories/local/hcm_attendance.dart';",
-    "import '../data/repositories/remote/attendance_logs.dart';",
-    "import '../data/repositories/remote/hcm_attendance.dart';"
+    "import 'package:attendance_management/attendance_management.dart';",
   ];
   var localRepositories = [
-    "RepositoryProvider<\n          LocalRepository<HCMAttendanceRegisterModel,\n              HCMAttendanceSearchModel>>(\n        create: (_) => AttendanceLocalRepository(\n          sql,\n          AttendanceOpLogManager(isar),\n        ),\n      ),",
-    "RepositoryProvider<\n          LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>>(\n        create: (_) => AttendanceLogsLocalRepository(\n          sql,\n          AttendanceLogOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<AttendanceRegisterModel,\n              AttendanceRegisterSearchModel>>(\n        create: (_) => AttendanceLocalRepository(\n          sql,\n          AttendanceOpLogManager(isar),\n        ),\n      ),",
+    "RepositoryProvider<\n          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(\n        create: (_) => AttendanceLogsLocalRepository(\n          sql,\n          AttendanceLogOpLogManager(isar),\n        ),\n      ),",
   ];
 
 // Define the remote repositories of attendance
-  var remoteRepositoriesOfAttendance = [
+  var remoteRepositoriesOfRegistrationDelivery = [
     "if (value == DataModelType.attendanceRegister)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HCMAttendanceRegisterModel,\n"
-        "          HCMAttendanceSearchModel>>(\n"
+        "      RemoteRepository<AttendanceRegisterModel,\n"
+        "          AttendanceRegisterSearchModel>>(\n"
         "    create: (_) =>\n"
         "        AttendanceRemoteRepository(dio, actionMap: actions),\n"
         "  )",
     "if (value == DataModelType.attendance)\n"
         "  RepositoryProvider<\n"
-        "      RemoteRepository<HCMAttendanceLogModel,\n"
-        "          HCMAttendanceLogSearchModel>>(\n"
+        "      RemoteRepository<AttendanceLogModel,\n"
+        "          AttendanceLogSearchModel>>(\n"
         "    create: (_) =>\n"
         "        AttendanceLogRemoteRepository(dio, actionMap: actions),\n"
         "  )"
@@ -210,22 +296,23 @@ void _addRepoToNetworkManagerProviderWrapper(
   }
 
 // Check if the remote repository of attendance already exists in the file
-  for (var remoteRepositoryOfAttendance in remoteRepositoriesOfAttendance) {
-    var normalizedRemoteRepositoryOfAttendance =
-        remoteRepositoryOfAttendance.replaceAll(RegExp(r'\s'), '');
+  for (var remoteRepositoryOfRegistrationDelivery
+      in remoteRepositoriesOfRegistrationDelivery) {
+    var normalizedRemoteRepositoryOfRegistrationDelivery =
+        remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
 
     if (!normalizedFileContent
-        .contains(normalizedRemoteRepositoryOfAttendance)) {
+        .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
       // Add the remote repository of attendance to the _getRemoteRepositories method
       var replacementString =
           networkManagerProviderWrapperFileContent.contains(']);')
-              ? '  $remoteRepositoryOfAttendance,\n]);'
-              : '  $remoteRepositoryOfAttendance\n]);';
+              ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
+              : '  $remoteRepositoryOfRegistrationDelivery\n]);';
       networkManagerProviderWrapperFileContent =
           networkManagerProviderWrapperFileContent.replaceFirst(
               ']);', replacementString);
       print(
-          'The remote repository of attendance was added: $remoteRepositoryOfAttendance');
+          'The remote repository of attendance was added: $remoteRepositoryOfRegistrationDelivery');
     } else {
       print('The remote repository of attendance already exists.');
     }
@@ -234,49 +321,6 @@ void _addRepoToNetworkManagerProviderWrapper(
   // Write the updated content back to the file
   networkManagerProviderWrapperFile
       .writeAsStringSync(networkManagerProviderWrapperFileContent);
-}
-
-void _createSkeletonBlocFile(
-    {required String blocFilePath, required String blocDirectoryPath}) {
-  // Check if the Bloc file already exists
-  // If not, create the directory and write the skeleton Bloc class to the file
-  var blocFile = File(blocFilePath);
-  if (!blocFile.existsSync()) {
-    Directory(blocDirectoryPath).createSync(recursive: true);
-
-    blocFile.writeAsStringSync('''
-import 'package:attendance_management/blocs/attendance_listeners.dart';
-import 'package:attendance_management/models/attendance_log.dart';
-import 'package:attendance_management/models/attendance_register.dart';
-
-class HcmAttendanceBloc extends AttendanceListeners {
-  @override
-  void callSyncMethod() {
-    // TODO: implement callSyncMethod
-  }
-
-  @override
-  Future<List<AttendanceRegisterModel>> getAttendanceRegisters() {
-    // TODO: implement getAttendanceRegisters
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<List<AttendanceLogModel>> searchAttendanceLog({required String registerId, required String tenantId, required int entryTime, required int exitTime, required int currentDate}) {
-    // TODO: implement searchAttendanceLog
-    throw UnimplementedError();
-  }
-
-  @override
-  void submitAttendanceDetails(SubmitAttendanceDetails attendanceLogs) {
-    // TODO: implement submitAttendanceDetails
-  }
-}
-''');
-    print('File $blocFilePath created.');
-  } else {
-    print('File $blocFilePath already exists. Not modifying the content.');
-  }
 }
 
 void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {

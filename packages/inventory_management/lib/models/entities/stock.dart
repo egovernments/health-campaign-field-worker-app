@@ -1,13 +1,12 @@
-
+// Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-
-import 'transaction_reason.dart';
-import 'transaction_type.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'stock.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class StockSearchModel with StockSearchModelMappable {
+class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final String? id;
   final String? tenantId;
   final String? facilityId;
@@ -21,9 +20,9 @@ class StockSearchModel with StockSearchModelMappable {
   final String? senderId;
   final String? senderType;
   final List<String>? clientReferenceId;
-  final List<TransactionType>? transactionType;
-  final List<TransactionReason>? transactionReason;
-  
+  final List<String>? transactionType;
+  final List<String>? transactionReason;
+
   StockSearchModel({
     this.id,
     this.tenantId,
@@ -40,7 +39,9 @@ class StockSearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
-  }):  super();
+    super.boundaryCode,
+    super.isDeleted,
+  }) : super();
 
   @MappableConstructor()
   StockSearchModel.ignoreDeleted({
@@ -59,12 +60,12 @@ class StockSearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
-  }):  super();
+    super.boundaryCode,
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class StockModel with StockModelMappable {
-
+class StockModel extends EntityModel with StockModelMappable {
   static const schemaName = 'Stock';
 
   final String? id;
@@ -82,12 +83,14 @@ class StockModel with StockModelMappable {
   final String? senderId;
   final String? senderType;
   final bool? nonRecoverableError;
-  final String? clientReferenceId;
+  final String clientReferenceId;
   final int? rowVersion;
-  final TransactionType? transactionType;
-  final TransactionReason? transactionReason;
+  final String? transactionType;
+  final String? transactionReason;
+  final StockAdditionalFields? additionalFields;
 
   StockModel({
+    this.additionalFields,
     this.id,
     this.tenantId,
     this.facilityId,
@@ -107,6 +110,52 @@ class StockModel with StockModelMappable {
     this.rowVersion,
     this.transactionType,
     this.transactionReason,
-  }): super();
+    super.auditDetails,
+    super.clientAuditDetails,
+    super.isDeleted = false,
+  }) : super();
+
+  StockCompanion get companion {
+    return StockCompanion(
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
+      id: Value(id),
+      tenantId: Value(tenantId),
+      facilityId: Value(facilityId),
+      productVariantId: Value(productVariantId),
+      referenceId: Value(referenceId),
+      referenceIdType: Value(referenceIdType),
+      transactingPartyId: Value(transactingPartyId),
+      transactingPartyType: Value(transactingPartyType),
+      quantity: Value(quantity),
+      waybillNumber: Value(waybillNumber),
+      receiverId: Value(receiverId),
+      receiverType: Value(receiverType),
+      senderId: Value(senderId),
+      senderType: Value(senderType),
+      nonRecoverableError: Value(nonRecoverableError),
+      clientReferenceId: Value(clientReferenceId),
+      rowVersion: Value(rowVersion),
+      transactionType: Value(transactionType),
+      transactionReason: Value(transactionReason),
+    );
+  }
 }
 
+@MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
+class StockAdditionalFields extends AdditionalFields
+    with StockAdditionalFieldsMappable {
+  StockAdditionalFields({
+    super.schema = 'Stock',
+    required super.version,
+    super.fields,
+  });
+}

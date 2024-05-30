@@ -1,11 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:registration_delivery/blocs/service/service.dart';
+import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
-import '../../blocs/service/service.dart';
-import '../../blocs/service_definition/service_definition.dart';
-import '../../models/entities/service.dart';
-import '../../models/entities/service_definition.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../widgets/boundary_selection_wrapper.dart';
 
@@ -14,9 +13,9 @@ class ChecklistWrapperPage extends StatelessWidget implements AutoRouteWrapper {
   final bool isEditing;
 
   const ChecklistWrapperPage({
-    Key? key,
+    super.key,
     this.isEditing = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
