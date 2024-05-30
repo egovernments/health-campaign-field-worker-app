@@ -182,6 +182,7 @@ class _StockReconciliationPageState
                                                 await DigitDialog.show<bool>(
                                               context,
                                               options: DigitDialogOptions(
+                                                key: const Key('submitDialog'),
                                                 titleText:
                                                     localizations.translate(
                                                   i18.stockReconciliationDetails
@@ -306,6 +307,8 @@ class _StockReconciliationPageState
                                                   },
                                                   child: IgnorePointer(
                                                     child: DigitTextFormField(
+                                                      key: const Key(
+                                                          _facilityKey),
                                                       hideKeyboard: true,
                                                       label: localizations
                                                           .translate(
@@ -378,6 +381,8 @@ class _StockReconciliationPageState
                                           fetched: (productVariants) {
                                             return DigitReactiveSearchDropdown<
                                                 ProductVariantModel>(
+                                              key:
+                                                  const Key(_productVariantKey),
                                               label: localizations.translate(
                                                 i18.stockReconciliationDetails
                                                     .productLabel,
@@ -433,6 +438,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockReceived'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -445,6 +451,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockIssued'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -457,6 +464,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockReturned'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -469,6 +477,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockLost'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -481,6 +490,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockDamaged'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -493,6 +503,7 @@ class _StockReconciliationPageState
                                     ),
                                     const DigitDivider(),
                                     DigitTableCard(
+                                      key: const Key('stockReconStockOnHand'),
                                       fraction: 2.5,
                                       gap: kPadding,
                                       element: {
@@ -526,6 +537,7 @@ class _StockReconciliationPageState
                                       height: kPadding,
                                     ),
                                     DigitTextFormField(
+                                      key: const Key(_manualCountKey),
                                       isRequired: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails

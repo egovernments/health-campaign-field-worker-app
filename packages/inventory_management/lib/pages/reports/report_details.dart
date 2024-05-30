@@ -241,6 +241,8 @@ class _InventoryReportDetailsPageState
                                                   },
                                                   child: IgnorePointer(
                                                     child: DigitTextFormField(
+                                                      key: const Key(
+                                                          _facilityKey),
                                                       valueAccessor:
                                                           FacilityValueAccessor(
                                                         facilities,
@@ -315,6 +317,8 @@ class _InventoryReportDetailsPageState
                                                 fetched: (productVariants) {
                                                   return DigitReactiveSearchDropdown<
                                                       ProductVariantModel>(
+                                                    key: const Key(
+                                                        _productVariantKey),
                                                     label:
                                                         localizations.translate(
                                                       i18.stockReconciliationDetails
