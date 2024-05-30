@@ -19,3 +19,6 @@
 
 ## 0.0.0-dev.7
 * Fixed Lost report type mapping to value
+
+## 0.0.0-dev.8
+* Updated digit_scanner to latest version
