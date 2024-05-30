@@ -523,7 +523,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       fetched: (productVariants) {
                                         return DigitReactiveDropdown<
                                             ProductVariantModel>(
-                                          key: const Key('selectProduct'),
+                                          key: const Key(_productVariantKey),
                                           formControlName: _productVariantKey,
                                           label: localizations.translate(
                                             module.selectProductLabel,
@@ -549,7 +549,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   StockRecordEntryType.damaged,
                                 ].contains(entryType))
                                   DigitReactiveDropdown<TransactionReason>(
-                                    key: const Key('transactionReason'),
+                                    key: const Key(_transactionReasonKey),
                                     label: localizations.translate(
                                       transactionReasonLabel ?? 'Reason',
                                     ),
@@ -608,7 +608,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             },
                                             child: IgnorePointer(
                                               child: DigitTextFormField(
-                                                key: const Key('secondParty'),
+                                                key: const Key(
+                                                    _secondaryPartyKey),
                                                 hideKeyboard: true,
                                                 label: localizations.translate(
                                                   '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
@@ -720,7 +721,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   ),
                                 ),
                                 DigitTextFormField(
-                                  key: const Key('quantity'),
+                                  key: const Key(_transactionQuantityKey),
                                   formControlName: _transactionQuantityKey,
                                   keyboardType:
                                       const TextInputType.numberWithOptions(
@@ -754,7 +755,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 ),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
-                                    key: const Key('waybillNumber'),
+                                    key: const Key(_waybillNumberKey),
                                     label: localizations.translate(
                                       i18.stockDetails.waybillNumberLabel,
                                     ),
@@ -778,7 +779,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 if (isWareHouseMgr)
                                   transportTypes.isNotEmpty
                                       ? DigitReactiveDropdown<String>(
-                                          key: const Key('transportTypes'),
+                                          key: const Key(_typeOfTransportKey),
                                           isRequired: false,
                                           label: localizations.translate(
                                             i18.stockDetails.transportTypeLabel,

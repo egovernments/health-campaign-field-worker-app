@@ -233,7 +233,7 @@ class _InventoryReportDetailsPageState
                                                   child: IgnorePointer(
                                                     child: DigitTextFormField(
                                                       key: const Key(
-                                                          'viewReportsFacility'),
+                                                          _facilityKey),
                                                       valueAccessor:
                                                           FacilityValueAccessor(
                                                         facilities,
@@ -307,7 +307,7 @@ class _InventoryReportDetailsPageState
                                                   return DigitReactiveSearchDropdown<
                                                       ProductVariantModel>(
                                                     key: const Key(
-                                                        'viewReportSelectProduct'),
+                                                        _productVariantKey),
                                                     label:
                                                         localizations.translate(
                                                       i18.stockReconciliationDetails

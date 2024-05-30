@@ -318,7 +318,7 @@ class _StockReconciliationPageState
                                                   child: IgnorePointer(
                                                     child: DigitTextFormField(
                                                       key: const Key(
-                                                          'stockReconFacilityId'),
+                                                          _facilityKey),
                                                       hideKeyboard: true,
                                                       label: localizations
                                                           .translate(
@@ -390,8 +390,8 @@ class _StockReconciliationPageState
                                           fetched: (productVariants) {
                                             return DigitReactiveSearchDropdown<
                                                 ProductVariantModel>(
-                                              key: const Key(
-                                                  'stockReconSelectProduct'),
+                                              key:
+                                                  const Key(_productVariantKey),
                                               label: localizations.translate(
                                                 i18.stockReconciliationDetails
                                                     .productLabel,
@@ -546,7 +546,7 @@ class _StockReconciliationPageState
                                       height: kPadding,
                                     ),
                                     DigitTextFormField(
-                                      key: const Key('stockManualCount'),
+                                      key: const Key(_manualCountKey),
                                       isRequired: true,
                                       label: localizations.translate(
                                         i18.stockReconciliationDetails
