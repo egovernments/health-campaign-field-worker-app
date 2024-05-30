@@ -6,35 +6,39 @@ import 'package:path/path.dart' as p;
 import 'lib/models.dart';
 
 void run(HookContext context) async {
-  final variables = context.vars;
+  try {
+    final variables = context.vars;
 
-  ConfigModelMapper.ensureInitialized();
-  AttributeModelMapper.ensureInitialized();
-  EnumValuesMapper.ensureInitialized();
-  TableReferenceModelMapper.ensureInitialized();
+    ConfigModelMapper.ensureInitialized();
+    AttributeModelMapper.ensureInitialized();
+    EnumValuesMapper.ensureInitialized();
+    TableReferenceModelMapper.ensureInitialized();
 
-  ConfigModel model = ConfigModelMapper.fromMap(variables);
-  if (!model.createRepository) {
-    final path = p.join(
-      'data',
-      'repositories',
-      'remote',
-      '${model.name.snakeCase}.dart',
-    );
-    await _deleteFile(path);
-  }
+    ConfigModel model = ConfigModelMapper.fromMap(variables);
+    if (!model.createRepository) {
+      final path = p.join(
+        'data',
+        'repositories',
+        'remote',
+        '${model.name.snakeCase}.dart',
+      );
+      await _deleteFile(path);
+    }
 
-  if (model.isEnum) {
-    final path = p.join(
-      'data',
-      'local_store',
-      'sql_store',
-      'tables',
-      '${model.name.snakeCase}.dart',
-    );
-    await _deleteFile(path);
-  } else {
-    await _addImportStatement(model.name);
+    if (model.isEnum) {
+      final path = p.join(
+        'data',
+        'local_store',
+        'sql_store',
+        'tables',
+        '${model.name.snakeCase}.dart',
+      );
+      await _deleteFile(path);
+    } else {
+      await _addImportStatement(model.name);
+    }
+  } catch(e) {
+    print(e);
   }
 }
 
@@ -51,6 +55,8 @@ Future<void> _addImportStatement(String tableName) async {
     'sql_store.dart',
   );
   final file = File(path);
+
+  print('Adding import statement to $path');
 
   if (await file.exists()) {
     var content = await file.readAsString();

@@ -1,39 +1,48 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Digit Showcase
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+The showcase widget is a wrapper widget that provides a way to highlight or showcase a widget. It is useful for highlighting a widget in a list of widgets or provide a functionality to provide visual help to understand the functionality of the widget.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Provides a showcase or highlight of the wrapped widget.
+
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/99d3a568-3f98-4fb5-b7c2-a2f2b526be66" width="280" height="480">
+
+<img src="https://github.com/egovernments/health-campaign-field-worker-app/assets/154230258/e8ef717b-a893-4574-b270-77e35aa9baad" width="280" height="480">
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this package, add the following dependency to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  digit_showcase: ^latest
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Wrap the top layer of your widget tree with the `Showcase` widget.
 
 ```dart
-const like = 'sample';
+ShowcaseWidget(
+enableAutoScroll: true,
+builder: Builder(
+builder: (context) {
+}
+);
+```
+Provide localizations for the showcase widget.
+
+```dart
+  final date = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.showcase_date.date,
+  );
 ```
 
-## Additional information
+Now use .buildWith to build the showcase widget.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+date.buildWith(child: Text('Date'));
+```
+
+Explore the package for more showcase items and their usage.

@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 
-import '../../../models/data_model.dart';
-import '../../data_repository.dart';
 
 class RepositoryType {
   static RemoteRepository getRemoteForType(

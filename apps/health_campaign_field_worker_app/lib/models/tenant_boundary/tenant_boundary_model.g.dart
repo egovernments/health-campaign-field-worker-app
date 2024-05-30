@@ -67,7 +67,7 @@ Map<String, dynamic> _$$HierarchyTypeModelImplToJson(
 _$BoundaryModelImpl _$$BoundaryModelImplFromJson(Map<String, dynamic> json) =>
     _$BoundaryModelImpl(
       id: json['id'] as String?,
-      boundaryNum: json['boundaryNum'] as int,
+      boundaryNum: (json['boundaryNum'] as num).toInt(),
       name: json['name'] as String,
       localName: json['localname'] as String,
       longitude: json['longitude'] as String?,

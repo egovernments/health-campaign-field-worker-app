@@ -49,20 +49,52 @@ class MdmsMasterDetailModel with _$MdmsMasterDetailModel {
 @freezed
 class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
   const factory AppConfigPrimaryWrapperModel({
-    @JsonKey(name: 'HCM-FIELD-APP-CONFIG')
-        final AppConfigSecondaryWrapperModel? appConfig,
-    @JsonKey(name: 'module-version')
-        final RowVersionWrapperModel? rowVersions,
-    @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-        final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
-    @JsonKey(name: 'HCM-REFERRAL-REASONS')
-        final ReferralReasonsWrapperModel? referralReasons,
+    @JsonKey(name: 'HCM') HCMWrapperModel? hcmWrapperModel,
+    @JsonKey(name: 'common-masters') CommonMastersWrapperModel? commonMasters,
+    @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
   }) = _AppConfigPrimaryWrapperModel;
 
   factory AppConfigPrimaryWrapperModel.fromJson(
     Map<String, dynamic> json,
   ) =>
       _$AppConfigPrimaryWrapperModelFromJson(json);
+}
+
+@freezed
+class HCMWrapperModel with _$HCMWrapperModel {
+  const factory HCMWrapperModel({
+    @JsonKey(name: 'APP_CONFIG') required List<AppConfig> appConfig,
+    @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
+    required List<BandWidthBatchSize> bandWidthBatchSize,
+    @JsonKey(name: 'DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+    required List<BandWidthBatchSize> downSyncBandWidthBatchSize,
+    @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
+    required List<DeletionReasonOptions> householdDeletionReasonOptions,
+    @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
+    required List<DeletionReasonOptions> householdMemberDeletionReasonOptions,
+    @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
+    List<BackgroundServiceConfig>? backgroundServiceConfig,
+    @JsonKey(name: 'CHECKLIST_TYPES')
+    required List<CheckListTypes> checklistTypes,
+    @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
+    required List<IdTypeOptions> idTypeOptions,
+    @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
+    required List<DeliveryCommentOptions> deliveryCommentOptions,
+    @JsonKey(name: 'BACKEND_INTERFACE')
+    required List<BackendInterface> backendInterface,
+    @JsonKey(name: 'CALL_SUPPORT')
+    required List<CallSupportList>? callSupportOptions,
+    @JsonKey(name: 'TRANSPORT_TYPES')
+    required List<TransportTypes> transportTypes,
+    @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
+    @JsonKey(name: 'REFERRAL_REASONS')
+    List<ReferralReasonType>? referralReasonList,
+  }) = _HCMWrapperModel;
+
+  factory HCMWrapperModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$HCMWrapperModelFromJson(json);
 }
 
 @freezed
@@ -75,6 +107,47 @@ class AppConfigSecondaryWrapperModel with _$AppConfigSecondaryWrapperModel {
     Map<String, dynamic> json,
   ) =>
       _$AppConfigSecondaryWrapperModelFromJson(json);
+}
+
+@freezed
+class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
+  const factory CommonMastersWrapperModel({
+    @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
+    @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
+  }) = _CommonMastersWrapperModel;
+
+  factory CommonMastersWrapperModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$CommonMastersWrapperModelFromJson(json);
+}
+
+@freezed
+class CommonMasterModel with _$CommonMasterModel {
+  const factory CommonMasterModel({
+    @JsonKey(name: 'code') required String code,
+    @JsonKey(name: 'name') String? name,
+    @JsonKey(name: 'active') required bool active,
+  }) = _CommonMasterModel;
+
+  factory CommonMasterModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$CommonMasterModelFromJson(json);
+}
+
+@freezed
+class StateInfoModel with _$StateInfoModel {
+  const factory StateInfoModel({
+    @JsonKey(name: 'code') required String code,
+    @JsonKey(name: 'languages') required List<Languages> languages,
+    @JsonKey(name: 'localizationModules') List<Languages>? localizationModules,
+  }) = _StateInfoModel;
+
+  factory StateInfoModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$StateInfoModelFromJson(json);
 }
 
 @freezed
@@ -92,43 +165,12 @@ class RowVersionWrapperModel with _$RowVersionWrapperModel {
 @freezed
 class AppConfig with _$AppConfig {
   factory AppConfig({
-    @JsonKey(name: 'NETWORK_DETECTION')
-        required String networkDetection,
-    @JsonKey(name: 'PERSISTENCE_MODE')
-        required String persistenceMode,
-    @JsonKey(name: 'SYNC_METHOD')
-        required String syncMethod,
-    @JsonKey(name: 'SYNC_TRIGGER')
-        required String syncTrigger,
-    @JsonKey(name: 'LANGUAGES')
-        required List<Languages> languages,
-    @JsonKey(name: 'TENANT_ID')
-        final String? tenantId,
-    @JsonKey(name: 'PROXIMITY_SEARCH_RANGE')
-        final double? maxRadius,
-    @JsonKey(name: 'HOUSEHOLD_DELETION_REASON_OPTIONS')
-        required List<DeletionReasonOptions> householdDeletionReasonOptions,
-    @JsonKey(name: 'BANDWIDTH_BATCH_SIZE')
-        required List<BandWidthBatchSize> bandWidthBatchSize,
-    @JsonKey(name: 'BACKGROUND_SERVICE_CONFIG')
-        BackgroundServiceConfig? backgroundServiceConfig,
-    @JsonKey(name: 'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS')
-        required List<DeletionReasonOptions>
-            householdMemberDeletionReasonOptions,
-    @JsonKey(name: 'GENDER_OPTIONS_POPULATOR')
-        required List<GenderOptions> genderOptions,
-    @JsonKey(name: 'CHECKLIST_TYPES')
-        required List<CheckListTypes> checklistTypes,
-    @JsonKey(name: 'ID_TYPE_OPTIONS_POPULATOR')
-        required List<IdTypeOptions> idTypeOptions,
-    @JsonKey(name: 'DELIVERY_COMMENT_OPTIONS_POPULATOR')
-        required List<DeliveryCommentOptions> deliveryCommentOptions,
-    @JsonKey(name: 'BACKEND_INTERFACE')
-        required BackendInterface backendInterface,
-    @JsonKey(name: 'CALL_SUPPORT')
-        required List<CallSupportList>? callSupportOptions,
-    @JsonKey(name: 'TRANSPORT_TYPES')
-        required List<TransportTypes> transportTypes,
+    @JsonKey(name: 'NETWORK_DETECTION') required String networkDetection,
+    @JsonKey(name: 'PERSISTENCE_MODE') required String persistenceMode,
+    @JsonKey(name: 'SYNC_METHOD') required String syncMethod,
+    @JsonKey(name: 'SYNC_TRIGGER') required String syncTrigger,
+    @JsonKey(name: 'TENANT_ID') final String? tenantId,
+    @JsonKey(name: 'PROXIMITY_SEARCH_RANGE') final double? maxRadius,
   }) = _AppConfig;
 
   factory AppConfig.fromJson(Map<String, dynamic> json) =>

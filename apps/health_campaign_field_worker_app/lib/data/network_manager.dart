@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:health_campaign_field_worker_app/data/repositories/sync/remote_type.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+
+import 'repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
-import '../models/data_model.dart';
 import '../utils/constants.dart';
-import 'data_repository.dart';
 import 'local_store/secure_store/secure_store.dart';
 import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';
@@ -125,6 +126,11 @@ class NetworkManager {
               entityResponse.whereType<Map<String, dynamic>>().toList();
 
           switch (response.keys.elementAt(i)) {
+            case "Individuals":
+              final entity = entityList
+                  .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
             case "Households":
               final entity = entityList
                   .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
@@ -137,11 +143,6 @@ class NetworkManager {
                       jsonEncode(e),
                     ),
                   )
-                  .toList();
-              await local.bulkCreate(entity);
-            case "Individuals":
-              final entity = entityList
-                  .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "ProjectBeneficiaries":
@@ -224,8 +225,6 @@ class NetworkManagerConfiguration {
     this.persistenceConfig = PersistenceConfiguration.offlineFirst,
   });
 }
-
-enum PersistenceConfiguration { offlineFirst, onlineOnly }
 
 abstract class SyncError implements Exception {
   final dynamic error;

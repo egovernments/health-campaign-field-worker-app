@@ -1,8 +1,10 @@
 import 'package:attendance_management/blocs/date_session_bloc.dart';
-import 'package:attendance_management/models/enum_values.dart';
+import 'package:attendance_management/utils/extensions/extensions.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -11,11 +13,15 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/app_localization.dart';
 import '../blocs/attendance_individual_bloc.dart';
-import '../models/attendance_register.dart';
+import '../models/entities/attendance_log.dart';
+import '../models/entities/attendance_register.dart';
+import '../models/entities/enum_values.dart';
+import '../router/attendance_router.gm.dart';
+import '../utils/constants.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
-import 'mark_attendance.dart';
 
+@RoutePage()
 class AttendanceDateSessionSelectionPage extends LocalizedStatefulWidget {
   final List<AttendanceRegisterModel> registers;
   final String registerID;
@@ -39,10 +45,17 @@ class _AttendanceDateSessionSelectionPageState
   List<String> attendeeList = [];
   String missedDays = "";
   DateSessionBloc sessionBloc = DateSessionBloc(const DateSessionLoading());
-  AttendanceIndividualBloc individualLogBloc = AttendanceIndividualBloc();
+  AttendanceIndividualBloc? individualLogBloc;
 
   @override
   void initState() {
+    individualLogBloc = AttendanceIndividualBloc(
+      const AttendanceIndividualState.loading(),
+      attendanceLogDataRepository: context
+          .repository<AttendanceLogModel, AttendanceLogSearchModel>(context),
+      attendanceLogLocalRepository: context.read<
+          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(),
+    );
     super.initState();
   }
 
@@ -70,7 +83,7 @@ class _AttendanceDateSessionSelectionPageState
                 ),
               ),
             child: BlocProvider<AttendanceIndividualBloc>(
-              create: (context) => individualLogBloc,
+              create: (context) => individualLogBloc!,
               child: BlocBuilder<DateSessionBloc, DateSessionStates>(
                   builder: (ctx, registerState) {
                 return registerState.maybeWhen(
@@ -124,7 +137,7 @@ class _AttendanceDateSessionSelectionPageState
                                                 final session = form
                                                     .control(_sessionRadio)
                                                     .value as KeyValue?;
-                                                DateTime s = form
+                                                DateTime dateSession = form
                                                     .control(_dateOfSession)
                                                     .value;
 
@@ -135,7 +148,7 @@ class _AttendanceDateSessionSelectionPageState
                                                         2
                                                     ? AttendanceDateTimeManagement
                                                         .getMillisecondEpoch(
-                                                        s,
+                                                        dateSession,
                                                         form
                                                                     .control(
                                                                         _sessionRadio)
@@ -149,8 +162,11 @@ class _AttendanceDateSessionSelectionPageState
                                                             : 0,
                                                         "entryTime",
                                                       )
-                                                    : (DateTime(s.year, s.month,
-                                                            s.day, 9)
+                                                    : (DateTime(
+                                                            dateSession.year,
+                                                            dateSession.month,
+                                                            dateSession.day,
+                                                            9)
                                                         .millisecondsSinceEpoch);
 
                                                 final exitTime = selectedRegister
@@ -160,7 +176,7 @@ class _AttendanceDateSessionSelectionPageState
                                                         2
                                                     ? AttendanceDateTimeManagement
                                                         .getMillisecondEpoch(
-                                                        s,
+                                                        dateSession,
                                                         form
                                                                     .control(
                                                                         _sessionRadio)
@@ -174,40 +190,39 @@ class _AttendanceDateSessionSelectionPageState
                                                             : 1,
                                                         "exitTime",
                                                       )
-                                                    : (DateTime(s.year, s.month,
-                                                            s.day, 18)
+                                                    : (DateTime(
+                                                            dateSession.year,
+                                                            dateSession.month,
+                                                            dateSession.day,
+                                                            18)
                                                         .millisecondsSinceEpoch);
 
                                                 final submit =
-                                                    await Navigator.of(context)
-                                                        .push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        MarkAttendancePage(
-                                                      attendees: selectedRegister
-                                                                  .attendees !=
-                                                              null
-                                                          //Filtering attendees based on current time and enrollment date of the attendee
-                                                          ? (selectedRegister
-                                                                      .attendees ??
-                                                                  [])
-                                                              .where((att) =>
-                                                                  att.enrollmentDate !=
-                                                                      null &&
-                                                                  att.enrollmentDate! <=
-                                                                      entryTime)
-                                                              .toList()
-                                                          : [],
-                                                      dateTime: s,
-                                                      session: session?.key,
-                                                      entryTime: entryTime,
-                                                      exitTime: exitTime,
-                                                      registerId:
-                                                          selectedRegister.id,
-                                                      tenantId: selectedRegister
-                                                          .tenantId
-                                                          .toString(),
-                                                    ),
+                                                    await context.router.push(
+                                                  MarkAttendanceRoute(
+                                                    attendees: selectedRegister
+                                                                .attendees !=
+                                                            null
+                                                        //Filtering attendees based on current time and enrollment date of the attendee
+                                                        ? (selectedRegister
+                                                                    .attendees ??
+                                                                [])
+                                                            .where((att) =>
+                                                                att.enrollmentDate !=
+                                                                    null &&
+                                                                att.enrollmentDate! <=
+                                                                    entryTime)
+                                                            .toList()
+                                                        : [],
+                                                    dateTime: dateSession,
+                                                    session: session?.key,
+                                                    entryTime: entryTime,
+                                                    exitTime: exitTime,
+                                                    registerId:
+                                                        selectedRegister.id,
+                                                    tenantId: selectedRegister
+                                                        .tenantId
+                                                        .toString(),
                                                   ),
                                                 );
                                                 if (submit == null) {
@@ -420,11 +435,4 @@ class _AttendanceDateSessionSelectionPageState
     // If attendance log is null or all logs are marked
     return false;
   }
-}
-
-class KeyValue {
-  String label;
-  dynamic key;
-
-  KeyValue(this.label, this.key);
 }

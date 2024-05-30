@@ -1,31 +1,26 @@
-import 'package:attendance_management/blocs/app_localization.dart'
-    as attendance_localization;
+import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
-import 'blocs/boundary/boundary.dart';
-import 'blocs/localization/app_localization.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
-import 'blocs/scanner/scanner.dart';
-import 'blocs/user/user.dart';
-import 'data/data_repository.dart';
 import 'data/local_store/app_shared_preferences.dart';
-import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
-import 'models/data_model.dart';
 import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
+import 'utils/localization_delegates.dart';
 import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
@@ -36,12 +31,12 @@ class MainApplication extends StatefulWidget {
   final LocalSqlDataStore sql;
 
   const MainApplication({
-    Key? key,
+    super.key,
     required this.isar,
     required this.client,
     required this.appRouter,
     required this.sql,
-  }) : super(key: key);
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -80,6 +75,14 @@ class MainApplicationState extends State<MainApplication>
                 lazy: false,
               ),
               BlocProvider(
+                create: (_) {
+                  return DigitScannerBloc(
+                    const DigitScannerState(),
+                  );
+                },
+                lazy: false,
+              ),
+              BlocProvider(
                 create: (context) {
                   return UserBloc(
                     const UserEmptyState(),
@@ -100,18 +103,6 @@ class MainApplicationState extends State<MainApplication>
                       tenantId: envConfig.variables.tenantId,
                     ),
                   ),
-              ),
-              BlocProvider(
-                create: (ctx) => ScannerBloc(
-                  const ScannerState(),
-                  projectBeneficiaryRepository: ctx
-                      .read<NetworkManager>()
-                      .repository<ProjectBeneficiaryModel,
-                          ProjectBeneficiarySearchModel>(ctx),
-                  hfReferralDataRepository: ctx
-                      .read<NetworkManager>()
-                      .repository<HFReferralModel, HFReferralSearchModel>(ctx),
-                ),
               ),
               BlocProvider(
                 create: (ctx) => BoundaryBloc(
@@ -232,11 +223,11 @@ class MainApplicationState extends State<MainApplication>
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
                             attendanceLocalRepository: ctx.read<
-                                LocalRepository<HCMAttendanceRegisterModel,
-                                    HCMAttendanceSearchModel>>(),
+                                LocalRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
                             attendanceRemoteRepository: ctx.read<
-                                RemoteRepository<HCMAttendanceRegisterModel,
-                                    HCMAttendanceSearchModel>>(),
+                                RemoteRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
                             individualLocalRepository: ctx.read<
                                 LocalRepository<IndividualModel,
                                     IndividualSearchModel>>(),
@@ -244,12 +235,44 @@ class MainApplicationState extends State<MainApplication>
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
                             attendanceLogLocalRepository: ctx.read<
-                                LocalRepository<HCMAttendanceLogModel,
-                                    HCMAttendanceLogSearchModel>>(),
+                                LocalRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
                             attendanceLogRemoteRepository: ctx.read<
-                                RemoteRepository<HCMAttendanceLogModel,
-                                    HCMAttendanceLogSearchModel>>(),
+                                RemoteRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
+                            stockLocalRepository: ctx.read<
+                                LocalRepository<StockModel,
+                                    StockSearchModel>>(),
+                            stockRemoteRepository: ctx.read<
+                                RemoteRepository<StockModel,
+                                    StockSearchModel>>(),
                             context: context,
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => FacilityBloc(
+                            facilityDataRepository: context.repository<
+                                FacilityModel, FacilitySearchModel>(),
+                            projectFacilityDataRepository: context.repository<
+                                ProjectFacilityModel,
+                                ProjectFacilitySearchModel>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => ProductVariantBloc(
+                            const ProductVariantEmptyState(),
+                            context.repository<ProductVariantModel,
+                                ProductVariantSearchModel>(),
+                            context.repository<ProjectResourceModel,
+                                ProjectResourceSearchModel>(),
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (context) => ProjectFacilityBloc(
+                            const ProjectFacilityState.loading(),
+                            projectFacilityDataRepository: context.repository<
+                                ProjectFacilityModel,
+                                ProjectFacilitySearchModel>(),
                           ),
                         ),
                       ],
@@ -292,23 +315,11 @@ class MainApplicationState extends State<MainApplication>
                                         : firstLanguage;
                                   })
                                 : [firstLanguage],
-                            localizationsDelegates: [
-                              AppLocalizations.getDelegate(
-                                appConfig,
-                                widget.isar,
-                              ),
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                              GlobalMaterialLocalizations.delegate,
-                              attendance_localization.AttendanceLocalization
-                                  .getDelegate(
-                                getLocalizationString(
-                                  widget.isar,
-                                  selectedLocale,
-                                ),
-                                appConfig.languages!,
-                              ),
-                            ],
+                            localizationsDelegates: getAppLocalizationDelegates(
+                              isar: widget.isar,
+                              appConfig: appConfig,
+                              selectedLocale: selectedLocale,
+                            ),
                             locale: languages != null
                                 ? Locale(
                                     selectedLocale!.split("_").first,

@@ -35,6 +35,7 @@ class LoginModel with _$LoginModel {
 @freezed
 class UserRequestModel with _$UserRequestModel {
   const factory UserRequestModel({
+    int? id,
     required String uuid,
     String? userName,
     String? name,

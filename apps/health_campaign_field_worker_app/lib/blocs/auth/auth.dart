@@ -4,13 +4,12 @@ import 'package:digit_components/digit_components.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:digit_data_model/data_model.dart';
 
-import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/auth.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/auth/auth_model.dart';
-import '../../models/entities/individual.dart';
 import '../../models/entities/roles_type.dart';
 import '../../models/role_actions/role_actions_model.dart';
 import '../../utils/environment_config.dart';
@@ -52,7 +51,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final refreshToken = await localSecureStore.refreshToken;
       final userObject = await localSecureStore.userRequestModel;
       final actionsList = await localSecureStore.savedActions;
-
       final userIndividualId = await localSecureStore.userIndividualId;
       if (accessToken == null ||
           refreshToken == null ||
@@ -110,7 +108,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
         await localSecureStore
-            .setSelectedIndividual(loggedInIndividual.first.id);
+            .setSelectedIndividual(loggedInIndividual.firstOrNull?.id);
       }
 
       emit(
@@ -119,6 +117,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           refreshToken: result.refreshToken,
           userModel: result.userRequestModel,
           actionsWrapper: actionsWrapper,
+          individualId: await localSecureStore.userIndividualId,
         ),
       );
     } on DioException catch (error) {

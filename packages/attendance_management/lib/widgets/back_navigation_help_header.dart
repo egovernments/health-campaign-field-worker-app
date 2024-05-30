@@ -1,4 +1,5 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -38,7 +39,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                         padding: EdgeInsets.zero,
                       ),
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        context.router.maybePop();
                         handleBack != null ? handleBack!() : null;
                       },
                       icon: const Icon(Icons.arrow_left_sharp),

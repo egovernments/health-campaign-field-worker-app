@@ -9,7 +9,7 @@ This project is maintained using [Melos](https://melos.invertase.dev).
 ### Pre-requisites
 
 1. Flutter:
-   The project is built using Flutter. The project uses the latest version of Flutter on stable branch. The path should
+   The project is built using Flutter. The project uses the 3.16.5 [https://docs.flutter.dev/release/archive] version of Flutter. The path should
    contain `flutter`.
 2. Dart
    `dart` should be available in the path and should use the same version as the bundled version that comes with Flutter

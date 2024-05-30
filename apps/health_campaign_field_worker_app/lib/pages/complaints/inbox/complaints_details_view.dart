@@ -2,14 +2,15 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
+import 'package:digit_data_model/data_model.dart';
 
 import '../../../blocs/localization/app_localization.dart';
-import '../../../models/data_model.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 
+@RoutePage()
 class ComplaintsDetailsViewPage extends StatelessWidget {
   final PgrServiceModel complaint;
 

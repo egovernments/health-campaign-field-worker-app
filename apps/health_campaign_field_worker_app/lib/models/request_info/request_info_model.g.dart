@@ -32,6 +32,9 @@ _$RequestInfoModelImpl _$$RequestInfoModelImplFromJson(
       key: json['key'] as String?,
       msgId: json['msgId'] as String?,
       authToken: json['authToken'] as String?,
+      userInfo: json['userInfo'] == null
+          ? null
+          : UserRequestModel.fromJson(json['userInfo'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$RequestInfoModelImplToJson(
@@ -52,5 +55,6 @@ Map<String, dynamic> _$$RequestInfoModelImplToJson(
   writeNotNull('key', instance.key);
   writeNotNull('msgId', instance.msgId);
   writeNotNull('authToken', instance.authToken);
+  writeNotNull('userInfo', instance.userInfo);
   return val;
 }

@@ -5,6 +5,7 @@ import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
+@RoutePage()
 class AcknowledgementPage extends LocalizedStatefulWidget {
   bool isDataRecordSuccess;
   String? label;
@@ -44,7 +45,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
         action: () {
-          context.router.pop();
+          context.router.maybePop();
         },
         enableBackToSearch: widget.isDataRecordSuccess ? false : true,
         actionLabel:

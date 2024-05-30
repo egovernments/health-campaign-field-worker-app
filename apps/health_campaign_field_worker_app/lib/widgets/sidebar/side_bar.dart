@@ -1,6 +1,7 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -8,10 +9,9 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../blocs/localization/app_localization.dart';
 import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/auth/auth.dart';
-import '../../blocs/boundary/boundary.dart';
 import '../../blocs/localization/localization.dart';
-import '../../blocs/user/user.dart';
 import '../../models/data_model.dart';
+import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -21,13 +21,16 @@ class SideBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authBloc = context.read<AuthBloc>();
     final theme = Theme.of(context);
-    bool isDistributor = context.loggedInUserRoles
-        .where(
-          (role) => role.code == RolesType.distributor.toValue(),
-        )
-        .toList()
-        .isNotEmpty;
+    bool isDistributor = authBloc.state != const AuthState.unauthenticated()
+        ? context.loggedInUserRoles
+            .where(
+              (role) => role.code == RolesType.distributor.toValue(),
+            )
+            .toList()
+            .isNotEmpty
+        : false;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
       return Column(
@@ -90,8 +93,7 @@ class SideBar extends StatelessWidget {
             icon: Icons.home,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.popUntilRoot();
-              context.router.push(HomeRoute());
+              context.router.replaceAll([HomeRoute()]);
             },
           ),
           BlocBuilder<AppInitializationBloc, AppInitializationState>(

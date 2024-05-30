@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -10,8 +11,10 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
-import '../../models/data_model.dart';
+import '../../models/entities/mdms_master_enums.dart';
+import '../../models/entities/mdms_module_enums.dart';
 import '../../utils/environment_config.dart';
+import '../../utils/utils.dart';
 import '../../widgets/network_manager_provider_wrapper.dart';
 
 part 'app_initialization.freezed.dart';
@@ -44,7 +47,7 @@ class AppInitializationBloc
 
       final config = await _loadOfflineData(emit);
       emit(AppInitialized(
-        appConfiguration: config.appConfigs.first,
+        appConfiguration: config.appConfigs.firstOrNull!,
         serviceRegistryList: config.serviceRegistryList,
       ));
     } on AppInitializationException catch (_) {
@@ -76,29 +79,36 @@ class AppInitializationBloc
             mdmsCriteria: MdmsCriteriaModel(
               tenantId: envConfig.variables.tenantId,
               moduleDetails: [
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-FIELD-APP-CONFIG',
-                  masterDetails: [
-                    MdmsMasterDetailModel('appConfig'),
-                  ],
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.hcm.toValue(),
+                  masterDetails: getMasterDetailsModel([
+                    MasterEnums.appConfig.toValue(),
+                    MasterEnums.symptomTypes.toValue(),
+                    MasterEnums.referralReasons.toValue(),
+                    MasterEnums.bandWidthBatchSize.toValue(),
+                    MasterEnums.downSyncBandwidthBatchSize.toValue(),
+                    MasterEnums.hhDelReasons.toValue(),
+                    MasterEnums.hhMemberDelReasons.toValue(),
+                    MasterEnums.backgroundServiceConfig.toValue(),
+                    MasterEnums.checklistTypes.toValue(),
+                    MasterEnums.idTypes.toValue(),
+                    MasterEnums.deliveryComments.toValue(),
+                    MasterEnums.backendInterface.toValue(),
+                    MasterEnums.callSupport.toValue(),
+                    MasterEnums.transportTypes.toValue(),
+                  ]),
                 ),
-                const MdmsModuleDetailModel(
-                  moduleName: 'module-version',
-                  masterDetails: [
-                    MdmsMasterDetailModel('ROW_VERSIONS'),
-                  ],
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.commonMasters.toValue(),
+                  masterDetails: getMasterDetailsModel([
+                    MasterEnums.stateInfo.toValue(),
+                    MasterEnums.genderType.toValue()
+                  ]),
                 ),
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-SYMPTOMS-TYPES',
-                  masterDetails: [
-                    MdmsMasterDetailModel('symptomsTypes'),
-                  ],
-                ),
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-REFERRAL-REASONS',
-                  masterDetails: [
-                    MdmsMasterDetailModel('referralReasons'),
-                  ],
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.moduleVersion.toValue(),
+                  masterDetails:
+                      getMasterDetailsModel([MasterEnums.rowVersion.toValue()]),
                 ),
               ],
             ),
@@ -112,10 +122,11 @@ class AppInitializationBloc
             mdmsCriteria: MdmsCriteriaModel(
               tenantId: envConfig.variables.tenantId,
               moduleDetails: [
-                const MdmsModuleDetailModel(
-                  moduleName: 'RAINMAKER-PGR',
+                MdmsModuleDetailModel(
+                  moduleName: ModuleEnums.rainmakerPgr.toValue(),
                   masterDetails: [
-                    MdmsMasterDetailModel('ServiceDefs'),
+                    MdmsMasterDetailModel(
+                        MasterEnums.serviceDefinitions.toValue()),
                   ],
                 ),
               ],

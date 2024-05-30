@@ -5,10 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/auth/auth.dart';
+import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
+@RoutePage()
 class LoginPage extends LocalizedStatefulWidget {
   const LoginPage({
     Key? key,
@@ -160,13 +162,13 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                               i18.forgotPassword.contentText,
                             ),
                             primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.forgotPassword.primaryActionLabel,
-                              ),
-                              action: (ctx) =>
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop(),
-                            ),
+                                label: localizations.translate(
+                                  i18.forgotPassword.primaryActionLabel,
+                                ),
+                                action: (ctx) {
+                                  Navigator.of(ctx).pop();
+                                  context.router.popUntilRoot();
+                                }),
                           ),
                         ),
                         style: TextButton.styleFrom(

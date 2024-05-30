@@ -1,3 +1,4 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -9,6 +10,7 @@ import '../../../widgets/localized.dart';
 import '../blocs/app_localization.dart';
 import '../utils/i18_key_constants.dart' as i18;
 
+@RoutePage()
 class AttendanceAcknowledgementPage extends LocalizedStatefulWidget {
   final String label;
   final String? subLabel;
