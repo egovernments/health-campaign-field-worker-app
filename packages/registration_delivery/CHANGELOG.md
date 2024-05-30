@@ -15,3 +15,6 @@
 
 ## 0.0.0-dev.6
 * Updated digit_scanner to latest version
+
+## 0.0.0-dev.7
+* Fixed Duplicate routing issue
