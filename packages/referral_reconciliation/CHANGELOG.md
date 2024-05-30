@@ -9,3 +9,6 @@ Updated digit_data_model to latest version
 
 ## 0.0.0-dev.4
 Updated digit_scanner to latest version
+
+## 0.0.0-dev.5
+Updated digit_scanner to latest version

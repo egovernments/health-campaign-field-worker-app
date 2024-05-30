@@ -420,10 +420,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           ),
                         ),
                         footer: DigitElevatedButton(
-                          onPressed: _resourceController.value.text
-                                  .trim()
-                                  .isNotEmpty
-                              ? () async {
+                          onPressed: () async {
                                   final bloc = context.read<DigitScannerBloc>();
                                   codes.add(_resourceController.value.text);
                                   bloc.add(
@@ -439,8 +436,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                       localizations,
                                     );
                                   }
-                                }
-                              : null,
+                                },
                           child: Text(localizations.translate(
                             i18.common.coreCommonSubmit,
                           )),
