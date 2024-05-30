@@ -1,6 +1,6 @@
 name: inventory_management
 description: Provides features to manage inventory.
-version: 0.0.0-dev.6
+version: 0.0.0-dev.7
 repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/inventory_management
 
 environment:
