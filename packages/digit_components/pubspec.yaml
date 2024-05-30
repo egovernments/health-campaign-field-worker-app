@@ -29,7 +29,7 @@ dependencies:
   overlay_builder: ^1.1.0
   package_info_plus: ^5.0.1
   easy_stepper: ^0.5.2+1
-  intl: ^0.18.1
+  intl: ^0.18.0
   flutter_focus_watcher: ^2.0.0
   remove_emoji_input_formatter: ^0.0.1+1
 
