@@ -1,6 +1,6 @@
 name: inventory_management
 description: Provides features to manage inventory.
-version: 0.0.0-dev.8
+version: 0.0.0-dev.9
 repository: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/inventory_management
 
 environment:
@@ -28,7 +28,7 @@ dependencies:
   uuid: ^3.0.6
   recase: ^4.1.0
   pluto_grid: ^7.0.1
-  digit_scanner: ^0.0.0-dev.6
+  digit_scanner: ^0.0.0-dev.7
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
   digit_data_model: ^0.0.0-dev.3

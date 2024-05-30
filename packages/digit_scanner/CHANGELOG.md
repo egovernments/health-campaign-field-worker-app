@@ -18,3 +18,5 @@ Updated digit_components version for dropdown fix
 ## 0.0.0-dev.6
 Disabled Submit button for manual code not entered
 
+## 0.0.0-dev.7
+Reverted disable button change
