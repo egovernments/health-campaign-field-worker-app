@@ -9,3 +9,6 @@
 
 ## 0.0.0-dev.4
 * Added null check for fetching product variants
+
+## 0.0.0-dev.5
+* Facility dialog empty pop up fix on initial load
