@@ -204,9 +204,9 @@ class StockReconciliationState with _$StockReconciliationState {
   // Getter for lost stock
   num get stockLost => _getQuantityCount(
         stockModels.where((e) =>
-            e.transactionType == TransactionType.dispatched.name &&
-            (e.transactionReason == TransactionReason.lostInTransit.name ||
-                e.transactionReason == TransactionReason.lostInStorage.name)),
+            e.transactionType == TransactionType.dispatched.toValue() &&
+            (e.transactionReason == TransactionReason.lostInTransit.toValue()||
+                e.transactionReason == TransactionReason.lostInStorage.toValue())),
       );
 
   // Getter for damaged stock
