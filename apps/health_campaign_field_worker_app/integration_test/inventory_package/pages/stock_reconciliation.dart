@@ -50,13 +50,13 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
   // Select facility ID
-  await widgetTester.tap(find.byKey(const Key('stockReconFacilityId')));
+  await widgetTester.tap(find.byKey(const Key('facility')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
   await widgetTester.tap(find.bySemanticsLabel(RegExp('FAC_F*')).last);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
   // Select product
-  await widgetTester.tap(find.byKey(const Key('stockReconSelectProduct')));
+  await widgetTester.tap(find.byKey(const Key('productVariant')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
   await widgetTester.tap(find.bySemanticsLabel(RegExp('Bednet Grade 1')).last);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
@@ -75,7 +75,7 @@ Future<void> testStockReconciliationPage(WidgetTester widgetTester) async {
   expect(expectedStockOnHand == stockParamValues['StockOnHand'], true);
 
   // Enter manual count
-  await widgetTester.enterText(find.byKey(const Key('stockManualCount')), '25');
+  await widgetTester.enterText(find.byKey(const Key('manualCountKey')), '25');
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 100));
 
   // Submit the form

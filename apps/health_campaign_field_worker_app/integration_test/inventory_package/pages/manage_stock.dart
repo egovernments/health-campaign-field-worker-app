@@ -49,11 +49,11 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   await widgetTester.pumpAndSettle(const Duration(seconds: 2));
 
   // Tap on the select product field
-  await widgetTester.tap(find.byKey(const Key('selectProduct')));
+  await widgetTester.tap(find.byKey(const Key('productVariant')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 50));
 
   // Select a product
-  await widgetTester.tap(find.text('Bednet Grade 1'));
+  await widgetTester.tap(find.text(testVariables['productName']));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 50));
 
   // Enter quantity
@@ -69,7 +69,7 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 50));
 
   // Select transport type
-  await widgetTester.tap(find.byKey(const Key('transportTypes')));
+  await widgetTester.tap(find.byKey(const Key('typeOfTransport')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 50));
   await widgetTester.tap(find.text('Bus'));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 50));

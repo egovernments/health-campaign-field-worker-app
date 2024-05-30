@@ -30,13 +30,13 @@ Future<void> testOnePage(WidgetTester widgetTester, int i) async {
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 2000));
 
   // Tap on facility
-  await widgetTester.tap(find.byKey(const Key('viewReportsFacility')));
+  await widgetTester.tap(find.byKey(const Key('facilityKey')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   await widgetTester.tap(find.bySemanticsLabel(RegExp('FAC_F*')).last);
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
 
   // Tap on select product
-  await widgetTester.tap(find.byKey(const Key('viewReportSelectProduct')));
+  await widgetTester.tap(find.byKey(const Key('productVariant')));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
   await widgetTester.tap(find.text(testVariables['productName']));
   await widgetTester.pumpAndSettle(const Duration(milliseconds: 1000));
