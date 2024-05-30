@@ -2,14 +2,18 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/widgets/no_result_card/no_result_card.dart';
 import 'package:intl/intl.dart';
+import 'package:registration_delivery/blocs/service/service.dart';
+import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
-import '../../blocs/service/service.dart';
-import '../../blocs/service_definition/service_definition.dart';
+import '../../router/app_router.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class ChecklistPreviewPage extends LocalizedStatefulWidget {
   const ChecklistPreviewPage({
     Key? key,
@@ -57,73 +61,92 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
           BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (value1, value2, value3) {
-                return value2 == null
-                    ? Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          ...value1
-                              .map((e) => e.serviceDefId != null
-                                  ? DigitCard(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Align(
-                                            alignment: Alignment.centerLeft,
-                                            child: Text(
-                                              DateFormat('dd MMMM yyyy').format(
-                                                DateFormat('dd/MM/yyyy').parse(
-                                                  e.createdAt.toString(),
-                                                ),
-                                              ),
-                                              style: theme
-                                                  .textTheme.headlineMedium,
-                                            ),
-                                          ),
-                                          Row(
+              serviceSearch: (serviceList, selectedService, loading) {
+                return selectedService == null
+                    ? serviceList.isNotEmpty
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ...serviceList
+                                  .map((e) => e.serviceDefId != null
+                                      ? DigitCard(
+                                          child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.spaceBetween,
                                             children: [
-                                              SizedBox(
+                                              Align(
+                                                alignment: Alignment.centerLeft,
                                                 child: Text(
-                                                  localizations.translate(
-                                                    '${e.tenantId}',
+                                                  DateFormat(Constants
+                                                          .checklistPreviewDateFormat)
+                                                      .format(
+                                                    DateFormat(Constants
+                                                            .defaultDateFormat)
+                                                        .parse(
+                                                      e.createdAt.toString(),
+                                                    ),
                                                   ),
+                                                  style: theme
+                                                      .textTheme.headlineMedium,
                                                 ),
                                               ),
-                                              DigitOutLineButton(
-                                                label: localizations.translate(
-                                                  i18.searchBeneficiary
-                                                      .iconLabel,
-                                                ),
-                                                onPressed: () {
-                                                  context
-                                                      .read<ServiceBloc>()
-                                                      .add(
-                                                        ServiceSelectionEvent(
-                                                          service: e,
-                                                        ),
-                                                      );
-                                                },
-                                                buttonStyle:
-                                                    OutlinedButton.styleFrom(
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.zero,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  SizedBox(
+                                                    child: Text(
+                                                      localizations.translate(
+                                                        '${e.tenantId}',
+                                                      ),
+                                                    ),
                                                   ),
-                                                ),
+                                                  DigitOutLineButton(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.searchBeneficiary
+                                                          .iconLabel,
+                                                    ),
+                                                    onPressed: () {
+                                                      context
+                                                          .read<ServiceBloc>()
+                                                          .add(
+                                                            ServiceSelectionEvent(
+                                                              service: e,
+                                                            ),
+                                                          );
+                                                    },
+                                                    buttonStyle: OutlinedButton
+                                                        .styleFrom(
+                                                      shape:
+                                                          const RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.zero,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                        ],
-                                      ),
-                                    )
-                                  : const Offstage())
-                              .toList(),
-                        ],
-                      )
+                                        )
+                                      : const Offstage())
+                                  .toList(),
+                            ],
+                          )
+                        : Expanded(
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(10),
+                                child: NoResultCard(
+                                  align: Alignment.center,
+                                  label: localizations.translate(
+                                      i18.checklist.noChecklistFound),
+                                ),
+                              ),
+                            ),
+                          )
                     : BlocBuilder<ServiceDefinitionBloc,
                         ServiceDefinitionState>(builder: (context, state) {
                         return state.maybeWhen(
@@ -151,7 +174,7 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                 theme.textTheme.displayMedium,
                                           ),
                                         ),
-                                        ...(value2.attributes ?? [])
+                                        ...(selectedService.attributes ?? [])
                                             .where((a) =>
                                                 a.value !=
                                                     i18.checklist

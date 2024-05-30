@@ -1,13 +1,14 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/utils/constants.dart';
 import 'package:recase/recase.dart';
+import 'package:registration_delivery/blocs/service/service.dart';
+import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
 import '../../blocs/auth/auth.dart';
-import '../../blocs/service/service.dart';
-import '../../blocs/service_definition/service_definition.dart';
-import '../../models/entities/service.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/action_card/action_card.dart';
@@ -15,6 +16,7 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/no_result_card/no_result_card.dart';
 
+@RoutePage()
 class ChecklistPage extends LocalizedStatefulWidget {
   const ChecklistPage({
     Key? key,
@@ -73,12 +75,15 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                               List<String> roles = res.userModel.roles
                                   .map((e) => e.code.snakeCase.toUpperCase())
                                   .toList();
-                              final values = value.serviceDefinitionList
-                                  .where((item) => !roles
-                                      .indexOf(
-                                        item.code!.split('.').last,
-                                      )
-                                      .isNegative);
+                              final values = value.serviceDefinitionList.where(
+                                  (item) =>
+                                      !roles
+                                          .indexOf(
+                                            item.code!.split('.').lastOrNull!,
+                                          )
+                                          .isNegative &&
+                                      !item.code!.contains(Constants
+                                          .healthFacilityChecklistPrefix));
 
                               if (values.isEmpty) {
                                 return Column(

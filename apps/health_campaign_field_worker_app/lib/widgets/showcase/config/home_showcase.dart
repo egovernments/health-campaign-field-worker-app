@@ -38,10 +38,6 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.distributorFileComplaint,
   );
 
-  final beneficiaryReferral = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.homeShowcase.beneficiaryReferral,
-  );
-
   final distributorSyncData = ShowcaseItemBuilder(
     messageLocalizationKey: i18.homeShowcase.distributorSyncData,
   );
@@ -94,11 +90,11 @@ class _HomePageShowcaseData {
     messageLocalizationKey: i18.homeShowcase.deleteAll,
   );
 
-  final db = ShowcaseItemBuilder(
-    messageLocalizationKey: i18.home.db,
-  );
-
   final manageAttendance = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.manageAttendanceLabel,
+  );
+
+  final db = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.home.db,
   );
 }

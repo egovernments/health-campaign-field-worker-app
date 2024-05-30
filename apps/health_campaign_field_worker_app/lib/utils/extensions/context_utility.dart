@@ -26,35 +26,28 @@ extension ContextUtilityExtensions on BuildContext {
 
   String get projectId => selectedProject.id;
 
-  Cycle get selectedCycle {
+  ProjectCycle? get selectedCycle {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
-    final selectedCycle = projectState.projectType?.cycles
-        ?.where(
-          (e) =>
-              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          // Return null when no matching cycle is found
-        )
-        .firstOrNull;
-
-    if (selectedCycle == null) {
-      return const Cycle();
-    }
+    final selectedCycle =
+        projectState.selectedProject?.additionalDetails?.projectType?.cycles
+            ?.where(
+              (e) =>
+                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
+            )
+            .firstOrNull;
 
     return selectedCycle;
   }
 
-  ProjectType? get selectedProjectType {
+  ProjectTypeModel? get selectedProjectType {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
-    final projectType = projectState.projectType;
-
-    if (selectedCycle == null) {
-      return null;
-    }
+    final projectType =
+        projectState.selectedProject?.additionalDetails?.projectType;
 
     return projectType;
   }
@@ -63,14 +56,13 @@ extension ContextUtilityExtensions on BuildContext {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
+    var projectCycles =
+        projectState.selectedProject?.additionalDetails?.projectType?.cycles;
 
-    if (projectState.projectType?.cycles != null &&
-        (projectState.projectType?.cycles?.length ?? 0) > 0) {
+    if (projectCycles != null && (projectCycles.isNotEmpty)) {
       List<String> resultList = [];
 
-      for (int i = 1;
-          i <= (projectState.projectType?.cycles?.length ?? 0);
-          i++) {
+      for (int i = 1; i <= (projectCycles.length); i++) {
         resultList.add('0${i.toString()}');
       }
 
@@ -78,22 +70,6 @@ extension ContextUtilityExtensions on BuildContext {
     } else {
       return [];
     }
-  }
-
-  BoundaryModel get boundary {
-    final boundaryBloc = _get<BoundaryBloc>();
-    final boundaryState = boundaryBloc.state;
-
-    final selectedBoundary = boundaryState.selectedBoundaryMap.entries
-        .where((element) => element.value != null)
-        .lastOrNull
-        ?.value;
-
-    if (selectedBoundary == null) {
-      throw AppException('No boundary is selected');
-    }
-
-    return selectedBoundary;
   }
 
   BeneficiaryType get beneficiaryType {
@@ -109,6 +85,25 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return selectedBeneficiary;
+  }
+
+  BoundaryModel get boundary {
+    final boundaryBloc = _get<BoundaryBloc>();
+    final boundaryState = boundaryBloc.state;
+
+    final selectedBoundary = boundaryState.selectedBoundaryMap.entries
+        .where((element) => element.value != null)
+        .lastOrNull
+        ?.value;
+
+    if (selectedBoundary == null) {
+      throw AppException('No boundary is selected');
+    }
+
+    RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
+    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
+    ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
+    return selectedBoundary;
   }
 
   BoundaryModel? get boundaryOrNull {

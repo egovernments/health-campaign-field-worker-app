@@ -3,15 +3,16 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
 
 import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints/complaints.dart';
-import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/boundary_selection_wrapper.dart';
 
+@RoutePage()
 class ComplaintsRegistrationWrapperPage extends StatelessWidget
-    with AutoRouteWrapper {
+    implements AutoRouteWrapper {
   final PgrServiceModel? pgrServiceModel;
 
   const ComplaintsRegistrationWrapperPage({

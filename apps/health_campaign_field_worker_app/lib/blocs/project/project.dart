@@ -2,24 +2,25 @@
 import 'dart:async';
 import 'dart:core';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
-import '../../data/data_repository.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
-import '../../models/data_model.dart';
-import '../../models/project_type/project_type_model.dart';
+import '../../models/entities/roles_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
@@ -44,15 +45,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<ProjectModel, ProjectSearchModel>
       projectLocalRepository;
 
-  final RemoteRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
+  final RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
       attendanceRemoteRepository;
-  final LocalRepository<HCMAttendanceRegisterModel, HCMAttendanceSearchModel>
+  final LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
       attendanceLocalRepository;
   final RemoteRepository<IndividualModel, IndividualSearchModel>
       individualRemoteRepository;
-  final LocalRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
+  final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
       attendanceLogLocalRepository;
-  final RemoteRepository<HCMAttendanceLogModel, HCMAttendanceLogSearchModel>
+  final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
       attendanceLogRemoteRepository;
   final LocalRepository<IndividualModel, IndividualSearchModel>
       individualLocalRepository;
@@ -68,6 +69,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       facilityRemoteRepository;
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
+
+  /// Stock Repositories
+  final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
+  final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
@@ -103,6 +108,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
+    required this.stockRemoteRepository,
+    required this.stockLocalRepository,
     required this.serviceDefinitionRemoteRepository,
     required this.boundaryRemoteRepository,
     required this.boundaryLocalRepository,
@@ -134,7 +141,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: true,
       projects: [],
       selectedProject: null,
-      projectType: null,
     ));
 
     final connectivityResult = await (Connectivity().checkConnectivity());
@@ -192,7 +198,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     List<ProjectModel> projects = [];
-    ProjectType? projectType;
     for (final projectStaff in projectStaffList) {
       await projectStaffLocalRepository.create(
         projectStaff,
@@ -213,7 +218,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             ),
           );
           final attendanceRegisters = await attendanceRemoteRepository.search(
-            HCMAttendanceSearchModel(
+            AttendanceRegisterSearchModel(
               staffId: individual.first.id,
               referenceId: projectStaff.projectId,
             ),
@@ -221,20 +226,20 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           await attendanceLocalRepository.bulkCreate(attendanceRegisters);
 
           for (final register in attendanceRegisters) {
-            if (register.attendanceRegister.attendees != null &&
-                (register.attendanceRegister.attendees ?? []).isNotEmpty) {
+            if (register.attendees != null &&
+                (register.attendees ?? []).isNotEmpty) {
               try {
                 final individuals = await individualRemoteRepository.search(
                   IndividualSearchModel(
-                    id: register.attendanceRegister.attendees!
+                    id: register.attendees!
                         .map((e) => e.individualId!)
                         .toList(),
                   ),
                 );
                 await individualLocalRepository.bulkCreate(individuals);
                 final logs = await attendanceLogRemoteRepository.search(
-                  HCMAttendanceLogSearchModel(
-                    registerId: register.attendanceRegister.id,
+                  AttendanceLogSearchModel(
+                    registerId: register.id,
                   ),
                 );
                 await attendanceLogLocalRepository.bulkCreate(logs);
@@ -317,37 +322,12 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         );
       }
-      // TODO [Need to optimize the code]
-      try {
-        final projectTypes = await mdmsRepository.searchProjectType(
-          envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                const MdmsModuleDetailModel(
-                  moduleName: 'HCM-PROJECT-TYPES',
-                  masterDetails: [MdmsMasterDetailModel('projectTypes')],
-                ),
-              ],
-            ),
-          ).toJson(),
-        );
-
-        emit(state.copyWith(
-          projectType: projectTypes.projectTypeWrapper?.projectTypes
-              .where((element) => element.id == projects.first.projectTypeId)
-              .toList()
-              .firstOrNull,
-        ));
-      } catch (_) {}
     }
 
     emit(ProjectState(
       projects: projects,
       loading: false,
       syncError: null,
-      projectType: projectType,
     ));
 
     if (projects.length == 1) {
@@ -365,22 +345,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     projects.removeDuplicates((element) => element.id);
 
     final selectedProject = await localSecureStore.selectedProject;
-    final getSelectedProjectType = await localSecureStore.selectedProjectType;
-    final currentRunningCycle = getSelectedProjectType?.cycles
-        ?.where(
-          (e) =>
-              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          // Return null when no matching cycle is found
-        )
-        .firstOrNull;
     emit(
       ProjectState(
         loading: false,
         projects: projects,
         selectedProject: selectedProject,
-        projectType: getSelectedProjectType,
-        selectedCycle: currentRunningCycle,
       ),
     );
   }
@@ -392,27 +361,15 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       ),
     );
 
-    for (final projectFacility in projectFacilities) {
-      await projectFacilityLocalRepository.create(
-        projectFacility,
-        createOpLog: false,
-      );
+    await projectFacilityLocalRepository.bulkCreate(projectFacilities);
 
-      /// Passing [id] as [null] is required to load all facilities associated
-      /// with the tenant
-      final facilities = await facilityRemoteRepository.search(
-        FacilitySearchModel(
-          id: null,
-        ),
-      );
+    final facilities = await facilityRemoteRepository.search(
+      FacilitySearchModel(
+        id: null,
+      ),
+    );
 
-      for (final facility in facilities) {
-        await facilityLocalRepository.create(
-          facility,
-          createOpLog: false,
-        );
-      }
-    }
+    await facilityLocalRepository.bulkCreate(facilities);
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
@@ -446,7 +403,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
     for (final project in projects) {
       final projectResources = await projectResourceRemoteRepository.search(
-        ProjectResourceSearchModel(projectId: project.id),
+        ProjectResourceSearchModel(projectId: [project.id]),
       );
 
       for (final projectResource in projectResources) {
@@ -495,34 +452,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           ),
         ).toJson(),
       );
-      final projectType = await mdmsRepository.searchProjectType(
-        envConfig.variables.mdmsApiPath,
-        MdmsRequestModel(
-          mdmsCriteria: MdmsCriteriaModel(
-            tenantId: envConfig.variables.tenantId,
-            moduleDetails: [
-              const MdmsModuleDetailModel(
-                moduleName: 'HCM-PROJECT-TYPES',
-                masterDetails: [MdmsMasterDetailModel('projectTypes')],
-              ),
-            ],
-          ),
-        ).toJson(),
-      );
-
-      final selectedProjectType = projectType.projectTypeWrapper?.projectTypes
-          .where(
-            (element) => element.id == event.model.projectTypeId,
-          )
-          .toList()
-          .firstOrNull;
-
-      final cycles = List<Cycle>.from(
-        selectedProjectType?.cycles ?? [],
-      );
-      cycles.sort((a, b) => a.id.compareTo(b.id));
-
-      final reqProjectType = selectedProjectType?.copyWith(cycles: cycles);
 
       final rowversionList = await isar.rowVersionLists
           .filter()
@@ -543,12 +472,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         boundaries = await boundaryRemoteRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
+            codes: event.model.address?.boundary,
           ),
         );
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
-        await localSecureStore.setSelectedProjectType(reqProjectType);
         await localSecureStore.setBoundaryRefetch(false);
         final List<RowVersionList> rowVersionList = [];
 
@@ -569,20 +497,19 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         boundaries = await boundaryLocalRepository.search(
           BoundarySearchModel(
             boundaryType: event.model.address?.boundaryType,
-            code: event.model.address?.boundary,
+            codes: event.model.address?.boundary,
           ),
         );
         if (boundaries.isEmpty) {
           boundaries = await boundaryRemoteRepository.search(
             BoundarySearchModel(
               boundaryType: event.model.address?.boundaryType,
-              code: event.model.address?.boundary,
+              codes: event.model.address?.boundary,
             ),
           );
         }
         await boundaryLocalRepository.bulkCreate(boundaries);
         await localSecureStore.setSelectedProject(event.model);
-        await localSecureStore.setSelectedProjectType(reqProjectType);
       }
       await localSecureStore.setProjectSetUpComplete(event.model.id, true);
     } catch (_) {
@@ -593,22 +520,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       return;
     }
-    final getSelectedProjectType = await localSecureStore.selectedProjectType;
-    final currentRunningCycle = getSelectedProjectType?.cycles
-        ?.where(
-          (e) =>
-              (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-              (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-          // Return null when no matching cycle is found
-        )
-        .firstOrNull;
 
     emit(state.copyWith(
       selectedProject: event.model,
       loading: false,
       syncError: null,
-      projectType: getSelectedProjectType,
-      selectedCycle: currentRunningCycle,
     ));
   }
 }
@@ -627,8 +543,6 @@ class ProjectState with _$ProjectState {
 
   const factory ProjectState({
     @Default([]) List<ProjectModel> projects,
-    ProjectType? projectType,
-    Cycle? selectedCycle,
     ProjectModel? selectedProject,
     @Default(false) bool loading,
     ProjectSyncErrorType? syncError,

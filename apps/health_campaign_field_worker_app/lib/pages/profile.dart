@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -9,13 +10,12 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
-import '../blocs/user/user.dart';
-import '../models/data_model.dart';
-import '../models/entities/user.dart';
+import '../router/app_router.dart';
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
+@RoutePage()
 class ProfilePage extends LocalizedStatefulWidget {
   const ProfilePage({
     Key? key,
@@ -69,8 +69,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
           value: context.read<AppInitializationBloc>().state.maybeWhen(
                 orElse: () => null,
                 initialized: (appConfiguration, serviceRegistryList) {
-                  return appConfiguration.genderOptions!
-                      .map((e) => localizations.translate(e.name))
+                  return appConfiguration.genderOptions
+                      ?.map((e) => e.code)
                       .firstWhereOrNull((element) => element == user?.gender);
                 },
               ),
@@ -179,7 +179,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                     name: formGroup.control(_name).value
                                         as String,
                                     emailId: formGroup.control(_emailId).value
-                                        as String,
+                                        as String?,
                                   );
 
                                   ctx.read<UserBloc>().add(

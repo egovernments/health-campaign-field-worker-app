@@ -1,37 +1,43 @@
 import 'dart:async';
 
-import 'package:attendance_management/pages/manage_attendance.dart';
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:referral_reconciliation/utils/utils.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
-import '../blocs/hcm_attendance_bloc.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_households.dart';
-import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/sync/sync.dart';
-import '../data/data_repository.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../data/local_store/sql_store/sql_store.dart';
-import '../models/data_model.dart';
+import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
-import '../widgets/progress_bar/beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
+@RoutePage()
 class HomePage extends LocalizedStatefulWidget {
   const HomePage({
     super.key,
@@ -64,6 +70,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         }
       }
     });
+    //// Function to set initial Data required for the packages to run
+    setPackagesSingleton(context);
   }
 
   //  Be sure to cancel subscription after you are done
@@ -313,12 +321,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            final searchBloc = context.read<SearchBlocWrapper>();
-            await context.router.push(
-              SearchBeneficiaryRoute(),
-            );
-            searchBloc.searchHouseholdsBloc
-                .add(const SearchHouseholdsClearEvent());
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
@@ -328,7 +331,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.store_mall_directory,
           label: i18.home.manageStockLabel,
           onPressed: () {
-            context.router.push(ManageStocksRoute());
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _) {
+                    context.router.push(ManageStocksRoute());
+                  },
+                );
           },
         ),
       ),
@@ -389,14 +397,17 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
       i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.beneficiaryReferral.buildWith(
+          homeShowcaseData.hfBeneficiaryReferral.buildWith(
         child: HomeItemCard(
           icon: Icons.supervised_user_circle_rounded,
           label: i18.home.beneficiaryReferralLabel,
           onPressed: () async {
-            final searchBloc = context.read<SearchReferralsBloc>();
-            searchBloc.add(const SearchReferralsClearEvent());
-            await context.router.push(SearchReferralsRoute());
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _) {
+                    context.router.push(SearchReferralReconciliationsRoute());
+                  },
+                );
           },
         ),
       ),
@@ -405,8 +416,31 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () {
-            context.router.push(
-              InventoryReportSelectionRoute(),
+            context.router.push(InventoryReportSelectionRoute());
+          },
+        ),
+      ),
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            context.router.push(const ManageAttendanceRoute());
+          },
+        ),
+      ),
+      i18.home.db: homeShowcaseData.db.buildWith(
+        child: HomeItemCard(
+          icon: Icons.table_chart,
+          label: i18.home.db,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
             );
           },
         ),
@@ -426,41 +460,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.manageAttendanceLabel:
-          homeShowcaseData.manageAttendance.buildWith(
-        child: HomeItemCard(
-          icon: Icons.fingerprint_outlined,
-          label: i18.home.manageAttendanceLabel,
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => ManageAttendancePage(
-                  attendanceListeners: HCMAttendanceBloc(
-                    userId: context.loggedInUserUuid,
-                    projectId: context.projectId,
-                    attendanceLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceRegisterModel,
-                            HCMAttendanceSearchModel>>(),
-                    individualLocalRepository: context.read<
-                        LocalRepository<IndividualModel,
-                            IndividualSearchModel>>(),
-                    attendanceLogLocalRepository: context.read<
-                        LocalRepository<HCMAttendanceLogModel,
-                            HCMAttendanceLogSearchModel>>(),
-                    context: context,
-                    individualId: context.loggedInIndividualId,
-                  ),
-                  projectId: context.projectId,
-                  userId: context.loggedInUserUuid,
-                  appVersion: Constants().version,
-                ),
-                settings: const RouteSettings(name: '/manage-attendance'),
-              ),
-            );
-          },
-        ),
-      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -475,11 +474,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
-      i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -490,9 +489,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
-      i18.home.db,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
+      i18.home.db,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -504,8 +503,10 @@ class _HomePageState extends LocalizedState<HomePage> {
             element == i18.home.db)
         .toList();
 
-    final showcaseKeys =
-        filteredLabels.map((label) => homeItemsShowcaseMap[label]!).toList();
+    final showcaseKeys = filteredLabels
+        .where((f) => f != i18.home.db)
+        .map((label) => homeItemsShowcaseMap[label]!)
+        .toList();
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
@@ -525,9 +526,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 context.read<
-                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
                 context.read<
                     LocalRepository<ProjectBeneficiaryModel,
                         ProjectBeneficiarySearchModel>>(),
@@ -539,9 +540,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     LocalRepository<StockReconciliationModel,
                         StockReconciliationSearchModel>>(),
@@ -550,14 +551,14 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
                 context.read<
-                    LocalRepository<HCMAttendanceLogModel,
-                        HCMAttendanceLogSearchModel>>(),
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
               ],
               remoteRepositories: [
                 context.read<
-                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
                 context.read<
                     RemoteRepository<ProjectBeneficiaryModel,
                         ProjectBeneficiarySearchModel>>(),
@@ -569,9 +570,9 @@ class _HomePageState extends LocalizedState<HomePage> {
                     RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
                 context.read<
                     RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
                 context
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
                 context.read<
                     RemoteRepository<StockReconciliationModel,
                         StockReconciliationSearchModel>>(),
@@ -580,13 +581,99 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
                 context.read<
-                    RemoteRepository<HCMAttendanceLogModel,
-                        HCMAttendanceLogSearchModel>>(),
+                    RemoteRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
               ],
             ),
           );
     }
   }
+}
+
+// Function to set initial Data required for the packages to run
+void setPackagesSingleton(BuildContext context) {
+  context.read<AppInitializationBloc>().state.maybeWhen(
+      orElse: () {},
+      initialized: (AppConfiguration appConfiguration, _) {
+        RegistrationDeliverySingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
+          referralReasons:
+              appConfiguration.referralReasons!.map((e) => e.code).toList(),
+        );
+
+        AttendanceSingleton().setInitialData(
+          projectId: context.projectId,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+        );
+
+        ReferralReconSingleton().setInitialData(
+          userName: context.loggedInUser.name ?? '',
+          userUUid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          projectName: context.selectedProject.name,
+          roleCode: RolesType.healthFacilityWorker.toValue(),
+          appVersion: Constants().version,
+          tenantId: envConfig.variables.tenantId,
+          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
+            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
+            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
+          ),
+          genderOptions:
+              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
+          cycles: context.cycles,
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
+                  [],
+          checklistTypes:
+              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+                  [],
+        );
+
+        InventorySingleton().setInitialData(
+          isWareHouseMgr: context.loggedInUserRoles
+              .where(
+                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .toList()
+              .isNotEmpty,
+          isDistributor: context.loggedInUserRoles
+              .where(
+                (role) => role.code == RolesType.distributor.toValue(),
+              )
+              .toList()
+              .isNotEmpty,
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          transportTypes: appConfiguration.transportTypes
+              ?.map((e) => InventoryTransportTypes()
+                ..name = e.code
+                ..code = e.code)
+              .toList(),
+        );
+      });
 }
 
 class _HomeItemDataModel {

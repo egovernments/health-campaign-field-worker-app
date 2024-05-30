@@ -9,7 +9,7 @@ part of 'bandwidth_model.dart';
 _$BandwidthModelImpl _$$BandwidthModelImplFromJson(Map<String, dynamic> json) =>
     _$BandwidthModelImpl(
       userId: json['userId'] as String,
-      batchSize: json['batchSize'] as int,
+      batchSize: (json['batchSize'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$BandwidthModelImplToJson(
