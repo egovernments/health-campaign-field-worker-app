@@ -26,16 +26,6 @@ Future<void> markAttendance(WidgetTester widgetTester) async {
     expect(find.text('Submit'), findsNothing);
   }
 
-  // //mark attedance for one attendee
-  // await widgetTester.tap(find.byType(CircularButton).first);
-  // await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
-
-  // //since only one attendee is marked, do not submit
-  // await widgetTester.tap(find.widgetWithText(DigitElevatedButton, 'Submit'));
-  // await widgetTester.pumpAndSettle(const Duration(milliseconds: 500));
-  // expect(find.text('Please mark attendance for the staffs'), findsOneWidget);
-  // expect(find.byType(AttendanceAcknowledgementPage), findsNothing);
-
   //mark attendance
   for (int i = 0; i < find.byType(CircularButton).evaluate().length; i++) {
     await widgetTester.tap(find.byType(CircularButton).at(i));
