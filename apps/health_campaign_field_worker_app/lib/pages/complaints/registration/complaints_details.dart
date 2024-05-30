@@ -92,7 +92,7 @@ class _ComplaintsDetailsPageState
                         });
 
                         if (form.control(_complaintDetailsForm).disabled) {
-                          router.parent()?.pop();
+                          router.parent()?.maybePop();
                         }
 
                         if (!form.valid) return;
@@ -169,14 +169,22 @@ class _ComplaintsDetailsPageState
                                 i18.common.coreCommonSubmit,
                               ),
                               action: (context) {
-                                context.router.popUntilRoot();
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(true);
                               },
                             ),
                             secondaryAction: DigitDialogActions(
                               label: localizations.translate(
                                 i18.common.coreCommonCancel,
                               ),
-                              action: (context) => context.router.popUntilRoot(),
+                              action: (context) {
+                                Navigator.of(
+                                  context,
+                                  rootNavigator: true,
+                                ).pop(false);
+                              },
                             ),
                           ),
                         );
