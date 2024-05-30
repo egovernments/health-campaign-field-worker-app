@@ -577,7 +577,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   StockRecordEntryType.loss,
                                   StockRecordEntryType.damaged,
                                 ].contains(entryType))
-                                  DigitReactiveDropdown<TransactionReason>(
+                                  DigitReactiveDropdown<String>(
                                     key: const Key(_transactionReasonKey),
                                     label: localizations.translate(
                                       transactionReasonLabel ?? 'Reason',
