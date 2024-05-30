@@ -7,3 +7,6 @@
 
 ## 0.0.0-dev.3
 * Supports boundary v2 and updated single entities to list for all search models
+
+## 1.0.0
+* Initial stable release

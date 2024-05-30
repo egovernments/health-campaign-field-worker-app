@@ -20,3 +20,9 @@ Disabled Submit button for manual code not entered
 
 ## 0.0.0-dev.7
 Reverted disable button change
+
+## 1.0.0
+Initial stable Release
+
+## 1.0.0+1
+* Updated digit_components to latest version

@@ -257,6 +257,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  cupertino_icons:
+    dependency: transitive
+    description:
+      name: cupertino_icons
+      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -268,11 +276,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -309,18 +316,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "00642b6c6195d75987f43f8e6c32a417c0bb75b36e15cf9c5b130466d556de91"
+      sha256: "29b8d33cce933e971831d371f0d873e008a091e99d4192cecd738de357eaaed8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3+13"
+    version: "1.0.0"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: ca8a602305fb591329a95c1340805ace1577ef4146a2beea1991a0653a24040d
+      sha256: "604be26d7f535027d1f16077b47b55a363c74a6040c34fb942ce82d58b9a54ec"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.1"
+    version: "1.0.0"
   dio:
     dependency: "direct main"
     description:
@@ -944,6 +951,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  remove_emoji_input_formatter:
+    dependency: transitive
+    description:
+      name: remove_emoji_input_formatter
+      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1+1"
   shelf:
     dependency: transitive
     description:

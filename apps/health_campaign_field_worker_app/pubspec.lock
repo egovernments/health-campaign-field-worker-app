@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: a37af7332bd47c81f008e081602fd2b438f0b3f5751b43080bd493156dd9c554
+      sha256: "1c4c58e887ae1090220271978b56ab8b89d27b0618afc201ed391ea5eade95fc"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.4"
+    version: "1.0.0+1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -420,11 +420,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -484,18 +483,19 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_components"
-      relative: true
-    source: path
-    version: "0.0.1+8"
+      name: digit_components
+      sha256: "29b8d33cce933e971831d371f0d873e008a091e99d4192cecd738de357eaaed8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: ed3c4938b77777b764497fa7ac7be8ba34212d2925a853b5ccbb77f716dacb5e
+      sha256: "604be26d7f535027d1f16077b47b55a363c74a6040c34fb942ce82d58b9a54ec"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.2"
+    version: "1.0.0"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -507,18 +507,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "5af0318e92a1373677141bd174f64bbc126f9ad64f1d333774205ac684fe40dc"
+      sha256: a9959caad13c65165db5dc00cbe592e640e881d5e512599eac55591722b2da15
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.5"
+    version: "1.0.0+1"
   digit_showcase:
     dependency: "direct main"
     description:
       name: digit_showcase
-      sha256: "75380c35b3e819d04690336eb1682d085882f372daea7a26724470bbc36e3555"
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.1"
+    version: "1.0.0"
   dio:
     dependency: "direct main"
     description:
@@ -1073,7 +1073,7 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "2237616a36c0d69aef7549ab439b833fb7f9fb9fc861af2cc9ac3eedddd69ca8"
+      sha256: "4c68bfd5ae83e700b5204c1e74451e7bf3cf750e6843c6e158289cf56bda018e"
       url: "https://pub.dev"
     source: hosted
     version: "4.1.7"
@@ -1094,10 +1094,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: "07a8a1558601f58524bff189052340b634b412e1643766e0b7e487e05f69b09b"
+      sha256: afb270392e2f3fb01a7e367dc5b0f0249b9e76c88208c1a1c71bcc6096491b0b
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.5"
+    version: "1.0.0"
   io:
     dependency: transitive
     description:
@@ -1510,18 +1510,18 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: b8852d90b9b2105b374583aa11f42b00fa823b1689b9b397293c269ba9f5a1bb
+      sha256: "95f00e17c3bacd61cd96b9bb7a8606de450540cfe53b5296c4a2bc2957d2b346"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.2"
+    version: "1.0.0"
   registration_delivery:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: cb61c12e3766998c63ac930d993dc28140dde2ef3211b9d1b3adff8dc8b20738
+      sha256: "328c71e9a1163481eba1e0653cca23a4e50a32c44cccfcfba049849e87184114"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.0-dev.2"
+    version: "1.0.0+1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
