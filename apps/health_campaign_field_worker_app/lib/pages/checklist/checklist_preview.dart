@@ -61,13 +61,13 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
           BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
-              serviceSearch: (value1, value2, value3) {
-                return value2 == null
-                    ? value1.isNotEmpty
+              serviceSearch: (serviceList, selectedService, loading) {
+                return selectedService == null
+                    ? serviceList.isNotEmpty
                         ? Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ...value1
+                              ...serviceList
                                   .map((e) => e.serviceDefId != null
                                       ? DigitCard(
                                           child: Column(
@@ -174,7 +174,7 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                                 theme.textTheme.displayMedium,
                                           ),
                                         ),
-                                        ...(value2.attributes ?? [])
+                                        ...(selectedService.attributes ?? [])
                                             .where((a) =>
                                                 a.value !=
                                                     i18.checklist
