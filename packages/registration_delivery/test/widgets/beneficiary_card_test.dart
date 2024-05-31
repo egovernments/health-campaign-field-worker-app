@@ -1,8 +1,9 @@
 
 import 'package:registration_delivery/widgets/beneficiary/beneficiary_card.dart';
 
-import '../widget_app.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'widget_app.dart';
 
 void main() {
   group(

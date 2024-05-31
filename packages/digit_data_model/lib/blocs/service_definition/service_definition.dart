@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 import '../../utils/typedefs.dart';
 
@@ -28,7 +27,7 @@ class ServiceDefinitionBloc
   ) async {
     final results = await serviceDefinitionDataRepository.search(
       ServiceDefinitionSearchModel(
-        tenantId: RegistrationDeliverySingleton().tenantId,
+        tenantId: DigitDataModelSingleton().tenantId,
       ),
     );
 

@@ -24,3 +24,8 @@
 
 ## 1.0.0+1
 * Updated digit_showcase to latest version
+
+## 1.0.1
+* Moved service and service definition bloc to digit_data_model package
+* Removed downsync model
+* Added HouseholdDetailsBloc in registration_delivery_wrapper page

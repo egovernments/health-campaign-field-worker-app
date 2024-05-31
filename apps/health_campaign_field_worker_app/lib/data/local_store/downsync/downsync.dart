@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 import 'package:drift/drift.dart';
-import 'package:registration_delivery/models/entities/downsync.dart';
+import '../../../models/downsync/downsync.dart';
 
 
 class DownsyncLocalRepository

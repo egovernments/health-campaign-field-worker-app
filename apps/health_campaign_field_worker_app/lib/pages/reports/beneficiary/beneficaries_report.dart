@@ -7,11 +7,11 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/models/entities/downsync.dart';
 
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../../../blocs/sync/sync.dart';
+import '../../../models/downsync/downsync.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
