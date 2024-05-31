@@ -18,3 +18,9 @@
 
 ## 0.0.0-dev.5
 * Updated digit_data_model to latest version
+
+## 1.0.0
+* Initial stable release
+
+## 1.0.0+1
+* Updated digit_components to latest version

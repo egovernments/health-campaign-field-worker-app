@@ -1,7 +1,8 @@
 name: attendance_management
 description: Digit UI attendance_management specification
-version: 0.0.0-dev.5
-homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/attendance_management"
+version: 1.0.0+1
+homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/attendance_management"
+repository: "https://github.com/egovernments/health-campaign-field-worker-app"
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -10,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: ^0.0.3+16
+  digit_components: ^1.0.0
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
@@ -26,7 +27,7 @@ dependencies:
   path: ^1.8.2
   drift_db_viewer: ^2.0.0
   auto_route: ^7.8.4
-  digit_data_model: ^0.0.0-dev.3
+  digit_data_model: ^1.0.0
   connectivity_plus: ^5.0.2
   collection: ^1.16.0
   location: ^5.0.0

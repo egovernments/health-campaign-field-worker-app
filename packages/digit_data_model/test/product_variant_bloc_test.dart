@@ -67,7 +67,7 @@ void main() {
             .thenAnswer((invocation) async {
           final searchModel =
               invocation.positionalArguments[0] as ProjectResourceSearchModel;
-          if (searchModel.projectId == testProjectId) {
+          if (searchModel.projectId!.contains(testProjectId)) {
             return testProjectResources;
           } else {
             return [];

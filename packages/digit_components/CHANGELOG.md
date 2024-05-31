@@ -100,3 +100,6 @@
 
 ## 0.0.3+16
 * Removed flutter_localizations dependency
+
+## 1.0.0
+* Stable release
