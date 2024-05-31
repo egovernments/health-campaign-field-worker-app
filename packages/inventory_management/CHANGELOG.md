@@ -25,3 +25,6 @@
 
 ## 0.0.0-dev.9
 * Updated digit_scanner to latest version
+
+## 1.0.0
+* Initial stable Release

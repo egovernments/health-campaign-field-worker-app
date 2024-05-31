@@ -309,17 +309,17 @@ packages:
     dependency: transitive
     description:
       name: digit_components
-      sha256: "00642b6c6195d75987f43f8e6c32a417c0bb75b36e15cf9c5b130466d556de91"
+      sha256: "29b8d33cce933e971831d371f0d873e008a091e99d4192cecd738de357eaaed8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3+13"
+    version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "0.0.0-dev.5"
+    version: "1.0.0+1"
   easy_stepper:
     dependency: transitive
     description:
@@ -879,6 +879,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "14.3.0"
+  remove_emoji_input_formatter:
+    dependency: transitive
+    description:
+      name: remove_emoji_input_formatter
+      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1+1"
   shelf:
     dependency: transitive
     description:

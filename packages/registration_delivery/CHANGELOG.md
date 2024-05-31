@@ -18,3 +18,9 @@
 
 ## 0.0.0-dev.7
 * Fixed Duplicate routing issue
+
+## 1.0.0
+* Initial stable version
+
+## 1.0.0+1
+* Updated digit_showcase to latest version
