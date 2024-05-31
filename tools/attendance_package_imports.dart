@@ -130,22 +130,36 @@ void _addAttendanceConstantsToConstantsFile(
 
   // Define the attendance configuration
   var attendanceConfiguration = '''
-// Attendance related configuration
 AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   ''';
 
-  // Define the attendance related lines
-  var attendanceLocalRepositories = [
-    'AttendanceLocalRepository(sql, AttendanceOpLogManager(isar)),',
-    'AttendanceLogsLocalRepository(sql, AttendanceLogOpLogManager(isar)),',
-  ];
-  var attendanceRemoteRepositories = [
-    'if (value == DataModelType.attendanceRegister) AttendanceRemoteRepository(dio, actionMap: actions),',
-    'if (value == DataModelType.attendance) AttendanceLogRemoteRepository(dio, actionMap: actions),',
-  ];
+  // Define the local and remote repositories
+  var localRepository = '''
+AttendanceLocalRepository(
+  sql,
+  AttendanceOpLogManager(isar),
+),
+AttendanceLogsLocalRepository(
+  sql,
+  AttendanceLogOpLogManager(isar),
+),
+  ''';
+
+  var remoteRepository = '''
+if (value == DataModelType.attendanceRegister)
+  AttendanceRemoteRepository(dio, actionMap: actions),
+if (value == DataModelType.attendance)
+  AttendanceLogRemoteRepository(dio, actionMap: actions),
+  ''';
+
+  // Check if the constants.dart file exists
+  var constantsFile = File(constantsFilePath);
+  if (!constantsFile.existsSync()) {
+    print('Error: The constants.dart file does not exist.');
+    return;
+  }
 
   // Read the constants.dart file
-  var constantsFile = File(constantsFilePath);
   var constantsFileContent = constantsFile.readAsStringSync();
 
   // Normalize the whitespace in the file content and the attendance configuration
@@ -158,12 +172,8 @@ AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   for (var importStatement in importStatements) {
     if (!normalizedFileContent
         .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-      // Add the import statement after the last import
-      constantsFileContent = constantsFileContent.substring(
-              0, constantsFileContent.indexOf(';') + 1) +
-          '\n' +
-          importStatement +
-          constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
+      // Add the import statement at the top of the file
+      constantsFileContent = importStatement + '\n' + constantsFileContent;
       print('The import statement was added: $importStatement');
     }
   }
@@ -171,44 +181,58 @@ AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   // Check if the attendance configuration already exists in the file
   // If not, add it to the file
   if (!normalizedFileContent.contains(normalizedAttendanceConfiguration)) {
-    constantsFileContent = '$attendanceConfiguration\n$constantsFileContent';
-    print('The attendance configuration was added.');
-  }
-
-  // Check if the attendance local repositories already exist in the file
-  for (var attendanceLocalRepository in attendanceLocalRepositories) {
-    var normalizedAttendanceLocalRepository =
-        attendanceLocalRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedAttendanceLocalRepository)) {
-      // Add the attendance local repository to the file
-      constantsFileContent = constantsFileContent.replaceFirst(
-          '];', '  $attendanceLocalRepository\n];');
-      print(
-          'The attendance local repository was added: $attendanceLocalRepository');
-    } else {
-      print('The attendance local repository already exists.');
-    }
-  }
-
-  // Check if the attendance remote repositories already exist in the file
-  for (var attendanceRemoteRepository in attendanceRemoteRepositories) {
-    var normalizedAttendanceRemoteRepository =
-        attendanceRemoteRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedAttendanceRemoteRepository)) {
-      // Add the attendance remote repository to the _getRemoteRepositories method
-      var replacementString = constantsFileContent.contains(']);')
-          ? '  $attendanceRemoteRepository,\n]);'
-          : '  $attendanceRemoteRepository\n]);';
+    // Find the setInitialDataOfPackages method and add the attendance configuration inside it
+    var setInitialDataOfPackagesIndex =
+        constantsFileContent.indexOf('void setInitialDataOfPackages() {');
+    if (setInitialDataOfPackagesIndex != -1) {
+      var endOfSetInitialDataOfPackages = setInitialDataOfPackagesIndex +
+          constantsFileContent
+              .substring(setInitialDataOfPackagesIndex)
+              .indexOf('}') +
+          1;
       constantsFileContent =
-          constantsFileContent.replaceFirst(']);', replacementString);
-      print(
-          'The attendance remote repository was added: $attendanceRemoteRepository');
-    } else {
-      print('The attendance remote repository already exists.');
+          constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
+              '\n  $attendanceConfiguration' +
+              constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
+      print('The attendance configuration was added.');
     }
   }
+
+  // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
+  var getLocalRepositoriesIndex =
+      constantsFileContent.indexOf('getLocalRepositories(');
+  if (getLocalRepositoriesIndex != -1) {
+    var endOfGetLocalRepositories = getLocalRepositoriesIndex +
+        constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
+        1;
+    constantsFileContent =
+        constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
+            '\n' +
+            localRepository +
+            constantsFileContent.substring(endOfGetLocalRepositories - 1);
+    print('The local repositories were added.');
+  }
+
+  var getRemoteRepositoriesIndex =
+      constantsFileContent.indexOf('getRemoteRepositories(');
+  if (getRemoteRepositoriesIndex != -1) {
+    var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
+        constantsFileContent
+            .substring(getRemoteRepositoriesIndex)
+            .indexOf('addAll(') +
+        'addAll('.length;
+    var endOfAddAll = constantsFileContent
+            .substring(endOfGetRemoteRepositories)
+            .indexOf(']') +
+        endOfGetRemoteRepositories;
+    constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
+        remoteRepository +
+        constantsFileContent.substring(endOfAddAll);
+    print('The remote repositories were added.');
+  }
+
+  // Write the updated content back to the constants.dart file
+  constantsFile.writeAsStringSync(constantsFileContent);
 }
 
 void _addRepoToNetworkManagerProviderWrapper(

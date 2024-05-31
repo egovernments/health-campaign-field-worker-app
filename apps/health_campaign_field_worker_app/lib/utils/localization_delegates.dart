@@ -1,3 +1,5 @@
+import 'package:attendance_management/blocs/app_localization.dart'
+    as attendance_localization;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
 
@@ -18,5 +20,12 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
+    attendance_localization.AttendanceLocalization.getDelegate(
+      getLocalizationString(
+        isar,
+        selectedLocale,
+      ),
+      appConfig.languages!,
+    ),
   ];
 }

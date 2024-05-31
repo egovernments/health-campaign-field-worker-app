@@ -1,5 +1,7 @@
 library app_utils;
 
+import 'package:attendance_management/attendance_management.dart'
+    as attendance_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'dart:async';
 import 'dart:io';
@@ -371,6 +373,7 @@ initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
+    Future(() => attendance_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

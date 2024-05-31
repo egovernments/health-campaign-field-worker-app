@@ -18,6 +18,7 @@ import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../models/downsync/downsync.dart';
+import 'package:attendance_management/attendance_management.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -181,6 +182,21 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           PgrServiceOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<AttendanceRegisterModel,
+              AttendanceRegisterSearchModel>>(
+        create: (_) => AttendanceLocalRepository(
+          sql,
+          AttendanceOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
+        create: (_) => AttendanceLogsLocalRepository(
+          sql,
+          AttendanceLogOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -324,6 +340,18 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               dio,
               actionMap: actions,
             ),
+          ),
+        if (value == DataModelType.attendanceRegister)
+          RepositoryProvider<
+              RemoteRepository<AttendanceRegisterModel,
+                  AttendanceRegisterSearchModel>>(
+            create: (_) => AttendanceRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.attendance)
+          RepositoryProvider<
+              RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>>(
+            create: (_) =>
+                AttendanceLogRemoteRepository(dio, actionMap: actions),
           ),
       ]);
     }

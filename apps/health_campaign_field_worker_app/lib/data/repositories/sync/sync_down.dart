@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
+import '../../../utils/environment_config.dart';
 import '../../network_manager.dart';
 import './remote_type.dart';
 
@@ -214,6 +216,56 @@ class PerformSyncDown {
                     rowVersion: rowVersion,
                   ),
                 );
+              }
+            }
+
+            break;
+
+          case DataModelType.attendance:
+            responseEntities = await remote.search(AttendanceLogSearchModel(
+              clientReferenceId: entities
+                  .whereType<AttendanceLogModel>()
+                  .map((e) => e.clientReferenceId!)
+                  .whereNotNull()
+                  .toList(),
+              tenantId: envConfig.variables.tenantId,
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as AttendanceLogModel;
+              final responseEntity = responseEntities
+                  .whereType<AttendanceLogModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId.toString(),
+                    serverGeneratedId: serverGeneratedId,
+                    nonRecoverableError: entity.nonRecoverableError,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable =
+                    await local.opLogManager.updateSyncDownRetry(
+                  entity.clientReferenceId.toString(),
+                );
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
               }
             }
 
