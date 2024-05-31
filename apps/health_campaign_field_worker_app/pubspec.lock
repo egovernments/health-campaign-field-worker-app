@@ -494,7 +494,7 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -1519,7 +1519,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
