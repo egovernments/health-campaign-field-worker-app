@@ -1,6 +1,6 @@
 name: registration_delivery
 description: "Registration and Delivery for Health Campaigns"
-version: 1.0.0+1
+version: 1.0.1
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/registration_delivery
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 

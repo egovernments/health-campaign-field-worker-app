@@ -17,6 +17,7 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
+import '../data/repositories/remote/downsync.dart';
 import 'environment_config.dart';
 import 'utils.dart';
 
@@ -82,23 +83,7 @@ class Constants {
       ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
       ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
-      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
-      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
-      StockLocalRepository(sql, StockOpLogManager(isar)),
-      StockReconciliationLocalRepository(
-        sql,
-        StockReconciliationOpLogManager(isar),
-      ),
-      ProjectBeneficiaryLocalRepository(
-        sql,
-        ProjectBeneficiaryOpLogManager(
-          isar,
-        ),
-      ),
       ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
-      TaskLocalRepository(sql, TaskOpLogManager(isar)),
-      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
-      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       ServiceDefinitionLocalRepository(
         sql,
         ServiceDefinitionOpLogManager(isar),
@@ -122,6 +107,22 @@ class Constants {
       PgrServiceLocalRepository(
         sql,
         PgrServiceOpLogManager(isar),
+      ),
+      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
+      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
+      ProjectBeneficiaryLocalRepository(
+        sql,
+        ProjectBeneficiaryOpLogManager(
+          isar,
+        ),
+      ),
+      TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
+      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
+      StockLocalRepository(sql, StockOpLogManager(isar)),
+      StockReconciliationLocalRepository(
+        sql,
+        StockReconciliationOpLogManager(isar),
       ),
       AttendanceLocalRepository(
         sql,
@@ -186,6 +187,8 @@ class Constants {
           ProjectFacilityRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.individual)
           IndividualRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.downsync)
+          DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stock)
           StockRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stockReconciliation)
@@ -202,8 +205,6 @@ class Constants {
           SideEffectRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.referral)
           ReferralRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.downsync)
-          DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendanceRegister)
           AttendanceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendance)

@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:registration_delivery/blocs/service/service.dart';
-import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
 import '../../models/data_model.dart';
 import '../../models/entities/roles_type.dart';

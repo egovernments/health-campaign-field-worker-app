@@ -1,6 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../models/entities/downsync.dart';
 import '../../../models/entities/household.dart';
 import '../../../models/entities/household_member.dart';
 import '../../../models/entities/project_beneficiary.dart';
@@ -163,31 +162,4 @@ class ReferralOpLogManager extends OpLogManager<ReferralModel> {
   @override
   bool? getNonRecoverableError(ReferralModel entity) =>
       entity.nonRecoverableError;
-}
-
-class DownsyncOpLogManager extends OpLogManager<DownsyncModel> {
-  DownsyncOpLogManager(super.isar);
-
-  @override
-  DownsyncModel applyServerGeneratedIdToEntity(
-      DownsyncModel entity,
-      String serverGeneratedId,
-      int rowVersion,
-      ) =>
-      throw UnimplementedError();
-
-  @override
-  String getClientReferenceId(DownsyncModel entity) =>
-      throw UnimplementedError();
-
-  @override
-  String? getServerGeneratedId(DownsyncModel entity) =>
-      throw UnimplementedError();
-
-  @override
-  int? getRowVersion(DownsyncModel entity) => throw UnimplementedError();
-
-  @override
-  bool? getNonRecoverableError(DownsyncModel entity) =>
-      throw UnimplementedError();
 }
