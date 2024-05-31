@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
@@ -9,19 +13,16 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
-import 'package:referral_reconciliation/data/repositories/local/hf_referral.dart';
-import 'package:referral_reconciliation/data/repositories/oplog/oplog.dart';
-import 'package:referral_reconciliation/data/repositories/remote/hf_referral.dart';
-import 'package:referral_reconciliation/models/entities/hf_referral.dart';
-import 'package:registration_delivery/data/repositories/local/registration_delivery_address.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
+import '../data/repositories/remote/downsync.dart';
+import '../models/downsync/downsync.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -136,53 +137,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ProjectFacilityOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<
-          LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
-        create: (_) => HouseholdMemberLocalRepository(
-          sql,
-          HouseholdMemberOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
-        create: (_) => HouseholdLocalRepository(
-          sql,
-          HouseholdOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<ProjectBeneficiaryModel,
-              ProjectBeneficiarySearchModel>>(
-        create: (_) => ProjectBeneficiaryLocalRepository(
-          sql,
-          ProjectBeneficiaryOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
-        create: (_) => TaskLocalRepository(
-          sql,
-          TaskOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
-        create: (_) => ReferralLocalRepository(
-          sql,
-          ReferralOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
-        create: (_) => HFReferralLocalRepository(
-          sql,
-          HFReferralOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
-          LocalRepository<SideEffectModel, SideEffectSearchModel>>(
-        create: (_) => SideEffectLocalRepository(
-          sql,
-          SideEffectOpLogManager(isar),
-        ),
-      ),
       RepositoryProvider<LocalRepository<DownsyncModel, DownsyncSearchModel>>(
         create: (_) => DownsyncLocalRepository(
           sql,
@@ -233,6 +187,59 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
+          LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
+        create: (_) => HouseholdMemberLocalRepository(
+          sql,
+          HouseholdMemberOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<HouseholdModel, HouseholdSearchModel>>(
+        create: (_) => HouseholdLocalRepository(
+          sql,
+          HouseholdOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<ProjectBeneficiaryModel,
+              ProjectBeneficiarySearchModel>>(
+        create: (_) => ProjectBeneficiaryLocalRepository(
+          sql,
+          ProjectBeneficiaryOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => TaskLocalRepository(
+          sql,
+          TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(
+        create: (_) => ReferralLocalRepository(
+          sql,
+          ReferralOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<HFReferralModel, HFReferralSearchModel>>(
+        create: (_) => HFReferralLocalRepository(
+          sql,
+          HFReferralOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
+          LocalRepository<SideEffectModel, SideEffectSearchModel>>(
+        create: (_) => SideEffectLocalRepository(
+          sql,
+          SideEffectOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<RegistrationDeliveryAddressRepo>(
+        create: (_) => RegistrationDeliveryAddressRepo(
+          sql,
+          AddressOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<
           LocalRepository<AttendanceRegisterModel,
               AttendanceRegisterSearchModel>>(
         create: (_) =>
@@ -255,12 +262,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         create: (_) => StockReconciliationLocalRepository(
           sql,
           StockReconciliationOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<RegistrationDeliveryAddressRepo>(
-        create: (_) => RegistrationDeliveryAddressRepo(
-          sql,
-          AddressOpLogManager(isar),
         ),
       ),
     ];
@@ -351,43 +352,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             create: (_) =>
                 ProjectResourceRemoteRepository(dio, actionMap: actions),
           ),
-        if (value == DataModelType.household)
-          RepositoryProvider<
-              RemoteRepository<HouseholdModel, HouseholdSearchModel>>(
-            create: (_) => HouseholdRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.householdMember)
-          RepositoryProvider<
-              RemoteRepository<HouseholdMemberModel,
-                  HouseholdMemberSearchModel>>(
-            create: (_) =>
-                HouseholdMemberRemoteRepository(dio, actionMap: actions),
-          ),
-        if (value == DataModelType.projectBeneficiary)
-          RepositoryProvider<
-              RemoteRepository<ProjectBeneficiaryModel,
-                  ProjectBeneficiarySearchModel>>(
-            create: (_) =>
-                ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
-          ),
-        if (value == DataModelType.task)
-          RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
-            create: (_) => TaskRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.referral)
-          RepositoryProvider<
-              RemoteRepository<ReferralModel, ReferralSearchModel>>(
-            create: (_) => ReferralRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
         if (value == DataModelType.service)
           RepositoryProvider<
               RemoteRepository<ServiceModel, ServiceSearchModel>>(
@@ -436,18 +400,55 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.sideEffect)
-          RepositoryProvider<
-              RemoteRepository<SideEffectModel, SideEffectSearchModel>>(
-            create: (_) => SideEffectRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
         if (value == DataModelType.downsync)
           RepositoryProvider<
               RemoteRepository<DownsyncModel, DownsyncSearchModel>>(
             create: (_) => DownsyncRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.household)
+          RepositoryProvider<
+              RemoteRepository<HouseholdModel, HouseholdSearchModel>>(
+            create: (_) => HouseholdRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.householdMember)
+          RepositoryProvider<
+              RemoteRepository<HouseholdMemberModel,
+                  HouseholdMemberSearchModel>>(
+            create: (_) =>
+                HouseholdMemberRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.projectBeneficiary)
+          RepositoryProvider<
+              RemoteRepository<ProjectBeneficiaryModel,
+                  ProjectBeneficiarySearchModel>>(
+            create: (_) =>
+                ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.task)
+          RepositoryProvider<RemoteRepository<TaskModel, TaskSearchModel>>(
+            create: (_) => TaskRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.referral)
+          RepositoryProvider<
+              RemoteRepository<ReferralModel, ReferralSearchModel>>(
+            create: (_) => ReferralRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
+        if (value == DataModelType.sideEffect)
+          RepositoryProvider<
+              RemoteRepository<SideEffectModel, SideEffectSearchModel>>(
+            create: (_) => SideEffectRemoteRepository(
               dio,
               actionMap: actions,
             ),

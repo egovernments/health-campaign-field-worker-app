@@ -16,6 +16,7 @@ export 'blocs/search_households/search_by_head.dart';
 export 'blocs/search_households/search_households.dart';
 export 'blocs/search_households/tag_by_search.dart';
 export 'blocs/side_effects/side_effects.dart';
+export 'data/repositories/local/registration_delivery_address.dart';
 export 'data/repositories/local/base/household_base.dart';
 export 'data/repositories/local/base/household_member_base.dart';
 export 'data/repositories/local/base/project_beneficiary_base.dart';
