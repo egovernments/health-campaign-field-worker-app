@@ -1,11 +1,8 @@
-import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
 
@@ -71,14 +68,6 @@ class MainApplicationState extends State<MainApplication>
                 create: (_) {
                   return LocationBloc(location: Location())
                     ..add(const LoadLocationEvent());
-                },
-                lazy: false,
-              ),
-              BlocProvider(
-                create: (_) {
-                  return DigitScannerBloc(
-                    const DigitScannerState(),
-                  );
                 },
                 lazy: false,
               ),
@@ -222,30 +211,12 @@ class MainApplicationState extends State<MainApplication>
                             projectResourceRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectResourceModel,
                                     ProjectResourceSearchModel>>(),
-                            attendanceLocalRepository: ctx.read<
-                                LocalRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
-                            attendanceRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceRegisterModel,
-                                    AttendanceRegisterSearchModel>>(),
                             individualLocalRepository: ctx.read<
                                 LocalRepository<IndividualModel,
                                     IndividualSearchModel>>(),
                             individualRemoteRepository: ctx.read<
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
-                            attendanceLogLocalRepository: ctx.read<
-                                LocalRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
-                            attendanceLogRemoteRepository: ctx.read<
-                                RemoteRepository<AttendanceLogModel,
-                                    AttendanceLogSearchModel>>(),
-                            stockLocalRepository: ctx.read<
-                                LocalRepository<StockModel,
-                                    StockSearchModel>>(),
-                            stockRemoteRepository: ctx.read<
-                                RemoteRepository<StockModel,
-                                    StockSearchModel>>(),
                             context: context,
                           ),
                         ),

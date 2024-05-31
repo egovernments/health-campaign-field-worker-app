@@ -99,10 +99,6 @@ extension ContextUtilityExtensions on BuildContext {
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
-
-    RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
-    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
-    ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
   }
 

@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:attendance_management/attendance_management.dart';
-import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -12,13 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:referral_reconciliation/utils/utils.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -28,7 +19,6 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/debound.dart';
-import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
@@ -158,18 +148,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     showcaseFor: showcaseKeys.toSet().toList(),
                   ),
                 ),
-                skipProgressBar
-                    ? const SizedBox.shrink()
-                    : homeShowcaseData.distributorProgressBar.buildWith(
-                        child: BeneficiaryProgressBar(
-                          label: localizations.translate(
-                            i18.home.progressIndicatorTitle,
-                          ),
-                          prefixLabel: localizations.translate(
-                            i18.home.progressIndicatorPrefixLabel,
-                          ),
-                        ),
-                      ),
               ],
             ),
             footer: PoweredByDigit(
@@ -320,9 +298,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
-          onPressed: () async {
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
-          },
+          onPressed: () async {},
         ),
       ),
       i18.home.manageStockLabel:
@@ -334,7 +310,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _) {
-                    context.router.push(ManageStocksRoute());
+                    // context.router.push(ManageStocksRoute());
                   },
                 );
           },
@@ -346,7 +322,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.menu_book,
           label: i18.home.stockReconciliationLabel,
           onPressed: () {
-            context.router.push(StockReconciliationRoute());
+            // context.router.push(StockReconciliationRoute());
           },
         ),
       ),
@@ -405,7 +381,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _) {
-                    context.router.push(SearchReferralReconciliationsRoute());
+                    // context.router.push(SearchReferralReconciliationsRoute());
                   },
                 );
           },
@@ -416,7 +392,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.announcement,
           label: i18.home.viewReportsLabel,
           onPressed: () {
-            context.router.push(InventoryReportSelectionRoute());
+            // context.router.push(InventoryReportSelectionRoute());
           },
         ),
       ),
@@ -426,7 +402,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            context.router.push(const ManageAttendanceRoute());
+            // context.router.push(const ManageAttendanceRoute());
           },
         ),
       ),
@@ -527,62 +503,18 @@ class _HomePageState extends LocalizedState<HomePage> {
               localRepositories: [
                 context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    LocalRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    LocalRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
               ],
               remoteRepositories: [
                 context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    RemoteRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
                 context
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    RemoteRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
                 context.read<
                     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    RemoteRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
               ],
             ),
           );
@@ -593,87 +525,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 // Function to set initial Data required for the packages to run
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
-      orElse: () {},
-      initialized: (AppConfiguration appConfiguration, _) {
-        RegistrationDeliverySingleton().setInitialData(
-          loggedInUserUuid: context.loggedInUserUuid,
-          maxRadius: appConfiguration.maxRadius!,
-          projectId: context.projectId,
-          selectedBeneficiaryType: context.beneficiaryType,
-          projectType: context.selectedProjectType,
-          selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
-          referralReasons:
-              appConfiguration.referralReasons!.map((e) => e.code).toList(),
-        );
-
-        AttendanceSingleton().setInitialData(
-          projectId: context.projectId,
-          loggedInIndividualId: context.loggedInIndividualId ?? '',
-          loggedInUserUuid: context.loggedInUserUuid,
-          appVersion: Constants().version,
-        );
-
-        ReferralReconSingleton().setInitialData(
-          userName: context.loggedInUser.name ?? '',
-          userUUid: context.loggedInUserUuid,
-          projectId: context.selectedProject.id,
-          projectName: context.selectedProject.name,
-          roleCode: RolesType.healthFacilityWorker.toValue(),
-          appVersion: Constants().version,
-          tenantId: envConfig.variables.tenantId,
-          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
-            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
-            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
-          ),
-          genderOptions:
-              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
-          cycles: context.cycles,
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
-                  [],
-          checklistTypes:
-              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
-                  [],
-        );
-
-        InventorySingleton().setInitialData(
-          isWareHouseMgr: context.loggedInUserRoles
-              .where(
-                  (role) => role.code == RolesType.warehouseManager.toValue())
-              .toList()
-              .isNotEmpty,
-          isDistributor: context.loggedInUserRoles
-              .where(
-                (role) => role.code == RolesType.distributor.toValue(),
-              )
-              .toList()
-              .isNotEmpty,
-          projectId: context.projectId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          transportTypes: appConfiguration.transportTypes
-              ?.map((e) => InventoryTransportTypes()
-                ..name = e.code
-                ..code = e.code)
-              .toList(),
-        );
-      });
+      orElse: () {}, initialized: (AppConfiguration appConfiguration, _) {});
 }
 
 class _HomeItemDataModel {

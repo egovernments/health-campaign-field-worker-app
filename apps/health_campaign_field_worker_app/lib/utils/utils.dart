@@ -1,15 +1,8 @@
 library app_utils;
 
-import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_delivery_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
-import 'package:inventory_management/inventory_management.init.dart'
-    as inventory_mappers;
 import 'dart:async';
 import 'dart:io';
-
-import 'package:attendance_management/attendance_management.dart'
-    as attendance_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -21,8 +14,6 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart'
-    as referral_reconciliation_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -379,11 +370,7 @@ getSelectedLanguage(AppInitialized state, int index) {
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
-    Future(() => attendance_mappers.initializeMappers()),
-    Future(() => referral_reconciliation_mappers.initializeMappers()),
-    Future(() => inventory_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
-    Future(() => registration_delivery_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

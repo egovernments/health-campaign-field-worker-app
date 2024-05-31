@@ -4,13 +4,11 @@ import 'dart:convert';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 
 import 'repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
-import '../utils/constants.dart';
 import 'local_store/secure_store/secure_store.dart';
 import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';
@@ -129,41 +127,6 @@ class NetworkManager {
             case "Individuals":
               final entity = entityList
                   .map((e) => IndividualModelMapper.fromJson(jsonEncode(e)))
-                  .toList();
-              await local.bulkCreate(entity);
-            case "Households":
-              final entity = entityList
-                  .map((e) => HouseholdModelMapper.fromJson(jsonEncode(e)))
-                  .toList();
-              await local.bulkCreate(entity);
-            case "HouseholdMembers":
-              final entity = entityList
-                  .map(
-                    (e) => HouseholdMemberModelMapper.fromJson(
-                      jsonEncode(e),
-                    ),
-                  )
-                  .toList();
-              await local.bulkCreate(entity);
-            case "ProjectBeneficiaries":
-              final entity = entityList
-                  .map((e) =>
-                      ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
-                  .toList();
-              await local.bulkCreate(entity);
-            case "Tasks":
-              final entity = entityList
-                  .map((e) => TaskModelMapper.fromJson(jsonEncode(e)))
-                  .toList();
-              await local.bulkCreate(entity);
-            case "SideEffects":
-              final entity = entityList
-                  .map((e) => SideEffectModelMapper.fromJson(jsonEncode(e)))
-                  .toList();
-              await local.bulkCreate(entity);
-            case "Referrals":
-              final entity = entityList
-                  .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             default:
