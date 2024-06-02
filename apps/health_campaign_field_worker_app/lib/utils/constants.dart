@@ -1,4 +1,3 @@
-import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
@@ -104,14 +103,7 @@ class Constants {
         sql,
         PgrServiceOpLogManager(isar),
       ),
-      AttendanceLocalRepository(
-        sql,
-        AttendanceOpLogManager(isar),
-      ),
-      AttendanceLogsLocalRepository(
-        sql,
-        AttendanceLogOpLogManager(isar),
-      ),
+  
     ];
   }
 
@@ -165,10 +157,6 @@ class Constants {
           IndividualRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.downsync)
           DownsyncRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.attendanceRegister)
-          AttendanceRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.attendance)
-          AttendanceLogRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -203,8 +191,6 @@ class Constants {
         entityMapper: EntityMapper(),
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
         hierarchyType: envConfig.variables.hierarchyType);
-
-    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

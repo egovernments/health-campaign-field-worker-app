@@ -2,7 +2,6 @@
 import 'dart:async';
 import 'dart:core';
 
-import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -32,15 +31,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final Isar isar;
   final MdmsRepository mdmsRepository;
 
-  final RemoteRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
-      attendanceRemoteRepository;
-  final LocalRepository<AttendanceRegisterModel, AttendanceRegisterSearchModel>
-      attendanceLocalRepository;
-
-  final LocalRepository<AttendanceLogModel, AttendanceLogSearchModel>
-      attendanceLogLocalRepository;
-  final RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel>
-      attendanceLogRemoteRepository;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -118,10 +108,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.individualLocalRepository,
     required this.individualRemoteRepository,
     required this.context,
-    required this.attendanceRemoteRepository,
-    required this.attendanceLocalRepository,
-    required this.attendanceLogLocalRepository,
-    required this.attendanceLogRemoteRepository,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
     on(_handleProjectInit);
@@ -212,42 +198,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-          final attendanceRegisters = await attendanceRemoteRepository.search(
-            AttendanceRegisterSearchModel(
-              staffId: individual.first.id,
-              referenceId: projectStaff.projectId,
-            ),
-          );
-          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-          for (final register in attendanceRegisters) {
-            if (register.attendees != null &&
-                (register.attendees ?? []).isNotEmpty) {
-              try {
-                final individuals = await individualRemoteRepository.search(
-                  IndividualSearchModel(
-                    id: register.attendees!
-                        .map((e) => e.individualId!)
-                        .toList(),
-                  ),
-                );
-                await individualLocalRepository.bulkCreate(individuals);
-                final logs = await attendanceLogRemoteRepository.search(
-                  AttendanceLogSearchModel(
-                    registerId: register.id,
-                  ),
-                );
-                await attendanceLogLocalRepository.bulkCreate(logs);
-              } catch (_) {
-                emit(state.copyWith(
-                  loading: false,
-                  syncError: ProjectSyncErrorType.project,
-                ));
-
-                return;
-              }
-            }
-          }
+  
         }
 
         staffProjects = await projectRemoteRepository.search(

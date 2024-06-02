@@ -65,14 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  attendance_management:
-    dependency: "direct main"
-    description:
-      name: attendance_management
-      sha256: "1c4c58e887ae1090220271978b56ab8b89d27b0618afc201ed391ea5eade95fc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -491,10 +483,11 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.1"
+      name: digit_data_model
+      sha256: "604be26d7f535027d1f16077b47b55a363c74a6040c34fb942ce82d58b9a54ec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   digit_firebase_services:
     dependency: "direct main"
     description:

@@ -305,7 +305,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ...AttendanceRoute().pagesMap,
   };
 }
 

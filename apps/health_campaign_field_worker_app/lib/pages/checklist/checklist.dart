@@ -3,6 +3,8 @@ import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/service/service.dart';
+import '../../blocs/service_definition/service_definition.dart';
 import '../../utils/constants.dart';
 import 'package:recase/recase.dart';
 
