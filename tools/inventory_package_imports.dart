@@ -23,6 +23,8 @@ void main() {
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
   var constantsFilePath = '$appRoot/utils/constants.dart';
   var utilsFilePath = '$appRoot/utils/utils.dart';
+  var routerFilePath = '$appRoot/router/app_router.dart';
+  
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
@@ -34,6 +36,9 @@ void main() {
   _addInventoryConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
   _addInventoryMapperToUtilsFile(utilsFilePath: utilsFilePath);
+
+ // Add inventory routes and import to the router file
+  _addInventoryRoutesAndImportToRouterFile(routerFilePath);
 
   // Run dart format on the hcm_oplog.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
@@ -57,8 +62,137 @@ void main() {
   Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
+
+    // Run dart format on the app_router.dart file
+  Process.run('dart', ['format', routerFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
 }
 
+
+
+void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
+  // Define the inventory route lines
+  var inventoryRoutes = '''
+    // Inventory Route
+    AutoRoute(
+      page: ManageStocksRoute.page,
+      path: 'manage-stocks',
+    ),
+    AutoRoute(
+      page: RecordStockWrapperRoute.page,
+      path: 'record-stock',
+      children: [
+        AutoRoute(
+          page: WarehouseDetailsRoute.page,
+          path: 'warehouse-details',
+          initial: true,
+        ),
+        AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+      ],
+    ),
+    AutoRoute(
+      page: InventoryFacilitySelectionRoute.page,
+      path: 'inventory-select-facilities',
+    ),
+    AutoRoute(
+      page: StockReconciliationRoute.page, path: 'stock-reconciliation',
+    ),
+    AutoRoute(
+      page: InventoryReportSelectionRoute.page,
+      path: 'inventory-report-selection',
+    ),
+    AutoRoute(
+      page: InventoryReportDetailsRoute.page,
+      path: 'inventory-report-details',
+    ),
+    AutoRoute(
+      page: InventoryAcknowledgementRoute.page,
+      path: 'inventory-acknowledgement',
+    ),
+  ''';
+
+  // Define the import statement
+  var importStatement1 = "import 'package:inventory_management/router/inventory_router.gm.dart';";
+    // Define the import statement
+  var importStatement2 = "import 'package:inventory_management/router/inventory_router.dart';";
+
+  // Check if the router file exists
+  var routerFile = File(routerFilePath);
+
+  if (!routerFile.existsSync()) {
+    print('Error: Router file does not exist at path: $routerFilePath');
+    return;
+  }
+
+  // Read the router file
+  var routerFileContent = routerFile.readAsStringSync();
+
+  // Normalize the whitespace in the file content
+  var normalizedFileContent = routerFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement already exists
+  if (!normalizedFileContent.contains(importStatement1.replaceAll(RegExp(r'\s'), ''))) {
+    // Add the import statement at the beginning of the file
+    routerFileContent = importStatement1 + '\n' + routerFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the import statement already exists
+  if (!normalizedFileContent.contains(importStatement2.replaceAll(RegExp(r'\s'), ''))) {
+    // Add the import statement at the beginning of the file
+    routerFileContent = importStatement2 + '\n' + routerFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+   // Check if the InventoryRoute module already exists
+  if (!routerFileContent.contains('InventoryRoute')) {
+    // Find the position to insert the module
+    var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
+    if (moduleInsertionIndex != -1) {
+      var endOfModulesIndex = routerFileContent.indexOf(']', moduleInsertionIndex);
+      if (endOfModulesIndex != -1) {
+        var modulesEndIndex = routerFileContent.lastIndexOf(']', endOfModulesIndex);
+        routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
+            ' InventoryRoute,' +
+            routerFileContent.substring(modulesEndIndex);
+        print('The InventoryRoute module was added.');
+      } else {
+        print('Error: Could not find the end of the modules list.');
+        return;
+      }
+    } else {
+      print('Error: Could not find @AutoRouterConfig annotation.');
+      return;
+    }
+  } else {
+    print('The InventoryRoute module already exists.');
+  }
+
+  // Check if the inventory routes already exist in the file
+  if (!normalizedFileContent.contains(inventoryRoutes.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the routes
+    var insertionIndex = routerFileContent.indexOf('// INFO : Need to add Router of package Here');
+    if (insertionIndex != -1) {
+      routerFileContent = routerFileContent.substring(0, insertionIndex) +
+          '// INFO : Need to add Router of package Here\n' +
+          inventoryRoutes +
+          routerFileContent.substring(insertionIndex + '// INFO : Need to add Router of package Here'.length);
+      print('The inventory routes were added.');
+
+      // Write the updated content back to the file
+      routerFile.writeAsStringSync(routerFileContent);
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The inventory routes already exist.');
+  }
+}
 void _addInventoryMapperToUtilsFile({required String utilsFilePath}) {
   // Define the inventory related lines
   var inventoryImportStatement = [
