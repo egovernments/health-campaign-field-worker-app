@@ -26,6 +26,19 @@ void main() {
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
   var constantsFilePath = '$appRoot/utils/constants.dart';
   var utilsFilePath = '$appRoot/utils/utils.dart';
+  var routerFilePath = '$appRoot/router/app_router.dart';
+  var entityMapperFilePath =
+      '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
+  var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
+
+  // Update the sync_down.dart file
+  _updateSyncDownFile(syncDownFilePath);
+
+  // Add attendance routes and import to the router file
+  _addAttendanceRoutesAndImportToRouterFile(routerFilePath);
+
+  // Add new case statements to the entity_mapper.dart file
+  _updateEntityMapperFile(entityMapperFilePath);
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
@@ -59,6 +72,295 @@ void main() {
   Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the app_router.dart file
+  Process.run('dart', ['format', routerFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the entity_mapper.dart file
+  Process.run('dart', ['format', entityMapperFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the sync_down.dart file
+  Process.run('dart', ['format', syncDownFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _updateSyncDownFile(String syncDownFilePath) {
+  // Define the import statement and the new case statements
+  var importStatement =
+      "import 'package:attendance_management/attendance_management.dart';";
+  var newCases = '''
+          case DataModelType.attendance:
+            responseEntities = await remote.search(AttendanceLogSearchModel(
+              clientReferenceId: entities
+                  .whereType<AttendanceLogModel>()
+                  .map((e) => e.clientReferenceId!)
+                  .whereNotNull()
+                  .toList(),
+              tenantId: envConfig.variables.tenantId,
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as AttendanceLogModel;
+              final responseEntity = responseEntities
+                  .whereType<AttendanceLogModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId.toString(),
+                    serverGeneratedId: serverGeneratedId,
+                    nonRecoverableError: entity.nonRecoverableError,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable =
+                    await local.opLogManager.updateSyncDownRetry(
+                  entity.clientReferenceId.toString(),
+                );
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+          break;
+''';
+
+  // Check if the sync_down file exists
+  var syncDownFile = File(syncDownFilePath);
+
+  if (!syncDownFile.existsSync()) {
+    print('Error: Sync Down file does not exist at path: $syncDownFilePath');
+    return;
+  }
+
+  // Read the sync_down file
+  var syncDownFileContent = syncDownFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!syncDownFileContent.contains(importStatement)) {
+    syncDownFileContent = importStatement + '\n' + syncDownFileContent;
+    print('The import statement was added to sync_down.dart.');
+  } else {
+    print('The import statement already exists in sync_down.dart.');
+  }
+
+  // Insert the new case statements
+  if (!syncDownFileContent.contains('DataModelType.attendance')) {
+    // Find the position to insert the new cases within the switch statement
+    var switchIndex =
+        syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
+    if (switchIndex != -1) {
+      var caseInsertionIndex =
+          syncDownFileContent.indexOf('default:', switchIndex);
+      if (caseInsertionIndex != -1) {
+        syncDownFileContent =
+            syncDownFileContent.substring(0, caseInsertionIndex) +
+                newCases +
+                '\n' +
+                syncDownFileContent.substring(caseInsertionIndex);
+        print('The new cases were added to sync_down.dart.');
+
+        // Write the updated content back to the file
+        syncDownFile.writeAsStringSync(syncDownFileContent);
+      } else {
+        print(
+            'Error: Could not find the default case in the switch statement in sync_down.dart.');
+        return;
+      }
+    } else {
+      print('Error: Could not find the switch statement in sync_down.dart.');
+      return;
+    }
+  } else {
+    print('The new cases already exist in sync_down.dart.');
+  }
+}
+
+void _updateEntityMapperFile(String entityMapperFilePath) {
+  // Define the import statement and new case statements
+  var importStatement =
+      "import 'package:attendance_management/attendance_management.dart';";
+  var newCases = '''
+      case "attendance":
+        final entity = AttendanceLogModelMapper.fromJson(entityString);
+        return entity;
+''';
+
+  // Check if the entity_mapper file exists
+  var entityMapperFile = File(entityMapperFilePath);
+
+  if (!entityMapperFile.existsSync()) {
+    print(
+        'Error: Entity Mapper file does not exist at path: $entityMapperFilePath');
+    return;
+  }
+
+  // Read the entity_mapper file
+  var entityMapperFileContent = entityMapperFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!entityMapperFileContent.contains(importStatement)) {
+    entityMapperFileContent = importStatement + '\n' + entityMapperFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the new cases already exist in the file
+  if (!entityMapperFileContent.contains('case "attendance":')) {
+    // Find the position to insert the new cases (before the default case)
+    var caseInsertionIndex = entityMapperFileContent.indexOf('default:');
+    if (caseInsertionIndex != -1) {
+      entityMapperFileContent =
+          entityMapperFileContent.substring(0, caseInsertionIndex) +
+              newCases +
+              '\n' +
+              entityMapperFileContent.substring(caseInsertionIndex);
+      print('The new cases were added.');
+
+      // Write the updated content back to the file
+      entityMapperFile.writeAsStringSync(entityMapperFileContent);
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The new cases already exist.');
+  }
+}
+
+void _addAttendanceRoutesAndImportToRouterFile(String routerFilePath) {
+  // Define the attendance route lines
+  var attendanceRoutes = '''
+    // Attendance Route
+        AutoRoute(
+          page: ManageAttendanceRoute.page,
+          path: 'manage-attendance',
+        ),
+        AutoRoute(
+          page: AttendanceDateSessionSelectionRoute.page,
+          path: 'attendance-date-session-selection',
+        ),
+        AutoRoute(
+          page: MarkAttendanceRoute.page,
+          path: 'mark-attendance',
+        ),
+        AutoRoute(
+          page: AttendanceAcknowledgementRoute.page,
+          path: 'attendance-acknowledgement',
+        ),
+  ''';
+
+  // Define the import statement
+  var importStatement1 =
+      "import 'package:attendance_management/router/attendance_router.gm.dart';";
+  // Define the import statement
+  var importStatement2 =
+      "import 'package:attendance_management/router/attendance_router.dart';";
+
+  // Check if the router file exists
+  var routerFile = File(routerFilePath);
+
+  if (!routerFile.existsSync()) {
+    print('Error: Router file does not exist at path: $routerFilePath');
+    return;
+  }
+
+  // Read the router file
+  var routerFileContent = routerFile.readAsStringSync();
+
+  // Normalize the whitespace in the file content
+  var normalizedFileContent = routerFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement already exists
+  if (!normalizedFileContent
+      .contains(importStatement1.replaceAll(RegExp(r'\s'), ''))) {
+    // Add the import statement at the beginning of the file
+    routerFileContent = importStatement1 + '\n' + routerFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the import statement already exists
+  if (!normalizedFileContent
+      .contains(importStatement2.replaceAll(RegExp(r'\s'), ''))) {
+    // Add the import statement at the beginning of the file
+    routerFileContent = importStatement2 + '\n' + routerFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+  // Check if the attendanceRoute module already exists
+  if (!routerFileContent.contains('AttendanceRoute')) {
+    // Find the position to insert the module
+    var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
+    if (moduleInsertionIndex != -1) {
+      var endOfModulesIndex =
+          routerFileContent.indexOf(']', moduleInsertionIndex);
+      if (endOfModulesIndex != -1) {
+        var modulesEndIndex =
+            routerFileContent.lastIndexOf(']', endOfModulesIndex);
+        routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
+            ' AttendanceRoute,' +
+            routerFileContent.substring(modulesEndIndex);
+        print('The attendanceRoute module was added.');
+      } else {
+        print('Error: Could not find the end of the modules list.');
+        return;
+      }
+    } else {
+      print('Error: Could not find @AutoRouterConfig annotation.');
+      return;
+    }
+  } else {
+    print('The AttendanceRoute module already exists.');
+  }
+
+  // Check if the attendance routes already exist in the file
+  if (!normalizedFileContent
+      .contains(attendanceRoutes.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the routes
+    var insertionIndex = routerFileContent
+        .indexOf('// INFO : Need to add Router of package Here');
+    if (insertionIndex != -1) {
+      routerFileContent = routerFileContent.substring(0, insertionIndex) +
+          '// INFO : Need to add Router of package Here\n' +
+          attendanceRoutes +
+          routerFileContent.substring(insertionIndex +
+              '// INFO : Need to add Router of package Here'.length);
+      print('The attendance routes were added.');
+
+      // Write the updated content back to the file
+      routerFile.writeAsStringSync(routerFileContent);
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The attendance routes already exist.');
+  }
 }
 
 void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
@@ -98,12 +400,12 @@ void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
   }
 
   if (!utilsFileContent.contains(attendanceInitializationStatement)) {
-    // Add the inventory related initialization statement to the file
+    // Add the attendance related initialization statement to the file
     var initializeAllMappersIndex =
         utilsFileContent.indexOf('initializeAllMappers() async {');
     if (initializeAllMappersIndex == -1) {
       print(
-          'Error: Could not find a place to insert the inventory initialization statement.');
+          'Error: Could not find a place to insert the attendance initialization statement.');
       return;
     }
     var endOfInitializeAllMappers = initializeAllMappersIndex +
@@ -114,7 +416,7 @@ void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
             '\n    ' +
             attendanceInitializationStatement +
             utilsFileContent.substring(endOfInitializeAllMappers - 1);
-    print('Inventory initialization statement added to utils.dart');
+    print('Attendance initialization statement added to utils.dart');
   }
 
   // Write the updated content back to the utils.dart file

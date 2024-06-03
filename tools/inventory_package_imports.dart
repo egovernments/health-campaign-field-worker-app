@@ -23,17 +23,40 @@ void main() {
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
   var constantsFilePath = '$appRoot/utils/constants.dart';
   var utilsFilePath = '$appRoot/utils/utils.dart';
+  var routerFilePath = '$appRoot/router/app_router.dart';
+  var entityMapperFilePath =
+      '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
+  var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
 
+  // add the localization delegates for the inventory package
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
+  // Add the inventory repositories to the network manager provider wrapper
   _addRepoToNetworkManagerProviderWrapper(
     networkManagerProviderWrapperFilePath:
         networkManagerProviderWrapperFilePath,
   );
 
+  // Add the inventory constants to the constants file
   _addInventoryConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
+  // Add the inventory mappers to the utils file
   _addInventoryMapperToUtilsFile(utilsFilePath: utilsFilePath);
+
+  // Add inventory routes and import to the router file
+  _addInventoryRoutesAndImportToRouterFile(routerFilePath);
+
+  // Add new case statements to the entity_mapper.dart file
+  _updateEntityMapperFile(entityMapperFilePath);
+
+  // Update the sync_down.dart file
+  _updateSyncDownFile(syncDownFilePath);
+
+  // Run dart format on the updated file
+  Process.run('dart', ['format', syncDownFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
 
   // Run dart format on the hcm_oplog.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
@@ -57,6 +80,361 @@ void main() {
   Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the app_router.dart file
+  Process.run('dart', ['format', routerFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the entity_mapper.dart file
+  Process.run('dart', ['format', entityMapperFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _updateSyncDownFile(String syncDownFilePath) {
+  // Define the import statement and the new case statements
+  var importStatement =
+      "import 'package:inventory_management/inventory_management.dart';";
+  var newCases = '''
+          case DataModelType.stock:
+            responseEntities = await remote.search(
+              StockSearchModel(
+                clientReferenceId: entities
+                    .whereType<StockModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
+            );
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockModel;
+              final responseEntity =
+                  responseEntities.whereType<StockModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId!,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+
+          case DataModelType.stockReconciliation:
+            responseEntities =
+                await remote.search(StockReconciliationSearchModel(
+              clientReferenceId: entities
+                  .whereType<StockReconciliationModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockReconciliationModel;
+              final responseEntity = responseEntities
+                  .whereType<StockReconciliationModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+''';
+
+  // Check if the sync_down file exists
+  var syncDownFile = File(syncDownFilePath);
+
+  if (!syncDownFile.existsSync()) {
+    print('Error: Sync Down file does not exist at path: $syncDownFilePath');
+    return;
+  }
+
+  // Read the sync_down file
+  var syncDownFileContent = syncDownFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!syncDownFileContent.contains(importStatement)) {
+    syncDownFileContent = importStatement + '\n' + syncDownFileContent;
+    print('The import statement was added to sync_down.dart.');
+  } else {
+    print('The import statement already exists in sync_down.dart.');
+  }
+
+  // Insert the new case statements
+  if (!syncDownFileContent.contains('DataModelType.stock') &&
+      !syncDownFileContent.contains('DataModelType.stockReconciliation')) {
+    // Find the position to insert the new cases within the switch statement
+    var switchIndex =
+        syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
+    if (switchIndex != -1) {
+      var caseInsertionIndex =
+          syncDownFileContent.indexOf('default:', switchIndex);
+      if (caseInsertionIndex != -1) {
+        syncDownFileContent =
+            syncDownFileContent.substring(0, caseInsertionIndex) +
+                newCases +
+                '\n' +
+                syncDownFileContent.substring(caseInsertionIndex);
+        print('The new cases were added to sync_down.dart.');
+
+        // Write the updated content back to the file
+        syncDownFile.writeAsStringSync(syncDownFileContent);
+      } else {
+        print(
+            'Error: Could not find the default case in the switch statement in sync_down.dart.');
+        return;
+      }
+    } else {
+      print('Error: Could not find the switch statement in sync_down.dart.');
+      return;
+    }
+  } else {
+    print('The new cases already exist in sync_down.dart.');
+  }
+}
+
+void _updateEntityMapperFile(String entityMapperFilePath) {
+  // Define the import statement and new case statements
+  var importStatement =
+      "import 'package:inventory_management/inventory_management.dart';";
+  var newCases = '''
+      case "stock":
+        final entity = StockModelMapper.fromJson(entityString);
+        return entity;
+
+      case "stockReconciliation":
+        final entity = StockReconciliationModelMapper.fromJson(entityString);
+        return entity;
+''';
+
+  // Check if the entity_mapper file exists
+  var entityMapperFile = File(entityMapperFilePath);
+
+  if (!entityMapperFile.existsSync()) {
+    print(
+        'Error: Entity Mapper file does not exist at path: $entityMapperFilePath');
+    return;
+  }
+
+  // Read the entity_mapper file
+  var entityMapperFileContent = entityMapperFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!entityMapperFileContent.contains(importStatement)) {
+    entityMapperFileContent = importStatement + '\n' + entityMapperFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the new cases already exist in the file
+  if (!entityMapperFileContent.contains('case "stock":') &&
+      !entityMapperFileContent.contains('case "stockReconciliation":')) {
+    // Find the position to insert the new cases (before the default case)
+    var caseInsertionIndex = entityMapperFileContent.indexOf('default:');
+    if (caseInsertionIndex != -1) {
+      entityMapperFileContent =
+          entityMapperFileContent.substring(0, caseInsertionIndex) +
+              newCases +
+              '\n' +
+              entityMapperFileContent.substring(caseInsertionIndex);
+      print('The new cases were added.');
+
+      // Write the updated content back to the file
+      entityMapperFile.writeAsStringSync(entityMapperFileContent);
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The new cases already exist.');
+  }
+}
+
+void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
+  // Define the inventory route lines
+  var inventoryRoutes = '''
+    // Inventory Route
+    AutoRoute(
+      page: ManageStocksRoute.page,
+      path: 'manage-stocks',
+    ),
+    AutoRoute(
+      page: RecordStockWrapperRoute.page,
+      path: 'record-stock',
+      children: [
+        AutoRoute(
+          page: WarehouseDetailsRoute.page,
+          path: 'warehouse-details',
+          initial: true,
+        ),
+        AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+      ],
+    ),
+    AutoRoute(
+      page: InventoryFacilitySelectionRoute.page,
+      path: 'inventory-select-facilities',
+    ),
+    AutoRoute(
+      page: StockReconciliationRoute.page, path: 'stock-reconciliation',
+    ),
+    AutoRoute(
+      page: InventoryReportSelectionRoute.page,
+      path: 'inventory-report-selection',
+    ),
+    AutoRoute(
+      page: InventoryReportDetailsRoute.page,
+      path: 'inventory-report-details',
+    ),
+    AutoRoute(
+      page: InventoryAcknowledgementRoute.page,
+      path: 'inventory-acknowledgement',
+    ),
+  ''';
+
+  // Define the import statement
+  var importStatement1 =
+      "import 'package:inventory_management/router/inventory_router.gm.dart';";
+  // Define the import statement
+  var importStatement2 =
+      "import 'package:inventory_management/router/inventory_router.dart';";
+
+  // Check if the router file exists
+  var routerFile = File(routerFilePath);
+
+  if (!routerFile.existsSync()) {
+    print('Error: Router file does not exist at path: $routerFilePath');
+    return;
+  }
+
+  // Read the router file
+  var routerFileContent = routerFile.readAsStringSync();
+
+  // Normalize the whitespace in the file content
+  var normalizedFileContent = routerFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement already exists
+  if (!normalizedFileContent
+      .contains(importStatement1.replaceAll(RegExp(r'\s'), ''))) {
+    // Add the import statement at the beginning of the file
+    routerFileContent = importStatement1 + '\n' + routerFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the import statement already exists
+  if (!normalizedFileContent
+      .contains(importStatement2.replaceAll(RegExp(r'\s'), ''))) {
+    // Add the import statement at the beginning of the file
+    routerFileContent = importStatement2 + '\n' + routerFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+  // Check if the InventoryRoute module already exists
+  if (!routerFileContent.contains('InventoryRoute')) {
+    // Find the position to insert the module
+    var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
+    if (moduleInsertionIndex != -1) {
+      var endOfModulesIndex =
+          routerFileContent.indexOf(']', moduleInsertionIndex);
+      if (endOfModulesIndex != -1) {
+        var modulesEndIndex =
+            routerFileContent.lastIndexOf(']', endOfModulesIndex);
+        routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
+            ' InventoryRoute,' +
+            routerFileContent.substring(modulesEndIndex);
+        print('The InventoryRoute module was added.');
+      } else {
+        print('Error: Could not find the end of the modules list.');
+        return;
+      }
+    } else {
+      print('Error: Could not find @AutoRouterConfig annotation.');
+      return;
+    }
+  } else {
+    print('The InventoryRoute module already exists.');
+  }
+
+  // Check if the inventory routes already exist in the file
+  if (!normalizedFileContent
+      .contains(inventoryRoutes.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the routes
+    var insertionIndex = routerFileContent
+        .indexOf('// INFO : Need to add Router of package Here');
+    if (insertionIndex != -1) {
+      routerFileContent = routerFileContent.substring(0, insertionIndex) +
+          '// INFO : Need to add Router of package Here\n' +
+          inventoryRoutes +
+          routerFileContent.substring(insertionIndex +
+              '// INFO : Need to add Router of package Here'.length);
+      print('The inventory routes were added.');
+
+      // Write the updated content back to the file
+      routerFile.writeAsStringSync(routerFileContent);
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The inventory routes already exist.');
+  }
 }
 
 void _addInventoryMapperToUtilsFile({required String utilsFilePath}) {
@@ -128,22 +506,32 @@ void _addInventoryConstantsToConstantsFile(
 
   // Define the inventory configuration
   var inventoryConfiguration = '''
-// inventory related configuration
-InventorySingleton().setTenantId(envConfig.variables.tenantId);
+      InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
   ''';
 
-  // Define the inventory related lines
-  var inventoryLocalRepositories = [
-    'StockLocalRepository(sql, StockOpLogManager(isar)),',
-    'StockReconciliationLocalRepository(sql,StockReconciliationOpLogManager(isar),),',
-  ];
-  var inventoryRemoteRepositories = [
-    'if (value == DataModelType.stock) StockRemoteRepository(dio, actionMap: actions),',
-    'if (value == DataModelType.stockReconciliation) StockReconciliationRemoteRepository(dio, actionMap: actions),',
+  var localRepositories = [
+    "StockLocalRepository(sql, StockOpLogManager(isar)),",
+    "StockReconciliationLocalRepository(sql,StockReconciliationOpLogManager(isar),),",
   ];
 
-  // Read the constants.dart file
+  // Define the remote repositories of inventory
+  var remoteRepositoriesOfInventory = [
+    '''
+    if (value == DataModelType.stock)
+       StockRemoteRepository(dio, actionMap: actions),
+    if (value == DataModelType.stockReconciliation)
+       StockReconciliationRemoteRepository(dio, actionMap: actions),
+    '''
+  ];
+
+  // Check if the constants.dart file exists
   var constantsFile = File(constantsFilePath);
+  if (!constantsFile.existsSync()) {
+    print('Error: The constants.dart file does not exist.');
+    return;
+  }
+
+  // Read the constants.dart file
   var constantsFileContent = constantsFile.readAsStringSync();
 
   // Normalize the whitespace in the file content and the inventory configuration
@@ -156,12 +544,8 @@ InventorySingleton().setTenantId(envConfig.variables.tenantId);
   for (var importStatement in importStatements) {
     if (!normalizedFileContent
         .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-      // Add the import statement after the last import
-      constantsFileContent = constantsFileContent.substring(
-              0, constantsFileContent.indexOf(';') + 1) +
-          '\n' +
-          importStatement +
-          constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
+      // Add the import statement at the top of the file
+      constantsFileContent = importStatement + '\n' + constantsFileContent;
       print('The import statement was added: $importStatement');
     }
   }
@@ -169,44 +553,58 @@ InventorySingleton().setTenantId(envConfig.variables.tenantId);
   // Check if the inventory configuration already exists in the file
   // If not, add it to the file
   if (!normalizedFileContent.contains(normalizedInventoryConfiguration)) {
-    constantsFileContent = '$inventoryConfiguration\n$constantsFileContent';
-    print('The inventory configuration was added.');
-  }
-
-  // Check if the inventory local repositories already exist in the file
-  for (var inventoryLocalRepository in inventoryLocalRepositories) {
-    var normalizedinventoryLocalRepository =
-        inventoryLocalRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedinventoryLocalRepository)) {
-      // Add the inventory local repository to the file
-      constantsFileContent = constantsFileContent.replaceFirst(
-          '];', '  $inventoryLocalRepository\n];');
-      print(
-          'The inventory local repository was added: $inventoryLocalRepository');
-    } else {
-      print('The inventory local repository already exists.');
-    }
-  }
-
-  // Check if the inventory remote repositories already exist in the file
-  for (var inventoryRemoteRepository in inventoryRemoteRepositories) {
-    var normalizedInventoryRemoteRepository =
-        inventoryRemoteRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedInventoryRemoteRepository)) {
-      // Add the inventory remote repository to the _getRemoteRepositories method
-      var replacementString = constantsFileContent.contains(']);')
-          ? '  $inventoryRemoteRepository,\n]);'
-          : '  $inventoryRemoteRepository\n]);';
+    // Find the setInitialDataOfPackages method and add the inventory configuration inside it
+    var setInitialDataOfPackagesIndex =
+        constantsFileContent.indexOf('void setInitialDataOfPackages() {');
+    if (setInitialDataOfPackagesIndex != -1) {
+      var endOfSetInitialDataOfPackages = setInitialDataOfPackagesIndex +
+          constantsFileContent
+              .substring(setInitialDataOfPackagesIndex)
+              .indexOf('}') +
+          1;
       constantsFileContent =
-          constantsFileContent.replaceFirst(']);', replacementString);
-      print(
-          'The inventory remote repository was added: $inventoryRemoteRepository');
-    } else {
-      print('The inventory remote repository already exists.');
+          constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
+              '\n  $inventoryConfiguration' +
+              constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
+      print('The inventory configuration was added.');
     }
   }
+
+  // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
+  var getLocalRepositoriesIndex =
+      constantsFileContent.indexOf('getLocalRepositories(');
+  if (getLocalRepositoriesIndex != -1) {
+    var endOfGetLocalRepositories = getLocalRepositoriesIndex +
+        constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
+        1;
+    constantsFileContent =
+        constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
+            '\n' +
+            localRepositories.join('\n') +
+            constantsFileContent.substring(endOfGetLocalRepositories - 1);
+    print('The local repositories were added.');
+  }
+
+  var getRemoteRepositoriesIndex =
+      constantsFileContent.indexOf('getRemoteRepositories(');
+  if (getRemoteRepositoriesIndex != -1) {
+    var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
+        constantsFileContent
+            .substring(getRemoteRepositoriesIndex)
+            .indexOf('addAll(') +
+        'addAll('.length;
+    var endOfAddAll = constantsFileContent
+            .substring(endOfGetRemoteRepositories)
+            .indexOf(']') +
+        endOfGetRemoteRepositories;
+    constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
+        remoteRepositoriesOfInventory.join('\n') +
+        constantsFileContent.substring(endOfAddAll);
+    print('The remote repositories were added.');
+  }
+
+  // Write the updated content back to the constants.dart file
+  constantsFile.writeAsStringSync(constantsFileContent);
 }
 
 void _addRepoToNetworkManagerProviderWrapper(
@@ -214,8 +612,6 @@ void _addRepoToNetworkManagerProviderWrapper(
   // Define the import statements and repository providers
   var importStatements = [
     "import 'package:inventory_management/inventory_management.dart';",
-    "import '../data/repositories/remote/stock.dart';",
-    "import '../data/repositories/remote/stock_reconciliation.dart';"
   ];
   var localRepositories = [
     "RepositoryProvider<\n          LocalRepository<StockModel,\n              StockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
