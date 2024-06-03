@@ -33,13 +33,16 @@ void main() {
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
+  // Add the inventory repositories to the network manager provider wrapper
   _addRepoToNetworkManagerProviderWrapper(
     networkManagerProviderWrapperFilePath:
         networkManagerProviderWrapperFilePath,
   );
 
+  // Add the inventory constants to the constants file
   _addInventoryConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
+  // Add the inventory mappers to the utils file
   _addInventoryMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
   // Add inventory routes and import to the router file
@@ -483,7 +486,6 @@ void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
   } else {
     print('The import statement already exists.');
   }
-
   // Check if the InventoryRoute module already exists
   if (!routerFileContent.contains('InventoryRoute')) {
     // Find the position to insert the module
@@ -709,7 +711,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import 'package:inventory_management/inventory_management.dart';"
+    "import 'package:inventory_management/inventory_management.dart';",
   ];
   var localRepositories = [
     "RepositoryProvider<\n          LocalRepository<StockModel,\n              StockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
