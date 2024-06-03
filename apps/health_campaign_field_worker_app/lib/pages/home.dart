@@ -1,6 +1,5 @@
 import 'dart:async';
 
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -406,14 +405,13 @@ class _HomePageState extends LocalizedState<HomePage> {
             SyncSyncUpEvent(
               userId: context.loggedInUserUuid,
               localRepositories: [
-                      // INFO : Need to add local repo of package Here
+                // INFO : Need to add local repo of package Here
                 context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
                 context.read<
                     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -435,17 +433,9 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
- // INFO : Need to add singeton of package Here
-        
-        // AttendanceSingleton().setInitialData(
-        //     projectId: context.projectId,
-        //     loggedInIndividualId: context.loggedInIndividualId!,
-        //     loggedInUserUuid: context.loggedInUserUuid,
-        //     appVersion: Constants().version);
+        // INFO : Need to add singeton of package Here
       });
-      
 }
-
 
 class _HomeItemDataModel {
   final List<Widget> homeItems;

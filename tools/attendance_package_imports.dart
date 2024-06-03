@@ -30,6 +30,10 @@ void main() {
   var entityMapperFilePath =
       '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
+  var homeFilePath = '$appRoot/pages/home.dart';
+
+  // Add attendance to home file
+  _updateHome(homeFilePath);
 
   // Update the sync_down.dart file
   _updateSyncDownFile(syncDownFilePath);
@@ -89,6 +93,112 @@ void main() {
       .then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the home.dart file
+  Process.run('dart', ['format', homeFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _updateHome(String homeFilePath) {
+  var importStatement = '''
+      import 'package:attendance_management/attendance_management.dart';
+      import 'package:attendance_management/router/attendance_router.gm.dart';
+      ''';
+
+  var homeItemsData = '''
+     i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            // context.router.push(const ManageAttendanceRoute());
+          },
+        ),
+      ),
+  ''';
+
+  var showCaseData = '''
+      i18.home.manageAttendanceLabel:
+        homeShowcaseData.manageAttendance.showcaseKey,
+  ''';
+
+  var itemsLabel = '''
+        i18.home.manageAttendanceLabel,
+  ''';
+
+  // Define the data to be added
+  var singletonData = '''
+    AttendanceSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInIndividualId: context.loggedInIndividualId!,
+            loggedInUserUuid: context.loggedInUserUuid,
+            appVersion: Constants().version);
+  ''';
+
+  var localRepoData = '''
+    context.read<LocalRepository<AttendanceLogModel,AttendanceLogSearchModel>>(),
+  ''';
+
+  var remoteRepoData = '''
+    context.read<RemoteRepository<AttendanceLogModel,AttendanceLogSearchModel>>(),
+  ''';
+
+  // Check if the home.dart file exists
+  var homeFile = File(homeFilePath);
+  if (!homeFile.existsSync()) {
+    print('Error: Home file does not exist at path: $homeFilePath');
+    return;
+  }
+
+  // Read the home.dart file
+  var homeFileContent = homeFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!homeFileContent.contains(importStatement)) {
+    homeFileContent = importStatement + '\n' + homeFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add singleton of package Here', singletonData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add local repo of package Here', localRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add repo repo of package Here', remoteRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add home items of package Here', homeItemsData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add showcase keys of package Here', showCaseData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO: Need to add items label of package Here', itemsLabel);
+
+  // Write the updated content back to the home.dart file
+  homeFile.writeAsStringSync(homeFileContent);
+}
+
+String insertData(String fileContent, String marker, String data) {
+  var markerIndex = fileContent.indexOf(marker);
+  if (markerIndex != -1) {
+    var endOfMarker = markerIndex + marker.length;
+    if (!fileContent.substring(endOfMarker).contains(data.trim())) {
+      fileContent = fileContent.substring(0, endOfMarker) +
+          '\n' +
+          data +
+          fileContent.substring(endOfMarker);
+      print('Data was added after marker: $marker');
+    } else {
+      print('Data already exists after marker: $marker');
+    }
+  } else {
+    print('Error: Could not find the marker: $marker');
+  }
+  return fileContent;
 }
 
 void _updateSyncDownFile(String syncDownFilePath) {
