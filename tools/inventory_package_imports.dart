@@ -24,6 +24,7 @@ void main() {
   var constantsFilePath = '$appRoot/utils/constants.dart';
   var utilsFilePath = '$appRoot/utils/utils.dart';
   var routerFilePath = '$appRoot/router/app_router.dart';
+  var entityMapperFilePath = '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
@@ -39,6 +40,10 @@ void main() {
 
  // Add inventory routes and import to the router file
   _addInventoryRoutesAndImportToRouterFile(routerFilePath);
+
+    // Add new case statements to the entity_mapper.dart file
+  _updateEntityMapperFile(entityMapperFilePath);
+
 
   // Run dart format on the hcm_oplog.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
@@ -67,11 +72,74 @@ void main() {
   Process.run('dart', ['format', routerFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the entity_mapper.dart file
+  Process.run('dart', ['format', entityMapperFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+  
+}
+
+
+void _updateEntityMapperFile(String entityMapperFilePath) {
+  // Define the import statement and new case statements
+  var importStatement = "import 'package:inventory_management/inventory_management.dart';";
+  var newCases = '''
+      case "stock":
+        final entity = StockModelMapper.fromJson(entityString);
+        return entity;
+
+      case "stockReconciliation":
+        final entity = StockReconciliationModelMapper.fromJson(entityString);
+        return entity;
+''';
+
+  // Check if the entity_mapper file exists
+  var entityMapperFile = File(entityMapperFilePath);
+
+  if (!entityMapperFile.existsSync()) {
+    print('Error: Entity Mapper file does not exist at path: $entityMapperFilePath');
+    return;
+  }
+
+  // Read the entity_mapper file
+  var entityMapperFileContent = entityMapperFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!entityMapperFileContent.contains(importStatement)) {
+    entityMapperFileContent = importStatement + '\n' + entityMapperFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the new cases already exist in the file
+  if (!entityMapperFileContent.contains('case "stock":') &&
+      !entityMapperFileContent.contains('case "stockReconciliation":')) {
+    // Find the position to insert the new cases (before the default case)
+    var caseInsertionIndex = entityMapperFileContent.indexOf('default:');
+    if (caseInsertionIndex != -1) {
+      entityMapperFileContent = entityMapperFileContent.substring(0, caseInsertionIndex) +
+          newCases +
+          '\n' +
+          entityMapperFileContent.substring(caseInsertionIndex);
+      print('The new cases were added.');
+
+      // Write the updated content back to the file
+      entityMapperFile.writeAsStringSync(entityMapperFileContent);
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The new cases already exist.');
+  }
 }
 
 
 
 void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
+  
   // Define the inventory route lines
   var inventoryRoutes = '''
     // Inventory Route
@@ -148,6 +216,9 @@ void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
   } else {
     print('The import statement already exists.');
   }
+
+
+  
    // Check if the InventoryRoute module already exists
   if (!routerFileContent.contains('InventoryRoute')) {
     // Find the position to insert the module
