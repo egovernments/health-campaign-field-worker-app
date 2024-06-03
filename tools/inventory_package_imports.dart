@@ -333,22 +333,32 @@ void _addInventoryConstantsToConstantsFile(
 
   // Define the inventory configuration
   var inventoryConfiguration = '''
-// inventory related configuration
-InventorySingleton().setTenantId(envConfig.variables.tenantId);
+      InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
   ''';
 
-  // Define the inventory related lines
-  var inventoryLocalRepositories = [
-    'StockLocalRepository(sql, StockOpLogManager(isar)),',
-    'StockReconciliationLocalRepository(sql,StockReconciliationOpLogManager(isar),),',
-  ];
-  var inventoryRemoteRepositories = [
-    'if (value == DataModelType.stock) StockRemoteRepository(dio, actionMap: actions),',
-    'if (value == DataModelType.stockReconciliation) StockReconciliationRemoteRepository(dio, actionMap: actions),',
+  var localRepositories = [
+    "StockLocalRepository(sql, StockOpLogManager(isar)),",
+    "StockReconciliationLocalRepository(sql,StockReconciliationOpLogManager(isar),),",
   ];
 
-  // Read the constants.dart file
+  // Define the remote repositories of inventory
+  var remoteRepositoriesOfInventory = [
+    '''
+    if (value == DataModelType.stock)
+       StockRemoteRepository(dio, actionMap: actions),
+    if (value == DataModelType.stockReconciliation)
+       StockReconciliationRemoteRepository(dio, actionMap: actions),
+    '''
+  ];
+
+  // Check if the constants.dart file exists
   var constantsFile = File(constantsFilePath);
+  if (!constantsFile.existsSync()) {
+    print('Error: The constants.dart file does not exist.');
+    return;
+  }
+
+  // Read the constants.dart file
   var constantsFileContent = constantsFile.readAsStringSync();
 
   // Normalize the whitespace in the file content and the inventory configuration
@@ -361,12 +371,8 @@ InventorySingleton().setTenantId(envConfig.variables.tenantId);
   for (var importStatement in importStatements) {
     if (!normalizedFileContent
         .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-      // Add the import statement after the last import
-      constantsFileContent = constantsFileContent.substring(
-              0, constantsFileContent.indexOf(';') + 1) +
-          '\n' +
-          importStatement +
-          constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
+      // Add the import statement at the top of the file
+      constantsFileContent = importStatement + '\n' + constantsFileContent;
       print('The import statement was added: $importStatement');
     }
   }
@@ -374,44 +380,58 @@ InventorySingleton().setTenantId(envConfig.variables.tenantId);
   // Check if the inventory configuration already exists in the file
   // If not, add it to the file
   if (!normalizedFileContent.contains(normalizedInventoryConfiguration)) {
-    constantsFileContent = '$inventoryConfiguration\n$constantsFileContent';
-    print('The inventory configuration was added.');
-  }
-
-  // Check if the inventory local repositories already exist in the file
-  for (var inventoryLocalRepository in inventoryLocalRepositories) {
-    var normalizedinventoryLocalRepository =
-        inventoryLocalRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedinventoryLocalRepository)) {
-      // Add the inventory local repository to the file
-      constantsFileContent = constantsFileContent.replaceFirst(
-          '];', '  $inventoryLocalRepository\n];');
-      print(
-          'The inventory local repository was added: $inventoryLocalRepository');
-    } else {
-      print('The inventory local repository already exists.');
-    }
-  }
-
-  // Check if the inventory remote repositories already exist in the file
-  for (var inventoryRemoteRepository in inventoryRemoteRepositories) {
-    var normalizedInventoryRemoteRepository =
-        inventoryRemoteRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedInventoryRemoteRepository)) {
-      // Add the inventory remote repository to the _getRemoteRepositories method
-      var replacementString = constantsFileContent.contains(']);')
-          ? '  $inventoryRemoteRepository,\n]);'
-          : '  $inventoryRemoteRepository\n]);';
+    // Find the setInitialDataOfPackages method and add the inventory configuration inside it
+    var setInitialDataOfPackagesIndex =
+        constantsFileContent.indexOf('void setInitialDataOfPackages() {');
+    if (setInitialDataOfPackagesIndex != -1) {
+      var endOfSetInitialDataOfPackages = setInitialDataOfPackagesIndex +
+          constantsFileContent
+              .substring(setInitialDataOfPackagesIndex)
+              .indexOf('}') +
+          1;
       constantsFileContent =
-          constantsFileContent.replaceFirst(']);', replacementString);
-      print(
-          'The inventory remote repository was added: $inventoryRemoteRepository');
-    } else {
-      print('The inventory remote repository already exists.');
+          constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
+              '\n  $inventoryConfiguration' +
+              constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
+      print('The inventory configuration was added.');
     }
   }
+
+  // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
+  var getLocalRepositoriesIndex =
+      constantsFileContent.indexOf('getLocalRepositories(');
+  if (getLocalRepositoriesIndex != -1) {
+    var endOfGetLocalRepositories = getLocalRepositoriesIndex +
+        constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
+        1;
+    constantsFileContent =
+        constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
+            '\n' +
+            localRepositories.join('\n') +
+            constantsFileContent.substring(endOfGetLocalRepositories - 1);
+    print('The local repositories were added.');
+  }
+
+  var getRemoteRepositoriesIndex =
+      constantsFileContent.indexOf('getRemoteRepositories(');
+  if (getRemoteRepositoriesIndex != -1) {
+    var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
+        constantsFileContent
+            .substring(getRemoteRepositoriesIndex)
+            .indexOf('addAll(') +
+        'addAll('.length;
+    var endOfAddAll = constantsFileContent
+            .substring(endOfGetRemoteRepositories)
+            .indexOf(']') +
+        endOfGetRemoteRepositories;
+    constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
+        remoteRepositoriesOfInventory.join('\n') +
+        constantsFileContent.substring(endOfAddAll);
+    print('The remote repositories were added.');
+  }
+
+  // Write the updated content back to the constants.dart file
+  constantsFile.writeAsStringSync(constantsFileContent);
 }
 
 void _addRepoToNetworkManagerProviderWrapper(
