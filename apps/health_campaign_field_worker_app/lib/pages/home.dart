@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -311,7 +312,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
                   initialized: (AppConfiguration appConfiguration, _) {
-                    // context.router.push(ManageStocksRoute());
+                    context.router.push(ManageStocksRoute());
                   },
                 );
           },
@@ -502,6 +503,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             SyncSyncUpEvent(
               userId: context.loggedInUserUuid,
               localRepositories: [
+                      // INFO : Need to add local repo of package Here
                 context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context
@@ -511,6 +513,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
               ],
               remoteRepositories: [
+                // INFO : Need to add repo repo of package Here
                 context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
                 context
@@ -529,13 +532,17 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
+ // INFO : Need to add singeton of package Here
+        
         // AttendanceSingleton().setInitialData(
         //     projectId: context.projectId,
         //     loggedInIndividualId: context.loggedInIndividualId!,
         //     loggedInUserUuid: context.loggedInUserUuid,
         //     appVersion: Constants().version);
       });
+      
 }
+
 
 class _HomeItemDataModel {
   final List<Widget> homeItems;
