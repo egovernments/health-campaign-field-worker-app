@@ -24,33 +24,37 @@ void main() {
   var constantsFilePath = '$appRoot/utils/constants.dart';
   var utilsFilePath = '$appRoot/utils/utils.dart';
   var routerFilePath = '$appRoot/router/app_router.dart';
-  var entityMapperFilePath = '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
+  var entityMapperFilePath =
+      '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
 
-  
-
+  // add the localization delegates for the inventory package
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
+  // Add the inventory repositories to the network manager provider wrapper
   _addRepoToNetworkManagerProviderWrapper(
     networkManagerProviderWrapperFilePath:
         networkManagerProviderWrapperFilePath,
   );
 
+  // Add the inventory constants to the constants file
   _addInventoryConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
+  // Add the inventory mappers to the utils file
   _addInventoryMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
- // Add inventory routes and import to the router file
+  // Add inventory routes and import to the router file
   _addInventoryRoutesAndImportToRouterFile(routerFilePath);
 
-    // Add new case statements to the entity_mapper.dart file
+  // Add new case statements to the entity_mapper.dart file
   _updateEntityMapperFile(entityMapperFilePath);
 
-    // Update the sync_down.dart file
- _updateSyncDownFile(syncDownFilePath);
-  
+  // Update the sync_down.dart file
+  _updateSyncDownFile(syncDownFilePath);
+
   // Run dart format on the updated file
-  Process.run('dart', ['format', syncDownFilePath]).then((ProcessResult results) {
+  Process.run('dart', ['format', syncDownFilePath])
+      .then((ProcessResult results) {
     print(results.stdout);
   });
 
@@ -77,21 +81,22 @@ void main() {
     print(results.stdout);
   });
 
-    // Run dart format on the app_router.dart file
+  // Run dart format on the app_router.dart file
   Process.run('dart', ['format', routerFilePath]).then((ProcessResult results) {
     print(results.stdout);
   });
 
   // Run dart format on the entity_mapper.dart file
-  Process.run('dart', ['format', entityMapperFilePath]).then((ProcessResult results) {
+  Process.run('dart', ['format', entityMapperFilePath])
+      .then((ProcessResult results) {
     print(results.stdout);
   });
-  
 }
 
 void _updateSyncDownFile(String syncDownFilePath) {
   // Define the import statement and the new case statements
-  var importStatement = "import 'package:inventory_management/inventory_management.dart';";
+  var importStatement =
+      "import 'package:inventory_management/inventory_management.dart';";
   var newCases = '''
           case DataModelType.stock:
             responseEntities = await remote.search(
@@ -213,20 +218,24 @@ void _updateSyncDownFile(String syncDownFilePath) {
   if (!syncDownFileContent.contains('DataModelType.stock') &&
       !syncDownFileContent.contains('DataModelType.stockReconciliation')) {
     // Find the position to insert the new cases within the switch statement
-    var switchIndex = syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
+    var switchIndex =
+        syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
     if (switchIndex != -1) {
-      var caseInsertionIndex = syncDownFileContent.indexOf('default:', switchIndex);
+      var caseInsertionIndex =
+          syncDownFileContent.indexOf('default:', switchIndex);
       if (caseInsertionIndex != -1) {
-        syncDownFileContent = syncDownFileContent.substring(0, caseInsertionIndex) +
-            newCases +
-            '\n' +
-            syncDownFileContent.substring(caseInsertionIndex);
+        syncDownFileContent =
+            syncDownFileContent.substring(0, caseInsertionIndex) +
+                newCases +
+                '\n' +
+                syncDownFileContent.substring(caseInsertionIndex);
         print('The new cases were added to sync_down.dart.');
 
         // Write the updated content back to the file
         syncDownFile.writeAsStringSync(syncDownFileContent);
       } else {
-        print('Error: Could not find the default case in the switch statement in sync_down.dart.');
+        print(
+            'Error: Could not find the default case in the switch statement in sync_down.dart.');
         return;
       }
     } else {
@@ -238,10 +247,10 @@ void _updateSyncDownFile(String syncDownFilePath) {
   }
 }
 
-
 void _updateEntityMapperFile(String entityMapperFilePath) {
   // Define the import statement and new case statements
-  var importStatement = "import 'package:inventory_management/inventory_management.dart';";
+  var importStatement =
+      "import 'package:inventory_management/inventory_management.dart';";
   var newCases = '''
       case "stock":
         final entity = StockModelMapper.fromJson(entityString);
@@ -256,7 +265,8 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   var entityMapperFile = File(entityMapperFilePath);
 
   if (!entityMapperFile.existsSync()) {
-    print('Error: Entity Mapper file does not exist at path: $entityMapperFilePath');
+    print(
+        'Error: Entity Mapper file does not exist at path: $entityMapperFilePath');
     return;
   }
 
@@ -277,10 +287,11 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
     // Find the position to insert the new cases (before the default case)
     var caseInsertionIndex = entityMapperFileContent.indexOf('default:');
     if (caseInsertionIndex != -1) {
-      entityMapperFileContent = entityMapperFileContent.substring(0, caseInsertionIndex) +
-          newCases +
-          '\n' +
-          entityMapperFileContent.substring(caseInsertionIndex);
+      entityMapperFileContent =
+          entityMapperFileContent.substring(0, caseInsertionIndex) +
+              newCases +
+              '\n' +
+              entityMapperFileContent.substring(caseInsertionIndex);
       print('The new cases were added.');
 
       // Write the updated content back to the file
@@ -294,10 +305,7 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   }
 }
 
-
-
 void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
-  
   // Define the inventory route lines
   var inventoryRoutes = '''
     // Inventory Route
@@ -339,9 +347,11 @@ void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
   ''';
 
   // Define the import statement
-  var importStatement1 = "import 'package:inventory_management/router/inventory_router.gm.dart';";
-    // Define the import statement
-  var importStatement2 = "import 'package:inventory_management/router/inventory_router.dart';";
+  var importStatement1 =
+      "import 'package:inventory_management/router/inventory_router.gm.dart';";
+  // Define the import statement
+  var importStatement2 =
+      "import 'package:inventory_management/router/inventory_router.dart';";
 
   // Check if the router file exists
   var routerFile = File(routerFilePath);
@@ -358,7 +368,8 @@ void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
   var normalizedFileContent = routerFileContent.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statement already exists
-  if (!normalizedFileContent.contains(importStatement1.replaceAll(RegExp(r'\s'), ''))) {
+  if (!normalizedFileContent
+      .contains(importStatement1.replaceAll(RegExp(r'\s'), ''))) {
     // Add the import statement at the beginning of the file
     routerFileContent = importStatement1 + '\n' + routerFileContent;
     print('The import statement was added.');
@@ -367,24 +378,24 @@ void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
   }
 
   // Check if the import statement already exists
-  if (!normalizedFileContent.contains(importStatement2.replaceAll(RegExp(r'\s'), ''))) {
+  if (!normalizedFileContent
+      .contains(importStatement2.replaceAll(RegExp(r'\s'), ''))) {
     // Add the import statement at the beginning of the file
     routerFileContent = importStatement2 + '\n' + routerFileContent;
     print('The import statement was added.');
   } else {
     print('The import statement already exists.');
   }
-
-
-  
-   // Check if the InventoryRoute module already exists
+  // Check if the InventoryRoute module already exists
   if (!routerFileContent.contains('InventoryRoute')) {
     // Find the position to insert the module
     var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
     if (moduleInsertionIndex != -1) {
-      var endOfModulesIndex = routerFileContent.indexOf(']', moduleInsertionIndex);
+      var endOfModulesIndex =
+          routerFileContent.indexOf(']', moduleInsertionIndex);
       if (endOfModulesIndex != -1) {
-        var modulesEndIndex = routerFileContent.lastIndexOf(']', endOfModulesIndex);
+        var modulesEndIndex =
+            routerFileContent.lastIndexOf(']', endOfModulesIndex);
         routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
             ' InventoryRoute,' +
             routerFileContent.substring(modulesEndIndex);
@@ -402,14 +413,17 @@ void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
   }
 
   // Check if the inventory routes already exist in the file
-  if (!normalizedFileContent.contains(inventoryRoutes.replaceAll(RegExp(r'\s'), ''))) {
+  if (!normalizedFileContent
+      .contains(inventoryRoutes.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the routes
-    var insertionIndex = routerFileContent.indexOf('// INFO : Need to add Router of package Here');
+    var insertionIndex = routerFileContent
+        .indexOf('// INFO : Need to add Router of package Here');
     if (insertionIndex != -1) {
       routerFileContent = routerFileContent.substring(0, insertionIndex) +
           '// INFO : Need to add Router of package Here\n' +
           inventoryRoutes +
-          routerFileContent.substring(insertionIndex + '// INFO : Need to add Router of package Here'.length);
+          routerFileContent.substring(insertionIndex +
+              '// INFO : Need to add Router of package Here'.length);
       print('The inventory routes were added.');
 
       // Write the updated content back to the file
@@ -422,6 +436,7 @@ void _addInventoryRoutesAndImportToRouterFile(String routerFilePath) {
     print('The inventory routes already exist.');
   }
 }
+
 void _addInventoryMapperToUtilsFile({required String utilsFilePath}) {
   // Define the inventory related lines
   var inventoryImportStatement = [
@@ -596,7 +611,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import 'package:inventory_management/inventory_management.dart';"
+    "import 'package:inventory_management/inventory_management.dart';",
   ];
   var localRepositories = [
     "RepositoryProvider<\n          LocalRepository<StockModel,\n              StockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
