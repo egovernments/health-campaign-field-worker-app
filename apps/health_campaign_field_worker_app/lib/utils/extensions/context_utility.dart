@@ -99,6 +99,9 @@ extension ContextUtilityExtensions on BuildContext {
     if (selectedBoundary == null) {
       throw AppException('No boundary is selected');
     }
+
+    // INFO: Set Boundary for packages
+
     return selectedBoundary;
   }
 

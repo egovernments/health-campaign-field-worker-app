@@ -28,38 +28,42 @@ void main() {
   var entityMapperFilePath =
       '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
-
   var homeFilePath = '$appRoot/pages/home.dart';
+  var extensionsFilePath = '$appRoot/utils/extensions/extensions.dart';
+  var contextUtilityFilePath = '$appRoot/utils/extensions/context_utility.dart';
 
-  // Add the scanner bloc to the app file
-  _addScannerBlocToAppFile(appFile);
+  // Set boundary in the context utility file
+  _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
 
-  //  Create the localization delegates file
-  _createLocalizationDelegatesFile(localizationDelegatesFilePath);
-
-  // Add the inventory repositories to the network manager provider wrapper
-  _addRepoToNetworkManagerProviderWrapper(
-    networkManagerProviderWrapperFilePath:
-        networkManagerProviderWrapperFilePath,
-  );
-
-  // Add the inventory constants to the constants file
-  _addInventoryConstantsToConstantsFile(constantsFilePath: constantsFilePath);
-
-  // Add the inventory mappers to the utils file
-  _addInventoryMapperToUtilsFile(utilsFilePath: utilsFilePath);
-
-  // Add inventory routes and import to the router file
-  _addInventoryRoutesAndImportToRouterFile(routerFilePath);
-
-  // Add new case statements to the entity_mapper.dart file
-  _updateEntityMapperFile(entityMapperFilePath);
-
-  // Update the sync_down.dart file
-  _updateSyncDownFile(syncDownFilePath);
-
-  // Add inventory to home file
-  _updateHome(homeFilePath);
+  // // Add the scanner bloc to the app file
+  // _addScannerBlocToAppFile(appFile);
+  //
+  // //  Create the localization delegates file
+  // _createLocalizationDelegatesFile(localizationDelegatesFilePath);
+  //
+  // // Add the inventory repositories to the network manager provider wrapper
+  // _addRepoToNetworkManagerProviderWrapper(
+  //   networkManagerProviderWrapperFilePath:
+  //       networkManagerProviderWrapperFilePath,
+  // );
+  //
+  // // Add the inventory constants to the constants file
+  // _addInventoryConstantsToConstantsFile(constantsFilePath: constantsFilePath);
+  //
+  // // Add the inventory mappers to the utils file
+  // _addInventoryMapperToUtilsFile(utilsFilePath: utilsFilePath);
+  //
+  // // Add inventory routes and import to the router file
+  // _addInventoryRoutesAndImportToRouterFile(routerFilePath);
+  //
+  // // Add new case statements to the entity_mapper.dart file
+  // _updateEntityMapperFile(entityMapperFilePath);
+  //
+  // // Update the sync_down.dart file
+  // _updateSyncDownFile(syncDownFilePath);
+  //
+  // // Add inventory to home file
+  // _updateHome(homeFilePath);
 
   // Run dart format on the updated file
   Process.run('dart', ['format', syncDownFilePath])
@@ -112,6 +116,35 @@ void main() {
   });
 }
 
+void _setBoundaryInContextUtilityFile(
+    String extensionsFilePath, String contextUtilityFilePath) {
+  // Define the lines to be added
+  var importStatement =
+      "import 'package:inventory_management/inventory_management.dart';";
+  var boundaryStatement =
+      'InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);';
+
+  // Update the extensions.dart file
+  var extensionsFile = File(extensionsFilePath);
+  var extensionsFileContent = extensionsFile.readAsStringSync();
+  if (!extensionsFileContent.contains(importStatement)) {
+    extensionsFileContent = importStatement + '\n' + extensionsFileContent;
+    extensionsFile.writeAsStringSync(extensionsFileContent);
+    print('Updated the extensions.dart file.');
+  }
+
+  // Update the context_utility.dart file
+  var contextUtilityFile = File(contextUtilityFilePath);
+  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
+
+  // Use the insertData method to insert the boundaryStatement
+  contextUtilityFileContent = insertData(contextUtilityFileContent, '// INFO: Set Boundary for packages', boundaryStatement);
+
+  // Write the updated content back to the context_utility.dart file
+  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+  print('Updated the context_utility.dart file.');
+}
+
 void _addScannerBlocToAppFile(String appFilePath) {
   var importStatement = "import 'package:digit_scanner/blocs/scanner.dart';";
 
@@ -153,8 +186,7 @@ void _addScannerBlocToAppFile(String appFilePath) {
 }
 
 void _updateHome(String homeFilePath) {
-  var importStatement =
-      '''
+  var importStatement = '''
       import 'package:inventory_management/inventory_management.dart';
       import 'package:inventory_management/router/inventory_router.gm.dart';
       ''';
@@ -279,7 +311,6 @@ void _updateHome(String homeFilePath) {
       '// INFO : Need to add showcase keys of package Here', showCaseData);
   homeFileContent = insertData(homeFileContent,
       '// INFO: Need to add items label of package Here', itemsLabel);
-
 
   // Write the updated content back to the home.dart file
   homeFile.writeAsStringSync(homeFileContent);
