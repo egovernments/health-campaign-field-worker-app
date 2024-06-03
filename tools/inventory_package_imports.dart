@@ -596,9 +596,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import 'package:inventory_management/inventory_management.dart';",
-    "import '../data/repositories/remote/stock.dart';",
-    "import '../data/repositories/remote/stock_reconciliation.dart';"
+    "import 'package:inventory_management/inventory_management.dart';"
   ];
   var localRepositories = [
     "RepositoryProvider<\n          LocalRepository<StockModel,\n              StockSearchModel>>(\n        create: (_) => StockLocalRepository(\n          sql,\n          StockOpLogManager(isar),\n        ),\n      ),",
