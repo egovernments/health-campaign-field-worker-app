@@ -1,3 +1,4 @@
+
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +32,15 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
-
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
 
 @AutoRouterConfig(
-  modules: [],
+  // INFO : Need to add the router modules here
+  modules: [
+    
+  ],
 )
 class AppRouter extends _$AppRouter {
   @override
@@ -61,7 +64,6 @@ class AppRouter extends _$AppRouter {
       page: AuthenticatedRouteWrapper.page,
       path: '/',
       children: [
-  
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
@@ -69,6 +71,9 @@ class AppRouter extends _$AppRouter {
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
+
+        // INFO : Need to add Router of package Here
+
 
         AutoRoute(
             page: ChecklistWrapperRoute.page,
