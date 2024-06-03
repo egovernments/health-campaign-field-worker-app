@@ -25,6 +25,8 @@ void main() {
   var utilsFilePath = '$appRoot/utils/utils.dart';
   var routerFilePath = '$appRoot/router/app_router.dart';
   var entityMapperFilePath = '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
+  var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
+
   
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
@@ -44,6 +46,13 @@ void main() {
     // Add new case statements to the entity_mapper.dart file
   _updateEntityMapperFile(entityMapperFilePath);
 
+    // Update the sync_down.dart file
+ _updateSyncDownFile(syncDownFilePath);
+  
+  // Run dart format on the updated file
+  Process.run('dart', ['format', syncDownFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
 
   // Run dart format on the hcm_oplog.dart file
   Process.run('dart', ['format', localizationDelegatesFilePath])
@@ -78,6 +87,155 @@ void main() {
     print(results.stdout);
   });
   
+}
+
+void _updateSyncDownFile(String syncDownFilePath) {
+  // Define the import statement and the new case statements
+  var importStatement = "import 'package:inventory_management/inventory_management.dart';";
+  var newCases = '''
+          case DataModelType.stock:
+            responseEntities = await remote.search(
+              StockSearchModel(
+                clientReferenceId: entities
+                    .whereType<StockModel>()
+                    .map((e) => e.clientReferenceId)
+                    .whereNotNull()
+                    .toList(),
+              ),
+            );
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockModel;
+              final responseEntity =
+                  responseEntities.whereType<StockModel>().firstWhereOrNull(
+                        (e) => e.clientReferenceId == entity.clientReferenceId,
+                      );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId!,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+
+          case DataModelType.stockReconciliation:
+            responseEntities =
+                await remote.search(StockReconciliationSearchModel(
+              clientReferenceId: entities
+                  .whereType<StockReconciliationModel>()
+                  .map((e) => e.clientReferenceId)
+                  .whereNotNull()
+                  .toList(),
+            ));
+
+            for (var element in operationGroupedEntity.value) {
+              if (element.id == null) return;
+              final entity = element.entity as StockReconciliationModel;
+              final responseEntity = responseEntities
+                  .whereType<StockReconciliationModel>()
+                  .firstWhereOrNull(
+                    (e) => e.clientReferenceId == entity.clientReferenceId,
+                  );
+
+              final serverGeneratedId = responseEntity?.id;
+              final rowVersion = responseEntity?.rowVersion;
+
+              if (serverGeneratedId != null) {
+                await local.opLogManager.updateServerGeneratedIds(
+                  model: UpdateServerGeneratedIdModel(
+                    clientReferenceId: entity.clientReferenceId,
+                    serverGeneratedId: serverGeneratedId,
+                    dataOperation: element.operation,
+                    rowVersion: rowVersion,
+                  ),
+                );
+              } else {
+                final bool markAsNonRecoverable = await local.opLogManager
+                    .updateSyncDownRetry(entity.clientReferenceId);
+
+                if (markAsNonRecoverable) {
+                  await local.update(
+                    entity.copyWith(
+                      nonRecoverableError: true,
+                    ),
+                    createOpLog: false,
+                  );
+                }
+              }
+            }
+
+            break;
+''';
+
+  // Check if the sync_down file exists
+  var syncDownFile = File(syncDownFilePath);
+
+  if (!syncDownFile.existsSync()) {
+    print('Error: Sync Down file does not exist at path: $syncDownFilePath');
+    return;
+  }
+
+  // Read the sync_down file
+  var syncDownFileContent = syncDownFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!syncDownFileContent.contains(importStatement)) {
+    syncDownFileContent = importStatement + '\n' + syncDownFileContent;
+    print('The import statement was added to sync_down.dart.');
+  } else {
+    print('The import statement already exists in sync_down.dart.');
+  }
+
+  // Insert the new case statements
+  if (!syncDownFileContent.contains('DataModelType.stock') &&
+      !syncDownFileContent.contains('DataModelType.stockReconciliation')) {
+    // Find the position to insert the new cases within the switch statement
+    var switchIndex = syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
+    if (switchIndex != -1) {
+      var caseInsertionIndex = syncDownFileContent.indexOf('default:', switchIndex);
+      if (caseInsertionIndex != -1) {
+        syncDownFileContent = syncDownFileContent.substring(0, caseInsertionIndex) +
+            newCases +
+            '\n' +
+            syncDownFileContent.substring(caseInsertionIndex);
+        print('The new cases were added to sync_down.dart.');
+
+        // Write the updated content back to the file
+        syncDownFile.writeAsStringSync(syncDownFileContent);
+      } else {
+        print('Error: Could not find the default case in the switch statement in sync_down.dart.');
+        return;
+      }
+    } else {
+      print('Error: Could not find the switch statement in sync_down.dart.');
+      return;
+    }
+  } else {
+    print('The new cases already exist in sync_down.dart.');
+  }
 }
 
 
