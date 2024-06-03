@@ -11,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -295,39 +294,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final Map<String, Widget> homeItemsMap = {
-      i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.buildWith(
-        child: HomeItemCard(
-          icon: Icons.all_inbox,
-          label: i18.home.beneficiaryLabel,
-          onPressed: () async {},
-        ),
-      ),
-      i18.home.manageStockLabel:
-          homeShowcaseData.warehouseManagerManageStock.buildWith(
-        child: HomeItemCard(
-          icon: Icons.store_mall_directory,
-          label: i18.home.manageStockLabel,
-          onPressed: () {
-            context.read<AppInitializationBloc>().state.maybeWhen(
-                  orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
-                    context.router.push(ManageStocksRoute());
-                  },
-                );
-          },
-        ),
-      ),
-      i18.home.stockReconciliationLabel:
-          homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
-        child: HomeItemCard(
-          icon: Icons.menu_book,
-          label: i18.home.stockReconciliationLabel,
-          onPressed: () {
-            // context.router.push(StockReconciliationRoute());
-          },
-        ),
-      ),
+      // INFO : Need to add home items of package Here
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
@@ -374,55 +341,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.hfBeneficiaryReferral.buildWith(
-        child: HomeItemCard(
-          icon: Icons.supervised_user_circle_rounded,
-          label: i18.home.beneficiaryReferralLabel,
-          onPressed: () async {
-            context.read<AppInitializationBloc>().state.maybeWhen(
-                  orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
-                    // context.router.push(SearchReferralReconciliationsRoute());
-                  },
-                );
-          },
-        ),
-      ),
-      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.viewReportsLabel,
-          onPressed: () {
-            // context.router.push(InventoryReportSelectionRoute());
-          },
-        ),
-      ),
-      i18.home.manageAttendanceLabel:
-          homeShowcaseData.manageAttendance.buildWith(
-        child: HomeItemCard(
-          icon: Icons.fingerprint_outlined,
-          label: i18.home.manageAttendanceLabel,
-          onPressed: () {
-            // context.router.push(const ManageAttendanceRoute());
-          },
-        ),
-      ),
-      i18.home.db: homeShowcaseData.db.buildWith(
-        child: HomeItemCard(
-          icon: Icons.table_chart,
-          label: i18.home.db,
-          onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
-          },
-        ),
-      ),
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
@@ -441,34 +359,19 @@ class _HomePageState extends LocalizedState<HomePage> {
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
-      i18.home.beneficiaryLabel:
-          homeShowcaseData.distributorBeneficiaries.showcaseKey,
-      i18.home.manageStockLabel:
-          homeShowcaseData.warehouseManagerManageStock.showcaseKey,
-      i18.home.stockReconciliationLabel:
-          homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
+      // INFO : Need to add showcase keys of package Here
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
-      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
-      i18.home.beneficiaryReferralLabel:
-          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
-      i18.home.manageAttendanceLabel:
-          homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
-      i18.home.beneficiaryLabel,
-      i18.home.manageStockLabel,
-      i18.home.stockReconciliationLabel,
+      // INFO: Need to add items label of package Here
       i18.home.myCheckList,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
-      i18.home.viewReportsLabel,
-      i18.home.beneficiaryReferralLabel,
-      i18.home.manageAttendanceLabel,
       i18.home.db,
     ];
 

@@ -65,6 +65,7 @@ class MainApplicationState extends State<MainApplication>
           sql: widget.sql,
           child: MultiBlocProvider(
             providers: [
+              // INFO : Need to add bloc of package Here
               BlocProvider(
                 create: (_) {
                   return LocationBloc(location: Location())
