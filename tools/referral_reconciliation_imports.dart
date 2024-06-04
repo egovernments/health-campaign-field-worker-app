@@ -19,21 +19,22 @@ void main() {
   var appDir = Directory.current.path;
 
   // Define the paths for the application root and the files to be modified
-  var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
-  var appFile = '$appRoot/app.dart';
+  var appRoot = appDir + '/apps/health_campaign_field_worker_app/lib';
+  var appFile = appRoot + '/app.dart';
   var localizationDelegatesFilePath =
-      '$appRoot/utils/localization_delegates.dart';
+      appRoot + '/utils/localization_delegates.dart';
   var networkManagerProviderWrapperFilePath =
-      '$appRoot/widgets/network_manager_provider_wrapper.dart';
-  var constantsFilePath = '$appRoot/utils/constants.dart';
-  var utilsFilePath = '$appRoot/utils/utils.dart';
-  var routerFilePath = '$appRoot/router/app_router.dart';
+      appRoot + '/widgets/network_manager_provider_wrapper.dart';
+  var constantsFilePath = appRoot + '/utils/constants.dart';
+  var utilsFilePath = appRoot + '/utils/utils.dart';
+  var routerFilePath = appRoot + '/router/app_router.dart';
   var entityMapperFilePath =
-      '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
-  var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
-  var homeFilePath = '$appRoot/pages/home.dart';
-  var extensionsFilePath = '$appRoot/utils/extensions/extensions.dart';
-  var contextUtilityFilePath = '$appRoot/utils/extensions/context_utility.dart';
+      appRoot + '/data/local_store/no_sql/schema/entity_mapper.dart';
+  var syncDownFilePath = appRoot + '/data/repositories/sync/sync_down.dart';
+  var homeFilePath = appRoot + '/pages/home.dart';
+  var extensionsFilePath = appRoot + '/utils/extensions/extensions.dart';
+  var contextUtilityFilePath =
+      appRoot + '/utils/extensions/context_utility.dart';
 
   // Set boundary in the context utility file
   _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
@@ -68,67 +69,26 @@ void main() {
   // Update the sync_down.dart file
   _updateSyncDownFile(syncDownFilePath);
 
-  // Run dart format on the localization_delegates.dart file
-  Process.run('dart', ['format', localizationDelegatesFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
+  _formatFiles([
+    localizationDelegatesFilePath,
+    networkManagerProviderWrapperFilePath,
+    constantsFilePath,
+    utilsFilePath,
+    routerFilePath,
+    entityMapperFilePath,
+    syncDownFilePath,
+    homeFilePath,
+    extensionsFilePath,
+    contextUtilityFilePath,
+    appFile,
+  ]);
+}
 
-  // Run dart format on the network_manager_provider_wrapper.dart file
-  Process.run('dart', ['format', networkManagerProviderWrapperFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the constants.dart file
-  Process.run('dart', ['format', constantsFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the utils.dart file
-  Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the router file
-  Process.run('dart', ['format', routerFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the entity_mapper.dart file
-  Process.run('dart', ['format', entityMapperFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the sync_down.dart file
-  Process.run('dart', ['format', syncDownFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the home.dart file
-  Process.run('dart', ['format', homeFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the app.dart file
-  Process.run('dart', ['format', appFile]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the extensions.dart file
-  Process.run('dart', ['format', extensionsFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the contextUtility.dart file
-  Process.run('dart', ['format', contextUtilityFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
+void _formatFiles(List<String> filePaths) {
+  for (var filePath in filePaths) {
+    Process.runSync('dart', ['format', filePath]);
+    print('Formatted $filePath');
+  }
 }
 
 void _addScannerBlocToAppFile(String appFilePath) {
@@ -279,7 +239,8 @@ void _updateHome(String homeFilePath) {
   var homeFileContent = homeFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!homeFileContent.contains(importStatement)) {
+  if (!homeFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     homeFileContent = importStatement + '\n' + homeFileContent;
     print('The import statement was added.');
   } else {
@@ -452,7 +413,8 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   var entityMapperFileContent = entityMapperFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!entityMapperFileContent.contains(importStatement)) {
+  if (!entityMapperFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     entityMapperFileContent = importStatement + '\n' + entityMapperFileContent;
     print('The import statement was added.');
   } else {

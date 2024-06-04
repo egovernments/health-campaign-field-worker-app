@@ -1,6 +1,8 @@
 // Import the required Dart I/O package
 import 'dart:io';
 
+import 'attendance_package_imports.dart';
+
 String createCaseCondition(String key, String value) {
   return 'case "$key":\n    $value';
 }
@@ -19,11 +21,11 @@ void main() {
   var appDir = Directory.current.path;
 
   // Define the paths for the application root and the files to be modified
-  var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
+  var appRoot = appDir + '/apps/health_campaign_field_worker_app/lib';
   var networkManagerProviderWrapperFilePath =
-      '$appRoot/widgets/network_manager_provider_wrapper.dart';
-  var constantsFilePath = '$appRoot/utils/constants.dart';
-  var utilsFilePath = '$appRoot/utils/utils.dart';
+      appRoot + '/widgets/network_manager_provider_wrapper.dart';
+  var constantsFilePath = appRoot + '/utils/constants.dart';
+  var utilsFilePath = appRoot + '/utils/utils.dart';
 
   _addRepoToNetworkManagerProviderWrapper(
       networkManagerProviderWrapperFilePath:
@@ -33,22 +35,18 @@ void main() {
 
   _addDataModelMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
-  // Run dart format on the network_manager_provider_wrapper.dart file
-  Process.run('dart', ['format', networkManagerProviderWrapperFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
+  _formatFiles([
+    networkManagerProviderWrapperFilePath,
+    constantsFilePath,
+    utilsFilePath,
+  ]);
+}
 
-  // Run dart format on the constants.dart file
-  Process.run('dart', ['format', constantsFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the utils.dart file
-  Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
+void _formatFiles(List<String> filePaths) {
+  for (var filePath in filePaths) {
+    Process.runSync('dart', ['format', filePath]);
+    print('Formatted $filePath');
+  }
 }
 
 void _addDataModelMapperToUtilsFile({required String utilsFilePath}) {
@@ -87,28 +85,33 @@ void _addDataModelMapperToUtilsFile({required String utilsFilePath}) {
     print('The import statement already exists.');
   }
 
-  if (!utilsFileContent.contains(dataModelInitializationStatement)) {
-    // Add the DataModel related initialization statement to the file
-    var initializeAllMappersIndex =
-        utilsFileContent.indexOf('initializeAllMappers() async {');
-    if (initializeAllMappersIndex == -1) {
-      print(
-          'Error: Could not find a place to insert the DataModel initialization statement.');
-      return;
+  if (!normalizedFileContent.contains(
+      dataModelInitializationStatement.replaceAll(RegExp(r'\s'), ''))) {
+    if (!utilsFileContent.contains(dataModelInitializationStatement)) {
+      // Add the DataModel related initialization statement to the file
+      var initializeAllMappersIndex =
+          utilsFileContent.indexOf('initializeAllMappers() async {');
+      if (initializeAllMappersIndex == -1) {
+        print(
+            'Error: Could not find a place to insert the DataModel initialization statement.');
+        return;
+      }
+      var endOfInitializeAllMappers = initializeAllMappersIndex +
+          utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
+          1;
+      utilsFileContent =
+          utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
+              '\n    ' +
+              dataModelInitializationStatement +
+              utilsFileContent.substring(endOfInitializeAllMappers - 1);
+      print('DataModel initialization statement added to utils.dart');
     }
-    var endOfInitializeAllMappers = initializeAllMappersIndex +
-        utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
-        1;
-    utilsFileContent =
-        utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
-            '\n    ' +
-            dataModelInitializationStatement +
-            utilsFileContent.substring(endOfInitializeAllMappers - 1);
-    print('DataModel initialization statement added to utils.dart');
-  }
 
-  // Write the updated content back to the utils.dart file
-  utilsFile.writeAsStringSync(utilsFileContent);
+    // Write the updated content back to the utils.dart file
+    utilsFile.writeAsStringSync(utilsFileContent);
+  } else {
+    print('The DataModel initialization statement already exists.');
+  }
 }
 
 void _addDataModelConstantsToConstantsFile(
@@ -149,6 +152,8 @@ void _addDataModelConstantsToConstantsFile(
           importStatement +
           constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
       print('The import statement was added: $importStatement');
+    } else {
+      print('The import statement already exists.');
     }
   }
 
@@ -204,6 +209,9 @@ void _addRepoToNetworkManagerProviderWrapper(
       File(networkManagerProviderWrapperFilePath);
   var networkManagerProviderWrapperFileContent =
       networkManagerProviderWrapperFile.readAsStringSync();
+  // Normalize the whitespace in the file content and the remote repository of DataModel
+  var normalizedFileContent =
+      networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Find the last import statement in the file
   var lastImportIndex = networkManagerProviderWrapperFileContent
@@ -218,24 +226,22 @@ void _addRepoToNetworkManagerProviderWrapper(
 
     // Check if the import statements already exist in the file
     for (var importStatement in importStatements) {
-      if (!networkManagerProviderWrapperFileContent.contains(importStatement)) {
+      if (!normalizedFileContent
+          .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
         // Add the import statement after the last import
         networkManagerProviderWrapperFileContent =
-            networkManagerProviderWrapperFileContent.substring(
-                    0, endOfLastImport) +
+            networkManagerProviderWrapperFileContent.substring(0,
+                    networkManagerProviderWrapperFileContent.indexOf(';') + 1) +
                 '\n' +
                 importStatement +
-                networkManagerProviderWrapperFileContent
-                    .substring(endOfLastImport);
-        endOfLastImport += importStatement.length + 1;
+                networkManagerProviderWrapperFileContent.substring(
+                    networkManagerProviderWrapperFileContent.indexOf(';') + 1);
         print('The import statement was added: $importStatement');
+      } else {
+        print('The import statement already exists.');
       }
     }
   }
-
-  // Normalize the whitespace in the file content and the remote repository of DataModel
-  var normalizedFileContent =
-      networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
   for (var repositoryProvider in localRepositories) {
