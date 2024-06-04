@@ -433,7 +433,7 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
-        // INFO : Need to add singeton of package Here
+        // INFO : Need to add singleton of package Here
       });
 }
 
