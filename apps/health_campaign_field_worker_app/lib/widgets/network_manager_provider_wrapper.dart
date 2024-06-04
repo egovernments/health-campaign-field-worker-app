@@ -264,6 +264,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           StockReconciliationOpLogManager(isar),
         ),
       ),
+      // INFO Need to add packages here
     ];
   }
 
@@ -484,6 +485,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             create: (_) =>
                 StockReconciliationRemoteRepository(dio, actionMap: actions),
           ),
+        // INFO Need to add packages here
       ]);
     }
 
