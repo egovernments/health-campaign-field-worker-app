@@ -153,7 +153,6 @@ class _BoundarySelectionPageState
                                       },
                                       onSelected: (value) {
                                         if (value == null) return;
-                                        value as BoundaryModel;
 
                                         context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:drift/drift.dart';
 
 part 'pgr_complaints.mapper.dart';
 
@@ -14,8 +14,8 @@ class PgrComplaintModel extends EntityModel with PgrComplaintModelMappable {
   const PgrComplaintModel({
     required this.service,
     this.workflow,
-       super.isDeleted  = false,
-        super.auditDetails,
+    super.isDeleted = false,
+    super.auditDetails,
   }) : super();
 }
 
@@ -53,7 +53,7 @@ class PgrComplainantModel extends EntityModel with PgrComplainantModelMappable {
     this.isDeleted = false,
     this.rowVersion = 1,
     super.auditDetails,
-
+    super.clientAuditDetails,
   }) : super();
 
   PgrComplainantCompanion get companion {
@@ -87,13 +87,14 @@ class PgrRolesModel extends EntityModel with PgrRolesModelMappable {
   const PgrRolesModel({
     required this.name,
     required this.code,
-        super.isDeleted  = false,
-        super.auditDetails,
+    super.isDeleted = false,
+    super.auditDetails,
   }) : super();
 }
 
 @MappableClass(ignoreNull: true)
-class PgrServiceSearchModel extends EntitySearchModel with PgrServiceSearchModelMappable {
+class PgrServiceSearchModel extends EntitySearchModel
+    with PgrServiceSearchModelMappable {
   final String? tenantId;
   final String? serviceRequestId;
   final String? clientReferenceId;
@@ -116,10 +117,10 @@ class PgrServiceSearchModel extends EntitySearchModel with PgrServiceSearchModel
     this.clientReferenceId,
     this.complainantMobileNumber,
     this.complaintNumber,
-       super.isDeleted  = false,
-        super.auditDetails,
-        super.additionalFields,
-        super.boundaryCode,
+    super.isDeleted = false,
+    super.auditDetails,
+    super.additionalFields,
+    super.boundaryCode,
   }) : super();
 }
 
@@ -142,8 +143,7 @@ class PgrServiceModel extends EntityModel with PgrServiceModelMappable {
   final PgrAddressModel address;
   final String? additionalDetail;
 
-
-  const PgrServiceModel( {
+  const PgrServiceModel({
     required this.clientReferenceId,
     this.active = true,
     this.id,
@@ -160,7 +160,7 @@ class PgrServiceModel extends EntityModel with PgrServiceModelMappable {
     required this.address,
     this.additionalDetail,
     super.auditDetails,
-
+    super.clientAuditDetails,
   }) : super(isDeleted: false);
 
   PgrServiceCompanion get companion {
@@ -199,7 +199,8 @@ class PgrWorkflowModel extends EntityModel with PgrWorkflowModelMappable {
     @MappableField(key: 'assignes') this.assignees = const [],
     required this.comments,
     super.auditDetails,
-  super.isDeleted  = false,
+    super.clientAuditDetails,
+    super.isDeleted = false,
   }) : super();
 }
 

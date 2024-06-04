@@ -196,15 +196,15 @@ class _DeliverInterventionPageState
                                                     onPressed: isClicked
                                                         ? null
                                                         : () async {
-                                                            if (((form.control(
+                                                            final deliveredProducts =
+                                                                ((form.control(
                                                               _resourceDeliveredKey,
                                                             ) as FormArray)
                                                                         .value
                                                                     as List<
-                                                                        ProductVariantModel?>)
-                                                                .any((ele) =>
-                                                                    ele?.productId ==
-                                                                    null)) {
+                                                                        ProductVariantModel?>);
+                                                            if (hasDuplicatesOrEmptyResource(
+                                                                deliveredProducts)) {
                                                               await DigitToast
                                                                   .show(
                                                                 context,
@@ -555,16 +555,54 @@ class _DeliverInterventionPageState
                                                         .toList(),
                                                     Center(
                                                       child: DigitIconButton(
-                                                        onPressed: () async {
-                                                          addController(form);
-                                                          setState(() {
-                                                            _controllers.add(
-                                                              _controllers
-                                                                  .length,
-                                                            );
-                                                          });
-                                                        },
+                                                        onPressed: ((form.control(_resourceDeliveredKey)
+                                                                                as FormArray)
+                                                                            .value ??
+                                                                        [])
+                                                                    .length <
+                                                                (productVariants ??
+                                                                        [])
+                                                                    .length
+                                                            ? () async {
+                                                                print(
+                                                                    _controllers);
+                                                                addController(
+                                                                    form);
+                                                                setState(() {
+                                                                  _controllers
+                                                                      .add(
+                                                                    _controllers
+                                                                        .length,
+                                                                  );
+                                                                });
+                                                              }
+                                                            : null,
                                                         icon: Icons.add_circle,
+                                                        iconColor: ((form.control(_resourceDeliveredKey)
+                                                                                as FormArray)
+                                                                            .value ??
+                                                                        [])
+                                                                    .length <
+                                                                (productVariants ??
+                                                                        [])
+                                                                    .length
+                                                            ? theme.colorScheme
+                                                                .secondary
+                                                            : theme.colorScheme
+                                                                .outline,
+                                                        iconTextColor:
+                                                            ((form.control(_resourceDeliveredKey) as FormArray).value ??
+                                                                            [])
+                                                                        .length <
+                                                                    (productVariants ??
+                                                                            [])
+                                                                        .length
+                                                                ? theme
+                                                                    .colorScheme
+                                                                    .secondary
+                                                                : theme
+                                                                    .colorScheme
+                                                                    .outline,
                                                         iconText: localizations
                                                             .translate(
                                                           i18.deliverIntervention
@@ -643,6 +681,27 @@ class _DeliverInterventionPageState
         .add(FormControl<ProductVariantModel>());
     (form.control(_quantityDistributedKey) as FormArray)
         .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
+  }
+
+  bool hasDuplicatesOrEmptyResource(
+      List<ProductVariantModel?> deliveredProducts) {
+    final Map<String?, List<ProductVariantModel?>> groupedVariants = {};
+    if (deliveredProducts.isNotEmpty) {
+      for (final variant in deliveredProducts) {
+        final productId = variant?.productId;
+        if (productId != null) {
+          groupedVariants.putIfAbsent(productId, () => []);
+          groupedVariants[productId]?.add(variant);
+        }
+      }
+      bool hasDuplicateProductIdOrNoProductId =
+          groupedVariants.values.any((variants) => variants.length > 1) ||
+              deliveredProducts.any((ele) => ele?.productId == null);
+
+      return hasDuplicateProductIdOrNoProductId;
+    }
+
+    return true;
   }
 
   // ignore: long-parameter-list

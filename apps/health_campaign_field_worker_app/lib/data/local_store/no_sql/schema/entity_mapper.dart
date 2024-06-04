@@ -76,6 +76,10 @@ class EntityMapper extends EntityMapperListener {
         final entity = AttendanceLogModelMapper.fromJson(entityString);
         return entity;
 
+      case "complaints":
+        final entity = PgrServiceModelMapper.fromJson(entityString);
+        return entity;
+
       default:
         final entity = EntityModelMapper.fromJson(entityString);
         return entity;

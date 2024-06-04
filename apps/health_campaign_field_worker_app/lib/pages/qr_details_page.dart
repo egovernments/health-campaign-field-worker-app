@@ -31,7 +31,7 @@ class _UserQRDetailsPageState extends LocalizedState<UserQRDetailsPage> {
   Widget build(BuildContext context) {
     return PopScope(
       onPopInvoked: (didPop) {
-        context.router.popUntilRouteWithName(HomeRoute.name);
+        context.router.replaceAll([HomeRoute()]);
       },
       child: Scaffold(
         body: BlocBuilder<AuthBloc, AuthState>(

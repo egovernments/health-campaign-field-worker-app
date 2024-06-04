@@ -56,12 +56,15 @@ class StockLocalRepository
                     sql.stock.auditCreatedBy.equals(
                       userId,
                     ),
-                  if (query.transactionReason != null)
-                    query.transactionReason!.isEmpty
-                        ? sql.stock.transactionReason.isNull()
-                        : sql.stock.transactionReason.isIn(
-                            query.transactionReason!,
-                          ),
+                  if (query.transactionType != null)
+                    sql.stock.transactionType.isIn(
+                      query.transactionType!,
+                    ),
+                  if (query.transactionReason != null &&
+                      query.transactionReason!.isNotEmpty)
+                    sql.stock.transactionReason.isIn(
+                      query.transactionReason!,
+                    ),
                 ],
               ),
             ))

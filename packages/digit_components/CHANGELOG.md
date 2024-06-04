@@ -103,3 +103,7 @@
 
 ## 1.0.0
 * Stable release
+
+
+## 1.0.0+1
+* Stable release with searchable dropdown fix

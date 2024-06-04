@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
-import '../blocs/referral_recon_service.dart';
 import '../blocs/search_referral_reconciliations.dart';
 import '../models/entities/hf_referral.dart';
 import '../router/referral_reconciliation_router.gm.dart';
@@ -72,8 +71,8 @@ class _SearchReferralReconciliationsPageState
                     }
                   },
                   child: BlocProvider(
-                      create: (_) => ReferralReconServiceBloc(
-                            const ReferralReconServiceEmptyState(),
+                      create: (_) => ServiceBloc(
+                            const ServiceEmptyState(),
                             serviceDataRepository: context.repository<
                                 ServiceModel, ServiceSearchModel>(context),
                           ),
@@ -162,10 +161,8 @@ class _SearchReferralReconciliationsPageState
                                       child: ViewReferralCard(
                                         hfReferralModel: i,
                                         onOpenPressed: () {
-                                          context
-                                              .read<ReferralReconServiceBloc>()
-                                              .add(
-                                                ReferralReconServiceSearchEvent(
+                                          context.read<ServiceBloc>().add(
+                                                ServiceSearchEvent(
                                                   serviceSearchModel:
                                                       ServiceSearchModel(
                                                     clientId:
@@ -180,7 +177,8 @@ class _SearchReferralReconciliationsPageState
                                               projectId:
                                                   ReferralReconSingleton()
                                                       .projectId,
-                                              cycles: ReferralReconSingleton().cycles,
+                                              cycles: ReferralReconSingleton()
+                                                  .cycles,
                                             ),
                                           );
                                         },

@@ -72,9 +72,9 @@ class StockReconciliationBloc
     // Fetching the stock reconciliation details
     final receivedStocks = (await stockRepository.search(
       StockSearchModel(
-        productVariantId: productVariantId,
-        receiverId: facilityId,
-      ),
+          productVariantId: productVariantId,
+          receiverId: facilityId,
+          transactionType: [TransactionType.received.toValue()]),
     ))
         .where((element) =>
             element.auditDetails != null &&
@@ -83,9 +83,9 @@ class StockReconciliationBloc
         .toList();
     final sentStocks = (await stockRepository.search(
       StockSearchModel(
-        productVariantId: productVariantId,
-        senderId: facilityId,
-      ),
+          productVariantId: productVariantId,
+          senderId: facilityId,
+          transactionType: [TransactionType.dispatched.toValue()]),
     ))
         .where((element) =>
             element.auditDetails != null &&
@@ -205,16 +205,19 @@ class StockReconciliationState with _$StockReconciliationState {
   num get stockLost => _getQuantityCount(
         stockModels.where((e) =>
             e.transactionType == TransactionType.dispatched.toValue() &&
-            (e.transactionReason == TransactionReason.lostInTransit.toValue()||
-                e.transactionReason == TransactionReason.lostInStorage.toValue())),
+            (e.transactionReason == TransactionReason.lostInTransit.toValue() ||
+                e.transactionReason ==
+                    TransactionReason.lostInStorage.toValue())),
       );
 
   // Getter for damaged stock
   num get stockDamaged => _getQuantityCount(
         stockModels.where((e) =>
             e.transactionType == TransactionType.dispatched.toValue() &&
-            (e.transactionReason == TransactionReason.damagedInTransit.toValue() ||
-                e.transactionReason == TransactionReason.damagedInStorage.toValue())),
+            (e.transactionReason ==
+                    TransactionReason.damagedInTransit.toValue() ||
+                e.transactionReason ==
+                    TransactionReason.damagedInStorage.toValue())),
       );
 
   // Getter for in-hand stock

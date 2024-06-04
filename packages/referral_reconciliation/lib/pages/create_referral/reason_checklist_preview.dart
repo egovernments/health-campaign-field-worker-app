@@ -1,12 +1,12 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 
-import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
@@ -35,8 +35,7 @@ class _ReferralReasonChecklistPreviewPageState
         header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
-        footer:
-            BlocBuilder<ReferralReconServiceBloc, ReferralReconServiceState>(
+        footer: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
@@ -45,9 +44,8 @@ class _ReferralReasonChecklistPreviewPageState
                     ? DigitCard(
                         child: DigitElevatedButton(
                           onPressed: () {
-                            context.read<ReferralReconServiceBloc>().add(
-                                  ReferralReconServiceResetEvent(
-                                      serviceList: serviceList),
+                            context.read<ServiceBloc>().add(
+                                  ServiceResetEvent(serviceList: serviceList),
                                 );
                           },
                           child: Text(
@@ -61,8 +59,7 @@ class _ReferralReasonChecklistPreviewPageState
           },
         ),
         children: [
-          BlocBuilder<ReferralReconServiceBloc, ReferralReconServiceState>(
-              builder: (context, state) {
+          BlocBuilder<ServiceBloc, ServiceState>(builder: (context, state) {
             return state.maybeWhen(
               orElse: () => const Offstage(),
               serviceSearch: (value1, value2, value3) {
@@ -104,11 +101,8 @@ class _ReferralReasonChecklistPreviewPageState
                                                   .iconLabel,
                                             ),
                                             onPressed: () {
-                                              context
-                                                  .read<
-                                                      ReferralReconServiceBloc>()
-                                                  .add(
-                                                    ReferralReconServiceSelectionEvent(
+                                              context.read<ServiceBloc>().add(
+                                                    ServiceSelectionEvent(
                                                       service: e,
                                                     ),
                                                   );
