@@ -24,7 +24,7 @@ class DigitScannerUtils {
         .translate(
           i18.scanner.scannerDialogContent,
         )
-        .replaceAll('<quantity>', quantity.toString());
+        .replaceAll('{quantity}', quantity.toString());
     await DigitDialog.show<bool>(
       context,
       options: DigitDialogOptions(
