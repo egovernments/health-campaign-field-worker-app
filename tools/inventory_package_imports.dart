@@ -17,6 +17,7 @@ void main() {
 
   // Define the paths
   var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
+  var appFile = '$appRoot/app.dart';
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
   var networkManagerProviderWrapperFilePath =
@@ -27,8 +28,17 @@ void main() {
   var entityMapperFilePath =
       '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
+  var homeFilePath = '$appRoot/pages/home.dart';
+  var extensionsFilePath = '$appRoot/utils/extensions/extensions.dart';
+  var contextUtilityFilePath = '$appRoot/utils/extensions/context_utility.dart';
 
-  // add the localization delegates for the inventory package
+  // Set boundary in the context utility file
+  _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
+
+  // Add the scanner bloc to the app file
+  _addScannerBlocToAppFile(appFile);
+
+  //  Create the localization delegates file
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
   // Add the inventory repositories to the network manager provider wrapper
@@ -51,6 +61,9 @@ void main() {
 
   // Update the sync_down.dart file
   _updateSyncDownFile(syncDownFilePath);
+
+  // Add inventory to home file
+  _updateHome(homeFilePath);
 
   // Run dart format on the updated file
   Process.run('dart', ['format', syncDownFilePath])
@@ -91,6 +104,248 @@ void main() {
       .then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the home.dart file
+  Process.run('dart', ['format', homeFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the app.dart file
+  Process.run('dart', ['format', appFile]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the extensions.dart file
+  Process.run('dart', ['format', extensionsFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the context_utility.dart file
+  Process.run('dart', ['format', contextUtilityFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _setBoundaryInContextUtilityFile(
+    String extensionsFilePath, String contextUtilityFilePath) {
+  // Define the lines to be added
+  var importStatement =
+      "import 'package:inventory_management/inventory_management.dart';";
+  var boundaryStatement =
+      'InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);';
+
+  // Update the extensions.dart file
+  var extensionsFile = File(extensionsFilePath);
+  var extensionsFileContent = extensionsFile.readAsStringSync();
+  if (!extensionsFileContent.contains(importStatement)) {
+    extensionsFileContent = importStatement + '\n' + extensionsFileContent;
+    extensionsFile.writeAsStringSync(extensionsFileContent);
+    print('Updated the extensions.dart file.');
+  }
+
+  // Update the context_utility.dart file
+  var contextUtilityFile = File(contextUtilityFilePath);
+  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
+
+  // Use the insertData method to insert the boundaryStatement
+  contextUtilityFileContent = insertData(contextUtilityFileContent,
+      '// INFO: Set Boundary for packages', boundaryStatement);
+
+  // Write the updated content back to the context_utility.dart file
+  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+  print('Updated the context_utility.dart file.');
+}
+
+void _addScannerBlocToAppFile(String appFilePath) {
+  var importStatement = "import 'package:digit_scanner/blocs/scanner.dart';";
+
+  var scannerBlocData = '''
+    BlocProvider(
+       create: (_) {
+          return DigitScannerBloc(
+              const DigitScannerState(),
+            );
+          },
+          lazy: false,
+       ),
+  ''';
+
+  // Check if the app.dart file exists
+  var appFile = File(appFilePath);
+  if (!appFile.existsSync()) {
+    print('Error: App file does not exist at path: $appFile');
+    return;
+  }
+
+  // Read the app.dart file
+  var appFileContent = appFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!appFileContent.contains(importStatement)) {
+    appFileContent = importStatement + '\n' + appFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  appFileContent = insertData(appFileContent,
+      '// INFO : Need to add bloc of package Here', scannerBlocData);
+
+  // Write the updated content back to the app.dart file
+  appFile.writeAsStringSync(appFileContent);
+}
+
+void _updateHome(String homeFilePath) {
+  var importStatement = '''
+      import 'package:inventory_management/inventory_management.dart';
+      import 'package:inventory_management/router/inventory_router.gm.dart';
+      ''';
+
+  var homeItemsData = '''
+    i18.home.manageStockLabel:
+        homeShowcaseData.warehouseManagerManageStock.buildWith(
+      child: HomeItemCard(
+        icon: Icons.store_mall_directory,
+        label: i18.home.manageStockLabel,
+        onPressed: () {
+          context.read<AppInitializationBloc>().state.maybeWhen(
+                orElse: () {},
+                initialized: (AppConfiguration appConfiguration, _) {
+                  context.router.push(ManageStocksRoute());
+                },
+              );
+        },
+      ),
+    ),
+    i18.home.stockReconciliationLabel:
+        homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
+      child: HomeItemCard(
+        icon: Icons.menu_book,
+        label: i18.home.stockReconciliationLabel,
+        onPressed: () {
+          context.router.push(StockReconciliationRoute());
+        },
+      ),
+    ),
+    i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
+      child: HomeItemCard(
+        icon: Icons.announcement,
+        label: i18.home.viewReportsLabel,
+        onPressed: () {
+          context.router.push(InventoryReportSelectionRoute());
+        },
+      ),
+    ),
+  ''';
+
+  var showCaseData = '''
+  i18.home.manageStockLabel:
+     homeShowcaseData.warehouseManagerManageStock.showcaseKey,
+  i18.home.stockReconciliationLabel:
+     homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
+  i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+  ''';
+
+  var itemsLabel = '''
+  i18.home.manageStockLabel,
+  i18.home.stockReconciliationLabel,
+  i18.home.viewReportsLabel,
+  ''';
+
+  // Define the data to be added
+  var singletonData = '''
+    InventorySingleton().setInitialData(
+      isWareHouseMgr: context.loggedInUserRoles
+          .where(
+              (role) => role.code == RolesType.warehouseManager.toValue())
+          .toList()
+          .isNotEmpty,
+      isDistributor: context.loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.distributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty,
+      projectId: context.projectId,
+      loggedInUserUuid: context.loggedInUserUuid,
+      transportTypes: appConfiguration.transportTypes
+          ?.map((e) => InventoryTransportTypes()
+            ..name = e.code
+            ..code = e.code)
+          .toList(),
+    );
+  ''';
+
+  var localRepoData = '''
+    context.read<LocalRepository<StockModel, StockSearchModel>>(),
+    context.read<
+        LocalRepository<StockReconciliationModel,
+            StockReconciliationSearchModel>>(),
+  ''';
+
+  var remoteRepoData = '''
+    context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+    context.read<
+        RemoteRepository<StockReconciliationModel,
+            StockReconciliationSearchModel>>(),
+  ''';
+
+  // Check if the home.dart file exists
+  var homeFile = File(homeFilePath);
+  if (!homeFile.existsSync()) {
+    print('Error: Home file does not exist at path: $homeFilePath');
+    return;
+  }
+
+  // Read the home.dart file
+  var homeFileContent = homeFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!homeFileContent.contains(importStatement)) {
+    homeFileContent = importStatement + '\n' + homeFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add singleton of package Here', singletonData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add local repo of package Here', localRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add repo repo of package Here', remoteRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add home items of package Here', homeItemsData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add showcase keys of package Here', showCaseData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO: Need to add items label of package Here', itemsLabel);
+
+  // Write the updated content back to the home.dart file
+  homeFile.writeAsStringSync(homeFileContent);
+}
+
+String insertData(String fileContent, String marker, String data) {
+  var markerIndex = fileContent.indexOf(marker);
+  if (markerIndex != -1) {
+    var endOfMarker = markerIndex + marker.length;
+    if (!fileContent.substring(endOfMarker).contains(data.trim())) {
+      fileContent = fileContent.substring(0, endOfMarker) +
+          '\n' +
+          data +
+          fileContent.substring(endOfMarker);
+      print('Data was added after marker: $marker');
+    } else {
+      print('Data already exists after marker: $marker');
+    }
+  } else {
+    print('Error: Could not find the marker: $marker');
+  }
+  return fileContent;
 }
 
 void _updateSyncDownFile(String syncDownFilePath) {

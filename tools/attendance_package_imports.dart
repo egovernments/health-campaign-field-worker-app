@@ -30,6 +30,10 @@ void main() {
   var entityMapperFilePath =
       '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
+  var homeFilePath = '$appRoot/pages/home.dart';
+
+  // Add attendance to home file
+  _updateHome(homeFilePath);
 
   // Update the sync_down.dart file
   _updateSyncDownFile(syncDownFilePath);
@@ -89,6 +93,111 @@ void main() {
       .then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the home.dart file
+  Process.run('dart', ['format', homeFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _updateHome(String homeFilePath) {
+  var importStatement = '''
+      import 'package:attendance_management/attendance_management.dart';
+      import 'package:attendance_management/router/attendance_router.gm.dart';
+      ''';
+
+  var homeItemsData = '''
+     i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            // context.router.push(const ManageAttendanceRoute());
+          },
+        ),
+      ),
+  ''';
+
+  var showCaseData = '''
+      i18.home.manageAttendanceLabel:
+        homeShowcaseData.manageAttendance.showcaseKey,
+  ''';
+
+  var itemsLabel = '''
+        i18.home.manageAttendanceLabel,
+  ''';
+
+  // Define the data to be added
+  var singletonData = '''
+    AttendanceSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInIndividualId: context.loggedInIndividualId!,
+            loggedInUserUuid: context.loggedInUserUuid,
+            appVersion: Constants().version);
+  ''';
+
+  var localRepoData = '''
+    context.read<LocalRepository<AttendanceLogModel,AttendanceLogSearchModel>>(),
+  ''';
+
+  var remoteRepoData = '''
+    context.read<RemoteRepository<AttendanceLogModel,AttendanceLogSearchModel>>(),
+  ''';
+
+  // Check if the home.dart file exists
+  var homeFile = File(homeFilePath);
+  if (!homeFile.existsSync()) {
+    print('Error: Home file does not exist at path: $homeFilePath');
+    return;
+  }
+
+  // Read the home.dart file
+  var homeFileContent = homeFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!homeFileContent.contains(importStatement)) {
+    homeFileContent = importStatement + '\n' + homeFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add singleton of package Here', singletonData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add local repo of package Here', localRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add repo repo of package Here', remoteRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add home items of package Here', homeItemsData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add showcase keys of package Here', showCaseData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO: Need to add items label of package Here', itemsLabel);
+
+  // Write the updated content back to the home.dart file
+  homeFile.writeAsStringSync(homeFileContent);
+}
+
+String insertData(String fileContent, String marker, String data) {
+  var markerIndex = fileContent.indexOf(marker);
+  if (markerIndex != -1) {
+    var endOfMarker = markerIndex + marker.length;
+    if (!fileContent.substring(endOfMarker).contains(data.trim())) {
+      fileContent = fileContent.substring(0, endOfMarker) +
+          '\n' +
+          data +
+          fileContent.substring(endOfMarker);
+      print('Data was added after marker: $marker');
+    } else {
+      print('Data already exists after marker: $marker');
+    }
+  } else {
+    print('Error: Could not find the marker: $marker');
+  }
+  return fileContent;
 }
 
 void _updateSyncDownFile(String syncDownFilePath) {
@@ -432,22 +541,36 @@ void _addAttendanceConstantsToConstantsFile(
 
   // Define the attendance configuration
   var attendanceConfiguration = '''
-// Attendance related configuration
 AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   ''';
 
-  // Define the attendance related lines
-  var attendanceLocalRepositories = [
-    'AttendanceLocalRepository(sql, AttendanceOpLogManager(isar)),',
-    'AttendanceLogsLocalRepository(sql, AttendanceLogOpLogManager(isar)),',
-  ];
-  var attendanceRemoteRepositories = [
-    'if (value == DataModelType.attendanceRegister) AttendanceRemoteRepository(dio, actionMap: actions),',
-    'if (value == DataModelType.attendance) AttendanceLogRemoteRepository(dio, actionMap: actions),',
-  ];
+  // Define the local and remote repositories
+  var localRepository = '''
+AttendanceLocalRepository(
+  sql,
+  AttendanceOpLogManager(isar),
+),
+AttendanceLogsLocalRepository(
+  sql,
+  AttendanceLogOpLogManager(isar),
+),
+  ''';
+
+  var remoteRepository = '''
+if (value == DataModelType.attendanceRegister)
+  AttendanceRemoteRepository(dio, actionMap: actions),
+if (value == DataModelType.attendance)
+  AttendanceLogRemoteRepository(dio, actionMap: actions),
+  ''';
+
+  // Check if the constants.dart file exists
+  var constantsFile = File(constantsFilePath);
+  if (!constantsFile.existsSync()) {
+    print('Error: The constants.dart file does not exist.');
+    return;
+  }
 
   // Read the constants.dart file
-  var constantsFile = File(constantsFilePath);
   var constantsFileContent = constantsFile.readAsStringSync();
 
   // Normalize the whitespace in the file content and the attendance configuration
@@ -460,12 +583,8 @@ AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   for (var importStatement in importStatements) {
     if (!normalizedFileContent
         .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-      // Add the import statement after the last import
-      constantsFileContent = constantsFileContent.substring(
-              0, constantsFileContent.indexOf(';') + 1) +
-          '\n' +
-          importStatement +
-          constantsFileContent.substring(constantsFileContent.indexOf(';') + 1);
+      // Add the import statement at the top of the file
+      constantsFileContent = importStatement + '\n' + constantsFileContent;
       print('The import statement was added: $importStatement');
     }
   }
@@ -473,44 +592,58 @@ AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   // Check if the attendance configuration already exists in the file
   // If not, add it to the file
   if (!normalizedFileContent.contains(normalizedAttendanceConfiguration)) {
-    constantsFileContent = '$attendanceConfiguration\n$constantsFileContent';
-    print('The attendance configuration was added.');
-  }
-
-  // Check if the attendance local repositories already exist in the file
-  for (var attendanceLocalRepository in attendanceLocalRepositories) {
-    var normalizedAttendanceLocalRepository =
-        attendanceLocalRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedAttendanceLocalRepository)) {
-      // Add the attendance local repository to the file
-      constantsFileContent = constantsFileContent.replaceFirst(
-          '];', '  $attendanceLocalRepository\n];');
-      print(
-          'The attendance local repository was added: $attendanceLocalRepository');
-    } else {
-      print('The attendance local repository already exists.');
-    }
-  }
-
-  // Check if the attendance remote repositories already exist in the file
-  for (var attendanceRemoteRepository in attendanceRemoteRepositories) {
-    var normalizedAttendanceRemoteRepository =
-        attendanceRemoteRepository.replaceAll(RegExp(r'\s'), '');
-
-    if (!normalizedFileContent.contains(normalizedAttendanceRemoteRepository)) {
-      // Add the attendance remote repository to the _getRemoteRepositories method
-      var replacementString = constantsFileContent.contains(']);')
-          ? '  $attendanceRemoteRepository,\n]);'
-          : '  $attendanceRemoteRepository\n]);';
+    // Find the setInitialDataOfPackages method and add the attendance configuration inside it
+    var setInitialDataOfPackagesIndex =
+        constantsFileContent.indexOf('void setInitialDataOfPackages() {');
+    if (setInitialDataOfPackagesIndex != -1) {
+      var endOfSetInitialDataOfPackages = setInitialDataOfPackagesIndex +
+          constantsFileContent
+              .substring(setInitialDataOfPackagesIndex)
+              .indexOf('}') +
+          1;
       constantsFileContent =
-          constantsFileContent.replaceFirst(']);', replacementString);
-      print(
-          'The attendance remote repository was added: $attendanceRemoteRepository');
-    } else {
-      print('The attendance remote repository already exists.');
+          constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
+              '\n  $attendanceConfiguration' +
+              constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
+      print('The attendance configuration was added.');
     }
   }
+
+  // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
+  var getLocalRepositoriesIndex =
+      constantsFileContent.indexOf('getLocalRepositories(');
+  if (getLocalRepositoriesIndex != -1) {
+    var endOfGetLocalRepositories = getLocalRepositoriesIndex +
+        constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
+        1;
+    constantsFileContent =
+        constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
+            '\n' +
+            localRepository +
+            constantsFileContent.substring(endOfGetLocalRepositories - 1);
+    print('The local repositories were added.');
+  }
+
+  var getRemoteRepositoriesIndex =
+      constantsFileContent.indexOf('getRemoteRepositories(');
+  if (getRemoteRepositoriesIndex != -1) {
+    var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
+        constantsFileContent
+            .substring(getRemoteRepositoriesIndex)
+            .indexOf('addAll(') +
+        'addAll('.length;
+    var endOfAddAll = constantsFileContent
+            .substring(endOfGetRemoteRepositories)
+            .indexOf(']') +
+        endOfGetRemoteRepositories;
+    constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
+        remoteRepository +
+        constantsFileContent.substring(endOfAddAll);
+    print('The remote repositories were added.');
+  }
+
+  // Write the updated content back to the constants.dart file
+  constantsFile.writeAsStringSync(constantsFileContent);
 }
 
 void _addRepoToNetworkManagerProviderWrapper(
