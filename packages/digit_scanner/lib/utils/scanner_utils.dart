@@ -16,16 +16,22 @@ import 'constants.dart';
 
 class DigitScannerUtils {
   void buildDialog(
-      BuildContext context, ScannerLocalization localizations) async {
+    BuildContext context,
+    ScannerLocalization localizations,
+    int quantity,
+  ) async {
+    var contentLocalization = localizations
+        .translate(
+          i18.scanner.scannerDialogContent,
+        )
+        .replaceAll('<quantity>', quantity.toString());
     await DigitDialog.show<bool>(
       context,
       options: DigitDialogOptions(
         titleText: localizations.translate(
           i18.scanner.scannerDialogTitle,
         ),
-        contentText: localizations.translate(
-          i18.scanner.scannerDialogContent,
-        ),
+        contentText: contentLocalization,
         primaryAction: DigitDialogActions(
           label: localizations.translate(
             i18.scanner.scannerDialogPrimaryAction,

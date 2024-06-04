@@ -8,7 +8,6 @@ import 'package:referral_reconciliation/models/entities/hf_referral.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/project_facility_bloc_wrapper.dart';
@@ -57,11 +56,11 @@ class _HFCreateReferralWrapperPageState
                 ServiceDefinitionModel, ServiceDefinitionSearchModel>(context),
           )..add(const ReferralReconServiceDefinitionFetchEvent()),
           child: BlocProvider(
-            create: (_) => ReferralReconServiceBloc(
-              const ReferralReconServiceEmptyState(),
+            create: (_) => ServiceBloc(
+              const ServiceEmptyState(),
               serviceDataRepository:
                   context.repository<ServiceModel, ServiceSearchModel>(context),
-            )..add(ReferralReconServiceSearchEvent(
+            )..add(ServiceSearchEvent(
                   serviceSearchModel: ServiceSearchModel(
                 clientId: widget.referralReconciliation?.clientReferenceId,
               ))),
