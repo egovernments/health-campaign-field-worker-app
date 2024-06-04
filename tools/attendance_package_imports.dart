@@ -19,18 +19,18 @@ void main() {
   var appDir = Directory.current.path;
 
   // Define the paths for the application root and the files to be modified
-  var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
+  var appRoot = appDir + '/apps/health_campaign_field_worker_app/lib';
   var localizationDelegatesFilePath =
-      '$appRoot/utils/localization_delegates.dart';
+      appRoot + '/utils/localization_delegates.dart';
   var networkManagerProviderWrapperFilePath =
-      '$appRoot/widgets/network_manager_provider_wrapper.dart';
-  var constantsFilePath = '$appRoot/utils/constants.dart';
-  var utilsFilePath = '$appRoot/utils/utils.dart';
-  var routerFilePath = '$appRoot/router/app_router.dart';
+      appRoot + '/widgets/network_manager_provider_wrapper.dart';
+  var constantsFilePath = appRoot + '/utils/constants.dart';
+  var utilsFilePath = appRoot + '/utils/utils.dart';
+  var routerFilePath = appRoot + '/router/app_router.dart';
   var entityMapperFilePath =
-      '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
-  var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
-  var homeFilePath = '$appRoot/pages/home.dart';
+      appRoot + '/data/local_store/no_sql/schema/entity_mapper.dart';
+  var syncDownFilePath = appRoot + '/data/repositories/sync/sync_down.dart';
+  var homeFilePath = appRoot + '/pages/home.dart';
 
   // Add attendance to home file
   _updateHome(homeFilePath);
@@ -54,51 +54,23 @@ void main() {
 
   _addAttendanceMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
-  // Run dart format on the localization_delegates.dart file
-  Process.run('dart', ['format', localizationDelegatesFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
+  _formatFiles([
+    homeFilePath,
+    syncDownFilePath,
+    entityMapperFilePath,
+    routerFilePath,
+    constantsFilePath,
+    utilsFilePath,
+    networkManagerProviderWrapperFilePath,
+    localizationDelegatesFilePath
+  ]);
+}
 
-  // Run dart format on the network_manager_provider_wrapper.dart file
-  Process.run('dart', ['format', networkManagerProviderWrapperFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the constants.dart file
-  Process.run('dart', ['format', constantsFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the utils.dart file
-  Process.run('dart', ['format', utilsFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the app_router.dart file
-  Process.run('dart', ['format', routerFilePath]).then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the entity_mapper.dart file
-  Process.run('dart', ['format', entityMapperFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the sync_down.dart file
-  Process.run('dart', ['format', syncDownFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
-
-  // Run dart format on the home.dart file
-  Process.run('dart', ['format', homeFilePath])
-      .then((ProcessResult results) {
-    print(results.stdout);
-  });
+void _formatFiles(List<String> filePaths) {
+  for (var filePath in filePaths) {
+    Process.runSync('dart', ['format', filePath]);
+    print('Formatted $filePath');
+  }
 }
 
 void _updateHome(String homeFilePath) {
@@ -157,7 +129,8 @@ void _updateHome(String homeFilePath) {
   var homeFileContent = homeFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!homeFileContent.contains(importStatement)) {
+  if (!homeFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     homeFileContent = importStatement + '\n' + homeFileContent;
     print('The import statement was added.');
   } else {
@@ -268,7 +241,8 @@ void _updateSyncDownFile(String syncDownFilePath) {
   var syncDownFileContent = syncDownFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!syncDownFileContent.contains(importStatement)) {
+  if (!syncDownFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     syncDownFileContent = importStatement + '\n' + syncDownFileContent;
     print('The import statement was added to sync_down.dart.');
   } else {
@@ -276,7 +250,8 @@ void _updateSyncDownFile(String syncDownFilePath) {
   }
 
   // Insert the new case statements
-  if (!syncDownFileContent.contains('DataModelType.attendance')) {
+  if (!syncDownFileContent
+      .contains('DataModelType.attendance'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the new cases within the switch statement
     var switchIndex =
         syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
@@ -330,7 +305,8 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   var entityMapperFileContent = entityMapperFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!entityMapperFileContent.contains(importStatement)) {
+  if (!entityMapperFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     entityMapperFileContent = importStatement + '\n' + entityMapperFileContent;
     print('The import statement was added.');
   } else {
@@ -338,7 +314,8 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
   }
 
   // Check if the new cases already exist in the file
-  if (!entityMapperFileContent.contains('case "attendance":')) {
+  if (!entityMapperFileContent
+      .contains('case "attendance":'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the new cases (before the default case)
     var caseInsertionIndex = entityMapperFileContent.indexOf('default:');
     if (caseInsertionIndex != -1) {
@@ -423,7 +400,8 @@ void _addAttendanceRoutesAndImportToRouterFile(String routerFilePath) {
     print('The import statement already exists.');
   }
   // Check if the attendanceRoute module already exists
-  if (!routerFileContent.contains('AttendanceRoute')) {
+  if (!routerFileContent
+      .contains('AttendanceRoute'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the module
     var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
     if (moduleInsertionIndex != -1) {
@@ -527,6 +505,8 @@ void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
             attendanceInitializationStatement +
             utilsFileContent.substring(endOfInitializeAllMappers - 1);
     print('Attendance initialization statement added to utils.dart');
+  } else {
+    print('The attendance initialization statement already exists.');
   }
 
   // Write the updated content back to the utils.dart file
@@ -611,36 +591,50 @@ if (value == DataModelType.attendance)
   }
 
   // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
-  var getLocalRepositoriesIndex =
-      constantsFileContent.indexOf('getLocalRepositories(');
-  if (getLocalRepositoriesIndex != -1) {
-    var endOfGetLocalRepositories = getLocalRepositoriesIndex +
-        constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
-        1;
-    constantsFileContent =
-        constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
-            '\n' +
-            localRepository +
-            constantsFileContent.substring(endOfGetLocalRepositories - 1);
-    print('The local repositories were added.');
+  if (!normalizedFileContent
+      .contains(localRepository.replaceAll(RegExp(r'\s'), ''))) {
+    var getLocalRepositoriesIndex =
+        constantsFileContent.indexOf('getLocalRepositories(');
+    if (getLocalRepositoriesIndex != -1) {
+      var endOfGetLocalRepositories = getLocalRepositoriesIndex +
+          constantsFileContent
+              .substring(getLocalRepositoriesIndex)
+              .indexOf('addAll(') +
+          'addAll('.length;
+      var endOfAddAll = constantsFileContent
+              .substring(endOfGetLocalRepositories)
+              .indexOf(']') +
+          endOfGetLocalRepositories;
+      constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
+          localRepository +
+          constantsFileContent.substring(endOfAddAll);
+      print('The local repositories were added.');
+    }
+  } else {
+    print('The local repositories already exist.');
   }
 
-  var getRemoteRepositoriesIndex =
-      constantsFileContent.indexOf('getRemoteRepositories(');
-  if (getRemoteRepositoriesIndex != -1) {
-    var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
-        constantsFileContent
-            .substring(getRemoteRepositoriesIndex)
-            .indexOf('addAll(') +
-        'addAll('.length;
-    var endOfAddAll = constantsFileContent
-            .substring(endOfGetRemoteRepositories)
-            .indexOf(']') +
-        endOfGetRemoteRepositories;
-    constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
-        remoteRepository +
-        constantsFileContent.substring(endOfAddAll);
-    print('The remote repositories were added.');
+  if (!normalizedFileContent
+      .contains(remoteRepository.replaceAll(RegExp(r'\s'), ''))) {
+    var getRemoteRepositoriesIndex =
+        constantsFileContent.indexOf('getRemoteRepositories(');
+    if (getRemoteRepositoriesIndex != -1) {
+      var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
+          constantsFileContent
+              .substring(getRemoteRepositoriesIndex)
+              .indexOf('addAll(') +
+          'addAll('.length;
+      var endOfAddAll = constantsFileContent
+              .substring(endOfGetRemoteRepositories)
+              .indexOf(']') +
+          endOfGetRemoteRepositories;
+      constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
+          remoteRepository +
+          constantsFileContent.substring(endOfAddAll);
+      print('The remote repositories were added.');
+    }
+  } else {
+    print('The remote repositories already exist.');
   }
 
   // Write the updated content back to the constants.dart file
@@ -695,7 +689,8 @@ void _addRepoToNetworkManagerProviderWrapper(
 
     // Check if the import statements already exist in the file
     for (var importStatement in importStatements) {
-      if (!networkManagerProviderWrapperFileContent.contains(importStatement)) {
+      if (!networkManagerProviderWrapperFileContent
+          .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
         // Add the import statement after the last import
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.substring(
@@ -706,57 +701,59 @@ void _addRepoToNetworkManagerProviderWrapper(
                     .substring(endOfLastImport);
         endOfLastImport += importStatement.length + 1;
         print('The import statement was added: $importStatement');
+      } else {
+        print('The import statement already exists.');
       }
     }
-  }
 
-  // Normalize the whitespace in the file content and the remote repository of attendance
-  var normalizedFileContent =
-      networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
+    // Normalize the whitespace in the file content and the remote repository of attendance
+    var normalizedFileContent =
+        networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
-  for (var repositoryProvider in localRepositories) {
-    var normalizedLocalRepositoryOfAttendance =
-        repositoryProvider.replaceAll(RegExp(r'\s'), '');
+    for (var repositoryProvider in localRepositories) {
+      var normalizedLocalRepositoryOfAttendance =
+          repositoryProvider.replaceAll(RegExp(r'\s'), '');
 
-    if (!normalizedFileContent
-        .contains(normalizedLocalRepositoryOfAttendance)) {
-      // Add the local repository provider to the file
-      networkManagerProviderWrapperFileContent =
-          networkManagerProviderWrapperFileContent.replaceFirst(
-              '];', '  $repositoryProvider\n];');
-      print('The local repository provider was added: $repositoryProvider');
-    } else {
-      print('The local repository provider already exists.');
+      if (!normalizedFileContent
+          .contains(normalizedLocalRepositoryOfAttendance)) {
+        // Add the local repository provider to the file
+        networkManagerProviderWrapperFileContent =
+            networkManagerProviderWrapperFileContent.replaceFirst(
+                '];', '  $repositoryProvider\n];');
+        print('The local repository provider was added: $repositoryProvider');
+      } else {
+        print('The local repository provider already exists.');
+      }
     }
-  }
 
 // Check if the remote repository of attendance already exists in the file
-  for (var remoteRepositoryOfRegistrationDelivery
-      in remoteRepositoriesOfRegistrationDelivery) {
-    var normalizedRemoteRepositoryOfRegistrationDelivery =
-        remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
+    for (var remoteRepositoryOfRegistrationDelivery
+        in remoteRepositoriesOfRegistrationDelivery) {
+      var normalizedRemoteRepositoryOfRegistrationDelivery =
+          remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
 
-    if (!normalizedFileContent
-        .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
-      // Add the remote repository of attendance to the _getRemoteRepositories method
-      var replacementString =
-          networkManagerProviderWrapperFileContent.contains(']);')
-              ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
-              : '  $remoteRepositoryOfRegistrationDelivery\n]);';
-      networkManagerProviderWrapperFileContent =
-          networkManagerProviderWrapperFileContent.replaceFirst(
-              ']);', replacementString);
-      print(
-          'The remote repository of attendance was added: $remoteRepositoryOfRegistrationDelivery');
-    } else {
-      print('The remote repository of attendance already exists.');
+      if (!normalizedFileContent
+          .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
+        // Add the remote repository of attendance to the _getRemoteRepositories method
+        var replacementString =
+            networkManagerProviderWrapperFileContent.contains(']);')
+                ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
+                : '  $remoteRepositoryOfRegistrationDelivery\n]);';
+        networkManagerProviderWrapperFileContent =
+            networkManagerProviderWrapperFileContent.replaceFirst(
+                ']);', replacementString);
+        print(
+            'The remote repository of attendance was added: $remoteRepositoryOfRegistrationDelivery');
+      } else {
+        print('The remote repository of attendance already exists.');
+      }
     }
-  }
 
-  // Write the updated content back to the file
-  networkManagerProviderWrapperFile
-      .writeAsStringSync(networkManagerProviderWrapperFileContent);
+    // Write the updated content back to the file
+    networkManagerProviderWrapperFile
+        .writeAsStringSync(networkManagerProviderWrapperFileContent);
+  }
 }
 
 void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
