@@ -193,6 +193,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                     );
                                 setState(() {
                                   manualCode = true;
+                                  _resourceController.value =
+                                      const TextEditingValue();
                                 });
                               },
                               child: Padding(
@@ -226,8 +228,11 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               onPressed: () async {
                                 if (widget.isGS1code &&
                                     result.length < widget.quantity) {
-                                  DigitScannerUtils()
-                                      .buildDialog(context, localizations);
+                                  DigitScannerUtils().buildDialog(
+                                    context,
+                                    localizations,
+                                    widget.quantity,
+                                  );
                                 } else {
                                   final bloc = context.read<DigitScannerBloc>();
                                   bloc.add(DigitScannerEvent.handleScanner(
@@ -246,12 +251,12 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                         Positioned(
                           bottom: (kPadding * 7.5),
                           height: widget.isGS1code
-                              ? state.barCodes.length < 10
+                              ? state.barCodes.length < 3
                                   ? (state.barCodes.length * 60) + 80
-                                  : MediaQuery.of(context).size.height / 2.2
-                              : state.qrCodes.length < 10
-                                  ? (state.qrCodes.length * 60) + 80
-                                  : MediaQuery.of(context).size.height / 2,
+                                  : MediaQuery.of(context).size.height / 3
+                              : state.qrCodes.length < 2
+                                  ? ((state.qrCodes.length + 1) * 60)
+                                  : MediaQuery.of(context).size.height / 4,
                           width: MediaQuery.of(context).size.width,
                           child: Container(
                             width: 100,
@@ -421,22 +426,28 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                         ),
                         footer: DigitElevatedButton(
                           onPressed: () async {
-                                  final bloc = context.read<DigitScannerBloc>();
-                                  codes.add(_resourceController.value.text);
-                                  bloc.add(
-                                    DigitScannerEvent.handleScanner(
-                                      barCode: state.barCodes,
-                                      qrCode: codes,
-                                    ),
-                                  );
-                                  if (widget.isGS1code &&
-                                      result.length < widget.quantity) {
-                                    DigitScannerUtils().buildDialog(
-                                      context,
-                                      localizations,
-                                    );
-                                  }
-                                },
+                            final bloc = context.read<DigitScannerBloc>();
+                            codes.add(_resourceController.value.text);
+                            bloc.add(
+                              DigitScannerEvent.handleScanner(
+                                barCode: state.barCodes,
+                                qrCode: codes,
+                              ),
+                            );
+                            if (widget.isGS1code &&
+                                result.length < widget.quantity) {
+                              DigitScannerUtils().buildDialog(
+                                context,
+                                localizations,
+                                widget.quantity,
+                              );
+                            }
+
+                            setState(() {
+                              manualCode = false;
+                              initializeCameras();
+                            });
+                          },
                           child: Text(localizations.translate(
                             i18.common.coreCommonSubmit,
                           )),

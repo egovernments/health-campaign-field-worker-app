@@ -473,8 +473,8 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
   }
 
   _clearValue() {
-    var item = '';
-    _effectiveController!.value = item;
+    T? item;
+    _effectiveController?.value = item;
 
     if (widget.onChanged != null) {
       widget.onChanged!(_selectedItem);
