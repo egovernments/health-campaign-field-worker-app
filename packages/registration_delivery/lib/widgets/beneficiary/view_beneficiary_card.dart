@@ -257,6 +257,14 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
     final isBeneficiaryRefused =
         checkIfBeneficiaryRefused(householdMember.tasks);
+    final projectBeneficiary = householdMember.projectBeneficiaries
+        .where((p) =>
+            p.beneficiaryClientReferenceId ==
+            householdMember.headOfHousehold.clientReferenceId)
+        .firstOrNull;
+    final tasks = householdMember.tasks?.where((t) =>
+        t.projectBeneficiaryClientReferenceId ==
+        projectBeneficiary?.clientReferenceId);
 
     return DigitCard(
       child: Column(
@@ -281,12 +289,12 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       : '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}',
                   status: RegistrationDeliverySingleton().beneficiaryType ==
                           BeneficiaryType.individual
-                      ? (householdMember.tasks ?? []).isNotEmpty &&
+                      ? (tasks ?? []).isNotEmpty &&
                               !isNotEligible &&
                               !isBeneficiaryRefused
                           ? Status.visited.toValue()
                           : Status.notVisited.toValue()
-                      : (householdMember.tasks ?? []).isNotEmpty
+                      : (tasks ?? []).isNotEmpty
                           ? Status.visited.toValue()
                           : Status.notVisited.toValue(),
                   title: [
