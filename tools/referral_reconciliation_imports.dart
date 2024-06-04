@@ -20,6 +20,7 @@ void main() {
 
   // Define the paths for the application root and the files to be modified
   var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
+  var appFile = '$appRoot/app.dart';
   var localizationDelegatesFilePath =
       '$appRoot/utils/localization_delegates.dart';
   var networkManagerProviderWrapperFilePath =
@@ -30,6 +31,18 @@ void main() {
   var entityMapperFilePath =
       '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
+  var homeFilePath = '$appRoot/pages/home.dart';
+  var extensionsFilePath = '$appRoot/utils/extensions/extensions.dart';
+  var contextUtilityFilePath = '$appRoot/utils/extensions/context_utility.dart';
+
+  // Set boundary in the context utility file
+  _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
+
+  // Add the scanner bloc to the app file
+  _addScannerBlocToAppFile(appFile);
+
+  // Add hf_referral to home file
+  _updateHome(homeFilePath);
 
   // Add referral_recon routes and import to the router file
   _addReferralReconRoutesAndImportToRouterFile(routerFilePath);
@@ -94,6 +107,220 @@ void main() {
       .then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the home.dart file
+  Process.run('dart', ['format', homeFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the app.dart file
+  Process.run('dart', ['format', appFile]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the extensions.dart file
+  Process.run('dart', ['format', extensionsFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the contextUtility.dart file
+  Process.run('dart', ['format', contextUtilityFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _addScannerBlocToAppFile(String appFilePath) {
+  var importStatement = "import 'package:digit_scanner/blocs/scanner.dart';";
+
+  var scannerBlocData = '''
+    BlocProvider(
+       create: (_) {
+          return DigitScannerBloc(
+              const DigitScannerState(),
+            );
+          },
+          lazy: false,
+       ),
+  ''';
+
+  // Check if the app.dart file exists
+  var appFile = File(appFilePath);
+  if (!appFile.existsSync()) {
+    print('Error: App file does not exist at path: $appFile');
+    return;
+  }
+
+  // Read the app.dart file
+  var appFileContent = appFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!appFileContent.contains(importStatement)) {
+    appFileContent = importStatement + '\n' + appFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  appFileContent = insertData(appFileContent,
+      '// INFO : Need to add bloc of package Here', scannerBlocData);
+
+  // Write the updated content back to the app.dart file
+  appFile.writeAsStringSync(appFileContent);
+}
+
+void _setBoundaryInContextUtilityFile(
+    String extensionsFilePath, String contextUtilityFilePath) {
+  // Define the lines to be added
+  var importStatement =
+      "import 'package:referral_reconciliation/referral_reconciliation.dart';";
+  var boundaryStatement =
+      'ReferralReconSingleton().setBoundary(boundary: selectedBoundary);';
+
+  // Update the extensions.dart file
+  var extensionsFile = File(extensionsFilePath);
+  var extensionsFileContent = extensionsFile.readAsStringSync();
+  if (!extensionsFileContent.contains(importStatement)) {
+    extensionsFileContent = importStatement + '\n' + extensionsFileContent;
+    extensionsFile.writeAsStringSync(extensionsFileContent);
+    print('Updated the extensions.dart file.');
+  }
+
+  // Update the context_utility.dart file
+  var contextUtilityFile = File(contextUtilityFilePath);
+  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
+
+  // Use the insertData method to insert the boundaryStatement
+  contextUtilityFileContent = insertData(contextUtilityFileContent,
+      '// INFO: Set Boundary for packages', boundaryStatement);
+
+  // Write the updated content back to the context_utility.dart file
+  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+  print('Updated the context_utility.dart file.');
+}
+
+void _updateHome(String homeFilePath) {
+  var importStatement = '''
+      import 'package:referral_reconciliation/referral_reconciliation.dart';
+      import 'package:referral_reconciliation/router/referral_reconciliation.gm.dart';
+      ''';
+
+  var homeItemsData = '''
+    i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.buildWith(
+        child: HomeItemCard(
+          icon: Icons.supervised_user_circle_rounded,
+          label: i18.home.beneficiaryReferralLabel,
+          onPressed: () async {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _) {
+                    context.router.push(SearchReferralReconciliationsRoute());
+                  },
+                );
+          },
+        ),
+      ),
+  ''';
+
+  var showCaseData = '''
+  i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+  ''';
+
+  var itemsLabel = '''
+  i18.home.beneficiaryReferralLabel,
+  ''';
+
+  // Define the data to be added
+  var singletonData = '''
+    ReferralReconSingleton().setInitialData(
+          userName: context.loggedInUser.name ?? '',
+          userUUid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          projectName: context.selectedProject.name,
+          roleCode: RolesType.healthFacilityWorker.toValue(),
+          appVersion: Constants().version,
+          tenantId: envConfig.variables.tenantId,
+          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
+            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
+            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
+          ),
+          genderOptions:
+              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
+          cycles: context.cycles,
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
+                  [],
+          checklistTypes:
+              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+                  [],
+        );
+  ''';
+
+  var localRepoData = '''
+    context.read<LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+  ''';
+
+  var remoteRepoData = '''
+    context.read<RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+  ''';
+
+  // Check if the home.dart file exists
+  var homeFile = File(homeFilePath);
+  if (!homeFile.existsSync()) {
+    print('Error: Home file does not exist at path: $homeFilePath');
+    return;
+  }
+
+  // Read the home.dart file
+  var homeFileContent = homeFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!homeFileContent.contains(importStatement)) {
+    homeFileContent = importStatement + '\n' + homeFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add singleton of package Here', singletonData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add local repo of package Here', localRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add repo repo of package Here', remoteRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add home items of package Here', homeItemsData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add showcase keys of package Here', showCaseData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO: Need to add items label of package Here', itemsLabel);
+
+  // Write the updated content back to the home.dart file
+  homeFile.writeAsStringSync(homeFileContent);
+}
+
+String insertData(String fileContent, String marker, String data) {
+  var markerIndex = fileContent.indexOf(marker);
+  if (markerIndex != -1) {
+    var endOfMarker = markerIndex + marker.length;
+    if (!fileContent.substring(endOfMarker).contains(data.trim())) {
+      fileContent = fileContent.substring(0, endOfMarker) +
+          '\n' +
+          data +
+          fileContent.substring(endOfMarker);
+      print('Data was added after marker: $marker');
+    } else {
+      print('Data already exists after marker: $marker');
+    }
+  } else {
+    print('Error: Could not find the marker: $marker');
+  }
+  return fileContent;
 }
 
 void _updateSyncDownFile(String syncDownFilePath) {
