@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../models/complaints/complaints.dart';
+import '../../models/entities/additional_fields_type.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 
@@ -127,7 +128,7 @@ class ComplaintsRegistrationBloc
             tenantId: envConfig.variables.tenantId,
             serviceCode: serviceCode,
             description: description,
-            source: 'mobile',
+            source: AdditionalFieldsType.mobile.toValue(),
             applicationStatus: PgrServiceApplicationStatus.created,
             user: PgrComplainantModel(
               tenantId: envConfig.variables.tenantId,
@@ -144,7 +145,7 @@ class ComplaintsRegistrationBloc
               ),
               uuid: event.userId,
               userName: complaintDetailsModel.complainantContactNumber,
-              type: 'EMPLOYEE',
+              type: AdditionalFieldsType.employee.toValue(),
             ),
             address: address.copyWith(
               relatedClientReferenceId: referenceId,
