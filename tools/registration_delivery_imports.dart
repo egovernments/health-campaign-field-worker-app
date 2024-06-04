@@ -20,6 +20,9 @@ void main() {
 
   // Define the paths for the application root and the files to be modified
   var appRoot = '$appDir/apps/health_campaign_field_worker_app/lib';
+  var appFile = '$appRoot/app.dart';
+  var localizationDelegatesFilePath =
+      '$appRoot/utils/localization_delegates.dart';
   var networkManagerProviderWrapperFilePath =
       '$appRoot/widgets/network_manager_provider_wrapper.dart';
   var constantsFilePath = '$appRoot/utils/constants.dart';
@@ -28,6 +31,21 @@ void main() {
   var entityMapperFilePath =
       '$appRoot/data/local_store/no_sql/schema/entity_mapper.dart';
   var syncDownFilePath = '$appRoot/data/repositories/sync/sync_down.dart';
+  var homeFilePath = '$appRoot/pages/home.dart';
+  var extensionsFilePath = '$appRoot/utils/extensions/extensions.dart';
+  var contextUtilityFilePath = '$appRoot/utils/extensions/context_utility.dart';
+
+  // Set boundary in the context utility file
+  _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
+
+  // Add the scanner bloc to the app file
+  _addScannerBlocToAppFile(appFile);
+
+  //  Create the localization delegates file
+  _createLocalizationDelegatesFile(localizationDelegatesFilePath);
+
+  // Add registration to home file
+  _updateHome(homeFilePath);
 
   // Update the sync_down.dart file
   _updateSyncDownFile(syncDownFilePath);
@@ -83,6 +101,284 @@ void main() {
       .then((ProcessResult results) {
     print(results.stdout);
   });
+
+  // Run dart format on the home.dart file
+  Process.run('dart', ['format', homeFilePath]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the localization.dart file
+  Process.run('dart', ['format', localizationDelegatesFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the app.dart file
+  Process.run('dart', ['format', appFile]).then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the extensions.dart file
+  Process.run('dart', ['format', extensionsFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+
+  // Run dart format on the context_utility.dart file
+  Process.run('dart', ['format', contextUtilityFilePath])
+      .then((ProcessResult results) {
+    print(results.stdout);
+  });
+}
+
+void _addScannerBlocToAppFile(String appFilePath) {
+  var importStatement = "import 'package:digit_scanner/blocs/scanner.dart';";
+
+  var scannerBlocData = '''
+    BlocProvider(
+       create: (_) {
+          return DigitScannerBloc(
+              const DigitScannerState(),
+            );
+          },
+          lazy: false,
+       ),
+  ''';
+
+  // Check if the app.dart file exists
+  var appFile = File(appFilePath);
+  if (!appFile.existsSync()) {
+    print('Error: App file does not exist at path: $appFile');
+    return;
+  }
+
+  // Read the app.dart file
+  var appFileContent = appFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!appFileContent.contains(importStatement)) {
+    appFileContent = importStatement + '\n' + appFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  appFileContent = insertData(appFileContent,
+      '// INFO : Need to add bloc of package Here', scannerBlocData);
+
+  // Write the updated content back to the app.dart file
+  appFile.writeAsStringSync(appFileContent);
+}
+
+void _updateHome(String homeFilePath) {
+  var importStatement = '''
+      import 'package:registration_delivery/registration_delivery.dart';
+      import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+      ''';
+
+  var homeItemsData = '''
+    i18.home.beneficiaryLabel:
+          homeShowcaseData.distributorBeneficiaries.buildWith(
+        child: HomeItemCard(
+          icon: Icons.all_inbox,
+          label: i18.home.beneficiaryLabel,
+          onPressed: () async {
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
+          },
+        ),
+      ),
+  ''';
+
+  var showCaseData = '''
+        i18.home.beneficiaryLabel:
+          homeShowcaseData.distributorBeneficiaries.showcaseKey,
+  ''';
+
+  var itemsLabel = '''
+  i18.home.beneficiaryLabel,
+  ''';
+
+  // Define the data to be added
+  var singletonData = '''
+    RegistrationDeliverySingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
+          referralReasons:
+              appConfiguration.referralReasons!.map((e) => e.code).toList(),
+        );
+  ''';
+
+  var localRepoData = '''
+    context.read<LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+    context.read<LocalRepository<ProjectBeneficiaryModel,ProjectBeneficiarySearchModel>>(),
+    context.read<LocalRepository<HouseholdMemberModel,HouseholdMemberSearchModel>>(),
+    context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+    context.read<LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+    context.read<LocalRepository<ReferralModel, ReferralSearchModel>>(),
+  ''';
+
+  var remoteRepoData = '''
+     context.read<RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+     context.read<RemoteRepository<ProjectBeneficiaryModel,ProjectBeneficiarySearchModel>>(),
+     context.read<RemoteRepository<HouseholdMemberModel,HouseholdMemberSearchModel>>(),
+     context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+     context.read<RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+     context.read<RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+  ''';
+
+  // Check if the home.dart file exists
+  var homeFile = File(homeFilePath);
+  if (!homeFile.existsSync()) {
+    print('Error: Home file does not exist at path: $homeFilePath');
+    return;
+  }
+
+  // Read the home.dart file
+  var homeFileContent = homeFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!homeFileContent.contains(importStatement)) {
+    homeFileContent = importStatement + '\n' + homeFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Insert the data to be added
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add singleton of package Here', singletonData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add local repo of package Here', localRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add repo repo of package Here', remoteRepoData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add home items of package Here', homeItemsData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO : Need to add showcase keys of package Here', showCaseData);
+  homeFileContent = insertData(homeFileContent,
+      '// INFO: Need to add items label of package Here', itemsLabel);
+
+  // Write the updated content back to the home.dart file
+  homeFile.writeAsStringSync(homeFileContent);
+}
+
+String insertData(String fileContent, String marker, String data) {
+  var markerIndex = fileContent.indexOf(marker);
+  if (markerIndex != -1) {
+    var endOfMarker = markerIndex + marker.length;
+    if (!fileContent.substring(endOfMarker).contains(data.trim())) {
+      fileContent = fileContent.substring(0, endOfMarker) +
+          '\n' +
+          data +
+          fileContent.substring(endOfMarker);
+      print('Data was added after marker: $marker');
+    } else {
+      print('Data already exists after marker: $marker');
+    }
+  } else {
+    print('Error: Could not find the marker: $marker');
+  }
+  return fileContent;
+}
+
+void _setBoundaryInContextUtilityFile(
+    String extensionsFilePath, String contextUtilityFilePath) {
+  // Define the lines to be added
+  var importStatement =
+      "import 'package:registration_delivery/registration_delivery.dart';";
+  var boundaryStatement =
+      'RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);';
+
+  // Update the extensions.dart file
+  var extensionsFile = File(extensionsFilePath);
+  var extensionsFileContent = extensionsFile.readAsStringSync();
+  if (!extensionsFileContent.contains(importStatement)) {
+    extensionsFileContent = importStatement + '\n' + extensionsFileContent;
+    extensionsFile.writeAsStringSync(extensionsFileContent);
+    print('Updated the extensions.dart file.');
+  }
+
+  // Update the context_utility.dart file
+  var contextUtilityFile = File(contextUtilityFilePath);
+  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
+
+  // Use the insertData method to insert the boundaryStatement
+  contextUtilityFileContent = insertData(contextUtilityFileContent,
+      '// INFO: Set Boundary for packages', boundaryStatement);
+
+  // Write the updated content back to the context_utility.dart file
+  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+  print('Updated the context_utility.dart file.');
+}
+
+void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
+  // Define the import statement and delegate for localization
+  var importStatement =
+      "import 'package:registration_delivery/blocs/app_localization.dart' as registration_delivery_localization;";
+  var delegate = ''' 
+      registration_delivery_localization.RegistrationDeliveryLocalization
+        .getDelegate(
+      getLocalizationString(
+        isar,
+        selectedLocale,
+      ),
+      appConfig.languages!,
+    ),
+    ''';
+
+  // Read the localization delegates file
+  var localizationDelegatesFile = File(localizationDelegatesFilePath);
+  var localizationDelegatesFileContent =
+      localizationDelegatesFile.readAsStringSync();
+
+  var normalizedFileContent =
+      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement and delegate already exist in the file
+  // If not, add them to the file
+  if (!normalizedFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    localizationDelegatesFileContent =
+        '$importStatement\n$localizationDelegatesFileContent';
+    print('The import statement was added.');
+  }
+
+  if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
+    var lastDelegateIndex =
+        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+    if (lastDelegateIndex != -1) {
+      localizationDelegatesFileContent =
+          localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
+              '\n  $delegate' +
+              localizationDelegatesFileContent.substring(lastDelegateIndex + 1);
+      print('The delegate was added.');
+    }
+  }
+
+  // Write the updated content back to the file
+  localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
 }
 
 void _updateSyncDownFile(String syncDownFilePath) {
