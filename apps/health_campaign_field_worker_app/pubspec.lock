@@ -1516,10 +1516,11 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
-    version: "1.0.1"
+      name: registration_delivery
+      sha256: "328c71e9a1163481eba1e0653cca23a4e50a32c44cccfcfba049849e87184114"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
