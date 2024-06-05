@@ -371,7 +371,7 @@ void _updateSyncDownFile(String syncDownFilePath) {
                 final addressAdditionalId = responseEntity?.address?.id == null
                     ? null
                     : AdditionalId(
-                        idType: householdAddressIdKey,
+                        idType: 'householdAddressId',
                         id: responseEntity!.address!.id!,
                       );
 
@@ -618,7 +618,7 @@ void _updateSyncDownFile(String syncDownFilePath) {
                           if (id == null) return null;
 
                           return AdditionalId(
-                            idType: taskResourceIdKey,
+                            idType: 'taskResourceId',
                             id: id,
                           );
                         })
@@ -1160,6 +1160,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     "RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(create: (_) => TaskLocalRepository(sql,TaskOpLogManager(isar),),),",
     "RepositoryProvider<LocalRepository<ReferralModel, ReferralSearchModel>>(create: (_) => ReferralLocalRepository(sql,ReferralOpLogManager(isar),),),",
     "RepositoryProvider<LocalRepository<SideEffectModel, SideEffectSearchModel>>(create: (_) => SideEffectLocalRepository(sql,SideEffectOpLogManager(isar),),),",
+    "RepositoryProvider<RegistrationDeliveryAddressRepo>(create: (_) => RegistrationDeliveryAddressRepo(sql,AddressOpLogManager(isar),),),",
   ];
 
 // Define the remote repositories of DataModel
@@ -1240,7 +1241,7 @@ void _addRepoToNetworkManagerProviderWrapper(
       // Add the remote repository of DataModel to the _getRemoteRepositories method
       var replacementString =
           networkManagerProviderWrapperFileContent.contains(']);')
-              ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
+              ? '  $remoteRepositoryOfRegistrationDelivery\n]);'
               : '  $remoteRepositoryOfRegistrationDelivery\n]);';
       networkManagerProviderWrapperFileContent =
           networkManagerProviderWrapperFileContent.replaceFirst(

@@ -164,7 +164,7 @@ void _setBoundaryInContextUtilityFile(
 void _updateHome(String homeFilePath) {
   var importStatement = '''
       import 'package:referral_reconciliation/referral_reconciliation.dart';
-      import 'package:referral_reconciliation/router/referral_reconciliation.gm.dart';
+      import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
       ''';
 
   var homeItemsData = '''
