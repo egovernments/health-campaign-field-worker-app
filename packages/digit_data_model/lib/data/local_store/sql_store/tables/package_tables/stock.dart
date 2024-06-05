@@ -2,6 +2,9 @@
 
 import 'package:drift/drift.dart';
 
+@TableIndex(name: 'stock_clientref', columns: {#clientReferenceId})
+@TableIndex(name: 'stock_productvariantid', columns: {#productVariantId})
+@TableIndex(name: 'stock_facilityid', columns: {#facilityId})
 class Stock extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text().nullable()();

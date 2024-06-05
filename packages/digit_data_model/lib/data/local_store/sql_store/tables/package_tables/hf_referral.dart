@@ -2,6 +2,10 @@
 
 import 'package:drift/drift.dart';
 
+@TableIndex(
+    name: 'hfreferral_clientref', columns: {#clientReferenceId})
+@TableIndex(
+    name: 'hfreferral_projectid', columns: {#projectId})
 class HFReferral extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get tenantId => text().nullable()();

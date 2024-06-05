@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
 
+@TableIndex(name: 'attendance_clientref', columns: {#clientReferenceId})
+@TableIndex(name: 'attendance_individualid', columns: {#individualId})
 class Attendance extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get clientReferenceId => text().nullable()();
@@ -27,10 +29,10 @@ class Attendance extends Table {
       boolean().nullable().withDefault(const Constant(false))();
   @override
   Set<Column> get primaryKey => {
-    registerId,
-    individualId,
-    tenantId,
-    type,
-    clientReferenceId,
-  };
+        registerId,
+        individualId,
+        tenantId,
+        type,
+        clientReferenceId,
+      };
 }
