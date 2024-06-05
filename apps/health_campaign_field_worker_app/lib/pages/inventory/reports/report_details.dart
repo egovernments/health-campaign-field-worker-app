@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/facility/facility.dart';
@@ -55,6 +56,7 @@ class _InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
+  Map<String, FacilityModel> facilityMap = {};
 
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
@@ -196,6 +198,22 @@ class _InventoryReportDetailsPageState
                                                             facilities,
                                                       ) ??
                                                       [];
+
+                                              final allFacilities =
+                                                  state.whenOrNull(
+                                                        fetched: (
+                                                          _,
+                                                          allFacilities,
+                                                          __,
+                                                        ) =>
+                                                            allFacilities,
+                                                      ) ??
+                                                      [];
+                                              for (var element
+                                                  in allFacilities) {
+                                                facilityMap[element.id] =
+                                                    element;
+                                              }
 
                                               return InkWell(
                                                 onTap: () async {
@@ -352,6 +370,8 @@ class _InventoryReportDetailsPageState
                                           const quantityKey = 'quantity';
                                           const transactingPartyKey =
                                               'transactingParty';
+                                          const batchNumberKey = 'batchNumber';
+                                          const expiryDateKey = 'dateOfExpiry';
 
                                           return _ReportDetailsContent(
                                             title: title,
@@ -373,17 +393,35 @@ class _InventoryReportDetailsPageState
                                                         .waybillLabel,
                                                   ),
                                                   key: waybillKey,
-                                                  width: 150,
+                                                  width: 100,
                                                 ),
                                                 DigitGridColumn(
                                                   label: quantityLabel,
                                                   key: quantityKey,
-                                                  width: 150,
+                                                  width: 100,
                                                 ),
                                                 DigitGridColumn(
                                                   label: transactingPartyLabel,
                                                   key: transactingPartyKey,
                                                   width: 200,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.stockDetails
+                                                        .batchNumberLabel,
+                                                  ),
+                                                  key: batchNumberKey,
+                                                  width: 100,
+                                                ),
+                                                DigitGridColumn(
+                                                  label:
+                                                      localizations.translate(
+                                                    i18.stockDetails
+                                                        .dateOfExpiryLabel,
+                                                  ),
+                                                  key: expiryDateKey,
+                                                  width: 100,
                                                 ),
                                               ],
                                               rows: [
@@ -414,27 +452,74 @@ class _InventoryReportDetailsPageState
                                                         DigitGridCell(
                                                           key:
                                                               transactingPartyKey,
-                                                          value: widget
-                                                                          .reportType ==
-                                                                      InventoryReportType
-                                                                          .receipt ||
-                                                                  widget.reportType ==
-                                                                      InventoryReportType
-                                                                          .dispatch ||
-                                                                  widget.reportType ==
-                                                                      InventoryReportType
-                                                                          .loss ||
-                                                                  widget.reportType ==
-                                                                      InventoryReportType
-                                                                          .damage
-                                                              ? model.receiverId ??
-                                                                  model
-                                                                      .receiverType ??
-                                                                  ''
-                                                              : model.senderId ??
-                                                                  model
-                                                                      .receiverType ??
-                                                                  '',
+                                                          // value: widget
+                                                          //                 .reportType ==
+                                                          //             InventoryReportType
+                                                          //                 .receipt ||
+                                                          //         widget.reportType ==
+                                                          //             InventoryReportType
+                                                          //                 .dispatch ||
+                                                          //         widget.reportType ==
+                                                          //             InventoryReportType
+                                                          //                 .loss ||
+                                                          //         widget.reportType ==
+                                                          //             InventoryReportType
+                                                          //                 .damage
+                                                          //     ? model.receiverId ??
+                                                          //         model
+                                                          //             .receiverType ??
+                                                          //         ''
+                                                          //     : model.senderId ??
+                                                          //         model
+                                                          //             .receiverType ??
+                                                          //         '',
+                                                          value: facilityMap[model
+                                                                      .transactingPartyId]
+                                                                  ?.name ??
+                                                              '',
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: batchNumberKey,
+                                                          value: model
+                                                                  .additionalFields
+                                                                  ?.fields
+                                                                  .firstWhereOrNull(
+                                                                    (element) =>
+                                                                        element
+                                                                            .key ==
+                                                                        batchNumberKey,
+                                                                  )
+                                                                  ?.value ??
+                                                              '',
+                                                        ),
+                                                        DigitGridCell(
+                                                          key: expiryDateKey,
+                                                          value: model.additionalFields
+                                                                      ?.fields
+                                                                      .firstWhereOrNull(
+                                                                        (element) =>
+                                                                            element.key ==
+                                                                            expiryDateKey,
+                                                                      )
+                                                                      ?.value !=
+                                                                  null
+                                                              ? DateFormat(
+                                                                  'dd MMM yyyy',
+                                                                ).format(DateTime
+                                                                  .fromMillisecondsSinceEpoch(
+                                                                  int.parse(model
+                                                                          .additionalFields
+                                                                          ?.fields
+                                                                          .firstWhereOrNull(
+                                                                            (element) =>
+                                                                                element.key ==
+                                                                                expiryDateKey,
+                                                                          )
+                                                                          ?.value
+                                                                          .toString() ??
+                                                                      '0'),
+                                                                ))
+                                                              : '',
                                                         ),
                                                       ],
                                                     ),
@@ -505,24 +590,24 @@ class _InventoryReportDetailsPageState
                                                   key: returnedKey,
                                                   width: 120,
                                                 ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .damagedCountLabel,
-                                                  ),
-                                                  key: damagedKey,
-                                                  width: 120,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .lostCountLabel,
-                                                  ),
-                                                  key: lossKey,
-                                                  width: 120,
-                                                ),
+                                                // DigitGridColumn(
+                                                //   label:
+                                                //       localizations.translate(
+                                                //     i18.inventoryReportDetails
+                                                //         .damagedCountLabel,
+                                                //   ),
+                                                //   key: damagedKey,
+                                                //   width: 120,
+                                                // ),
+                                                // DigitGridColumn(
+                                                //   label:
+                                                //       localizations.translate(
+                                                //     i18.inventoryReportDetails
+                                                //         .lostCountLabel,
+                                                //   ),
+                                                //   key: lossKey,
+                                                //   width: 120,
+                                                // ),
                                                 DigitGridColumn(
                                                   label:
                                                       localizations.translate(
@@ -577,22 +662,22 @@ class _InventoryReportDetailsPageState
                                                             'returned',
                                                           ),
                                                         ),
-                                                        DigitGridCell(
-                                                          key: lossKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'lost',
-                                                          ),
-                                                        ),
-                                                        DigitGridCell(
-                                                          key: damagedKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'damaged',
-                                                          ),
-                                                        ),
+                                                        // DigitGridCell(
+                                                        //   key: lossKey,
+                                                        //   value:
+                                                        //       _getCountFromAdditionalDetails(
+                                                        //     model,
+                                                        //     'lost',
+                                                        //   ),
+                                                        // ),
+                                                        // DigitGridCell(
+                                                        //   key: damagedKey,
+                                                        //   value:
+                                                        //       _getCountFromAdditionalDetails(
+                                                        //     model,
+                                                        //     'damaged',
+                                                        //   ),
+                                                        // ),
                                                         DigitGridCell(
                                                           key: stockInHandKey,
                                                           value:

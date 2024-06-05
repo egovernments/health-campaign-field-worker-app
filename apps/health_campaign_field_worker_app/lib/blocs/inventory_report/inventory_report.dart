@@ -49,6 +49,7 @@ class InventoryReportBloc
     String? senderId;
     String? receiverId;
 
+    // Impel customization
     if (reportType == InventoryReportType.receipt) {
       transactionType = [TransactionType.received];
       transactionReason = [TransactionReason.received];
@@ -83,25 +84,16 @@ class InventoryReportBloc
     }
     final user = await LocalSecureStore.instance.userRequestModel;
 
-    final data = (receiverId != null
-            ? await stockRepository.search(
-                StockSearchModel(
-                  transactionType: transactionType,
-                  tenantId: envConfig.variables.tenantId,
-                  receiverId: receiverId,
-                  productVariantId: productVariantId,
-                  transactionReason: transactionReason,
-                ),
-              )
-            : await stockRepository.search(
-                StockSearchModel(
-                  transactionType: transactionType,
-                  tenantId: envConfig.variables.tenantId,
-                  senderId: senderId,
-                  productVariantId: productVariantId,
-                  transactionReason: transactionReason,
-                ),
-              ))
+    // Impel customization
+    final data = (await stockRepository.search(
+      StockSearchModel(
+        transactionType: transactionType,
+        tenantId: envConfig.variables.tenantId,
+        facilityId: facilityId,
+        productVariantId: productVariantId,
+        transactionReason: transactionReason,
+      ),
+    ))
         .where((element) =>
             element.auditDetails != null &&
             element.auditDetails?.createdBy == user?.uuid);
@@ -109,7 +101,7 @@ class InventoryReportBloc
     final groupedData = data.groupListsBy(
       (element) => DateFormat('dd MMM yyyy').format(
         DateTime.fromMillisecondsSinceEpoch(
-          element.auditDetails!.createdTime,
+          element.dateOfEntryTime!.millisecondsSinceEpoch,
         ),
       ),
     );
