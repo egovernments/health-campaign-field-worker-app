@@ -495,9 +495,7 @@ class _IndividualDetailsPageState
                                             (age.years == 150 &&
                                                 age.months > 0))) {
                                       formControl.setErrors({'': true});
-                                    } else if (context.projectTypeCode ==
-                                            ProjectTypes.smc.toValue() &&
-                                        widget.isHeadOfHousehold &&
+                                    } else if (widget.isHeadOfHousehold &&
                                         age.years < 18) {
                                       isHeadAgeValid = false;
                                     } else {
