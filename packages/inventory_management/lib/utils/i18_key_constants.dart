@@ -133,7 +133,8 @@ class WarehouseDetails {
 
   String get noFacilitiesAssigned => 'NO_FACILITIES_ASSIGNED';
 
-  String get noFacilitiesAssignedDescription => 'NO_FACILITIES_ASSIGNED_DESCRIPTION';
+  String get noFacilitiesAssignedDescription =>
+      'NO_FACILITIES_ASSIGNED_DESCRIPTION';
 }
 
 class StockDetails {
@@ -480,6 +481,10 @@ class InventoryReportDetails {
 
   String get noFilterMessage {
     return 'INVENTORY_REPORT_DETAILS_NO_FILTER_MESSAGE';
+  }
+
+  String get noFilterMessageDistributor {
+    return 'INVENTORY_REPORT_DETAILS_NO_PRODUCT_SELECTED';
   }
 }
 
