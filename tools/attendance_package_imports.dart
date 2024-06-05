@@ -86,7 +86,7 @@ void _updateHome(String homeFilePath) {
           icon: Icons.fingerprint_outlined,
           label: i18.home.manageAttendanceLabel,
           onPressed: () {
-            // context.router.push(const ManageAttendanceRoute());
+            context.router.push(const ManageAttendanceRoute());
           },
         ),
       ),
@@ -526,7 +526,8 @@ AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   ''';
 
   // Define the local and remote repositories
-  var localRepository = '''
+  var localRepository = [
+    '''
 AttendanceLocalRepository(
   sql,
   AttendanceOpLogManager(isar),
@@ -535,14 +536,17 @@ AttendanceLogsLocalRepository(
   sql,
   AttendanceLogOpLogManager(isar),
 ),
-  ''';
+  '''
+  ];
 
-  var remoteRepository = '''
+  var remoteRepository = [
+    '''
 if (value == DataModelType.attendanceRegister)
   AttendanceRemoteRepository(dio, actionMap: actions),
 if (value == DataModelType.attendance)
   AttendanceLogRemoteRepository(dio, actionMap: actions),
-  ''';
+  '''
+  ];
 
   // Check if the constants.dart file exists
   var constantsFile = File(constantsFilePath);
@@ -591,50 +595,36 @@ if (value == DataModelType.attendance)
   }
 
   // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
-  if (!normalizedFileContent
-      .contains(localRepository.replaceAll(RegExp(r'\s'), ''))) {
-    var getLocalRepositoriesIndex =
-        constantsFileContent.indexOf('getLocalRepositories(');
-    if (getLocalRepositoriesIndex != -1) {
-      var endOfGetLocalRepositories = getLocalRepositoriesIndex +
-          constantsFileContent
-              .substring(getLocalRepositoriesIndex)
-              .indexOf('addAll(') +
-          'addAll('.length;
-      var endOfAddAll = constantsFileContent
-              .substring(endOfGetLocalRepositories)
-              .indexOf(']') +
-          endOfGetLocalRepositories;
-      constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
-          localRepository +
-          constantsFileContent.substring(endOfAddAll);
-      print('The local repositories were added.');
-    }
-  } else {
-    print('The local repositories already exist.');
+  var getLocalRepositoriesIndex =
+      constantsFileContent.indexOf('getLocalRepositories(');
+  if (getLocalRepositoriesIndex != -1) {
+    var endOfGetLocalRepositories = getLocalRepositoriesIndex +
+        constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
+        1;
+    constantsFileContent =
+        constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
+            '\n' +
+            localRepository.join('\n') +
+            constantsFileContent.substring(endOfGetLocalRepositories - 1);
+    print('The local repositories were added.');
   }
 
-  if (!normalizedFileContent
-      .contains(remoteRepository.replaceAll(RegExp(r'\s'), ''))) {
-    var getRemoteRepositoriesIndex =
-        constantsFileContent.indexOf('getRemoteRepositories(');
-    if (getRemoteRepositoriesIndex != -1) {
-      var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
-          constantsFileContent
-              .substring(getRemoteRepositoriesIndex)
-              .indexOf('addAll(') +
-          'addAll('.length;
-      var endOfAddAll = constantsFileContent
-              .substring(endOfGetRemoteRepositories)
-              .indexOf(']') +
-          endOfGetRemoteRepositories;
-      constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
-          remoteRepository +
-          constantsFileContent.substring(endOfAddAll);
-      print('The remote repositories were added.');
-    }
-  } else {
-    print('The remote repositories already exist.');
+  var getRemoteRepositoriesIndex =
+      constantsFileContent.indexOf('getRemoteRepositories(');
+  if (getRemoteRepositoriesIndex != -1) {
+    var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
+        constantsFileContent
+            .substring(getRemoteRepositoriesIndex)
+            .indexOf('addAll(') +
+        'addAll('.length;
+    var endOfAddAll = constantsFileContent
+            .substring(endOfGetRemoteRepositories)
+            .indexOf(']') +
+        endOfGetRemoteRepositories;
+    constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
+        remoteRepository.join('\n') +
+        constantsFileContent.substring(endOfAddAll);
+    print('The remote repositories were added.');
   }
 
   // Write the updated content back to the constants.dart file
