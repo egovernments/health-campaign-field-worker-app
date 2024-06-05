@@ -458,7 +458,7 @@ class _ReferralReasonChecklistPageState
                           final childIndex =
                               initialAttributes?.indexOf(matchingChildItem);
                           if (childIndex != null) {
-                            // controller[childIndex].clear();
+                            controller[childIndex].clear();
                             visibleChecklistIndexes
                                 .removeWhere((v) => v == childIndex);
                           }
