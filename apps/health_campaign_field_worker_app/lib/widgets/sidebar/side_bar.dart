@@ -237,7 +237,7 @@ class SideBar extends StatelessWidget {
                       color: DigitTheme.instance.colorScheme.error,
                     ),
                     contentText: t.translate(
-                      i18.common.coreCommonWarning,
+                      i18.common.coreCommonWarningText,
                     ),
                     primaryAction: DigitDialogActions(
                       label: t.translate(i18.common.coreCommonNo),
