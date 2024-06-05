@@ -1240,7 +1240,7 @@ void _addRepoToNetworkManagerProviderWrapper(
       // Add the remote repository of DataModel to the _getRemoteRepositories method
       var replacementString =
           networkManagerProviderWrapperFileContent.contains(']);')
-              ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
+              ? '  $remoteRepositoryOfRegistrationDelivery\n]);'
               : '  $remoteRepositoryOfRegistrationDelivery\n]);';
       networkManagerProviderWrapperFileContent =
           networkManagerProviderWrapperFileContent.replaceFirst(
