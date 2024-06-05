@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
@@ -1051,6 +1052,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       label: localizations.translate(
                                         i18.stockDetails.waybillNumberLabel,
                                       ),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                          RegExp('[0-9]'),
+                                        ),
+                                        LengthLimitingTextInputFormatter(5),
+                                      ],
                                       isRequired: true,
                                       formControlName: _waybillNumberKey,
                                       validationMessages: {
@@ -1157,6 +1164,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     ),
                                     isRequired: true,
                                     formControlName: _batchNumberKey,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.allow(
+                                        RegExp(r'[a-zA-Z0-9]'),
+                                      ),
+                                      LengthLimitingTextInputFormatter(
+                                        6,
+                                      ),
+                                    ],
                                     validationMessages: {
                                       'required': (object) =>
                                           localizations.translate(
