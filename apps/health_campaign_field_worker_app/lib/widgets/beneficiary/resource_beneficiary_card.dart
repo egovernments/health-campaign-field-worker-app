@@ -80,10 +80,10 @@ class _ResourceBeneficiaryCardState
             },
           ),
           DigitIntegerFormPicker(
-            incrementer: true,
-            decimal: true,
+            incrementer: false,
             formControlName: 'quantityDistributed.${widget.cardIndex}',
             form: widget.form,
+            readOnly: true,
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
@@ -94,8 +94,9 @@ class _ResourceBeneficiaryCardState
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [
               FilteringTextInputFormatter.allow(
-                RegExp(r'^\d*\.?(0|5)?$'),
+                RegExp('[0-9]'),
               ),
+              LengthLimitingTextInputFormatter(3),
             ],
             label: localizations.translate(
               i18.deliverIntervention.quantityWastedLabel,

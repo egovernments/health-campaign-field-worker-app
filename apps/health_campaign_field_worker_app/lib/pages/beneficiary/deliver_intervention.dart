@@ -77,45 +77,6 @@ class _DeliverInterventionPageState
       });
     }
 
-    bool isCommentMandatory(
-      bool isCommentRequired,
-      List<ProductVariantsModel>? productVariants,
-      FormGroup form,
-      Map<String?, List<double?>> idVsSuggestedAndDistributedQuantity,
-    ) {
-      final resourcesDelivered =
-          (form.control(_resourceDeliveredKey) as FormArray).value;
-      final quantityDistributed =
-          (form.control(_quantityDistributedKey) as FormArray).value;
-      if (productVariants != null) {
-        for (var element in productVariants) {
-          var indexOfResource = -1;
-          for (int i = 0; i < resourcesDelivered!.length; i++) {
-            if (resourcesDelivered[i].id == element.productVariantId) {
-              indexOfResource = i;
-              break;
-            }
-          }
-          if (indexOfResource >= 0) {
-            List<double?> suggestedAndDistributed = [];
-            suggestedAndDistributed.add(element.quantity);
-            suggestedAndDistributed.add(quantityDistributed![indexOfResource]);
-            idVsSuggestedAndDistributedQuantity[element.productVariantId] =
-                suggestedAndDistributed;
-          }
-        }
-      }
-      for (var quantities in idVsSuggestedAndDistributedQuantity.values) {
-        if (quantities.length >= 2 && quantities[0] != quantities[1]) {
-          isCommentRequired = true;
-        }
-      }
-
-      return isCommentRequired;
-    }
-
-    ;
-
     return BlocBuilder<LocationBloc, LocationState>(
       builder: (context, locationState) {
         return ProductVariantBlocWrapper(
@@ -260,37 +221,6 @@ class _DeliverInterventionPageState
                                                                       .translate(i18
                                                                           .deliverIntervention
                                                                           .resourceCannotBeZero),
-                                                                  true,
-                                                                  theme,
-                                                                ),
-                                                              );
-                                                            } else if (isCommentMandatory(
-                                                                  isCommentRequired,
-                                                                  productVariants,
-                                                                  form,
-                                                                  idVsSuggestedAndDistributedQuantity,
-                                                                ) &&
-                                                                (form
-                                                                            .control(
-                                                                              _deliveryCommentKey,
-                                                                            )
-                                                                            .value ==
-                                                                        null ||
-                                                                    (form
-                                                                            .control(
-                                                                              _deliveryCommentKey,
-                                                                            )
-                                                                            .value as String)
-                                                                        .isEmpty)) {
-                                                              await DigitToast
-                                                                  .show(
-                                                                context,
-                                                                options:
-                                                                    DigitToastOptions(
-                                                                  localizations
-                                                                      .translate(i18
-                                                                          .deliverIntervention
-                                                                          .deliveryCommentRequired),
                                                                   true,
                                                                   theme,
                                                                 ),
@@ -697,68 +627,68 @@ class _DeliverInterventionPageState
                                                   ],
                                                 ),
                                               ),
-                                              DigitCard(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisSize:
-                                                      MainAxisSize.min,
-                                                  children: [
-                                                    Text(
-                                                      localizations.translate(
-                                                        i18.deliverIntervention
-                                                            .deliveryCommentLabel,
-                                                      ),
-                                                      style: theme.textTheme
-                                                          .headlineLarge,
-                                                    ),
-                                                    BlocBuilder<
-                                                        AppInitializationBloc,
-                                                        AppInitializationState>(
-                                                      builder:
-                                                          (context, state) {
-                                                        if (state
-                                                            is! AppInitialized) {
-                                                          return const Offstage();
-                                                        }
+                                              // DigitCard(
+                                              //   child: Column(
+                                              //     crossAxisAlignment:
+                                              //         CrossAxisAlignment.start,
+                                              //     mainAxisSize:
+                                              //         MainAxisSize.min,
+                                              //     children: [
+                                              //       Text(
+                                              //         localizations.translate(
+                                              //           i18.deliverIntervention
+                                              //               .deliveryCommentLabel,
+                                              //         ),
+                                              //         style: theme.textTheme
+                                              //             .headlineLarge,
+                                              //       ),
+                                              //       BlocBuilder<
+                                              //           AppInitializationBloc,
+                                              //           AppInitializationState>(
+                                              //         builder:
+                                              //             (context, state) {
+                                              //           if (state
+                                              //               is! AppInitialized) {
+                                              //             return const Offstage();
+                                              //           }
 
-                                                        final deliveryCommentOptions = state
-                                                                .appConfiguration
-                                                                .deliveryCommentOptions ??
-                                                            <DeliveryCommentOptions>[];
+                                              //           final deliveryCommentOptions = state
+                                              //                   .appConfiguration
+                                              //                   .deliveryCommentOptions ??
+                                              //               <DeliveryCommentOptions>[];
 
-                                                        return DigitReactiveSearchDropdown<
-                                                            String>(
-                                                          label: localizations
-                                                              .translate(
-                                                            i18.deliverIntervention
-                                                                .deliveryCommentLabel,
-                                                          ),
-                                                          form: form,
-                                                          menuItems:
-                                                              deliveryCommentOptions
-                                                                  .map((e) {
-                                                            return e.code;
-                                                          }).toList(),
-                                                          formControlName:
-                                                              _deliveryCommentKey,
-                                                          isRequired:
-                                                              isCommentRequired,
-                                                          valueMapper: (value) =>
-                                                              localizations
-                                                                  .translate(
-                                                            value,
-                                                          ),
-                                                          emptyText: localizations
-                                                              .translate(i18
-                                                                  .common
-                                                                  .noMatchFound),
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
+                                              //           return DigitReactiveSearchDropdown<
+                                              //               String>(
+                                              //             label: localizations
+                                              //                 .translate(
+                                              //               i18.deliverIntervention
+                                              //                   .deliveryCommentLabel,
+                                              //             ),
+                                              //             form: form,
+                                              //             menuItems:
+                                              //                 deliveryCommentOptions
+                                              //                     .map((e) {
+                                              //               return e.code;
+                                              //             }).toList(),
+                                              //             formControlName:
+                                              //                 _deliveryCommentKey,
+                                              //             isRequired:
+                                              //                 isCommentRequired,
+                                              //             valueMapper: (value) =>
+                                              //                 localizations
+                                              //                     .translate(
+                                              //               value,
+                                              //             ),
+                                              //             emptyText: localizations
+                                              //                 .translate(i18
+                                              //                     .common
+                                              //                     .noMatchFound),
+                                              //           );
+                                              //         },
+                                              //       ),
+                                              //     ],
+                                              //   ),
+                                              // ),
                                             ],
                                           ),
                                         ],
@@ -956,10 +886,17 @@ class _DeliverInterventionPageState
               )),
         ],
       ),
-      _quantityDistributedKey: FormArray<double>([
+      _quantityDistributedKey: FormArray<int>([
         ..._controllers.map(
-          (e) =>
-              FormControl<double>(value: 0, validators: [Validators.min(.5)]),
+          (e) => FormControl<int>(
+            value: _controllers.indexOf(e) < productVariants.length
+                ? productVariants
+                    .elementAt(_controllers.indexOf(e))
+                    .quantity!
+                    .toInt()
+                : 0,
+            validators: [Validators.min(1)],
+          ),
         ),
       ]),
       _quantityWastedKey: FormArray<String>([

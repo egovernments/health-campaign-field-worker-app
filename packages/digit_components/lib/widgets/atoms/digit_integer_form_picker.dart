@@ -11,6 +11,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
   final FormGroup form;
   final bool? decimal;
   final String formControlName;
+  final bool readOnly;
   const DigitIntegerFormPicker({
     super.key,
     this.minimum,
@@ -21,6 +22,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
     required this.form,
     required this.label,
     this.decimal,
+    this.readOnly = false,
   });
 
   @override
@@ -33,6 +35,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
             formControlName: formControlName,
             decoration: InputDecoration(labelText: hint),
             keyboardType: TextInputType.number,
+            readOnly: readOnly,
           ));
     }
 
