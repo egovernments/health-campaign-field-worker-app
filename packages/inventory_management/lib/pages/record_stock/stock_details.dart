@@ -787,6 +787,10 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       i18.stockDetails.waybillNumberLabel,
                                     ),
                                     formControlName: _waybillNumberKey,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      decimal: true,
+                                    ),
                                   ),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(

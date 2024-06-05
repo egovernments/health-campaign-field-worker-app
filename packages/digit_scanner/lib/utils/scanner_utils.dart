@@ -120,23 +120,27 @@ class DigitScannerUtils {
 
             if (alreadyScanned) {
               // Handle error if the barcode is already scanned
-              await handleError(i18.scanner.resourceAlreadyScanned);
+              await handleError(
+                  localizations.translate(i18.scanner.resourceAlreadyScanned));
             } else if (quantity > result.length) {
               // Store the parsed result if the quantity is greater than result length
               await storeValue(parsedResult);
             } else {
               // Handle error if there is a mismatch in the scanned resource count
-              await handleError(i18.scanner.scannedResourceCountMisMatch);
+              await handleError(localizations
+                  .translate(i18.scanner.scannedResourceCountMisMatch));
             }
           } catch (e) {
             // Handle error if parsing fails
-            await handleError(i18.scanner.scannedResourceCountMisMatch);
+            await handleError(localizations
+                .translate(i18.scanner.scannedResourceCountMisMatch));
           }
         } else {
           // For non-GS1 codes
           if (bloc.state.qrCodes.contains(barcodes.first.displayValue)) {
             // Handle error if the QR code is already scanned
-            await handleError(i18.scanner.resourceAlreadyScanned);
+            await handleError(
+                localizations.translate(i18.scanner.resourceAlreadyScanned));
             return;
           } else {
             // Store the QR code if not already scanned
