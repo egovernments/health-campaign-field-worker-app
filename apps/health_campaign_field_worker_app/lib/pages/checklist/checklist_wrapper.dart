@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../blocs/service/service.dart';
-import '../../blocs/service_definition/service_definition.dart';
 import '../../utils/extensions/extensions.dart';
 import '../../widgets/boundary_selection_wrapper.dart';
 

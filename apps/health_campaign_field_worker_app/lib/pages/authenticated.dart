@@ -11,7 +11,6 @@ import 'package:location/location.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../blocs/service/service.dart';
 import '../blocs/sync/sync.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
