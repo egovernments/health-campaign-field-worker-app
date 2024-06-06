@@ -412,6 +412,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.viewSummaryReportsPerformanceLabel:
+          homeShowcaseData.summaryReportPerformance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.viewSummaryReportsPerformanceLabel,
+          onPressed: () {
+            context.router.push(
+              InventoryReportSelectionRoute(),
+            );
+          },
+        ),
+      ),
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,

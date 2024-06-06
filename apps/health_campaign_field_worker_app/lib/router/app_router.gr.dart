@@ -128,6 +128,19 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    PerformamnceSummaryReportDetailsRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<PerformamnceSummaryReportDetailsRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(
+            child: PerformamnceSummaryReportDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          reportType: args.reportType,
+        )),
+      );
+    },
     ChecklistWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<ChecklistWrapperRouteArgs>(
           orElse: () => const ChecklistWrapperRouteArgs());
@@ -854,6 +867,11 @@ class _$AppRouter extends RootStackRouter {
               ],
             ),
             RouteConfig(
+              PerformamnceSummaryReportDetailsRoute.name,
+              path: 'performance-summary-report-details',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               ChecklistWrapperRoute.name,
               path: 'checklist',
               parent: AuthenticatedRouteWrapper.name,
@@ -1424,6 +1442,46 @@ class BeneficiaryWrapperRouteArgs {
   @override
   String toString() {
     return 'BeneficiaryWrapperRouteArgs{key: $key, wrapper: $wrapper, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [PerformamnceSummaryReportDetailsPage]
+class PerformamnceSummaryReportDetailsRoute
+    extends PageRouteInfo<PerformamnceSummaryReportDetailsRouteArgs> {
+  PerformamnceSummaryReportDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    required InventoryReportType reportType,
+  }) : super(
+          PerformamnceSummaryReportDetailsRoute.name,
+          path: 'performance-summary-report-details',
+          args: PerformamnceSummaryReportDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            reportType: reportType,
+          ),
+        );
+
+  static const String name = 'PerformamnceSummaryReportDetailsRoute';
+}
+
+class PerformamnceSummaryReportDetailsRouteArgs {
+  const PerformamnceSummaryReportDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    required this.reportType,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final InventoryReportType reportType;
+
+  @override
+  String toString() {
+    return 'PerformamnceSummaryReportDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, reportType: $reportType}';
   }
 }
 
