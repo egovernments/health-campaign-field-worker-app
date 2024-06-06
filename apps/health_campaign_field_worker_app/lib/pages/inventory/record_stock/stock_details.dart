@@ -1052,12 +1052,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       label: localizations.translate(
                                         i18.stockDetails.waybillNumberLabel,
                                       ),
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp('[0-9]'),
-                                        ),
-                                        LengthLimitingTextInputFormatter(5),
-                                      ],
+                                      // inputFormatters: [
+                                      //   FilteringTextInputFormatter.allow(
+                                      //     RegExp('[0-9]'),
+                                      //   ),
+                                      //   LengthLimitingTextInputFormatter(5),
+                                      // ],
                                       isRequired: true,
                                       formControlName: _waybillNumberKey,
                                       validationMessages: {
@@ -1164,14 +1164,14 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     ),
                                     isRequired: true,
                                     formControlName: _batchNumberKey,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(
-                                        RegExp(r'[a-zA-Z0-9]'),
-                                      ),
-                                      LengthLimitingTextInputFormatter(
-                                        6,
-                                      ),
-                                    ],
+                                    // inputFormatters: [
+                                    //   FilteringTextInputFormatter.allow(
+                                    //     RegExp(r'[a-zA-Z0-9]'),
+                                    //   ),
+                                    //   LengthLimitingTextInputFormatter(
+                                    //     6,
+                                    //   ),
+                                    // ],
                                     validationMessages: {
                                       'required': (object) =>
                                           localizations.translate(
