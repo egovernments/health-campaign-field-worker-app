@@ -137,6 +137,10 @@ class MdmsRepository {
       ..serviceInterval =
           element?.backgroundServiceConfig?.first.serviceInterval;
 
+    final firebaseConfig = FirebaseConfig()
+      ..enableAnalytics = element?.firebaseConfig?.first.enableAnalytics
+      ..enableCrashlytics = element?.firebaseConfig?.first.enableCrashlytics;
+
     appConfiguration
       ..networkDetection = appConfig?.networkDetection
       ..persistenceMode = appConfig?.persistenceMode
@@ -144,7 +148,8 @@ class MdmsRepository {
       ..syncTrigger = appConfig?.syncTrigger
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
-      ..backgroundServiceConfig = backgroundServiceConfig;
+      ..backgroundServiceConfig = backgroundServiceConfig
+      ..firebaseConfig = firebaseConfig;
 
     final List<Languages>? languageList =
         commonMasters?.stateInfo.first.languages.map((element) {

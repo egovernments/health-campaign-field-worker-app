@@ -5,7 +5,6 @@ library inventory_management;
 
 import 'package:dart_mappable/dart_mappable.dart';
 
-export 'blocs/inventory_listener.dart';
 export 'data/repositories/local/base/stock_base.dart';
 export 'data/repositories/local/base/stock_reconciliation_base.dart';
 export 'data/repositories/local/stock.dart';
