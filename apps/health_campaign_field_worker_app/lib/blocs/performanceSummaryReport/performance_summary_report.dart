@@ -28,7 +28,7 @@ class PerformannceSummaryReportBloc
   }
 
   Future<void> _handleLoadDataEvent(
-    InventoryReportLoadStockDataEvent event,
+    PerformanceSummaryReportLoadDataEvent event,
     PerformanceSummaryReportEmitter emit,
   ) async {
     final reportType = event.reportType;
@@ -40,7 +40,7 @@ class PerformannceSummaryReportBloc
         'Invalid report type: ${event.reportType}',
       );
     }
-    emit(const InventoryReportLoadingState());
+    emit(const PerformanceSummaryReportLoadingState());
 
     List<TransactionReason>? transactionReason;
     List<TransactionType>? transactionType;
