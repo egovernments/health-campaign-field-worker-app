@@ -512,10 +512,10 @@ bool allDosesDelivered(
           lastDose == selectedCycle.deliveries?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
-          tasks?.last.status != Status.delivered.name) {
+          tasks?.last.status != Status.delivered.toValue()) {
         return true;
       } else if (selectedCycle.id == lastCycle &&
-          tasks?.last.status == Status.delivered.name) {
+          tasks?.last.status == Status.delivered.toValue()) {
         return false;
       } else if ((sideEffects ?? []).isNotEmpty) {
         return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);
