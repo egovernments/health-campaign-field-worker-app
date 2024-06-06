@@ -7,6 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/facility/facility.dart';
 import '../../blocs/inventory_report/inventory_report.dart';
+import '../../blocs/performanceSummaryReport/performance_summary_report.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/stock_reconciliation/stock_reconciliation.dart';
 import '../../models/data_model.dart';
@@ -53,11 +54,10 @@ and attached the event to load the data*/
 }
 
 class _PerformamnceSummaryReportDetailsPageState
-    extends LocalizedState<> {
+    extends LocalizedState<PerformamnceSummaryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
   Map<String, FacilityModel> facilityMap = {};
-
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
@@ -123,8 +123,9 @@ class _PerformamnceSummaryReportDetailsPageState
           ),
         ),
       ),
-      body: BlocBuilder<InventoryReportBloc, InventoryReportState>(
-        builder: (context, inventoryReportState) {
+      body: BlocBuilder<PerformannceSummaryReportBloc,
+          PerformanceSummaryReportState>(
+        builder: (context, performanceSumamryReportState) {
           final noRecordsMessage = localizations.translate(
             i18.inventoryReportDetails.noRecordsMessage,
           );
@@ -342,7 +343,7 @@ class _PerformamnceSummaryReportDetailsPageState
                                   Expanded(
                                     child: Align(
                                       alignment: Alignment.topCenter,
-                                      child: inventoryReportState.when(
+                                      child: performanceSumamryReportState.when(
                                         empty: () => _NoReportContent(
                                           title: title,
                                           message: noFilterMessage,
@@ -352,7 +353,7 @@ class _PerformamnceSummaryReportDetailsPageState
                                             child: CircularProgressIndicator(),
                                           );
                                         },
-                                        stock: (data) {
+                                        summaryData: (data) {
                                           if (data.isEmpty) {
                                             return Padding(
                                               padding: const EdgeInsets.all(
@@ -520,178 +521,6 @@ class _PerformamnceSummaryReportDetailsPageState
                                                                       '0'),
                                                                 ))
                                                               : '',
-                                                        ),
-                                                      ],
-                                                    ),
-                                                ],
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                        stockReconciliation: (data) {
-                                          if (data.isEmpty) {
-                                            return Padding(
-                                              padding: const EdgeInsets.all(
-                                                kPadding * 2,
-                                              ),
-                                              child: _NoReportContent(
-                                                title: title,
-                                                message: noRecordsMessage,
-                                              ),
-                                            );
-                                          }
-
-                                          const dateKey = 'date';
-                                          const receivedKey = 'received';
-                                          const dispatchedKey = 'dispatched';
-                                          const returnedKey = 'returned';
-                                          const damagedKey = 'damaged';
-                                          const lossKey = 'loss';
-                                          const stockInHandKey = 'stockInHand';
-                                          const manualCountKey = 'manualCount';
-
-                                          return _ReportDetailsContent(
-                                            title: title,
-                                            data: DigitGridData(
-                                              columns: [
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .dateLabel,
-                                                  ),
-                                                  key: dateKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .receivedCountLabel,
-                                                  ),
-                                                  key: receivedKey,
-                                                  width: 110,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .dispatchedCountLabel,
-                                                  ),
-                                                  key: dispatchedKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .returnedCountLabel,
-                                                  ),
-                                                  key: returnedKey,
-                                                  width: 120,
-                                                ),
-                                                // DigitGridColumn(
-                                                //   label:
-                                                //       localizations.translate(
-                                                //     i18.inventoryReportDetails
-                                                //         .damagedCountLabel,
-                                                //   ),
-                                                //   key: damagedKey,
-                                                //   width: 120,
-                                                // ),
-                                                // DigitGridColumn(
-                                                //   label:
-                                                //       localizations.translate(
-                                                //     i18.inventoryReportDetails
-                                                //         .lostCountLabel,
-                                                //   ),
-                                                //   key: lossKey,
-                                                //   width: 120,
-                                                // ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .stockInHandLabel,
-                                                  ),
-                                                  key: stockInHandKey,
-                                                  width: 150,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .manualCountLabel,
-                                                  ),
-                                                  key: manualCountKey,
-                                                  width: 150,
-                                                ),
-                                              ],
-                                              rows: [
-                                                for (final entry
-                                                    in data.entries) ...[
-                                                  for (final model
-                                                      in entry.value)
-                                                    DigitGridRow(
-                                                      [
-                                                        DigitGridCell(
-                                                          key: dateKey,
-                                                          value: entry.key,
-                                                        ),
-                                                        DigitGridCell(
-                                                          key: receivedKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'received',
-                                                          ),
-                                                        ),
-                                                        DigitGridCell(
-                                                          key: dispatchedKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'issued',
-                                                          ),
-                                                        ),
-                                                        DigitGridCell(
-                                                          key: returnedKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'returned',
-                                                          ),
-                                                        ),
-                                                        // DigitGridCell(
-                                                        //   key: lossKey,
-                                                        //   value:
-                                                        //       _getCountFromAdditionalDetails(
-                                                        //     model,
-                                                        //     'lost',
-                                                        //   ),
-                                                        // ),
-                                                        // DigitGridCell(
-                                                        //   key: damagedKey,
-                                                        //   value:
-                                                        //       _getCountFromAdditionalDetails(
-                                                        //     model,
-                                                        //     'damaged',
-                                                        //   ),
-                                                        // ),
-                                                        DigitGridCell(
-                                                          key: stockInHandKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'inHand',
-                                                          ),
-                                                        ),
-                                                        DigitGridCell(
-                                                          key: manualCountKey,
-                                                          value:
-                                                              (model.physicalCount ??
-                                                                      '0')
-                                                                  .toString(),
                                                         ),
                                                       ],
                                                     ),
