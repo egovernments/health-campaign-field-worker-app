@@ -130,6 +130,7 @@ class Common {
   String get noResultsFound => 'NO_RESULTS_FOUND';
 
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
+  String get coreCommonWarningText => 'CORE_COMMON_WARNING_TEXT';
 
   String get coreQuantityWasted => 'CORE_QUANTITY_WASTED';
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
