@@ -38,3 +38,7 @@
 ## 1.0.0
 
 * Initial stable Release
+
+## 1.0.0+1
+
+* Bug fixes and enhancements

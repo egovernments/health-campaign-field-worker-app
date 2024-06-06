@@ -1,5 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -18,6 +21,7 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
 
@@ -148,6 +152,14 @@ class Constants {
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
+    if (enableCrashlytics) {
+      firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+        onErrorMessage: (value) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+        },
+      );
+    }
 
     _version = version;
   }
