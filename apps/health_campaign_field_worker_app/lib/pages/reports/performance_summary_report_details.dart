@@ -6,11 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/facility/facility.dart';
-import '../../blocs/inventory_report/inventory_report.dart';
 import '../../blocs/performanceSummaryReport/performance_summary_report.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/stock_reconciliation/stock_reconciliation.dart';
-import '../../data/local_store/sql_store/tables/individual.dart';
 import '../../data/repositories/local/household.dart';
 import '../../data/repositories/local/individual.dart';
 import '../../data/repositories/local/task.dart';
@@ -44,12 +42,11 @@ and attached the event to load the data*/
     return BlocProvider(
       create: (context) {
         return PerformannceSummaryReportBloc(
-          individualRepository: context.read<IndividualSearchModel>()
-              as IndividualLocalRepository,
+          individualRepository:
+              context.repository<IndividualModel, IndividualSearchModel>(),
           householdRepository:
-              context.read<HouseholdSearchModel>() as HouseholdLocalRepository,
-          taskRepository:
-              context.read<HouseholdSearchModel>() as TaskLocalRepository,
+              context.repository<HouseholdModel, HouseholdSearchModel>(),
+          taskRepository: context.repository<TaskModel, TaskSearchModel>(),
         );
       },
       child: this,

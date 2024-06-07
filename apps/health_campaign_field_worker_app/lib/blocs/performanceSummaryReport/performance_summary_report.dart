@@ -25,11 +25,11 @@ typedef PerformanceSummaryReportEmitter
 
 class PerformannceSummaryReportBloc
     extends Bloc<PerformanceSummaryReportEvent, PerformanceSummaryReportState> {
-  final IndividualLocalRepository individualRepository;
+  final IndividualDataRepository individualRepository;
 
-  final HouseholdLocalRepository householdRepository;
+  final HouseholdDataRepository householdRepository;
 
-  final TaskLocalRepository taskRepository;
+  final TaskDataRepository taskRepository;
 
   PerformannceSummaryReportBloc({
     required this.individualRepository,
@@ -49,16 +49,17 @@ class PerformannceSummaryReportBloc
     Map<String, List<HouseholdModel>> dayVsHouseholdListMap = {};
     Map<String, List<TaskModel>> dayVsTaskListMap = {};
     Set<String> availableDates = {};
-
-    final householdList = await householdRepository.search(
+    final householdList =
+        await (householdRepository as HouseholdLocalRepository).search(
       HouseholdSearchModel(tenantId: envConfig.variables.tenantId),
       userId,
     );
-    final individualList = await individualRepository.search(
+    final individualList =
+        await (individualRepository as IndividualLocalRepository).search(
       IndividualSearchModel(tenantId: envConfig.variables.tenantId),
       userId,
     );
-    final taskList = await taskRepository.search(
+    final taskList = await (taskRepository as TaskLocalRepository).search(
       TaskSearchModel(tenantId: envConfig.variables.tenantId),
       userId,
     );
