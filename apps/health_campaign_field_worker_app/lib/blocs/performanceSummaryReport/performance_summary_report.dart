@@ -7,7 +7,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
+import '../../data/data_repository.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/local_store/sql_store/tables/task.dart';
+import '../../data/repositories/local/household.dart';
+import '../../data/repositories/local/individual.dart';
+import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
 import '../../utils/app_exception.dart';
 import '../../utils/environment_config.dart';
@@ -20,12 +25,16 @@ typedef PerformanceSummaryReportEmitter
 
 class PerformannceSummaryReportBloc
     extends Bloc<PerformanceSummaryReportEvent, PerformanceSummaryReportState> {
-  final StockDataRepository stockRepository;
-  final StockReconciliationDataRepository stockReconciliationRepository;
+  final IndividualLocalRepository individualRepository;
+
+  final HouseholdLocalRepository householdRepository;
+
+  final TaskLocalRepository taskRepository;
 
   PerformannceSummaryReportBloc({
-    required this.stockRepository,
-    required this.stockReconciliationRepository,
+    required this.individualRepository,
+    required this.householdRepository,
+    required this.taskRepository,
   }) : super(const PerformanceSummaryReportEmptyState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadingEvent);
@@ -35,7 +44,64 @@ class PerformannceSummaryReportBloc
     PerformanceSummaryReportLoadDataEvent event,
     PerformanceSummaryReportEmitter emit,
   ) async {
-    emit(const PerformanceSummaryReportSummaryDataState(summaryData: null));
+    var userId = event.userId;
+    Map<String, List<IndividualModel>> dayVsIndividualListMap = {};
+    Map<String, List<HouseholdModel>> dayVsHouseholdListMap = {};
+    Map<String, List<TaskModel>> dayVsTaskListMap = {};
+    Set<String> availableDates = {};
+
+    final householdList = await householdRepository.search(
+      HouseholdSearchModel(tenantId: envConfig.variables.tenantId),
+      userId,
+    );
+    final individualList = await individualRepository.search(
+      IndividualSearchModel(tenantId: envConfig.variables.tenantId),
+      userId,
+    );
+    final taskList = await taskRepository.search(
+      TaskSearchModel(tenantId: envConfig.variables.tenantId),
+      userId,
+    );
+    for (var element in householdList) {
+      var dateKey = element.auditDetails!.createdTime.toString();
+      if (dayVsHouseholdListMap.containsKey(dateKey) &&
+          dayVsHouseholdListMap[dateKey] != null) {
+        dayVsHouseholdListMap[dateKey]!.add(element);
+      } else {
+        dayVsHouseholdListMap[dateKey] = [];
+      }
+    }
+    for (var element in individualList) {
+      var dateKey = element.auditDetails!.createdTime.toString();
+      if (dayVsIndividualListMap.containsKey(dateKey) &&
+          dayVsIndividualListMap[dateKey] != null) {
+        dayVsIndividualListMap[dateKey]!.add(element);
+      } else {
+        dayVsIndividualListMap[dateKey] = [];
+      }
+    }
+    for (var element in taskList) {
+      var dateKey = element.auditDetails!.createdTime.toString();
+      if (dayVsTaskListMap.containsKey(dateKey) &&
+          dayVsTaskListMap[dateKey] != null) {
+        dayVsTaskListMap[dateKey]!.add(element);
+      } else {
+        dayVsTaskListMap[dateKey] = [];
+      }
+    }
+    availableDates.addAll(dayVsHouseholdListMap.keys.toSet());
+    availableDates.addAll(dayVsIndividualListMap.keys.toSet());
+    availableDates.addAll(dayVsTaskListMap.keys.toSet());
+
+    final groupedData = taskList.groupListsBy(
+      (element) => DateFormat('dd MMM yyyy').format(
+        DateTime.fromMillisecondsSinceEpoch(element.auditDetails!.createdTime),
+      ),
+    );
+
+    emit(PerformanceSummaryReportSummaryDataState(
+      summaryData: groupedData,
+    ));
   }
 
   Future<void> _handleLoadingEvent(
@@ -49,8 +115,7 @@ class PerformannceSummaryReportBloc
 @freezed
 class PerformanceSummaryReportEvent with _$PerformanceSummaryReportEvent {
   const factory PerformanceSummaryReportEvent.loadData({
-    required String facilityId,
-    required String productVariantId,
+    required String userId,
   }) = PerformanceSummaryReportLoadDataEvent;
 
   const factory PerformanceSummaryReportEvent.loading() =
@@ -65,6 +130,6 @@ class PerformanceSummaryReportState with _$PerformanceSummaryReportState {
       PerformanceSummaryReportEmptyState;
 
   const factory PerformanceSummaryReportState.summaryData({
-    @Default({}) Map<String, List<StockModel>> summaryData,
+    @Default({}) Map<String, List<TaskModel>> summaryData,
   }) = PerformanceSummaryReportSummaryDataState;
 }

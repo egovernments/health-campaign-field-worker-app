@@ -10,6 +10,10 @@ import '../../blocs/inventory_report/inventory_report.dart';
 import '../../blocs/performanceSummaryReport/performance_summary_report.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/stock_reconciliation/stock_reconciliation.dart';
+import '../../data/local_store/sql_store/tables/individual.dart';
+import '../../data/repositories/local/household.dart';
+import '../../data/repositories/local/individual.dart';
+import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -24,12 +28,9 @@ import '../inventory/facility_selection.dart';
 
 class PerformamnceSummaryReportDetailsPage extends LocalizedStatefulWidget
     with AutoRouteWrapper {
-  final InventoryReportType reportType;
-
   const PerformamnceSummaryReportDetailsPage({
     Key? key,
     super.appLocalizations,
-    required this.reportType,
   }) : super(key: key);
 
   @override
@@ -42,10 +43,13 @@ and attached the event to load the data*/
   Widget wrappedRoute(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        return InventoryReportBloc(
-          stockReconciliationRepository: context.repository<
-              StockReconciliationModel, StockReconciliationSearchModel>(),
-          stockRepository: context.repository<StockModel, StockSearchModel>(),
+        return PerformannceSummaryReportBloc(
+          individualRepository: context.read<IndividualSearchModel>()
+              as IndividualLocalRepository,
+          householdRepository:
+              context.read<HouseholdSearchModel>() as HouseholdLocalRepository,
+          taskRepository:
+              context.read<HouseholdSearchModel>() as TaskLocalRepository,
         );
       },
       child: this,
@@ -59,35 +63,17 @@ class _PerformamnceSummaryReportDetailsPageState
   static const _facilityKey = 'facilityKey';
   Map<String, FacilityModel> facilityMap = {};
   void handleSelection(FormGroup form) {
-    final event = widget.reportType == InventoryReportType.reconciliation
-        ? InventoryReportLoadStockReconciliationDataEvent(
-            facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
-                : '',
-            productVariantId: form.control(_productVariantKey).value != null
-                ? (form.control(_productVariantKey).value
-                        as ProductVariantModel)
-                    .id
-                : '',
-          )
-        : InventoryReportLoadStockDataEvent(
-            reportType: widget.reportType,
-            facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
-                : '',
-            productVariantId: form.control(_productVariantKey).value != null
-                ? (form.control(_productVariantKey).value
-                        as ProductVariantModel)
-                    .id
-                : '',
-          );
+    var createdByUserId = context.loggedInUserUuid;
+    final event = PerformanceSummaryReportLoadDataEvent(
+      userId: createdByUserId.isEmpty ? '' : createdByUserId,
+    );
 
-    context.read<InventoryReportBloc>().add(
-          const InventoryReportLoadingEvent(),
+    context.read<PerformannceSummaryReportBloc>().add(
+          const PerformanceSummaryReportLoadingEvent(),
         );
 
     Future.delayed(const Duration(milliseconds: 500), () {
-      context.read<InventoryReportBloc>().add(event);
+      context.read<PerformannceSummaryReportBloc>().add(event);
     });
   }
 
@@ -142,7 +128,7 @@ class _PerformamnceSummaryReportDetailsPageState
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    title,
+                    "title",
                     maxLines: 1,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
@@ -345,7 +331,7 @@ class _PerformamnceSummaryReportDetailsPageState
                                       alignment: Alignment.topCenter,
                                       child: performanceSumamryReportState.when(
                                         empty: () => _NoReportContent(
-                                          title: title,
+                                          title: "",
                                           message: noFilterMessage,
                                         ),
                                         loading: () {
@@ -360,7 +346,7 @@ class _PerformamnceSummaryReportDetailsPageState
                                                 kPadding * 2,
                                               ),
                                               child: _NoReportContent(
-                                                title: title,
+                                                title: "",
                                                 message: noRecordsMessage,
                                               ),
                                             );
@@ -375,7 +361,7 @@ class _PerformamnceSummaryReportDetailsPageState
                                           const expiryDateKey = 'dateOfExpiry';
 
                                           return _ReportDetailsContent(
-                                            title: title,
+                                            title: "",
                                             data: DigitGridData(
                                               columns: [
                                                 DigitGridColumn(
@@ -397,12 +383,12 @@ class _PerformamnceSummaryReportDetailsPageState
                                                   width: 100,
                                                 ),
                                                 DigitGridColumn(
-                                                  label: quantityLabel,
+                                                  label: "",
                                                   key: quantityKey,
                                                   width: 100,
                                                 ),
                                                 DigitGridColumn(
-                                                  label: transactingPartyLabel,
+                                                  label: "",
                                                   key: transactingPartyKey,
                                                   width: 200,
                                                 ),
@@ -438,17 +424,11 @@ class _PerformamnceSummaryReportDetailsPageState
                                                         ),
                                                         DigitGridCell(
                                                           key: waybillKey,
-                                                          value: model
-                                                                  .waybillNumber ??
-                                                              model
-                                                                  .waybillNumber ??
-                                                              '',
+                                                          value: '',
                                                         ),
                                                         DigitGridCell(
                                                           key: quantityKey,
-                                                          value:
-                                                              model.quantity ??
-                                                                  '',
+                                                          value: '',
                                                         ),
                                                         DigitGridCell(
                                                           key:
@@ -474,10 +454,10 @@ class _PerformamnceSummaryReportDetailsPageState
                                                           //         model
                                                           //             .receiverType ??
                                                           //         '',
-                                                          value: facilityMap[model
-                                                                      .transactingPartyId]
-                                                                  ?.name ??
-                                                              '',
+                                                          value:
+                                                              facilityMap[model]
+                                                                      ?.name ??
+                                                                  '',
                                                         ),
                                                         DigitGridCell(
                                                           key: batchNumberKey,
@@ -547,79 +527,6 @@ class _PerformamnceSummaryReportDetailsPageState
         },
       ),
     );
-  }
-
-  String get title {
-    String value;
-    switch (widget.reportType) {
-      case InventoryReportType.receipt:
-        value = i18.inventoryReportDetails.receiptReportTitle;
-        break;
-      case InventoryReportType.dispatch:
-        value = i18.inventoryReportDetails.dispatchReportTitle;
-        break;
-      case InventoryReportType.returned:
-        value = i18.inventoryReportDetails.returnedReportTitle;
-        break;
-      case InventoryReportType.damage:
-        value = i18.inventoryReportDetails.damageReportTitle;
-        break;
-      case InventoryReportType.loss:
-        value = i18.inventoryReportDetails.lossReportTitle;
-        break;
-      case InventoryReportType.reconciliation:
-        value = i18.inventoryReportDetails.reconciliationReportTitle;
-        break;
-    }
-
-    return localizations.translate(value);
-  }
-
-  String get quantityLabel {
-    String value;
-    switch (widget.reportType) {
-      case InventoryReportType.receipt:
-        value = i18.inventoryReportDetails.receiptQuantityLabel;
-        break;
-      case InventoryReportType.dispatch:
-        value = i18.inventoryReportDetails.dispatchQuantityLabel;
-        break;
-      case InventoryReportType.returned:
-        value = i18.inventoryReportDetails.returnedQuantityLabel;
-        break;
-      case InventoryReportType.damage:
-        value = i18.inventoryReportDetails.damagedQuantityLabel;
-        break;
-      default:
-        value = i18.inventoryReportDetails.lossQuantityLabel;
-        break;
-    }
-
-    return localizations.translate(value);
-  }
-
-  String get transactingPartyLabel {
-    String value;
-
-    switch (widget.reportType) {
-      case InventoryReportType.receipt:
-        value = i18.inventoryReportDetails.receiptTransactingPartyLabel;
-        break;
-      case InventoryReportType.dispatch:
-        value = i18.inventoryReportDetails.dispatchTransactingPartyLabel;
-        break;
-      case InventoryReportType.returned:
-        value = i18.inventoryReportDetails.returnedTransactingPartyLabel;
-        break;
-      case InventoryReportType.damage:
-        value = i18.inventoryReportDetails.damagedTransactingPartyLabel;
-        break;
-      default:
-        value = i18.inventoryReportDetails.lossTransactingPartyLabel;
-        break;
-    }
-
-    return localizations.translate(value);
   }
 
   String _getCountFromAdditionalDetails(

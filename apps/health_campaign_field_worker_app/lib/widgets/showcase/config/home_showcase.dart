@@ -18,6 +18,7 @@ class _HomePageShowcaseData {
         warehouseManagerFileComplaint,
         warehouseManagerSyncData,
         inventoryReport,
+        summaryReportPerformance,
         supervisorProgressBar,
         supervisorMyChecklist,
         supervisorComplaints,

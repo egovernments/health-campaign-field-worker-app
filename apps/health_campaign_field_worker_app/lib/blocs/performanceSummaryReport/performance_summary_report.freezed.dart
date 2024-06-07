@@ -18,20 +18,19 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$PerformanceSummaryReportEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String facilityId, String productVariantId)
-        loadData,
+    required TResult Function(String userId) loadData,
     required TResult Function() loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String facilityId, String productVariantId)? loadData,
+    TResult? Function(String userId)? loadData,
     TResult? Function()? loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String facilityId, String productVariantId)? loadData,
+    TResult Function(String userId)? loadData,
     TResult Function()? loading,
     required TResult orElse(),
   }) =>
@@ -87,7 +86,7 @@ abstract class _$$PerformanceSummaryReportLoadDataEventImplCopyWith<$Res> {
           $Res Function(_$PerformanceSummaryReportLoadDataEventImpl) then) =
       __$$PerformanceSummaryReportLoadDataEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String facilityId, String productVariantId});
+  $Res call({String userId});
 }
 
 /// @nodoc
@@ -103,17 +102,12 @@ class __$$PerformanceSummaryReportLoadDataEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? facilityId = null,
-    Object? productVariantId = null,
+    Object? userId = null,
   }) {
     return _then(_$PerformanceSummaryReportLoadDataEventImpl(
-      facilityId: null == facilityId
-          ? _value.facilityId
-          : facilityId // ignore: cast_nullable_to_non_nullable
-              as String,
-      productVariantId: null == productVariantId
-          ? _value.productVariantId
-          : productVariantId // ignore: cast_nullable_to_non_nullable
+      userId: null == userId
+          ? _value.userId
+          : userId // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -123,17 +117,14 @@ class __$$PerformanceSummaryReportLoadDataEventImplCopyWithImpl<$Res>
 
 class _$PerformanceSummaryReportLoadDataEventImpl
     implements PerformanceSummaryReportLoadDataEvent {
-  const _$PerformanceSummaryReportLoadDataEventImpl(
-      {required this.facilityId, required this.productVariantId});
+  const _$PerformanceSummaryReportLoadDataEventImpl({required this.userId});
 
   @override
-  final String facilityId;
-  @override
-  final String productVariantId;
+  final String userId;
 
   @override
   String toString() {
-    return 'PerformanceSummaryReportEvent.loadData(facilityId: $facilityId, productVariantId: $productVariantId)';
+    return 'PerformanceSummaryReportEvent.loadData(userId: $userId)';
   }
 
   @override
@@ -141,14 +132,11 @@ class _$PerformanceSummaryReportLoadDataEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PerformanceSummaryReportLoadDataEventImpl &&
-            (identical(other.facilityId, facilityId) ||
-                other.facilityId == facilityId) &&
-            (identical(other.productVariantId, productVariantId) ||
-                other.productVariantId == productVariantId));
+            (identical(other.userId, userId) || other.userId == userId));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, facilityId, productVariantId);
+  int get hashCode => Object.hash(runtimeType, userId);
 
   @JsonKey(ignore: true)
   @override
@@ -161,31 +149,30 @@ class _$PerformanceSummaryReportLoadDataEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String facilityId, String productVariantId)
-        loadData,
+    required TResult Function(String userId) loadData,
     required TResult Function() loading,
   }) {
-    return loadData(facilityId, productVariantId);
+    return loadData(userId);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String facilityId, String productVariantId)? loadData,
+    TResult? Function(String userId)? loadData,
     TResult? Function()? loading,
   }) {
-    return loadData?.call(facilityId, productVariantId);
+    return loadData?.call(userId);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String facilityId, String productVariantId)? loadData,
+    TResult Function(String userId)? loadData,
     TResult Function()? loading,
     required TResult orElse(),
   }) {
     if (loadData != null) {
-      return loadData(facilityId, productVariantId);
+      return loadData(userId);
     }
     return orElse();
   }
@@ -227,12 +214,10 @@ class _$PerformanceSummaryReportLoadDataEventImpl
 abstract class PerformanceSummaryReportLoadDataEvent
     implements PerformanceSummaryReportEvent {
   const factory PerformanceSummaryReportLoadDataEvent(
-          {required final String facilityId,
-          required final String productVariantId}) =
+          {required final String userId}) =
       _$PerformanceSummaryReportLoadDataEventImpl;
 
-  String get facilityId;
-  String get productVariantId;
+  String get userId;
   @JsonKey(ignore: true)
   _$$PerformanceSummaryReportLoadDataEventImplCopyWith<
           _$PerformanceSummaryReportLoadDataEventImpl>
@@ -282,8 +267,7 @@ class _$PerformanceSummaryReportLoadingEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String facilityId, String productVariantId)
-        loadData,
+    required TResult Function(String userId) loadData,
     required TResult Function() loading,
   }) {
     return loading();
@@ -292,7 +276,7 @@ class _$PerformanceSummaryReportLoadingEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String facilityId, String productVariantId)? loadData,
+    TResult? Function(String userId)? loadData,
     TResult? Function()? loading,
   }) {
     return loading?.call();
@@ -301,7 +285,7 @@ class _$PerformanceSummaryReportLoadingEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String facilityId, String productVariantId)? loadData,
+    TResult Function(String userId)? loadData,
     TResult Function()? loading,
     required TResult orElse(),
   }) {
@@ -357,7 +341,7 @@ mixin _$PerformanceSummaryReportState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> summaryData)
+    required TResult Function(Map<String, List<TaskModel>> summaryData)
         summaryData,
   }) =>
       throw _privateConstructorUsedError;
@@ -365,14 +349,14 @@ mixin _$PerformanceSummaryReportState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult? Function(Map<String, List<TaskModel>> summaryData)? summaryData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult Function(Map<String, List<TaskModel>> summaryData)? summaryData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -470,7 +454,7 @@ class _$PerformanceSummaryReportLoadingStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> summaryData)
+    required TResult Function(Map<String, List<TaskModel>> summaryData)
         summaryData,
   }) {
     return loading();
@@ -481,7 +465,7 @@ class _$PerformanceSummaryReportLoadingStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult? Function(Map<String, List<TaskModel>> summaryData)? summaryData,
   }) {
     return loading?.call();
   }
@@ -491,7 +475,7 @@ class _$PerformanceSummaryReportLoadingStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult Function(Map<String, List<TaskModel>> summaryData)? summaryData,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -590,7 +574,7 @@ class _$PerformanceSummaryReportEmptyStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> summaryData)
+    required TResult Function(Map<String, List<TaskModel>> summaryData)
         summaryData,
   }) {
     return empty();
@@ -601,7 +585,7 @@ class _$PerformanceSummaryReportEmptyStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult? Function(Map<String, List<TaskModel>> summaryData)? summaryData,
   }) {
     return empty?.call();
   }
@@ -611,7 +595,7 @@ class _$PerformanceSummaryReportEmptyStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult Function(Map<String, List<TaskModel>> summaryData)? summaryData,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -672,7 +656,7 @@ abstract class _$$PerformanceSummaryReportSummaryDataStateImplCopyWith<$Res> {
           $Res Function(_$PerformanceSummaryReportSummaryDataStateImpl) then) =
       __$$PerformanceSummaryReportSummaryDataStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Map<String, List<StockModel>> summaryData});
+  $Res call({Map<String, List<TaskModel>> summaryData});
 }
 
 /// @nodoc
@@ -694,7 +678,7 @@ class __$$PerformanceSummaryReportSummaryDataStateImplCopyWithImpl<$Res>
       summaryData: null == summaryData
           ? _value._summaryData
           : summaryData // ignore: cast_nullable_to_non_nullable
-              as Map<String, List<StockModel>>,
+              as Map<String, List<TaskModel>>,
     ));
   }
 }
@@ -704,13 +688,13 @@ class __$$PerformanceSummaryReportSummaryDataStateImplCopyWithImpl<$Res>
 class _$PerformanceSummaryReportSummaryDataStateImpl
     implements PerformanceSummaryReportSummaryDataState {
   const _$PerformanceSummaryReportSummaryDataStateImpl(
-      {final Map<String, List<StockModel>> summaryData = const {}})
+      {final Map<String, List<TaskModel>> summaryData = const {}})
       : _summaryData = summaryData;
 
-  final Map<String, List<StockModel>> _summaryData;
+  final Map<String, List<TaskModel>> _summaryData;
   @override
   @JsonKey()
-  Map<String, List<StockModel>> get summaryData {
+  Map<String, List<TaskModel>> get summaryData {
     if (_summaryData is EqualUnmodifiableMapView) return _summaryData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_summaryData);
@@ -748,7 +732,7 @@ class _$PerformanceSummaryReportSummaryDataStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<String, List<StockModel>> summaryData)
+    required TResult Function(Map<String, List<TaskModel>> summaryData)
         summaryData,
   }) {
     return summaryData(this.summaryData);
@@ -759,7 +743,7 @@ class _$PerformanceSummaryReportSummaryDataStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult? Function(Map<String, List<TaskModel>> summaryData)? summaryData,
   }) {
     return summaryData?.call(this.summaryData);
   }
@@ -769,7 +753,7 @@ class _$PerformanceSummaryReportSummaryDataStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<String, List<StockModel>> summaryData)? summaryData,
+    TResult Function(Map<String, List<TaskModel>> summaryData)? summaryData,
     required TResult orElse(),
   }) {
     if (summaryData != null) {
@@ -820,10 +804,10 @@ class _$PerformanceSummaryReportSummaryDataStateImpl
 abstract class PerformanceSummaryReportSummaryDataState
     implements PerformanceSummaryReportState {
   const factory PerformanceSummaryReportSummaryDataState(
-          {final Map<String, List<StockModel>> summaryData}) =
+          {final Map<String, List<TaskModel>> summaryData}) =
       _$PerformanceSummaryReportSummaryDataStateImpl;
 
-  Map<String, List<StockModel>> get summaryData;
+  Map<String, List<TaskModel>> get summaryData;
   @JsonKey(ignore: true)
   _$$PerformanceSummaryReportSummaryDataStateImplCopyWith<
           _$PerformanceSummaryReportSummaryDataStateImpl>

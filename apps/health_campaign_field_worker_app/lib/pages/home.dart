@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:drift/src/runtime/api/runtime_api.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -419,7 +420,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.viewSummaryReportsPerformanceLabel,
           onPressed: () {
             context.router.push(
-              InventoryReportSelectionRoute(),
+              PerformamnceSummaryReportDetailsRoute(),
             );
           },
         ),
@@ -432,7 +433,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
+                  context.read<LocalSqlDataStore>() as GeneratedDatabase,
                 ),
               ),
             );
@@ -503,6 +504,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
+      i18.home.viewSummaryReportsPerformanceLabel,
       i18.home.db,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
@@ -520,6 +522,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
+
+    widgetList.add(HomeItemCard(
+      icon: Icons.announcement,
+      label: i18.home.viewSummaryReportsPerformanceLabel,
+      onPressed: () {
+        context.router.push(
+          PerformamnceSummaryReportDetailsRoute(),
+        );
+      },
+    ));
 
     return _HomeItemDataModel(
       widgetList,
