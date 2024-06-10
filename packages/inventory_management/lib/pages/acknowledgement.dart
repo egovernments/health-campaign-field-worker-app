@@ -6,11 +6,11 @@ import '../widgets/localized.dart';
 
 @RoutePage()
 class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
-  bool isDataRecordSuccess;
-  String? label;
-  String? description;
-  Map<String, dynamic>? descriptionTableData;
-  InventoryAcknowledgementPage({
+  final bool isDataRecordSuccess;
+  final String? label;
+  final String? description;
+  final Map<String, dynamic>? descriptionTableData;
+  const InventoryAcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,

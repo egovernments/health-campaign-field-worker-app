@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';

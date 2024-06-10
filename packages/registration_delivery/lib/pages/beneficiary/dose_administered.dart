@@ -108,9 +108,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   }
                                   form.markAllAsTouched();
 
-                                  if (!form.valid)
+                                  if (!form.valid) {
                                     return;
-                                  else {
+                                  } else {
                                     final doseAdministered = form
                                         .control(_doseAdministeredKey)
                                         .value as KeyValue;
