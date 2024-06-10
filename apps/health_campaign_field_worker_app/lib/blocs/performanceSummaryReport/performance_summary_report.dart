@@ -60,7 +60,10 @@ class PerformannceSummaryReportBloc
       userId,
     );
     final taskList = await (taskRepository as TaskLocalRepository).search(
-      TaskSearchModel(tenantId: envConfig.variables.tenantId),
+      TaskSearchModel(
+        tenantId: envConfig.variables.tenantId,
+        status: Status.administeredSuccess.toValue(),
+      ),
       userId,
     );
     for (var element in householdList) {
@@ -94,14 +97,32 @@ class PerformannceSummaryReportBloc
     availableDates.addAll(dayVsIndividualListMap.keys.toSet());
     availableDates.addAll(dayVsTaskListMap.keys.toSet());
 
-    final groupedData = taskList.groupListsBy(
-      (element) => DateFormat('dd MMM yyyy').format(
-        DateTime.fromMillisecondsSinceEpoch(element.auditDetails!.createdTime),
-      ),
-    );
+    Map<String, List<int>> dayVsDataCount = {};
+
+    for (var date in availableDates) {
+      int totatlIndividualForADay = 0;
+      int totatlHouseholdlForADay = 0;
+      int totatlTaskForADay = 0;
+
+      if (dayVsIndividualListMap.containsKey(date) &&
+          dayVsIndividualListMap[date] != null) {
+        totatlIndividualForADay += dayVsIndividualListMap[date]!.length;
+      } else if (dayVsHouseholdListMap.containsKey(date) &&
+          dayVsHouseholdListMap[date] != null) {
+        totatlIndividualForADay += dayVsHouseholdListMap[date]!.length;
+      } else if (dayVsTaskListMap.containsKey(date) &&
+          dayVsTaskListMap[date] != null) {
+        totatlIndividualForADay += dayVsTaskListMap[date]!.length;
+      }
+      dayVsDataCount[date] = [
+        totatlIndividualForADay,
+        totatlHouseholdlForADay,
+        totatlTaskForADay,
+      ];
+    }
 
     emit(PerformanceSummaryReportSummaryDataState(
-      summaryData: groupedData,
+      summaryData: dayVsDataCount,
     ));
   }
 
@@ -131,6 +152,6 @@ class PerformanceSummaryReportState with _$PerformanceSummaryReportState {
       PerformanceSummaryReportEmptyState;
 
   const factory PerformanceSummaryReportState.summaryData({
-    @Default({}) Map<String, List<TaskModel>> summaryData,
+    @Default({}) Map<String, List<int>> summaryData,
   }) = PerformanceSummaryReportSummaryDataState;
 }
