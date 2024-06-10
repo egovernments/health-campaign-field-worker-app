@@ -7,7 +7,6 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:digit_data_model/utils/constants.dart';
 import 'package:dio/dio.dart';
 
-import '../../../utils/utils.dart';
 
 class AttendanceLogRemoteRepository
     extends RemoteRepository<AttendanceLogModel, AttendanceLogSearchModel> {

@@ -40,35 +40,6 @@ export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
-class CustomValidator {
-  /// Validates that control's value must be `true`
-  static Map<String, dynamic>? requiredMin(
-    AbstractControl<dynamic> control,
-  ) {
-    return control.value == null ||
-            control.value.toString().length >= 2 ||
-            control.value.toString().trim().isEmpty
-        ? null
-        : {'required': true};
-  }
-
-  static Map<String, dynamic>? validMobileNumber(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return null;
-    }
-
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
-
-    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
-
-    if (control.value.toString().length < 10) return {'mobileNumber': true};
-
-    return {'mobileNumber': true};
-  }
-}
-
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);
@@ -81,8 +52,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 

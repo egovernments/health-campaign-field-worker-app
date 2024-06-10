@@ -472,9 +472,7 @@ class _ComplaintsDetailsPageState
         disabled: shouldDisableForm,
         validators: [
           Validators.required,
-          CustomValidator.validMobileNumber,
-          Validators.minLength(10),
-          Validators.maxLength(10)
+          Validators.pattern(Constants.mobileNumberRegExp)
         ],
       ),
       _supervisorName: FormControl<String>(
@@ -485,11 +483,7 @@ class _ComplaintsDetailsPageState
       _supervisorContactNumber: FormControl<String>(
         value: complaintDetails?.supervisorContactNumber,
         disabled: shouldDisableForm,
-        validators: [
-          CustomValidator.validMobileNumber,
-          Validators.maxLength(10),
-          Validators.minLength(10),
-        ],
+        validators: [Validators.pattern(Constants.mobileNumberRegExp)],
       ),
       _complaintDescription: FormControl<String>(
         value: complaintDetails?.complaintDescription,

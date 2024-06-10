@@ -64,7 +64,7 @@ class MemberCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: DigitTheme.instance.colorScheme.background,
+        color: DigitTheme.instance.colorScheme.surface,
         border: Border.all(
           color: DigitTheme.instance.colorScheme.outline,
           width: 1,

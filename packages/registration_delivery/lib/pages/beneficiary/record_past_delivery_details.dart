@@ -97,7 +97,7 @@ class _RecordPastDeliveryDetailsPageState
                             i18.common.coreCommonNo,
                           ),
                           action: (ctx) {
-                            router.pop();
+                            router.maybePop();
                             final event =
                                 context.read<DeliverInterventionBloc>();
 
@@ -316,8 +316,6 @@ class _RecordPastDeliveryDetailsPageState
   }
 
   FormGroup buildForm(BuildContext context) {
-    final bloc = context.read<DeliverInterventionBloc>().state;
-
     final futureTaskList = widget.tasks
         ?.where((task) => task.status == Status.delivered.toValue())
         .toList();

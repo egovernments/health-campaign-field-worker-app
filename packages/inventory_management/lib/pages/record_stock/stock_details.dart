@@ -55,7 +55,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         validators: [Validators.required],
       ),
       _transactionQuantityKey: FormControl<int>(validators: [
-        Validators.number,
+        Validators.number(),
         Validators.required,
         Validators.min(0),
         Validators.max(10000),
@@ -84,7 +84,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
     final theme = Theme.of(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
-    final parser = GS1BarcodeParser.defaultParser();
 
     return PopScope(
       onPopInvoked: (didPop) {
@@ -118,7 +117,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 const module = i18.stockDetails;
 
                 String pageTitle;
-                String transactionPartyLabel;
                 String quantityCountLabel;
                 String? transactionReasonLabel;
                 String? transactionReason;
@@ -129,23 +127,18 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                 switch (entryType) {
                   case StockRecordEntryType.receipt:
                     pageTitle = module.receivedPageTitle;
-                    transactionPartyLabel =
-                        module.selectTransactingPartyReceived;
                     quantityCountLabel = module.quantityReceivedLabel;
                     transactionType = TransactionType.received.toValue();
 
                     break;
                   case StockRecordEntryType.dispatch:
                     pageTitle = module.issuedPageTitle;
-                    transactionPartyLabel = module.selectTransactingPartyIssued;
                     quantityCountLabel = module.quantitySentLabel;
                     transactionType = TransactionType.dispatched.toValue();
 
                     break;
                   case StockRecordEntryType.returned:
                     pageTitle = module.returnedPageTitle;
-                    transactionPartyLabel =
-                        module.selectTransactingPartyReturned;
                     quantityCountLabel = module.quantityReturnedLabel;
                     transactionType = TransactionType.received.toValue();
                     break;
@@ -162,8 +155,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                     break;
                   case StockRecordEntryType.damaged:
                     pageTitle = module.damagedPageTitle;
-                    transactionPartyLabel =
-                        module.selectTransactingPartyReceivedFromDamaged;
                     quantityCountLabel = module.quantityDamagedLabel;
                     transactionReasonLabel = module.transactionReasonDamaged;
                     transactionType = TransactionType.dispatched.toValue();

@@ -4,39 +4,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/entities/inventory_transport_type.dart';
 
-/// This class contains custom validators for form controls.
-class CustomValidator {
-  /// Validates that control's value must be `true`
-  static Map<String, dynamic>? requiredMin(
-    AbstractControl<dynamic> control,
-  ) {
-    return control.value == null ||
-            control.value.toString().length >= 2 ||
-            control.value.toString().trim().isEmpty
-        ? null
-        : {'required': true};
-  }
-
-  /// Validates that the control's value is a valid stock count.
-  /// The value must be a non-negative integer less than or equal to 10000.
-  static Map<String, dynamic>? validStockCount(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return {'required': true};
-    }
-
-    var parsed = int.tryParse(control.value) ?? 0;
-    if (parsed < 0) {
-      return {'min': true};
-    } else if (parsed > 10000) {
-      return {'max': true};
-    }
-
-    return null;
-  }
-}
-
 // This is a singleton class for inventory operations.
 class InventorySingleton {
   static final InventorySingleton _singleton = InventorySingleton._internal();

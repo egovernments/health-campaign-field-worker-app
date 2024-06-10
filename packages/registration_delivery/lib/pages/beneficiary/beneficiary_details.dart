@@ -302,9 +302,8 @@ class _BeneficiaryDetailsPageState
                                     }
 
                                     return maskString(identifiers
-                                            .first.identifierId
-                                            .toString()) ??
-                                        '--';
+                                        .first.identifierId
+                                        .toString());
                                   }(),
                                   localizations.translate(
                                     i18.common.coreCommonAge,

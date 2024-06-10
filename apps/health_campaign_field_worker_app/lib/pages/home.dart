@@ -50,7 +50,7 @@ class HomePage extends LocalizedStatefulWidget {
 class _HomePageState extends LocalizedState<HomePage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -58,10 +58,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
           context
               .read<SyncBloc>()

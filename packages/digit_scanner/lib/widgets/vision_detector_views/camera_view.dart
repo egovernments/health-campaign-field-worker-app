@@ -11,7 +11,7 @@ import 'package:google_mlkit_commons/google_mlkit_commons.dart';
 
 class CameraView extends LocalizedStatefulWidget {
   const CameraView({
-    Key? key,
+    super.key,
     required this.customPaint,
     required this.onImage,
     this.onCameraFeedReady,
@@ -20,7 +20,7 @@ class CameraView extends LocalizedStatefulWidget {
     this.initialCameraLensDirection = CameraLensDirection.back,
     required this.cameraController,
     required this.cameras,
-  }) : super(key: key);
+  });
 
   final CustomPaint? customPaint;
   final Function(InputImage inputImage) onImage;
@@ -44,7 +44,6 @@ class _CameraViewState extends State<CameraView> {
   double _maxAvailableZoom = 1.0;
   double _minAvailableExposureOffset = 0.0;
   double _maxAvailableExposureOffset = 0.0;
-  double _currentExposureOffset = 0.0;
   bool _changingCameraLens = false;
 
   @override
@@ -253,7 +252,6 @@ class _CameraViewState extends State<CameraView> {
       _controller?.getMaxZoomLevel().then((value) {
         _maxAvailableZoom = value;
       });
-      _currentExposureOffset = 0.0;
       _controller?.getMinExposureOffset().then((value) {
         _minAvailableExposureOffset = value;
       });

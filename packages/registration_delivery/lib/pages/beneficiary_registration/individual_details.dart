@@ -72,8 +72,8 @@ class _IndividualDetailsPageState
                 if (value.navigateToRoot) {
                   (router.parent() as StackRouter).maybePop();
                 } else {
-                  router.popUntil(
-                      (route) => route.settings.name == SearchBeneficiaryRoute.name);
+                  router.popUntil((route) =>
+                      route.settings.name == SearchBeneficiaryRoute.name);
                   context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsEvent.searchByHousehold(
                           householdModel: value.householdModel,
@@ -778,7 +778,7 @@ class _IndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          Validators.minLength(2),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery,
