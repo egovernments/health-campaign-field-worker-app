@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,6 +15,7 @@ import '../../data/repositories/local/household.dart';
 import '../../data/repositories/local/individual.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
+import '../../models/performance_summary.dart';
 import '../../utils/app_exception.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
@@ -67,37 +69,43 @@ class PerformannceSummaryReportBloc
       userId,
     );
     for (var element in householdList) {
-      var dateKey = element.auditDetails!.createdTime.toString();
+      var dateKey = DigitDateUtils.getDateFromTimestamp(
+        element.auditDetails!.createdTime,
+      );
       if (dayVsHouseholdListMap.containsKey(dateKey) &&
           dayVsHouseholdListMap[dateKey] != null) {
         dayVsHouseholdListMap[dateKey]!.add(element);
       } else {
-        dayVsHouseholdListMap[dateKey] = [];
+        dayVsHouseholdListMap[dateKey] = [element];
       }
     }
     for (var element in individualList) {
-      var dateKey = element.auditDetails!.createdTime.toString();
+      var dateKey = DigitDateUtils.getDateFromTimestamp(
+        element.auditDetails!.createdTime,
+      );
       if (dayVsIndividualListMap.containsKey(dateKey) &&
           dayVsIndividualListMap[dateKey] != null) {
         dayVsIndividualListMap[dateKey]!.add(element);
       } else {
-        dayVsIndividualListMap[dateKey] = [];
+        dayVsIndividualListMap[dateKey] = [element];
       }
     }
     for (var element in taskList) {
-      var dateKey = element.auditDetails!.createdTime.toString();
+      var dateKey = DigitDateUtils.getDateFromTimestamp(
+        element.auditDetails!.createdTime,
+      );
       if (dayVsTaskListMap.containsKey(dateKey) &&
           dayVsTaskListMap[dateKey] != null) {
         dayVsTaskListMap[dateKey]!.add(element);
       } else {
-        dayVsTaskListMap[dateKey] = [];
+        dayVsTaskListMap[dateKey] = [element];
       }
     }
     availableDates.addAll(dayVsHouseholdListMap.keys.toSet());
     availableDates.addAll(dayVsIndividualListMap.keys.toSet());
     availableDates.addAll(dayVsTaskListMap.keys.toSet());
 
-    Map<String, List<int>> dayVsDataCount = {};
+    Map<String, PerformanceSummary> dayVsDataCount = {};
 
     for (var date in availableDates) {
       int totatlIndividualForADay = 0;
@@ -107,18 +115,21 @@ class PerformannceSummaryReportBloc
       if (dayVsIndividualListMap.containsKey(date) &&
           dayVsIndividualListMap[date] != null) {
         totatlIndividualForADay += dayVsIndividualListMap[date]!.length;
-      } else if (dayVsHouseholdListMap.containsKey(date) &&
-          dayVsHouseholdListMap[date] != null) {
-        totatlIndividualForADay += dayVsHouseholdListMap[date]!.length;
-      } else if (dayVsTaskListMap.containsKey(date) &&
-          dayVsTaskListMap[date] != null) {
-        totatlIndividualForADay += dayVsTaskListMap[date]!.length;
       }
-      dayVsDataCount[date] = [
-        totatlIndividualForADay,
-        totatlHouseholdlForADay,
-        totatlTaskForADay,
-      ];
+      if (dayVsHouseholdListMap.containsKey(date) &&
+          dayVsHouseholdListMap[date] != null) {
+        totatlHouseholdlForADay += dayVsHouseholdListMap[date]!.length;
+      }
+      if (dayVsTaskListMap.containsKey(date) &&
+          dayVsTaskListMap[date] != null) {
+        totatlTaskForADay += dayVsTaskListMap[date]!.length;
+      }
+      PerformanceSummary summary = PerformanceSummary(
+        individualCount: totatlIndividualForADay,
+        householdCount: totatlHouseholdlForADay,
+        taskCount: totatlTaskForADay,
+      );
+      dayVsDataCount[date] = summary;
     }
 
     emit(PerformanceSummaryReportSummaryDataState(
@@ -152,6 +163,6 @@ class PerformanceSummaryReportState with _$PerformanceSummaryReportState {
       PerformanceSummaryReportEmptyState;
 
   const factory PerformanceSummaryReportState.summaryData({
-    @Default({}) Map<String, List<int>> summaryData,
+    @Default({}) Map<String, PerformanceSummary> summaryData,
   }) = PerformanceSummaryReportSummaryDataState;
 }

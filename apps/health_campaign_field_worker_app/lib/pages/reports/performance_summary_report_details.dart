@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -66,10 +67,10 @@ class _PerformamnceSummaryReportDetailsPageState
   void _loadData() {
     final bloc = BlocProvider.of<PerformannceSummaryReportBloc>(context);
     bloc.add(PerformanceSummaryReportLoadDataEvent(
-        userId: context.loggedInUserUuid));
+      userId: context.loggedInUserUuid,
+    ));
   }
 
-  Map<String, FacilityModel> facilityMap = {};
   static const _householdKey = 'householdKey';
   static const _individualKey = 'individualKey';
   static const _treatedKey = 'treatedKey';
@@ -94,79 +95,80 @@ class _PerformamnceSummaryReportDetailsPageState
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "title",
+                    "Performance Summary Report",
                     maxLines: 1,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
                 ),
               ),
-              ReactiveFormBuilder(
-                form: _form,
-                builder: (ctx, form, child) {
-                  return SizedBox(
-                    height: 300,
-                    child: _ReportDetailsContent(
-                      title: "",
-                      data: DigitGridData(
-                        columns: [
-                          DigitGridColumn(
-                            label: localizations.translate(
-                              i18.inventoryReportDetails.dateLabel,
+              if (performanceSumamryReportState
+                  is PerformanceSummaryReportSummaryDataState)
+                ReactiveFormBuilder(
+                  form: _form,
+                  builder: (ctx, form, child) {
+                    return SizedBox(
+                      height: 300,
+                      child: _ReportDetailsContent(
+                        title: "Performance Summary Report",
+                        data: DigitGridData(
+                          columns: [
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.dateLabel,
+                              ),
+                              key: _dateKey,
+                              width: 100,
                             ),
-                            key: _dateKey,
-                            width: 100,
-                          ),
-                          DigitGridColumn(
-                            label:
-                                localizations.translate("HOUSEHOLD_DATA_LIST"),
-                            key: _householdKey,
-                            width: 100,
-                          ),
-                          DigitGridColumn(
-                            label:
-                                localizations.translate("INDIVIDUAL_DATA_LIST"),
-                            key: _individualKey,
-                            width: 100,
-                          ),
-                          DigitGridColumn(
-                            label: localizations.translate("TASK_DATA_LIST"),
-                            key: _treatedKey,
-                            width: 200,
-                          ),
-                        ],
-                        rows: [
-                          for (final entry in (performanceSumamryReportState
-                                  as PerformanceSummaryReportSummaryDataState)
-                              .summaryData
-                              .entries) ...[
-                            for (var countList in entry.value)
+                            DigitGridColumn(
+                              label: localizations
+                                  .translate("HOUSEHOLD_DATA_LIST"),
+                              key: _householdKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label: localizations
+                                  .translate("INDIVIDUAL_DATA_LIST"),
+                              key: _individualKey,
+                              width: 100,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate("TASK_DATA_LIST"),
+                              key: _treatedKey,
+                              width: 200,
+                            ),
+                          ],
+                          rows: [
+                            for (final entry in performanceSumamryReportState
+                                .summaryData.entries) ...[
                               DigitGridRow(
                                 [
                                   DigitGridCell(
                                     key: _dateKey,
                                     value: entry.key,
                                   ),
-                                  const DigitGridCell(
+                                  DigitGridCell(
                                     key: _householdKey,
-                                    value: countList[0],
+                                    value:
+                                        entry.value.householdCount.toString(),
                                   ),
-                                  const DigitGridCell(
+                                  DigitGridCell(
                                     key: _individualKey,
-                                    value: '',
+                                    value:
+                                        entry.value.individualCount.toString(),
                                   ),
                                   DigitGridCell(
                                     key: _treatedKey,
-                                    value: "",
+                                    value: entry.value.taskCount.toString(),
                                   ),
                                 ],
                               ),
+                            ],
                           ],
-                        ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                    );
+                  },
+                ),
             ],
           );
         },
