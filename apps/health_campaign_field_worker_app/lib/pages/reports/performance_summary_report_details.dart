@@ -120,19 +120,23 @@ class _PerformamnceSummaryReportDetailsPageState
                               width: 100,
                             ),
                             DigitGridColumn(
-                              label: localizations
-                                  .translate("HOUSEHOLD_DATA_LIST"),
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST",
+                              ),
                               key: _householdKey,
                               width: 100,
                             ),
                             DigitGridColumn(
-                              label: localizations
-                                  .translate("INDIVIDUAL_DATA_LIST"),
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST",
+                              ),
                               key: _individualKey,
                               width: 100,
                             ),
                             DigitGridColumn(
-                              label: localizations.translate("TASK_DATA_LIST"),
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_TASK_DATA_LIST",
+                              ),
                               key: _treatedKey,
                               width: 200,
                             ),

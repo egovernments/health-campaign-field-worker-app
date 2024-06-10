@@ -489,6 +489,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.viewSummaryReportsPerformanceLabel:
+          homeShowcaseData.summaryReportPerformance.showcaseKey,
       i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
@@ -522,16 +524,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
-
-    widgetList.add(HomeItemCard(
-      icon: Icons.announcement,
-      label: i18.home.viewSummaryReportsPerformanceLabel,
-      onPressed: () {
-        context.router.push(
-          PerformamnceSummaryReportDetailsRoute(),
-        );
-      },
-    ));
 
     return _HomeItemDataModel(
       widgetList,

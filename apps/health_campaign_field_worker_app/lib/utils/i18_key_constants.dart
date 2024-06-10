@@ -857,7 +857,7 @@ class Home {
 
   String get viewReportsLabel => 'HOME_VIEW_REPORTS_LABEL';
   String get viewSummaryReportsPerformanceLabel =>
-      'HOME_VIEW_SUMMARY_REPORTS_PERFORMANCE_LABEL';
+      'HOME_VIEW_PERFORMANCE_SUMMARY_REPORTS_LABEL';
 
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
