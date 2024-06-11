@@ -186,8 +186,8 @@ class ReferralReconciliation {
   String get cycle => 'CYCLE';
   String get noCyclesFound => 'NO_CYCLES_FOUND';
   String get iconLabel => 'ICON_LABEL';
-  String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
-  String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
+  String get referralSearchHintText => 'REFERRAL_SEARCH_HINT_TEXT';
+  String get referralInfoDescription => 'REFERRAL_INFO_DESCRIPTION';
   String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
   String get scannerLabel => 'SCANNER_LABEL';
 }
