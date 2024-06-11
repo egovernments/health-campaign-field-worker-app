@@ -1435,7 +1435,12 @@ class StockDetails {
   /// Waybill number label
   String get waybillNumberLabel => 'STOCK_DETAILS_WAYBILL_NUMBER';
 
+  String get voucherNumberValidation =>
+      'STOCK_DETAILS_WAYBILL_NUMBER_VALIDATION';
+
   String get batchNumberLabel => 'STOCK_DETAILS_BATCH_NUMBER';
+
+  String get batchNumberValidation => 'STOCK_DETAILS_BATCH_NUMBER_VALIDATION';
 
   String get dateOfExpiryLabel => 'STOCK_DETAILS_DATE_OF_EXPIRY';
 

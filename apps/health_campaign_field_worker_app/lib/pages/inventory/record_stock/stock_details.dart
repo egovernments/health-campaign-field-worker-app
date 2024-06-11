@@ -43,6 +43,9 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _deliveryTeamKey = 'deliveryTeam';
   static const _batchNumberKey = 'batchNumber';
   static const _dateOfExpiry = 'dateOfExpiry';
+  static const albendazole = 'Albendazole';
+  static const ivermectin = 'Ivermectin';
+
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
 
@@ -61,7 +64,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
       ]),
       _transactionReasonKey: FormControl<TransactionReason>(),
       _waybillNumberKey: FormControl<String>(
-        validators: [Validators.required],
+        validators: [Validators.required, CustomValidator.voucherNumber],
       ),
       _waybillQuantityKey: FormControl<int>(
         validators: [
@@ -680,10 +683,16 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                           )
                                                           .value !=
                                                       null &&
-                                                  (form.control(_productVariantKey).value
-                                                              as ProductVariantModel)
-                                                          .sku ==
-                                                      "Albendazole 400mg") {
+                                                  (form
+                                                              .control(
+                                                                _productVariantKey,
+                                                              )
+                                                              .value
+                                                          as ProductVariantModel)
+                                                      .sku!
+                                                      .contains(
+                                                        albendazole,
+                                                      )) {
                                                 setState(() {
                                                   form
                                                       .control(
@@ -716,16 +725,33 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                     autoValidate: true,
                                                   );
                                                 });
+                                                form
+                                                    .control(
+                                                  _batchNumberKey,
+                                                )
+                                                    .setValidators(
+                                                  [
+                                                    Validators.required,
+                                                    CustomValidator
+                                                        .batchNumber4,
+                                                  ],
+                                                  updateParent: true,
+                                                  autoValidate: true,
+                                                );
                                               } else if (form
                                                           .control(
                                                             _productVariantKey,
                                                           )
                                                           .value !=
                                                       null &&
-                                                  (form.control(_productVariantKey).value
-                                                              as ProductVariantModel)
-                                                          .sku ==
-                                                      "Ivermectin 100mg") {
+                                                  (form
+                                                              .control(
+                                                                _productVariantKey,
+                                                              )
+                                                              .value
+                                                          as ProductVariantModel)
+                                                      .sku!
+                                                      .contains(ivermectin)) {
                                                 setState(() {
                                                   form
                                                       .control(
@@ -753,6 +779,19 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                       Validators.min(0),
                                                       Validators.max(context
                                                           .maximumQuantityIvermectin),
+                                                    ],
+                                                    updateParent: true,
+                                                    autoValidate: true,
+                                                  );
+                                                  form
+                                                      .control(
+                                                    _batchNumberKey,
+                                                  )
+                                                      .setValidators(
+                                                    [
+                                                      Validators.required,
+                                                      CustomValidator
+                                                          .batchNumber7,
                                                     ],
                                                     updateParent: true,
                                                     autoValidate: true,
@@ -974,7 +1013,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       "max": (object) =>
                                           "${localizations.translate(
                                             '${quantityCountLabel}_MAX_ERROR',
-                                          )} ${form.control(_productVariantKey).value != null && (form.control(_productVariantKey).value as ProductVariantModel).sku == "Albendazole 400mg" ? context.maximumQuantityAlbendazole : context.maximumQuantityIvermectin}",
+                                          )} ${form.control(_productVariantKey).value != null && (form.control(_productVariantKey).value as ProductVariantModel).sku!.contains(albendazole) ? context.maximumQuantityAlbendazole : context.maximumQuantityIvermectin}",
                                       "min": (object) =>
                                           localizations.translate(
                                             '${quantityCountLabel}_MIN_ERROR',
@@ -983,87 +1022,23 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     label: localizations.translate(
                                       quantityCountLabel,
                                     ),
-                                    onChanged: (control) {
-                                      if (form
-                                                  .control(_productVariantKey)
-                                                  .value !=
-                                              null &&
-                                          (form.control(_productVariantKey).value
-                                                      as ProductVariantModel)
-                                                  .sku ==
-                                              "Albendazole 400mg") {
-                                        setState(() {
-                                          form
-                                              .control(
-                                            _transactionQuantityKey,
-                                          )
-                                              .setValidators(
-                                            [
-                                              Validators.number,
-                                              Validators.required,
-                                              Validators.min(0),
-                                              Validators.max(context
-                                                  .maximumQuantityAlbendazole),
-                                            ],
-                                            updateParent: true,
-                                            autoValidate: true,
-                                          );
-                                          form
-                                              .control(
-                                                _transactionQuantityKey,
-                                              )
-                                              .touched;
-                                        });
-                                      } else if (form
-                                                  .control(_productVariantKey)
-                                                  .value !=
-                                              null &&
-                                          (form.control(_productVariantKey).value
-                                                      as ProductVariantModel)
-                                                  .sku ==
-                                              "Ivermectin 100mg") {
-                                        setState(() {
-                                          form
-                                              .control(
-                                            _transactionQuantityKey,
-                                          )
-                                              .setValidators(
-                                            [
-                                              Validators.number,
-                                              Validators.required,
-                                              Validators.min(0),
-                                              Validators.max(context
-                                                  .maximumQuantityIvermectin),
-                                            ],
-                                            updateParent: true,
-                                            autoValidate: true,
-                                          );
-                                          form
-                                              .control(
-                                                _transactionQuantityKey,
-                                              )
-                                              .touched;
-                                        });
-                                      }
-                                    },
                                   ),
                                   if (isWareHouseMgr)
                                     DigitTextFormField(
                                       label: localizations.translate(
                                         i18.stockDetails.waybillNumberLabel,
                                       ),
-                                      // inputFormatters: [
-                                      //   FilteringTextInputFormatter.allow(
-                                      //     RegExp('[0-9]'),
-                                      //   ),
-                                      //   LengthLimitingTextInputFormatter(5),
-                                      // ],
                                       isRequired: true,
                                       formControlName: _waybillNumberKey,
                                       validationMessages: {
                                         'required': (object) =>
                                             localizations.translate(
                                               i18.common.corecommonRequired,
+                                            ),
+                                        'voucherNumber': (object) =>
+                                            localizations.translate(
+                                              i18.stockDetails
+                                                  .voucherNumberValidation,
                                             ),
                                       },
                                     ),
@@ -1087,74 +1062,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         "max": (object) =>
                                             "${localizations.translate(
                                               '${quantityCountLabel}_MAX_ERROR',
-                                            )} ${form.control(_productVariantKey).value != null && (form.control(_productVariantKey).value as ProductVariantModel).sku == "Albendazole 400mg" ? context.maximumQuantityAlbendazole : context.maximumQuantityIvermectin}",
+                                            )} ${form.control(_productVariantKey).value != null && (form.control(_productVariantKey).value as ProductVariantModel).sku!.contains(albendazole) ? context.maximumQuantityAlbendazole : context.maximumQuantityIvermectin}",
                                         "min": (object) =>
                                             localizations.translate(
                                               '${quantityCountLabel}_MIN_ERROR',
                                             ),
-                                      },
-                                      onChanged: (control) {
-                                        if (form
-                                                    .control(_productVariantKey)
-                                                    .value !=
-                                                null &&
-                                            (form.control(_productVariantKey).value
-                                                        as ProductVariantModel)
-                                                    .sku ==
-                                                "Albendazole 400mg") {
-                                          setState(() {
-                                            form
-                                                .control(
-                                              _waybillQuantityKey,
-                                            )
-                                                .setValidators(
-                                              [
-                                                Validators.number,
-                                                Validators.required,
-                                                Validators.min(0),
-                                                Validators.max(context
-                                                    .maximumQuantityAlbendazole),
-                                              ],
-                                              updateParent: true,
-                                              autoValidate: true,
-                                            );
-                                            form
-                                                .control(
-                                                  _waybillQuantityKey,
-                                                )
-                                                .touched;
-                                          });
-                                        } else if (form
-                                                    .control(_productVariantKey)
-                                                    .value !=
-                                                null &&
-                                            (form.control(_productVariantKey).value
-                                                        as ProductVariantModel)
-                                                    .sku ==
-                                                "Ivermectin 100mg") {
-                                          setState(() {
-                                            form
-                                                .control(
-                                              _waybillQuantityKey,
-                                            )
-                                                .setValidators(
-                                              [
-                                                Validators.number,
-                                                Validators.required,
-                                                Validators.min(0),
-                                                Validators.max(context
-                                                    .maximumQuantityIvermectin),
-                                              ],
-                                              updateParent: true,
-                                              autoValidate: true,
-                                            );
-                                            form
-                                                .control(
-                                                  _waybillQuantityKey,
-                                                )
-                                                .touched;
-                                          });
-                                        }
                                       },
                                     ),
 
@@ -1164,18 +1076,15 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                     ),
                                     isRequired: true,
                                     formControlName: _batchNumberKey,
-                                    // inputFormatters: [
-                                    //   FilteringTextInputFormatter.allow(
-                                    //     RegExp(r'[a-zA-Z0-9]'),
-                                    //   ),
-                                    //   LengthLimitingTextInputFormatter(
-                                    //     6,
-                                    //   ),
-                                    // ],
                                     validationMessages: {
                                       'required': (object) =>
                                           localizations.translate(
                                             i18.common.corecommonRequired,
+                                          ),
+                                      'batchNumber': (object) =>
+                                          localizations.translate(
+                                            i18.stockDetails
+                                                .batchNumberValidation,
                                           ),
                                     },
                                   ),

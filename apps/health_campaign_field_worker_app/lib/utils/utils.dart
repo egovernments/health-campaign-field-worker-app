@@ -125,6 +125,42 @@ class CustomValidator {
 
     return null;
   }
+
+  static Map<String, dynamic>? voucherNumber(
+    AbstractControl<dynamic> control,
+  ) {
+    const pattern = r'[0-9]';
+
+    return control.value == null ||
+            (control.value.toString().trim().length == 5 &&
+                RegExp(pattern).hasMatch(control.value.toString().trim()))
+        ? null
+        : {'voucherNumber': true};
+  }
+
+  static Map<String, dynamic>? batchNumber4(
+    AbstractControl<dynamic> control,
+  ) {
+    const pattern = r'^[a-zA-Z0-9]+$';
+
+    return control.value == null ||
+            (control.value.toString().trim().length == 4 &&
+                RegExp(pattern).hasMatch(control.value.toString().trim()))
+        ? null
+        : {'batchNumber': true};
+  }
+
+  static Map<String, dynamic>? batchNumber7(
+    AbstractControl<dynamic> control,
+  ) {
+    const pattern = r'[a-zA-Z0-9]';
+
+    return control.value == null ||
+            (control.value.toString().trim().length == 7 &&
+                RegExp(pattern).hasMatch(control.value.toString().trim()))
+        ? null
+        : {'batchNumber': true};
+  }
 }
 
 setBgRunning(bool isBgRunning) async {
