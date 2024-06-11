@@ -1,24 +1,16 @@
 import 'dart:async';
-import 'dart:html';
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:flutter/src/widgets/basic.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:intl/intl.dart';
 
-import '../../data/data_repository.dart';
-import '../../data/local_store/secure_store/secure_store.dart';
-import '../../data/local_store/sql_store/tables/task.dart';
 import '../../data/repositories/local/household.dart';
-import '../../data/repositories/local/individual.dart';
 import '../../data/repositories/local/product_variant.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
 import '../../models/performance_summary.dart';
-import '../../utils/app_exception.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/typedefs.dart';
 
@@ -84,14 +76,18 @@ class PerformannceSummaryReportBloc
       variantIdVsProduct[productVariant.sku] = productVariant.id;
     }
 
-    var albendazoleResourceId = variantIdVsProduct.keys
-        .where((element) =>
-            element!.contains(BeneficiaryType.albendazole.toValue()))
+    var albendazoleResourceKey = variantIdVsProduct.keys
+        .where((element) => element!
+            .toUpperCase()
+            .contains(BeneficiaryType.albendazole.name.toUpperCase()))
         .first;
-    var ivermectinResourceId = variantIdVsProduct.keys
-        .where((element) =>
-            element!.contains(BeneficiaryType.ivermectin.toValue()))
+    var albendazoleResourceId = variantIdVsProduct[albendazoleResourceKey];
+    var ivermectinResourceKey = variantIdVsProduct.keys
+        .where((element) => element!
+            .toUpperCase()
+            .contains(BeneficiaryType.ivermectin.name.toUpperCase()))
         .first;
+    var ivermectinResourceId = variantIdVsProduct[ivermectinResourceKey];
 
     for (var element in householdList) {
       var dateKey = DigitDateUtils.getDateFromTimestamp(
@@ -173,11 +169,12 @@ class PerformannceSummaryReportBloc
       if (dayVsDrugsQuantityMap.containsKey(date) &&
           dayVsDrugsQuantityMap[date] != null &&
           dayVsDrugsQuantityMap[date]!.containsKey(ivermectinResourceId)) {
-        drugOne = dayVsDrugsQuantityMap[date]![ivermectinResourceId] ?? 0;
+        drugTwo = dayVsDrugsQuantityMap[date]![ivermectinResourceId] ?? 0;
       }
-      final treatedPercentage = totalTaskForADay / 75;
+      final treatedPercentage = (totalTaskForADay / 75) * 100;
+      //Rounded treatedPercentage to 2 degree
       PerformanceSummary summary = PerformanceSummary(
-        treatedPercentage: treatedPercentage,
+        treatedPercentage: double.parse(treatedPercentage.toStringAsFixed(2)),
         householdCount: totatlHouseholdForADay,
         taskCount: totalTaskForADay,
         drugOne: drugOne,
@@ -209,15 +206,21 @@ class PerformannceSummaryReportBloc
     for (var resource in taskResourceList) {
       var quantityDistributed = 0;
       var quantityWasted = 0;
+
+      //todo remove the double and int checks once , data type is finalized
       var resourceId = resource.productVariantId;
-      quantityDistributed =
-          quantityDistributed + int.parse(resource.quantity ?? "0");
+      quantityDistributed = quantityDistributed +
+          (resource.quantity!.contains(".")
+              ? double.parse(resource.quantity ?? "0.0").toInt()
+              : int.parse(resource.quantity ?? "0"));
       if (resource.additionalFields != null) {
         var value = resource.additionalFields!.fields
             .firstWhere((element) => element.key == quantityWastedKey)
             .value;
         quantityWasted = quantityWasted +
-            double.parse(value is String ? value : "0.0").toInt();
+            (value is String && value.contains(".")
+                ? double.parse(value ?? "0.0").toInt()
+                : int.parse(value ?? "0"));
       }
       final quantityUsed = quantityDistributed + quantityWasted;
       if (resourceVsQuantity.containsKey(resourceId) &&

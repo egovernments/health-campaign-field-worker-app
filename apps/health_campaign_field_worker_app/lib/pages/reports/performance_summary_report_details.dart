@@ -121,28 +121,42 @@ class _PerformamnceSummaryReportDetailsPageState
                                 i18.inventoryReportDetails.dateLabel,
                               ),
                               key: _dateKey,
-                              width: 100,
+                              width: 80,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
                                 "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST",
                               ),
                               key: _householdKey,
-                              width: 100,
+                              width: 80,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
                                 "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST",
                               ),
                               key: _treatedPercentageKey,
-                              width: 100,
+                              width: 80,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
                                 "PERFORMANCE_SUMMARY_TASK_DATA_LIST",
                               ),
                               key: _treatedKey,
-                              width: 200,
+                              width: 80,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_DRUG_ONE",
+                              ),
+                              key: _drugOneKey,
+                              width: 80,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_DRUG_TWO",
+                              ),
+                              key: _drugTwoKey,
+                              width: 80,
                             ),
                           ],
                           rows: [
