@@ -48,6 +48,8 @@ and attached the event to load the data*/
           householdRepository:
               context.repository<HouseholdModel, HouseholdSearchModel>(),
           taskRepository: context.repository<TaskModel, TaskSearchModel>(),
+          productVariantRepository: context
+              .repository<ProductVariantModel, ProductVariantSearchModel>(),
         );
       },
       child: this,
@@ -72,9 +74,11 @@ class _PerformamnceSummaryReportDetailsPageState
   }
 
   static const _householdKey = 'householdKey';
-  static const _individualKey = 'individualKey';
+  static const _treatedPercentageKey = 'treatedPercentageKey';
   static const _treatedKey = 'treatedKey';
   static const _dateKey = 'dateKey';
+  static const _drugOneKey = 'drugOneKey';
+  static const _drugTwoKey = 'drugTwoKey';
 
   FormGroup _form() {
     return fb.group({});
@@ -130,7 +134,7 @@ class _PerformamnceSummaryReportDetailsPageState
                               label: localizations.translate(
                                 "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST",
                               ),
-                              key: _individualKey,
+                              key: _treatedPercentageKey,
                               width: 100,
                             ),
                             DigitGridColumn(
@@ -156,13 +160,21 @@ class _PerformamnceSummaryReportDetailsPageState
                                         entry.value.householdCount.toString(),
                                   ),
                                   DigitGridCell(
-                                    key: _individualKey,
-                                    value:
-                                        entry.value.individualCount.toString(),
-                                  ),
-                                  DigitGridCell(
                                     key: _treatedKey,
                                     value: entry.value.taskCount.toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _treatedPercentageKey,
+                                    value: entry.value.treatedPercentage
+                                        .toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _drugOneKey,
+                                    value: entry.value.drugOne.toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _drugTwoKey,
+                                    value: entry.value.drugTwo.toString(),
                                   ),
                                 ],
                               ),

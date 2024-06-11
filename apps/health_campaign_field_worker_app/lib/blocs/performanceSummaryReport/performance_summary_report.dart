@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -13,6 +14,7 @@ import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/local_store/sql_store/tables/task.dart';
 import '../../data/repositories/local/household.dart';
 import '../../data/repositories/local/individual.dart';
+import '../../data/repositories/local/product_variant.dart';
 import '../../data/repositories/local/task.dart';
 import '../../models/data_model.dart';
 import '../../models/performance_summary.dart';
@@ -33,10 +35,13 @@ class PerformannceSummaryReportBloc
 
   final TaskDataRepository taskRepository;
 
+  final ProductVariantDataRepository productVariantRepository;
+
   PerformannceSummaryReportBloc({
     required this.individualRepository,
     required this.householdRepository,
     required this.taskRepository,
+    required this.productVariantRepository,
   }) : super(const PerformanceSummaryReportEmptyState()) {
     on(_handleLoadDataEvent);
     on(_handleLoadingEvent);
@@ -47,19 +52,25 @@ class PerformannceSummaryReportBloc
     PerformanceSummaryReportEmitter emit,
   ) async {
     var userId = event.userId;
-    Map<String, List<IndividualModel>> dayVsIndividualListMap = {};
+    // Map<String, List<IndividualModel>> dayVsIndividualListMap = {};
     Map<String, List<HouseholdModel>> dayVsHouseholdListMap = {};
     Map<String, List<TaskModel>> dayVsTaskListMap = {};
+    Map<String?, String> variantIdVsProduct = {};
     Set<String> availableDates = {};
     final householdList =
         await (householdRepository as HouseholdLocalRepository).search(
       HouseholdSearchModel(tenantId: envConfig.variables.tenantId),
       userId,
     );
-    final individualList =
-        await (individualRepository as IndividualLocalRepository).search(
-      IndividualSearchModel(tenantId: envConfig.variables.tenantId),
-      userId,
+    // final individualList =
+    //     await (individualRepository as IndividualLocalRepository).search(
+    //   IndividualSearchModel(tenantId: envConfig.variables.tenantId),
+    //   userId,
+    // );
+    final productVariantList =
+        await (productVariantRepository as ProductVariantLocalRepository)
+            .search(
+      ProductVariantSearchModel(tenantId: envConfig.variables.tenantId),
     );
     final taskList = await (taskRepository as TaskLocalRepository).search(
       TaskSearchModel(
@@ -68,6 +79,20 @@ class PerformannceSummaryReportBloc
       ),
       userId,
     );
+
+    for (var productVariant in productVariantList) {
+      variantIdVsProduct[productVariant.sku] = productVariant.id;
+    }
+
+    var albendazoleResourceId = variantIdVsProduct.keys
+        .where((element) =>
+            element!.contains(BeneficiaryType.albendazole.toValue()))
+        .first;
+    var ivermectinResourceId = variantIdVsProduct.keys
+        .where((element) =>
+            element!.contains(BeneficiaryType.ivermectin.toValue()))
+        .first;
+
     for (var element in householdList) {
       var dateKey = DigitDateUtils.getDateFromTimestamp(
         element.auditDetails!.createdTime,
@@ -79,17 +104,17 @@ class PerformannceSummaryReportBloc
         dayVsHouseholdListMap[dateKey] = [element];
       }
     }
-    for (var element in individualList) {
-      var dateKey = DigitDateUtils.getDateFromTimestamp(
-        element.auditDetails!.createdTime,
-      );
-      if (dayVsIndividualListMap.containsKey(dateKey) &&
-          dayVsIndividualListMap[dateKey] != null) {
-        dayVsIndividualListMap[dateKey]!.add(element);
-      } else {
-        dayVsIndividualListMap[dateKey] = [element];
-      }
-    }
+    // for (var element in individualList) {
+    //   var dateKey = DigitDateUtils.getDateFromTimestamp(
+    //     element.auditDetails!.createdTime,
+    //   );
+    //   if (dayVsIndividualListMap.containsKey(dateKey) &&
+    //       dayVsIndividualListMap[dateKey] != null) {
+    //     dayVsIndividualListMap[dateKey]!.add(element);
+    //   } else {
+    //     dayVsIndividualListMap[dateKey] = [element];
+    //   }
+    // }
     for (var element in taskList) {
       var dateKey = DigitDateUtils.getDateFromTimestamp(
         element.auditDetails!.createdTime,
@@ -102,32 +127,61 @@ class PerformannceSummaryReportBloc
       }
     }
     availableDates.addAll(dayVsHouseholdListMap.keys.toSet());
-    availableDates.addAll(dayVsIndividualListMap.keys.toSet());
+    // availableDates.addAll(dayVsIndividualListMap.keys.toSet());
     availableDates.addAll(dayVsTaskListMap.keys.toSet());
 
     Map<String, PerformanceSummary> dayVsDataCount = {};
+    Map<String, Map<String?, int>> dayVsDrugsQuantityMap = {};
+
+    for (var entry in dayVsTaskListMap.entries) {
+      var date = entry.key;
+      var taskListForADate = entry.value;
+      getDrugsVsQuantityMap(
+        taskListForADate,
+        date,
+        dayVsDrugsQuantityMap,
+      );
+    }
 
     for (var date in availableDates) {
-      int totatlIndividualForADay = 0;
-      int totatlHouseholdlForADay = 0;
-      int totatlTaskForADay = 0;
+      // int totatlIndividualForADay = 0;
+      int totatlHouseholdForADay = 0;
+      int totalTaskForADay = 0;
 
-      if (dayVsIndividualListMap.containsKey(date) &&
-          dayVsIndividualListMap[date] != null) {
-        totatlIndividualForADay += dayVsIndividualListMap[date]!.length;
-      }
+      // if (dayVsIndividualListMap.containsKey(date) &&
+      //     dayVsIndividualListMap[date] != null) {
+      //   totatlIndividualForADay += dayVsIndividualListMap[date]!.length;
+      // }
       if (dayVsHouseholdListMap.containsKey(date) &&
           dayVsHouseholdListMap[date] != null) {
-        totatlHouseholdlForADay += dayVsHouseholdListMap[date]!.length;
+        totatlHouseholdForADay += dayVsHouseholdListMap[date]!.length;
       }
       if (dayVsTaskListMap.containsKey(date) &&
           dayVsTaskListMap[date] != null) {
-        totatlTaskForADay += dayVsTaskListMap[date]!.length;
+        totalTaskForADay += dayVsTaskListMap[date]!.length;
       }
+
+      // denominator is fixed here
+      // assumption here is drugOne Albendazole and drugTwo is Ivermectin
+      var drugOne = 0;
+      var drugTwo = 0;
+      if (dayVsDrugsQuantityMap.containsKey(date) &&
+          dayVsDrugsQuantityMap[date] != null &&
+          dayVsDrugsQuantityMap[date]!.containsKey(albendazoleResourceId)) {
+        drugOne = dayVsDrugsQuantityMap[date]![albendazoleResourceId] ?? 0;
+      }
+      if (dayVsDrugsQuantityMap.containsKey(date) &&
+          dayVsDrugsQuantityMap[date] != null &&
+          dayVsDrugsQuantityMap[date]!.containsKey(ivermectinResourceId)) {
+        drugOne = dayVsDrugsQuantityMap[date]![ivermectinResourceId] ?? 0;
+      }
+      final treatedPercentage = totalTaskForADay / 75;
       PerformanceSummary summary = PerformanceSummary(
-        individualCount: totatlIndividualForADay,
-        householdCount: totatlHouseholdlForADay,
-        taskCount: totatlTaskForADay,
+        treatedPercentage: treatedPercentage,
+        householdCount: totatlHouseholdForADay,
+        taskCount: totalTaskForADay,
+        drugOne: drugOne,
+        drugTwo: drugTwo,
       );
       dayVsDataCount[date] = summary;
     }
@@ -135,6 +189,46 @@ class PerformannceSummaryReportBloc
     emit(PerformanceSummaryReportSummaryDataState(
       summaryData: dayVsDataCount,
     ));
+  }
+
+  void getDrugsVsQuantityMap(
+    List<TaskModel> taskList,
+    String date,
+    Map<String, Map<String?, int>> dayVsDrugsQuantityMap,
+  ) {
+    const quantityWastedKey = 'quantityWasted';
+    Map<String?, int> resourceVsQuantity = {};
+    List<TaskResourceModel> taskResourceList = [];
+
+    for (var task in taskList) {
+      if (task.resources == null) {
+        continue;
+      }
+      taskResourceList.addAll(task.resources!.toList());
+    }
+    for (var resource in taskResourceList) {
+      var quantityDistributed = 0;
+      var quantityWasted = 0;
+      var resourceId = resource.productVariantId;
+      quantityDistributed =
+          quantityDistributed + int.parse(resource.quantity ?? "0");
+      if (resource.additionalFields != null) {
+        var value = resource.additionalFields!.fields
+            .firstWhere((element) => element.key == quantityWastedKey)
+            .value;
+        quantityWasted = quantityWasted +
+            double.parse(value is String ? value : "0.0").toInt();
+      }
+      final quantityUsed = quantityDistributed + quantityWasted;
+      if (resourceVsQuantity.containsKey(resourceId) &&
+          resourceVsQuantity[resourceId] != null) {
+        resourceVsQuantity[resourceId] =
+            resourceVsQuantity[resourceId]! + quantityUsed;
+      } else {
+        resourceVsQuantity[resourceId] = quantityUsed;
+      }
+    }
+    dayVsDrugsQuantityMap[date] = resourceVsQuantity;
   }
 
   Future<void> _handleLoadingEvent(

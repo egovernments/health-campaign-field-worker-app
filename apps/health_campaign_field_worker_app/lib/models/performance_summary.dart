@@ -1,14 +1,20 @@
+import 'package:flutter/material.dart';
+
 import 'data_model.dart';
 
 class PerformanceSummary extends EntityModel {
-  int individualCount;
+  double treatedPercentage;
   int householdCount;
   int taskCount;
+  int drugOne;
+  int drugTwo;
 
   PerformanceSummary({
-    required this.individualCount,
+    required this.treatedPercentage,
     required this.householdCount,
     required this.taskCount,
+    required this.drugOne,
+    required this.drugTwo,
   }) : super();
 
   @override
