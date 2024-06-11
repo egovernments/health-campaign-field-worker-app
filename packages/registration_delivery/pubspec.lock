@@ -420,26 +420,26 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "29b8d33cce933e971831d371f0d873e008a091e99d4192cecd738de357eaaed8"
+      sha256: "31c9c45bdbad9fb4c3ed5ce1c2f95c983eaea4967ed0dcf9c36e467a77a97008"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.0+1"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "604be26d7f535027d1f16077b47b55a363c74a6040c34fb942ce82d58b9a54ec"
+      sha256: "2d033990f03f7a0ea651e08c37933b4ed5ea76bf3a6a2ac3ff652c2286d04912"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.1"
   digit_scanner:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: a9959caad13c65165db5dc00cbe592e640e881d5e512599eac55591722b2da15
+      sha256: abd9dcc5c2d39d7d81277a3437262e2ebc6a3c4a3862a51844c8ebf29a795f22
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.1"
   digit_showcase:
     dependency: "direct main"
     description:
