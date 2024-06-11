@@ -39,6 +39,7 @@
 
 * Initial stable Release
 
-## 1.0.0+1
+## 1.0.1
 
 * Bug fixes and enhancements
+* Updated digit_components and digit_scanner to latest versions

@@ -33,3 +33,7 @@ Initial stable Release
 ## 1.0.0+1
 
 * Updated digit_components to latest version
+
+## 1.0.1
+
+* GS1 Barcodes-Removed Enter Manual Code
