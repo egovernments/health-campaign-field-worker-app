@@ -93,12 +93,8 @@ class PerformannceSummaryReportBloc
       var dateKey = DigitDateUtils.getDateFromTimestamp(
         element.auditDetails!.createdTime,
       );
-      if (dayVsHouseholdListMap.containsKey(dateKey) &&
-          dayVsHouseholdListMap[dateKey] != null) {
-        dayVsHouseholdListMap[dateKey]!.add(element);
-      } else {
-        dayVsHouseholdListMap[dateKey] = [element];
-      }
+
+      dayVsHouseholdListMap.putIfAbsent(dateKey, () => []).add(element);
     }
     // for (var element in individualList) {
     //   var dateKey = DigitDateUtils.getDateFromTimestamp(
@@ -115,12 +111,8 @@ class PerformannceSummaryReportBloc
       var dateKey = DigitDateUtils.getDateFromTimestamp(
         element.auditDetails!.createdTime,
       );
-      if (dayVsTaskListMap.containsKey(dateKey) &&
-          dayVsTaskListMap[dateKey] != null) {
-        dayVsTaskListMap[dateKey]!.add(element);
-      } else {
-        dayVsTaskListMap[dateKey] = [element];
-      }
+
+      dayVsTaskListMap.putIfAbsent(dateKey, () => []).add(element);
     }
     availableDates.addAll(dayVsHouseholdListMap.keys.toSet());
     // availableDates.addAll(dayVsIndividualListMap.keys.toSet());
@@ -223,13 +215,11 @@ class PerformannceSummaryReportBloc
                 : int.parse(value ?? "0"));
       }
       final quantityUsed = quantityDistributed + quantityWasted;
-      if (resourceVsQuantity.containsKey(resourceId) &&
-          resourceVsQuantity[resourceId] != null) {
-        resourceVsQuantity[resourceId] =
-            resourceVsQuantity[resourceId]! + quantityUsed;
-      } else {
-        resourceVsQuantity[resourceId] = quantityUsed;
-      }
+      resourceVsQuantity.update(
+        resourceId,
+        (existingValue) => existingValue + quantityUsed,
+        ifAbsent: () => quantityUsed,
+      );
     }
     dayVsDrugsQuantityMap[date] = resourceVsQuantity;
   }
