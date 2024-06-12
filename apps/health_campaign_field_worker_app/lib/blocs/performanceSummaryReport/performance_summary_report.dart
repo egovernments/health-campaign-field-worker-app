@@ -210,9 +210,11 @@ class PerformannceSummaryReportBloc
             .firstWhere((element) => element.key == quantityWastedKey)
             .value;
         quantityWasted = quantityWasted +
-            (value is String && value.contains(".")
-                ? double.parse(value ?? "0.0").toInt()
-                : int.parse(value ?? "0"));
+            (value == null || value == "null"
+                ? 0
+                : (value is String && value.contains(".")
+                    ? double.parse(value ?? "0.0").toInt()
+                    : int.parse(value ?? "0")));
       }
       final quantityUsed = quantityDistributed + quantityWasted;
       resourceVsQuantity.update(

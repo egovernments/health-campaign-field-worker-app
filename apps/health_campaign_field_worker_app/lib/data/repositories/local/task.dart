@@ -130,6 +130,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                   lastModifiedBy: resources.auditModifiedBy,
                   lastModifiedTime: resources.auditModifiedTime,
                 ),
+                additionalFields: resources.additionalFields == null
+                    ? null
+                    : TaskResourceAdditionalFieldsMapper.fromJson(
+                        resources.additionalFields!,
+                      ),
               ),
             );
       } else {
@@ -232,6 +237,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                       lastModifiedBy: resources.auditModifiedBy,
                       lastModifiedTime: resources.auditModifiedTime,
                     ),
+                    additionalFields: resources.additionalFields == null
+                        ? null
+                        : TaskResourceAdditionalFieldsMapper.fromJson(
+                            resources.additionalFields!,
+                          ),
                   ),
                 ],
         );
