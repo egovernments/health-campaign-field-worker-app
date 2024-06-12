@@ -214,6 +214,10 @@ class HomeShowcase {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_INVENTORY_REPORT';
   }
 
+  String get summaryReportPerformance {
+    return 'COMMUNITY_DISTRIBUTOR_HOME_SHOWCASE_PERFORMANCE_SUMMARY_REPORT';
+  }
+
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
@@ -852,6 +856,8 @@ class Home {
   String get stockReconciliationLabel => 'HOME_STOCK_RECONCILIATION_LABEL';
 
   String get viewReportsLabel => 'HOME_VIEW_REPORTS_LABEL';
+  String get viewSummaryReportsPerformanceLabel =>
+      'HOME_VIEW_PERFORMANCE_SUMMARY_REPORTS_LABEL';
 
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
