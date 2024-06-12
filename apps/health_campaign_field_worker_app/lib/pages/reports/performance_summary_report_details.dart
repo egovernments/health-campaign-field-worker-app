@@ -79,6 +79,7 @@ class _PerformamnceSummaryReportDetailsPageState
   static const _dateKey = 'dateKey';
   static const _drugOneKey = 'drugOneKey';
   static const _drugTwoKey = 'drugTwoKey';
+  static const _title = "Summary Report";
 
   FormGroup _form() {
     return fb.group({});
@@ -99,7 +100,7 @@ class _PerformamnceSummaryReportDetailsPageState
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Performance Summary Report",
+                    _title,
                     maxLines: 1,
                     style: Theme.of(context).textTheme.displayMedium,
                   ),
@@ -113,7 +114,7 @@ class _PerformamnceSummaryReportDetailsPageState
                     return SizedBox(
                       height: 300,
                       child: _ReportDetailsContent(
-                        title: "Performance Summary Report",
+                        title: _title,
                         data: DigitGridData(
                           columns: [
                             DigitGridColumn(
