@@ -127,23 +127,24 @@ class _InventoryReportSelectionPageState
                 //     ),
                 //   ),
                 // ),
-                DigitListView(
-                  title: localizations.translate(
-                    i18.inventoryReportSelection
-                        .inventoryReportReconciliationLabel,
-                  ),
-                  description: localizations.translate(
-                    i18.inventoryReportSelection
-                        .inventoryReportReconciliationDescription,
-                  ),
-                  prefixIcon: Icons.store,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () => context.router.push(
-                    InventoryReportDetailsRoute(
-                      reportType: InventoryReportType.reconciliation,
+                if (!isCommunityDistributor)
+                  DigitListView(
+                    title: localizations.translate(
+                      i18.inventoryReportSelection
+                          .inventoryReportReconciliationLabel,
+                    ),
+                    description: localizations.translate(
+                      i18.inventoryReportSelection
+                          .inventoryReportReconciliationDescription,
+                    ),
+                    prefixIcon: Icons.store,
+                    sufixIcon: Icons.arrow_circle_right,
+                    onPressed: () => context.router.push(
+                      InventoryReportDetailsRoute(
+                        reportType: InventoryReportType.reconciliation,
+                      ),
                     ),
                   ),
-                ),
               ]),
               const SizedBox(height: 16),
             ],
