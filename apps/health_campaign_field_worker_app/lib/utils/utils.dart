@@ -129,7 +129,7 @@ class CustomValidator {
   static Map<String, dynamic>? voucherNumber(
     AbstractControl<dynamic> control,
   ) {
-    const pattern = r'[0-9]';
+    const pattern = r'^[0-9]+$';
 
     return control.value == null ||
             (control.value.toString().trim().length == 5 &&
@@ -153,7 +153,7 @@ class CustomValidator {
   static Map<String, dynamic>? batchNumber7(
     AbstractControl<dynamic> control,
   ) {
-    const pattern = r'[a-zA-Z0-9]';
+    const pattern = r'^[a-zA-Z][0-9]*$';
 
     return control.value == null ||
             (control.value.toString().trim().length == 7 &&
