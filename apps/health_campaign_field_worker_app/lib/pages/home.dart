@@ -433,7 +433,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>() as GeneratedDatabase,
+                  context.read<LocalSqlDataStore>(),
                 ),
               ),
             );
