@@ -108,99 +108,97 @@ class _PerformamnceSummaryReportDetailsPageState
               ),
               if (performanceSumamryReportState
                   is PerformanceSummaryReportSummaryDataState)
-                Expanded(
-                  child: ReactiveFormBuilder(
-                    form: _form,
-                    builder: (ctx, form, child) {
-                      return SizedBox(
-                        height: 300,
-                        child: _ReportDetailsContent(
-                          title: _title,
-                          data: DigitGridData(
-                            columns: [
-                              DigitGridColumn(
-                                label: localizations.translate(
-                                  i18.inventoryReportDetails.dateLabel,
-                                ),
-                                key: _dateKey,
-                                width: 80,
+                ReactiveFormBuilder(
+                  form: _form,
+                  builder: (ctx, form, child) {
+                    return SizedBox(
+                      height: 400,
+                      child: _ReportDetailsContent(
+                        title: _title,
+                        data: DigitGridData(
+                          columns: [
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                i18.inventoryReportDetails.dateLabel,
                               ),
-                              DigitGridColumn(
-                                label: localizations.translate(
-                                  "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST",
-                                ),
-                                key: _householdKey,
-                                width: 170,
+                              key: _dateKey,
+                              width: 90,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST",
                               ),
-                              DigitGridColumn(
-                                label: localizations.translate(
-                                  "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST",
-                                ),
-                                key: _treatedPercentageKey,
-                                width: 140,
+                              key: _householdKey,
+                              width: 170,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST",
                               ),
-                              DigitGridColumn(
-                                label: localizations.translate(
-                                  "PERFORMANCE_SUMMARY_TASK_DATA_LIST",
-                                ),
-                                key: _treatedKey,
-                                width: 120,
+                              key: _treatedPercentageKey,
+                              width: 140,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_TASK_DATA_LIST",
                               ),
-                              DigitGridColumn(
-                                label: localizations.translate(
-                                  "PERFORMANCE_SUMMARY_DRUG_ONE",
-                                ),
-                                key: _drugOneKey,
-                                width: 130,
+                              key: _treatedKey,
+                              width: 120,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_DRUG_ONE",
                               ),
-                              DigitGridColumn(
-                                label: localizations.translate(
-                                  "PERFORMANCE_SUMMARY_DRUG_TWO",
-                                ),
-                                key: _drugTwoKey,
-                                width: 130,
+                              key: _drugOneKey,
+                              width: 130,
+                            ),
+                            DigitGridColumn(
+                              label: localizations.translate(
+                                "PERFORMANCE_SUMMARY_DRUG_TWO",
+                              ),
+                              key: _drugTwoKey,
+                              width: 130,
+                            ),
+                          ],
+                          rows: [
+                            for (final entry in performanceSumamryReportState
+                                .summaryData.entries) ...[
+                              DigitGridRow(
+                                [
+                                  DigitGridCell(
+                                    key: _dateKey,
+                                    value: entry.key,
+                                  ),
+                                  DigitGridCell(
+                                    key: _householdKey,
+                                    value:
+                                        entry.value.householdCount.toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _treatedKey,
+                                    value: entry.value.taskCount.toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _treatedPercentageKey,
+                                    value: entry.value.treatedPercentage
+                                        .toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _drugOneKey,
+                                    value: entry.value.drugOne.toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _drugTwoKey,
+                                    value: entry.value.drugTwo.toString(),
+                                  ),
+                                ],
                               ),
                             ],
-                            rows: [
-                              for (final entry in performanceSumamryReportState
-                                  .summaryData.entries) ...[
-                                DigitGridRow(
-                                  [
-                                    DigitGridCell(
-                                      key: _dateKey,
-                                      value: entry.key,
-                                    ),
-                                    DigitGridCell(
-                                      key: _householdKey,
-                                      value:
-                                          entry.value.householdCount.toString(),
-                                    ),
-                                    DigitGridCell(
-                                      key: _treatedKey,
-                                      value: entry.value.taskCount.toString(),
-                                    ),
-                                    DigitGridCell(
-                                      key: _treatedPercentageKey,
-                                      value: entry.value.treatedPercentage
-                                          .toString(),
-                                    ),
-                                    DigitGridCell(
-                                      key: _drugOneKey,
-                                      value: entry.value.drugOne.toString(),
-                                    ),
-                                    DigitGridCell(
-                                      key: _drugTwoKey,
-                                      value: entry.value.drugTwo.toString(),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ],
-                          ),
+                          ],
                         ),
-                      );
-                    },
-                  ),
+                      ),
+                    );
+                  },
                 ),
             ],
           );
