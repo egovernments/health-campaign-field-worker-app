@@ -152,68 +152,75 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             ),
                           ),
                         ),
-                        Positioned(
-                          top: MediaQuery.of(context).size.height / 2.4,
-                          left: MediaQuery.of(context).size.width / 5,
-                          width: 300,
-                          height: 250,
-                          child: SizedBox(
-                            width: 150,
-                            height: 50,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: kPadding),
-                              child: Text(
-                                localizations.translate(
-                                  i18.scanner.manualScan,
-                                ),
-                                style: TextStyle(
-                                  color: theme.colorScheme.onError,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Positioned(
-                          top: MediaQuery.of(context).size.height / 2.2,
-                          left: MediaQuery.of(context).size.width / 5,
-                          width: 250,
-                          height: 50,
-                          child: SizedBox(
-                            width: 150,
-                            height: 50,
-                            child: TextButton(
-                              onPressed: () {
-                                context.read<DigitScannerBloc>().add(
-                                      const DigitScannerEvent.handleScanner(
-                                        barCode: [],
-                                        qrCode: [],
+                        widget.isGS1code
+                            ? const SizedBox.shrink()
+                            : Positioned(
+                                top: MediaQuery.of(context).size.height / 2.4,
+                                left: MediaQuery.of(context).size.width / 5,
+                                width: 300,
+                                height: 250,
+                                child: SizedBox(
+                                  width: 150,
+                                  height: 50,
+                                  child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: kPadding),
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.scanner.manualScan,
                                       ),
-                                    );
-                                setState(() {
-                                  manualCode = true;
-                                  _resourceController.value =
-                                      const TextEditingValue();
-                                });
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: kPadding),
-                                child: Text(
-                                  localizations.translate(
-                                    i18.scanner.enterManualCode,
-                                  ),
-                                  style: TextStyle(
-                                    color: theme.colorScheme.secondary,
-                                    fontSize: theme
-                                        .textTheme.headlineMedium?.fontSize,
-                                    decoration: TextDecoration.underline,
+                                      style: TextStyle(
+                                        color: theme.colorScheme.onError,
+                                        fontSize: 20,
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
+
+                        widget.isGS1code
+                            ? const SizedBox.shrink()
+                            : Positioned(
+                                top: MediaQuery.of(context).size.height / 2.2,
+                                left: MediaQuery.of(context).size.width / 5,
+                                width: 250,
+                                height: 50,
+                                child: SizedBox(
+                                  width: 150,
+                                  height: 50,
+                                  child: TextButton(
+                                    onPressed: () {
+                                      context.read<DigitScannerBloc>().add(
+                                            const DigitScannerEvent
+                                                .handleScanner(
+                                              barCode: [],
+                                              qrCode: [],
+                                            ),
+                                          );
+                                      setState(() {
+                                        manualCode = true;
+                                        _resourceController.value =
+                                            const TextEditingValue();
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: kPadding),
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.scanner.enterManualCode,
+                                        ),
+                                        style: TextStyle(
+                                          color: theme.colorScheme.secondary,
+                                          fontSize: theme.textTheme
+                                              .headlineMedium?.fontSize,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
 
                         Positioned(
                           bottom: 0,

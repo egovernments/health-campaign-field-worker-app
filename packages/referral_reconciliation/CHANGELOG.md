@@ -21,3 +21,7 @@ Updated digit_scanner to latest version
 ## 1.0.0
 
 * Initial stable version
+
+## 1.0.1
+
+* Upgraded digit_scanner,digit_data_model and digit_components to latest versions
