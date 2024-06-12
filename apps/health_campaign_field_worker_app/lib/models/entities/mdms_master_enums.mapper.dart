@@ -61,6 +61,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.rowVersion;
       case "ServiceDefs":
         return MasterEnums.serviceDefinitions;
+      case "FIREBASE_CONFIG":
+        return MasterEnums.firebaseConfig;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -105,6 +107,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ROW_VERSIONS";
       case MasterEnums.serviceDefinitions:
         return "ServiceDefs";
+      case MasterEnums.firebaseConfig:
+        return "FIREBASE_CONFIG";
     }
   }
 }
