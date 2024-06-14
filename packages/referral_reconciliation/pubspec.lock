@@ -412,7 +412,7 @@ packages:
       path: "../digit_scanner"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.1"
   dio:
     dependency: "direct main"
     description:
@@ -507,7 +507,7 @@ packages:
     source: hosted
     version: "2.0.0"
   flutter_keyboard_visibility:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_keyboard_visibility
       sha256: "4983655c26ab5b959252ee204c2fffa4afeb4413cd030455194ec0caa3b8e7cb"

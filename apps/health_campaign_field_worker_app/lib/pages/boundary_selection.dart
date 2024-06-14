@@ -10,10 +10,10 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../blocs/sync/sync.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -42,14 +42,17 @@ class _BoundarySelectionPageState
   StreamController<double> downloadProgress = StreamController<double>();
 
   Map<String, TextEditingController> dropdownControllers = {};
+  SyncBloc? syncBloc;
 
   @override
   void initState() {
-    context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
+    syncBloc = context.read<SyncBloc>();
+    syncBloc!.add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
         );
     super.initState();
+    listenToSyncBloc();
   }
 
   @override
@@ -483,95 +486,83 @@ class _BoundarySelectionPageState
                                 padding: const EdgeInsets.fromLTRB(
                                     kPadding, 0, kPadding, 0),
                                 child: SafeArea(
-                                  child: BlocListener<SyncBloc, SyncState>(
-                                    listener: (context, syncState) {
-                                      setState(() {
-                                        pendingSyncCount = syncState.maybeWhen(
-                                          orElse: () => 0,
-                                          pendingSync: (count) => count,
-                                        );
-                                      });
-                                    },
-                                    child: ValueListenableBuilder(
-                                      valueListenable: clickedStatus,
-                                      builder: (context, bool isClicked, _) {
-                                        return DigitElevatedButton(
-                                          onPressed: selectedBoundary == null ||
-                                                  isClicked
-                                              ? null
-                                              : () async {
-                                                  if (!form.valid ||
-                                                      validateAllBoundarySelection()) {
-                                                    clickedStatus.value = false;
-                                                    await DigitToast.show(
-                                                      context,
-                                                      options:
-                                                          DigitToastOptions(
-                                                        localizations.translate(i18
-                                                            .common
-                                                            .corecommonRequired),
-                                                        true,
-                                                        Theme.of(context),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    setState(() {
-                                                      shouldPop = true;
-                                                    });
+                                  child: ValueListenableBuilder(
+                                    valueListenable: clickedStatus,
+                                    builder: (context, bool isClicked, _) {
+                                      return DigitElevatedButton(
+                                        onPressed: selectedBoundary == null ||
+                                                isClicked
+                                            ? null
+                                            : () async {
+                                                if (!form.valid ||
+                                                    validateAllBoundarySelection()) {
+                                                  clickedStatus.value = false;
+                                                  await DigitToast.show(
+                                                    context,
+                                                    options: DigitToastOptions(
+                                                      localizations.translate(i18
+                                                          .common
+                                                          .corecommonRequired),
+                                                      true,
+                                                      Theme.of(context),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  setState(() {
+                                                    shouldPop = true;
+                                                  });
 
-                                                    context
-                                                        .read<BoundaryBloc>()
-                                                        .add(
-                                                          const BoundarySubmitEvent(),
-                                                        );
-                                                    bool isOnline =
-                                                        await getIsConnected();
+                                                  context
+                                                      .read<BoundaryBloc>()
+                                                      .add(
+                                                        const BoundarySubmitEvent(),
+                                                      );
+                                                  bool isOnline =
+                                                      await getIsConnected();
 
-                                                    if (context.mounted) {
-                                                      if (isOnline &&
-                                                          isDistributor) {
-                                                        context
-                                                            .read<
-                                                                BeneficiaryDownSyncBloc>()
-                                                            .add(
-                                                              DownSyncGetBatchSizeEvent(
-                                                                appConfiguration: [
-                                                                  appConfiguration,
-                                                                ],
-                                                                projectId: context
-                                                                    .projectId,
-                                                                boundaryCode:
-                                                                    selectedBoundary
-                                                                        .value!
-                                                                        .code
-                                                                        .toString(),
-                                                                pendingSyncCount:
-                                                                    pendingSyncCount,
-                                                                boundaryName:
-                                                                    selectedBoundary
-                                                                        .value!
-                                                                        .name
-                                                                        .toString(),
-                                                              ),
-                                                            );
-                                                      } else {
-                                                        Future.delayed(
-                                                          const Duration(
-                                                            milliseconds: 100,
-                                                          ),
-                                                          () => context.router
-                                                              .maybePop(),
-                                                        );
-                                                      }
-                                                      clickedStatus.value =
-                                                          true;
+                                                  if (context.mounted) {
+                                                    if (isOnline &&
+                                                        isDistributor) {
+                                                      context
+                                                          .read<
+                                                              BeneficiaryDownSyncBloc>()
+                                                          .add(
+                                                            DownSyncGetBatchSizeEvent(
+                                                              appConfiguration: [
+                                                                appConfiguration,
+                                                              ],
+                                                              projectId: context
+                                                                  .projectId,
+                                                              boundaryCode:
+                                                                  selectedBoundary
+                                                                      .value!
+                                                                      .code
+                                                                      .toString(),
+                                                              pendingSyncCount:
+                                                                  pendingSyncCount,
+                                                              boundaryName:
+                                                                  selectedBoundary
+                                                                      .value!
+                                                                      .name
+                                                                      .toString(),
+                                                            ),
+                                                          );
+                                                    } else {
+                                                      Future.delayed(
+                                                        const Duration(
+                                                          milliseconds: 100,
+                                                        ),
+                                                        () => context.router
+                                                            .maybePop(),
+                                                      );
                                                     }
+                                                    clickedStatus.value = true;
                                                   }
-                                                },
-                                          child: const Text('Submit'),
-                                        );
-                                      },
-                                    ),
+                                                }
+                                              },
+                                        child: const Text('Submit'),
+                                      );
+                                    },
                                   ),
                                 ),
                               ),
@@ -630,5 +621,18 @@ class _BoundarySelectionPageState
 
     // Return false if none of the form controls have a null value
     return false;
+  }
+
+  void listenToSyncBloc() {
+    syncBloc!.stream.listen((state) {
+      state.maybeWhen(
+        orElse: () {},
+        pendingSync: (count) {
+          setState(() {
+            pendingSyncCount = count;
+          });
+        },
+      );
+    });
   }
 }

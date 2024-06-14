@@ -13,6 +13,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recase/recase.dart';
+import 'package:sync_service/data/sync_service.dart';
+import 'package:sync_service/models/bandwidth/bandwidth_model.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
@@ -20,7 +22,6 @@ import '../data/local_store/secure_store/secure_store.dart';
 import '../data/network_manager.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
-import '../models/bandwidth/bandwidth_model.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
 import 'environment_config.dart';
 import 'utils.dart';
@@ -169,10 +170,6 @@ void onStart(ServiceInstance service) async {
                 sum / speedArray.length,
                 appConfiguration,
               );
-              final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-                'userId': userRequestModel!.uuid,
-                'batchSize': configuredBatchSize,
-              });
               flutterLocalNotificationsPlugin.show(
                 888,
                 'Auto Sync',
@@ -186,11 +183,11 @@ void onStart(ServiceInstance service) async {
                   ),
                 ),
               );
-              final isSyncCompleted = await const NetworkManager(
-                configuration: NetworkManagerConfiguration(
-                  persistenceConfig: PersistenceConfiguration.offlineFirst,
-                ),
-              ).performSync(
+              final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
+                'userId': userRequestModel!.uuid,
+                'batchSize': configuredBatchSize,
+              });
+              final isSyncCompleted = await SyncService().performSync(
                 localRepositories: Constants.getLocalRepositories(
                   _sql,
                   _isar,
