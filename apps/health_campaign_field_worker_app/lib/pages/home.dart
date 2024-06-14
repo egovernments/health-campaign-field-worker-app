@@ -18,10 +18,10 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
-import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
@@ -90,7 +90,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       return e.code;
     });
 
-    //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
         roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
@@ -105,172 +104,165 @@ class _HomePageState extends LocalizedState<HomePage> {
     ];
 
     return Scaffold(
-      backgroundColor: DigitTheme.instance.colorScheme.background,
-      body: BlocListener<SyncBloc, SyncState>(
-        listener: (context, state) {
-          state.maybeWhen(
-            orElse: () {},
-            pendingSync: (count) {
-              final debouncer = Debouncer(seconds: 5);
-              debouncer.run(() async {
-                if (count != 0) {
-                  await localSecureStore.setManualSyncTrigger(false);
-                  if (context.mounted) {
-                    await performBackgroundService(
-                      isBackground: false,
-                      stopService: false,
-                      context: context,
-                    );
-                  }
-                } else {
-                  await localSecureStore.setManualSyncTrigger(true);
-                }
-              });
-            },
-          );
-        },
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: ScrollableContent(
-            slivers: [
-              SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return homeItems.elementAt(index);
-                  },
-                  childCount: homeItems.length,
-                ),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 145,
-                  childAspectRatio: 104 / 128,
+      backgroundColor: DigitTheme.instance.colorScheme.surface,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: ScrollableContent(
+          slivers: [
+            SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return homeItems.elementAt(index);
+                },
+                childCount: homeItems.length,
+              ),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 145,
+                childAspectRatio: 104 / 128,
+              ),
+            ),
+          ],
+          header: Column(
+            children: [
+              BackNavigationHelpHeaderWidget(
+                showBackNavigation: false,
+                showHelp: false,
+                showcaseButton: ShowcaseButton(
+                  showcaseFor: showcaseKeys.toSet().toList(),
                 ),
               ),
-            ],
-            header: Column(
-              children: [
-                BackNavigationHelpHeaderWidget(
-                  showBackNavigation: false,
-                  showHelp: false,
-                  showcaseButton: ShowcaseButton(
-                    showcaseFor: showcaseKeys.toSet().toList(),
-                  ),
-                ),
-                skipProgressBar
-                    ? const SizedBox.shrink()
-                    : homeShowcaseData.distributorProgressBar.buildWith(
-                        child: BeneficiaryProgressBar(
-                          label: localizations.translate(
-                            i18.home.progressIndicatorTitle,
-                          ),
-                          prefixLabel: localizations.translate(
-                            i18.home.progressIndicatorPrefixLabel,
-                          ),
+              skipProgressBar
+                  ? const SizedBox.shrink()
+                  : homeShowcaseData.distributorProgressBar.buildWith(
+                      child: BeneficiaryProgressBar(
+                        label: localizations.translate(
+                          i18.home.progressIndicatorTitle,
+                        ),
+                        prefixLabel: localizations.translate(
+                          i18.home.progressIndicatorPrefixLabel,
                         ),
                       ),
-              ],
-            ),
-            footer: PoweredByDigit(
-              version: Constants().version,
-            ),
-            children: [
-              const SizedBox(height: kPadding * 2),
-              BlocConsumer<SyncBloc, SyncState>(
-                listener: (context, state) {
-                  state.maybeWhen(
-                    orElse: () => null,
-                    syncInProgress: () async {
-                      await localSecureStore.setManualSyncTrigger(false);
-                      if (context.mounted) {
-                        DigitSyncDialog.show(
-                          context,
-                          type: DigitSyncDialogType.inProgress,
-                          label: localizations.translate(
-                            i18.syncDialog.syncInProgressTitle,
-                          ),
-                          barrierDismissible: false,
-                        );
-                      }
-                    },
-                    completedSync: () async {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        DigitSyncDialog.show(
-                          context,
-                          type: DigitSyncDialogType.complete,
-                          label: localizations.translate(
-                            i18.syncDialog.dataSyncedTitle,
-                          ),
-                          primaryAction: DigitDialogActions(
-                            label: localizations.translate(
-                              i18.syncDialog.closeButtonLabel,
-                            ),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                            },
-                          ),
-                        );
-                      }
-                    },
-                    failedSync: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.syncFailedTitle,
-                          ),
-                        );
-                      }
-                    },
-                    failedDownSync: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.downSyncFailedTitle,
-                          ),
-                        );
-                      }
-                    },
-                    failedUpSync: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.upSyncFailedTitle,
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-                builder: (context, state) {
-                  return state.maybeWhen(
-                    orElse: () => const Offstage(),
-                    pendingSync: (count) {
-                      return count == 0
-                          ? const Offstage()
-                          : DigitInfoCard(
-                              icon: Icons.info,
-                              backgroundColor:
-                                  theme.colorScheme.tertiaryContainer,
-                              iconColor: theme.colorScheme.surfaceTint,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
-                              ),
-                            );
-                    },
-                  );
-                },
-              ),
+                    ),
             ],
           ),
+          footer: PoweredByDigit(
+            version: Constants().version,
+          ),
+          children: [
+            const SizedBox(height: kPadding * 2),
+            BlocConsumer<SyncBloc, SyncState>(
+              listener: (context, state) {
+                state.maybeWhen(
+                  orElse: () => null,
+                  pendingSync: (count) {
+                    final debouncer = Debouncer(seconds: 5);
+                    debouncer.run(() async {
+                      if (count != 0) {
+                        await localSecureStore.setManualSyncTrigger(false);
+                        if (context.mounted) {
+                          await performBackgroundService(
+                            isBackground: false,
+                            stopService: false,
+                            context: context,
+                          );
+                        }
+                      } else {
+                        await localSecureStore.setManualSyncTrigger(true);
+                      }
+                    });
+                  },
+                  syncInProgress: () async {
+                    await localSecureStore.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      DigitSyncDialog.show(
+                        context,
+                        type: DigitSyncDialogType.inProgress,
+                        label: localizations.translate(
+                          i18.syncDialog.syncInProgressTitle,
+                        ),
+                        barrierDismissible: false,
+                      );
+                    }
+                  },
+                  completedSync: () async {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      DigitSyncDialog.show(
+                        context,
+                        type: DigitSyncDialogType.complete,
+                        label: localizations.translate(
+                          i18.syncDialog.dataSyncedTitle,
+                        ),
+                        primaryAction: DigitDialogActions(
+                          label: localizations.translate(
+                            i18.syncDialog.closeButtonLabel,
+                          ),
+                          action: (ctx) {
+                            Navigator.pop(ctx);
+                          },
+                        ),
+                      );
+                    }
+                  },
+                  failedSync: () async {
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      _showSyncFailedDialog(
+                        context,
+                        message: localizations.translate(
+                          i18.syncDialog.syncFailedTitle,
+                        ),
+                      );
+                    }
+                  },
+                  failedDownSync: () async {
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      _showSyncFailedDialog(
+                        context,
+                        message: localizations.translate(
+                          i18.syncDialog.downSyncFailedTitle,
+                        ),
+                      );
+                    }
+                  },
+                  failedUpSync: () async {
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      _showSyncFailedDialog(
+                        context,
+                        message: localizations.translate(
+                          i18.syncDialog.upSyncFailedTitle,
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+              builder: (context, state) {
+                return state.maybeWhen(
+                  orElse: () => const Offstage(),
+                  pendingSync: (count) {
+                    return count == 0
+                        ? const Offstage()
+                        : DigitInfoCard(
+                            icon: Icons.info,
+                            backgroundColor:
+                                theme.colorScheme.tertiaryContainer,
+                            iconColor: theme.colorScheme.surfaceTint,
+                            description: localizations
+                                .translate(i18.home.dataSyncInfoContent)
+                                .replaceAll('{}', count.toString()),
+                            title: localizations.translate(
+                              i18.home.dataSyncInfoLabel,
+                            ),
+                          );
+                  },
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

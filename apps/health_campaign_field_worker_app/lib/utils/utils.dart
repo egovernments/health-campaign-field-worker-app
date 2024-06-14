@@ -358,28 +358,3 @@ initializeAllMappers() async {
   ];
   await Future.wait(initializations);
 }
-
-int getSyncCount(List<OpLog> oplogs) {
-  int count = oplogs.where((element) {
-    switch (element.entityType) {
-      case DataModelType.household:
-      case DataModelType.individual:
-      case DataModelType.householdMember:
-      case DataModelType.projectBeneficiary:
-      case DataModelType.task:
-      case DataModelType.stock:
-      case DataModelType.stockReconciliation:
-      case DataModelType.service:
-      case DataModelType.complaints:
-      case DataModelType.sideEffect:
-      case DataModelType.referral:
-      case DataModelType.hFReferral:
-      case DataModelType.attendance:
-        return true;
-      default:
-        return false;
-    }
-  }).length;
-
-  return count;
-}

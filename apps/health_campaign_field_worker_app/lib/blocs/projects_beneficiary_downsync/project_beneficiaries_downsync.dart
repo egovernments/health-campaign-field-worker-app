@@ -6,10 +6,10 @@ import 'package:disk_space_update/disk_space_update.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
-import '../../data/network_manager.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
@@ -27,24 +27,22 @@ class BeneficiaryDownSyncBloc
       downSyncRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
-  final NetworkManager networkManager;
   final BandwidthCheckRepository bandwidthCheckRepository;
   final LocalRepository<HouseholdModel, HouseholdSearchModel>
-  householdLocalRepository;
+      householdLocalRepository;
   final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-  householdMemberLocalRepository;
+      householdMemberLocalRepository;
   final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-  projectBeneficiaryLocalRepository;
+      projectBeneficiaryLocalRepository;
   final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
   final LocalRepository<SideEffectModel, SideEffectSearchModel>
-  sideEffectLocalRepository;
+      sideEffectLocalRepository;
   final LocalRepository<ReferralModel, ReferralSearchModel>
-  referralLocalRepository;
+      referralLocalRepository;
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
     required this.downSyncLocalRepository,
-    required this.networkManager,
     required this.bandwidthCheckRepository,
     required this.householdLocalRepository,
     required this.householdMemberLocalRepository,
@@ -202,7 +200,9 @@ class BeneficiaryDownSyncBloc
             );
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              await networkManager.writeToEntityDB(downSyncResults, [
+              await SyncServiceSingleton()
+                  .entityMapper
+                  ?.writeToEntityDB(downSyncResults, [
                 individualLocalRepository,
                 householdLocalRepository,
                 householdMemberLocalRepository,

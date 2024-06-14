@@ -13,7 +13,7 @@ class RepositoryType {
 
     if (repository == null) {
       throw Exception(
-        'Remote repository is not configured in the network manager',
+        'Remote repository is not passed to sync service',
       );
     }
 
@@ -30,7 +30,7 @@ class RepositoryType {
 
     if (repository == null) {
       throw Exception(
-        'Local repository is not configured in the network manager',
+        'Local repository is not passed to sync service',
       );
     }
 
