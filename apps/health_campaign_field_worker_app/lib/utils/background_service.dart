@@ -19,7 +19,6 @@ import 'package:sync_service/models/bandwidth/bandwidth_model.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
-import '../data/network_manager.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../widgets/network_manager_provider_wrapper.dart';
@@ -183,6 +182,8 @@ void onStart(ServiceInstance service) async {
                   ),
                 ),
               );
+
+              // Insert sync logic here
               final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
                 'userId': userRequestModel!.uuid,
                 'batchSize': configuredBatchSize,

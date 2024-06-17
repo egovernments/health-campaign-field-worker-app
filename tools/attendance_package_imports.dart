@@ -29,14 +29,15 @@ void main() {
   var routerFilePath = appRoot + '/router/app_router.dart';
   var entityMapperFilePath =
       appRoot + '/data/local_store/no_sql/schema/entity_mapper.dart';
-  var syncDownFilePath = appRoot + '/data/repositories/sync/sync_down.dart';
+  var syncServiceMapperFilePath =
+      appRoot + '/data/repositories/sync_service_mapper.dart';
   var homeFilePath = appRoot + '/pages/home.dart';
 
   // Add attendance to home file
   _updateHome(homeFilePath);
 
-  // Update the sync_down.dart file
-  _updateSyncDownFile(syncDownFilePath);
+  // Update the sync_service_mapper.dart file
+  _updateSyncServiceMapperDownFile(syncServiceMapperFilePath);
 
   // Add attendance routes and import to the router file
   _addAttendanceRoutesAndImportToRouterFile(routerFilePath);
@@ -56,7 +57,7 @@ void main() {
 
   _formatFiles([
     homeFilePath,
-    syncDownFilePath,
+    syncServiceMapperFilePath,
     entityMapperFilePath,
     routerFilePath,
     constantsFilePath,
@@ -174,7 +175,7 @@ String insertData(String fileContent, String marker, String data) {
   return fileContent;
 }
 
-void _updateSyncDownFile(String syncDownFilePath) {
+void _updateSyncServiceMapperDownFile(String syncServiceMapperFilePath) {
   // Define the import statement and the new case statements
   var importStatement =
       "import 'package:attendance_management/attendance_management.dart';";
@@ -229,56 +230,58 @@ void _updateSyncDownFile(String syncDownFilePath) {
           break;
 ''';
 
-  // Check if the sync_down file exists
-  var syncDownFile = File(syncDownFilePath);
+  // Check if the sync_service_mapper file exists
+  var syncServiceMapperFile = File(syncServiceMapperFilePath);
 
-  if (!syncDownFile.existsSync()) {
-    print('Error: Sync Down file does not exist at path: $syncDownFilePath');
+  if (!syncServiceMapperFile.existsSync()) {
+    print(
+        'Error: Sync Service Mapper file does not exist at path: $syncServiceMapperFilePath');
     return;
   }
 
-  // Read the sync_down file
-  var syncDownFileContent = syncDownFile.readAsStringSync();
+  // Read the sync_service_mapper file
+  var syncServiceMapperFileContent = syncServiceMapperFile.readAsStringSync();
 
   // Check if the import statement already exists and add it if not
-  if (!syncDownFileContent
+  if (!syncServiceMapperFileContent
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    syncDownFileContent = importStatement + '\n' + syncDownFileContent;
-    print('The import statement was added to sync_down.dart.');
+    syncServiceMapperFileContent = importStatement + '\n' + syncServiceMapperFileContent;
+    print('The import statement was added to sync_service_mapper.dart.');
   } else {
-    print('The import statement already exists in sync_down.dart.');
+    print('The import statement already exists in sync_service_mapper.dart.');
   }
 
   // Insert the new case statements
-  if (!syncDownFileContent
+  if (!syncServiceMapperFileContent
       .contains('DataModelType.attendance'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the new cases within the switch statement
     var switchIndex =
-        syncDownFileContent.indexOf('switch (typeGroupedEntity.key) {');
+        syncServiceMapperFileContent.indexOf('switch (typeGroupedEntity.key) {');
     if (switchIndex != -1) {
       var caseInsertionIndex =
-          syncDownFileContent.indexOf('default:', switchIndex);
+          syncServiceMapperFileContent.indexOf('default:', switchIndex);
       if (caseInsertionIndex != -1) {
-        syncDownFileContent =
-            syncDownFileContent.substring(0, caseInsertionIndex) +
+        syncServiceMapperFileContent =
+            syncServiceMapperFileContent.substring(0, caseInsertionIndex) +
                 newCases +
                 '\n' +
-                syncDownFileContent.substring(caseInsertionIndex);
-        print('The new cases were added to sync_down.dart.');
+                syncServiceMapperFileContent.substring(caseInsertionIndex);
+        print('The new cases were added to sync_service_mapper.dart.');
 
         // Write the updated content back to the file
-        syncDownFile.writeAsStringSync(syncDownFileContent);
+        syncServiceMapperFile.writeAsStringSync(syncServiceMapperFileContent);
       } else {
         print(
-            'Error: Could not find the default case in the switch statement in sync_down.dart.');
+            'Error: Could not find the default case in the switch statement in sync_service_mapper.dart.');
         return;
       }
     } else {
-      print('Error: Could not find the switch statement in sync_down.dart.');
+      print(
+          'Error: Could not find the switch statement in sync_service_mapper.dart.');
       return;
     }
   } else {
-    print('The new cases already exist in sync_down.dart.');
+    print('The new cases already exist in sync_service_mapper.dart.');
   }
 }
 

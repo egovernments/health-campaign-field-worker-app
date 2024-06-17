@@ -9,10 +9,14 @@ import 'package:sync_service/utils/utils.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 
+/// The `SyncService` class provides methods to perform sync operations.
 class SyncService {
-/* This function will read the params and get the records which are not synced
- and pushes to the sync-up and sync-down methods */
-
+  /// This function reads the params and gets the records which are not synced
+  /// and pushes to the sync-up and sync-down methods.
+  ///
+  /// It accepts a list of `LocalRepository` objects, a list of `RemoteRepository` objects,
+  /// a `BandwidthModel`, and an optional `ServiceInstance` as parameters.
+  /// It returns a `Future` that resolves to a `bool` indicating whether the sync operation is completed.
   FutureOr<bool> performSync({
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
@@ -87,6 +91,10 @@ class SyncService {
     return isSyncCompleted;
   }
 
+  /// Writes the given response to the entity database.
+  ///
+  /// This method accepts a `Map<String, dynamic>` response and a list of `LocalRepository` objects as parameters.
+  /// It is a `FutureOr<void>` function.
   FutureOr<void> writeToEntityDB(
     Map<String, dynamic> response,
     List<LocalRepository> localRepositories,
@@ -97,6 +105,10 @@ class SyncService {
         );
   }
 
+  /// Returns the count of pending sync records for the given user.
+  ///
+  /// This method accepts a list of `LocalRepository` objects and a `String` user ID as parameters.
+  /// It returns a `FutureOr<int>` that resolves to the count of pending sync records.
   FutureOr<int> getPendingSyncRecordsCount(
     List<LocalRepository> localRepositories,
     String userId,
@@ -108,6 +120,10 @@ class SyncService {
           .length;
 }
 
+/// This function filters the entities by the given bandwidth.
+///
+/// It accepts an integer `batchSize` and a list of `EntityModel` objects as parameters.
+/// It returns a `FutureOr<List<EntityModel>>` that resolves to a list of filtered `EntityModel` objects.
 FutureOr<List<EntityModel>> filterEntityByBandwidth(
   int batchSize,
   List<EntityModel> entities,
@@ -122,6 +138,10 @@ FutureOr<List<EntityModel>> filterEntityByBandwidth(
   return items;
 }
 
+/// This function filters the operation log entries by the given bandwidth.
+///
+/// It accepts an integer `batchSize` and a list of `OpLogEntry<EntityModel>` objects as parameters.
+/// It returns a `Future<List<OpLogEntry<EntityModel>>>` that resolves to a list of filtered `OpLogEntry<EntityModel>` objects.
 Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
   int batchSize,
   List<OpLogEntry<EntityModel>> entities,
@@ -136,16 +156,25 @@ Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
   return items;
 }
 
+/// The `SyncError` class is an abstract class that represents a sync error.
+///
+/// It extends the `Exception` class and includes a dynamic `error` property.
 abstract class SyncError implements Exception {
   final dynamic error;
 
   const SyncError([this.error]);
 }
 
+/// The `SyncUpError` class represents a sync up error.
+///
+/// It extends the `SyncError` class.
 class SyncUpError extends SyncError {
   const SyncUpError([super.error]);
 }
 
+/// The `SyncDownError` class represents a sync down error.
+///
+/// It extends the `SyncError` class.
 class SyncDownError extends SyncError {
   const SyncDownError([super.error]);
 }

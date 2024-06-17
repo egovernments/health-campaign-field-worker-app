@@ -8,7 +8,15 @@ import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../sync_service.dart';
 import 'remote_type.dart';
 
+/// The `PerformSyncDown` class provides a method to perform a sync down operation.
 class PerformSyncDown {
+  /// Performs a sync down operation.
+  ///
+  /// This method accepts a `BandwidthModel`, a list of `LocalRepository` objects, a list of `RemoteRepository` objects, and a `PersistenceConfiguration` as parameters.
+  /// It throws an exception if the persistence configuration is `onlineOnly`.
+  /// It gets the items to be synced down from each local repository and groups them by type and operation.
+  /// It then gets the remote and local repositories for each type and applies the server generated ID to each entity.
+  /// Finally, it updates each entity in the local repository.
   static FutureOr<void> syncDown({
     required BandwidthModel bandwidthModel,
     required List<LocalRepository> localRepositories,
@@ -18,7 +26,6 @@ class PerformSyncDown {
     if (configuration == PersistenceConfiguration.onlineOnly) {
       throw Exception('Sync down is not valid for online only configuration');
     }
-
     final futures = await Future.wait(
       localRepositories
           .map((e) => e.getItemsToBeSyncedDown(bandwidthModel.userId)),
@@ -32,11 +39,11 @@ class PerformSyncDown {
         .toList()
         .groupListsBy(
           (element) => element.type,
-    );
+        );
 
     for (final typeGroupedEntity in groupedEntries.entries) {
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
-            (element) => element.operation,
+        (element) => element.operation,
       );
 
       final remote = RepositoryType.getRemoteForType(
@@ -69,7 +76,7 @@ class PerformSyncDown {
         responseEntities = await SyncServiceSingleton()
             .entityMapper
             ?.entityResponse(typeGroupedEntity, operationGroupedEntity,
-            entities, remote, local);
+                entities, remote, local);
 
         for (var element in responseEntities!) {
           await local.update(element, createOpLog: false);

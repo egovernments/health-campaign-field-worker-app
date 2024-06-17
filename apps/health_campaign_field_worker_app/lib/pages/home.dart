@@ -61,9 +61,7 @@ class _HomePageState extends LocalizedState<HomePage> {
         .listen((List<ConnectivityResult> result) async {
       if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -150,6 +148,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           ),
           children: [
             const SizedBox(height: kPadding * 2),
+            // INFO : Need to add sync bloc of package Here
             BlocConsumer<SyncBloc, SyncState>(
               listener: (context, state) {
                 state.maybeWhen(
@@ -295,6 +294,80 @@ class _HomePageState extends LocalizedState<HomePage> {
         action: (ctx) => Navigator.pop(ctx),
       ),
     );
+  }
+
+  void _attemptSyncUp(BuildContext context) async {
+    await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+    if (context.mounted) {
+      context.read<SyncBloc>().add(
+            SyncSyncUpEvent(
+              userId: context.loggedInUserUuid,
+              localRepositories: [
+                // INFO : Need to add local repo of package Here
+                context.read<
+                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+                context.read<
+                    LocalRepository<ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>>(),
+                context.read<
+                    LocalRepository<HouseholdMemberModel,
+                        HouseholdMemberSearchModel>>(),
+                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+                context.read<
+                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+                context.read<
+                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    LocalRepository<StockReconciliationModel,
+                        StockReconciliationSearchModel>>(),
+                context.read<
+                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+                context.read<
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+              ],
+              remoteRepositories: [
+                // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+                context.read<
+                    RemoteRepository<ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>>(),
+                context.read<
+                    RemoteRepository<HouseholdMemberModel,
+                        HouseholdMemberSearchModel>>(),
+                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+                context.read<
+                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+                context.read<
+                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    RemoteRepository<StockReconciliationModel,
+                        StockReconciliationSearchModel>>(),
+                context.read<
+                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+                context.read<
+                    RemoteRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+              ],
+            ),
+          );
+    }
   }
 
   _HomeItemDataModel? _getItems(BuildContext context) {
@@ -507,80 +580,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       widgetList,
       showcaseKeys,
     );
-  }
-
-  void _attemptSyncUp(BuildContext context) async {
-    await LocalSecureStore.instance.setManualSyncTrigger(true);
-
-    if (context.mounted) {
-      context.read<SyncBloc>().add(
-            SyncSyncUpEvent(
-              userId: context.loggedInUserUuid,
-              localRepositories: [
-                // INFO : Need to add local repo of package Here
-                context.read<
-                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    LocalRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    LocalRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<LocalRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    LocalRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    LocalRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-              ],
-              remoteRepositories: [
-                // INFO : Need to add repo repo of package Here
-                context.read<
-                    RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
-                context.read<
-                    RemoteRepository<ProjectBeneficiaryModel,
-                        ProjectBeneficiarySearchModel>>(),
-                context.read<
-                    RemoteRepository<HouseholdMemberModel,
-                        HouseholdMemberSearchModel>>(),
-                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
-                context.read<
-                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
-                context.read<
-                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
-                context
-                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
-                context.read<
-                    RemoteRepository<StockReconciliationModel,
-                        StockReconciliationSearchModel>>(),
-                context.read<
-                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-                context.read<
-                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
-                context.read<
-                    RemoteRepository<AttendanceLogModel,
-                        AttendanceLogSearchModel>>(),
-              ],
-            ),
-          );
-    }
   }
 }
 
