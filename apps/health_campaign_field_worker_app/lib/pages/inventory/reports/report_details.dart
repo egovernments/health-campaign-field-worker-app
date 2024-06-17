@@ -57,6 +57,7 @@ class _InventoryReportDetailsPageState
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
   Map<String, FacilityModel> facilityMap = {};
+  bool isCommunityDistributor = false;
 
   void handleSelection(FormGroup form) {
     final event = widget.reportType == InventoryReportType.reconciliation
@@ -108,6 +109,8 @@ class _InventoryReportDetailsPageState
         )
         .toList()
         .isNotEmpty;
+
+    isCommunityDistributor = context.isCommunityDistributor;
 
     return Scaffold(
       bottomNavigationBar: DigitCard(
@@ -199,6 +202,19 @@ class _InventoryReportDetailsPageState
                                                       ) ??
                                                       [];
 
+                                              List<FacilityModel>
+                                                  filteredFacilities = [];
+                                              if (isCommunityDistributor) {
+                                                filteredFacilities = facilities
+                                                    .where(
+                                                      (element) =>
+                                                          element.name ==
+                                                          context.loggedInUser
+                                                              .userName,
+                                                    )
+                                                    .toList();
+                                              }
+
                                               final allFacilities =
                                                   state.whenOrNull(
                                                         fetched: (
@@ -225,7 +241,12 @@ class _InventoryReportDetailsPageState
                                                       .router
                                                       .push<FacilityModel>(
                                                     FacilitySelectionRoute(
-                                                      facilities: facilities,
+                                                      facilities:
+                                                          isCommunityDistributor &&
+                                                                  filteredFacilities
+                                                                      .isNotEmpty
+                                                              ? filteredFacilities
+                                                              : facilities,
                                                     ),
                                                   );
 
