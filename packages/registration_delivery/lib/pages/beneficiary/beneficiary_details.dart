@@ -2,12 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:registration_delivery/blocs/app_localization.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:recase/recase.dart';
+import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -17,8 +17,8 @@ import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../widgets/localized.dart';
 import 'widgets/record_delivery_cycle.dart';
 
 @RoutePage()
@@ -334,7 +334,7 @@ class _BeneficiaryDetailsPageState
                                           DateTime.now(),
                                     ).months;
 
-                                    return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
+                                    return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
                                   }(),
                                   localizations.translate(
                                     i18.common.coreCommonGender,

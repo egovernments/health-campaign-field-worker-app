@@ -72,8 +72,8 @@ class _IndividualDetailsPageState
                 if (value.navigateToRoot) {
                   (router.parent() as StackRouter).maybePop();
                 } else {
-                  router.popUntil(
-                      (route) => route.settings.name == SearchBeneficiaryRoute.name);
+                  router.popUntil((route) =>
+                      route.settings.name == SearchBeneficiaryRoute.name);
                   context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsEvent.searchByHousehold(
                           householdModel: value.householdModel,
@@ -520,6 +520,10 @@ class _IndividualDetailsPageState
                                     }
                                   }
                                 },
+                                cancelText: localizations
+                                    .translate(i18.common.coreCommonCancel),
+                                confirmText: localizations
+                                    .translate(i18.common.coreCommonOk),
                               ),
                             ),
                             DigitReactiveSearchDropdown<String>(

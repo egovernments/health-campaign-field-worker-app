@@ -225,6 +225,8 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+  String get householdMemberSingular => 'BENEFICIARY_HOUSEHOLD_MEMBER';
+  String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 }
 
 class IndividualDetails {
