@@ -62,7 +62,7 @@ dependencies:
   inventory_management: ^1.0.0
   referral_reconciliation: ^1.0.0
   registration_delivery: ^1.0.0+1
-  sync_service: ^1.0.0
+  sync_service: ^0.0.1
 
 dev_dependencies:
   flutter_test:

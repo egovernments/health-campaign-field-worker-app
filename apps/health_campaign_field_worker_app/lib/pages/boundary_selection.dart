@@ -10,7 +10,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:sync_service/sync_service_lib.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -38,21 +37,19 @@ class _BoundarySelectionPageState
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
-  var expenseTypeCtrl = TextEditingController();
   StreamController<double> downloadProgress = StreamController<double>();
 
   Map<String, TextEditingController> dropdownControllers = {};
-  SyncBloc? syncBloc;
+  late StreamSubscription syncSubscription;
 
   @override
   void initState() {
-    syncBloc = context.read<SyncBloc>();
-    syncBloc!.add(SyncRefreshEvent(context.loggedInUserUuid));
+    context.syncRefresh();
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
         );
     super.initState();
-    listenToSyncBloc();
+    listenToSyncCount();
   }
 
   @override
@@ -66,6 +63,7 @@ class _BoundarySelectionPageState
   @override
   void dispose() {
     clickedStatus.dispose();
+    syncSubscription.cancel();
     super.dispose();
   }
 
@@ -623,16 +621,15 @@ class _BoundarySelectionPageState
     return false;
   }
 
-  void listenToSyncBloc() {
-    syncBloc!.stream.listen((state) {
+  void listenToSyncCount() async {
+    syncSubscription = context.syncCount().listen((state) {
       state.maybeWhen(
-        orElse: () {},
-        pendingSync: (count) {
-          setState(() {
-            pendingSyncCount = count;
+          orElse: () {},
+          pendingSync: (count) {
+            setState(() {
+              pendingSyncCount = count;
+            });
           });
-        },
-      );
     });
   }
 }
