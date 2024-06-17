@@ -320,7 +320,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                           height: kPadding * 6,
                                           decoration: BoxDecoration(
                                             color: DigitTheme.instance
-                                                .colorScheme.background,
+                                                .colorScheme.surface,
                                             border: Border.all(
                                               color: DigitTheme
                                                   .instance.colorScheme.outline,

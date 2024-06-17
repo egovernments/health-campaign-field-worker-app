@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/task.dart';
+import 'package:sync_service/utils/utils.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
-import '../../../utils/environment_config.dart';
 import 'remote_type.dart';
 
 class PerformSyncUp {
@@ -16,11 +14,6 @@ class PerformSyncUp {
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) async {
-    const taskResourceIdKey = 'taskResourceId';
-    const individualIdentifierIdKey = 'individualIdentifierId';
-    const householdAddressIdKey = 'householdAddressId';
-    const individualAddressIdKey = 'individualAddressId';
-
     List<EntityModel> getEntityModel(
       List<OpLogEntry<EntityModel>> opLogList,
       LocalRepository<EntityModel, EntitySearchModel> local,
@@ -32,74 +25,16 @@ class PerformSyncUp {
             final serverGeneratedId = e.serverGeneratedId;
             final rowVersion = e.rowVersion;
             if (serverGeneratedId != null) {
-              var updatedEntity =
+              EntityModel? updatedEntity =
                   local.opLogManager.applyServerGeneratedIdToEntity(
                 oplogEntryEntity,
                 serverGeneratedId,
                 rowVersion,
               );
 
-              if (updatedEntity is HouseholdModel) {
-                final addressId = e.additionalIds.firstWhereOrNull(
-                  (element) {
-                    return element.idType == householdAddressIdKey;
-                  },
-                )?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  address: updatedEntity.address?.copyWith(
-                    id: updatedEntity.address?.id ?? addressId,
-                  ),
-                );
-              }
-
-              if (updatedEntity is IndividualModel) {
-                final identifierId = e.additionalIds.firstWhereOrNull(
-                  (element) {
-                    return element.idType == individualIdentifierIdKey;
-                  },
-                )?.id;
-
-                final addressId = e.additionalIds.firstWhereOrNull(
-                  (element) {
-                    return element.idType == individualAddressIdKey;
-                  },
-                )?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  identifiers: updatedEntity.identifiers?.map((e) {
-                    return e.copyWith(
-                      id: e.id ?? identifierId,
-                    );
-                  }).toList(),
-                  address: updatedEntity.address?.map((e) {
-                    return e.copyWith(
-                      id: e.id ?? addressId,
-                    );
-                  }).toList(),
-                );
-              }
-
-              if (updatedEntity is TaskModel) {
-                final resourceId = e.additionalIds
-                    .firstWhereOrNull(
-                      (element) => element.idType == taskResourceIdKey,
-                    )
-                    ?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  resources: updatedEntity.resources?.map((e) {
-                    if (resourceId != null) {
-                      return e.copyWith(
-                        taskId: serverGeneratedId,
-                        id: e.id ?? resourceId,
-                      );
-                    }
-
-                    return e.copyWith(taskId: serverGeneratedId);
-                  }).toList(),
-                );
-              }
+              updatedEntity = SyncServiceSingleton()
+                  .entityMapper
+                  ?.updatedEntity(updatedEntity, e, serverGeneratedId);
 
               return updatedEntity;
             }
@@ -154,12 +89,12 @@ class PerformSyncUp {
             .where((element) => element.nonRecoverableError)
             .toList();
 
-        // [returns list of oplogs whose nonRecoverableError is false and retry count is equal to configured value]
+        // [returns list of opLogs whose nonRecoverableError is false and retry count is equal to configured value]
         final nonRecoverableErrorList = operationGroupedEntity.value
             .where((element) =>
                 !element.nonRecoverableError &&
                 element.syncDownRetryCount >=
-                    envConfig.variables.syncDownRetryCount)
+                    SyncServiceSingleton().syncDownRetryCount)
             .toList();
 
         final List<List<OpLogEntry<EntityModel>>> listOfBatchedOpLogList =

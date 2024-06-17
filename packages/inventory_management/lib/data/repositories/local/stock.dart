@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:inventory_management/models/entities/stock.dart';
 
 class StockLocalRepository
@@ -22,7 +23,9 @@ class StockLocalRepository
         batch.insert(sql.stock, stockCompanion);
       });
     } catch (e) {
-      print('Error in stock create: $e');
+      if (kDebugMode) {
+        print('Error in stock create: $e');
+      }
     }
     await super.create(entity);
   }
@@ -70,7 +73,9 @@ class StockLocalRepository
             ))
           .get();
     } catch (e) {
-      print('Error in stock search: $e');
+      if (kDebugMode) {
+        print('Error in stock search: $e');
+      }
     }
     return results.map((e) {
       final data = e.readTable(sql.stock);

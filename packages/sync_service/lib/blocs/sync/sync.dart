@@ -5,10 +5,10 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
+import 'package:sync_service/utils/utils.dart';
 
-import '../../data/network_manager.dart';
+import '../../data/sync_service.dart';
 import '../../models/bandwidth/bandwidth_model.dart';
-import '../../utils/utils.dart';
 
 part 'sync.freezed.dart';
 
@@ -16,11 +16,11 @@ typedef SyncEmitter = Emitter<SyncState>;
 
 class SyncBloc extends Bloc<SyncEvent, SyncState> {
   final Isar isar;
-  final NetworkManager networkManager;
+  final SyncService syncService;
 
   SyncBloc({
     required this.isar,
-    required this.networkManager,
+    required this.syncService,
   }) : super(const SyncPendingState()) {
     on(_handleRefresh);
     on(_handleSyncUp);
@@ -38,17 +38,18 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
-      length ??= getSyncCount(await isar.opLogs
+      length ??= (SyncServiceSingleton().entityMapper!.getSyncCount(await isar
+              .opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
               .syncedUpEqualTo(false)
               .findAll()) +
-          getSyncCount(await isar.opLogs
+          SyncServiceSingleton().entityMapper!.getSyncCount(await isar.opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
               .syncedUpEqualTo(true)
               .syncedDownEqualTo(false)
-              .findAll());
+              .findAll()));
     } catch (_) {
       rethrow;
     } finally {
@@ -66,7 +67,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         'batchSize': 5,
       });
       emit(const SyncInProgressState());
-      await networkManager.performSync(
+      await syncService.performSync(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,
         bandwidthModel: bandwidthModel,
