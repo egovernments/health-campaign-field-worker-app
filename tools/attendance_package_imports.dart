@@ -37,7 +37,7 @@ void main() {
   _updateHome(homeFilePath);
 
   // Update the sync_service_mapper.dart file
-  _updateSyncServiceMapperDownFile(syncServiceMapperFilePath);
+  _updateSyncServiceMapperFile(syncServiceMapperFilePath);
 
   // Add attendance routes and import to the router file
   _addAttendanceRoutesAndImportToRouterFile(routerFilePath);
@@ -175,7 +175,7 @@ String insertData(String fileContent, String marker, String data) {
   return fileContent;
 }
 
-void _updateSyncServiceMapperDownFile(String syncServiceMapperFilePath) {
+void _updateSyncServiceMapperFile(String syncServiceMapperFilePath) {
   // Define the import statement and the new case statements
   var importStatement =
       "import 'package:attendance_management/attendance_management.dart';";
