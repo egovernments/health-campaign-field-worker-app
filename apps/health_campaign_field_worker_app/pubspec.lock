@@ -68,10 +68,9 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "4ee87621bdcfb088c0bd9b5938fdb09feb6c09059e8aa550910b5befaa1de2df"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
     version: "1.0.0+2"
   audioplayers:
     dependency: "direct main"
@@ -483,18 +482,16 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "31c9c45bdbad9fb4c3ed5ce1c2f95c983eaea4967ed0dcf9c36e467a77a97008"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_components"
+      relative: true
+    source: path
     version: "1.0.0+1"
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "2d033990f03f7a0ea651e08c37933b4ed5ea76bf3a6a2ac3ff652c2286d04912"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.0.1"
   digit_firebase_services:
     dependency: "direct main"
@@ -506,18 +503,16 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: abd9dcc5c2d39d7d81277a3437262e2ebc6a3c4a3862a51844c8ebf29a795f22
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.1"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
     version: "1.0.0"
   dio:
     dependency: "direct main"
@@ -1093,10 +1088,9 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: "894bbf8193041d096d301c8bc8fd4e6dfa8205176d9430a60f2c80656000bfe6"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
     version: "1.0.1"
   io:
     dependency: transitive
@@ -1509,18 +1503,16 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "8e5a0b922f7ec13e298de53ae9b7bc72236787930e9da98c1ec94da09d200cb4"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
     version: "1.0.1"
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: f27ac7213aac505eb468123b34b59e80eecaa341b1328b1d65fc950fa3ede5b8
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.1"
   remove_emoji_input_formatter:
     dependency: transitive
@@ -2056,5 +2048,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <3.9.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"

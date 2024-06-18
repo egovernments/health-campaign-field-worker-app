@@ -132,7 +132,7 @@ class MainApplicationState extends State<MainApplication>
 
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
-                    firstLanguage = appConfig.languages?.last.value;
+                    firstLanguage = appConfig.languages?.lastOrNull?.value;
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(
