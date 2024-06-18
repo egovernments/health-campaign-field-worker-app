@@ -109,30 +109,30 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
       null,
     );
 
-    final househHoldIds =
+    final houseHoldIds =
         householdMembers.map((e) => e.householdClientReferenceId!).toList();
-    final List<HouseholdMemberModel> allhouseholdMembers =
+    final List<HouseholdMemberModel> allHouseHoldMembers =
         await fetchHouseholdMembersBulk(
       null,
-      househHoldIds,
+      houseHoldIds,
     );
 
     final List<IndividualModel> individualMembers =
         await individual.search(IndividualSearchModel(
-      clientReferenceId: allhouseholdMembers
+      clientReferenceId: allHouseHoldMembers
           .map((e) => e.individualClientReferenceId.toString())
           .toList(),
     ));
     final List<HouseholdModel> houseHolds = await household.search(
       HouseholdSearchModel(
-        clientReferenceId: househHoldIds,
+        clientReferenceId: houseHoldIds,
       ),
     );
 
     final projectBeneficiaries = await fetchProjectBeneficiary(
       beneficiaryType != BeneficiaryType.individual
-          ? househHoldIds
-          : allhouseholdMembers
+          ? houseHoldIds
+          : allHouseHoldMembers
               .map((e) => e.individualClientReferenceId.toString())
               .toList(),
     );
@@ -141,7 +141,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
 
     if (projectBeneficiaries.isNotEmpty) {
       // Search for tasks and side effects based on project beneficiaries.
-      tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
+      tasks = await fetchTaskByProjectBeneficiary(projectBeneficiaries);
 
       sideEffects = await sideEffectDataRepository.search(SideEffectSearchModel(
         taskClientReferenceId: tasks.map((e) => e.clientReferenceId).toList(),
@@ -154,7 +154,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
     }
 
     // Initialize a list to store household members.
-    final groupedHouseholds = allhouseholdMembers
+    final groupedHouseholds = allHouseHoldMembers
         .where((hm) => projectBeneficiaries
             .map((p) => p.beneficiaryClientReferenceId)
             .toList()
@@ -169,7 +169,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
 
       if (householdId == null) continue;
       // Retrieve the first household result.
-      final householdresult =
+      final houseHoldResult =
           houseHolds.firstWhere((e) => e.clientReferenceId == householdId);
       // Search for individuals based on proximity, beneficiary type, and search text.
       final List<String?> membersIds =
@@ -181,7 +181,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
           .where((element) => beneficiaryType == BeneficiaryType.individual
               ? individualClientReferenceIds
                   .contains(element.beneficiaryClientReferenceId)
-              : (househHoldIds).contains(element.beneficiaryClientReferenceId))
+              : (houseHoldIds).contains(element.beneficiaryClientReferenceId))
           .toList();
       final beneficiaryClientReferenceIds = projectBeneficiaries
           .map((e) => e.beneficiaryClientReferenceId)
@@ -221,7 +221,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
         // Create a container for household members and associated data.
         containers.add(
           HouseholdMemberWrapper(
-            household: householdresult,
+            household: houseHoldResult,
             headOfHousehold: head,
             members: beneficiaryType == BeneficiaryType.individual
                 ? beneficiaryIndividuals

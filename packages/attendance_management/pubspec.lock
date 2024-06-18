@@ -263,7 +263,7 @@ packages:
       path: "../dart_mappable_builder"
       relative: true
     source: path
-    version: "4.2.0"
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -320,7 +320,7 @@ packages:
     source: hosted
     version: "2.18.0"
   drift_db_viewer:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: drift_db_viewer
       sha256: "5ea77858c52b55460a1e8f34ab5f88324621d486717d876fd745765fbc227f3f"
@@ -492,7 +492,7 @@ packages:
     source: sdk
     version: "0.0.0"
   fluttertoast:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: fluttertoast
       sha256: "7eae679e596a44fdf761853a706f74979f8dd3cd92cf4e23cae161fda091b847"
@@ -764,7 +764,7 @@ packages:
     source: hosted
     version: "2.0.2"
   overlay_builder:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: overlay_builder
       sha256: "58b97bc5f67a2e2bb7006dd88e697ac757dfffc9dbd1e7dfc1917fb510a4b5c8"
@@ -796,7 +796,7 @@ packages:
     source: hosted
     version: "3.0.0"
   path:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path
       sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
@@ -812,7 +812,7 @@ packages:
     source: hosted
     version: "1.0.1"
   path_provider:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: path_provider
       sha256: c9e7d3a4cd1410877472158bee69963a4579f78b68c65a2b7d40d1a7a88bb161
@@ -932,7 +932,7 @@ packages:
     source: hosted
     version: "2.1.1"
   reactive_forms:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: reactive_forms
       sha256: "9b1fb18e0aae9c50cfa0aaabaaa38bc4d78eefc9b7b95fa9c947b051f6524b8e"
@@ -1041,7 +1041,7 @@ packages:
     source: hosted
     version: "2.4.3"
   sqlite3_flutter_libs:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
       sha256: "9f89a7e7dc36eac2035808427eba1c3fbd79e59c3a22093d8dace6d36b1fe89e"

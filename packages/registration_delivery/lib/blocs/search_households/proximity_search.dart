@@ -69,7 +69,7 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
     );
     if (projectBeneficiariesList.isNotEmpty) {
       // Search for tasks and side effects based on project beneficiaries.
-      taskList = await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+      taskList = await fetchTaskByProjectBeneficiary(projectBeneficiariesList);
       sideEffectsList =
           await sideEffectDataRepository.search(SideEffectSearchModel(
         taskClientReferenceId:
@@ -153,14 +153,12 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
             projectBeneficiaries: filteredBeneficiaries,
             tasks: filteredTasks.isEmpty ? null : filteredTasks,
             sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
-            //TODO Need to added the side effects
             referrals: referralsList.isEmpty ? null : referralsList,
-            //TODO Need to addevid the referrals
           ),
         );
       }
     }
-    // Update the state with the   results and mark the search as completed.
+    // Update the state with the results and mark the search as completed.
     emit(state.copyWith(
       householdMembers: containers,
       loading: false,

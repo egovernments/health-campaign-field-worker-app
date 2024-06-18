@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'side_effect.dart';
@@ -129,10 +129,8 @@ mixin SideEffectSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SideEffectSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as SideEffectSearchModel, other));
+    return SideEffectSearchModelMapper.ensureInitialized()
+        .equalsValue(this as SideEffectSearchModel, other);
   }
 
   @override
@@ -392,10 +390,8 @@ mixin SideEffectModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SideEffectModelMapper.ensureInitialized()
-                .isValueEqual(this as SideEffectModel, other));
+    return SideEffectModelMapper.ensureInitialized()
+        .equalsValue(this as SideEffectModel, other);
   }
 
   @override
@@ -616,10 +612,8 @@ mixin SideEffectAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            SideEffectAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as SideEffectAdditionalFields, other));
+    return SideEffectAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as SideEffectAdditionalFields, other);
   }
 
   @override

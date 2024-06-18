@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'pgr_complaints.dart';
@@ -154,10 +154,8 @@ mixin PgrComplaintModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrComplaintModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrComplaintModel, other));
+    return PgrComplaintModelMapper.ensureInitialized()
+        .equalsValue(this as PgrComplaintModel, other);
   }
 
   @override
@@ -382,10 +380,8 @@ mixin PgrServiceModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrServiceModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrServiceModel, other));
+    return PgrServiceModelMapper.ensureInitialized()
+        .equalsValue(this as PgrServiceModel, other);
   }
 
   @override
@@ -670,10 +666,8 @@ mixin PgrComplainantModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrComplainantModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrComplainantModel, other));
+    return PgrComplainantModelMapper.ensureInitialized()
+        .equalsValue(this as PgrComplainantModel, other);
   }
 
   @override
@@ -889,10 +883,8 @@ mixin PgrRolesModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrRolesModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrRolesModel, other));
+    return PgrRolesModelMapper.ensureInitialized()
+        .equalsValue(this as PgrRolesModel, other);
   }
 
   @override
@@ -1050,10 +1042,8 @@ mixin PgrWorkflowModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrWorkflowModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrWorkflowModel, other));
+    return PgrWorkflowModelMapper.ensureInitialized()
+        .equalsValue(this as PgrWorkflowModel, other);
   }
 
   @override
@@ -1287,10 +1277,8 @@ mixin PgrServiceSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrServiceSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrServiceSearchModel, other));
+    return PgrServiceSearchModelMapper.ensureInitialized()
+        .equalsValue(this as PgrServiceSearchModel, other);
   }
 
   @override
@@ -1511,10 +1499,8 @@ mixin PgrFiltersMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrFiltersMapper.ensureInitialized()
-                .isValueEqual(this as PgrFilters, other));
+    return PgrFiltersMapper.ensureInitialized()
+        .equalsValue(this as PgrFilters, other);
   }
 
   @override
@@ -1662,10 +1648,8 @@ mixin PgrSearchKeysMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrSearchKeysMapper.ensureInitialized()
-                .isValueEqual(this as PgrSearchKeys, other));
+    return PgrSearchKeysMapper.ensureInitialized()
+        .equalsValue(this as PgrSearchKeys, other);
   }
 
   @override
@@ -1795,10 +1779,8 @@ mixin PgrAdditionalDetailsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrAdditionalDetailsMapper.ensureInitialized()
-                .isValueEqual(this as PgrAdditionalDetails, other));
+    return PgrAdditionalDetailsMapper.ensureInitialized()
+        .equalsValue(this as PgrAdditionalDetails, other);
   }
 
   @override

@@ -223,7 +223,7 @@ void showDownloadDialog(
                   );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.pop();
+              context.router.maybePop();
             }
           },
         ),
@@ -231,7 +231,7 @@ void showDownloadDialog(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.maybePop();
           },
         ),
       );

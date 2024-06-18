@@ -192,28 +192,7 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                         );
 
                                         if (shouldSubmit ?? false) {
-                                          final reloadState = context
-                                              .read<HouseholdOverviewBloc>();
-
-                                          Future.delayed(
-                                            const Duration(milliseconds: 500),
-                                            () {
-                                              reloadState.add(
-                                                HouseholdOverviewReloadEvent(
-                                                  projectId:
-                                                      RegistrationDeliverySingleton()
-                                                          .projectId!,
-                                                  projectBeneficiaryType:
-                                                      RegistrationDeliverySingleton()
-                                                          .beneficiaryType!,
-                                                ),
-                                              );
-                                            },
-                                          ).then((value) => context.router.push(
-                                                HouseholdAcknowledgementRoute(
-                                                  enableViewHousehold: true,
-                                                ),
-                                              ));
+                                          submitSideEffects();
                                         }
                                       } else {
                                         setState(() {
@@ -357,5 +336,26 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
         },
       ),
     );
+  }
+
+  void submitSideEffects() async {
+    final reloadState = context.read<HouseholdOverviewBloc>();
+
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        reloadState.add(
+          HouseholdOverviewReloadEvent(
+            projectId: RegistrationDeliverySingleton().projectId!,
+            projectBeneficiaryType:
+                RegistrationDeliverySingleton().beneficiaryType!,
+          ),
+        );
+      },
+    ).then((value) => context.router.push(
+          HouseholdAcknowledgementRoute(
+            enableViewHousehold: true,
+          ),
+        ));
   }
 }
