@@ -53,7 +53,7 @@ class SearchReferralsBloc
     );
     // Update state with fetched referrals.
     emit(state.copyWith(
-      referrals: beneficiaries ?? [],
+      referrals: beneficiaries,
       loading: false,
       tag: event.tag,
     ));

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 
 class ProjectStaffLocalRepository
     extends LocalRepository<ProjectStaffModel, ProjectStaffSearchModel> {
@@ -28,7 +29,9 @@ class ProjectStaffLocalRepository
         createOpLog: createOpLog,
       );
     } catch (e) {
-      print('Error creating project staff table: $e');
+      if (kDebugMode) {
+        print('Error creating project staff table: $e');
+      }
     }
   }
 

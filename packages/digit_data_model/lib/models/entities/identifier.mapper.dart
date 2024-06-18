@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'identifier.dart';
@@ -117,10 +117,8 @@ mixin IdentifierSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            IdentifierSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as IdentifierSearchModel, other));
+    return IdentifierSearchModelMapper.ensureInitialized()
+        .equalsValue(this as IdentifierSearchModel, other);
   }
 
   @override
@@ -332,10 +330,8 @@ mixin IdentifierModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            IdentifierModelMapper.ensureInitialized()
-                .isValueEqual(this as IdentifierModel, other));
+    return IdentifierModelMapper.ensureInitialized()
+        .equalsValue(this as IdentifierModel, other);
   }
 
   @override
@@ -537,10 +533,8 @@ mixin IdentifierAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            IdentifierAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as IdentifierAdditionalFields, other));
+    return IdentifierAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as IdentifierAdditionalFields, other);
   }
 
   @override

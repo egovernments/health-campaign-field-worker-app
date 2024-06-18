@@ -40,7 +40,7 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
           body: ReactiveFormConsumer(
             builder: (context, form, _) {
               final filteredProjectFacilities =
-                  (projectFacilities ?? []).isNotEmpty
+                  (projectFacilities).isNotEmpty
                       ? projectFacilities.where((element) {
                           final query =
                               form.control(_facilityName).value as String?;
