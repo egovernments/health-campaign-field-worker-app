@@ -50,7 +50,7 @@ void main() {
   _updateHome(homeFilePath);
 
   // Update the sync_service_mapper.dart file
-  _updateSyncServiceMapperDownFile(syncServiceMapperFilePath);
+  _updateSyncServiceMapperFile(syncServiceMapperFilePath);
 
   // Add registration routes and import to the router file
   _addRegistrationRoutesAndImportToRouterFile(routerFilePath);
@@ -343,7 +343,7 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
 }
 
-void _updateSyncServiceMapperDownFile(String syncServiceMapperFilePath) {
+void _updateSyncServiceMapperFile(String syncServiceMapperFilePath) {
   // Define the import statement and the new case statements
   var importStatement =
       "import 'package:registration_delivery/registration_delivery.dart';";
@@ -663,9 +663,9 @@ void _updateSyncServiceMapperDownFile(String syncServiceMapperFilePath) {
   if (!syncServiceMapperFileContent.contains(importStatement)) {
     syncServiceMapperFileContent =
         importStatement + '\n' + syncServiceMapperFileContent;
-    print('The import statement was added to sync_down.dart.');
+    print('The import statement was added to sync_service_mapper.dart.');
   } else {
-    print('The import statement already exists in sync_down.dart.');
+    print('The import statement already exists in sync_service_mapper.dart.');
   }
 
   // Insert the new case statements
@@ -684,21 +684,21 @@ void _updateSyncServiceMapperDownFile(String syncServiceMapperFilePath) {
                 newCases +
                 '\n' +
                 syncServiceMapperFileContent.substring(caseInsertionIndex);
-        print('The new cases were added to sync_down.dart.');
+        print('The new cases were added to sync_service_mapper.dart.');
 
         // Write the updated content back to the file
         syncServiceMapperFile.writeAsStringSync(syncServiceMapperFileContent);
       } else {
         print(
-            'Error: Could not find the default case in the switch statement in sync_down.dart.');
+            'Error: Could not find the default case in the switch statement in sync_service_mapper.dart.');
         return;
       }
     } else {
-      print('Error: Could not find the switch statement in sync_down.dart.');
+      print('Error: Could not find the switch statement in sync_service_mapper.dart.');
       return;
     }
   } else {
-    print('The new cases already exist in sync_down.dart.');
+    print('The new cases already exist in sync_service_mapper.dart.');
   }
 }
 
