@@ -184,7 +184,7 @@ class DigitScannerUtils {
     required ScannerLocalization localizations,
   }) async {
     // Play the buzzer sound to indicate an error
-    player.play(AssetSource(DigitScannerConstants().audioFilePath));
+    player.play(AssetSource(DigitScannerConstants().errorFilePath));
 
     // Check if the player has completed playing or if the result list is empty
     if (player.state == PlayerState.completed || result.isEmpty) {

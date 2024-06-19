@@ -152,75 +152,61 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             ),
                           ),
                         ),
-                        widget.isGS1code
-                            ? const SizedBox.shrink()
-                            : Positioned(
-                                top: MediaQuery.of(context).size.height / 2.4,
-                                left: MediaQuery.of(context).size.width / 5,
-                                width: 300,
-                                height: 250,
-                                child: SizedBox(
-                                  width: 150,
-                                  height: 50,
+                        if (widget.isGS1code)
+                          const SizedBox.shrink()
+                        else
+                          Align(
+                            alignment: Alignment.center,
+                            widthFactor: 2,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: kPadding),
+                                  child: Text(
+                                    localizations.translate(
+                                      i18.scanner.manualScan,
+                                    ),
+                                    style: TextStyle(
+                                      color: theme.colorScheme.onError,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    context.read<DigitScannerBloc>().add(
+                                          const DigitScannerEvent.handleScanner(
+                                            barCode: [],
+                                            qrCode: [],
+                                          ),
+                                        );
+                                    setState(() {
+                                      manualCode = true;
+                                      _resourceController.value =
+                                          const TextEditingValue();
+                                    });
+                                  },
                                   child: Padding(
                                     padding:
                                         const EdgeInsets.only(top: kPadding),
                                     child: Text(
                                       localizations.translate(
-                                        i18.scanner.manualScan,
+                                        i18.scanner.enterManualCode,
                                       ),
                                       style: TextStyle(
-                                        color: theme.colorScheme.onError,
-                                        fontSize: 20,
+                                        color: theme.colorScheme.secondary,
+                                        fontSize: theme
+                                            .textTheme.headlineMedium?.fontSize,
+                                        decoration: TextDecoration.underline,
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-
-                        widget.isGS1code
-                            ? const SizedBox.shrink()
-                            : Positioned(
-                                top: MediaQuery.of(context).size.height / 2.2,
-                                left: MediaQuery.of(context).size.width / 5,
-                                width: 250,
-                                height: 50,
-                                child: SizedBox(
-                                  width: 150,
-                                  height: 50,
-                                  child: TextButton(
-                                    onPressed: () {
-                                      context.read<DigitScannerBloc>().add(
-                                            const DigitScannerEvent
-                                                .handleScanner(
-                                              barCode: [],
-                                              qrCode: [],
-                                            ),
-                                          );
-                                      setState(() {
-                                        manualCode = true;
-                                        _resourceController.value =
-                                            const TextEditingValue();
-                                      });
-                                    },
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(top: kPadding),
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.scanner.enterManualCode,
-                                        ),
-                                        style: TextStyle(
-                                          color: theme.colorScheme.secondary,
-                                          fontSize: theme.textTheme
-                                              .headlineMedium?.fontSize,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              ],
+                            ),
+                          ),
 
                         Positioned(
                           bottom: 0,
@@ -501,8 +487,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
       inputImage: inputImage,
       canProcess: _canProcess,
       isBusy: _isBusy,
-      setBusy: (busy) => setState(() => _isBusy = busy),
-      setText: (text) => setState(() => _text = text),
+      setBusy: (busy) => mounted ? setState(() => _isBusy = busy) : null,
+      setText: (text) => mounted ? setState(() => _text = text) : null,
       updateCustomPaint: (customPaint) => _customPaint = customPaint,
       isGS1code: widget.isGS1code,
       quantity: widget.quantity,
