@@ -227,8 +227,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                               label: localizations.translate(
                                 i18.common.coreCommonMobileNumber,
                               ),
-                              minLength: 10,
                               maxLength: 10,
+                              readOnly: true,
                               validationMessages: {
                                 'mobileNumber': (object) =>
                                     localizations.translate(i18

@@ -73,120 +73,123 @@ class DigitTextFormField extends StatelessWidget {
         labelStyle: labelStyle ?? Theme.of(context).textTheme.bodyLarge,
         child: Column(
           children: [
-            Container(
-              color: (readOnly) ? const DigitColors().seaShellGray : null,
-              child: ReactiveTextField(
-                  onChanged: onChanged,
-                  readOnly: readOnly,
-                  formControlName: formControlName,
-                  maxLength: maxLength,
-                  validationMessages: validationMessages,
-                  autofocus: false,
-                  textCapitalization: textCapitalization,
-                  minLines: minLines,
-                  maxLines: maxLines,
-                  style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: (readOnly && hideKeyboard == false)
-                          ? const DigitColors().davyGray
-                          : DigitTheme.instance.colorScheme.onBackground),
-                  obscureText: obscureText,
-                  focusNode: focusNode,
-                  keyboardType: keyboardType,
-                  inputFormatters: [
-                    RemoveEmojiInputFormatter(),
-                    ...?inputFormatters
-                  ],
-                  valueAccessor: valueAccessor,
-                  decoration: (readOnly && hideKeyboard == false)
-                      ? InputDecoration(
-                          enabledBorder: DigitTheme
-                              .instance.inputDecorationTheme.disabledBorder,
-                          fillColor: DigitTheme.instance.colors.cloudGray,
-                          focusedBorder: DigitTheme
-                              .instance.inputDecorationTheme.disabledBorder,
-                          focusColor: DigitTheme.instance.colors.cloudGray,
-                          suffixIcon: suffix == null
-                              ? null
-                              : InkWell(
-                                  onTap: onTap,
-                                  child: suffix,
-                                ),
-                          prefixIconConstraints:
-                              const BoxConstraints(minWidth: 0, minHeight: 0),
-                          prefixStyle: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w200,
-                              color: readOnly
-                                  ? const DigitColors().hintGrey
-                                  : DigitTheme
-                                      .instance.colorScheme.onBackground),
-                          prefixIcon: prefixIcon ??
-                              (prefixText == ''
-                                  ? null
-                                  : Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10,
-                                          left: 10,
-                                          bottom: 10,
-                                          right: 0),
-                                      child: Text(
-                                        prefixText ?? '',
-                                        style: TextStyle(
-                                            fontSize: kIsWeb ? 15 : 16,
-                                            fontWeight: FontWeight.w200,
-                                            color: readOnly
-                                                ? const DigitColors().hintGrey
-                                                : DigitTheme.instance
-                                                    .colorScheme.onBackground),
-                                      ),
-                                    )),
-                        )
-                      : InputDecoration(
-                          labelText: hint,
-                          suffixIconConstraints: const BoxConstraints(
-                            maxHeight: 40,
-                            maxWidth: 100,
-                          ),
-                          prefixIconConstraints:
-                              const BoxConstraints(minWidth: 0, minHeight: 0),
-                          prefixStyle: TextStyle(
+            ReactiveTextField(
+                onChanged: onChanged,
+                readOnly: readOnly,
+                formControlName: formControlName,
+                maxLength: maxLength,
+                validationMessages: validationMessages,
+                autofocus: false,
+                textCapitalization: textCapitalization,
+                minLines: minLines,
+                maxLines: maxLines,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: (readOnly && hideKeyboard == false)
+                        ? const DigitColors().davyGray
+                        : DigitTheme.instance.colorScheme.onBackground),
+                obscureText: obscureText,
+                focusNode: focusNode,
+                keyboardType: keyboardType,
+                inputFormatters: [
+                  RemoveEmojiInputFormatter(),
+                  ...?inputFormatters
+                ],
+                valueAccessor: valueAccessor,
+                decoration: (readOnly && hideKeyboard == false)
+                    ? InputDecoration(
+                        enabledBorder: DigitTheme
+                            .instance.inputDecorationTheme.disabledBorder,
+                        fillColor: DigitTheme.instance.colors.cloudGray,
+                        focusedBorder: DigitTheme
+                            .instance.inputDecorationTheme.disabledBorder,
+                        focusColor: DigitTheme.instance.colors.cloudGray,
+                        enabled: false,
+                        suffixIcon: suffix == null
+                            ? null
+                            : InkWell(
+                                onTap: onTap,
+                                child: suffix,
+                              ),
+                        prefixIconConstraints:
+                            const BoxConstraints(minWidth: 0, minHeight: 0),
+                        labelStyle: TextStyle(
                             fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                            fontWeight: FontWeight.w200,
                             color: readOnly
                                 ? const DigitColors().hintGrey
-                                : DigitTheme.instance.colorScheme.onBackground,
-                          ),
-                          prefixIcon: prefixIcon ??
-                              (prefixText == ''
-                                  ? null
-                                  : Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 10,
-                                          left: 10,
-                                          bottom: 10,
-                                          right: 0),
-                                      child: Text(
-                                        prefixText ?? '',
-                                        style: TextStyle(
+                                : DigitTheme.instance.colorScheme.onBackground),
+                        prefixStyle: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w200,
+                            color: readOnly
+                                ? const DigitColors().hintGrey
+                                : DigitTheme.instance.colorScheme.onBackground),
+                        prefixIcon: prefixIcon ??
+                            (prefixText == ''
+                                ? null
+                                : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10,
+                                        left: 10,
+                                        bottom: 10,
+                                        right: 0),
+                                    child: Text(
+                                      prefixText ?? '',
+                                      style: TextStyle(
                                           fontSize: kIsWeb ? 15 : 16,
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w200,
                                           color: readOnly
                                               ? const DigitColors().hintGrey
                                               : DigitTheme.instance.colorScheme
-                                                  .onBackground,
-                                        ),
+                                                  .onBackground),
+                                    ),
+                                  )),
+                      )
+                    : InputDecoration(
+                        labelText: hint,
+                        suffixIconConstraints: const BoxConstraints(
+                          maxHeight: 40,
+                          maxWidth: 100,
+                        ),
+                        prefixIconConstraints:
+                            const BoxConstraints(minWidth: 0, minHeight: 0),
+                        prefixStyle: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: readOnly
+                              ? const DigitColors().hintGrey
+                              : DigitTheme.instance.colorScheme.onBackground,
+                        ),
+                        prefixIcon: prefixIcon ??
+                            (prefixText == ''
+                                ? null
+                                : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 10,
+                                        left: 10,
+                                        bottom: 10,
+                                        right: 0),
+                                    child: Text(
+                                      prefixText ?? '',
+                                      style: TextStyle(
+                                        fontSize: kIsWeb ? 15 : 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: readOnly
+                                            ? const DigitColors().hintGrey
+                                            : DigitTheme.instance.colorScheme
+                                                .onBackground,
                                       ),
-                                    )),
-                          suffixIcon: suffix == null
-                              ? null
-                              : InkWell(
-                                  onTap: onTap,
-                                  child: suffix,
-                                ),
-                        )),
-            ),
+                                    ),
+                                  )),
+                        suffixIcon: suffix == null
+                            ? null
+                            : InkWell(
+                                onTap: onTap,
+                                child: suffix,
+                              ),
+                      )),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(hintText ?? '',

@@ -124,17 +124,17 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             : null;
 
         final ageInYears = DigitDateUtils.calculateAge(
-          householdMember.headOfHousehold.dateOfBirth != null
+          e.dateOfBirth != null
               ? DigitDateUtils.getFormattedDateToDateTime(
-                    householdMember.headOfHousehold.dateOfBirth!,
+                    e.dateOfBirth!,
                   ) ??
                   DateTime.now()
               : DateTime.now(),
         ).years;
         final ageInMonths = DigitDateUtils.calculateAge(
-          householdMember.headOfHousehold.dateOfBirth != null
+          e.dateOfBirth != null
               ? DigitDateUtils.getFormattedDateToDateTime(
-                    householdMember.headOfHousehold.dateOfBirth!,
+                    e.dateOfBirth!,
                   ) ??
                   DateTime.now()
               : DateTime.now(),
@@ -358,7 +358,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     List<TaskModel>? taskData,
   ) {
     if (statusKeys.isNotEligible) {
-      return 'Not Eligible';
+      return localizations.translate(
+          i18.householdOverView.householdOverViewNotEligibleIconLabel);
     } else if (statusKeys.isBeneficiaryReferred) {
       return localizations.translate(Status.beneficiaryReferred.toValue());
     } else if (taskData != null) {
