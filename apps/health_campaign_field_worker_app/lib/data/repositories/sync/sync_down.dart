@@ -656,73 +656,73 @@ class PerformSyncDown {
 
             break;
 
-          case DataModelType.complaints:
-            if (remote is! PgrServiceRemoteRepository) continue;
-
-            final futures = entities
-                .whereType<PgrServiceModel>()
-                .map((e) => e.serviceRequestId)
-                .whereNotNull()
-                .map(
-              (e) {
-                final future = remote.searchWithoutClientReferenceId(
-                  PgrServiceSearchModel(
-                    serviceRequestId: e,
-                  ),
-                );
-
-                return Future.sync(() => future);
-              },
-            );
-
-            final resolvedFutures = await Future.wait(futures);
-
-            responseEntities = resolvedFutures
-                .expand((element) => element)
-                .whereType<PgrServiceResponseModel>()
-                // We only need serviceRequestId and application status
-                .map((e) => PgrServiceModel(
-                      clientReferenceId: '',
-                      tenantId: e.tenantId ?? '',
-                      serviceCode: e.serviceCode ?? '',
-                      description: e.description ?? '',
-                      serviceRequestId: e.serviceRequestId,
-                      applicationStatus: e.applicationStatus ??
-                          PgrServiceApplicationStatus.pendingAssignment,
-                      user: PgrComplainantModel(
-                        clientReferenceId: '',
-                        tenantId: '',
-                        complaintClientReferenceId: e.serviceRequestId ?? '',
-                      ),
-                      address: PgrAddressModel(),
-                    ))
-                .toList();
-
-            for (var element in operationGroupedEntity.value) {
-              if (element.id == null) return;
-              final entity = element.entity as PgrServiceModel;
-              final responseEntity = responseEntities
-                  .whereType<PgrServiceModel>()
-                  .firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-
-              final serverGeneratedId = responseEntity?.serviceRequestId;
-              final rowVersion = responseEntity?.rowVersion;
-
-              if (serverGeneratedId != null) {
-                await local.opLogManager.updateServerGeneratedIds(
-                  model: UpdateServerGeneratedIdModel(
-                    clientReferenceId: entity.clientReferenceId,
-                    serverGeneratedId: serverGeneratedId,
-                    dataOperation: element.operation,
-                    rowVersion: rowVersion,
-                  ),
-                );
-              }
-            }
-
-            break;
+          // case DataModelType.complaints:
+          //   if (remote is! PgrServiceRemoteRepository) continue;
+          //
+          //   final futures = entities
+          //       .whereType<PgrServiceModel>()
+          //       .map((e) => e.serviceRequestId)
+          //       .whereNotNull()
+          //       .map(
+          //     (e) {
+          //       final future = remote.searchWithoutClientReferenceId(
+          //         PgrServiceSearchModel(
+          //           serviceRequestId: e,
+          //         ),
+          //       );
+          //
+          //       return Future.sync(() => future);
+          //     },
+          //   );
+          //
+          //   final resolvedFutures = await Future.wait(futures);
+          //
+          //   responseEntities = resolvedFutures
+          //       .expand((element) => element)
+          //       .whereType<PgrServiceResponseModel>()
+          //       // We only need serviceRequestId and application status
+          //       .map((e) => PgrServiceModel(
+          //             clientReferenceId: '',
+          //             tenantId: e.tenantId ?? '',
+          //             serviceCode: e.serviceCode ?? '',
+          //             description: e.description ?? '',
+          //             serviceRequestId: e.serviceRequestId,
+          //             applicationStatus: e.applicationStatus ??
+          //                 PgrServiceApplicationStatus.pendingAssignment,
+          //             user: PgrComplainantModel(
+          //               clientReferenceId: '',
+          //               tenantId: '',
+          //               complaintClientReferenceId: e.serviceRequestId ?? '',
+          //             ),
+          //             address: PgrAddressModel(),
+          //           ))
+          //       .toList();
+          //
+          //   for (var element in operationGroupedEntity.value) {
+          //     if (element.id == null) return;
+          //     final entity = element.entity as PgrServiceModel;
+          //     final responseEntity = responseEntities
+          //         .whereType<PgrServiceModel>()
+          //         .firstWhereOrNull(
+          //           (e) => e.clientReferenceId == entity.clientReferenceId,
+          //         );
+          //
+          //     final serverGeneratedId = responseEntity?.serviceRequestId;
+          //     final rowVersion = responseEntity?.rowVersion;
+          //
+          //     if (serverGeneratedId != null) {
+          //       await local.opLogManager.updateServerGeneratedIds(
+          //         model: UpdateServerGeneratedIdModel(
+          //           clientReferenceId: entity.clientReferenceId,
+          //           serverGeneratedId: serverGeneratedId,
+          //           dataOperation: element.operation,
+          //           rowVersion: rowVersion,
+          //         ),
+          //       );
+          //     }
+          //   }
+          //
+          //   break;
 
           default:
             continue;
