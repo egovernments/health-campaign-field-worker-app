@@ -8,6 +8,7 @@ import 'package:recase/recase.dart';
 
 import '../../blocs/auth/auth.dart';
 import '../../router/app_router.dart';
+import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/action_card/action_card.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -81,7 +82,9 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                           )
                                           .isNegative &&
                                       !item.code!.contains(Constants
-                                          .healthFacilityChecklistPrefix));
+                                          .healthFacilityChecklistPrefix) &&
+                                      (item.code ?? '').contains(
+                                          context.selectedProject.name));
 
                               if (values.isEmpty) {
                                 return Column(
