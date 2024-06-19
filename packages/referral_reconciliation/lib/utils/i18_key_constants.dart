@@ -190,4 +190,5 @@ class ReferralReconciliation {
   String get referralInfoDescription => 'REFERRAL_INFO_DESCRIPTION';
   String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
   String get scannerLabel => 'SCANNER_LABEL';
+  String get noFacilitiesAssigned => 'NO_FACILITIES_ASSIGNED';
 }
