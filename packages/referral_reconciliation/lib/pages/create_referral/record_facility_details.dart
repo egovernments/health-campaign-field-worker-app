@@ -411,7 +411,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
         validators: [Validators.max(DateTime.now()), Validators.required],
       ),
       _administrativeUnitKey: FormControl<String>(
-        value: ReferralReconSingleton().boundary?.name,
+        value: localizations.translate(
+            (ReferralReconSingleton().boundary?.code ?? '').toString()),
         validators: [
           Validators.required,
         ],
