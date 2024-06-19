@@ -101,7 +101,8 @@ class DigitTextFormField extends StatelessWidget {
                     ? InputDecoration(
                         enabledBorder: DigitTheme
                             .instance.inputDecorationTheme.disabledBorder,
-                        fillColor: DigitTheme.instance.colors.cloudGray,
+                        filled: true,
+                        fillColor: DigitTheme.instance.colors.seaShellGray,
                         focusedBorder: DigitTheme
                             .instance.inputDecorationTheme.disabledBorder,
                         focusColor: DigitTheme.instance.colors.cloudGray,
