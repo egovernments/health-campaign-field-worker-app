@@ -263,7 +263,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                             localizations.translate(
                                               i18.common.coreCommonGender,
                                             ),
-                                            style: theme.textTheme.labelMedium,
+                                            style: theme.textTheme.titleMedium,
                                           ),
                                         ],
                                       ),
