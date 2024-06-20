@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.0+2"
+    version: "1.0.1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -485,14 +485,14 @@ packages:
       path: "../../packages/digit_components"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.0+2"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -506,7 +506,7 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   digit_showcase:
     dependency: "direct main"
     description:

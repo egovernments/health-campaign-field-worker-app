@@ -25,3 +25,8 @@ Updated digit_scanner to latest version
 ## 1.0.1
 
 * Upgraded digit_scanner,digit_data_model and digit_components to latest versions
+
+## 1.0.2
+
+* Bug fixes and enhancements
+* Added try catch for local repository to handle db lock

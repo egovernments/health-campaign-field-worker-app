@@ -656,6 +656,8 @@ class PerformSyncDown {
 
             break;
 
+          // Note: Uncomment the following code block to enable complaints sync down
+
           // case DataModelType.complaints:
           //   if (remote is! PgrServiceRemoteRepository) continue;
           //

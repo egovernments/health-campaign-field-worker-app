@@ -9,7 +9,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
-import '../models/entities/reg_form_validations_type.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
@@ -27,23 +26,30 @@ class CustomValidator {
         : {'required': true};
   }
 
-  /// Validates that the control's value is a valid stock count.
-  /// The value must be a non-negative integer less than or equal to 10000.
-  static Map<String, dynamic>? validStockCount(
+  static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,
   ) {
     if (control.value == null || control.value.toString().isEmpty) {
-      return {RegFormValidations.required.toValue(): true};
+      return null;
     }
 
-    var parsed = int.tryParse(control.value) ?? 0;
-    if (parsed < 0) {
-      return {RegFormValidations.min.toValue(): true};
-    } else if (parsed > 10000) {
-      return {RegFormValidations.max.toValue(): true};
-    }
+    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
 
-    return null;
+    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
+
+    if (control.value.toString().length < 10) return {'mobileNumber': true};
+
+    return {'mobileNumber': true};
+  }
+
+  static Map<String, dynamic>? minPhoneNumValidation(
+    AbstractControl<dynamic> control,
+  ) {
+    if (control.value != null &&
+        control.value.toString().isNotEmpty &&
+        control.value.toString().length < 10) {
+      return {'minLength': true};
+    }
   }
 }
 

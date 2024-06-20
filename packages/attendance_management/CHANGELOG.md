@@ -34,3 +34,7 @@
 ## 1.0.0+2
 
 * Updated digit_data_model to latest version
+
+## 1.0.1
+
+* Added try catch for local repository to handle db lock

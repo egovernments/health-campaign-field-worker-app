@@ -103,8 +103,6 @@ flutter:
   assets:
     - ./
     - assets/icons/svg/
-    - ./assets/audio/add.wav
-    - ./assets/audio/buzzer.wav
     
   fonts:
     - family: Roboto
