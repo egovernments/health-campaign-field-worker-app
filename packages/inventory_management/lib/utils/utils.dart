@@ -6,17 +6,6 @@ import '../models/entities/inventory_transport_type.dart';
 
 /// This class contains custom validators for form controls.
 class CustomValidator {
-  /// Validates that control's value must be `true`
-  static Map<String, dynamic>? requiredMin(
-    AbstractControl<dynamic> control,
-  ) {
-    return control.value == null ||
-            control.value.toString().length >= 2 ||
-            control.value.toString().trim().isEmpty
-        ? null
-        : {'required': true};
-  }
-
   /// Validates that the control's value is a valid stock count.
   /// The value must be a non-negative integer less than or equal to 10000.
   static Map<String, dynamic>? validStockCount(
