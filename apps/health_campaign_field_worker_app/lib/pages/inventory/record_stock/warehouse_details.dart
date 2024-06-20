@@ -42,12 +42,12 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
 
   @override
   void initState() {
-    clearQRCodes();
-    final stockState = context.read<RecordStockBloc>().state;
-    setState(() {
-      selectedFacilityId = stockState.primaryId;
-      entryType = stockState.entryType.toString();
-    });
+    // clearQRCodes();
+    // final stockState = context.read<RecordStockBloc>().state;
+    // setState(() {
+    //   selectedFacilityId = stockState.primaryId;
+    //   entryType = stockState.entryType.toString();
+    // });
     super.initState();
   }
 
@@ -59,9 +59,9 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
         ),
         _warehouseKey: FormControl<String>(
           validators: [Validators.required],
-          value: isCommunityDistributor && filteredFacility != null
-              ? filteredFacility!.name
-              : prevFacility?.name,
+          // value: isCommunityDistributor && filteredFacility != null
+          //     ? filteredFacility!.name
+          //     : prevFacility?.name,
         ),
         _teamCodeKey: FormControl<String>(
           value: stockState.primaryId ?? '',
@@ -131,15 +131,15 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
               }
             }
 
-            prevFacility = facilityState.whenOrNull(
-              fetched: (_, __, facility) => facility,
-            );
+            // prevFacility = facilityState.whenOrNull(
+            //   fetched: (_, __, facility) => facility,
+            // );
 
-            if (prevFacility != null) {
-              selectedFacilityId = prevFacility?.id;
-            } else if (isCommunityDistributor && filteredFacility != null) {
-              selectedFacilityId = filteredFacility!.id;
-            }
+            // if (prevFacility != null) {
+            //   selectedFacilityId = prevFacility?.id;
+            // } else if (isCommunityDistributor && filteredFacility != null) {
+            //   selectedFacilityId = filteredFacility!.id;
+            // }
 
             return Scaffold(
               body: GestureDetector(
