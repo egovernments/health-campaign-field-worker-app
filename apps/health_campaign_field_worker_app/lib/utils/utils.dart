@@ -23,8 +23,6 @@ import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
-import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -381,7 +379,6 @@ getSelectedLanguage(AppInitialized state, int index) {
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
-    Future(() => registration_mappers.initializeMappers()),
     Future(() => attendance_mappers.initializeMappers()),
     Future(() => referral_reconciliation_mappers.initializeMappers()),
     Future(() => inventory_mappers.initializeMappers()),
@@ -393,23 +390,42 @@ initializeAllMappers() async {
 
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
-    switch (element.entityType) {
-      case DataModelType.household:
-      case DataModelType.individual:
-      case DataModelType.householdMember:
-      case DataModelType.projectBeneficiary:
-      case DataModelType.task:
-      case DataModelType.stock:
-      case DataModelType.stockReconciliation:
-      case DataModelType.service:
-      case DataModelType.complaints:
-      case DataModelType.sideEffect:
-      case DataModelType.referral:
-      case DataModelType.hFReferral:
-      case DataModelType.attendance:
-        return true;
-      default:
-        return false;
+    if (element.syncedDown == false && element.syncedUp == true) {
+      switch (element.entityType) {
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      switch (element.entityType) {
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.service:
+        case DataModelType.complaints:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+          return true;
+        default:
+          return false;
+      }
     }
   }).length;
 

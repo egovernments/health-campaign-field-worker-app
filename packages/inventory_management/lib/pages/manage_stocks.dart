@@ -5,9 +5,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
-import '../blocs/inventory_listener.dart';
 import '../blocs/record_stock.dart';
-import '../models/entities/inventory_transport_type.dart';
 import '../widgets/back_navigation_help_header.dart';
 
 @RoutePage()

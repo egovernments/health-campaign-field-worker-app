@@ -3,13 +3,12 @@ import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/utils/constants.dart';
+import '../../utils/constants.dart';
 import 'package:recase/recase.dart';
-import 'package:registration_delivery/blocs/service/service.dart';
-import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
 import '../../blocs/auth/auth.dart';
 import '../../router/app_router.dart';
+import '../../utils/extensions/extensions.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/action_card/action_card.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -83,7 +82,9 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                           )
                                           .isNegative &&
                                       !item.code!.contains(Constants
-                                          .healthFacilityChecklistPrefix));
+                                          .healthFacilityChecklistPrefix) &&
+                                      (item.code ?? '').contains(
+                                          context.selectedProject.name));
 
                               if (values.isEmpty) {
                                 return Column(

@@ -1,5 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -17,6 +20,8 @@ import '../data/local_store/no_sql/schema/localization.dart';
 import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
+import '../data/repositories/remote/downsync.dart';
+import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
 
@@ -82,23 +87,7 @@ class Constants {
       ProjectLocalRepository(sql, ProjectOpLogManager(isar)),
       ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
-      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
-      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
-      StockLocalRepository(sql, StockOpLogManager(isar)),
-      StockReconciliationLocalRepository(
-        sql,
-        StockReconciliationOpLogManager(isar),
-      ),
-      ProjectBeneficiaryLocalRepository(
-        sql,
-        ProjectBeneficiaryOpLogManager(
-          isar,
-        ),
-      ),
       ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
-      TaskLocalRepository(sql, TaskOpLogManager(isar)),
-      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
-      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       ServiceDefinitionLocalRepository(
         sql,
         ServiceDefinitionOpLogManager(isar),
@@ -122,6 +111,22 @@ class Constants {
       PgrServiceLocalRepository(
         sql,
         PgrServiceOpLogManager(isar),
+      ),
+      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
+      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
+      ProjectBeneficiaryLocalRepository(
+        sql,
+        ProjectBeneficiaryOpLogManager(
+          isar,
+        ),
+      ),
+      TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
+      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
+      StockLocalRepository(sql, StockOpLogManager(isar)),
+      StockReconciliationLocalRepository(
+        sql,
+        StockReconciliationOpLogManager(isar),
       ),
       AttendanceLocalRepository(
         sql,
@@ -147,6 +152,14 @@ class Constants {
 
     final enableCrashlytics =
         config?.firebaseConfig?.enableCrashlytics ?? false;
+    if (enableCrashlytics) {
+      firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+        onErrorMessage: (value) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+        },
+      );
+    }
 
     _version = version;
   }
@@ -186,6 +199,8 @@ class Constants {
           ProjectFacilityRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.individual)
           IndividualRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.downsync)
+          DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stock)
           StockRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.stockReconciliation)
@@ -202,8 +217,6 @@ class Constants {
           SideEffectRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.referral)
           ReferralRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.downsync)
-          DownsyncRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendanceRegister)
           AttendanceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.attendance)

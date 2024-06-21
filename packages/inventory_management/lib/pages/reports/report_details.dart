@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:collection/collection.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/component_wrapper/facility_bloc_wrapper.dart';
@@ -42,6 +42,7 @@ class _InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
+  String? selectedFacilityId;
 
   /// Handles the selection of a facility and product variant from the form and triggers the loading of the corresponding inventory report data.
   ///
@@ -66,7 +67,7 @@ class _InventoryReportDetailsPageState
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
+                ? selectedFacilityId!
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -77,7 +78,7 @@ class _InventoryReportDetailsPageState
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
+                ? selectedFacilityId!
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -97,7 +98,7 @@ class _InventoryReportDetailsPageState
 
   FormGroup _form() {
     return fb.group({
-      _facilityKey: FormControl<FacilityModel>(
+      _facilityKey: FormControl<String>(
         validators: [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(),
@@ -135,7 +136,10 @@ class _InventoryReportDetailsPageState
               i18.inventoryReportDetails.noRecordsMessage,
             );
             final noFilterMessage = localizations.translate(
-              i18.inventoryReportDetails.noFilterMessage,
+              InventorySingleton().isDistributor &&
+                      !InventorySingleton().isWareHouseMgr
+                  ? i18.inventoryReportDetails.noFilterMessageDistributor
+                  : i18.inventoryReportDetails.noFilterMessage,
             );
 
             return ScrollableContent(
@@ -222,9 +226,19 @@ class _InventoryReportDetailsPageState
                                                                     facilities))
                                                         as FacilityModel?;
 
-                                                    if (facility == null) {
+                                                    if (facility == null)
                                                       return;
-                                                    }
+                                                    form
+                                                            .control(_facilityKey)
+                                                            .value =
+                                                        localizations.translate(
+                                                      'FAC_${facility.id}',
+                                                    );
+
+                                                    setState(() {
+                                                      selectedFacilityId =
+                                                          facility.id;
+                                                    });
                                                     form
                                                         .control(_facilityKey)
                                                         .value = facility;
@@ -243,10 +257,6 @@ class _InventoryReportDetailsPageState
                                                     child: DigitTextFormField(
                                                       key: const Key(
                                                           _facilityKey),
-                                                      valueAccessor:
-                                                          FacilityValueAccessor(
-                                                        facilities,
-                                                      ),
                                                       label: localizations
                                                           .translate(
                                                         i18.stockReconciliationDetails
@@ -274,9 +284,21 @@ class _InventoryReportDetailsPageState
                                                                         facilities))
                                                             as FacilityModel?;
 
-                                                        if (facility == null) {
+                                                        if (facility == null)
                                                           return;
-                                                        }
+                                                        form
+                                                                .control(
+                                                                    _facilityKey)
+                                                                .value =
+                                                            localizations
+                                                                .translate(
+                                                          'FAC_${facility.id}',
+                                                        );
+
+                                                        setState(() {
+                                                          selectedFacilityId =
+                                                              facility.id;
+                                                        });
                                                         form
                                                             .control(
                                                                 _facilityKey)

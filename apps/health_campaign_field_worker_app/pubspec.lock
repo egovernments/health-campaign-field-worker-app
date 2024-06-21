@@ -69,10 +69,10 @@ packages:
     dependency: "direct main"
     description:
       name: attendance_management
-      sha256: "1c4c58e887ae1090220271978b56ab8b89d27b0618afc201ed391ea5eade95fc"
+      sha256: "7a3719dcca80be6f9475bea2b1e5226e67fcc60f3c3c55d849aa4f7216512a43"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -484,18 +484,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "29b8d33cce933e971831d371f0d873e008a091e99d4192cecd738de357eaaed8"
+      sha256: "53ee8c0a7c992c0e8d1c9c867b6cf1d52e1728200f4b4436943a5d6c5e4984c3"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.0+2"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "604be26d7f535027d1f16077b47b55a363c74a6040c34fb942ce82d58b9a54ec"
+      sha256: "0e1ec8e4d2776fcc4a8118ac85043b8876466ec7399c14880f3d585ad3586ef6"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -507,10 +507,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: a9959caad13c65165db5dc00cbe592e640e881d5e512599eac55591722b2da15
+      sha256: a040c9c413436aeb953fdea3bc99ef618641189b06e8f155d84ac83ba8d40fd1
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.2"
   digit_showcase:
     dependency: "direct main"
     description:
@@ -1094,10 +1094,10 @@ packages:
     dependency: "direct main"
     description:
       name: inventory_management
-      sha256: afb270392e2f3fb01a7e367dc5b0f0249b9e76c88208c1a1c71bcc6096491b0b
+      sha256: "2be2d09552432266bef3c11f2cd6d12ce83f39339c925d350aeda764c2acfef9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   io:
     dependency: transitive
     description:
@@ -1510,18 +1510,18 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: "95f00e17c3bacd61cd96b9bb7a8606de450540cfe53b5296c4a2bc2957d2b346"
+      sha256: "27f03bb51743cb9b25419fc1089507ee95693270a43233b92194298b1f87779c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   registration_delivery:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: "328c71e9a1163481eba1e0653cca23a4e50a32c44cccfcfba049849e87184114"
+      sha256: c315da85605c6d08b9b05147ced61a93ecb566d98bafee1653681659cfde4b84
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+1"
+    version: "1.0.2"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

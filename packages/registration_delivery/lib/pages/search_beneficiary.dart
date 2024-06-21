@@ -87,8 +87,8 @@ class _SearchBeneficiaryPageState
                   longititude: long,
                   projectId: RegistrationDeliverySingleton().projectId!,
                   maxRadius: RegistrationDeliverySingleton().maxRadius!,
-                  offset: blocWrapper.state.offset + blocWrapper.state.limit,
-                  limit: blocWrapper.state.limit,
+                  offset: blocWrapper.proximitySearchBloc.state.offset,
+                  limit: blocWrapper.proximitySearchBloc.state.limit,
                 ));
               } else if (metrics.atEdge &&
                   searchController.text != '' &&
@@ -98,8 +98,8 @@ class _SearchBeneficiaryPageState
                   searchText: searchController.text,
                   projectId: RegistrationDeliverySingleton().projectId!,
                   isProximityEnabled: isProximityEnabled,
-                  offset: blocWrapper.state.offset + blocWrapper.state.limit,
-                  limit: blocWrapper.state.limit,
+                  offset: blocWrapper.searchByHeadBloc.state.offset,
+                  limit: blocWrapper.searchByHeadBloc.state.limit,
                 ));
               }
             }
@@ -166,9 +166,8 @@ class _SearchBeneficiaryPageState
                                         maxRadius:
                                             RegistrationDeliverySingleton()
                                                 .maxRadius!,
-                                        offset: blocWrapper.state.offset +
-                                            blocWrapper.state.limit,
-                                        limit: blocWrapper.state.limit,
+                                        offset: offset,
+                                        limit: limit,
                                       ),
                                     );
                                   } else {
@@ -233,9 +232,8 @@ class _SearchBeneficiaryPageState
                                                   maxRadius:
                                                       RegistrationDeliverySingleton()
                                                           .maxRadius!,
-                                                  offset: 0,
-                                                  limit:
-                                                      blocWrapper.state.limit,
+                                                  offset: offset,
+                                                  limit: limit,
                                                 ),
                                               );
                                             } else {

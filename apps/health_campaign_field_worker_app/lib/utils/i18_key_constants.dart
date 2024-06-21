@@ -1,7 +1,5 @@
 library i18;
 
-import 'package:registration_delivery/utils/i18_key_constants.dart';
-
 const common = Common();
 const login = Login();
 const forgotPassword = ForgotPassword();
@@ -126,6 +124,8 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+
+  String get profileUpdateSuccess => 'PROFILE_UPDATE_SUCCESS';
 }
 
 class HomeShowcase {
@@ -830,4 +830,205 @@ class StockDetailsReturnedShowcase {
   String get comments {
     return 'STOCK_DETAILS_RETURNED_SHOWCASE_COMMENT';
   }
+}
+
+class HouseholdLocationShowcase {
+  const HouseholdLocationShowcase();
+
+  String get administrativeArea {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get landmark {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_LANDMARK';
+  }
+
+  String get address {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_ADDRESS';
+  }
+
+  String get postalCode {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_POSTAL_CODE';
+  }
+}
+
+class HouseholdLocation {
+  const HouseholdLocation();
+
+  String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
+
+  String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
+
+  String get administrationAreaRequiredValidation =>
+      'HOUSEHOLD_LOCATION_ADMINISTRATION_AREA_REQUIRED_VALIDATION';
+
+  String get householdAddressLine1LabelText =>
+      'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
+
+  String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
+
+  String get householdAddressLine2LabelText =>
+      'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
+
+  String get postalCodeFormLabel => 'POSTAL_CODE_FORM_LABEL';
+
+  String get actionLabel => 'HOUSEHOLD_LOCATION_ACTION_LABEL';
+}
+
+class SearchBeneficiary {
+  const SearchBeneficiary();
+
+  String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
+
+  String get searchIndividualLabelText =>
+      'BENEFICIARY_STATISTICS_SEARCH_INDIVIDUAL_LABEL';
+
+  String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
+
+  String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+
+  String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
+
+  String get beneficiaryIndividualSearchHintText =>
+      'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
+
+  String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
+
+  String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
+
+  String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
+
+  String get iconLabel => 'ICON_LABEL';
+
+  String get yearsAbbr => 'YEARS_ABBR';
+
+  String get monthsAbbr => 'MONTHS_ABBR';
+
+  String get proximityLabel => 'PROXIMITY_LABEL';
+}
+
+class IndividualDetails {
+  const IndividualDetails();
+
+  String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
+
+  String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
+
+  String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
+
+  String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
+
+  String get idNumberLabelText => 'ID_NUMBER_LABEL_TEXT';
+
+  String get idNumberSuggestionText => 'ID_NUMBER_SUGGESTION_TEXT';
+
+  String get dobLabelText => 'DOB_LABEL_TEXT';
+
+  String get ageLabelText => 'AGE_LABEL_TEXT';
+
+  String get separatorLabelText => 'SEPARATOR_LABEL_TEXT';
+
+  String get genderLabelText => 'GENDER_LABEL_TEXT';
+
+  String get dobErrorText => 'DOB_ERROR_MESSAGE';
+
+  String get mobileNumberLabelText => 'MOBILE_NUMBER_LABEL_TEXT';
+
+  String get heightLabelText => 'HEIGHT_LABEL_TEXT';
+
+  String get submitButtonLabelText => 'INDIVIDUAL_DETAILS_SUBMIT';
+
+  String get mobileNumberInvalidFormatValidationMessage =>
+      'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
+
+  String get yearsHintText => 'YEARS_HINT_TEXT';
+  String get monthsHintText => 'MONTHS_HINT_TEXT';
+
+  String get yearsErrorText => 'ERR_YEARS';
+
+  String get monthsErrorText => 'ERR_MONTHS';
+
+  String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
+
+  String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
+}
+
+class BeneficiaryDetails {
+  const BeneficiaryDetails();
+
+  String get beneficiarysDetailsLabelText => 'BENEFICIARY_DETAILS_LABEL_TEXT';
+  String get beneficiarysDetailsEditIconLabelText =>
+      'BENEFICIARY_DETAILS_EDIT_ICON_LABEL_TEXT';
+  String get beneficiarysDetailsEditIconLabel =>
+      'BENEFICIARY_DETAILS_EDIT_ICON_LABEL';
+  String get beneficiarysDetailsDeleteIconLabel =>
+      'BENEFICIARY_DETAILS_DELETE_ICON_LABEL';
+  String get resourcesTobeDelivered => 'RESOURCES_TO_BE_DELIVERED';
+  String get resourcesTobeProvided => 'RESOURCES_TO_BE_PROVIDED';
+
+  String get beneficiaryAge => 'BENEFICIARY_AGE';
+  String get ctaProceed => 'PROCEED';
+  String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
+  String get beneficiaryDose => 'BENEFICIARY_DETAILS_DOSE';
+  String get beneficiaryStatus => 'BENEFICIARY_DETAILS_STATUS';
+  String get beneficiaryResources => 'BENEFICIARY_DETAILS_RESOURCES';
+  String get beneficiaryQuantity => 'BENEFICIARY_DETAILS_QUANTITY';
+  String get beneficiaryCompletedOn => 'BENEFICIARY_DETAILS_COMPLETED_ON';
+  String get beneficiaryDeliveryStrategy =>
+      'BENEFICIARY_DETAILS_DELIVERY_STRATEGY';
+  String get beneficiaryCycle => 'BENEFICIARY_DETAILS_CYCLE';
+  String get currentCycleLabel => 'BENEFICIARY_DETAILS_CURRENT_CYCLE_LABEL';
+  String get fromCurrentLocation => 'FROM_CURRENT_LOCATION';
+  String get unableToScan => 'UNABLE_TO_SCAN';
+
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+
+  String get scannedResourceCountMisMatch => 'SCANNED_RESOURCE_COUNT_MISMATCH';
+
+  String get resourceAlreadyScanned => 'RESOURCE_ALREADY_SCANNED';
+
+  String get scannerLabel => 'SCANNER_LABEL';
+
+  String get noOfResourceScanned => 'NO_OF_RESOURCE_SCANNED';
+
+  String get resourcesScanned => 'RESOURCES_SCANNED';
+
+  String get saveScannedResource => 'SAVE_SCANNED_RESOURCE';
+
+  String get flashOn => 'FLASH_ON';
+
+  String get flashOff => 'FLASH_OFF';
+
+  String get scannerDialogTitle => 'SCANNER_DIALOG_TITLE';
+
+  String get scannerDialogContent => 'SCANNER_DIALOG_CONTENT';
+
+  String get scannerDialogPrimaryAction => 'SCANNER_DIALOG_PRIMARY_ACTION';
+
+  String get scannerDialogSecondaryAction => 'SCANNER_DIALOG_SECONDARY_ACTION';
+  String get beneficiaryHeader => 'BENEFICIARY_HEADER';
+  String get deliveryHeader => 'DELIVERY_TABLE_HEADER';
+
+  String get proceedWithoutDownloading => 'PROCEED_WITHOUT_DOWNLOADING';
+  String get unableToCheckDataInServer => 'FAILED_TO_CHECK_DATA_IN_SERVER';
+  String get dataFound => 'DATA_FOUND';
+  String get noDataFound => 'NO_DATA_FOUND';
+  String get dataFoundContent => 'DATA_FOUND_CONTENT';
+  String get noDataFoundContent => 'NO_DATA_FOUND_CONTENT';
+  String get dataDownloadInProgress => 'DATA_DOWNLOAD_IN_PROGRESS';
+  String get insufficientStorage => 'INSUFFICIENT_STORAGE_WARNING';
+  String get downloadreport => 'DOWNLOAD_REPORT';
+  String get boundary => 'BOUNDARY';
+  String get status => 'STATUS';
+  String get downloadedon => 'DOWNLOADED_ON';
+  String get recordsdownload => 'RECORDS_DOWNLOAD';
+  String get downloadcompleted => 'DOWNLOAD_COMPLETED';
+  String get datadownloadreport => 'DATA_DOWNLOAD_REPORT';
+  String get download => 'DOWNLOAD';
+  String get partialdownloaded => 'PARTIAL_DOWNLOAD';
+  String get downloadtime => 'DOWNLOAD_TIME';
+  String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
+  String get insufficientStorageContent =>
+      'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+  String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
 }

@@ -16,16 +16,22 @@ import 'constants.dart';
 
 class DigitScannerUtils {
   void buildDialog(
-      BuildContext context, ScannerLocalization localizations) async {
+    BuildContext context,
+    ScannerLocalization localizations,
+    int quantity,
+  ) async {
+    var contentLocalization = localizations
+        .translate(
+          i18.scanner.scannerDialogContent,
+        )
+        .replaceAll('{quantity}', quantity.toString());
     await DigitDialog.show<bool>(
       context,
       options: DigitDialogOptions(
         titleText: localizations.translate(
           i18.scanner.scannerDialogTitle,
         ),
-        contentText: localizations.translate(
-          i18.scanner.scannerDialogContent,
-        ),
+        contentText: contentLocalization,
         primaryAction: DigitDialogActions(
           label: localizations.translate(
             i18.scanner.scannerDialogPrimaryAction,
@@ -114,23 +120,27 @@ class DigitScannerUtils {
 
             if (alreadyScanned) {
               // Handle error if the barcode is already scanned
-              await handleError(i18.scanner.resourceAlreadyScanned);
+              await handleError(
+                  localizations.translate(i18.scanner.resourceAlreadyScanned));
             } else if (quantity > result.length) {
               // Store the parsed result if the quantity is greater than result length
               await storeValue(parsedResult);
             } else {
               // Handle error if there is a mismatch in the scanned resource count
-              await handleError(i18.scanner.scannedResourceCountMisMatch);
+              await handleError(localizations
+                  .translate(i18.scanner.scannedResourceCountMisMatch));
             }
           } catch (e) {
             // Handle error if parsing fails
-            await handleError(i18.scanner.scannedResourceCountMisMatch);
+            await handleError(localizations
+                .translate(i18.scanner.scannedResourceCountMisMatch));
           }
         } else {
           // For non-GS1 codes
           if (bloc.state.qrCodes.contains(barcodes.first.displayValue)) {
             // Handle error if the QR code is already scanned
-            await handleError(i18.scanner.resourceAlreadyScanned);
+            await handleError(
+                localizations.translate(i18.scanner.resourceAlreadyScanned));
             return;
           } else {
             // Store the QR code if not already scanned
@@ -174,7 +184,7 @@ class DigitScannerUtils {
     required ScannerLocalization localizations,
   }) async {
     // Play the buzzer sound to indicate an error
-    player.play(AssetSource(DigitScannerConstants().audioFilePath));
+    player.play(AssetSource(DigitScannerConstants().errorFilePath));
 
     // Check if the player has completed playing or if the result list is empty
     if (player.state == PlayerState.completed || result.isEmpty) {

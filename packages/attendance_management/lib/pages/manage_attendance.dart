@@ -76,12 +76,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                     attendanceBloc: attendanceBloc!,
                     data: {
                       localization.translate(i18.attendance.campaignNameLabel):
-                          register.additionalDetails?[
-                                  EnumValues.campaignName.toValue()] ??
+                          register.additionalDetails?[localization.translate(
+                                  EnumValues.campaignName.toValue())] ??
                               localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.eventTypeLabel):
-                          register.additionalDetails?[
-                                  EnumValues.eventType.toValue()] ??
+                          register.additionalDetails?[localization
+                                  .translate(EnumValues.eventType.toValue())] ??
                               localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.staffCountLabel):
                           register.attendees?.length ?? 0,

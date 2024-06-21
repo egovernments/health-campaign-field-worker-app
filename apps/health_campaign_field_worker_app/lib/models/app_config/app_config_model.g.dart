@@ -139,6 +139,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       referralReasonList: (json['REFERRAL_REASONS'] as List<dynamic>?)
           ?.map((e) => ReferralReasonType.fromJson(e as Map<String, dynamic>))
           .toList(),
+      firebaseConfig: (json['FIREBASE_CONFIG'] as List<dynamic>?)
+          ?.map((e) => FirebaseConfig.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -160,6 +163,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'TRANSPORT_TYPES': instance.transportTypes,
       'SYMPTOM_TYPES': instance.symptomsTypeList,
       'REFERRAL_REASONS': instance.referralReasonList,
+      'FIREBASE_CONFIG': instance.firebaseConfig,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -462,4 +466,17 @@ Map<String, dynamic> _$$RowVersionsImplToJson(_$RowVersionsImpl instance) =>
     <String, dynamic>{
       'module': instance.module,
       'version': instance.version,
+    };
+
+_$FirebaseConfigImpl _$$FirebaseConfigImplFromJson(Map<String, dynamic> json) =>
+    _$FirebaseConfigImpl(
+      enableCrashlytics: json['enableCrashlytics'] as bool,
+      enableAnalytics: json['enableAnalytics'] as bool,
+    );
+
+Map<String, dynamic> _$$FirebaseConfigImplToJson(
+        _$FirebaseConfigImpl instance) =>
+    <String, dynamic>{
+      'enableCrashlytics': instance.enableCrashlytics,
+      'enableAnalytics': instance.enableAnalytics,
     };

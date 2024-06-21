@@ -1,12 +1,8 @@
 // Importing necessary packages and modules
 import 'package:flutter_test/flutter_test.dart';
-import 'package:inventory_management/blocs/inventory_listener.dart';
 import 'package:inventory_management/blocs/record_stock.dart';
 import 'package:bloc_test/bloc_test.dart';
-import 'package:inventory_management/data/repositories/local/stock.dart';
-import 'package:inventory_management/models/entities/stock.dart';
 import 'package:inventory_management/utils/typedefs.dart';
-import 'package:inventory_management/utils/utils.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:digit_data_model/data_model.dart';
 
@@ -23,19 +19,11 @@ class MockFacilityModel extends Mock implements FacilityModel {
   String get id => InventoryReportConstants.facilityId;
 }
 
-// Fake class for SaveStockDetails for testing
-class SaveStockDetailsFake extends Fake implements SaveStockDetails {
-  @override
-  StockModel get stockModel => InventoryReportConstants.stockModel;
-}
-
 void main() {
   late MockFacilityModel mockFacilityModel;
 
   // Setting up the test environment
   setUpAll(() {
-    registerFallbackValue(SaveStockDetailsFake());
-
     // Initializing the entryType and projectId
     mockFacilityModel = MockFacilityModel();
   });
@@ -89,14 +77,14 @@ void main() {
             projectId: InventoryReportConstants.projectId),
       ),
       act: (bloc) => bloc.add(RecordStockEvent.saveStockDetails(
-        stockModel: SaveStockDetailsFake().stockModel,
+        stockModel: InventoryReportConstants.stockModel,
       )),
       // Expecting the bloc to emit a state with the saved stock details
       expect: () => <RecordStockState>[
         RecordStockState.create(
           entryType: InventoryReportConstants.entryType,
           projectId: InventoryReportConstants.projectId,
-          stockModel: SaveStockDetailsFake().stockModel,
+          stockModel: InventoryReportConstants.stockModel,
         ),
       ],
     );
@@ -111,7 +99,7 @@ void main() {
           projectId: InventoryReportConstants.projectId,
           dateOfRecord: InventoryReportConstants.dateOfRecord,
           facilityModel: mockFacilityModel,
-          stockModel: SaveStockDetailsFake().stockModel,
+          stockModel: InventoryReportConstants.stockModel,
         ),
       ),
       act: (bloc) {
@@ -125,14 +113,14 @@ void main() {
           projectId: InventoryReportConstants.projectId,
           dateOfRecord: InventoryReportConstants.dateOfRecord,
           facilityModel: mockFacilityModel,
-          stockModel: SaveStockDetailsFake().stockModel,
+          stockModel: InventoryReportConstants.stockModel,
         ),
         RecordStockPersistedState(
           entryType: InventoryReportConstants.entryType,
           projectId: InventoryReportConstants.projectId,
           dateOfRecord: InventoryReportConstants.dateOfRecord,
           facilityModel: mockFacilityModel,
-          stockModel: SaveStockDetailsFake().stockModel,
+          stockModel: InventoryReportConstants.stockModel,
         ),
       ],
     );

@@ -13,7 +13,6 @@ import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_record.dart';
-import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../models/entities/hf_referral.dart';
 import '../../utils/utils.dart';
@@ -99,8 +98,7 @@ class _RecordReferralDetailsPageState
                         header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
-                        footer: BlocBuilder<ReferralReconServiceBloc,
-                            ReferralReconServiceState>(
+                        footer: BlocBuilder<ServiceBloc, ServiceState>(
                           builder: (context, serviceState) {
                             return serviceState.maybeWhen(
                               orElse: () => DigitCard(
@@ -155,11 +153,8 @@ class _RecordReferralDetailsPageState
                                                             symptom,
                                                       ),
                                                     );
-                                                context
-                                                    .read<
-                                                        ReferralReconServiceBloc>()
-                                                    .add(
-                                                      ReferralReconServiceSearchEvent(
+                                                context.read<ServiceBloc>().add(
+                                                      ServiceSearchEvent(
                                                         serviceSearchModel:
                                                             ServiceSearchModel(
                                                           clientId: recordState
@@ -470,10 +465,9 @@ class _RecordReferralDetailsPageState
                                                                   symptom),
                                                         );
                                                     context
-                                                        .read<
-                                                            ReferralReconServiceBloc>()
+                                                        .read<ServiceBloc>()
                                                         .add(
-                                                          ReferralReconServiceSearchEvent(
+                                                          ServiceSearchEvent(
                                                             serviceSearchModel:
                                                                 ServiceSearchModel(
                                                               clientId:

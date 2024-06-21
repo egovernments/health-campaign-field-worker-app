@@ -1,7 +1,8 @@
 import 'package:registration_delivery/models/beneficiary_statistics/beneficiary_statistics_model.dart';
 import 'package:registration_delivery/widgets/beneficiary/beneficiary_statistics_card.dart';
-import '../widget_app.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'widget_app.dart';
 
 void main() {
   group(

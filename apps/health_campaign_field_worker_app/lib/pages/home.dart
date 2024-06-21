@@ -16,7 +16,6 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
-import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
@@ -315,6 +314,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     }
 
     final Map<String, Widget> homeItemsMap = {
+      // INFO : Need to add home items of package Here
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
@@ -463,6 +463,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
+      // INFO : Need to add showcase keys of package Here
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
       i18.home.manageStockLabel:
@@ -482,6 +483,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     };
 
     final homeItemsLabel = <String>[
+      // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
@@ -525,6 +527,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             SyncSyncUpEvent(
               userId: context.loggedInUserUuid,
               localRepositories: [
+                // INFO : Need to add local repo of package Here
                 context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context.read<
@@ -555,6 +558,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                         AttendanceLogSearchModel>>(),
               ],
               remoteRepositories: [
+                // INFO : Need to add repo repo of package Here
                 context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
                 context.read<
@@ -595,6 +599,7 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
+        // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,

@@ -137,7 +137,8 @@ class _ComplaintsDetailsPageState
                               ComplaintsRegistrationEvent.saveComplaintDetails(
                                 boundaryModel: context.boundary,
                                 complaintsDetailsModel: ComplaintsDetailsModel(
-                                  administrativeArea: administrativeArea,
+                                  administrativeArea:
+                                      context.boundary.code.toString(),
                                   dateOfComplaint: dateOfComplaint,
                                   complaintRaisedFor: complaintRaisedFor,
                                   complainantName: complainantName,
@@ -453,7 +454,9 @@ class _ComplaintsDetailsPageState
         validators: [],
       ),
       _administrativeArea: FormControl<String>(
-        value: complaintDetails?.administrativeArea ?? context.boundary.name,
+        value: localizations.translate(
+            (complaintDetails?.administrativeArea ?? context.boundary.name)
+                .toString()),
         disabled: shouldDisableForm,
         validators: [Validators.required],
       ),

@@ -67,6 +67,7 @@ class MainApplicationState extends State<MainApplication>
           sql: widget.sql,
           child: MultiBlocProvider(
             providers: [
+              // INFO : Need to add bloc of package Here
               BlocProvider(
                 create: (_) {
                   return LocationBloc(location: Location())
@@ -131,7 +132,7 @@ class MainApplicationState extends State<MainApplication>
 
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
-                    firstLanguage = appConfig.languages?.last.value;
+                    firstLanguage = appConfig.languages?.lastOrNull?.value;
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(

@@ -72,8 +72,8 @@ class _IndividualDetailsPageState
                 if (value.navigateToRoot) {
                   (router.parent() as StackRouter).maybePop();
                 } else {
-                  router.popUntil(
-                      (route) => route.settings.name == SearchBeneficiaryRoute.name);
+                  router.popUntil((route) =>
+                      route.settings.name == SearchBeneficiaryRoute.name);
                   context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsEvent.searchByHousehold(
                           householdModel: value.householdModel,
@@ -520,6 +520,10 @@ class _IndividualDetailsPageState
                                     }
                                   }
                                 },
+                                cancelText: localizations
+                                    .translate(i18.common.coreCommonCancel),
+                                confirmText: localizations
+                                    .translate(i18.common.coreCommonOk),
                               ),
                             ),
                             DigitReactiveSearchDropdown<String>(
@@ -548,6 +552,7 @@ class _IndividualDetailsPageState
                               child: DigitTextFormField(
                                 keyboardType: TextInputType.number,
                                 formControlName: _mobileNumberKey,
+                                maxLength: 10,
                                 label: localizations.translate(
                                   i18.individualDetails.mobileNumberLabelText,
                                 ),
@@ -555,7 +560,11 @@ class _IndividualDetailsPageState
                                   'maxLength': (object) =>
                                       localizations.translate(i18
                                           .individualDetails
-                                          .mobileNumberInvalidFormatValidationMessage),
+                                          .mobileNumberLengthValidationMessage),
+                                  'minLength': (object) =>
+                                      localizations.translate(i18
+                                          .individualDetails
+                                          .mobileNumberLengthValidationMessage),
                                 },
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
@@ -800,7 +809,9 @@ class _IndividualDetailsPageState
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
-        Validators.maxLength(10),
+        CustomValidator.validMobileNumber,
+        CustomValidator.minPhoneNumValidation,
+        Validators.maxLength(10)
       ]),
     });
   }

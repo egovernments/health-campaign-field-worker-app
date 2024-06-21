@@ -11,29 +11,31 @@ class ProductVariantLocalRepository
   FutureOr<List<ProductVariantModel>> search(
     ProductVariantSearchModel query,
   ) async {
-    final selectQuery = sql.select(sql.productVariant).join([]);
+    return retryLocalCallOperation(() async {
+      final selectQuery = sql.select(sql.productVariant).join([]);
 
-    final results = await (selectQuery
-          ..where(buildAnd([
-            if (query.id != null) sql.productVariant.id.isIn(query.id!),
-            if (query.productId != null)
-              sql.productVariant.productId.isIn(query.productId!),
-          ])))
-        .get();
+      final results = await (selectQuery
+            ..where(buildAnd([
+              if (query.id != null) sql.productVariant.id.isIn(query.id!),
+              if (query.productId != null)
+                sql.productVariant.productId.isIn(query.productId!),
+            ])))
+          .get();
 
-    return results.map((e) {
-      final productVariant = e.readTable(sql.productVariant);
+      return results.map((e) {
+        final productVariant = e.readTable(sql.productVariant);
 
-      return ProductVariantModel(
-        tenantId: productVariant.tenantId,
-        isDeleted: productVariant.isDeleted,
-        id: productVariant.id,
-        rowVersion: productVariant.rowVersion,
-        productId: productVariant.productId,
-        sku: productVariant.sku,
-        variation: productVariant.variation,
-      );
-    }).toList();
+        return ProductVariantModel(
+          tenantId: productVariant.tenantId,
+          isDeleted: productVariant.isDeleted,
+          id: productVariant.id,
+          rowVersion: productVariant.rowVersion,
+          productId: productVariant.productId,
+          sku: productVariant.sku,
+          variation: productVariant.variation,
+        );
+      }).toList();
+    });
   }
 
   @override
@@ -42,18 +44,20 @@ class ProductVariantLocalRepository
     bool createOpLog = false,
     DataOperation dataOperation = DataOperation.create,
   }) async {
-    await sql.batch((batch) async {
-      batch.insert(
-        sql.productVariant,
-        entity.companion,
-        mode: InsertMode.insertOrReplace,
+    return retryLocalCallOperation(() async {
+      await sql.batch((batch) async {
+        batch.insert(
+          sql.productVariant,
+          entity.companion,
+          mode: InsertMode.insertOrReplace,
+        );
+      });
+
+      await super.create(
+        entity,
+        createOpLog: createOpLog,
       );
     });
-
-    await super.create(
-      entity,
-      createOpLog: createOpLog,
-    );
   }
 
   @override

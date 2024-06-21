@@ -1,10 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
+import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/proximity_search.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_by_head.dart';
@@ -149,6 +149,9 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
                 tagSearchBloc: context.read<TagSearchBloc>(),
               );
             },
+          ),
+          BlocProvider(
+            create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
           ),
         ],
         child: const AutoRouter(),
