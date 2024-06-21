@@ -380,7 +380,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
     return fb.group(<String, Object>{
       _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
       _administrativeUnitKey: FormControl<String>(
-          value: RegistrationDeliverySingleton().boundary!.name),
+          value: localizations.translate(
+              RegistrationDeliverySingleton().boundary!.name.toString())),
       _referredByKey: FormControl<String>(
         value: RegistrationDeliverySingleton().loggedInUserUuid,
         validators: [Validators.required],
