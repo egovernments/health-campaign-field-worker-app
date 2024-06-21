@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -56,7 +55,9 @@ void main() {
     mockSideEffectDataRepository = MockSideEffectDataRepository();
     mockReferralDataRepository = MockReferralDataRepository();
     householdOverviewBloc = HouseholdOverviewBloc(
-      HouseholdOverviewState(householdMemberWrapper: RegistrationDeliveryTestConstants.householdMemberWrapper),
+      HouseholdOverviewState(
+          householdMemberWrapper:
+              RegistrationDeliveryTestConstants.householdMemberWrapper),
       individualRepository: mockIndividualDataRepository,
       householdRepository: mockHouseholdDataRepository,
       householdMemberRepository: mockHouseholdMemberDataRepository,
@@ -83,20 +84,14 @@ void main() {
     'emits [HouseholdOverviewState with loading true, HouseholdOverviewState with updated householdMemberWrapper] when _handleReloadMember is called',
     build: () {
       when(() => mockHouseholdMemberDataRepository.search(any())).thenAnswer(
-          (_) async => [
-                HouseholdMemberModel(
-                    clientReferenceId: '123', isHeadOfHousehold: true)
-              ]);
-      when(() => mockHouseholdDataRepository.search(any()))
-          .thenAnswer((_) async => [HouseholdModel(clientReferenceId: '123')]);
-      when(() => mockIndividualDataRepository.search(any()))
-          .thenAnswer((_) async => [IndividualModel(clientReferenceId: '123')]);
-      when(() => mockProjectBeneficiaryDataRepository.search(any()))
-          .thenAnswer((_) async => [
-                ProjectBeneficiaryModel(
-                    clientReferenceId: '123',
-                    dateOfRegistration: DateTime.monday)
-              ]);
+          (_) async => [RegistrationDeliveryTestConstants.mockHouseholdMember]);
+      when(() => mockHouseholdDataRepository.search(any())).thenAnswer(
+          (_) async => [RegistrationDeliveryTestConstants.mockHousehold]);
+      when(() => mockIndividualDataRepository.search(any())).thenAnswer(
+          (_) async => [RegistrationDeliveryTestConstants.mockIndividual]);
+      when(() => mockProjectBeneficiaryDataRepository.search(any())).thenAnswer(
+          (_) async =>
+              [RegistrationDeliveryTestConstants.mockProjectBeneficiary]);
       when(() => mockTaskDataRepository.search(any()))
           .thenAnswer((_) async => []);
       when(() => mockSideEffectDataRepository.search(any()))
@@ -106,30 +101,17 @@ void main() {
       return householdOverviewBloc;
     },
     act: (bloc) => bloc.add(const HouseholdOverviewReloadEvent(
-        projectId: '123', projectBeneficiaryType: BeneficiaryType.individual)),
+        projectId: RegistrationDeliveryTestConstants.testProjectId,
+        projectBeneficiaryType: BeneficiaryType.individual)),
     expect: () => [
       HouseholdOverviewState(
           loading: true,
-          householdMemberWrapper: HouseholdMemberWrapper(
-              household: HouseholdModel(clientReferenceId: '123'),
-              headOfHousehold: IndividualModel(clientReferenceId: '123'),
-              tasks: null,
-              distance: null,
-              referrals: null,
-              sideEffects: null,
-              members: [],
-              projectBeneficiaries: [])),
+          householdMemberWrapper:
+              RegistrationDeliveryTestConstants.householdMemberWrapper),
       HouseholdOverviewState(
         loading: false,
-        householdMemberWrapper: HouseholdMemberWrapper(
-            household: HouseholdModel(clientReferenceId: '123'),
-            headOfHousehold: IndividualModel(clientReferenceId: '123'),
-            members: [],
-            tasks: null,
-            distance: null,
-            projectBeneficiaries: [],
-            sideEffects: null,
-            referrals: null),
+        householdMemberWrapper:
+            RegistrationDeliveryTestConstants.householdMemberWrapper,
       )
     ],
   );

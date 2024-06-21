@@ -302,7 +302,7 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
       v.clientAuditDetails;
   static const Field<PgrServiceModel, ClientAuditDetails>
       _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
 
   @override
   final MappableFields<PgrServiceModel> fields = const {
@@ -344,7 +344,8 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
         additionalDetail: data.dec(_f$additionalDetail),
-        auditDetails: data.dec(_f$auditDetails));
+        auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails));
   }
 
   @override
@@ -408,6 +409,9 @@ abstract class PgrServiceModelCopyWith<$R, $In extends PgrServiceModel, $Out>
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  @override
   $R call(
       {String? clientReferenceId,
       bool? active,
@@ -424,7 +428,8 @@ abstract class PgrServiceModelCopyWith<$R, $In extends PgrServiceModel, $Out>
       int? rowVersion,
       PgrAddressModel? address,
       String? additionalDetail,
-      AuditDetails? auditDetails});
+      AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails});
   PgrServiceModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -447,6 +452,10 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
+  @override
   $R call(
           {String? clientReferenceId,
           bool? active,
@@ -463,7 +472,8 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
           int? rowVersion,
           PgrAddressModel? address,
           Object? additionalDetail = $none,
-          Object? auditDetails = $none}) =>
+          Object? auditDetails = $none,
+          Object? clientAuditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
         if (active != null) #active: active,
@@ -480,7 +490,8 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
         if (rowVersion != null) #rowVersion: rowVersion,
         if (address != null) #address: address,
         if (additionalDetail != $none) #additionalDetail: additionalDetail,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none) #clientAuditDetails: clientAuditDetails
       }));
   @override
   PgrServiceModel $make(CopyWithData data) => PgrServiceModel(
@@ -503,7 +514,9 @@ class _PgrServiceModelCopyWithImpl<$R, $Out>
       address: data.get(#address, or: $value.address),
       additionalDetail:
           data.get(#additionalDetail, or: $value.additionalDetail),
-      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails));
 
   @override
   PgrServiceModelCopyWith<$R2, PgrServiceModel, $Out2> $chain<$R2, $Out2>(
@@ -578,7 +591,7 @@ class PgrComplainantModelMapper extends ClassMapperBase<PgrComplainantModel> {
       v.clientAuditDetails;
   static const Field<PgrComplainantModel, ClientAuditDetails>
       _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
 
   @override
   final MappableFields<PgrComplainantModel> fields = const {
@@ -618,7 +631,8 @@ class PgrComplainantModelMapper extends ClassMapperBase<PgrComplainantModel> {
         active: data.dec(_f$active),
         isDeleted: data.dec(_f$isDeleted),
         rowVersion: data.dec(_f$rowVersion),
-        auditDetails: data.dec(_f$auditDetails));
+        auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails));
   }
 
   @override
@@ -683,6 +697,9 @@ abstract class PgrComplainantModelCopyWith<$R, $In extends PgrComplainantModel,
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  @override
   $R call(
       {int? id,
       String? clientReferenceId,
@@ -698,7 +715,8 @@ abstract class PgrComplainantModelCopyWith<$R, $In extends PgrComplainantModel,
       bool? active,
       covariant bool? isDeleted,
       int? rowVersion,
-      AuditDetails? auditDetails});
+      AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails});
   PgrComplainantModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -720,6 +738,10 @@ class _PgrComplainantModelCopyWithImpl<$R, $Out>
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
+  @override
   $R call(
           {Object? id = $none,
           String? clientReferenceId,
@@ -735,7 +757,8 @@ class _PgrComplainantModelCopyWithImpl<$R, $Out>
           bool? active,
           bool? isDeleted,
           int? rowVersion,
-          Object? auditDetails = $none}) =>
+          Object? auditDetails = $none,
+          Object? clientAuditDetails = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
@@ -752,7 +775,8 @@ class _PgrComplainantModelCopyWithImpl<$R, $Out>
         if (active != null) #active: active,
         if (isDeleted != null) #isDeleted: isDeleted,
         if (rowVersion != null) #rowVersion: rowVersion,
-        if (auditDetails != $none) #auditDetails: auditDetails
+        if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none) #clientAuditDetails: clientAuditDetails
       }));
   @override
   PgrComplainantModel $make(CopyWithData data) => PgrComplainantModel(
@@ -772,7 +796,9 @@ class _PgrComplainantModelCopyWithImpl<$R, $Out>
       active: data.get(#active, or: $value.active),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
-      auditDetails: data.get(#auditDetails, or: $value.auditDetails));
+      auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails));
 
   @override
   PgrComplainantModelCopyWith<$R2, PgrComplainantModel, $Out2>
@@ -959,14 +985,14 @@ class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
   static AuditDetails? _$auditDetails(PgrWorkflowModel v) => v.auditDetails;
   static const Field<PgrWorkflowModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
-  static bool? _$isDeleted(PgrWorkflowModel v) => v.isDeleted;
-  static const Field<PgrWorkflowModel, bool> _f$isDeleted =
-      Field('isDeleted', _$isDeleted, opt: true, def: false);
   static ClientAuditDetails? _$clientAuditDetails(PgrWorkflowModel v) =>
       v.clientAuditDetails;
   static const Field<PgrWorkflowModel, ClientAuditDetails>
       _f$clientAuditDetails =
-      Field('clientAuditDetails', _$clientAuditDetails, mode: FieldMode.member);
+      Field('clientAuditDetails', _$clientAuditDetails, opt: true);
+  static bool? _$isDeleted(PgrWorkflowModel v) => v.isDeleted;
+  static const Field<PgrWorkflowModel, bool> _f$isDeleted =
+      Field('isDeleted', _$isDeleted, opt: true, def: false);
 
   @override
   final MappableFields<PgrWorkflowModel> fields = const {
@@ -974,8 +1000,8 @@ class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
     #assignees: _f$assignees,
     #comments: _f$comments,
     #auditDetails: _f$auditDetails,
-    #isDeleted: _f$isDeleted,
     #clientAuditDetails: _f$clientAuditDetails,
+    #isDeleted: _f$isDeleted,
   };
   @override
   final bool ignoreNull = true;
@@ -986,6 +1012,7 @@ class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
         assignees: data.dec(_f$assignees),
         comments: data.dec(_f$comments),
         auditDetails: data.dec(_f$auditDetails),
+        clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
   }
 
@@ -1049,11 +1076,15 @@ abstract class PgrWorkflowModelCopyWith<$R, $In extends PgrWorkflowModel, $Out>
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails;
+  @override
   $R call(
       {String? action,
       List<String>? assignees,
       String? comments,
       AuditDetails? auditDetails,
+      ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
   PgrWorkflowModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -1075,17 +1106,24 @@ class _PgrWorkflowModelCopyWithImpl<$R, $Out>
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
+  ClientAuditDetailsCopyWith<$R, ClientAuditDetails, ClientAuditDetails>?
+      get clientAuditDetails => $value.clientAuditDetails?.copyWith
+          .$chain((v) => call(clientAuditDetails: v));
+  @override
   $R call(
           {String? action,
           List<String>? assignees,
           String? comments,
           Object? auditDetails = $none,
+          Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
         if (action != null) #action: action,
         if (assignees != null) #assignees: assignees,
         if (comments != null) #comments: comments,
         if (auditDetails != $none) #auditDetails: auditDetails,
+        if (clientAuditDetails != $none)
+          #clientAuditDetails: clientAuditDetails,
         if (isDeleted != $none) #isDeleted: isDeleted
       }));
   @override
@@ -1094,6 +1132,8 @@ class _PgrWorkflowModelCopyWithImpl<$R, $Out>
       assignees: data.get(#assignees, or: $value.assignees),
       comments: data.get(#comments, or: $value.comments),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
+      clientAuditDetails:
+          data.get(#clientAuditDetails, or: $value.clientAuditDetails),
       isDeleted: data.get(#isDeleted, or: $value.isDeleted));
 
   @override

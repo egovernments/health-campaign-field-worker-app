@@ -52,7 +52,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       final results =
           entityList.map((e) => UserModelMapper.fromMap(e)).toList();
       emit(UserState.user(userModel: results.first));
-    } on DioError catch (error) {
+    } on DioException catch (error) {
       // [TODO]- Need to create a model mapper for error;
       final String errorCode = error.response?.data['Errors'][0]['code'];
       emit(UserErrorState(errorCode));

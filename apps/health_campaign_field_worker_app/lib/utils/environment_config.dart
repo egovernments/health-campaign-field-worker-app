@@ -213,7 +213,8 @@ enum EnvType {
   dev("DEV"),
   uat("UAT"),
   qa("QA"),
-  prod("PROD");
+  prod("PROD"),
+  demo("DEMO");
 
   final String env;
 

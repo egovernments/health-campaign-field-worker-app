@@ -38747,6 +38747,71 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $TaskResourceTable taskResource = $TaskResourceTable(this);
   late final $SideEffectTable sideEffect = $SideEffectTable(this);
   late final $ReferralTable referral = $ReferralTable(this);
+  late final Index attendanceClientref = Index('attendance_clientref',
+      'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
+  late final Index attendanceIndividualid = Index('attendance_individualid',
+      'CREATE INDEX attendance_individualid ON attendance (individual_id)');
+  late final Index projectClinetref = Index('project_clinetref',
+      'CREATE INDEX project_clinetref ON project_beneficiary (client_reference_id)');
+  late final Index projectProjectid = Index('project_projectid',
+      'CREATE INDEX project_projectid ON project_beneficiary (project_id)');
+  late final Index projectProjectbeneficiaryclientref = Index(
+      'project_projectbeneficiaryclientref',
+      'CREATE INDEX project_projectbeneficiaryclientref ON project_beneficiary (beneficiary_client_reference_id)');
+  late final Index stockClientref = Index('stock_clientref',
+      'CREATE INDEX stock_clientref ON stock (client_reference_id)');
+  late final Index stockProductvariantid = Index('stock_productvariantid',
+      'CREATE INDEX stock_productvariantid ON stock (product_variant_id)');
+  late final Index stockFacilityid = Index('stock_facilityid',
+      'CREATE INDEX stock_facilityid ON stock (facility_id)');
+  late final Index stockreconClientref = Index('stockrecon_clientref',
+      'CREATE INDEX stockrecon_clientref ON stock_reconciliation (client_reference_id)');
+  late final Index stockreconFacilityid = Index('stockrecon_facilityid',
+      'CREATE INDEX stockrecon_facilityid ON stock_reconciliation (facility_id)');
+  late final Index stockreconProductvariantid = Index(
+      'stockrecon_productvariantid',
+      'CREATE INDEX stockrecon_productvariantid ON stock_reconciliation (product_variant_id)');
+  late final Index hfreferralClientref = Index('hfreferral_clientref',
+      'CREATE INDEX hfreferral_clientref ON h_f_referral (client_reference_id)');
+  late final Index hfreferralProjectid = Index('hfreferral_projectid',
+      'CREATE INDEX hfreferral_projectid ON h_f_referral (project_id)');
+  late final Index householdmemberClinetref = Index('householdmember_clinetref',
+      'CREATE INDEX householdmember_clinetref ON household_member (client_reference_id)');
+  late final Index householdClientref = Index('household_clientref',
+      'CREATE INDEX household_clientref ON household_member (household_client_reference_id)');
+  late final Index householdmemberIndividualid = Index(
+      'householdmember_individualid',
+      'CREATE INDEX householdmember_individualid ON household_member (individual_client_reference_id)');
+  late final Index taskClinetref = Index('task_clinetref',
+      'CREATE INDEX task_clinetref ON task (client_reference_id)');
+  late final Index taskProjectid = Index(
+      'task_projectid', 'CREATE INDEX task_projectid ON task (project_id)');
+  late final Index taskProjectbeneficiaryid = Index('task_projectbeneficiaryid',
+      'CREATE INDEX task_projectbeneficiaryid ON task (project_beneficiary_id)');
+  late final Index taskProjectbeneficiaryclientref = Index(
+      'task_projectbeneficiaryclientref',
+      'CREATE INDEX task_projectbeneficiaryclientref ON task (project_beneficiary_client_reference_id)');
+  late final Index taskresourceclinetref = Index('taskresourceclinetref',
+      'CREATE INDEX taskresourceclinetref ON task_resource (client_reference_id)');
+  late final Index taskresourceTaskclientref = Index(
+      'taskresource_taskclientref',
+      'CREATE INDEX taskresource_taskclientref ON task_resource (taskclient_reference_id)');
+  late final Index taskresourceProductvariantid = Index(
+      'taskresource_productvariantid',
+      'CREATE INDEX taskresource_productvariantid ON task_resource (product_variant_id)');
+  late final Index sideeffectClinetref = Index('sideeffect_clinetref',
+      'CREATE INDEX sideeffect_clinetref ON side_effect (client_reference_id)');
+  late final Index sideeffectProjectid = Index('sideeffect_projectid',
+      'CREATE INDEX sideeffect_projectid ON side_effect (project_id)');
+  late final Index sideeffectTaskclientref = Index('sideeffect_taskclientref',
+      'CREATE INDEX sideeffect_taskclientref ON side_effect (task_client_reference_id)');
+  late final Index referralClinetref = Index('referral_clinetref',
+      'CREATE INDEX referral_clinetref ON referral (client_reference_id)');
+  late final Index referralProjectid = Index('referral_projectid',
+      'CREATE INDEX referral_projectid ON referral (project_id)');
+  late final Index referralProjectbeneficiaryclientref = Index(
+      'referral_projectbeneficiaryclientref',
+      'CREATE INDEX referral_projectbeneficiaryclientref ON referral (project_beneficiary_client_reference_id)');
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -38791,6 +38856,35 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         task,
         taskResource,
         sideEffect,
-        referral
+        referral,
+        attendanceClientref,
+        attendanceIndividualid,
+        projectClinetref,
+        projectProjectid,
+        projectProjectbeneficiaryclientref,
+        stockClientref,
+        stockProductvariantid,
+        stockFacilityid,
+        stockreconClientref,
+        stockreconFacilityid,
+        stockreconProductvariantid,
+        hfreferralClientref,
+        hfreferralProjectid,
+        householdmemberClinetref,
+        householdClientref,
+        householdmemberIndividualid,
+        taskClinetref,
+        taskProjectid,
+        taskProjectbeneficiaryid,
+        taskProjectbeneficiaryclientref,
+        taskresourceclinetref,
+        taskresourceTaskclientref,
+        taskresourceProductvariantid,
+        sideeffectClinetref,
+        sideeffectProjectid,
+        sideeffectTaskclientref,
+        referralClinetref,
+        referralProjectid,
+        referralProjectbeneficiaryclientref
       ];
 }

@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
-import 'package:registration_delivery/blocs/service/service.dart';
-import 'package:registration_delivery/blocs/service_definition/service_definition.dart';
 
 import '../../models/data_model.dart';
 import '../../models/entities/roles_type.dart';
@@ -585,9 +583,9 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                             maxLength: 1000,
                             isRequired: true,
                             controller: additionalController[index],
-                            label: '${localizations.translate(
+                            label: localizations.translate(
                               '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
-                            )}*',
+                            ),
                             validator: (value1) {
                               if (value1 == null || value1 == '') {
                                 return localizations.translate(

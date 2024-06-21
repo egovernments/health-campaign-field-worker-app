@@ -256,6 +256,9 @@ class PerformSyncUp {
                       }
 
                       await local.markSyncedUp(
+                        entry: sublist.firstWhere((element) =>
+                            element.clientReferenceId ==
+                            entity.clientReferenceId),
                         clientReferenceId: entity.clientReferenceId,
                         nonRecoverableError: entity.nonRecoverableError,
                       );

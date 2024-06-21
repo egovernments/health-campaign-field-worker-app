@@ -97,7 +97,7 @@ class _RecordPastDeliveryDetailsPageState
                             i18.common.coreCommonNo,
                           ),
                           action: (ctx) {
-                            router.pop();
+                            router.maybePop();
                             final event =
                                 context.read<DeliverInterventionBloc>();
 

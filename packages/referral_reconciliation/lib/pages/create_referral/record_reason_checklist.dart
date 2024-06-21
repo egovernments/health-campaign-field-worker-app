@@ -11,7 +11,6 @@ import 'package:group_radio_button/group_radio_button.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 
-import '../../blocs/referral_recon_service.dart';
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -45,8 +44,8 @@ class _ReferralReasonChecklistPageState
 
   @override
   void initState() {
-    context.read<ReferralReconServiceBloc>().add(
-          ReferralReconServiceChecklistEvent(
+    context.read<ServiceBloc>().add(
+          ServiceChecklistEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
@@ -93,8 +92,8 @@ class _ReferralReasonChecklistPageState
                         final router = context.router;
                         submitTriggered = true;
 
-                        context.read<ReferralReconServiceBloc>().add(
-                              const ReferralReconServiceChecklistEvent(
+                        context.read<ServiceBloc>().add(
+                              const ServiceChecklistEvent(
                                 value: '',
                                 submitTriggered: true,
                               ),
@@ -161,8 +160,8 @@ class _ReferralReasonChecklistPageState
                                       additionalDetails: null));
                                 }
 
-                                context.read<ReferralReconServiceBloc>().add(
-                                      ReferralReconServiceCreateEvent(
+                                context.read<ServiceBloc>().add(
+                                      ServiceCreateEvent(
                                         serviceModel: ServiceModel(
                                           createdAt: DigitDateUtils
                                               .getDateFromTimestamp(
@@ -325,8 +324,7 @@ class _ReferralReasonChecklistPageState
                                     ),
                                   ),
                                 ),
-                                BlocBuilder<ReferralReconServiceBloc,
-                                    ReferralReconServiceState>(
+                                BlocBuilder<ServiceBloc, ServiceState>(
                                   builder: (context, state) {
                                     return Column(
                                       children: e.values!
@@ -338,10 +336,9 @@ class _ReferralReasonChecklistPageState
                                                     .contains(e),
                                                 onChanged: (value) {
                                                   context
-                                                      .read<
-                                                          ReferralReconServiceBloc>()
+                                                      .read<ServiceBloc>()
                                                       .add(
-                                                        ReferralReconServiceChecklistEvent(
+                                                        ServiceChecklistEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -444,13 +441,13 @@ class _ReferralReasonChecklistPageState
           ),
           Column(
             children: [
-              BlocBuilder<ReferralReconServiceBloc, ReferralReconServiceState>(
+              BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
                   return RadioGroup<String>.builder(
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
-                      context.read<ReferralReconServiceBloc>().add(
-                            ReferralReconServiceChecklistEvent(
+                      context.read<ServiceBloc>().add(
+                            ServiceChecklistEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -461,7 +458,7 @@ class _ReferralReasonChecklistPageState
                           final childIndex =
                               initialAttributes?.indexOf(matchingChildItem);
                           if (childIndex != null) {
-                            // controller[childIndex].clear();
+                            controller[childIndex].clear();
                             visibleChecklistIndexes
                                 .removeWhere((v) => v == childIndex);
                           }
@@ -478,14 +475,12 @@ class _ReferralReasonChecklistPageState
                         if (excludedIndexes.isNotEmpty) {
                           for (int i = 0; i < excludedIndexes.length; i++) {
                             // Clear excluded child controllers
-                            if (item.dataType != 'SingleValueList') {
-                              // controller[excludedIndexes[i]].value =
-                              //     TextEditingController.fromValue(
-                              //   const TextEditingValue(
-                              //     text: '',
-                              //   ),
-                              // ).value;
-                            }
+                            controller[excludedIndexes[i]].value =
+                                TextEditingController.fromValue(
+                              const TextEditingValue(
+                                text: '',
+                              ),
+                            ).value;
                           }
                         }
 
@@ -505,7 +500,7 @@ class _ReferralReasonChecklistPageState
                   );
                 },
               ),
-              BlocBuilder<ReferralReconServiceBloc, ReferralReconServiceState>(
+              BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
                   final hasError = (item.required == true &&
                       controller[index].text.isEmpty &&
@@ -621,7 +616,7 @@ class _ReferralReasonChecklistPageState
               ),
             ),
           ),
-          BlocBuilder<ReferralReconServiceBloc, ReferralReconServiceState>(
+          BlocBuilder<ServiceBloc, ServiceState>(
             builder: (context, state) {
               return Column(
                 children: item.values!
@@ -629,8 +624,8 @@ class _ReferralReasonChecklistPageState
                           label: e,
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
-                            context.read<ReferralReconServiceBloc>().add(
-                                  ReferralReconServiceChecklistEvent(
+                            context.read<ServiceBloc>().add(
+                                  ServiceChecklistEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),

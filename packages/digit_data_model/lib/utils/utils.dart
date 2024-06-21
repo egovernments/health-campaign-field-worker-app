@@ -1,5 +1,6 @@
 // Importing necessary packages.
 import 'package:drift/drift.dart';
+import 'package:drift/native.dart';
 import 'package:uuid/uuid.dart';
 
 import '../data/local_store/no_sql/schema/entity_mapper_listener.dart';
@@ -86,3 +87,24 @@ class DigitDataModelSingleton {
 
 /// `PersistenceConfiguration` is an enum that represents the different types of persistence configurations.
 enum PersistenceConfiguration { offlineFirst, onlineOnly }
+
+
+Future<T> retryLocalCallOperation<T>(Future<T> Function() operation,
+    {int maxRetries = 5,
+      Duration retryDelay = const Duration(seconds: 1)}) async {
+  int retryCount = 0;
+  while (retryCount < maxRetries) {
+    try {
+      return await operation();
+    } catch (e) {
+      if (e is SqliteException && e.extendedResultCode == 5) {
+        retryCount++;
+        await Future.delayed(retryDelay); // Wait before retrying
+      } else {
+        rethrow; // Exit loop on unexpected errors
+      }
+    }
+  }
+  throw Exception(
+      'Failed to complete the database operation after $maxRetries retries.');
+}

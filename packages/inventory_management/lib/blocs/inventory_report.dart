@@ -39,83 +39,87 @@ class InventoryReportBloc
     final facilityId = event.facilityId;
     final productVariantId = event.productVariantId;
 
-    if (reportType == InventoryReportType.reconciliation) {
-      throw AppException(
-        'Invalid report type: ${event.reportType}',
-      );
-    }
-    emit(const InventoryReportLoadingState());
+    if (facilityId.trim().isEmpty || productVariantId.trim().isEmpty) {
+      emit(const InventoryReportEmptyState());
+    } else {
+      if (reportType == InventoryReportType.reconciliation) {
+        throw AppException(
+          'Invalid report type: ${event.reportType}',
+        );
+      }
+      emit(const InventoryReportLoadingState());
 
-    List<String>? transactionReason;
-    List<String>? transactionType;
-    String? senderId;
-    String? receiverId;
+      List<String>? transactionReason;
+      List<String>? transactionType;
+      String? senderId;
+      String? receiverId;
 
-    if (reportType == InventoryReportType.receipt) {
-      transactionType = [TransactionType.received.toValue()];
-      transactionReason = [TransactionReason.received.toValue()];
-      receiverId = facilityId;
-      senderId = null;
-    } else if (reportType == InventoryReportType.dispatch) {
-      transactionType = [TransactionType.dispatched.toValue()];
-      transactionReason = [];
-      receiverId = null;
-      senderId = facilityId;
-    } else if (reportType == InventoryReportType.returned) {
-      transactionType = [TransactionType.received.toValue()];
-      transactionReason = [TransactionReason.returned.toValue()];
-      receiverId = null;
-      senderId = facilityId;
-    } else if (reportType == InventoryReportType.damage) {
-      transactionType = [TransactionType.dispatched.toValue()];
-      transactionReason = [
-        TransactionReason.damagedInStorage.toValue(),
-        TransactionReason.damagedInTransit.toValue(),
-      ];
-      receiverId = facilityId;
-      senderId = null;
-    } else if (reportType == InventoryReportType.loss) {
-      transactionType = [TransactionType.dispatched.toValue()];
-      transactionReason = [
-        TransactionReason.lostInStorage.toValue(),
-        TransactionReason.lostInTransit.toValue(),
-      ];
-      receiverId = facilityId;
-      senderId = null;
-    }
-    final data = (receiverId != null
-            ? await stockRepository.search(
-                StockSearchModel(
-                  transactionType: transactionType,
-                  tenantId: InventorySingleton().tenantId,
-                  receiverId: receiverId,
-                  productVariantId: productVariantId,
-                  transactionReason: transactionReason,
-                ),
-              )
-            : await stockRepository.search(
-                StockSearchModel(
-                  transactionType: transactionType,
-                  tenantId: InventorySingleton().tenantId,
-                  senderId: senderId,
-                  productVariantId: productVariantId,
-                  transactionReason: transactionReason,
-                ),
-              ))
-        .where((element) =>
-            element.auditDetails != null &&
-            element.auditDetails?.createdBy ==
-                InventorySingleton().loggedInUserUuid);
+      if (reportType == InventoryReportType.receipt) {
+        transactionType = [TransactionType.received.toValue()];
+        transactionReason = [TransactionReason.received.toValue()];
+        receiverId = facilityId;
+        senderId = null;
+      } else if (reportType == InventoryReportType.dispatch) {
+        transactionType = [TransactionType.dispatched.toValue()];
+        transactionReason = [];
+        receiverId = null;
+        senderId = facilityId;
+      } else if (reportType == InventoryReportType.returned) {
+        transactionType = [TransactionType.received.toValue()];
+        transactionReason = [TransactionReason.returned.toValue()];
+        receiverId = null;
+        senderId = facilityId;
+      } else if (reportType == InventoryReportType.damage) {
+        transactionType = [TransactionType.dispatched.toValue()];
+        transactionReason = [
+          TransactionReason.damagedInStorage.toValue(),
+          TransactionReason.damagedInTransit.toValue(),
+        ];
+        receiverId = facilityId;
+        senderId = null;
+      } else if (reportType == InventoryReportType.loss) {
+        transactionType = [TransactionType.dispatched.toValue()];
+        transactionReason = [
+          TransactionReason.lostInStorage.toValue(),
+          TransactionReason.lostInTransit.toValue(),
+        ];
+        receiverId = facilityId;
+        senderId = null;
+      }
+      final data = (receiverId != null
+              ? await stockRepository.search(
+                  StockSearchModel(
+                    transactionType: transactionType,
+                    tenantId: InventorySingleton().tenantId,
+                    receiverId: receiverId,
+                    productVariantId: productVariantId,
+                    transactionReason: transactionReason,
+                  ),
+                )
+              : await stockRepository.search(
+                  StockSearchModel(
+                    transactionType: transactionType,
+                    tenantId: InventorySingleton().tenantId,
+                    senderId: senderId,
+                    productVariantId: productVariantId,
+                    transactionReason: transactionReason,
+                  ),
+                ))
+          .where((element) =>
+              element.auditDetails != null &&
+              element.auditDetails?.createdBy ==
+                  InventorySingleton().loggedInUserUuid);
 
-    final groupedData = data.groupListsBy(
-      (element) => DateFormat('dd MMM yyyy').format(
-        DateTime.fromMillisecondsSinceEpoch(
-          element.auditDetails!.createdTime,
+      final groupedData = data.groupListsBy(
+        (element) => DateFormat('dd MMM yyyy').format(
+          DateTime.fromMillisecondsSinceEpoch(
+            element.auditDetails!.createdTime,
+          ),
         ),
-      ),
-    );
+      );
 
-    emit(InventoryReportStockState(stockData: groupedData));
+      emit(InventoryReportStockState(stockData: groupedData));
+    }
   }
 
   Future<void> _handleLoadingEvent(

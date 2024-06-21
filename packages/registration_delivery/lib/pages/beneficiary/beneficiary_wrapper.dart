@@ -8,8 +8,6 @@ import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
 import '../../blocs/search_households/search_households.dart';
-import '../../blocs/service/service.dart';
-import '../../blocs/service_definition/service_definition.dart';
 import '../../blocs/side_effects/side_effects.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';

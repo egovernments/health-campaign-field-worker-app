@@ -15,6 +15,7 @@ import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.da
 import '../blocs/sync/sync.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
+import '../models/downsync/downsync.dart';
 import '../router/app_router.dart';
 import '../router/authenticated_route_observer.dart';
 import '../utils/environment_config.dart';
@@ -166,25 +167,28 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           ..add(const LoadLocationEvent()),
                       ),
                       BlocProvider(
-                        create: (_) =>
-                            HouseholdDetailsBloc(const HouseholdDetailsState()),
-                      ),
-                      BlocProvider(
                         create: (ctx) => BeneficiaryDownSyncBloc(
                           bandwidthCheckRepository: BandwidthCheckRepository(
                             DioClient().dio,
                             bandwidthPath:
                                 envConfig.variables.checkBandwidthApiPath,
                           ),
+                          individualLocalRepository: ctx.read<
+                              LocalRepository<IndividualModel,
+                                  IndividualSearchModel>>(),
+                          downSyncRemoteRepository: ctx.read<
+                              RemoteRepository<DownsyncModel,
+                                  DownsyncSearchModel>>(),
+                          downSyncLocalRepository: ctx.read<
+                              LocalRepository<DownsyncModel,
+                                  DownsyncSearchModel>>(),
+                          networkManager: ctx.read(),
                           householdLocalRepository: ctx.read<
                               LocalRepository<HouseholdModel,
                                   HouseholdSearchModel>>(),
                           householdMemberLocalRepository: ctx.read<
                               LocalRepository<HouseholdMemberModel,
                                   HouseholdMemberSearchModel>>(),
-                          individualLocalRepository: ctx.read<
-                              LocalRepository<IndividualModel,
-                                  IndividualSearchModel>>(),
                           projectBeneficiaryLocalRepository: ctx.read<
                               LocalRepository<ProjectBeneficiaryModel,
                                   ProjectBeneficiarySearchModel>>(),
@@ -196,13 +200,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           referralLocalRepository: ctx.read<
                               LocalRepository<ReferralModel,
                                   ReferralSearchModel>>(),
-                          downSyncRemoteRepository: ctx.read<
-                              RemoteRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          downSyncLocalRepository: ctx.read<
-                              LocalRepository<DownsyncModel,
-                                  DownsyncSearchModel>>(),
-                          networkManager: ctx.read(),
                         ),
                       ),
                       BlocProvider(

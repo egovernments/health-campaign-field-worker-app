@@ -955,6 +955,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'FIREBASE_CONFIG')
+  List<FirebaseConfig>? get firebaseConfig =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -991,7 +994,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'REFERRAL_REASONS')
-      List<ReferralReasonType>? referralReasonList});
+      List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
 }
 
 /// @nodoc
@@ -1021,6 +1025,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
     Object? referralReasonList = freezed,
+    Object? firebaseConfig = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: null == appConfig
@@ -1080,6 +1085,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
               as List<ReferralReasonType>?,
+      firebaseConfig: freezed == firebaseConfig
+          ? _value.firebaseConfig
+          : firebaseConfig // ignore: cast_nullable_to_non_nullable
+              as List<FirebaseConfig>?,
     ) as $Val);
   }
 }
@@ -1115,7 +1124,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'TRANSPORT_TYPES') List<TransportTypes> transportTypes,
       @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'REFERRAL_REASONS')
-      List<ReferralReasonType>? referralReasonList});
+      List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
 }
 
 /// @nodoc
@@ -1143,6 +1153,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? transportTypes = null,
     Object? symptomsTypeList = freezed,
     Object? referralReasonList = freezed,
+    Object? firebaseConfig = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
       appConfig: null == appConfig
@@ -1202,6 +1213,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
               as List<ReferralReasonType>?,
+      firebaseConfig: freezed == firebaseConfig
+          ? _value._firebaseConfig
+          : firebaseConfig // ignore: cast_nullable_to_non_nullable
+              as List<FirebaseConfig>?,
     ));
   }
 }
@@ -1237,7 +1252,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       @JsonKey(name: 'SYMPTOM_TYPES')
       final List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'REFERRAL_REASONS')
-      final List<ReferralReasonType>? referralReasonList})
+      final List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'FIREBASE_CONFIG')
+      required final List<FirebaseConfig>? firebaseConfig})
       : _appConfig = appConfig,
         _bandWidthBatchSize = bandWidthBatchSize,
         _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
@@ -1252,7 +1269,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _callSupportOptions = callSupportOptions,
         _transportTypes = transportTypes,
         _symptomsTypeList = symptomsTypeList,
-        _referralReasonList = referralReasonList;
+        _referralReasonList = referralReasonList,
+        _firebaseConfig = firebaseConfig;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HCMWrapperModelImplFromJson(json);
@@ -1401,9 +1419,20 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<FirebaseConfig>? _firebaseConfig;
+  @override
+  @JsonKey(name: 'FIREBASE_CONFIG')
+  List<FirebaseConfig>? get firebaseConfig {
+    final value = _firebaseConfig;
+    if (value == null) return null;
+    if (_firebaseConfig is EqualUnmodifiableListView) return _firebaseConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, referralReasonList: $referralReasonList)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, referralReasonList: $referralReasonList, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1441,7 +1470,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._symptomsTypeList, _symptomsTypeList) &&
             const DeepCollectionEquality()
-                .equals(other._referralReasonList, _referralReasonList));
+                .equals(other._referralReasonList, _referralReasonList) &&
+            const DeepCollectionEquality()
+                .equals(other._firebaseConfig, _firebaseConfig));
   }
 
   @JsonKey(ignore: true)
@@ -1462,7 +1493,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       const DeepCollectionEquality().hash(_callSupportOptions),
       const DeepCollectionEquality().hash(_transportTypes),
       const DeepCollectionEquality().hash(_symptomsTypeList),
-      const DeepCollectionEquality().hash(_referralReasonList));
+      const DeepCollectionEquality().hash(_referralReasonList),
+      const DeepCollectionEquality().hash(_firebaseConfig));
 
   @JsonKey(ignore: true)
   @override
@@ -1508,8 +1540,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       @JsonKey(name: 'SYMPTOM_TYPES')
       final List<SymptomsType>? symptomsTypeList,
       @JsonKey(name: 'REFERRAL_REASONS')
-      final List<ReferralReasonType>?
-          referralReasonList}) = _$HCMWrapperModelImpl;
+      final List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'FIREBASE_CONFIG')
+      required final List<FirebaseConfig>?
+          firebaseConfig}) = _$HCMWrapperModelImpl;
 
   factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
       _$HCMWrapperModelImpl.fromJson;
@@ -1556,6 +1590,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList;
+  @override
+  @JsonKey(name: 'FIREBASE_CONFIG')
+  List<FirebaseConfig>? get firebaseConfig;
   @override
   @JsonKey(ignore: true)
   _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
@@ -5183,5 +5220,164 @@ abstract class _RowVersions implements RowVersions {
   @override
   @JsonKey(ignore: true)
   _$$RowVersionsImplCopyWith<_$RowVersionsImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+FirebaseConfig _$FirebaseConfigFromJson(Map<String, dynamic> json) {
+  return _FirebaseConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FirebaseConfig {
+  bool get enableCrashlytics => throw _privateConstructorUsedError;
+  bool get enableAnalytics => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $FirebaseConfigCopyWith<FirebaseConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FirebaseConfigCopyWith<$Res> {
+  factory $FirebaseConfigCopyWith(
+          FirebaseConfig value, $Res Function(FirebaseConfig) then) =
+      _$FirebaseConfigCopyWithImpl<$Res, FirebaseConfig>;
+  @useResult
+  $Res call({bool enableCrashlytics, bool enableAnalytics});
+}
+
+/// @nodoc
+class _$FirebaseConfigCopyWithImpl<$Res, $Val extends FirebaseConfig>
+    implements $FirebaseConfigCopyWith<$Res> {
+  _$FirebaseConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enableCrashlytics = null,
+    Object? enableAnalytics = null,
+  }) {
+    return _then(_value.copyWith(
+      enableCrashlytics: null == enableCrashlytics
+          ? _value.enableCrashlytics
+          : enableCrashlytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+      enableAnalytics: null == enableAnalytics
+          ? _value.enableAnalytics
+          : enableAnalytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FirebaseConfigImplCopyWith<$Res>
+    implements $FirebaseConfigCopyWith<$Res> {
+  factory _$$FirebaseConfigImplCopyWith(_$FirebaseConfigImpl value,
+          $Res Function(_$FirebaseConfigImpl) then) =
+      __$$FirebaseConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({bool enableCrashlytics, bool enableAnalytics});
+}
+
+/// @nodoc
+class __$$FirebaseConfigImplCopyWithImpl<$Res>
+    extends _$FirebaseConfigCopyWithImpl<$Res, _$FirebaseConfigImpl>
+    implements _$$FirebaseConfigImplCopyWith<$Res> {
+  __$$FirebaseConfigImplCopyWithImpl(
+      _$FirebaseConfigImpl _value, $Res Function(_$FirebaseConfigImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? enableCrashlytics = null,
+    Object? enableAnalytics = null,
+  }) {
+    return _then(_$FirebaseConfigImpl(
+      enableCrashlytics: null == enableCrashlytics
+          ? _value.enableCrashlytics
+          : enableCrashlytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+      enableAnalytics: null == enableAnalytics
+          ? _value.enableAnalytics
+          : enableAnalytics // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$FirebaseConfigImpl implements _FirebaseConfig {
+  _$FirebaseConfigImpl(
+      {required this.enableCrashlytics, required this.enableAnalytics});
+
+  factory _$FirebaseConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FirebaseConfigImplFromJson(json);
+
+  @override
+  final bool enableCrashlytics;
+  @override
+  final bool enableAnalytics;
+
+  @override
+  String toString() {
+    return 'FirebaseConfig(enableCrashlytics: $enableCrashlytics, enableAnalytics: $enableAnalytics)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FirebaseConfigImpl &&
+            (identical(other.enableCrashlytics, enableCrashlytics) ||
+                other.enableCrashlytics == enableCrashlytics) &&
+            (identical(other.enableAnalytics, enableAnalytics) ||
+                other.enableAnalytics == enableAnalytics));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode =>
+      Object.hash(runtimeType, enableCrashlytics, enableAnalytics);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FirebaseConfigImplCopyWith<_$FirebaseConfigImpl> get copyWith =>
+      __$$FirebaseConfigImplCopyWithImpl<_$FirebaseConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FirebaseConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _FirebaseConfig implements FirebaseConfig {
+  factory _FirebaseConfig(
+      {required final bool enableCrashlytics,
+      required final bool enableAnalytics}) = _$FirebaseConfigImpl;
+
+  factory _FirebaseConfig.fromJson(Map<String, dynamic> json) =
+      _$FirebaseConfigImpl.fromJson;
+
+  @override
+  bool get enableCrashlytics;
+  @override
+  bool get enableAnalytics;
+  @override
+  @JsonKey(ignore: true)
+  _$$FirebaseConfigImplCopyWith<_$FirebaseConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

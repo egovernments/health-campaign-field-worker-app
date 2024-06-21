@@ -8,7 +8,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 export 'attendance_management.init.dart';
 export 'blocs/app_localization.dart';
 export 'blocs/attendance_bloc.dart';
-export 'blocs/attendance_listeners.dart';
 export 'data/repositories/local/attendance_logs.dart';
 export 'data/repositories/local/attendance_register.dart';
 export 'data/repositories/oplog/oplog.dart';

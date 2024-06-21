@@ -89,6 +89,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
+    @JsonKey(name: 'FIREBASE_CONFIG') required List<FirebaseConfig>? firebaseConfig,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -338,4 +339,15 @@ class RowVersions with _$RowVersions {
   }) = _RowVersions;
   factory RowVersions.fromJson(Map<String, dynamic> json) =>
       _$RowVersionsFromJson(json);
+}
+
+@freezed
+class FirebaseConfig with _$FirebaseConfig {
+  factory FirebaseConfig({
+    required bool enableCrashlytics,
+    required bool enableAnalytics,
+  }) = _FirebaseConfig;
+
+  factory FirebaseConfig.fromJson(Map<String, dynamic> json) =>
+      _$FirebaseConfigFromJson(json);
 }

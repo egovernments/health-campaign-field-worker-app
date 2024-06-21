@@ -11,6 +11,7 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/network_manager.dart';
 import '../../data/repositories/remote/bandwidth_check.dart';
+import '../../models/downsync/downsync.dart';
 import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 
@@ -26,31 +27,31 @@ class BeneficiaryDownSyncBloc
       downSyncRemoteRepository;
   final LocalRepository<DownsyncModel, DownsyncSearchModel>
       downSyncLocalRepository;
-  final LocalRepository<HouseholdModel, HouseholdSearchModel>
-      householdLocalRepository;
-  final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
-      householdMemberLocalRepository;
-  final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
-      projectBeneficiaryLocalRepository;
-  final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
-  final LocalRepository<SideEffectModel, SideEffectSearchModel>
-      sideEffectLocalRepository;
-  final LocalRepository<ReferralModel, ReferralSearchModel>
-      referralLocalRepository;
   final NetworkManager networkManager;
   final BandwidthCheckRepository bandwidthCheckRepository;
+  final LocalRepository<HouseholdModel, HouseholdSearchModel>
+  householdLocalRepository;
+  final LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>
+  householdMemberLocalRepository;
+  final LocalRepository<ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>
+  projectBeneficiaryLocalRepository;
+  final LocalRepository<TaskModel, TaskSearchModel> taskLocalRepository;
+  final LocalRepository<SideEffectModel, SideEffectSearchModel>
+  sideEffectLocalRepository;
+  final LocalRepository<ReferralModel, ReferralSearchModel>
+  referralLocalRepository;
   BeneficiaryDownSyncBloc({
     required this.individualLocalRepository,
     required this.downSyncRemoteRepository,
     required this.downSyncLocalRepository,
+    required this.networkManager,
+    required this.bandwidthCheckRepository,
     required this.householdLocalRepository,
     required this.householdMemberLocalRepository,
     required this.projectBeneficiaryLocalRepository,
     required this.taskLocalRepository,
     required this.sideEffectLocalRepository,
     required this.referralLocalRepository,
-    required this.networkManager,
-    required this.bandwidthCheckRepository,
   }) : super(const BeneficiaryDownSyncState._()) {
     on(_handleDownSyncOfBeneficiaries);
     on(_handleCheckTotalCount);
@@ -202,9 +203,9 @@ class BeneficiaryDownSyncBloc
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
               await networkManager.writeToEntityDB(downSyncResults, [
+                individualLocalRepository,
                 householdLocalRepository,
                 householdMemberLocalRepository,
-                individualLocalRepository,
                 projectBeneficiaryLocalRepository,
                 taskLocalRepository,
                 sideEffectLocalRepository,
