@@ -89,139 +89,14 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   child: BlocBuilder<LocationBloc, LocationState>(
                     builder: (context, locationState) {
                       return DigitElevatedButton(
-                        onPressed: () {
-                          form.markAllAsTouched();
-                          if (!form.valid) {
-                            print('Form is invalid');
-                          } else {
-                            print('Form is valid');
-                          }
-
-                          final addressLine1 =
-                              form.control(_addressLine1Key).value as String?;
-                          final addressLine2 =
-                              form.control(_addressLine2Key).value as String?;
-                          final landmark =
-                              form.control(_landmarkKey).value as String?;
-                          final postalCode =
-                              form.control(_postalCodeKey).value as String?;
-
-                          registrationState.maybeWhen(
-                            orElse: () {
-                              return;
-                            },
-                            create: (
-                              address,
-                              householdModel,
-                              individualModel,
-                              registrationDate,
-                              searchQuery,
-                              loading,
-                              isHeadOfHousehold,
-                            ) {
-                              var addressModel = AddressModel(
-                                addressLine1: addressLine1 != null &&
-                                        addressLine1.trim().isNotEmpty
-                                    ? addressLine1
-                                    : null,
-                                addressLine2: addressLine2 != null &&
-                                        addressLine2.trim().isNotEmpty
-                                    ? addressLine2
-                                    : null,
-                                landmark: landmark != null &&
-                                        landmark.trim().isNotEmpty
-                                    ? landmark
-                                    : null,
-                                pincode: postalCode != null &&
-                                        postalCode.trim().isNotEmpty
-                                    ? postalCode
-                                    : null,
-                                type: AddressType.correspondence,
-                                latitude: form.control(_latKey).value ??
-                                    locationState.latitude,
-                                longitude: form.control(_lngKey).value ??
-                                    locationState.longitude,
-                                locationAccuracy:
-                                    form.control(_accuracyKey).value ??
-                                        locationState.accuracy,
-                                locality: LocalityModel(
-                                  code: RegistrationDeliverySingleton()
-                                      .boundary!
-                                      .code!,
-                                  name: RegistrationDeliverySingleton()
-                                      .boundary!
-                                      .name,
-                                ),
-                                tenantId:
-                                    RegistrationDeliverySingleton().tenantId,
-                                rowVersion: 1,
-                                auditDetails: AuditDetails(
-                                  createdBy: RegistrationDeliverySingleton()
-                                      .loggedInUserUuid!,
-                                  createdTime: context.millisecondsSinceEpoch(),
-                                ),
-                                clientAuditDetails: ClientAuditDetails(
-                                  createdBy: RegistrationDeliverySingleton()
-                                      .loggedInUserUuid!,
-                                  createdTime: context.millisecondsSinceEpoch(),
-                                  lastModifiedBy:
-                                      RegistrationDeliverySingleton()
-                                          .loggedInUserUuid,
-                                  lastModifiedTime:
-                                      context.millisecondsSinceEpoch(),
-                                ),
-                              );
-
-                              bloc.add(
-                                BeneficiaryRegistrationSaveAddressEvent(
-                                  addressModel,
-                                ),
-                              );
-                              router.push(HouseHoldDetailsRoute());
-                            },
-                            editHousehold: (
-                              address,
-                              householdModel,
-                              individuals,
-                              registrationDate,
-                              projectBeneficiaryModel,
-                              loading,
-                            ) {
-                              var addressModel = address.copyWith(
-                                addressLine1: addressLine1 != null &&
-                                        addressLine1.trim().isNotEmpty
-                                    ? addressLine1
-                                    : null,
-                                addressLine2: addressLine2 != null &&
-                                        addressLine2.trim().isNotEmpty
-                                    ? addressLine2
-                                    : null,
-                                landmark: landmark != null &&
-                                        landmark.trim().isNotEmpty
-                                    ? landmark
-                                    : null,
-                                locality: address.locality,
-                                pincode: postalCode != null &&
-                                        postalCode.trim().isNotEmpty
-                                    ? postalCode
-                                    : null,
-                                type: AddressType.correspondence,
-                                latitude: form.control(_latKey).value,
-                                longitude: form.control(_lngKey).value,
-                                locationAccuracy:
-                                    form.control(_accuracyKey).value,
-                              );
-                              // TODO [Linking of Voucher for Household based project  need to be handled]
-
-                              bloc.add(
-                                BeneficiaryRegistrationSaveAddressEvent(
-                                  addressModel,
-                                ),
-                              );
-                              router.push(HouseHoldDetailsRoute());
-                            },
-                          );
-                        },
+                        onPressed: () => proceedToNextPage(
+                          context,
+                          form,
+                          registrationState,
+                          router,
+                          locationState,
+                          bloc,
+                        ),
                         child: Center(
                           child: Text(
                             localizations.translate(
@@ -399,5 +274,112 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
         value: addressModel?.locationAccuracy,
       ),
     });
+  }
+
+  proceedToNextPage(
+      BuildContext context,
+      FormGroup form,
+      BeneficiaryRegistrationState registrationState,
+      StackRouter router,
+      LocationState locationState,
+      BeneficiaryRegistrationBloc bloc) {
+    form.markAllAsTouched();
+
+    final addressLine1 = form.control(_addressLine1Key).value as String?;
+    final addressLine2 = form.control(_addressLine2Key).value as String?;
+    final landmark = form.control(_landmarkKey).value as String?;
+    final postalCode = form.control(_postalCodeKey).value as String?;
+
+    registrationState.maybeWhen(
+      orElse: () {
+        return;
+      },
+      create: (
+        address,
+        householdModel,
+        individualModel,
+        registrationDate,
+        searchQuery,
+        loading,
+        isHeadOfHousehold,
+      ) {
+        var addressModel = AddressModel(
+          addressLine1: addressLine1 != null && addressLine1.trim().isNotEmpty
+              ? addressLine1
+              : null,
+          addressLine2: addressLine2 != null && addressLine2.trim().isNotEmpty
+              ? addressLine2
+              : null,
+          landmark:
+              landmark != null && landmark.trim().isNotEmpty ? landmark : null,
+          pincode: postalCode != null && postalCode.trim().isNotEmpty
+              ? postalCode
+              : null,
+          type: AddressType.correspondence,
+          latitude: form.control(_latKey).value ?? locationState.latitude,
+          longitude: form.control(_lngKey).value ?? locationState.longitude,
+          locationAccuracy:
+              form.control(_accuracyKey).value ?? locationState.accuracy,
+          locality: LocalityModel(
+            code: RegistrationDeliverySingleton().boundary!.code!,
+            name: RegistrationDeliverySingleton().boundary!.name,
+          ),
+          tenantId: RegistrationDeliverySingleton().tenantId,
+          rowVersion: 1,
+          auditDetails: AuditDetails(
+            createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            createdTime: context.millisecondsSinceEpoch(),
+          ),
+          clientAuditDetails: ClientAuditDetails(
+            createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+            createdTime: context.millisecondsSinceEpoch(),
+            lastModifiedBy: RegistrationDeliverySingleton().loggedInUserUuid,
+            lastModifiedTime: context.millisecondsSinceEpoch(),
+          ),
+        );
+
+        bloc.add(
+          BeneficiaryRegistrationSaveAddressEvent(
+            addressModel,
+          ),
+        );
+        router.push(HouseHoldDetailsRoute());
+      },
+      editHousehold: (
+        address,
+        householdModel,
+        individuals,
+        registrationDate,
+        projectBeneficiaryModel,
+        loading,
+      ) {
+        var addressModel = address.copyWith(
+          addressLine1: addressLine1 != null && addressLine1.trim().isNotEmpty
+              ? addressLine1
+              : null,
+          addressLine2: addressLine2 != null && addressLine2.trim().isNotEmpty
+              ? addressLine2
+              : null,
+          landmark:
+              landmark != null && landmark.trim().isNotEmpty ? landmark : null,
+          locality: address.locality,
+          pincode: postalCode != null && postalCode.trim().isNotEmpty
+              ? postalCode
+              : null,
+          type: AddressType.correspondence,
+          latitude: form.control(_latKey).value,
+          longitude: form.control(_lngKey).value,
+          locationAccuracy: form.control(_accuracyKey).value,
+        );
+        // TODO [Linking of Voucher for Household based project  need to be handled]
+
+        bloc.add(
+          BeneficiaryRegistrationSaveAddressEvent(
+            addressModel,
+          ),
+        );
+        router.push(HouseHoldDetailsRoute());
+      },
+    );
   }
 }

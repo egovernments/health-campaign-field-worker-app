@@ -6,7 +6,7 @@ import 'registration_delivery_router.gm.dart';
 class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
   RouteType get defaultRouteType => const RouteType.material();
 
-  List<AutoRoute> get routes => [
+  static List<AutoRoute> get routes => [
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,
             path: 'registration-delivery-wrapper',

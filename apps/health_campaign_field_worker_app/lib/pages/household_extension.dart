@@ -1,8 +1,10 @@
 // Importing necessary libraries and packages
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_components/digit_components.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 // A custom page that extends the HouseholdLocationPage
@@ -15,7 +17,14 @@ class CustomHouseHoldLocationPage extends HouseholdLocationPage {
   const CustomHouseHoldLocationPage(
       {super.key,
       super.customExtensionWidgetPage = const CustomExtensionWidgetPage(
-        customWidget: Text('From main app'),
+        customWidget: Column(
+          children: [
+            DigitTextFormField(
+              label: 'Address Line 2',
+              formControlName: 'addressLine2',
+            ),
+          ],
+        ),
         customMethod: CustomHouseHoldLocationState.customMethod1,
       )});
 
@@ -36,6 +45,22 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
     );
   }
 
+  @override
+  proceedToNextPage(
+      BuildContext context,
+      FormGroup form,
+      BeneficiaryRegistrationState registrationState,
+      StackRouter router,
+      LocationState locationState,
+      BeneficiaryRegistrationBloc bloc) {
+    // Custom logic to proceed to the next page
+    // This method is called when the user presses the 'Next' button
+    // The custom logic can be added here
+    // The super keyword is used to call the method from the parent class
+
+    print('Proceed to next page');
+  }
+
   // A custom method that prints a message to the console when the app is in debug mode
   static void customMethod1(BuildContext context) {
     if (kDebugMode) {
@@ -43,4 +68,13 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
           'Custom1 method called ${context.read<BeneficiaryRegistrationBloc>().state}');
     }
   }
+}
+
+class CustomBloc extends BeneficiaryRegistrationBloc {
+  CustomBloc(super.initialState,
+      {required super.individualRepository,
+      required super.householdRepository,
+      required super.householdMemberRepository,
+      required super.projectBeneficiaryRepository,
+      required super.beneficiaryType});
 }

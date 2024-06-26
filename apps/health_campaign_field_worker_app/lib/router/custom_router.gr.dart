@@ -7,11 +7,11 @@
 // ignore_for_file: type=lint
 // coverage:ignore-file
 
-part of 'app_router.dart';
+part of 'custom_router.dart';
 
-abstract class _$AppRouter extends RootStackRouter {
+abstract class _$CustomRoute extends RootStackRouter {
   // ignore: unused_element
-  _$AppRouter({super.navigatorKey});
+  _$CustomRoute({super.navigatorKey});
 
   @override
   final Map<String, PageFactory> pagesMap = {
@@ -316,10 +316,7 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ...InventoryRoute().pagesMap,
-    ...AttendanceRoute().pagesMap,
-    ...ReferralReconciliationRoute().pagesMap,
-    ...DigitScannerPackageRoute().pagesMap,
+    ...RegistrationDeliveryRoute().pagesMap,
   };
 }
 

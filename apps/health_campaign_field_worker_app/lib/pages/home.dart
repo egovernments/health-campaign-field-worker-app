@@ -436,7 +436,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => const CustomHouseHoldLocationPage()),
+                  builder: (context) => CustomHouseHoldLocationPage()),
             );
           },
         ),
@@ -448,7 +448,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => const CustomHouseHoldLocationPage()),
+                  builder: (context) => CustomHouseHoldLocationPage()),
             );
           },
         ),

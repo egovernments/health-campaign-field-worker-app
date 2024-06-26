@@ -12,6 +12,7 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.gm
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:digit_components/digit_components.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -54,7 +55,6 @@ part 'app_router.gr.dart';
     AttendanceRoute,
     ReferralReconciliationRoute,
     DigitScannerPackageRoute,
-    RegistrationDeliveryRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -111,10 +111,11 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
-                    initial: true,
                   ),
                   AutoRoute(
                     page: CustomHouseHoldLocationRoute.page,
+                    path: 'household-location',
+                    initial: true,
                   ),
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
