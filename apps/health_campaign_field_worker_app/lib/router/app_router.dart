@@ -11,6 +11,7 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.da
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -41,6 +42,7 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/household_extension.dart';
 
 export 'package:auto_route/auto_route.dart';
 
@@ -110,6 +112,9 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
                     initial: true,
+                  ),
+                  AutoRoute(
+                    page: CustomHouseHoldLocationRoute.page,
                   ),
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,

@@ -279,7 +279,6 @@ class RegistrationDeliverySingleton {
 
   String? _tenantId;
   String? _loggedInUserUuid;
-
   double? _maxRadius;
   String? _projectId;
   BeneficiaryType? _beneficiaryType;

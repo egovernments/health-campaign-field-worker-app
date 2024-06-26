@@ -228,6 +228,17 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
+    CustomHouseHoldLocationRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseHoldLocationRouteArgs>(
+          orElse: () => const CustomHouseHoldLocationRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseHoldLocationPage(
+          key: args.key,
+          customExtensionWidgetPage: args.customExtensionWidgetPage,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -1047,6 +1058,50 @@ class ComplaintsRegistrationWrapperRouteArgs {
   @override
   String toString() {
     return 'ComplaintsRegistrationWrapperRouteArgs{key: $key, pgrServiceModel: $pgrServiceModel}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseHoldLocationPage]
+class CustomHouseHoldLocationRoute
+    extends PageRouteInfo<CustomHouseHoldLocationRouteArgs> {
+  CustomHouseHoldLocationRoute({
+    Key? key,
+    CustomExtensionWidgetPage? customExtensionWidgetPage =
+        const CustomExtensionWidgetPage(
+            customWidget: Text('From main DB View app'),
+            customMethod: CustomHouseHoldLocationState.customMethod1),
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseHoldLocationRoute.name,
+          args: CustomHouseHoldLocationRouteArgs(
+            key: key,
+            customExtensionWidgetPage: customExtensionWidgetPage,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseHoldLocationRoute';
+
+  static const PageInfo<CustomHouseHoldLocationRouteArgs> page =
+      PageInfo<CustomHouseHoldLocationRouteArgs>(name);
+}
+
+class CustomHouseHoldLocationRouteArgs {
+  const CustomHouseHoldLocationRouteArgs({
+    this.key,
+    this.customExtensionWidgetPage = const CustomExtensionWidgetPage(
+        customWidget: Text('From main DB View app'),
+        customMethod: CustomHouseHoldLocationState.customMethod1),
+  });
+
+  final Key? key;
+
+  final CustomExtensionWidgetPage? customExtensionWidgetPage;
+
+  @override
+  String toString() {
+    return 'CustomHouseHoldLocationRouteArgs{key: $key, customExtensionWidgetPage: $customExtensionWidgetPage}';
   }
 }
 

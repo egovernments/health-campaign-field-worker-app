@@ -69,3 +69,4 @@ export 'pages/beneficiary_registration/individual_details.dart';
 export 'pages/reason_for_deletion.dart';
 export 'pages/registration_delivery_wrapper.dart';
 export 'pages/search_beneficiary.dart';
+export 'pages/beneficiary_registration/custom_extension_widget.dart';

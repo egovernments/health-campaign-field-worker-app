@@ -8,6 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -74,6 +75,20 @@ class MainApplicationState extends State<MainApplication>
                     ..add(const LoadLocationEvent());
                 },
                 lazy: false,
+              ),
+              BlocProvider(
+                create: (context) => BeneficiaryRegistrationBloc(
+                  const BeneficiaryRegistrationState.create(),
+                  individualRepository: context
+                      .repository<IndividualModel, IndividualSearchModel>(),
+                  householdRepository: context
+                      .repository<HouseholdModel, HouseholdSearchModel>(),
+                  householdMemberRepository: context.repository<
+                      HouseholdMemberModel, HouseholdMemberSearchModel>(),
+                  projectBeneficiaryRepository: context.repository<
+                      ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
+                  beneficiaryType: BeneficiaryType.individual,
+                ),
               ),
               BlocProvider(
                 create: (_) {

@@ -35,6 +35,7 @@ import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import 'household_extension.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -435,10 +436,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
+                  builder: (context) => const CustomHouseHoldLocationPage()),
             );
           },
         ),
@@ -450,10 +448,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
+                  builder: (context) => const CustomHouseHoldLocationPage()),
             );
           },
         ),

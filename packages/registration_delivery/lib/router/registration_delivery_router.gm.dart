@@ -16,7 +16,7 @@ import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary
     as _i23;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i24;
-import 'package:registration_delivery/models/entities/task.dart' as _i26;
+import 'package:registration_delivery/models/entities/task.dart' as _i27;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
     as _i2;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_wrapper.dart'
@@ -43,6 +43,8 @@ import 'package:registration_delivery/pages/beneficiary_registration/beneficiary
     as _i1;
 import 'package:registration_delivery/pages/beneficiary_registration/beneficiary_registration_wrapper.dart'
     as _i3;
+import 'package:registration_delivery/pages/beneficiary_registration/custom_extension_widget.dart'
+    as _i26;
 import 'package:registration_delivery/pages/beneficiary_registration/household_details.dart'
     as _i8;
 import 'package:registration_delivery/pages/beneficiary_registration/household_location.dart'
@@ -166,6 +168,7 @@ abstract class $RegistrationDeliveryRoute extends _i20.AutoRouterModule {
         child: _i10.HouseholdLocationPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
+          customExtensionWidgetPage: args.customExtensionWidgetPage,
         ),
       );
     },
@@ -650,12 +653,14 @@ class HouseholdLocationRoute
   HouseholdLocationRoute({
     _i21.Key? key,
     _i22.RegistrationDeliveryLocalization? appLocalizations,
+    _i26.CustomExtensionWidgetPage? customExtensionWidgetPage,
     List<_i20.PageRouteInfo>? children,
   }) : super(
           HouseholdLocationRoute.name,
           args: HouseholdLocationRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
+            customExtensionWidgetPage: customExtensionWidgetPage,
           ),
           initialChildren: children,
         );
@@ -670,15 +675,18 @@ class HouseholdLocationRouteArgs {
   const HouseholdLocationRouteArgs({
     this.key,
     this.appLocalizations,
+    this.customExtensionWidgetPage,
   });
 
   final _i21.Key? key;
 
   final _i22.RegistrationDeliveryLocalization? appLocalizations;
 
+  final _i26.CustomExtensionWidgetPage? customExtensionWidgetPage;
+
   @override
   String toString() {
-    return 'HouseholdLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+    return 'HouseholdLocationRouteArgs{key: $key, appLocalizations: $appLocalizations, customExtensionWidgetPage: $customExtensionWidgetPage}';
   }
 }
 
@@ -816,7 +824,7 @@ class RecordPastDeliveryDetailsRoute
   RecordPastDeliveryDetailsRoute({
     _i21.Key? key,
     _i22.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i26.TaskModel>? tasks,
+    List<_i27.TaskModel>? tasks,
     List<_i20.PageRouteInfo>? children,
   }) : super(
           RecordPastDeliveryDetailsRoute.name,
@@ -845,7 +853,7 @@ class RecordPastDeliveryDetailsRouteArgs {
 
   final _i22.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i26.TaskModel>? tasks;
+  final List<_i27.TaskModel>? tasks;
 
   @override
   String toString() {
@@ -961,7 +969,7 @@ class SideEffectsRoute extends _i20.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
     _i21.Key? key,
     _i22.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i26.TaskModel> tasks,
+    required List<_i27.TaskModel> tasks,
     bool isEditing = false,
     List<_i20.PageRouteInfo>? children,
   }) : super(
@@ -993,7 +1001,7 @@ class SideEffectsRouteArgs {
 
   final _i22.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i26.TaskModel> tasks;
+  final List<_i27.TaskModel> tasks;
 
   final bool isEditing;
 

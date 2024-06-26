@@ -16,20 +16,22 @@ import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_button.dart';
+import 'custom_extension_widget.dart';
 
 @RoutePage()
 class HouseholdLocationPage extends LocalizedStatefulWidget {
+  final CustomExtensionWidgetPage? customExtensionWidgetPage;
   const HouseholdLocationPage({
     super.key,
     super.appLocalizations,
+    this.customExtensionWidgetPage,
   });
 
   @override
-  State<HouseholdLocationPage> createState() => _HouseholdLocationPageState();
+  State<HouseholdLocationPage> createState() => HouseholdLocationPageState();
 }
 
-class _HouseholdLocationPageState
-    extends LocalizedState<HouseholdLocationPage> {
+class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
   static const _administrationAreaKey = 'administrationArea';
   static const _addressLine1Key = 'addressLine1';
   static const _addressLine2Key = 'addressLine2';
@@ -89,7 +91,11 @@ class _HouseholdLocationPageState
                       return DigitElevatedButton(
                         onPressed: () {
                           form.markAllAsTouched();
-                          if (!form.valid) return;
+                          if (!form.valid) {
+                            print('Form is invalid');
+                          } else {
+                            print('Form is valid');
+                          }
 
                           final addressLine1 =
                               form.control(_addressLine1Key).value as String?;
@@ -337,6 +343,9 @@ class _HouseholdLocationPageState
                               ),
                             ),
                           ]),
+                          widget.customExtensionWidgetPage != null
+                              ? widget.customExtensionWidgetPage!
+                              : Container(),
                         ],
                       ),
                     ),
@@ -382,9 +391,7 @@ class _HouseholdLocationPageState
         Validators.minLength(2),
         Validators.maxLength(6),
       ]),
-      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        Validators.minLength(2),
-      ]),
+      _latKey: FormControl<double>(value: addressModel?.latitude),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,
       ),
