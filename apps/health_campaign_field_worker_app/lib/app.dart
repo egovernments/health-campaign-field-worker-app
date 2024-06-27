@@ -3,6 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/inventory_management.dart';
@@ -46,6 +47,21 @@ class MainApplication extends StatefulWidget {
 
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    _requestDisableBatteryOptimization();
+  }
+
+  Future<void> _requestDisableBatteryOptimization() async {
+    bool isIgnoringBatteryOptimizations =
+        await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;
+
+    if (!isIgnoringBatteryOptimizations) {
+      await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
