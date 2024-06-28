@@ -55,6 +55,7 @@ part 'app_router.gr.dart';
     AttendanceRoute,
     ReferralReconciliationRoute,
     DigitScannerPackageRoute,
+    RegistrationDeliveryRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -112,9 +113,12 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
                   ),
+                  RedirectRoute(
+                      path: 'household-location',
+                      redirectTo: 'custom-household-location'),
                   AutoRoute(
                     page: CustomHouseHoldLocationRoute.page,
-                    path: 'household-location',
+                    path: 'custom-household-location',
                     initial: true,
                   ),
                   AutoRoute(

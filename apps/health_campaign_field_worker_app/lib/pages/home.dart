@@ -436,7 +436,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => CustomHouseHoldLocationPage()),
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
             );
           },
         ),
@@ -448,7 +451,10 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                  builder: (context) => CustomHouseHoldLocationPage()),
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
             );
           },
         ),

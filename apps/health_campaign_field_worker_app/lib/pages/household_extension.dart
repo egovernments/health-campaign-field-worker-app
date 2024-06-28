@@ -17,16 +17,21 @@ class CustomHouseHoldLocationPage extends HouseholdLocationPage {
   const CustomHouseHoldLocationPage(
       {super.key,
       super.customExtensionWidgetPage = const CustomExtensionWidgetPage(
+        customWidget: SizedBox(),
+        customMethod: CustomHouseHoldLocationState.customMethod1,
+      )});
+
+  @override
+  CustomExtensionWidgetPage? get customExtensionWidgetPage =>
+      const CustomExtensionWidgetPage(
         customWidget: Column(
           children: [
             DigitTextFormField(
-              label: 'Address Line 2',
-              formControlName: 'addressLine2',
-            ),
+                label: 'Address line 2', formControlName: 'addressLine2')
           ],
         ),
         customMethod: CustomHouseHoldLocationState.customMethod1,
-      )});
+      );
 
   // Overriding the createState method to return a new instance of CustomHouseHoldLocationState
   @override
@@ -57,8 +62,11 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
     // This method is called when the user presses the 'Next' button
     // The custom logic can be added here
     // The super keyword is used to call the method from the parent class
-
-    print('Proceed to next page');
+    if (kDebugMode) {
+      print('form value: ${form.value} ${bloc.state}');
+    }
+    super.proceedToNextPage(
+        context, form, registrationState, router, locationState, bloc);
   }
 
   // A custom method that prints a message to the console when the app is in debug mode

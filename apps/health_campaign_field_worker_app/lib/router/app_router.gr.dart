@@ -320,6 +320,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...AttendanceRoute().pagesMap,
     ...ReferralReconciliationRoute().pagesMap,
     ...DigitScannerPackageRoute().pagesMap,
+    ...RegistrationDeliveryRoute().pagesMap,
   };
 }
 
@@ -1068,10 +1069,7 @@ class CustomHouseHoldLocationRoute
     Key? key,
     CustomExtensionWidgetPage? customExtensionWidgetPage =
         const CustomExtensionWidgetPage(
-            customWidget: Column(children: [
-              DigitTextFormField(
-                  label: 'Address Line 2', formControlName: 'addressLine2')
-            ]),
+            customWidget: SizedBox(),
             customMethod: CustomHouseHoldLocationState.customMethod1),
     List<PageRouteInfo>? children,
   }) : super(
@@ -1093,10 +1091,7 @@ class CustomHouseHoldLocationRouteArgs {
   const CustomHouseHoldLocationRouteArgs({
     this.key,
     this.customExtensionWidgetPage = const CustomExtensionWidgetPage(
-        customWidget: Column(children: [
-          DigitTextFormField(
-              label: 'Address Line 2', formControlName: 'addressLine2')
-        ]),
+        customWidget: SizedBox(),
         customMethod: CustomHouseHoldLocationState.customMethod1),
   });
 
