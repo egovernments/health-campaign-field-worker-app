@@ -229,14 +229,9 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     CustomHouseHoldLocationRoute.name: (routeData) {
-      final args = routeData.argsAs<CustomHouseHoldLocationRouteArgs>(
-          orElse: () => const CustomHouseHoldLocationRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: CustomHouseHoldLocationPage(
-          key: args.key,
-          customExtensionWidgetPage: args.customExtensionWidgetPage,
-        ),
+        child: const CustomHouseHoldLocationPage(),
       );
     },
     HomeRoute.name: (routeData) {
@@ -1063,46 +1058,16 @@ class ComplaintsRegistrationWrapperRouteArgs {
 
 /// generated route for
 /// [CustomHouseHoldLocationPage]
-class CustomHouseHoldLocationRoute
-    extends PageRouteInfo<CustomHouseHoldLocationRouteArgs> {
-  CustomHouseHoldLocationRoute({
-    Key? key,
-    CustomExtensionWidgetPage? customExtensionWidgetPage =
-        const CustomExtensionWidgetPage(
-            customWidget: SizedBox(),
-            customMethod: CustomHouseHoldLocationState.customMethod1),
-    List<PageRouteInfo>? children,
-  }) : super(
+class CustomHouseHoldLocationRoute extends PageRouteInfo<void> {
+  const CustomHouseHoldLocationRoute({List<PageRouteInfo>? children})
+      : super(
           CustomHouseHoldLocationRoute.name,
-          args: CustomHouseHoldLocationRouteArgs(
-            key: key,
-            customExtensionWidgetPage: customExtensionWidgetPage,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'CustomHouseHoldLocationRoute';
 
-  static const PageInfo<CustomHouseHoldLocationRouteArgs> page =
-      PageInfo<CustomHouseHoldLocationRouteArgs>(name);
-}
-
-class CustomHouseHoldLocationRouteArgs {
-  const CustomHouseHoldLocationRouteArgs({
-    this.key,
-    this.customExtensionWidgetPage = const CustomExtensionWidgetPage(
-        customWidget: SizedBox(),
-        customMethod: CustomHouseHoldLocationState.customMethod1),
-  });
-
-  final Key? key;
-
-  final CustomExtensionWidgetPage? customExtensionWidgetPage;
-
-  @override
-  String toString() {
-    return 'CustomHouseHoldLocationRouteArgs{key: $key, customExtensionWidgetPage: $customExtensionWidgetPage}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

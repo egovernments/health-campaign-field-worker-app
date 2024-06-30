@@ -43,7 +43,7 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
-import '../pages/household_extension.dart';
+import '../pages/household_location_extension.dart';
 
 export 'package:auto_route/auto_route.dart';
 

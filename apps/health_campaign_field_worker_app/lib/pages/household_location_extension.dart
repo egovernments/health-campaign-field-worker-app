@@ -1,34 +1,41 @@
+// Importing necessary libraries and packages
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 
-import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
-import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
-import '../../widgets/showcase/config/showcase_constants.dart';
-import '../../widgets/showcase/showcase_button.dart';
+import '../utils/extensions/extensions.dart';
+import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/showcase/showcase_button.dart';
 
+// A custom page that extends the HouseholdLocationPage
+// This page is used to display a custom location for a household
 @RoutePage()
-class HouseholdLocationPage extends LocalizedStatefulWidget {
-  const HouseholdLocationPage({
+class CustomHouseHoldLocationPage extends HouseholdLocationPage {
+  // Constructor for the CustomHouseHoldLocationPage class
+  // It takes a key and a customExtensionWidgetPage as parameters
+  // The customExtensionWidgetPage is set to a default value of CustomExtensionWidgetPage
+  const CustomHouseHoldLocationPage({
     super.key,
-    super.appLocalizations,
   });
 
+  // Overriding the createState method to return a new instance of CustomHouseHoldLocationState
   @override
-  State<HouseholdLocationPage> createState() => HouseholdLocationPageState();
+  CustomHouseHoldLocationState createState() => CustomHouseHoldLocationState();
 }
 
-class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
+// A custom state class that extends the HouseholdLocationPageState
+class CustomHouseHoldLocationState extends HouseholdLocationPageState {
+  static const _buildingName = 'buildingName';
   static const _administrationAreaKey = 'administrationArea';
   static const _addressLine1Key = 'addressLine1';
   static const _addressLine2Key = 'addressLine2';
@@ -39,6 +46,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
 
+  // Overriding the build method to return a widget that fits the entire screen
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -194,6 +202,13 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 },
                               ),
                             ),
+                            DigitTextFormField(
+                              keyboardType: TextInputType.text,
+                              formControlName: _buildingName,
+                              label: localizations.translate(
+                                'Building Name',
+                              ),
+                            ),
                             householdLocationShowcaseData.postalCode.buildWith(
                               child: DigitTextFormField(
                                 keyboardType: TextInputType.text,
@@ -214,7 +229,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 ],
                               ),
                             ),
-                            customAdditionalField(),
                           ]),
                         ],
                       ),
@@ -229,6 +243,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     );
   }
 
+  @override
   FormGroup buildForm(BeneficiaryRegistrationState state) {
     final addressModel = state.mapOrNull(
       editHousehold: (value) => value.addressModel,
@@ -256,6 +271,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
         Validators.minLength(2),
         Validators.maxLength(64),
       ]),
+      _buildingName: FormControl<String>(),
       _postalCodeKey:
           FormControl<String>(value: addressModel?.pincode, validators: [
         Validators.minLength(2),
@@ -271,6 +287,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     });
   }
 
+  @override
   proceedToNextPage(
       BuildContext context,
       FormGroup form,
@@ -310,6 +327,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
           pincode: postalCode != null && postalCode.trim().isNotEmpty
               ? postalCode
               : null,
+          buildingName: form.control(_buildingName).value,
           type: AddressType.correspondence,
           latitude: form.control(_latKey).value ?? locationState.latitude,
           longitude: form.control(_lngKey).value ?? locationState.longitude,
@@ -378,7 +396,11 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     );
   }
 
-  customAdditionalField() {
-    return const SizedBox();
+  // A custom method that prints a message to the console when the app is in debug mode
+  static void customMethod1(BuildContext context) {
+    if (kDebugMode) {
+      print(
+          'Custom1 method called ${context.read<BeneficiaryRegistrationBloc>().state}');
+    }
   }
 }

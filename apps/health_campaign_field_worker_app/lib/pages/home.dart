@@ -35,7 +35,6 @@ import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
-import 'household_extension.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
