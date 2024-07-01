@@ -331,6 +331,12 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
           type: AddressType.correspondence,
           latitude: form.control(_latKey).value ?? locationState.latitude,
           longitude: form.control(_lngKey).value ?? locationState.longitude,
+          additionalFields: AddressAdditionalFields(
+            version: 1,
+            fields: [
+              AdditionalField('building_name', form.control(_buildingName).value),
+            ]
+          ),
           locationAccuracy:
               form.control(_accuracyKey).value ?? locationState.accuracy,
           locality: LocalityModel(

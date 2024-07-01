@@ -24,10 +24,10 @@ class HouseHoldDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HouseHoldDetailsPage> createState() => _HouseHoldDetailsPageState();
+  State<HouseHoldDetailsPage> createState() => HouseHoldDetailsPageState();
 }
 
-class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
+class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _dateOfRegistrationKey = 'dateOfRegistration';
   static const _memberCountKey = 'memberCount';
 
