@@ -82,7 +82,7 @@ class AppRouter extends _$AppRouter {
       children: [
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
-        RedirectRoute(path: 'profile', redirectTo: 'custom-household-location'),
+        // RedirectRoute(path: 'profile', redirectTo: 'custom-household-location'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
         AutoRoute(
@@ -207,28 +207,30 @@ class AppRouter extends _$AppRouter {
                       path: 'individual-details'),
                   AutoRoute(
                       page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
-                  // AutoRoute(
-                  //   page: CustomHouseHoldDetailsRoute.page,
-                  //   path: 'custom-household-details',
-                  // ),
-                  // RedirectRoute(
-                  //     path: 'household-details',
-                  //     redirectTo: 'custom-household-details',
-                  // ),
+                      path: 'householddetails'),
+                  AutoRoute(
+                    page: CustomHouseHoldDetailsRoute.page,
+                    path: 'custom-household-details',
+                  ),
+                  RedirectRoute(
+                      path: 'householddetails',
+                      redirectTo: 'custom-household-details',
+                  ),
                   AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
-                    initial: true,
+            
                   ),
-                  // AutoRoute(
-                  //     page: CustomHouseHoldLocationRoute.page,
-                  //     path: 'custom-household-location',
-                  // ),
-                  // RedirectRoute(
-                  //   path: 'household-location',
-                  //   redirectTo: 'custom-household-location',
-                  // ),
+                  AutoRoute(
+                      page: CustomHouseHoldLocationRoute.page,
+                      path: 'custom-household-location',
+                      initial: true,
+                  ),
+                  
+                  RedirectRoute(
+                    path: 'household-location',
+                    redirectTo: 'custom-household-location',
+                  ),
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',

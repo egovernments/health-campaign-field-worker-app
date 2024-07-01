@@ -8,10 +8,10 @@ class AppLogger {
   const AppLogger._();
 
   void debug(dynamic input, {String? title}) =>
-      _printMessage(input, title: title, level: Level.CONFIG);
+ null;
 
   void info(dynamic input, {String? title}) =>
-      _printMessage(input, title: title, level: Level.INFO);
+    null;
 
   void error({
     required String title,
