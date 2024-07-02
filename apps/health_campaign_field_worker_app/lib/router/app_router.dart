@@ -82,7 +82,7 @@ class AppRouter extends _$AppRouter {
       children: [
         AutoRoute(page: HomeRoute.page, path: 'home'),
         AutoRoute(page: ProfileRoute.page, path: 'profile'),
-        // RedirectRoute(path: 'profile', redirectTo: 'custom-household-location'),
+        RedirectRoute(path: 'profile', redirectTo: 'custom-household-location'),
         AutoRoute(page: UserQRDetailsRoute.page, path: 'user-qr-code'),
         AutoRoute(page: DigitScannerRoute.page, path: 'scanner'),
         AutoRoute(
@@ -90,8 +90,8 @@ class AppRouter extends _$AppRouter {
           path: 'beneficiary-downsync-report',
         ),
         AutoRoute(
-            page: CustomHouseHoldLocationRoute.page,
-            path: 'custom-household-location',
+          page: CustomHouseHoldLocationRoute.page,
+          path: 'custom-household-location',
         ),
         AutoRoute(
             page: ChecklistWrapperRoute.page,
@@ -162,7 +162,7 @@ class AppRouter extends _$AppRouter {
             ),
             AutoRoute(
               page: ComplaintsDetailsViewRoute.page,
-              path: 'complaints-inbox-view-details',
+              path: 'complaints-details-view',
             ),
           ],
         ),
@@ -200,36 +200,39 @@ class AppRouter extends _$AppRouter {
               /// Beneficiary Registration
               AutoRoute(
                 page: BeneficiaryRegistrationWrapperRoute.page,
-                path: 'beneficiary-registration',
+                path: 'beneficiary-registration-wrapper',
                 children: [
                   AutoRoute(
+                      usesPathAsKey: true,
                       page: IndividualDetailsRoute.page,
                       path: 'individual-details'),
                   AutoRoute(
+                      usesPathAsKey: true,
                       page: HouseHoldDetailsRoute.page,
-                      path: 'householddetails'),
+                      path: 'house-hold-details'),
                   AutoRoute(
+                    usesPathAsKey: true,
                     page: CustomHouseHoldDetailsRoute.page,
-                    path: 'custom-household-details',
+                    path: 'custom-house-hold-details',
                   ),
                   RedirectRoute(
-                      path: 'householddetails',
-                      redirectTo: 'custom-household-details',
+                    path: 'house-hold-details',
+                    redirectTo: 'custom-house-hold-details',
                   ),
                   AutoRoute(
+                    usesPathAsKey: true,
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
-            
                   ),
                   AutoRoute(
-                      page: CustomHouseHoldLocationRoute.page,
-                      path: 'custom-household-location',
-                      initial: true,
+                    usesPathAsKey: true,
+                    page: CustomHouseHoldLocationRoute.page,
+                    path: 'custom-house-hold-location',
+                    initial: true,
                   ),
-                  
                   RedirectRoute(
                     path: 'household-location',
-                    redirectTo: 'custom-household-location',
+                    redirectTo: 'custom-house-hold-location',
                   ),
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,

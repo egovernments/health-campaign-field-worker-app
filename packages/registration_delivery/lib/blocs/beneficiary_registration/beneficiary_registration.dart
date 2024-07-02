@@ -37,7 +37,7 @@ class BeneficiaryRegistrationBloc
     required this.projectBeneficiaryRepository,
     required this.beneficiaryType,
   }) {
-    on(_handleSaveAddress);
+    on(handleSaveAddress);
     on(_handleSaveHouseholdDetails);
     on(_handleSaveIndividualDetails);
     on(_handleCreate);
@@ -47,7 +47,7 @@ class BeneficiaryRegistrationBloc
   }
 
   //_handleSaveAddress event can be used for saving address details to the form
-  FutureOr<void> _handleSaveAddress(
+  FutureOr<void> handleSaveAddress(
     BeneficiaryRegistrationSaveAddressEvent event,
     BeneficiaryRegistrationEmitter emit,
   ) async {

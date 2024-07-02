@@ -12,6 +12,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
+import 'blocs/custom_bloc.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
@@ -88,6 +89,13 @@ class MainApplicationState extends State<MainApplication>
                   projectBeneficiaryRepository: context.repository<
                       ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
                   beneficiaryType: BeneficiaryType.individual,
+                ),
+              ),
+              BlocProvider(
+                create: (context) => CustomBeneficiaryRegistrationBloc(
+                  CustomBeneficiaryRegistrationState.newState(
+                      houseHoldModel: HouseholdModel(clientReferenceId: '')),
+                  context.read<BeneficiaryRegistrationBloc>(),
                 ),
               ),
               BlocProvider(

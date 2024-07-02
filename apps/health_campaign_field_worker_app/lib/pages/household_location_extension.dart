@@ -3,7 +3,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,28 +12,25 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import '../blocs/localization/app_localization.dart';
 import '../utils/extensions/extensions.dart';
 import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
 import '../widgets/showcase/showcase_button.dart';
 
 // A custom page that extends the HouseholdLocationPage
 // This page is used to display a custom location for a household
 @RoutePage()
-class CustomHouseHoldLocationPage extends HouseholdLocationPage {
-  // Constructor for the CustomHouseHoldLocationPage class
-  // It takes a key and a customExtensionWidgetPage as parameters
-  // The customExtensionWidgetPage is set to a default value of CustomExtensionWidgetPage
-  const CustomHouseHoldLocationPage({
-    super.key,
-  });
+class CustomHouseHoldLocationPage extends LocalizedStatefulWidget {
+  const CustomHouseHoldLocationPage({super.key});
 
-  // Overriding the createState method to return a new instance of CustomHouseHoldLocationState
   @override
-  CustomHouseHoldLocationState createState() => CustomHouseHoldLocationState();
+  State<CustomHouseHoldLocationPage> createState() =>
+      _CustomHouseHoldLocationPageState();
 }
 
-// A custom state class that extends the HouseholdLocationPageState
-class CustomHouseHoldLocationState extends HouseholdLocationPageState {
+class _CustomHouseHoldLocationPageState
+    extends State<CustomHouseHoldLocationPage> {
   static const _buildingName = 'buildingName';
   static const _administrationAreaKey = 'administrationArea';
   static const _addressLine1Key = 'addressLine1';
@@ -50,6 +46,7 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
 
@@ -287,7 +284,6 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
     });
   }
 
-  @override
   proceedToNextPage(
       BuildContext context,
       FormGroup form,
@@ -331,12 +327,9 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
           type: AddressType.correspondence,
           latitude: form.control(_latKey).value ?? locationState.latitude,
           longitude: form.control(_lngKey).value ?? locationState.longitude,
-          additionalFields: AddressAdditionalFields(
-            version: 1,
-            fields: [
-              AdditionalField('building_name', form.control(_buildingName).value),
-            ]
-          ),
+          additionalFields: AddressAdditionalFields(version: 1, fields: [
+            AdditionalField('building_name', form.control(_buildingName).value),
+          ]),
           locationAccuracy:
               form.control(_accuracyKey).value ?? locationState.accuracy,
           locality: LocalityModel(
@@ -400,13 +393,5 @@ class CustomHouseHoldLocationState extends HouseholdLocationPageState {
         router.push(HouseHoldDetailsRoute());
       },
     );
-  }
-
-  // A custom method that prints a message to the console when the app is in debug mode
-  static void customMethod1(BuildContext context) {
-    if (kDebugMode) {
-      print(
-          'Custom1 method called ${context.read<BeneficiaryRegistrationBloc>().state}');
-    }
   }
 }
