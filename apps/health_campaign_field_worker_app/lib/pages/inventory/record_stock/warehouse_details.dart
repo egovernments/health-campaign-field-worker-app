@@ -43,11 +43,10 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   @override
   void initState() {
     // clearQRCodes();
-    // final stockState = context.read<RecordStockBloc>().state;
-    // setState(() {
-    //   selectedFacilityId = stockState.primaryId;
-    //   entryType = stockState.entryType.toString();
-    // });
+    final stockState = context.read<RecordStockBloc>().state;
+    setState(() {
+      entryType = stockState.entryType.toString();
+    });
     super.initState();
   }
 
