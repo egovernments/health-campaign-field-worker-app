@@ -470,7 +470,7 @@ class RouteCollection {
       hasValidInitialPath |= routeToUse.path == targetInitialPath;
       routesMap[r.name] = routeToUse;
     }
-    if (!hasValidInitialPath) {
+    if (!hasValidInitialPath && routesMarkedInitial.isNotEmpty) {
       final redirectRoute = RedirectRoute(
         path: targetInitialPath,
         redirectTo: routesMarkedInitial.first.path,
