@@ -4,6 +4,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/status.dart';
@@ -82,8 +83,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     final currentCycle =
         RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(
               (e) =>
-                  (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-                  (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
               // Return null when no matching cycle is found
             );
 
@@ -159,8 +160,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           referralData,
           currentCycle,
         );
-
-// TODO need to pass the current cycle
 
         final isStatusReset = checkStatus(taskData, currentCycle);
 
@@ -287,16 +286,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   subtitle: widget.distance != null
                       ? '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
                       : '${householdMember.members.length ?? 1} ${householdMember.members.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
-                  status: RegistrationDeliverySingleton().beneficiaryType ==
-                          BeneficiaryType.individual
-                      ? (tasks ?? []).isNotEmpty &&
-                              !isNotEligible &&
-                              !isBeneficiaryRefused
-                          ? Status.visited.toValue()
-                          : Status.notVisited.toValue()
-                      : (tasks ?? []).isNotEmpty
-                          ? Status.visited.toValue()
-                          : Status.notVisited.toValue(),
+                  status: getStatus(
+                      tasks ?? [],
+                      householdMember.projectBeneficiaries,
+                      isNotEligible,
+                      isBeneficiaryRefused),
                   title: [
                     householdMember.headOfHousehold.name?.givenName,
                     householdMember.headOfHousehold.name?.familyName,
@@ -392,5 +386,28 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             !isStatusReset
         ? theme.colorScheme.onSurfaceVariant
         : theme.colorScheme.error;
+  }
+
+  getStatus(
+      Iterable<TaskModel> tasks,
+      List<ProjectBeneficiaryModel> projectBeneficiaries,
+      bool isNotEligible,
+      bool isBeneficiaryRefused) {
+    if (projectBeneficiaries.isNotEmpty) {
+      if (tasks.isEmpty) {
+        return Status.registered.toValue();
+      } else {
+        bool isIndividual = RegistrationDeliverySingleton().beneficiaryType ==
+            BeneficiaryType.individual;
+        if (isIndividual && !isNotEligible && !isBeneficiaryRefused ||
+            !isIndividual) {
+          return Status.visited.toValue();
+        } else {
+          return Status.notVisited.toValue();
+        }
+      }
+    } else {
+      return Status.notRegistered.toValue();
+    }
   }
 }

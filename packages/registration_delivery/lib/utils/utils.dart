@@ -54,9 +54,7 @@ class CustomValidator {
 }
 
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
-  if (currentCycle == null ||
-      currentCycle.startDate == null ||
-      currentCycle.endDate == null) {
+  if (currentCycle == null) {
     return false;
   }
 
