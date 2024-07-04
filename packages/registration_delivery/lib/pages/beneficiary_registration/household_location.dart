@@ -382,9 +382,7 @@ class _HouseholdLocationPageState
         Validators.minLength(2),
         Validators.maxLength(6),
       ]),
-      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        Validators.minLength(2),
-      ]),
+      _latKey: FormControl<double>(value: addressModel?.latitude),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,
       ),
