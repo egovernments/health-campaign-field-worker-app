@@ -61,6 +61,7 @@ dependencies:
   inventory_management: ^1.0.0
   referral_reconciliation: ^1.0.0
   registration_delivery: ^1.0.0+1
+  disable_battery_optimization: ^1.1.1
 
 dev_dependencies:
   flutter_test:
@@ -93,8 +94,6 @@ flutter:
   assets:
     - ./
     - assets/icons/svg/
-    - ./assets/audio/add.wav
-    - ./assets/audio/buzzer.wav
     
   fonts:
     - family: Roboto

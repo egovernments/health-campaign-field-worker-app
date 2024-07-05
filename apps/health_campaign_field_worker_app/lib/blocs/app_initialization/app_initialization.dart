@@ -96,6 +96,7 @@ class AppInitializationBloc
                     MasterEnums.backendInterface.toValue(),
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
+                    MasterEnums.firebaseConfig.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(

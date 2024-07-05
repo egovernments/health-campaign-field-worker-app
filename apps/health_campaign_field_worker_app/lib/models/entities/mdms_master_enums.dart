@@ -41,4 +41,6 @@ enum MasterEnums {
   rowVersion,
   @MappableValue("ServiceDefs")
   serviceDefinitions,
+  @MappableValue("FIREBASE_CONFIG")
+  firebaseConfig,
 }

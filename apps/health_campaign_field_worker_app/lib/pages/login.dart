@@ -116,37 +116,30 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         suffix: buildPasswordVisibility(),
                       ),
                       const SizedBox(height: 16),
-                      BlocBuilder<AuthBloc, AuthState>(
-                        builder: (context, state) {
-                          return DigitElevatedButton(
-                            onPressed: state.maybeWhen(
-                              orElse: () => () {
-                                form.markAllAsTouched();
-                                if (!form.valid) return;
+                      DigitElevatedButton(
+                        onPressed: () {
+                          form.markAllAsTouched();
+                          if (!form.valid) return;
 
-                                FocusManager.instance.primaryFocus?.unfocus();
+                          FocusManager.instance.primaryFocus?.unfocus();
 
-                                context.read<AuthBloc>().add(
-                                      AuthLoginEvent(
-                                        userId: (form.control(_userId).value
-                                                as String)
-                                            .trim(),
-                                        password: (form.control(_password).value
-                                                as String)
-                                            .trim(),
-                                        tenantId: envConfig.variables.tenantId,
-                                      ),
-                                    );
-                              },
-                              loading: () => null,
-                            ),
-                            child: Center(
-                              child: Text(
-                                localizations.translate(i18.login.actionLabel),
-                              ),
-                            ),
-                          );
+                          context.read<AuthBloc>().add(
+                                AuthLoginEvent(
+                                  userId:
+                                      (form.control(_userId).value as String)
+                                          .trim(),
+                                  password:
+                                      (form.control(_password).value as String)
+                                          .trim(),
+                                  tenantId: envConfig.variables.tenantId,
+                                ),
+                              );
                         },
+                        child: Center(
+                          child: Text(
+                            localizations.translate(i18.login.actionLabel),
+                          ),
+                        ),
                       ),
                       const SizedBox(
                         height: 16,
@@ -202,7 +195,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: 'eGov@1234',
+          value: '',
         ),
       });
 }

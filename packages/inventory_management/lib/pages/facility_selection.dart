@@ -3,28 +3,35 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
-import 'package:inventory_management/blocs/app_localization.dart';
 import 'package:inventory_management/utils/constants.dart';
+import 'package:inventory_management/widgets/localized.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
-class InventoryFacilitySelectionPage extends StatelessWidget {
+class InventoryFacilitySelectionPage extends LocalizedStatefulWidget {
   final List<FacilityModel> facilities;
 
   const InventoryFacilitySelectionPage({
     super.key,
+    super.appLocalizations,
     required this.facilities,
   });
 
+  @override
+  State<InventoryFacilitySelectionPage> createState() =>
+      _InventoryFacilitySelectionPageState();
+}
+
+class _InventoryFacilitySelectionPageState
+    extends LocalizedState<InventoryFacilitySelectionPage> {
   static const _facilityName = 'facilityKey';
   static const _selectedFacility = 'selectedFacilityKey';
 
   @override
   Widget build(BuildContext context) {
-    InventoryLocalization localizations = InventoryLocalization.of(context);
     final theme = Theme.of(context);
     final BorderSide borderSide = BorderSide(
       color: theme.colorScheme.outline,
@@ -39,7 +46,7 @@ class InventoryFacilitySelectionPage extends StatelessWidget {
             backgroundColor: Colors.white,
             body: ReactiveFormConsumer(
               builder: (context, form, _) {
-                final filteredFacilities = facilities.where((element) {
+                final filteredFacilities = widget.facilities.where((element) {
                   final query = form.control(_facilityName).value as String?;
                   if (query == null || query.isEmpty) return true;
                   final localizedFacilityIdWithPrefix = localizations

@@ -6,26 +6,34 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:referral_reconciliation/widgets/localized.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
-class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
+class ReferralReconProjectFacilitySelectionPage
+    extends LocalizedStatefulWidget {
   final List<ProjectFacilityModel> projectFacilities;
 
   const ReferralReconProjectFacilitySelectionPage({
     super.key,
+    super.appLocalizations,
     required this.projectFacilities,
   });
 
+  @override
+  State<ReferralReconProjectFacilitySelectionPage> createState() =>
+      _ReferralReconProjectFacilitySelectionPageState();
+}
+
+class _ReferralReconProjectFacilitySelectionPageState
+    extends LocalizedState<ReferralReconProjectFacilitySelectionPage> {
   static const _facilityName = 'facilityKey';
   static const _selectedFacility = 'selectedFacilityKey';
 
   @override
   Widget build(BuildContext context) {
-    ReferralReconLocalization localizations =
-        ReferralReconLocalization.of(context);
     final theme = Theme.of(context);
     final BorderSide borderSide = BorderSide(
       color: theme.colorScheme.outline,
@@ -40,8 +48,8 @@ class ReferralReconProjectFacilitySelectionPage extends StatelessWidget {
           body: ReactiveFormConsumer(
             builder: (context, form, _) {
               final filteredProjectFacilities =
-                  (projectFacilities ?? []).isNotEmpty
-                      ? projectFacilities.where((element) {
+                  (widget.projectFacilities ?? []).isNotEmpty
+                      ? widget.projectFacilities.where((element) {
                           final query =
                               form.control(_facilityName).value as String?;
                           if (query == null || query.isEmpty) return true;
