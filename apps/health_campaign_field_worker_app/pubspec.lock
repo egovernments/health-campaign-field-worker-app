@@ -489,10 +489,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "0e1ec8e4d2776fcc4a8118ac85043b8876466ec7399c14880f3d585ad3586ef6"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.0.2"
   digit_firebase_services:
     dependency: "direct main"
@@ -504,10 +503,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: a040c9c413436aeb953fdea3bc99ef618641189b06e8f155d84ac83ba8d40fd1
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.2"
   digit_showcase:
     dependency: "direct main"
@@ -1513,10 +1511,9 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "27f03bb51743cb9b25419fc1089507ee95693270a43233b92194298b1f87779c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
     version: "1.0.2"
   registration_delivery:
     dependency: "direct main"
@@ -2059,5 +2056,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <3.9.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"

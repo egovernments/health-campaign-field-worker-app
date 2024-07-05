@@ -142,6 +142,12 @@ class SearchBeneficiary {
 
   String get iconLabel => 'ICON_LABEL';
 
+  String get filterLabel => 'FILTER_LABEL';
+
+  String get clearFilter => 'CLEAR_FILTER';
+
+  String get applyFilter => 'APPLY_FILTER';
+
   String get yearsAbbr => 'YEARS_ABBR';
 
   String get monthsAbbr => 'MONTHS_ABBR';
