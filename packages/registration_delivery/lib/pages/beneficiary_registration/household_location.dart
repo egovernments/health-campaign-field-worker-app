@@ -400,8 +400,8 @@ class _HouseholdLocationPageState
 
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations.translate(
-            RegistrationDeliverySingleton().boundary!.code.toString()),
+        value: localizations
+            .translate(RegistrationDeliverySingleton().boundary!.name!),
         validators: [Validators.required],
       ),
       _addressLine1Key:

@@ -3,7 +3,8 @@ class Constants {
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
   ];
-
+  static RegExp mobileNumberRegExp =
+      RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
   final String dateFormat = 'dd/MM/yyyy';
   final String communityHealthWorker = 'Community Health Worker';
   final String deliveryTeam = 'Delivery Team';
