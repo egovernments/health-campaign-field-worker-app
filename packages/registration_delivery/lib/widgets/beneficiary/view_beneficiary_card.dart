@@ -124,17 +124,17 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             : null;
 
         final ageInYears = DigitDateUtils.calculateAge(
-          householdMember.headOfHousehold.dateOfBirth != null
+          e.dateOfBirth != null
               ? DigitDateUtils.getFormattedDateToDateTime(
-                    householdMember.headOfHousehold.dateOfBirth!,
+                    e.dateOfBirth!,
                   ) ??
                   DateTime.now()
               : DateTime.now(),
         ).years;
         final ageInMonths = DigitDateUtils.calculateAge(
-          householdMember.headOfHousehold.dateOfBirth != null
+          e.dateOfBirth != null
               ? DigitDateUtils.getFormattedDateToDateTime(
-                    householdMember.headOfHousehold.dateOfBirth!,
+                    e.dateOfBirth!,
                   ) ??
                   DateTime.now()
               : DateTime.now(),
@@ -278,8 +278,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                     householdMember.household.address?.pincode,
                   ].whereNotNull().take(2).join(' '),
                   subtitle: widget.distance != null
-                      ? '${householdMember.members.length} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                      : '${householdMember.members.length} ${householdMember.members.length == 1 ? 'Household Member' : 'Household Members'}',
+                      ? '${householdMember.members.length} ${householdMember.members.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                      : '${householdMember.members.length} ${householdMember.members.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
                   status: RegistrationDeliverySingleton().beneficiaryType ==
                           BeneficiaryType.individual
                       ? (tasks ?? []).isNotEmpty &&
@@ -351,7 +351,8 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     List<TaskModel>? taskData,
   ) {
     if (statusKeys.isNotEligible) {
-      return 'Not Eligible';
+      return localizations.translate(
+          i18.householdOverView.householdOverViewNotEligibleIconLabel);
     } else if (statusKeys.isBeneficiaryReferred) {
       return localizations.translate(Status.beneficiaryReferred.toValue());
     } else if (taskData != null) {

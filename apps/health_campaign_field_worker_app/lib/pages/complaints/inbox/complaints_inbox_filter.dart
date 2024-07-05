@@ -297,7 +297,11 @@ class _ComplaintsInboxFilterPageState
                                   formControlName: _complaintType,
                                   valueMapper: (value) {
                                     return localizations.translate(
-                                      value.snakeCase.toUpperCase().trim(),
+                                      value
+                                          .toString()
+                                          .trim()
+                                          .snakeCase
+                                          .toUpperCase(),
                                     );
                                   },
                                   emptyText: localizations
@@ -309,7 +313,8 @@ class _ComplaintsInboxFilterPageState
                                   form: formGroup,
                                   menuItems: locality.toList(),
                                   formControlName: _complaintLocality,
-                                  valueMapper: (value) => value.trim(),
+                                  valueMapper: (value) => localizations
+                                      .translate(value.toString().trim()),
                                   emptyText: localizations
                                       .translate(i18.common.noMatchFound),
                                 ),

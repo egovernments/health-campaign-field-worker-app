@@ -70,11 +70,9 @@
 
 * Updated intl version and added pubspec_override
 
-
 ## 0.0.3+9
 
 * Updated homepage url
-
 
 ## 0.0.3+10
 
@@ -104,6 +102,11 @@
 ## 1.0.0
 * Stable release
 
-
 ## 1.0.0+1
 * Stable release with searchable dropdown fix
+
+## 1.0.0+2
+* DigitTextField component update
+
+## 1.0.0+3
+* Capture and Hide Location Dialog added to utils 

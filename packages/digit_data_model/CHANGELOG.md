@@ -17,3 +17,7 @@
 ## 1.0.1
 
 * Added Service and Service Definition Bloc
+
+## 1.0.2
+
+* Added try catch for local repository to handle db lock

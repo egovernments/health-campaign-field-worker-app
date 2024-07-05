@@ -202,7 +202,10 @@ class _BoundarySelectionPageState
                                     DigitSyncDialog.show(
                                       context,
                                       type: DigitSyncDialogType.inProgress,
-                                      label: 'Loading',
+                                      label: localizations.translate(
+                                        i18.beneficiaryDetails
+                                            .dataDownloadInProgress,
+                                      ),
                                       barrierDismissible: false,
                                     ),
                                   },
@@ -568,7 +571,9 @@ class _BoundarySelectionPageState
                                                     }
                                                   }
                                                 },
-                                          child: const Text('Submit'),
+                                          child: Text(localizations.translate(
+                                            i18.common.coreCommonSubmit,
+                                          )),
                                         );
                                       },
                                     ),

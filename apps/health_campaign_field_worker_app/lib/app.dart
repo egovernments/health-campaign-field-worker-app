@@ -47,6 +47,12 @@ class MainApplication extends StatefulWidget {
 class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
   @override
+  void initState() {
+    super.initState();
+    requestDisableBatteryOptimization();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
@@ -132,7 +138,7 @@ class MainApplicationState extends State<MainApplication>
 
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
-                    firstLanguage = appConfig.languages?.last.value;
+                    firstLanguage = appConfig.languages?.lastOrNull?.value;
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(

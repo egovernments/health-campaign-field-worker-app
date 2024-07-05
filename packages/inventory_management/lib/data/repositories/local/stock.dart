@@ -15,19 +15,15 @@ class StockLocalRepository
     bool createOpLog = true,
     DataOperation dataOperation = DataOperation.create,
   }) async {
-    try {
+    return retryLocalCallOperation(() async {
       final stockCompanion = entity.companion.copyWith(
         transactionType: Value(entity.companion.transactionType.value),
       );
       await sql.batch((batch) {
         batch.insert(sql.stock, stockCompanion);
       });
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error in stock create: $e');
-      }
-    }
-    await super.create(entity);
+      await super.create(entity);
+    });
   }
 
   @override
@@ -35,8 +31,8 @@ class StockLocalRepository
     StockSearchModel query, [
     String? userId,
   ]) async {
-    var results = [];
-    try {
+    return retryLocalCallOperation<List<StockModel>>(() async {
+      var results = [];
       final selectQuery = sql.select(sql.stock).join([]);
       results = await (selectQuery
             ..where(
@@ -72,50 +68,46 @@ class StockLocalRepository
               ),
             ))
           .get();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error in stock search: $e');
-      }
-    }
-    return results.map((e) {
-      final data = e.readTable(sql.stock);
+      return results.map((e) {
+        final data = e.readTable(sql.stock);
 
-      final createdBy = data.auditCreatedBy;
-      final createdTime = data.auditCreatedTime;
+        final createdBy = data.auditCreatedBy;
+        final createdTime = data.auditCreatedTime;
 
-      return StockModel(
-        id: data.id,
-        tenantId: data.tenantId,
-        facilityId: data.facilityId,
-        productVariantId: data.productVariantId,
-        receiverId: data.receiverId,
-        senderId: data.senderId,
-        receiverType: data.receiverType,
-        senderType: data.senderType,
-        referenceId: data.referenceId,
-        referenceIdType: data.referenceIdType,
-        transactionType: data.transactionType,
-        transactionReason: data.transactionReason,
-        transactingPartyId: data.transactingPartyId,
-        transactingPartyType: data.transactingPartyType,
-        quantity: data.quantity,
-        waybillNumber: data.waybillNumber,
-        clientReferenceId: data.clientReferenceId,
-        isDeleted: data.isDeleted,
-        rowVersion: data.rowVersion,
-        auditDetails: createdTime == null || createdBy == null
-            ? null
-            : AuditDetails(createdTime: createdTime, createdBy: createdBy),
-        clientAuditDetails: createdTime == null || createdBy == null
-            ? null
-            : ClientAuditDetails(
-                createdTime: data.clientCreatedTime!,
-                createdBy: data.clientCreatedBy!,
-                lastModifiedBy: data.clientModifiedBy,
-                lastModifiedTime: data.clientModifiedTime,
-              ),
-      );
-    }).toList();
+        return StockModel(
+          id: data.id,
+          tenantId: data.tenantId,
+          facilityId: data.facilityId,
+          productVariantId: data.productVariantId,
+          receiverId: data.receiverId,
+          senderId: data.senderId,
+          receiverType: data.receiverType,
+          senderType: data.senderType,
+          referenceId: data.referenceId,
+          referenceIdType: data.referenceIdType,
+          transactionType: data.transactionType,
+          transactionReason: data.transactionReason,
+          transactingPartyId: data.transactingPartyId,
+          transactingPartyType: data.transactingPartyType,
+          quantity: data.quantity,
+          waybillNumber: data.waybillNumber,
+          clientReferenceId: data.clientReferenceId,
+          isDeleted: data.isDeleted,
+          rowVersion: data.rowVersion,
+          auditDetails: createdTime == null || createdBy == null
+              ? null
+              : AuditDetails(createdTime: createdTime, createdBy: createdBy),
+          clientAuditDetails: createdTime == null || createdBy == null
+              ? null
+              : ClientAuditDetails(
+                  createdTime: data.clientCreatedTime!,
+                  createdBy: data.clientCreatedBy!,
+                  lastModifiedBy: data.clientModifiedBy,
+                  lastModifiedTime: data.clientModifiedTime,
+                ),
+        );
+      }).toList();
+    });
   }
 
   @override
@@ -123,19 +115,21 @@ class StockLocalRepository
     StockModel entity, {
     bool createOpLog = true,
   }) async {
-    final stockCompanion = entity.companion;
+    return retryLocalCallOperation(() async {
+      final stockCompanion = entity.companion;
 
-    await sql.batch((batch) {
-      batch.update(
-        sql.stock,
-        stockCompanion,
-        where: (table) => table.clientReferenceId.equals(
-          entity.clientReferenceId,
-        ),
-      );
+      await sql.batch((batch) {
+        batch.update(
+          sql.stock,
+          stockCompanion,
+          where: (table) => table.clientReferenceId.equals(
+            entity.clientReferenceId,
+          ),
+        );
+      });
+
+      return super.update(entity, createOpLog: createOpLog);
     });
-
-    return super.update(entity, createOpLog: createOpLog);
   }
 
   @override

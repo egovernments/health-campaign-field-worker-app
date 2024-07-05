@@ -33,6 +33,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
   static const _emailId = 'emailId';
 
   bool isLoading = false;
+  bool isUpdate = false;
 
   @override
   void initState() {
@@ -95,14 +96,24 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
               if (isLoading) {
                 Navigator.of(context, rootNavigator: true).pop();
               }
+              if (isUpdate) {
+                DigitToast.show(context,
+                    options: DigitToastOptions(
+                        localizations
+                            .translate(i18.common.profileUpdateSuccess),
+                        false,
+                        theme));
+              }
               setState(() {
                 isLoading = false;
+                isUpdate = false;
               });
             },
             error: (error) {
               Navigator.of(context, rootNavigator: true).pop();
               setState(() {
                 isLoading = false;
+                isUpdate = false;
               });
               DigitToast.show(
                 context,
@@ -172,6 +183,9 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                   user: (value) => value.userModel,
                                 );
                                 if (user != null) {
+                                  setState(() {
+                                    isUpdate = true;
+                                  });
                                   final updatedUser = user.copyWith(
                                     gender: formGroup.control(_genderKey).value
                                         as String,
@@ -229,8 +243,8 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                               label: localizations.translate(
                                 i18.common.coreCommonMobileNumber,
                               ),
-                              minLength: 10,
                               maxLength: 10,
+                              readOnly: true,
                               validationMessages: {
                                 'mobileNumber': (object) =>
                                     localizations.translate(i18
@@ -251,7 +265,7 @@ class _ProfilePageState extends LocalizedState<ProfilePage> {
                                             localizations.translate(
                                               i18.common.coreCommonGender,
                                             ),
-                                            style: theme.textTheme.labelMedium,
+                                            style: theme.textTheme.titleMedium,
                                           ),
                                         ],
                                       ),

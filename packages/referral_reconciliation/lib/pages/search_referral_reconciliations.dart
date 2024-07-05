@@ -110,7 +110,7 @@ class _SearchReferralReconciliationsPageState
                                             controller: searchController,
                                             hintText: localizations.translate(
                                               i18.referralReconciliation
-                                                  .beneficiarySearchHintText,
+                                                  .referralSearchHintText,
                                             ),
                                             textCapitalization:
                                                 TextCapitalization.words,
@@ -138,7 +138,7 @@ class _SearchReferralReconciliationsPageState
                                         DigitInfoCard(
                                           description: localizations.translate(
                                             i18.referralReconciliation
-                                                .beneficiaryInfoDescription,
+                                                .referralInfoDescription,
                                           ),
                                           title: localizations.translate(
                                             i18.referralReconciliation

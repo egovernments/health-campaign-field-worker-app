@@ -1,10 +1,5 @@
 library app_utils;
 
-import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_delivery_mappers;
-import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
-import 'package:inventory_management/inventory_management.init.dart'
-    as inventory_mappers;
 import 'dart:async';
 import 'dart:io';
 
@@ -16,13 +11,19 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.init.dart'
+    as inventory_mappers;
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
+import 'package:registration_delivery/registration_delivery.init.dart'
+    as registration_delivery_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -39,6 +40,15 @@ import 'extensions/extensions.dart';
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
+
+Future<void> requestDisableBatteryOptimization() async {
+  bool isIgnoringBatteryOptimizations =
+      await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;
+
+  if (!isIgnoringBatteryOptimizations) {
+    await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+  }
+}
 
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
@@ -75,7 +85,8 @@ performBackgroundService({
   } else {
     if (!isRunning && isOnline) {
       service.startService();
-      if (context != null) {
+      if (context != null && context.mounted) {
+        requestDisableBatteryOptimization();
         DigitToast.show(
           context,
           options: DigitToastOptions(
@@ -361,23 +372,42 @@ initializeAllMappers() async {
 
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
-    switch (element.entityType) {
-      case DataModelType.household:
-      case DataModelType.individual:
-      case DataModelType.householdMember:
-      case DataModelType.projectBeneficiary:
-      case DataModelType.task:
-      case DataModelType.stock:
-      case DataModelType.stockReconciliation:
-      case DataModelType.service:
-      case DataModelType.complaints:
-      case DataModelType.sideEffect:
-      case DataModelType.referral:
-      case DataModelType.hFReferral:
-      case DataModelType.attendance:
-        return true;
-      default:
-        return false;
+    if (element.syncedDown == false && element.syncedUp == true) {
+      switch (element.entityType) {
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      switch (element.entityType) {
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.service:
+        case DataModelType.complaints:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+          return true;
+        default:
+          return false;
+      }
     }
   }).length;
 

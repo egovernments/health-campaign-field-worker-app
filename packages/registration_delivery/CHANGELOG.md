@@ -39,3 +39,14 @@
 * Moved service and service definition bloc to digit_data_model package
 * Removed downsync model
 * Added HouseholdDetailsBloc in registration_delivery_wrapper page
+* Updated digit_data_model to latest version
+
+## 1.0.2
+
+* Added try catch for local repository to handle db lock
+* Localisation support added for missing fields
+* Bug fixes and enhancements
+
+## 1.0.2+1
+
+* Get Precise location on Submitting latitude longitude details

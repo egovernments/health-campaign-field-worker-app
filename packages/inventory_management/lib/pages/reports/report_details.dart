@@ -42,6 +42,7 @@ class _InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
+  String? selectedFacilityId;
 
   /// Handles the selection of a facility and product variant from the form and triggers the loading of the corresponding inventory report data.
   ///
@@ -66,7 +67,7 @@ class _InventoryReportDetailsPageState
     final event = widget.reportType == InventoryReportType.reconciliation
         ? InventoryReportLoadStockReconciliationDataEvent(
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
+                ? selectedFacilityId!
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -77,7 +78,7 @@ class _InventoryReportDetailsPageState
         : InventoryReportLoadStockDataEvent(
             reportType: widget.reportType,
             facilityId: form.control(_facilityKey).value != null
-                ? (form.control(_facilityKey).value as FacilityModel).id
+                ? selectedFacilityId!
                 : '',
             productVariantId: form.control(_productVariantKey).value != null
                 ? (form.control(_productVariantKey).value
@@ -97,7 +98,7 @@ class _InventoryReportDetailsPageState
 
   FormGroup _form() {
     return fb.group({
-      _facilityKey: FormControl<FacilityModel>(
+      _facilityKey: FormControl<String>(
         validators: [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(),
@@ -224,9 +225,19 @@ class _InventoryReportDetailsPageState
                                                                     facilities))
                                                         as FacilityModel?;
 
-                                                    if (facility == null) {
+                                                    if (facility == null)
                                                       return;
-                                                    }
+                                                    form
+                                                            .control(_facilityKey)
+                                                            .value =
+                                                        localizations.translate(
+                                                      'FAC_${facility.id}',
+                                                    );
+
+                                                    setState(() {
+                                                      selectedFacilityId =
+                                                          facility.id;
+                                                    });
                                                     form
                                                         .control(_facilityKey)
                                                         .value = facility;
@@ -245,10 +256,6 @@ class _InventoryReportDetailsPageState
                                                     child: DigitTextFormField(
                                                       key: const Key(
                                                           _facilityKey),
-                                                      valueAccessor:
-                                                          FacilityValueAccessor(
-                                                        facilities,
-                                                      ),
                                                       label: localizations
                                                           .translate(
                                                         i18.stockReconciliationDetails
@@ -276,9 +283,21 @@ class _InventoryReportDetailsPageState
                                                                         facilities))
                                                             as FacilityModel?;
 
-                                                        if (facility == null) {
+                                                        if (facility == null)
                                                           return;
-                                                        }
+                                                        form
+                                                                .control(
+                                                                    _facilityKey)
+                                                                .value =
+                                                            localizations
+                                                                .translate(
+                                                          'FAC_${facility.id}',
+                                                        );
+
+                                                        setState(() {
+                                                          selectedFacilityId =
+                                                              facility.id;
+                                                        });
                                                         form
                                                             .control(
                                                                 _facilityKey)

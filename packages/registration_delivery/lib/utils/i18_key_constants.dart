@@ -113,6 +113,8 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+  String get locationCapturing => 'CAPTURING_LOCATION';
+  String get locationCaptured => 'LOCATION_CAPTURED';
 }
 
 class SearchBeneficiary {
@@ -225,6 +227,8 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+  String get householdMemberSingular => 'BENEFICIARY_HOUSEHOLD_MEMBER';
+  String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
 }
 
 class IndividualDetails {
@@ -260,6 +264,9 @@ class IndividualDetails {
 
   String get mobileNumberInvalidFormatValidationMessage =>
       'INDIVIDUAL_DETAILS_INVALID_MOBILE_NUMBER';
+
+  String get mobileNumberLengthValidationMessage =>
+      'INDIVIDUAL_DETAILS_MOBILE_NUMBER_LENGTH';
 
   String get yearsHintText => 'YEARS_HINT_TEXT';
   String get monthsHintText => 'MONTHS_HINT_TEXT';

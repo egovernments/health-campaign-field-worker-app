@@ -53,6 +53,7 @@ abstract class $InventoryRoute extends _i10.AutoRouterModule {
         routeData: routeData,
         child: _i2.InventoryFacilitySelectionPage(
           key: args.key,
+          appLocalizations: args.appLocalizations,
           facilities: args.facilities,
         ),
       );
@@ -202,12 +203,14 @@ class InventoryFacilitySelectionRoute
     extends _i10.PageRouteInfo<InventoryFacilitySelectionRouteArgs> {
   InventoryFacilitySelectionRoute({
     _i11.Key? key,
+    _i12.InventoryLocalization? appLocalizations,
     required List<_i13.FacilityModel> facilities,
     List<_i10.PageRouteInfo>? children,
   }) : super(
           InventoryFacilitySelectionRoute.name,
           args: InventoryFacilitySelectionRouteArgs(
             key: key,
+            appLocalizations: appLocalizations,
             facilities: facilities,
           ),
           initialChildren: children,
@@ -222,16 +225,19 @@ class InventoryFacilitySelectionRoute
 class InventoryFacilitySelectionRouteArgs {
   const InventoryFacilitySelectionRouteArgs({
     this.key,
+    this.appLocalizations,
     required this.facilities,
   });
 
   final _i11.Key? key;
 
+  final _i12.InventoryLocalization? appLocalizations;
+
   final List<_i13.FacilityModel> facilities;
 
   @override
   String toString() {
-    return 'InventoryFacilitySelectionRouteArgs{key: $key, facilities: $facilities}';
+    return 'InventoryFacilitySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations, facilities: $facilities}';
   }
 }
 

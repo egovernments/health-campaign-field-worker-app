@@ -39,6 +39,16 @@
 
 * Initial stable Release
 
-## 1.0.0+1
+## 1.0.1
 
 * Bug fixes and enhancements
+* Updated digit_components and digit_scanner to latest versions
+
+## 1.0.2
+
+* Localization support added for missing fields
+* Added try catch for local repository to handle db lock
+
+## 1.0.2+1
+
+* Get Precise location on Submitting latitude longitude details

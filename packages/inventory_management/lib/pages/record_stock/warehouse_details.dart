@@ -1,13 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:digit_data_model/data_model.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
@@ -50,7 +50,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
       fb.group(<String, Object>{
         _dateOfEntryKey: FormControl<DateTime>(value: DateTime.now()),
         _administrativeUnitKey: FormControl<String>(
-          value: InventorySingleton().boundaryName,
+          value: localizations.translate(InventorySingleton().boundaryName),
         ),
         _warehouseKey: FormControl<String>(
           validators: [Validators.required],
@@ -79,9 +79,7 @@ class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
             },
             builder: (ctx, facilityState) {
               final facilities = facilityState.whenOrNull(
-                    fetched: (
-                      facilities, allFacilities
-                    ) {
+                    fetched: (facilities, allFacilities) {
                       final teamFacilities = [
                         FacilityModel(
                           id: 'Delivery Team',
