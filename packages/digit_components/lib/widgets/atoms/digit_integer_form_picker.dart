@@ -93,7 +93,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
     VoidCallback? onPressed,
   }) =>
       SizedBox(
-        width: 100,
+        width: buttonWidth ?? 100,
         height: kPadding*5,
         child: Material(
           shape: border,
