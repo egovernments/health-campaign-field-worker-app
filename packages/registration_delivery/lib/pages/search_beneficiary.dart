@@ -264,7 +264,7 @@ class _SearchBeneficiaryPageState
                               selectedFilters.isNotEmpty
                                   // &&
                                   //     searchHouseholdsState
-                                  //         .householdMembers.isNotEmpty
+                                  //         .householdMembers.isNotEmpty // [TODO: Uncomment this line after implementing the search results based on search results and filters count]
                                   ? Align(
                                       alignment: Alignment.topLeft,
                                       child: SingleChildScrollView(
