@@ -390,28 +390,27 @@ packages:
       path: "../digit_components"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.0+3"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   digit_scanner:
     dependency: "direct main"
     description:
       path: "../digit_scanner"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.2"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_showcase"
+      relative: true
+    source: path
     version: "1.0.0"
   dio:
     dependency: "direct main"

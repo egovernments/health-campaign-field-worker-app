@@ -13,46 +13,6 @@ import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
 
-/// This class contains custom validators for form controls.
-class CustomValidator {
-  /// Validates that control's value must be `true`
-  static Map<String, dynamic>? requiredMin(
-    AbstractControl<dynamic> control,
-  ) {
-    return control.value == null ||
-            control.value.toString().length >= 2 ||
-            control.value.toString().trim().isEmpty
-        ? null
-        : {'required': true};
-  }
-
-  static Map<String, dynamic>? validMobileNumber(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return null;
-    }
-
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
-
-    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
-
-    if (control.value.toString().length < 10) return {'mobileNumber': true};
-
-    return {'mobileNumber': true};
-  }
-
-  static Map<String, dynamic>? minPhoneNumValidation(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value != null &&
-        control.value.toString().isNotEmpty &&
-        control.value.toString().length < 10) {
-      return {'minLength': true};
-    }
-  }
-}
-
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
     return false;
