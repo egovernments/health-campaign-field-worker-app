@@ -10,6 +10,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
   final String label;
   final FormGroup form;
   final String formControlName;
+  final double? buttonWidth;
   const DigitIntegerFormPicker({
     super.key,
     this.minimum,
@@ -19,6 +20,7 @@ class DigitIntegerFormPicker extends StatelessWidget {
     this.hint,
     required this.form,
     required this.label,
+    this.buttonWidth,
   });
 
   @override
@@ -57,14 +59,18 @@ class DigitIntegerFormPicker extends StatelessWidget {
                     : form.control(formControlName).value -= 1,
               ),
               Expanded(
-                child: ReactiveTextField(
-                  readOnly: true,
-                  textAlign: TextAlign.center,
-                  formControlName: formControlName,
-                  decoration: InputDecoration(
-                    labelText: hint,
+                child: SizedBox(
+                  height: kPadding*5,
+                  child: ReactiveTextField(
+
+                    readOnly: true,
+                    textAlign: TextAlign.center,
+                    formControlName: formControlName,
+                    decoration: InputDecoration(
+                      labelText: hint,
+                    ),
+                    keyboardType: TextInputType.number,
                   ),
-                  keyboardType: TextInputType.number,
                 ),
               ),
               _buildButton(context,
@@ -86,8 +92,9 @@ class DigitIntegerFormPicker extends StatelessWidget {
     required IconData icon,
     VoidCallback? onPressed,
   }) =>
-      AspectRatio(
-        aspectRatio: 1,
+      SizedBox(
+        width: 100,
+        height: kPadding*5,
         child: Material(
           shape: border,
           color: Theme.of(context).colorScheme.background,
