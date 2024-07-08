@@ -1,6 +1,5 @@
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:flutter/material.dart';
-
 import '../../theme/colors.dart';
 
 class TextBlock extends StatelessWidget {
@@ -29,40 +28,55 @@ class TextBlock extends StatelessWidget {
     this.spacing = kPadding,
   }) : super(key: key);
 
+  List<Widget> _conditionalRender(String? text, TextStyle? style, {bool addSpacing = false}) {
+    if (text == null) return [];
+    List<Widget> children = [
+      Text(
+        text,
+        style: style,
+      ),
+    ];
+    if (addSpacing) children.add(SizedBox(height: spacing));
+    return children;
+  }
+
+  List<Widget> _buildTextBlocks(BuildContext context) {
+    final theme = Theme.of(context);
+    final List<Widget> blocks = [];
+
+    blocks.addAll(_conditionalRender(
+      caption,
+      captionStyle ?? theme.textTheme.labelSmall?.copyWith(color: const DigitColors().davyGray),
+      addSpacing: caption != null && (heading != null || subHeading != null || body != null),
+    ));
+
+    blocks.addAll(_conditionalRender(
+      heading,
+      headingStyle ?? theme.textTheme.displayMedium?.copyWith(color: const DigitColors().woodsmokeBlack),
+      addSpacing: heading != null && (subHeading != null || body != null),
+    ));
+
+    blocks.addAll(_conditionalRender(
+      subHeading,
+      subHeadingStyle ?? theme.textTheme.headlineMedium?.copyWith(color: const DigitColors().davyGray),
+      addSpacing: subHeading != null && body != null,
+    ));
+
+    blocks.addAll(_conditionalRender(
+      body,
+      bodyStyle ?? theme.textTheme.bodyLarge?.copyWith(color: const DigitColors().davyGray),
+    ));
+
+    return blocks;
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    final theme = Theme.of(context);
-
     return Padding(
       padding: padding ?? const EdgeInsets.symmetric(vertical: kPadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (caption != null)
-            Text(
-              caption!,
-              style: captionStyle ?? theme.textTheme.labelSmall?.copyWith(color: const DigitColors().davyGray),
-            ),
-          if (caption != null)  SizedBox(height: spacing),
-          if (heading != null)
-            Text(
-              heading!,
-              style: headingStyle ?? theme.textTheme.displayMedium?.copyWith(color: const DigitColors().woodsmokeBlack),
-            ),
-          if (heading != null && (subHeading != null || body != null)) SizedBox(height: spacing),
-          if (subHeading != null)
-            Text(
-              subHeading!,
-              style: subHeadingStyle ?? theme.textTheme.headlineMedium?.copyWith(color: const DigitColors().davyGray),
-            ),
-          if (subHeading != null && body != null) SizedBox(height: spacing),
-          if (body != null)
-            Text(
-              body!,
-              style: bodyStyle ?? theme.textTheme.bodyLarge?.copyWith(color: const DigitColors().davyGray),
-            ),
-        ],
+        children: _buildTextBlocks(context),
       ),
     );
   }
