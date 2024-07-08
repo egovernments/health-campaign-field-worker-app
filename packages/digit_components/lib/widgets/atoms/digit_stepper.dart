@@ -166,7 +166,7 @@ class DigitStepper extends StatelessWidget {
         loadingAnimation: loadingAnimation,
         padding: padding,
         showTitle: showTitle,
-        stepAnimationCurve: stepAnimationCurve!,
+        stepAnimationCurve: stepAnimationCurve ?? stepReachedAnimationEffect ?? Curves.easeInOut,
         stepAnimationDuration:
             stepAnimationDuration ?? stepReachedAnimationDuration,
         stepBorderRadius: stepBorderRadius,

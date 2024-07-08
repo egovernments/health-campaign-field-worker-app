@@ -390,21 +390,21 @@ packages:
       path: "../digit_components"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.0+3"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   digit_scanner:
     dependency: "direct main"
     description:
       path: "../digit_scanner"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.2"
   dio:
     dependency: "direct main"
     description:
