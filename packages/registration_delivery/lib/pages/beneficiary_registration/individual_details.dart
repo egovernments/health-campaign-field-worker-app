@@ -787,7 +787,8 @@ class _IndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          Validators.minLength(2),
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery,
@@ -812,7 +813,7 @@ class _IndividualDetailsPageState
         validators: [
           Validators.pattern(Constants.mobileNumberRegExp,
               validationMessage:
-              localizations.translate(i18.common.coreCommonMobileNumber))
+                  localizations.translate(i18.common.coreCommonMobileNumber))
         ],
       )
     });
