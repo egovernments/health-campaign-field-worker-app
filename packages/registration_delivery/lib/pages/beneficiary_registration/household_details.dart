@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -214,13 +215,14 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: kPadding),
-                          child: Text(
-                            localizations.translate(
-                              i18.householdDetails.householdDetailsLabel,
-                            ),
-                            style: theme.textTheme.displayMedium,
+                        TextBlock(
+                          padding:  const EdgeInsets.only(top: kPadding),
+                          heading: localizations.translate(
+                            i18.householdDetails.householdDetailsLabel,
+                          ),
+                          headingStyle: theme.textTheme.displayMedium,
+                          body: localizations.translate(
+                            i18.householdDetails.householdDetailsDescription,
                           ),
                         ),
                         Column(children: [
