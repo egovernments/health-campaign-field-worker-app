@@ -13,6 +13,19 @@ import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
 
+class CustomValidator {
+  /// Validates that control's value must be `true`
+  static Map<String, dynamic>? requiredMin(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            control.value.toString().length >= 2 ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'required': true};
+  }
+}
+
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
   if (currentCycle == null) {
     return false;

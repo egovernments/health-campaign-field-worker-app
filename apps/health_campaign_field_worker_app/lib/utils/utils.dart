@@ -41,6 +41,19 @@ export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
+class CustomValidator {
+  /// Validates that control's value must be `true`
+  static Map<String, dynamic>? requiredMin(
+      AbstractControl<dynamic> control,
+      ) {
+    return control.value == null ||
+        control.value.toString().length >= 2 ||
+        control.value.toString().trim().isEmpty
+        ? null
+        : {'required': true};
+  }
+}
+
 Future<void> requestDisableBatteryOptimization() async {
   bool isIgnoringBatteryOptimizations =
       await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;
