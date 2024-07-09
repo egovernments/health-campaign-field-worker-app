@@ -327,6 +327,8 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+  String get noOfPregnantWomenCountLabel => 'NO_OF_PREGNANT_WOMEN_LABEL';
+  String get noOfChildrenBelow5YearsLabel => 'NO_OF_CHILDREN_BELOW_5_YR_LABEL';
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 }
@@ -670,6 +672,12 @@ class HouseholdDetailsShowcase {
   String get numberOfMembersLivingInHousehold {
     return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_HOUSEHOLD';
   }
+
+  String get numberOfPregnantWomenInHousehold =>
+      'HOUSEHOLD_DETAILS_SHOWCASE_NO_OF_PREGNANT_WOMEN_IN_HOUSEHOLD';
+
+  String get numberOfChildrenBelow5InHousehold =>
+      'HOUSEHOLD_DETAILS_SHOWCASE_NO_OF_CHILD_BELOW_5_IN_HOUSEHOLD';
 }
 
 class IndividualDetailsShowcase {
