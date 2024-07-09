@@ -96,7 +96,14 @@ class DigitScannerUtils {
     setText('');
 
     // Process the image to detect barcodes
-    final barcodes = await barcodeScanner.processImage(inputImage);
+    final barcodes;
+
+    try {
+      barcodes = await barcodeScanner.processImage(inputImage);
+    } catch (e) {
+      debugPrint('Error processing image: $e');
+      return;
+    }
 
     // Check if the input image has valid metadata for size and rotation
     if (inputImage.metadata?.size != null &&
