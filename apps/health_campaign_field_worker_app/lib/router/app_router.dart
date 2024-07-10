@@ -127,6 +127,10 @@ class AppRouter extends _$AppRouter {
                     initial: true,
                   ),
                   AutoRoute(
+                    page: BeneficiaryChecklistRoute.page,
+                    path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(
                     page: BeneficiaryDetailsRoute.page,
                     path: 'beneficiary-details',
                   ),

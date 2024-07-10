@@ -16,6 +16,7 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:registration_delivery/pages/close_household/close_household_details.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
@@ -460,6 +461,19 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.closeHouseHold: homeShowcaseData.closeHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home_filled,
+          label: i18.home.closeHouseHold,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const CloseHouseholdDetailsPage(),
+              ),
+            );
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -494,6 +508,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.db,
+      i18.home.closeHouseHold,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -502,11 +517,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db || element == i18.home.closeHouseHold)
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) => f != i18.home.db && f != i18.home.closeHouseHold)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
