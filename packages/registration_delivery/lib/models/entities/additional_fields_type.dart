@@ -39,4 +39,8 @@ enum AdditionalFieldsType {
   latitude,
   @MappableValue("longitude")
   longitude,
+  @MappableValue("pregnantWomen")
+  pregnantWomen,
+  @MappableValue("children")
+  children,
 }
