@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
@@ -31,6 +32,8 @@ class HouseHoldDetailsPage extends LocalizedStatefulWidget {
 class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _dateOfRegistrationKey = 'dateOfRegistration';
   static const _memberCountKey = 'memberCount';
+  static const _pregnantWomenCountKey = 'pregnantWomenCount';
+  static const _childrenCountKey = 'childrenCount';
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,11 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
 
                     final dateOfRegistration =
                         form.control(_dateOfRegistrationKey).value as DateTime;
+                    //[TODO: Use pregnant women form value based on project config
+                    final pregnantWomen =
+                        form.control(_pregnantWomenCountKey).value as int;
+                    final children =
+                        form.control(_childrenCountKey).value as int;
 
                     registrationState.maybeWhen(
                       orElse: () {
@@ -102,13 +110,46 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         );
 
                         household = household.copyWith(
-                          memberCount: memberCount,
-                          address: addressModel,
-                        );
+                            memberCount: memberCount,
+                            clientAuditDetails: ClientAuditDetails(
+                              createdBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid
+                                  .toString(),
+                              createdTime: context.millisecondsSinceEpoch(),
+                              lastModifiedBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid
+                                  .toString(),
+                              lastModifiedTime:
+                                  context.millisecondsSinceEpoch(),
+                            ),
+                            auditDetails: AuditDetails(
+                              createdBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid
+                                  .toString(),
+                              createdTime: context.millisecondsSinceEpoch(),
+                              lastModifiedBy: RegistrationDeliverySingleton()
+                                  .loggedInUserUuid
+                                  .toString(),
+                              lastModifiedTime:
+                                  context.millisecondsSinceEpoch(),
+                            ),
+                            address: addressModel,
+                            additionalFields:
+                                HouseholdAdditionalFields(version: 1, fields: [
+                              //[TODO: Use pregnant women form value based on project config
+                              AdditionalField(
+                                AdditionalFieldsType.pregnantWomen.toValue(),
+                                pregnantWomen,
+                              ),
+                              AdditionalField(
+                                AdditionalFieldsType.children.toValue(),
+                                children,
+                              )
+                            ]));
 
                         bloc.add(
                           BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                            household: household!,
+                            household: household,
                             registrationDate: dateOfRegistration,
                           ),
                         );
@@ -125,27 +166,59 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         loading,
                       ) {
                         var household = householdModel.copyWith(
-                          memberCount: memberCount,
-                          address: addressModel,
-                          clientAuditDetails:
-                              (householdModel.clientAuditDetails?.createdBy !=
-                                          null &&
-                                      householdModel.clientAuditDetails
-                                              ?.createdTime !=
-                                          null)
-                                  ? ClientAuditDetails(
-                                      createdBy: householdModel
-                                          .clientAuditDetails!.createdBy,
-                                      createdTime: householdModel
-                                          .clientAuditDetails!.createdTime,
-                                      lastModifiedBy: householdModel
-                                          .clientAuditDetails!.lastModifiedBy,
-                                      lastModifiedTime:
-                                          DateTime.now().millisecondsSinceEpoch,
-                                    )
-                                  : null,
-                          rowVersion: householdModel.rowVersion,
-                        );
+                            memberCount: memberCount,
+                            address: addressModel,
+                            clientAuditDetails: (householdModel
+                                            .clientAuditDetails?.createdBy !=
+                                        null &&
+                                    householdModel
+                                            .clientAuditDetails?.createdTime !=
+                                        null)
+                                ? ClientAuditDetails(
+                                    createdBy: householdModel
+                                        .clientAuditDetails!.createdBy,
+                                    createdTime: householdModel
+                                        .clientAuditDetails!.createdTime,
+                                    lastModifiedBy: householdModel
+                                        .clientAuditDetails!.lastModifiedBy,
+                                    lastModifiedTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                  )
+                                : null,
+                            rowVersion: householdModel.rowVersion,
+                            additionalFields: HouseholdAdditionalFields(
+                                version:
+                                    householdModel.additionalFields?.version ??
+                                        1,
+                                fields: [
+                                  //[TODO: Use pregnant women form value based on project config
+                                  AdditionalField(
+                                    AdditionalFieldsType.pregnantWomen
+                                        .toValue(),
+                                    int.tryParse(householdModel
+                                            .additionalFields?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType
+                                                    .pregnantWomen
+                                                    .toValue())
+                                            .first
+                                            .value) ??
+                                        pregnantWomen,
+                                  ),
+                                  AdditionalField(
+                                    AdditionalFieldsType.children.toValue(),
+                                    int.tryParse(householdModel
+                                            .additionalFields?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType.children
+                                                    .toValue())
+                                            .first
+                                            .value) ??
+                                        children,
+                                  )
+                                ]));
 
                         bloc.add(
                           BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
@@ -256,6 +329,35 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               incrementer: true,
                             ),
                           ),
+                          //[TODO: Use pregnant women form value based on project config
+                          householdDetailsShowcaseData
+                              .numberOfPregnantWomenInHousehold
+                              .buildWith(
+                            child: DigitIntegerFormPicker(
+                              minimum: 1,
+                              form: form,
+                              formControlName: _pregnantWomenCountKey,
+                              label: localizations.translate(
+                                i18.householdDetails
+                                    .noOfPregnantWomenCountLabel,
+                              ),
+                              incrementer: true,
+                            ),
+                          ),
+                          householdDetailsShowcaseData
+                              .numberOfChildrenBelow5InHousehold
+                              .buildWith(
+                            child: DigitIntegerFormPicker(
+                              minimum: 1,
+                              form: form,
+                              formControlName: _childrenCountKey,
+                              label: localizations.translate(
+                                i18.householdDetails
+                                    .noOfChildrenBelow5YearsLabel,
+                              ),
+                              incrementer: true,
+                            ),
+                          ),
                         ]),
                         const SizedBox(height: 16),
                       ],
@@ -288,6 +390,20 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
       _dateOfRegistrationKey:
           FormControl<DateTime>(value: registrationDate, validators: []),
       _memberCountKey: FormControl<int>(value: household?.memberCount ?? 1),
+      _pregnantWomenCountKey: FormControl<int>(
+          value: int.tryParse(household?.additionalFields?.fields
+                  .where((h) =>
+                      h.key == AdditionalFieldsType.pregnantWomen.toValue())
+                  .first
+                  .value) ??
+              0),
+      _childrenCountKey: FormControl<int>(
+          value: int.tryParse(household?.additionalFields?.fields
+                  .where(
+                      (h) => h.key == AdditionalFieldsType.children.toValue())
+                  .first
+                  .value) ??
+              0)
     });
   }
 }
