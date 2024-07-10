@@ -477,7 +477,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 );
                                               },
                                               initialSelection: controller[index].text=='true' ?  [true] : controller[index].text=='false' ?[false] : [],
-                                              options: const [true, false],
+                                              options: const [true, false], // TODO: need to update
                                               onSelectionChanged: (curValue) {
                                                 if(curValue.isNotEmpty){
                                                   context
