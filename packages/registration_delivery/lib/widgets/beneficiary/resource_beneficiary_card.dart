@@ -1,4 +1,5 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -54,24 +55,28 @@ class _ResourceBeneficiaryCardState
               return productState.maybeWhen(
                 orElse: () => const Offstage(),
                 fetched: (productVariants) {
-                  return DigitReactiveSearchDropdown<ProductVariantModel>(
-                    label: localizations.translate(
-                      i18.individualDetails.idTypeLabelText,
-                    ),
-                    form: widget.form,
-                    menuItems: productVariants,
-                    formControlName: 'resourceDelivered.${widget.cardIndex}',
-                    valueMapper: (value) {
-                      return localizations.translate(
-                        value.sku ?? value.id,
-                      );
-                    },
-                    isRequired: true,
-                    validationMessage: localizations.translate(
-                      i18.common.corecommonRequired,
-                    ),
-                    emptyText: localizations.translate(i18.common.noMatchFound),
-                  );
+                  return
+                    SelectionBox<ProductVariantModel>(
+                      width: 116,
+                      options: productVariants,
+                      onSelectionChanged: (selectedOptions) {
+                        if (selectedOptions.isNotEmpty) {
+                          var selectedOption = selectedOptions.first;
+                          widget.form.control('resourceDelivered.${widget.cardIndex}').value = selectedOption;
+                        }else{
+                          widget.form.control('resourceDelivered.${widget.cardIndex}').value = null;
+                        }
+                      },
+                      initialSelection: widget.form.control('resourceDelivered.${widget.cardIndex}').value != null ? [
+                        widget.form.control('resourceDelivered.${widget.cardIndex}').value
+                      ] : [],
+                      valueMapper: (value) {
+                        return localizations.translate(
+                          value.sku ?? value.id,
+                        );
+                      },
+                      allowMultipleSelection: false,
+                    );
                 },
               );
             },
@@ -84,6 +89,7 @@ class _ResourceBeneficiaryCardState
               i18.deliverIntervention.quantityDistributedLabel,
             ),
             minimum: 1,
+
           ),
           SizedBox(
             child: Align(
