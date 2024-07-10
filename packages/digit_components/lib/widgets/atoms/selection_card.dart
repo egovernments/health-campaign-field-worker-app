@@ -6,7 +6,7 @@ class SelectionBox<T> extends StatefulWidget {
   final String? errorMessage;
   final List<T> options;
   final Function(List<T>) onSelectionChanged;
-  final List<T> initialSelection;
+  final List<T>? initialSelection;
   final bool allowMultipleSelection;
   final String Function(T) valueMapper;
 
@@ -16,7 +16,7 @@ class SelectionBox<T> extends StatefulWidget {
     this.errorMessage,
     required this.options,
     required this.onSelectionChanged,
-    this.initialSelection = const [],
+    this.initialSelection,
     this.allowMultipleSelection = true,
     required this.valueMapper,
   }) : super(key: key);
@@ -26,12 +26,14 @@ class SelectionBox<T> extends StatefulWidget {
 }
 
 class _SelectionBoxState<T> extends State<SelectionBox<T>> {
-  late List<T> _selectedOptions = [];
+  final List<T> _selectedOptions = [];
 
   @override
   void initState() {
     super.initState();
-    _selectedOptions = widget.initialSelection;
+    if(widget.initialSelection != null) {
+      _selectedOptions.addAll(widget.initialSelection!);
+    }
   }
 
   void _onOptionTap(T option) {
@@ -50,8 +52,8 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
           _selectedOptions.add(option);
         }
       }
-      widget.onSelectionChanged(_selectedOptions);
     });
+    widget.onSelectionChanged(_selectedOptions);
   }
 
   Widget _buildOption(T option) {
