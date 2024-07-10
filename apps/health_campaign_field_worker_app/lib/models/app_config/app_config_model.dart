@@ -89,7 +89,10 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
-    @JsonKey(name: 'FIREBASE_CONFIG') required List<FirebaseConfig>? firebaseConfig,
+    @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+    List<CommonMasterModel>? houseStructureTypes,
+    @JsonKey(name: 'FIREBASE_CONFIG')
+    required List<FirebaseConfig>? firebaseConfig,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
