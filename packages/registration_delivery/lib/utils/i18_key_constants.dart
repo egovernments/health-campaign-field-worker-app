@@ -283,6 +283,8 @@ class HouseholdLocation {
 
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 
+  String get householdLocationDescriptionText => 'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
+
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
 
   String get administrationAreaRequiredValidation =>
@@ -320,6 +322,8 @@ class HouseholdDetails {
   const HouseholdDetails();
 
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
+
+  String get householdDetailsDescription => 'HOUSEHOLD_DETAILS_DESCRIPTION';
 
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
 
