@@ -719,6 +719,10 @@ class _HouseholdOverviewPageState
               ? Icons.check_circle
               : Icons.info_rounded)
           : Icons.check_circle;
+    } else {
+      textLabel = i18.householdOverView.householdOverViewNotRegisteredIconLabel;
+      color = DigitTheme.instance.colorScheme.error;
+      icon = Icons.info_rounded;
     }
 
     return {'textLabel': textLabel, 'color': color, 'icon': icon};

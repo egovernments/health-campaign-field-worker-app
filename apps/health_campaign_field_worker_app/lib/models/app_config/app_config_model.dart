@@ -87,6 +87,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'TRANSPORT_TYPES')
     required List<TransportTypes> transportTypes,
     @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
+    @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS') List<SearchHouseHoldFilters>? searchHouseHoldFilters,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
     @JsonKey(name: 'FIREBASE_CONFIG') required List<FirebaseConfig>? firebaseConfig,
@@ -318,6 +319,18 @@ class CallSupportList with _$CallSupportList {
 
   factory CallSupportList.fromJson(Map<String, dynamic> json) =>
       _$CallSupportListFromJson(json);
+}
+
+@freezed
+class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
+  factory SearchHouseHoldFilters({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _SearchHouseHoldFilters;
+
+  factory SearchHouseHoldFilters.fromJson(Map<String, dynamic> json) =>
+      _$SearchHouseHoldFiltersFromJson(json);
 }
 
 @freezed

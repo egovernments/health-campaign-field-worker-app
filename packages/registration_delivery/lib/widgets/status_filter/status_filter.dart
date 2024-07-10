@@ -7,7 +7,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 
 class StatusFilter extends LocalizedStatefulWidget {
   final List<Status> status;
-  final Set<String>? selectedFilters;
+  final List<Status>? selectedFilters;
   const StatusFilter({
     super.key,
     super.appLocalizations,
@@ -20,11 +20,11 @@ class StatusFilter extends LocalizedStatefulWidget {
 }
 
 class _StatusFilterState extends LocalizedState<StatusFilter> {
-  Set<String> selectedButtons = {};
+  List<Status> selectedButtons = [];
 
   @override
   void initState() {
-    selectedButtons = widget.selectedFilters ?? {};
+    selectedButtons = widget.selectedFilters ?? [];
     super.initState();
   }
 
@@ -48,7 +48,7 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
                 shrinkWrap: true,
                 itemCount: widget.status.length,
                 itemBuilder: (context, index) =>
-                    _buildButton(widget.status[index].toValue())),
+                    _buildButton(widget.status[index])),
           ),
           const SizedBox(
             height: kPadding,
@@ -90,7 +90,7 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
     );
   }
 
-  void selectButton(String button) {
+  void selectButton(Status button) {
     setState(() {
       if (selectedButtons.contains(button)) {
         selectedButtons.remove(button);
@@ -100,7 +100,7 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
     });
   }
 
-  Widget _buildButton(String label) {
+  Widget _buildButton(Status label) {
     bool isSelected = selectedButtons.contains(label);
     return GestureDetector(
       onTap: () => selectButton(label),
@@ -112,7 +112,7 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
           borderRadius: BorderRadius.circular(kPadding / 2),
         ),
         child: Text(
-          label,
+          localizations.translate(label.toValue()),
           style: TextStyle(
             color: isSelected
                 ? const DigitColors().white

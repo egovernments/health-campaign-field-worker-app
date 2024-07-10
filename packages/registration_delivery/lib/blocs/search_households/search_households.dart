@@ -14,6 +14,7 @@ import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
+import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/typedefs.dart';
 
@@ -229,6 +230,13 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required final bool isProximityEnabled,
     required HouseholdModel householdModel,
   }) = SearchHouseholdsByHouseholdsEvent;
+
+  const factory SearchHouseholdsEvent.searchByStatus({
+    required String projectId,
+    required final int offset,
+    required final int limit,
+    required List<Status> status,
+  }) = SearchHouseholdsByStatusEvent;
 
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,

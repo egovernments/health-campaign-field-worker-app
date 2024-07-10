@@ -304,6 +304,7 @@ class RegistrationDeliverySingleton {
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
   List<String>? _symptomsTypes;
+  List<String>? _searchHouseHoldFilter;
   List<String>? _referralReasons;
 
   void setBoundary({required BoundaryModel boundary}) {
@@ -328,6 +329,7 @@ class RegistrationDeliverySingleton {
       required List<String>? householdMemberDeletionReasonOptions,
       required List<String>? deliveryCommentOptions,
       required List<String>? symptomsTypes,
+      required List<String>? searchHouseHoldFilter,
       required List<String>? referralReasons}) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -342,6 +344,7 @@ class RegistrationDeliverySingleton {
         householdMemberDeletionReasonOptions;
     _deliveryCommentOptions = deliveryCommentOptions;
     _symptomsTypes = symptomsTypes;
+    _searchHouseHoldFilter = searchHouseHoldFilter;
     _referralReasons = referralReasons;
   }
 
@@ -367,6 +370,7 @@ class RegistrationDeliverySingleton {
       _householdMemberDeletionReasonOptions;
   List<String>? get deliveryCommentOptions => _deliveryCommentOptions;
   List<String>? get symptomsTypes => _symptomsTypes;
+  List<String>? get searchHouseHoldFilter => _searchHouseHoldFilter;
   List<String>? get referralReasons => _referralReasons;
 }
 

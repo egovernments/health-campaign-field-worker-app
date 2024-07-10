@@ -37,7 +37,7 @@ class _SearchBeneficiaryPageState
 
   double lat = 0.0;
   double long = 0.0;
-  Set<String> selectedFilters = {};
+  List<Status> selectedFilters = [];
 
   SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
     loading: false,
@@ -104,6 +104,17 @@ class _SearchBeneficiaryPageState
                   offset: blocWrapper.searchByHeadBloc.state.offset,
                   limit: blocWrapper.searchByHeadBloc.state.limit,
                 ));
+              } else if (metrics.atEdge &&
+                  selectedFilters.isNotEmpty &&
+                  metrics.pixels != 0) {
+                blocWrapper.statusSearchBloc.add(
+                  SearchHouseholdsEvent.searchByStatus(
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    offset: blocWrapper.statusSearchBloc.state.offset,
+                    limit: blocWrapper.statusSearchBloc.state.limit,
+                    status: selectedFilters,
+                  ),
+                );
               }
             }
             // Return true to allow the notification to continue to be dispatched to further ancestors.
@@ -262,9 +273,6 @@ class _SearchBeneficiaryPageState
                                 ),
                               ),
                               selectedFilters.isNotEmpty
-                                  // &&
-                                  //     searchHouseholdsState
-                                  //         .householdMembers.isNotEmpty // [TODO: Uncomment this line after implementing the search results based on search results and filters count]
                                   ? Align(
                                       alignment: Alignment.topLeft,
                                       child: SingleChildScrollView(
@@ -290,14 +298,18 @@ class _SearchBeneficiaryPageState
                                                     ),
                                                     child: Row(
                                                       children: [
-                                                        Text(filter,
+                                                        Text(
+                                                            localizations
+                                                                .translate(filter
+                                                                    .toValue()),
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
-                                                        Text('(12)',
+                                                        Text(
+                                                            '(${searchHouseholdsState.householdMembers.length})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
-                                                                    .davyGray)), // [TODO: Replace with search results based on search results and filters count]
+                                                                    .davyGray)),
                                                         const SizedBox(
                                                             width: kPadding),
                                                         GestureDetector(
@@ -307,6 +319,8 @@ class _SearchBeneficiaryPageState
                                                                   .remove(
                                                                       filter);
                                                             });
+                                                            blocWrapper
+                                                                .clearEvent();
                                                           },
                                                           child: Container(
                                                             color:
@@ -485,8 +499,22 @@ class _SearchBeneficiaryPageState
     );
   }
 
+  /// Retrieves a list of [Status] objects based on the current search filter settings.
+  ///
+  /// This method accesses the `searchHouseHoldFilter` from the [RegistrationDeliverySingleton]
+  /// to determine which statuses to filter for in the search. It maps each filter identifier
+  /// to the corresponding [Status] enum value, effectively converting the list of filter
+  /// identifiers into a list of [Status] enum values.
+  ///
+  /// Returns:
+  ///   A list of [Status] objects that match the filter identifiers stored in
+  ///   `searchHouseHoldFilter`. If `searchHouseHoldFilter` is null or empty,
+  ///   an empty list of [Status] is returned.
   getStatusToFilter() {
-    return [Status.registered, Status.notRegistered, Status.delivered];
+    return (RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
+        .map((e) => Status.values.where((element) => element.toValue() == e))
+        .expand((element) => element)
+        .toList();
   }
 
   getFilterIconNLabel() {
@@ -512,6 +540,19 @@ class _SearchBeneficiaryPageState
       setState(() {
         selectedFilters = filters;
       });
+      blocWrapper.statusSearchBloc.add(
+        SearchHouseholdsEvent.searchByStatus(
+          projectId: RegistrationDeliverySingleton().projectId!,
+          offset: offset,
+          limit: limit,
+          status: filters,
+        ),
+      );
+    } else {
+      setState(() {
+        selectedFilters = [];
+      });
+      blocWrapper.clearEvent();
     }
   }
 }

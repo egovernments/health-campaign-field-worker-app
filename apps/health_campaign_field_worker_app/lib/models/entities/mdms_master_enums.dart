@@ -43,4 +43,6 @@ enum MasterEnums {
   serviceDefinitions,
   @MappableValue("FIREBASE_CONFIG")
   firebaseConfig,
+  @MappableValue("SEARCH_HOUSEHOLD_FILTERS")
+  searchHouseHoldFilters,
 }

@@ -63,6 +63,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.serviceDefinitions;
       case "FIREBASE_CONFIG":
         return MasterEnums.firebaseConfig;
+      case "SEARCH_HOUSEHOLD_FILTERS":
+        return MasterEnums.searchHouseHoldFilters;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -109,6 +111,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ServiceDefs";
       case MasterEnums.firebaseConfig:
         return "FIREBASE_CONFIG";
+      case MasterEnums.searchHouseHoldFilters:
+        return "SEARCH_HOUSEHOLD_FILTERS";
     }
   }
 }

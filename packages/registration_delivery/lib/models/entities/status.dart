@@ -29,5 +29,7 @@ enum Status {
   registered,
   @MappableValue("NOT_REGISTERED")
   notRegistered,
+  @MappableValue("CLOSED")
+  closed,
   ;
 }
