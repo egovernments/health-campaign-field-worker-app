@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:registration_delivery/pages/beneficiary/refused_delivery.dart';
 
 import 'registration_delivery_router.gm.dart';
 
@@ -56,7 +57,6 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                     page: BeneficiaryDetailsRoute.page,
                     path: 'beneficiary-details',
                   ),
-
                   AutoRoute(
                     page: BeneficiaryChecklistRoute.page,
                     path: 'beneficiary-checklist',
@@ -64,6 +64,10 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                   AutoRoute(
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',
+                  ),
+                  AutoRoute(
+                    page: RefusedDeliveryRoute.page,
+                    path: 'refused-delivery',
                   ),
                   AutoRoute(
                     page: SideEffectsRoute.page,
