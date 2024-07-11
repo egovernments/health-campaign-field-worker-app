@@ -98,7 +98,7 @@ class _HouseholdOverviewPageState
                                       ),
                                       onPressed: () async {
                                         await context.router
-                                            .push(DeliverInterventionRoute());
+                                            .push(BeneficiaryChecklistRoute());
                                       },
                                     )
                                   : DigitElevatedButton(
@@ -119,7 +119,7 @@ class _HouseholdOverviewPageState
                                         );
 
                                         await context.router
-                                            .push(DeliverInterventionRoute());
+                                            .push(BeneficiaryChecklistRoute());
                                       },
                                       child: Center(
                                         child: Text(

@@ -17,6 +17,7 @@ const householdDetailsShowcase = HouseholdDetailsShowcase();
 const individualDetailsShowcase = IndividualDetailsShowcase();
 const householdOverviewShowcase = HouseholdOverviewShowcase();
 const deliverInterventionShowcase = DeliverInterventionShowcase();
+const checklist = Checklist();
 
 class Common {
   const Common();
@@ -317,6 +318,46 @@ class AcknowledgementSuccess {
   String get goToHome => 'GO_TO_HOME_SCREEN';
   String get downloadmoredata => 'DOWNLOAD_MORE_DATA';
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
+}
+
+class Checklist {
+  const Checklist();
+
+  String get checklist => 'CHECKLIST';
+
+  String get checklistlabel => 'CHECKLIST_LABEL';
+
+  String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
+
+  String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
+
+  String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
+
+  String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
+
+  String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
+
+  String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
+
+  String get checklistDialogSecondaryAction =>
+      'CHECKLIST_DIALOG_SECONDARY_ACTION';
+
+  String get checklistdate => 'CHECKLIST_DATE';
+
+  String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
+
+  String get notSelectedKey => 'NOT_SELECTED';
+
+  String get checklistBackDialogLabel => 'CHECKLIST_BACK_DIALOG_LABEL';
+
+  String get checklistBackDialogDescription =>
+      'CHECKLIST_BACK_DIALOG_DESCRITPTION';
+
+  String get checklistBackDialogPrimaryAction =>
+      'CHECKLIST_BACK_DIALOG_PRIMARY_ACTION';
+
+  String get checklistBackDialogSecondaryAction =>
+      'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 }
 
 class HouseholdDetails {
