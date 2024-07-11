@@ -56,7 +56,6 @@ import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
     as _i17;
 import 'package:registration_delivery/pages/search_beneficiary.dart' as _i18;
 import 'package:registration_delivery/pages/summary_page.dart' as _i21;
-import 'package:registration_delivery/widgets/details_card.dart' as _i29;
 
 abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
   @override
@@ -285,13 +284,13 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
       );
     },
     SummaryRoute.name: (routeData) {
-      final args = routeData.argsAs<SummaryRouteArgs>();
+      final args = routeData.argsAs<SummaryRouteArgs>(
+          orElse: () => const SummaryRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i21.SummaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
-          summaryList: args.summaryList,
         ),
       );
     },
@@ -1117,14 +1116,12 @@ class SummaryRoute extends _i22.PageRouteInfo<SummaryRouteArgs> {
   SummaryRoute({
     _i23.Key? key,
     _i24.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i29.LabelValueList> summaryList,
     List<_i22.PageRouteInfo>? children,
   }) : super(
           SummaryRoute.name,
           args: SummaryRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
-            summaryList: summaryList,
           ),
           initialChildren: children,
         );
@@ -1139,17 +1136,14 @@ class SummaryRouteArgs {
   const SummaryRouteArgs({
     this.key,
     this.appLocalizations,
-    required this.summaryList,
   });
 
   final _i23.Key? key;
 
   final _i24.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i29.LabelValueList> summaryList;
-
   @override
   String toString() {
-    return 'SummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, summaryList: $summaryList}';
+    return 'SummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }

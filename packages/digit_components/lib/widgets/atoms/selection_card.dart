@@ -5,18 +5,20 @@ class SelectionBox<T> extends StatefulWidget {
   final double? width;
   final String? errorMessage;
   final List<T> options;
+  final String? title;
   final Function(List<T>) onSelectionChanged;
-  final List<T> initialSelection;
+  final List<T>? initialSelection;
   final bool allowMultipleSelection;
   final String Function(T) valueMapper;
 
   const SelectionBox({
     Key? key,
     this.width,
+    this.title,
     this.errorMessage,
     required this.options,
     required this.onSelectionChanged,
-    this.initialSelection = const [],
+    this.initialSelection,
     this.allowMultipleSelection = true,
     required this.valueMapper,
   }) : super(key: key);
@@ -26,12 +28,14 @@ class SelectionBox<T> extends StatefulWidget {
 }
 
 class _SelectionBoxState<T> extends State<SelectionBox<T>> {
-  late List<T> _selectedOptions = [];
+  final List<T> _selectedOptions = [];
 
   @override
   void initState() {
     super.initState();
-    _selectedOptions = widget.initialSelection;
+    if (widget.initialSelection != null) {
+      _selectedOptions.addAll(widget.initialSelection!);
+    }
   }
 
   void _onOptionTap(T option) {
@@ -50,8 +54,8 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
           _selectedOptions.add(option);
         }
       }
-      widget.onSelectionChanged(_selectedOptions);
     });
+    widget.onSelectionChanged(_selectedOptions);
   }
 
   Widget _buildOption(T option) {
@@ -104,20 +108,23 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(kPadding * 3),
-          decoration: BoxDecoration(
-            color: const DigitColors().alabasterWhite,
-            borderRadius: BorderRadius.circular(kPadding / 2),
-            border: Border.all(
-              color: const DigitColors().quillGray,
-              width: 1,
+        LabeledField(
+          label: widget.title ?? '',
+          child: Container(
+            padding: const EdgeInsets.all(kPadding * 3),
+            decoration: BoxDecoration(
+              color: const DigitColors().alabasterWhite,
+              borderRadius: BorderRadius.circular(kPadding / 2),
+              border: Border.all(
+                color: const DigitColors().quillGray,
+                width: 1,
+              ),
             ),
-          ),
-          child: Wrap(
-            spacing: kPadding * 3,
-            runSpacing: kPadding * 3,
-            children: widget.options.map(_buildOption).toList(),
+            child: Wrap(
+              spacing: kPadding * 3,
+              runSpacing: kPadding * 3,
+              children: widget.options.map(_buildOption).toList(),
+            ),
           ),
         ),
         const SizedBox(height: kPadding / 2),
