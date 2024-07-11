@@ -150,7 +150,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
                 fit: FlexFit.tight,
                 child: Text(
                   widget.errorMessage!,
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyLarge?.copyWith(
                     color: const DigitColors().lavaRed,
                   ),
                 ),
