@@ -19,9 +19,9 @@ class MdmsRepository {
   const MdmsRepository(this._client);
 
   Future<ServiceRegistryPrimaryWrapperModel> searchServiceRegistry(
-    String apiEndPoint,
-    Map<String, dynamic> body,
-  ) async {
+      String apiEndPoint,
+      Map<String, dynamic> body,
+      ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
@@ -34,9 +34,9 @@ class MdmsRepository {
   }
 
   FutureOr<void> writeToRegistryDB(
-    ServiceRegistryPrimaryWrapperModel result,
-    Isar isar,
-  ) async {
+      ServiceRegistryPrimaryWrapperModel result,
+      Isar isar,
+      ) async {
     final List<ServiceRegistry> newServiceRegistryList = [];
     final data = result.serviceRegistry?.serviceRegistryList;
     if (data != null && data.isNotEmpty) {
@@ -68,9 +68,9 @@ class MdmsRepository {
   }
 
   Future<app_configuration.AppConfigPrimaryWrapperModel> searchAppConfig(
-    String apiEndPoint,
-    Map body,
-  ) async {
+      String apiEndPoint,
+      Map body,
+      ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
@@ -90,9 +90,9 @@ class MdmsRepository {
   }
 
   Future<PGRServiceDefinitions> searchPGRServiceDefinitions(
-    String apiEndPoint,
-    Map<String, dynamic> body,
-  ) async {
+      String apiEndPoint,
+      Map<String, dynamic> body,
+      ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
@@ -110,10 +110,10 @@ class MdmsRepository {
   }
 
   FutureOr<void> writeToAppConfigDB(
-    app_configuration.AppConfigPrimaryWrapperModel result,
-    PGRServiceDefinitions pgrServiceDefinitions,
-    Isar isar,
-  ) async {
+      app_configuration.AppConfigPrimaryWrapperModel result,
+      PGRServiceDefinitions pgrServiceDefinitions,
+      Isar isar,
+      ) async {
     final appConfiguration = AppConfiguration();
 
     final data = result.rowVersions?.rowVersionslist;
@@ -254,8 +254,7 @@ class MdmsRepository {
 
     final List<Interfaces>? interfaceList =
     element?.backendInterface.first.interface.map((e) {
-      final config = Config()
-        ..localStoreTTL = e.config.localStoreTTL;
+      final config = Config()..localStoreTTL = e.config.localStoreTTL;
 
       final interfaces = Interfaces()
         ..name = e.name
@@ -330,12 +329,16 @@ class MdmsRepository {
           return reasonTypes;
         }).toList();
 
+    await isar.writeTxn(() async {
+      await isar.appConfigurations.put(appConfiguration);
+      await isar.rowVersionLists.putAll(rowVersionList);
+    });
   }
 
   Future<RoleActionsWrapperModel> searchRoleActions(
-    String apiEndPoint,
-    Map<String, dynamic> body,
-  ) async {
+      String apiEndPoint,
+      Map<String, dynamic> body,
+      ) async {
     try {
       final Response response = await _client.post(apiEndPoint, data: body);
 

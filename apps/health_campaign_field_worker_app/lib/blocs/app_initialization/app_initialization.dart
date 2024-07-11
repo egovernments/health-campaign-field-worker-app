@@ -54,7 +54,6 @@ class AppInitializationBloc
       emit(const AppUninitialized());
       rethrow;
     } catch (error) {
-      print(error);
       try {
         final result = await mdmsRepository.searchServiceRegistry(
           envConfig.variables.mdmsApiPath,
@@ -74,7 +73,6 @@ class AppInitializationBloc
         );
         await mdmsRepository.writeToRegistryDB(result, isar);
 
-      print( MasterEnums.refusalReasons.toValue());
         final configResult = await mdmsRepository.searchAppConfig(
           envConfig.variables.mdmsApiPath,
           MdmsRequestModel(
@@ -88,6 +86,7 @@ class AppInitializationBloc
                     MasterEnums.symptomTypes.toValue(),
                     MasterEnums.referralReasons.toValue(),
                     MasterEnums.houseStructureTypes.toValue(),
+                    MasterEnums.refusalReasons.toValue(),
                     MasterEnums.bandWidthBatchSize.toValue(),
                     MasterEnums.downSyncBandwidthBatchSize.toValue(),
                     MasterEnums.hhDelReasons.toValue(),
@@ -118,7 +117,6 @@ class AppInitializationBloc
             ),
           ).toJson(),
         );
-print(configResult);
         final pgrServiceDefinitions =
             await mdmsRepository.searchPGRServiceDefinitions(
           envConfig.variables.mdmsApiPath,
@@ -151,7 +149,6 @@ print(configResult);
         );
         emit(const AppUninitialized());
       } catch (e) {
-        print(e);
         /*Checks for if app initialization failed due to no internet or no retries left */
         emit(const AppInitializationState.failed());
       }

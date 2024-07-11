@@ -29,9 +29,9 @@ class RefusedDeliveryPage extends LocalizedStatefulWidget {
 }
 
 class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
-  static const _noOfRoomsKey = 'noOfRooms';
   static const _dataOfRefusalKey = 'dateOfAdministration';
-  List<String>? selectedHouseStructureTypes;
+  static const _reasonOfRefusal = 'reasonOfRefusal';
+  static const _deliveryCommentKey = 'deliveryComment';
 
   @override
   void initState() {
@@ -70,7 +70,7 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                     onPressed: () {
                       form.markAllAsTouched();
                       if (!form.valid) return;
-                      // TODO: need to update form value based on project config
+                      // TODO: need to complete the next flow
                     },
                     child: Center(
                       child: Text(
@@ -93,66 +93,82 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                 0, 0, 0, kPadding),
                             child: Text(
                               localizations.translate(
-                                i18.householdDetails.houseDetailsLabel,
+                                i18.deliverIntervention.refusedDeliveryLabel,
                               ),
                               style: theme.textTheme.displayMedium,
                             ),
                           ),
                           Column(children: [
-                            DigitDateFormPicker(
-                              isEnabled: false,
-                              formControlName:
-                              _dataOfRefusalKey,
-                              label: localizations
-                                  .translate(
-                                i18.householdDetails
-                                    .dateOfRegistrationLabel,
-                              ),
-                              confirmText:
-                              localizations
-                                  .translate(
-                                i18.common
-                                    .coreCommonOk,
-                              ),
-                              cancelText:
-                              localizations
-                                  .translate(
-                                i18.common
-                                    .coreCommonCancel,
-                              ),
-                              isRequired: false,
-                              padding:
-                              const EdgeInsets
-                                  .only(
-                                top: kPadding,
-                              ),
-                            ),
-                            SelectionBox<String>(
-                                width: 120,
-                                options: RegistrationDeliverySingleton()
-                                    .refusalReasons ??
-                                    [],
-                                onSelectionChanged: (values) {
-                                  setState(() {
-                                    selectedHouseStructureTypes = values;
-                                  });
-                                },
-                                valueMapper: (value) {
-                                  return localizations
-                                      .translate(value.toString());
-                                },
-                              ),
-                            houseShowcaseData.noOfRooms.buildWith(
-                              child: DigitIntegerFormPicker(
-                                minimum: 1,
-                                form: form,
-                                formControlName: _noOfRoomsKey,
-                                label: localizations.translate(
-                                  i18.householdDetails.noOfRoomsLabel,
+                            refusedDeliveryShowcaseData.dateOfVisit.buildWith( 
+                              child: DigitDateFormPicker(
+                                isEnabled: false,
+                                formControlName:
+                                _dataOfRefusalKey,
+                                label: localizations
+                                    .translate(
+                                  i18.deliverIntervention
+                                      .refusedDeliveryVisitDateLabel,
                                 ),
-                                incrementer: true,
+                                confirmText:
+                                localizations
+                                    .translate(
+                                  i18.common
+                                      .coreCommonOk,
+                                ),
+                                cancelText:
+                                localizations
+                                    .translate(
+                                  i18.common
+                                      .coreCommonCancel,
+                                ),
+                                isRequired: false,
+                                padding:
+                                const EdgeInsets
+                                    .only(
+                                  top: kPadding,
+                                ),
                               ),
                             ),
+                            const SizedBox(height: kPadding,),
+                            refusedDeliveryShowcaseData.reasonOfRefusal.buildWith(
+                              child: LabeledField(
+                                label: localizations
+                                    .translate(
+                                  i18.deliverIntervention
+                                      .reasonForRefusalLabel,
+                                ),
+                                isRequired: true,
+                                child: SelectionBox<String>(
+                                    width: 122,
+                                    allowMultipleSelection: false,
+                                    options: RegistrationDeliverySingleton()
+                                        .refusalReasons ??
+                                        [],
+                                    onSelectionChanged: (value) {
+                                      setState(() {
+                                        if(value.isNotEmpty){
+                                          form.control(_reasonOfRefusal).value = value.first;
+                                        }else{
+                                          form.control(_reasonOfRefusal).value = null;
+                                          setState(() {
+                                            form.control(_reasonOfRefusal).setErrors({'': true});
+                                          });
+                                        }
+                                      });
+                                    },
+                                    valueMapper: (value) {
+                                      return localizations
+                                          .translate(value.toString());
+                                    },
+                                  ),
+                              ),
+                            ),
+                            refusedDeliveryShowcaseData.comments.buildWith(
+                               child: DigitTextFormField(
+                                formControlName: _deliveryCommentKey,
+                                label: localizations.translate(i18.deliverIntervention.reasonForRefusalCommentLabel),
+                                                           ),
+                             ),
                           ]),
                         ],
                       ),
@@ -167,10 +183,10 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
 
   FormGroup buildForm() {
     return fb.group(<String, Object>{
-      _noOfRoomsKey: FormControl<int>(
-          value: 0, validators: [Validators.required]),
       _dataOfRefusalKey:
       FormControl<DateTime>(value: DateTime.now(), validators: []),
+      _reasonOfRefusal: FormControl<String>(value: null, validators: [Validators.required]),
+      _deliveryCommentKey: FormControl<String>(value: null),
     });
   }
 }

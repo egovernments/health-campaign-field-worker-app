@@ -631,7 +631,8 @@ void setPackagesSingleton(BuildContext context) {
                 .toList(),
         refusalReasons: appConfiguration.refusalReasons
             ?.map((e) => e.code)
-            .toList());
+            .toList(),
+        );
 
 
         AttendanceSingleton().setInitialData(
