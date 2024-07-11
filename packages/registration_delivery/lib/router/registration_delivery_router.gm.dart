@@ -8,62 +8,64 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:auto_route/auto_route.dart' as _i22;
-import 'package:digit_data_model/data_model.dart' as _i27;
-import 'package:flutter/material.dart' as _i23;
-import 'package:registration_delivery/blocs/app_localization.dart' as _i24;
+import 'package:auto_route/auto_route.dart' as _i23;
+import 'package:digit_data_model/data_model.dart' as _i28;
+import 'package:flutter/material.dart' as _i24;
+import 'package:registration_delivery/blocs/app_localization.dart' as _i25;
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart'
-    as _i25;
-import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i26;
-import 'package:registration_delivery/models/entities/task.dart' as _i28;
-import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
+import 'package:registration_delivery/blocs/search_households/search_households.dart'
+    as _i27;
+import 'package:registration_delivery/models/entities/task.dart' as _i29;
+import 'package:registration_delivery/pages/beneficiary/beneficiary_checklist.dart'
     as _i2;
+import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
+    as _i3;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_wrapper.dart'
-    as _i4;
-import 'package:registration_delivery/pages/beneficiary/deliver_intervention.dart'
     as _i5;
-import 'package:registration_delivery/pages/beneficiary/dose_administered.dart'
+import 'package:registration_delivery/pages/beneficiary/deliver_intervention.dart'
     as _i6;
-import 'package:registration_delivery/pages/beneficiary/facility_selection.dart'
+import 'package:registration_delivery/pages/beneficiary/dose_administered.dart'
     as _i7;
+import 'package:registration_delivery/pages/beneficiary/facility_selection.dart'
+    as _i8;
 import 'package:registration_delivery/pages/beneficiary/household_overview.dart'
-    as _i12;
+    as _i13;
 import 'package:registration_delivery/pages/beneficiary/record_past_delivery_details.dart'
-    as _i15;
-import 'package:registration_delivery/pages/beneficiary/refer_beneficiary.dart'
     as _i16;
+import 'package:registration_delivery/pages/beneficiary/refer_beneficiary.dart'
+    as _i17;
 import 'package:registration_delivery/pages/beneficiary/side_effects.dart'
-    as _i19;
-import 'package:registration_delivery/pages/beneficiary/widgets/household_acknowledgement.dart'
-    as _i10;
-import 'package:registration_delivery/pages/beneficiary/widgets/splash_acknowledgement.dart'
     as _i20;
+import 'package:registration_delivery/pages/beneficiary/widgets/household_acknowledgement.dart'
+    as _i11;
+import 'package:registration_delivery/pages/beneficiary/widgets/splash_acknowledgement.dart'
+    as _i21;
 import 'package:registration_delivery/pages/beneficiary_registration/beneficiary_acknowledgement.dart'
     as _i1;
 import 'package:registration_delivery/pages/beneficiary_registration/beneficiary_registration_wrapper.dart'
-    as _i3;
+    as _i4;
 import 'package:registration_delivery/pages/beneficiary_registration/house_details.dart'
-    as _i8;
-import 'package:registration_delivery/pages/beneficiary_registration/household_details.dart'
     as _i9;
+import 'package:registration_delivery/pages/beneficiary_registration/household_details.dart'
+    as _i10;
 import 'package:registration_delivery/pages/beneficiary_registration/household_location.dart'
-    as _i11;
+    as _i12;
 import 'package:registration_delivery/pages/beneficiary_registration/individual_details.dart'
-    as _i13;
-import 'package:registration_delivery/pages/reason_for_deletion.dart' as _i14;
+    as _i14;
+import 'package:registration_delivery/pages/reason_for_deletion.dart' as _i15;
 import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
-    as _i17;
-import 'package:registration_delivery/pages/search_beneficiary.dart' as _i18;
-import 'package:registration_delivery/pages/summary_page.dart' as _i21;
+    as _i18;
+import 'package:registration_delivery/pages/search_beneficiary.dart' as _i19;
+import 'package:registration_delivery/pages/summary_page.dart' as _i22;
 
-abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
+abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
   @override
-  final Map<String, _i22.PageFactory> pagesMap = {
+  final Map<String, _i23.PageFactory> pagesMap = {
     BeneficiaryAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryAcknowledgementRouteArgs>(
           orElse: () => const BeneficiaryAcknowledgementRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i1.BeneficiaryAcknowledgementPage(
           key: args.key,
@@ -72,12 +74,24 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
         ),
       );
     },
+    BeneficiaryChecklistRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryChecklistRouteArgs>(
+          orElse: () => const BeneficiaryChecklistRouteArgs());
+      return _i23.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i2.BeneficiaryChecklistPage(
+          key: args.key,
+          referralClientRefId: args.referralClientRefId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     BeneficiaryDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryDetailsRouteArgs>(
           orElse: () => const BeneficiaryDetailsRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.BeneficiaryDetailsPage(
+        child: _i3.BeneficiaryDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -85,10 +99,10 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     },
     BeneficiaryRegistrationWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryRegistrationWrapperRouteArgs>();
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i22.WrappedRoute(
-            child: _i3.BeneficiaryRegistrationWrapperPage(
+        child: _i23.WrappedRoute(
+            child: _i4.BeneficiaryRegistrationWrapperPage(
           key: args.key,
           initialState: args.initialState,
         )),
@@ -96,9 +110,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     },
     BeneficiaryWrapperRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryWrapperRouteArgs>();
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i4.BeneficiaryWrapperPage(
+        child: _i5.BeneficiaryWrapperPage(
           key: args.key,
           wrapper: args.wrapper,
           isEditing: args.isEditing,
@@ -108,9 +122,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     DeliverInterventionRoute.name: (routeData) {
       final args = routeData.argsAs<DeliverInterventionRouteArgs>(
           orElse: () => const DeliverInterventionRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i5.DeliverInterventionPage(
+        child: _i6.DeliverInterventionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
@@ -120,9 +134,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     DoseAdministeredRoute.name: (routeData) {
       final args = routeData.argsAs<DoseAdministeredRouteArgs>(
           orElse: () => const DoseAdministeredRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i6.DoseAdministeredPage(
+        child: _i7.DoseAdministeredPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -130,9 +144,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     },
     FacilitySelectionRoute.name: (routeData) {
       final args = routeData.argsAs<FacilitySelectionRouteArgs>();
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i7.FacilitySelectionPage(
+        child: _i8.FacilitySelectionPage(
           key: args.key,
           facilities: args.facilities,
         ),
@@ -141,9 +155,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     HouseDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<HouseDetailsRouteArgs>(
           orElse: () => const HouseDetailsRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i8.HouseDetailsPage(
+        child: _i9.HouseDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -152,9 +166,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     HouseHoldDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<HouseHoldDetailsRouteArgs>(
           orElse: () => const HouseHoldDetailsRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i9.HouseHoldDetailsPage(
+        child: _i10.HouseHoldDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -163,9 +177,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     HouseholdAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdAcknowledgementRouteArgs>(
           orElse: () => const HouseholdAcknowledgementRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i10.HouseholdAcknowledgementPage(
+        child: _i11.HouseholdAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableViewHousehold: args.enableViewHousehold,
@@ -175,9 +189,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     HouseholdLocationRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdLocationRouteArgs>(
           orElse: () => const HouseholdLocationRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i11.HouseholdLocationPage(
+        child: _i12.HouseholdLocationPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -186,9 +200,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     HouseholdOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdOverviewRouteArgs>(
           orElse: () => const HouseholdOverviewRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i12.HouseholdOverviewPage(
+        child: _i13.HouseholdOverviewPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -197,9 +211,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     IndividualDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<IndividualDetailsRouteArgs>(
           orElse: () => const IndividualDetailsRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i13.IndividualDetailsPage(
+        child: _i14.IndividualDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHeadOfHousehold: args.isHeadOfHousehold,
@@ -209,9 +223,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     ReasonForDeletionRoute.name: (routeData) {
       final args = routeData.argsAs<ReasonForDeletionRouteArgs>(
           orElse: () => const ReasonForDeletionRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i14.ReasonForDeletionPage(
+        child: _i15.ReasonForDeletionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHousholdDelete: args.isHousholdDelete,
@@ -221,9 +235,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     RecordPastDeliveryDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<RecordPastDeliveryDetailsRouteArgs>(
           orElse: () => const RecordPastDeliveryDetailsRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i15.RecordPastDeliveryDetailsPage(
+        child: _i16.RecordPastDeliveryDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
@@ -232,9 +246,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     },
     ReferBeneficiaryRoute.name: (routeData) {
       final args = routeData.argsAs<ReferBeneficiaryRouteArgs>();
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i16.ReferBeneficiaryPage(
+        child: _i17.ReferBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
@@ -243,17 +257,17 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
       );
     },
     RegistrationDeliveryWrapperRoute.name: (routeData) {
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i17.RegistrationDeliveryWrapperPage(),
+        child: const _i18.RegistrationDeliveryWrapperPage(),
       );
     },
     SearchBeneficiaryRoute.name: (routeData) {
       final args = routeData.argsAs<SearchBeneficiaryRouteArgs>(
           orElse: () => const SearchBeneficiaryRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i18.SearchBeneficiaryPage(
+        child: _i19.SearchBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -261,9 +275,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     },
     SideEffectsRoute.name: (routeData) {
       final args = routeData.argsAs<SideEffectsRouteArgs>();
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i19.SideEffectsPage(
+        child: _i20.SideEffectsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
@@ -274,9 +288,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     SplashAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<SplashAcknowledgementRouteArgs>(
           orElse: () => const SplashAcknowledgementRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i20.SplashAcknowledgementPage(
+        child: _i21.SplashAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableBackToSearch: args.enableBackToSearch,
@@ -286,9 +300,9 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     SummaryRoute.name: (routeData) {
       final args = routeData.argsAs<SummaryRouteArgs>(
           orElse: () => const SummaryRouteArgs());
-      return _i22.AutoRoutePage<dynamic>(
+      return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i21.SummaryPage(
+        child: _i22.SummaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -300,12 +314,12 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
 /// generated route for
 /// [_i1.BeneficiaryAcknowledgementPage]
 class BeneficiaryAcknowledgementRoute
-    extends _i22.PageRouteInfo<BeneficiaryAcknowledgementRouteArgs> {
+    extends _i23.PageRouteInfo<BeneficiaryAcknowledgementRouteArgs> {
   BeneficiaryAcknowledgementRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
     bool? enableViewHousehold,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           BeneficiaryAcknowledgementRoute.name,
           args: BeneficiaryAcknowledgementRouteArgs(
@@ -318,8 +332,8 @@ class BeneficiaryAcknowledgementRoute
 
   static const String name = 'BeneficiaryAcknowledgementRoute';
 
-  static const _i22.PageInfo<BeneficiaryAcknowledgementRouteArgs> page =
-      _i22.PageInfo<BeneficiaryAcknowledgementRouteArgs>(name);
+  static const _i23.PageInfo<BeneficiaryAcknowledgementRouteArgs> page =
+      _i23.PageInfo<BeneficiaryAcknowledgementRouteArgs>(name);
 }
 
 class BeneficiaryAcknowledgementRouteArgs {
@@ -329,9 +343,9 @@ class BeneficiaryAcknowledgementRouteArgs {
     this.enableViewHousehold,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   final bool? enableViewHousehold;
 
@@ -342,13 +356,57 @@ class BeneficiaryAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [_i2.BeneficiaryDetailsPage]
+/// [_i2.BeneficiaryChecklistPage]
+class BeneficiaryChecklistRoute
+    extends _i23.PageRouteInfo<BeneficiaryChecklistRouteArgs> {
+  BeneficiaryChecklistRoute({
+    _i24.Key? key,
+    String? referralClientRefId,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryChecklistRoute.name,
+          args: BeneficiaryChecklistRouteArgs(
+            key: key,
+            referralClientRefId: referralClientRefId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryChecklistRoute';
+
+  static const _i23.PageInfo<BeneficiaryChecklistRouteArgs> page =
+      _i23.PageInfo<BeneficiaryChecklistRouteArgs>(name);
+}
+
+class BeneficiaryChecklistRouteArgs {
+  const BeneficiaryChecklistRouteArgs({
+    this.key,
+    this.referralClientRefId,
+    this.appLocalizations,
+  });
+
+  final _i24.Key? key;
+
+  final String? referralClientRefId;
+
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryChecklistRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [_i3.BeneficiaryDetailsPage]
 class BeneficiaryDetailsRoute
-    extends _i22.PageRouteInfo<BeneficiaryDetailsRouteArgs> {
+    extends _i23.PageRouteInfo<BeneficiaryDetailsRouteArgs> {
   BeneficiaryDetailsRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           BeneficiaryDetailsRoute.name,
           args: BeneficiaryDetailsRouteArgs(
@@ -360,8 +418,8 @@ class BeneficiaryDetailsRoute
 
   static const String name = 'BeneficiaryDetailsRoute';
 
-  static const _i22.PageInfo<BeneficiaryDetailsRouteArgs> page =
-      _i22.PageInfo<BeneficiaryDetailsRouteArgs>(name);
+  static const _i23.PageInfo<BeneficiaryDetailsRouteArgs> page =
+      _i23.PageInfo<BeneficiaryDetailsRouteArgs>(name);
 }
 
 class BeneficiaryDetailsRouteArgs {
@@ -370,9 +428,9 @@ class BeneficiaryDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -381,13 +439,13 @@ class BeneficiaryDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i3.BeneficiaryRegistrationWrapperPage]
+/// [_i4.BeneficiaryRegistrationWrapperPage]
 class BeneficiaryRegistrationWrapperRoute
-    extends _i22.PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
+    extends _i23.PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
   BeneficiaryRegistrationWrapperRoute({
-    _i23.Key? key,
-    required _i25.BeneficiaryRegistrationState initialState,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    required _i26.BeneficiaryRegistrationState initialState,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           BeneficiaryRegistrationWrapperRoute.name,
           args: BeneficiaryRegistrationWrapperRouteArgs(
@@ -399,8 +457,8 @@ class BeneficiaryRegistrationWrapperRoute
 
   static const String name = 'BeneficiaryRegistrationWrapperRoute';
 
-  static const _i22.PageInfo<BeneficiaryRegistrationWrapperRouteArgs> page =
-      _i22.PageInfo<BeneficiaryRegistrationWrapperRouteArgs>(name);
+  static const _i23.PageInfo<BeneficiaryRegistrationWrapperRouteArgs> page =
+      _i23.PageInfo<BeneficiaryRegistrationWrapperRouteArgs>(name);
 }
 
 class BeneficiaryRegistrationWrapperRouteArgs {
@@ -409,9 +467,9 @@ class BeneficiaryRegistrationWrapperRouteArgs {
     required this.initialState,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i25.BeneficiaryRegistrationState initialState;
+  final _i26.BeneficiaryRegistrationState initialState;
 
   @override
   String toString() {
@@ -420,14 +478,14 @@ class BeneficiaryRegistrationWrapperRouteArgs {
 }
 
 /// generated route for
-/// [_i4.BeneficiaryWrapperPage]
+/// [_i5.BeneficiaryWrapperPage]
 class BeneficiaryWrapperRoute
-    extends _i22.PageRouteInfo<BeneficiaryWrapperRouteArgs> {
+    extends _i23.PageRouteInfo<BeneficiaryWrapperRouteArgs> {
   BeneficiaryWrapperRoute({
-    _i23.Key? key,
-    required _i26.HouseholdMemberWrapper wrapper,
+    _i24.Key? key,
+    required _i27.HouseholdMemberWrapper wrapper,
     bool isEditing = false,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           BeneficiaryWrapperRoute.name,
           args: BeneficiaryWrapperRouteArgs(
@@ -440,8 +498,8 @@ class BeneficiaryWrapperRoute
 
   static const String name = 'BeneficiaryWrapperRoute';
 
-  static const _i22.PageInfo<BeneficiaryWrapperRouteArgs> page =
-      _i22.PageInfo<BeneficiaryWrapperRouteArgs>(name);
+  static const _i23.PageInfo<BeneficiaryWrapperRouteArgs> page =
+      _i23.PageInfo<BeneficiaryWrapperRouteArgs>(name);
 }
 
 class BeneficiaryWrapperRouteArgs {
@@ -451,9 +509,9 @@ class BeneficiaryWrapperRouteArgs {
     this.isEditing = false,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i26.HouseholdMemberWrapper wrapper;
+  final _i27.HouseholdMemberWrapper wrapper;
 
   final bool isEditing;
 
@@ -464,14 +522,14 @@ class BeneficiaryWrapperRouteArgs {
 }
 
 /// generated route for
-/// [_i5.DeliverInterventionPage]
+/// [_i6.DeliverInterventionPage]
 class DeliverInterventionRoute
-    extends _i22.PageRouteInfo<DeliverInterventionRouteArgs> {
+    extends _i23.PageRouteInfo<DeliverInterventionRouteArgs> {
   DeliverInterventionRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
     bool isEditing = false,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           DeliverInterventionRoute.name,
           args: DeliverInterventionRouteArgs(
@@ -484,8 +542,8 @@ class DeliverInterventionRoute
 
   static const String name = 'DeliverInterventionRoute';
 
-  static const _i22.PageInfo<DeliverInterventionRouteArgs> page =
-      _i22.PageInfo<DeliverInterventionRouteArgs>(name);
+  static const _i23.PageInfo<DeliverInterventionRouteArgs> page =
+      _i23.PageInfo<DeliverInterventionRouteArgs>(name);
 }
 
 class DeliverInterventionRouteArgs {
@@ -495,9 +553,9 @@ class DeliverInterventionRouteArgs {
     this.isEditing = false,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   final bool isEditing;
 
@@ -508,13 +566,13 @@ class DeliverInterventionRouteArgs {
 }
 
 /// generated route for
-/// [_i6.DoseAdministeredPage]
+/// [_i7.DoseAdministeredPage]
 class DoseAdministeredRoute
-    extends _i22.PageRouteInfo<DoseAdministeredRouteArgs> {
+    extends _i23.PageRouteInfo<DoseAdministeredRouteArgs> {
   DoseAdministeredRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           DoseAdministeredRoute.name,
           args: DoseAdministeredRouteArgs(
@@ -526,8 +584,8 @@ class DoseAdministeredRoute
 
   static const String name = 'DoseAdministeredRoute';
 
-  static const _i22.PageInfo<DoseAdministeredRouteArgs> page =
-      _i22.PageInfo<DoseAdministeredRouteArgs>(name);
+  static const _i23.PageInfo<DoseAdministeredRouteArgs> page =
+      _i23.PageInfo<DoseAdministeredRouteArgs>(name);
 }
 
 class DoseAdministeredRouteArgs {
@@ -536,9 +594,9 @@ class DoseAdministeredRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -547,13 +605,13 @@ class DoseAdministeredRouteArgs {
 }
 
 /// generated route for
-/// [_i7.FacilitySelectionPage]
+/// [_i8.FacilitySelectionPage]
 class FacilitySelectionRoute
-    extends _i22.PageRouteInfo<FacilitySelectionRouteArgs> {
+    extends _i23.PageRouteInfo<FacilitySelectionRouteArgs> {
   FacilitySelectionRoute({
-    _i23.Key? key,
-    required List<_i27.FacilityModel> facilities,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    required List<_i28.FacilityModel> facilities,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           FacilitySelectionRoute.name,
           args: FacilitySelectionRouteArgs(
@@ -565,8 +623,8 @@ class FacilitySelectionRoute
 
   static const String name = 'FacilitySelectionRoute';
 
-  static const _i22.PageInfo<FacilitySelectionRouteArgs> page =
-      _i22.PageInfo<FacilitySelectionRouteArgs>(name);
+  static const _i23.PageInfo<FacilitySelectionRouteArgs> page =
+      _i23.PageInfo<FacilitySelectionRouteArgs>(name);
 }
 
 class FacilitySelectionRouteArgs {
@@ -575,9 +633,9 @@ class FacilitySelectionRouteArgs {
     required this.facilities,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final List<_i27.FacilityModel> facilities;
+  final List<_i28.FacilityModel> facilities;
 
   @override
   String toString() {
@@ -586,12 +644,12 @@ class FacilitySelectionRouteArgs {
 }
 
 /// generated route for
-/// [_i8.HouseDetailsPage]
-class HouseDetailsRoute extends _i22.PageRouteInfo<HouseDetailsRouteArgs> {
+/// [_i9.HouseDetailsPage]
+class HouseDetailsRoute extends _i23.PageRouteInfo<HouseDetailsRouteArgs> {
   HouseDetailsRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           HouseDetailsRoute.name,
           args: HouseDetailsRouteArgs(
@@ -603,8 +661,8 @@ class HouseDetailsRoute extends _i22.PageRouteInfo<HouseDetailsRouteArgs> {
 
   static const String name = 'HouseDetailsRoute';
 
-  static const _i22.PageInfo<HouseDetailsRouteArgs> page =
-      _i22.PageInfo<HouseDetailsRouteArgs>(name);
+  static const _i23.PageInfo<HouseDetailsRouteArgs> page =
+      _i23.PageInfo<HouseDetailsRouteArgs>(name);
 }
 
 class HouseDetailsRouteArgs {
@@ -613,9 +671,9 @@ class HouseDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -624,13 +682,13 @@ class HouseDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i9.HouseHoldDetailsPage]
+/// [_i10.HouseHoldDetailsPage]
 class HouseHoldDetailsRoute
-    extends _i22.PageRouteInfo<HouseHoldDetailsRouteArgs> {
+    extends _i23.PageRouteInfo<HouseHoldDetailsRouteArgs> {
   HouseHoldDetailsRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           HouseHoldDetailsRoute.name,
           args: HouseHoldDetailsRouteArgs(
@@ -642,8 +700,8 @@ class HouseHoldDetailsRoute
 
   static const String name = 'HouseHoldDetailsRoute';
 
-  static const _i22.PageInfo<HouseHoldDetailsRouteArgs> page =
-      _i22.PageInfo<HouseHoldDetailsRouteArgs>(name);
+  static const _i23.PageInfo<HouseHoldDetailsRouteArgs> page =
+      _i23.PageInfo<HouseHoldDetailsRouteArgs>(name);
 }
 
 class HouseHoldDetailsRouteArgs {
@@ -652,9 +710,9 @@ class HouseHoldDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -663,14 +721,14 @@ class HouseHoldDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i10.HouseholdAcknowledgementPage]
+/// [_i11.HouseholdAcknowledgementPage]
 class HouseholdAcknowledgementRoute
-    extends _i22.PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
+    extends _i23.PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
   HouseholdAcknowledgementRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
     bool? enableViewHousehold,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           HouseholdAcknowledgementRoute.name,
           args: HouseholdAcknowledgementRouteArgs(
@@ -683,8 +741,8 @@ class HouseholdAcknowledgementRoute
 
   static const String name = 'HouseholdAcknowledgementRoute';
 
-  static const _i22.PageInfo<HouseholdAcknowledgementRouteArgs> page =
-      _i22.PageInfo<HouseholdAcknowledgementRouteArgs>(name);
+  static const _i23.PageInfo<HouseholdAcknowledgementRouteArgs> page =
+      _i23.PageInfo<HouseholdAcknowledgementRouteArgs>(name);
 }
 
 class HouseholdAcknowledgementRouteArgs {
@@ -694,9 +752,9 @@ class HouseholdAcknowledgementRouteArgs {
     this.enableViewHousehold,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   final bool? enableViewHousehold;
 
@@ -707,13 +765,13 @@ class HouseholdAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [_i11.HouseholdLocationPage]
+/// [_i12.HouseholdLocationPage]
 class HouseholdLocationRoute
-    extends _i22.PageRouteInfo<HouseholdLocationRouteArgs> {
+    extends _i23.PageRouteInfo<HouseholdLocationRouteArgs> {
   HouseholdLocationRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           HouseholdLocationRoute.name,
           args: HouseholdLocationRouteArgs(
@@ -725,8 +783,8 @@ class HouseholdLocationRoute
 
   static const String name = 'HouseholdLocationRoute';
 
-  static const _i22.PageInfo<HouseholdLocationRouteArgs> page =
-      _i22.PageInfo<HouseholdLocationRouteArgs>(name);
+  static const _i23.PageInfo<HouseholdLocationRouteArgs> page =
+      _i23.PageInfo<HouseholdLocationRouteArgs>(name);
 }
 
 class HouseholdLocationRouteArgs {
@@ -735,9 +793,9 @@ class HouseholdLocationRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -746,13 +804,13 @@ class HouseholdLocationRouteArgs {
 }
 
 /// generated route for
-/// [_i12.HouseholdOverviewPage]
+/// [_i13.HouseholdOverviewPage]
 class HouseholdOverviewRoute
-    extends _i22.PageRouteInfo<HouseholdOverviewRouteArgs> {
+    extends _i23.PageRouteInfo<HouseholdOverviewRouteArgs> {
   HouseholdOverviewRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           HouseholdOverviewRoute.name,
           args: HouseholdOverviewRouteArgs(
@@ -764,8 +822,8 @@ class HouseholdOverviewRoute
 
   static const String name = 'HouseholdOverviewRoute';
 
-  static const _i22.PageInfo<HouseholdOverviewRouteArgs> page =
-      _i22.PageInfo<HouseholdOverviewRouteArgs>(name);
+  static const _i23.PageInfo<HouseholdOverviewRouteArgs> page =
+      _i23.PageInfo<HouseholdOverviewRouteArgs>(name);
 }
 
 class HouseholdOverviewRouteArgs {
@@ -774,9 +832,9 @@ class HouseholdOverviewRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -785,14 +843,14 @@ class HouseholdOverviewRouteArgs {
 }
 
 /// generated route for
-/// [_i13.IndividualDetailsPage]
+/// [_i14.IndividualDetailsPage]
 class IndividualDetailsRoute
-    extends _i22.PageRouteInfo<IndividualDetailsRouteArgs> {
+    extends _i23.PageRouteInfo<IndividualDetailsRouteArgs> {
   IndividualDetailsRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
     bool isHeadOfHousehold = false,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           IndividualDetailsRoute.name,
           args: IndividualDetailsRouteArgs(
@@ -805,8 +863,8 @@ class IndividualDetailsRoute
 
   static const String name = 'IndividualDetailsRoute';
 
-  static const _i22.PageInfo<IndividualDetailsRouteArgs> page =
-      _i22.PageInfo<IndividualDetailsRouteArgs>(name);
+  static const _i23.PageInfo<IndividualDetailsRouteArgs> page =
+      _i23.PageInfo<IndividualDetailsRouteArgs>(name);
 }
 
 class IndividualDetailsRouteArgs {
@@ -816,9 +874,9 @@ class IndividualDetailsRouteArgs {
     this.isHeadOfHousehold = false,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   final bool isHeadOfHousehold;
 
@@ -829,14 +887,14 @@ class IndividualDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i14.ReasonForDeletionPage]
+/// [_i15.ReasonForDeletionPage]
 class ReasonForDeletionRoute
-    extends _i22.PageRouteInfo<ReasonForDeletionRouteArgs> {
+    extends _i23.PageRouteInfo<ReasonForDeletionRouteArgs> {
   ReasonForDeletionRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
     bool isHousholdDelete = false,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           ReasonForDeletionRoute.name,
           args: ReasonForDeletionRouteArgs(
@@ -849,8 +907,8 @@ class ReasonForDeletionRoute
 
   static const String name = 'ReasonForDeletionRoute';
 
-  static const _i22.PageInfo<ReasonForDeletionRouteArgs> page =
-      _i22.PageInfo<ReasonForDeletionRouteArgs>(name);
+  static const _i23.PageInfo<ReasonForDeletionRouteArgs> page =
+      _i23.PageInfo<ReasonForDeletionRouteArgs>(name);
 }
 
 class ReasonForDeletionRouteArgs {
@@ -860,9 +918,9 @@ class ReasonForDeletionRouteArgs {
     this.isHousholdDelete = false,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   final bool isHousholdDelete;
 
@@ -873,14 +931,14 @@ class ReasonForDeletionRouteArgs {
 }
 
 /// generated route for
-/// [_i15.RecordPastDeliveryDetailsPage]
+/// [_i16.RecordPastDeliveryDetailsPage]
 class RecordPastDeliveryDetailsRoute
-    extends _i22.PageRouteInfo<RecordPastDeliveryDetailsRouteArgs> {
+    extends _i23.PageRouteInfo<RecordPastDeliveryDetailsRouteArgs> {
   RecordPastDeliveryDetailsRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i28.TaskModel>? tasks,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i29.TaskModel>? tasks,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           RecordPastDeliveryDetailsRoute.name,
           args: RecordPastDeliveryDetailsRouteArgs(
@@ -893,8 +951,8 @@ class RecordPastDeliveryDetailsRoute
 
   static const String name = 'RecordPastDeliveryDetailsRoute';
 
-  static const _i22.PageInfo<RecordPastDeliveryDetailsRouteArgs> page =
-      _i22.PageInfo<RecordPastDeliveryDetailsRouteArgs>(name);
+  static const _i23.PageInfo<RecordPastDeliveryDetailsRouteArgs> page =
+      _i23.PageInfo<RecordPastDeliveryDetailsRouteArgs>(name);
 }
 
 class RecordPastDeliveryDetailsRouteArgs {
@@ -904,11 +962,11 @@ class RecordPastDeliveryDetailsRouteArgs {
     this.tasks,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i28.TaskModel>? tasks;
+  final List<_i29.TaskModel>? tasks;
 
   @override
   String toString() {
@@ -917,15 +975,15 @@ class RecordPastDeliveryDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i16.ReferBeneficiaryPage]
+/// [_i17.ReferBeneficiaryPage]
 class ReferBeneficiaryRoute
-    extends _i22.PageRouteInfo<ReferBeneficiaryRouteArgs> {
+    extends _i23.PageRouteInfo<ReferBeneficiaryRouteArgs> {
   ReferBeneficiaryRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
     bool isEditing = false,
     required String projectBeneficiaryClientRefId,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           ReferBeneficiaryRoute.name,
           args: ReferBeneficiaryRouteArgs(
@@ -939,8 +997,8 @@ class ReferBeneficiaryRoute
 
   static const String name = 'ReferBeneficiaryRoute';
 
-  static const _i22.PageInfo<ReferBeneficiaryRouteArgs> page =
-      _i22.PageInfo<ReferBeneficiaryRouteArgs>(name);
+  static const _i23.PageInfo<ReferBeneficiaryRouteArgs> page =
+      _i23.PageInfo<ReferBeneficiaryRouteArgs>(name);
 }
 
 class ReferBeneficiaryRouteArgs {
@@ -951,9 +1009,9 @@ class ReferBeneficiaryRouteArgs {
     required this.projectBeneficiaryClientRefId,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   final bool isEditing;
 
@@ -966,9 +1024,9 @@ class ReferBeneficiaryRouteArgs {
 }
 
 /// generated route for
-/// [_i17.RegistrationDeliveryWrapperPage]
-class RegistrationDeliveryWrapperRoute extends _i22.PageRouteInfo<void> {
-  const RegistrationDeliveryWrapperRoute({List<_i22.PageRouteInfo>? children})
+/// [_i18.RegistrationDeliveryWrapperPage]
+class RegistrationDeliveryWrapperRoute extends _i23.PageRouteInfo<void> {
+  const RegistrationDeliveryWrapperRoute({List<_i23.PageRouteInfo>? children})
       : super(
           RegistrationDeliveryWrapperRoute.name,
           initialChildren: children,
@@ -976,17 +1034,17 @@ class RegistrationDeliveryWrapperRoute extends _i22.PageRouteInfo<void> {
 
   static const String name = 'RegistrationDeliveryWrapperRoute';
 
-  static const _i22.PageInfo<void> page = _i22.PageInfo<void>(name);
+  static const _i23.PageInfo<void> page = _i23.PageInfo<void>(name);
 }
 
 /// generated route for
-/// [_i18.SearchBeneficiaryPage]
+/// [_i19.SearchBeneficiaryPage]
 class SearchBeneficiaryRoute
-    extends _i22.PageRouteInfo<SearchBeneficiaryRouteArgs> {
+    extends _i23.PageRouteInfo<SearchBeneficiaryRouteArgs> {
   SearchBeneficiaryRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           SearchBeneficiaryRoute.name,
           args: SearchBeneficiaryRouteArgs(
@@ -998,8 +1056,8 @@ class SearchBeneficiaryRoute
 
   static const String name = 'SearchBeneficiaryRoute';
 
-  static const _i22.PageInfo<SearchBeneficiaryRouteArgs> page =
-      _i22.PageInfo<SearchBeneficiaryRouteArgs>(name);
+  static const _i23.PageInfo<SearchBeneficiaryRouteArgs> page =
+      _i23.PageInfo<SearchBeneficiaryRouteArgs>(name);
 }
 
 class SearchBeneficiaryRouteArgs {
@@ -1008,9 +1066,9 @@ class SearchBeneficiaryRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
@@ -1019,14 +1077,14 @@ class SearchBeneficiaryRouteArgs {
 }
 
 /// generated route for
-/// [_i19.SideEffectsPage]
-class SideEffectsRoute extends _i22.PageRouteInfo<SideEffectsRouteArgs> {
+/// [_i20.SideEffectsPage]
+class SideEffectsRoute extends _i23.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i28.TaskModel> tasks,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    required List<_i29.TaskModel> tasks,
     bool isEditing = false,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           SideEffectsRoute.name,
           args: SideEffectsRouteArgs(
@@ -1040,8 +1098,8 @@ class SideEffectsRoute extends _i22.PageRouteInfo<SideEffectsRouteArgs> {
 
   static const String name = 'SideEffectsRoute';
 
-  static const _i22.PageInfo<SideEffectsRouteArgs> page =
-      _i22.PageInfo<SideEffectsRouteArgs>(name);
+  static const _i23.PageInfo<SideEffectsRouteArgs> page =
+      _i23.PageInfo<SideEffectsRouteArgs>(name);
 }
 
 class SideEffectsRouteArgs {
@@ -1052,11 +1110,11 @@ class SideEffectsRouteArgs {
     this.isEditing = false,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i28.TaskModel> tasks;
+  final List<_i29.TaskModel> tasks;
 
   final bool isEditing;
 
@@ -1067,14 +1125,14 @@ class SideEffectsRouteArgs {
 }
 
 /// generated route for
-/// [_i20.SplashAcknowledgementPage]
+/// [_i21.SplashAcknowledgementPage]
 class SplashAcknowledgementRoute
-    extends _i22.PageRouteInfo<SplashAcknowledgementRouteArgs> {
+    extends _i23.PageRouteInfo<SplashAcknowledgementRouteArgs> {
   SplashAcknowledgementRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
     bool? enableBackToSearch,
-    List<_i22.PageRouteInfo>? children,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           SplashAcknowledgementRoute.name,
           args: SplashAcknowledgementRouteArgs(
@@ -1087,8 +1145,8 @@ class SplashAcknowledgementRoute
 
   static const String name = 'SplashAcknowledgementRoute';
 
-  static const _i22.PageInfo<SplashAcknowledgementRouteArgs> page =
-      _i22.PageInfo<SplashAcknowledgementRouteArgs>(name);
+  static const _i23.PageInfo<SplashAcknowledgementRouteArgs> page =
+      _i23.PageInfo<SplashAcknowledgementRouteArgs>(name);
 }
 
 class SplashAcknowledgementRouteArgs {
@@ -1098,9 +1156,9 @@ class SplashAcknowledgementRouteArgs {
     this.enableBackToSearch,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   final bool? enableBackToSearch;
 
@@ -1111,12 +1169,12 @@ class SplashAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [_i21.SummaryPage]
-class SummaryRoute extends _i22.PageRouteInfo<SummaryRouteArgs> {
+/// [_i22.SummaryPage]
+class SummaryRoute extends _i23.PageRouteInfo<SummaryRouteArgs> {
   SummaryRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i22.PageRouteInfo>? children,
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
   }) : super(
           SummaryRoute.name,
           args: SummaryRouteArgs(
@@ -1128,8 +1186,8 @@ class SummaryRoute extends _i22.PageRouteInfo<SummaryRouteArgs> {
 
   static const String name = 'SummaryRoute';
 
-  static const _i22.PageInfo<SummaryRouteArgs> page =
-      _i22.PageInfo<SummaryRouteArgs>(name);
+  static const _i23.PageInfo<SummaryRouteArgs> page =
+      _i23.PageInfo<SummaryRouteArgs>(name);
 }
 
 class SummaryRouteArgs {
@@ -1138,9 +1196,9 @@ class SummaryRouteArgs {
     this.appLocalizations,
   });
 
-  final _i23.Key? key;
+  final _i24.Key? key;
 
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
