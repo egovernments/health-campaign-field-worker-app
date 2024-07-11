@@ -228,6 +228,7 @@ class BeneficiaryDetails {
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
   String get householdMemberSingular => 'BENEFICIARY_HOUSEHOLD_MEMBER';
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
+  String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
 }
 
 class IndividualDetails {
@@ -296,6 +297,8 @@ class HouseholdLocation {
       'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
 
   String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
+
+  String get villageLabel => 'VILLAGE_LABEL';
 
   String get householdAddressLine2LabelText =>
       'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
@@ -380,6 +383,7 @@ class HouseholdDetails {
   String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
   String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
   String get selectStructureTypeError => 'PLEASE_SELECT_STRUCTURE_TYPE';
+  String get typeOfStructure => 'TYPE_OF_STRUCTURE';
 }
 
 class HouseholdOverView {
