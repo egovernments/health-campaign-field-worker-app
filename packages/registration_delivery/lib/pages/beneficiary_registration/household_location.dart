@@ -172,7 +172,7 @@ class _HouseholdLocationPageState
                                   addressModel,
                                 ),
                               );
-                              router.push(HouseHoldDetailsRoute());
+                              router.push(HouseDetailsRoute());
                             },
                             editHousehold: (
                               address,
@@ -213,7 +213,7 @@ class _HouseholdLocationPageState
                                   addressModel,
                                 ),
                               );
-                              router.push(HouseHoldDetailsRoute());
+                              router.push(HouseDetailsRoute());
                             },
                           );
                         },
@@ -236,17 +236,16 @@ class _HouseholdLocationPageState
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           TextBlock(
-                            padding: const EdgeInsets.only(top: kPadding),
-                            heading: localizations.translate(
-                              i18.householdLocation
-                                  .householdLocationLabelText,
-                            ),
-                            headingStyle: theme.textTheme.displayMedium,
-                            body: localizations.translate(
-                              i18.householdLocation
-                                  .householdLocationDescriptionText,
-                            )
-                          ),
+                              padding: const EdgeInsets.only(top: kPadding),
+                              heading: localizations.translate(
+                                i18.householdLocation
+                                    .householdLocationLabelText,
+                              ),
+                              headingStyle: theme.textTheme.displayMedium,
+                              body: localizations.translate(
+                                i18.householdLocation
+                                    .householdLocationDescriptionText,
+                              )),
                           Column(children: [
                             householdLocationShowcaseData.administrativeArea
                                 .buildWith(

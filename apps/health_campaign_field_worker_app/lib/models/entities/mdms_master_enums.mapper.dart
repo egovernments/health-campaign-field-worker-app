@@ -31,6 +31,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.symptomTypes;
       case "REFERRAL_REASONS":
         return MasterEnums.referralReasons;
+      case "HOUSE_STRUCTURE_TYPES":
+        return MasterEnums.houseStructureTypes;
       case "BANDWIDTH_BATCH_SIZE":
         return MasterEnums.bandWidthBatchSize;
       case "DOWNSYNC-BANDWIDTH_BATCH_SIZE":
@@ -77,6 +79,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "SYMPTOM_TYPES";
       case MasterEnums.referralReasons:
         return "REFERRAL_REASONS";
+      case MasterEnums.houseStructureTypes:
+        return "HOUSE_STRUCTURE_TYPES";
       case MasterEnums.bandWidthBatchSize:
         return "BANDWIDTH_BATCH_SIZE";
       case MasterEnums.downSyncBandwidthBatchSize:

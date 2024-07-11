@@ -283,7 +283,8 @@ class HouseholdLocation {
 
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 
-  String get householdLocationDescriptionText => 'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
+  String get householdLocationDescriptionText =>
+      'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
 
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
 
@@ -335,6 +336,9 @@ class HouseholdDetails {
   String get noOfChildrenBelow5YearsLabel => 'NO_OF_CHILDREN_BELOW_5_YR_LABEL';
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+  String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
+  String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
+  String get selectStructureTypeError => 'PLEASE_SELECT_STRUCTURE_TYPE';
 }
 
 class HouseholdOverView {
@@ -682,6 +686,11 @@ class HouseholdDetailsShowcase {
 
   String get numberOfChildrenBelow5InHousehold =>
       'HOUSEHOLD_DETAILS_SHOWCASE_NO_OF_CHILD_BELOW_5_IN_HOUSEHOLD';
+
+  String get numberOfRoomsInHousehold =>
+      'HOUSE_DETAILS_SHOWCASE_NO_OF_ROOMS_IN_HOUSEHOLD';
+
+  String get typeOfStructure => 'HOUSE_DETAILS_SHOWCASE_TYPE_OF_STRUCTURE';
 }
 
 class IndividualDetailsShowcase {

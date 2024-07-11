@@ -30,6 +30,9 @@ class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
                       page: HouseHoldDetailsRoute.page,
                       path: 'household-details'),
                   AutoRoute(
+                      page: HouseDetailsRoute.page,
+                      path: 'house-details'),
+                  AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
                     initial: true,

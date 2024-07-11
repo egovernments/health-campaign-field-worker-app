@@ -63,6 +63,10 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return AdditionalFieldsType.pregnantWomen;
       case "children":
         return AdditionalFieldsType.children;
+      case "noOfRooms":
+        return AdditionalFieldsType.noOfRooms;
+      case "houseStructureTypes":
+        return AdditionalFieldsType.houseStructureTypes;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -109,6 +113,10 @@ class AdditionalFieldsTypeMapper extends EnumMapper<AdditionalFieldsType> {
         return "pregnantWomen";
       case AdditionalFieldsType.children:
         return "children";
+      case AdditionalFieldsType.noOfRooms:
+        return "noOfRooms";
+      case AdditionalFieldsType.houseStructureTypes:
+        return "houseStructureTypes";
     }
   }
 }
