@@ -21,4 +21,13 @@ class _HouseholdDetailsShowcaseData {
     messageLocalizationKey:
         i18.householdDetailsShowcase.numberOfMembersLivingInHousehold,
   );
+
+  final numberOfPregnantWomenInHousehold = ShowcaseItemBuilder(
+    messageLocalizationKey:
+        i18.householdDetailsShowcase.numberOfPregnantWomenInHousehold,
+  );
+  final numberOfChildrenBelow5InHousehold = ShowcaseItemBuilder(
+    messageLocalizationKey:
+        i18.householdDetailsShowcase.numberOfChildrenBelow5InHousehold,
+  );
 }

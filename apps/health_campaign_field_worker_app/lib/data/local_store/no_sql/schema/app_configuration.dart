@@ -76,6 +76,7 @@ class AppConfiguration {
   late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
 
   late List<ReferralReasons>? referralReasons;
+  late List<HouseStructureTypes>? houseStructureTypes;
 }
 
 @embedded
@@ -203,6 +204,13 @@ class SymptomsTypes {
 
 @embedded
 class ReferralReasons {
+  late String code;
+  late String name;
+  late bool active;
+}
+
+@embedded
+class HouseStructureTypes {
   late String code;
   late String name;
   late bool active;

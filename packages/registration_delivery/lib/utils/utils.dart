@@ -306,6 +306,7 @@ class RegistrationDeliverySingleton {
   List<String>? _symptomsTypes;
   List<String>? _searchHouseHoldFilter;
   List<String>? _referralReasons;
+  List<String>? _houseStructureTypes;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -316,21 +317,23 @@ class RegistrationDeliverySingleton {
     _persistenceConfiguration = persistenceConfiguration;
   }
 
-  void setInitialData(
-      {required String loggedInUserUuid,
-      required double maxRadius,
-      required String projectId,
-      required BeneficiaryType selectedBeneficiaryType,
-      required ProjectTypeModel? projectType,
-      required ProjectModel selectedProject,
-      required List<String>? genderOptions,
-      required List<String>? idTypeOptions,
-      required List<String>? householdDeletionReasonOptions,
-      required List<String>? householdMemberDeletionReasonOptions,
-      required List<String>? deliveryCommentOptions,
-      required List<String>? symptomsTypes,
-      required List<String>? searchHouseHoldFilter,
-      required List<String>? referralReasons}) {
+  void setInitialData({
+    required String loggedInUserUuid,
+    required double maxRadius,
+    required String projectId,
+    required BeneficiaryType selectedBeneficiaryType,
+    required ProjectTypeModel? projectType,
+    required ProjectModel selectedProject,
+    required List<String>? genderOptions,
+    required List<String>? idTypeOptions,
+    required List<String>? householdDeletionReasonOptions,
+    required List<String>? householdMemberDeletionReasonOptions,
+    required List<String>? deliveryCommentOptions,
+    required List<String>? symptomsTypes,
+    required List<String>? searchHouseHoldFilter,
+      required List<String>? referralReasons,
+    required List<String>? houseStructureTypes,
+  }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -346,6 +349,7 @@ class RegistrationDeliverySingleton {
     _symptomsTypes = symptomsTypes;
     _searchHouseHoldFilter = searchHouseHoldFilter;
     _referralReasons = referralReasons;
+    _houseStructureTypes = houseStructureTypes;
   }
 
   void setTenantId(String tenantId) {
@@ -372,6 +376,7 @@ class RegistrationDeliverySingleton {
   List<String>? get symptomsTypes => _symptomsTypes;
   List<String>? get searchHouseHoldFilter => _searchHouseHoldFilter;
   List<String>? get referralReasons => _referralReasons;
+  List<String>? get houseStructureTypes => _houseStructureTypes;
 }
 
 bool allDosesDelivered(

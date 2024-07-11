@@ -86,6 +86,7 @@ class AppInitializationBloc
                     MasterEnums.appConfig.toValue(),
                     MasterEnums.symptomTypes.toValue(),
                     MasterEnums.referralReasons.toValue(),
+                    MasterEnums.houseStructureTypes.toValue(),
                     MasterEnums.bandWidthBatchSize.toValue(),
                     MasterEnums.downSyncBandwidthBatchSize.toValue(),
                     MasterEnums.hhDelReasons.toValue(),

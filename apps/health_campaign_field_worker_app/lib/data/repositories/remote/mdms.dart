@@ -317,6 +317,15 @@ class MdmsRepository {
 
       return reasonTypes;
     }).toList();
+    appConfiguration.houseStructureTypes =
+        result.hcmWrapperModel?.houseStructureTypes?.map((e) {
+      final structureTypes = HouseStructureTypes()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return structureTypes;
+    }).toList();
 
     await isar.writeTxn(() async {
       await isar.appConfigurations.put(appConfiguration);

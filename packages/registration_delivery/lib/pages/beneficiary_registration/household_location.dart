@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
 import 'package:flutter/material.dart';
@@ -205,6 +206,46 @@ class _HouseholdLocationPageState
                                           ),
                                         );
 
+                              bloc.add(
+                                BeneficiaryRegistrationSaveAddressEvent(
+                                  addressModel,
+                                ),
+                              );
+                              router.push(HouseDetailsRoute());
+                            },
+                            editHousehold: (
+                              address,
+                              householdModel,
+                              individuals,
+                              registrationDate,
+                              projectBeneficiaryModel,
+                              loading,
+                            ) {
+                              var addressModel = address.copyWith(
+                                addressLine1: addressLine1 != null &&
+                                        addressLine1.trim().isNotEmpty
+                                    ? addressLine1
+                                    : null,
+                                addressLine2: addressLine2 != null &&
+                                        addressLine2.trim().isNotEmpty
+                                    ? addressLine2
+                                    : null,
+                                landmark: landmark != null &&
+                                        landmark.trim().isNotEmpty
+                                    ? landmark
+                                    : null,
+                                locality: address.locality,
+                                pincode: postalCode != null &&
+                                        postalCode.trim().isNotEmpty
+                                    ? postalCode
+                                    : null,
+                                type: AddressType.correspondence,
+                                latitude: form.control(_latKey).value,
+                                longitude: form.control(_lngKey).value,
+                                locationAccuracy:
+                                    form.control(_accuracyKey).value,
+                              );
+                              // TODO [Linking of Voucher for Household based project  need to be handled]
                                         bloc.add(
                                           BeneficiaryRegistrationSaveAddressEvent(
                                             addressModel,
@@ -252,7 +293,7 @@ class _HouseholdLocationPageState
                                             addressModel,
                                           ),
                                         );
-                                        router.push(HouseHoldDetailsRoute());
+                                        router.push(HouseDetailsRoute());
                                       },
                                     );
                                   },
@@ -277,17 +318,17 @@ class _HouseholdLocationPageState
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.fromLTRB(0, 0, 0, kPadding),
-                            child: Text(
-                              localizations.translate(
+                          TextBlock(
+                              padding: const EdgeInsets.only(top: kPadding),
+                              heading: localizations.translate(
                                 i18.householdLocation
                                     .householdLocationLabelText,
                               ),
-                              style: theme.textTheme.displayMedium,
-                            ),
-                          ),
+                              headingStyle: theme.textTheme.displayMedium,
+                              body: localizations.translate(
+                                i18.householdLocation
+                                    .householdLocationDescriptionText,
+                              )),
                           Column(children: [
                             householdLocationShowcaseData.administrativeArea
                                 .buildWith(
