@@ -43,4 +43,8 @@ enum AdditionalFieldsType {
   pregnantWomen,
   @MappableValue("children")
   children,
+  @MappableValue("noOfRooms")
+  noOfRooms,
+  @MappableValue("houseStructureTypes")
+  houseStructureTypes,
 }

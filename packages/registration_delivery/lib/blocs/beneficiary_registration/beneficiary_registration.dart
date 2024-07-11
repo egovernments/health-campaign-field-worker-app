@@ -9,8 +9,8 @@ import 'package:registration_delivery/models/entities/household_member.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
-import '../../utils/utils.dart';
 import '../../utils/typedefs.dart';
+import '../../utils/utils.dart';
 
 part 'beneficiary_registration.freezed.dart';
 
@@ -38,6 +38,7 @@ class BeneficiaryRegistrationBloc
     required this.beneficiaryType,
   }) {
     on(_handleSaveAddress);
+    on(_handleSaveHouseDetails);
     on(_handleSaveHouseholdDetails);
     on(_handleSaveIndividualDetails);
     on(_handleCreate);
@@ -60,6 +61,24 @@ class BeneficiaryRegistrationBloc
       },
       create: (value) {
         emit(value.copyWith(addressModel: event.model));
+      },
+    );
+  }
+
+  //_handleSaveHouseDetails event can be used for saving house details to the form
+  FutureOr<void> _handleSaveHouseDetails(
+    BeneficiaryRegistrationSaveHouseDetailsEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    state.maybeMap(
+      orElse: () {
+        throw const InvalidRegistrationStateException();
+      },
+      editHousehold: (value) {
+        emit(value.copyWith(householdModel: event.model));
+      },
+      create: (value) {
+        emit(value.copyWith(householdModel: event.model));
       },
     );
   }
@@ -454,6 +473,10 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
   const factory BeneficiaryRegistrationEvent.saveAddress(
     AddressModel model,
   ) = BeneficiaryRegistrationSaveAddressEvent;
+
+  const factory BeneficiaryRegistrationEvent.saveHouseDetails({
+    required HouseholdModel model,
+  }) = BeneficiaryRegistrationSaveHouseDetailsEvent;
 
   const factory BeneficiaryRegistrationEvent.saveHouseholdDetails({
     required HouseholdModel household,

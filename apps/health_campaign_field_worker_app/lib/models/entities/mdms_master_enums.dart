@@ -11,6 +11,8 @@ enum MasterEnums {
   symptomTypes,
   @MappableValue("REFERRAL_REASONS")
   referralReasons,
+  @MappableValue("HOUSE_STRUCTURE_TYPES")
+  houseStructureTypes,
   @MappableValue("BANDWIDTH_BATCH_SIZE")
   bandWidthBatchSize,
   @MappableValue("DOWNSYNC-BANDWIDTH_BATCH_SIZE")

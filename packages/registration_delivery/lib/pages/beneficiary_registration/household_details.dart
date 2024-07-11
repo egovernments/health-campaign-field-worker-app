@@ -54,6 +54,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                   showcaseButton: ShowcaseButton(),
                 ),
               ]),
+              enableFixedButton: true,
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                 padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
@@ -89,7 +90,9 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         var household = householdModel;
                         household ??= HouseholdModel(
                           tenantId: RegistrationDeliverySingleton().tenantId,
-                          clientReferenceId: IdGen.i.identifier,
+                          clientReferenceId:
+                              householdModel?.clientReferenceId ??
+                                  IdGen.i.identifier,
                           rowVersion: 1,
                           clientAuditDetails: ClientAuditDetails(
                             createdBy: RegistrationDeliverySingleton()
@@ -110,6 +113,11 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         );
 
                         household = household.copyWith(
+                            rowVersion: 1,
+                            tenantId: RegistrationDeliverySingleton().tenantId,
+                            clientReferenceId:
+                                householdModel?.clientReferenceId ??
+                                    IdGen.i.identifier,
                             memberCount: memberCount,
                             clientAuditDetails: ClientAuditDetails(
                               createdBy: RegistrationDeliverySingleton()
@@ -137,6 +145,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             additionalFields:
                                 HouseholdAdditionalFields(version: 1, fields: [
                               //[TODO: Use pregnant women form value based on project config
+                              ...?householdModel?.additionalFields?.fields,
                               AdditionalField(
                                 AdditionalFieldsType.pregnantWomen.toValue(),
                                 pregnantWomen,
@@ -195,28 +204,11 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                   AdditionalField(
                                     AdditionalFieldsType.pregnantWomen
                                         .toValue(),
-                                    int.tryParse(householdModel
-                                            .additionalFields?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType
-                                                    .pregnantWomen
-                                                    .toValue())
-                                            .first
-                                            .value) ??
-                                        pregnantWomen,
+                                    pregnantWomen,
                                   ),
                                   AdditionalField(
                                     AdditionalFieldsType.children.toValue(),
-                                    int.tryParse(householdModel
-                                            .additionalFields?.fields
-                                            .where((h) =>
-                                                h.key ==
-                                                AdditionalFieldsType.children
-                                                    .toValue())
-                                            .first
-                                            .value) ??
-                                        children,
+                                    children,
                                   )
                                 ]));
 
@@ -289,7 +281,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextBlock(
-                          padding:  const EdgeInsets.only(top: kPadding),
+                          padding: const EdgeInsets.only(top: kPadding),
                           heading: localizations.translate(
                             i18.householdDetails.householdDetailsLabel,
                           ),
@@ -334,7 +326,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               .numberOfPregnantWomenInHousehold
                               .buildWith(
                             child: DigitIntegerFormPicker(
-                              minimum: 1,
+                              minimum: 0,
                               form: form,
                               formControlName: _pregnantWomenCountKey,
                               label: localizations.translate(
@@ -348,7 +340,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               .numberOfChildrenBelow5InHousehold
                               .buildWith(
                             child: DigitIntegerFormPicker(
-                              minimum: 1,
+                              minimum: 0,
                               form: form,
                               formControlName: _childrenCountKey,
                               label: localizations.translate(
@@ -391,19 +383,35 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
           FormControl<DateTime>(value: registrationDate, validators: []),
       _memberCountKey: FormControl<int>(value: household?.memberCount ?? 1),
       _pregnantWomenCountKey: FormControl<int>(
-          value: int.tryParse(household?.additionalFields?.fields
-                  .where((h) =>
-                      h.key == AdditionalFieldsType.pregnantWomen.toValue())
-                  .first
-                  .value) ??
-              0),
+          value: household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.pregnantWomen.toValue())
+                      .firstOrNull
+                      ?.value !=
+                  null
+              ? int.tryParse(household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.pregnantWomen.toValue())
+                      .firstOrNull
+                      ?.value
+                      .toString() ??
+                  '0')
+              : 0),
       _childrenCountKey: FormControl<int>(
-          value: int.tryParse(household?.additionalFields?.fields
-                  .where(
-                      (h) => h.key == AdditionalFieldsType.children.toValue())
-                  .first
-                  .value) ??
-              0)
+          value: household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.children.toValue())
+                      .firstOrNull
+                      ?.value !=
+                  null
+              ? int.tryParse(household?.additionalFields?.fields
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.children.toValue())
+                      .firstOrNull
+                      ?.value
+                      .toString() ??
+                  '0')
+              : 0)
     });
   }
 }
