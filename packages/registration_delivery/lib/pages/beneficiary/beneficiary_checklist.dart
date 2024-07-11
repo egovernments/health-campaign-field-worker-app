@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/pages/beneficiary/refused_delivery.dart';
+
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -18,7 +19,6 @@ import '../../widgets/localized.dart';
 @RoutePage()
 class BeneficiaryChecklistPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
-
   const BeneficiaryChecklistPage({
     super.key,
     this.referralClientRefId,
@@ -64,6 +64,7 @@ class _BeneficiaryChecklistPageState
                         .contains('IRS.TRAINING_SUPERVISION.DISTRIBUTOR'))
                     .toList()
                     .first;
+
                 initialAttributes = selectedServiceDefinition?.attributes;
                 if (!isControllersInitialized) {
                   initialAttributes?.forEach((e) {
@@ -134,6 +135,7 @@ class _BeneficiaryChecklistPageState
                             ),
                           ),
                         );
+
                       },
                       child: Text(
                         localizations.translate(i18.common.coreCommonSubmit),
@@ -306,6 +308,7 @@ class _BeneficiaryChecklistPageState
                                                   )} ${e.required == true ? '*' : ''}',
                                                   style: theme
                                                       .textTheme.headlineSmall,
+
                                                 ),
                                               ],
                                             ),

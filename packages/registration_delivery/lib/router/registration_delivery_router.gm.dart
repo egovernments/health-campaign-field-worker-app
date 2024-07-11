@@ -60,6 +60,7 @@ import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
     as _i19;
 import 'package:registration_delivery/pages/search_beneficiary.dart' as _i20;
 
+
 abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
   @override
   final Map<String, _i23.PageFactory> pagesMap = {
@@ -1067,6 +1068,7 @@ class RefusedDeliveryRouteArgs {
 /// [_i19.RegistrationDeliveryWrapperPage]
 class RegistrationDeliveryWrapperRoute extends _i23.PageRouteInfo<void> {
   const RegistrationDeliveryWrapperRoute({List<_i23.PageRouteInfo>? children})
+
       : super(
           RegistrationDeliveryWrapperRoute.name,
           initialChildren: children,
