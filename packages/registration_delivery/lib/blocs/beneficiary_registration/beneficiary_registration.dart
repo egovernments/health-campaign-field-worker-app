@@ -45,6 +45,7 @@ class BeneficiaryRegistrationBloc
     on(_handleUpdateHousehold);
     on(_handleUpdateIndividual);
     on(_handleAddMember);
+    on(_handleSummary);
   }
 
   //_handleSaveAddress event can be used for saving address details to the form
@@ -127,6 +128,60 @@ class BeneficiaryRegistrationBloc
     );
   }
 
+  FutureOr<void> _handleSummary(
+    BeneficiaryRegistrationSummaryEvent event,
+    BeneficiaryRegistrationEmitter emit,
+  ) async {
+    await state.maybeMap(
+      orElse: () {
+        throw const InvalidRegistrationStateException();
+      },
+      create: (value) async {
+        final individual = value.individualModel;
+        final household = value.householdModel;
+        final address = value.addressModel;
+        final code = event.boundary.code;
+        final name = event.boundary.name;
+        final locality = code == null || name == null
+            ? null
+            : LocalityModel(code: code, name: name);
+        emit(BeneficiaryRegistrationSummaryState(
+            navigateToRoot: false,
+            householdModel: household?.copyWith(
+                address: address?.copyWith(
+              relatedClientReferenceId: household.clientReferenceId,
+              auditDetails: individual?.auditDetails,
+              clientAuditDetails: individual?.clientAuditDetails,
+              locality: locality,
+            )),
+            individualModel: individual,
+            projectBeneficiaryModel: ProjectBeneficiaryModel(
+              tag: event.tag,
+              rowVersion: 1,
+              tenantId: RegistrationDeliverySingleton().tenantId,
+              clientReferenceId: IdGen.i.identifier,
+              dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+              projectId: event.projectId,
+              beneficiaryClientReferenceId:
+                  beneficiaryType == BeneficiaryType.individual
+                      ? individual?.clientReferenceId
+                      : household?.clientReferenceId,
+              clientAuditDetails: ClientAuditDetails(
+                createdTime: DateTime.now().millisecondsSinceEpoch,
+                lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                lastModifiedBy: event.userUuid,
+                createdBy: event.userUuid,
+              ),
+              auditDetails: AuditDetails(
+                createdBy: event.userUuid,
+                createdTime: DateTime.now().millisecondsSinceEpoch,
+              ),
+            ),
+            isHeadOfHousehold: value.isHeadOfHousehold));
+      },
+    );
+  }
+
   FutureOr<void> _handleCreate(
     BeneficiaryRegistrationCreateEvent event,
     BeneficiaryRegistrationEmitter emit,
@@ -134,6 +189,100 @@ class BeneficiaryRegistrationBloc
     await state.maybeMap(
       orElse: () {
         throw const InvalidRegistrationStateException();
+      },
+      persisted: (value) {},
+      summary: (value) async {
+        if (event.navigateToSummary) {
+          emit(BeneficiaryRegistrationState.create(
+            addressModel: value.householdModel?.address,
+            householdModel: value.householdModel,
+          ));
+        } else {
+          final individual = value.individualModel;
+          final household = value.householdModel;
+          final address = value.householdModel?.address;
+          final dateOfRegistration =
+              value.projectBeneficiaryModel?.dateOfRegistration;
+          if (individual == null) {
+            throw const InvalidRegistrationStateException(
+              'Individual cannot be null',
+            );
+          } else if (household == null) {
+            throw const InvalidRegistrationStateException(
+              'Household cannot be null',
+            );
+          }
+
+          try {
+            final createdAt = DateTime.now().millisecondsSinceEpoch;
+
+            emit(value.copyWith(loading: true));
+
+            final code = event.boundary.code;
+            final name = event.boundary.name;
+
+            final locality = code == null || name == null
+                ? null
+                : LocalityModel(code: code, name: name);
+            await householdRepository.create(
+              household.copyWith(
+                address: address?.copyWith(
+                  relatedClientReferenceId: household.clientReferenceId,
+                  auditDetails: individual.auditDetails,
+                  clientAuditDetails: individual.clientAuditDetails,
+                  locality: locality,
+                ),
+              ),
+            );
+            final initialModifiedAt = DateTime.now().millisecondsSinceEpoch;
+            await individualRepository.create(
+              individual.copyWith(
+                address: [
+                  address!.copyWith(
+                    relatedClientReferenceId: individual.clientReferenceId,
+                    auditDetails: individual.auditDetails,
+                    clientAuditDetails: individual.clientAuditDetails,
+                    locality: locality,
+                  ),
+                ],
+              ),
+            );
+
+            await projectBeneficiaryRepository.create(
+              value.projectBeneficiaryModel!,
+            );
+
+            await householdMemberRepository.create(
+              HouseholdMemberModel(
+                householdClientReferenceId: household.clientReferenceId,
+                individualClientReferenceId: individual.clientReferenceId,
+                isHeadOfHousehold: value.isHeadOfHousehold,
+                tenantId: RegistrationDeliverySingleton().tenantId,
+                rowVersion: 1,
+                clientReferenceId: IdGen.i.identifier,
+                clientAuditDetails: ClientAuditDetails(
+                  createdTime: createdAt,
+                  lastModifiedTime: initialModifiedAt,
+                  lastModifiedBy: event.userUuid,
+                  createdBy: event.userUuid,
+                ),
+                auditDetails: AuditDetails(
+                  createdBy: event.userUuid,
+                  createdTime: createdAt,
+                ),
+              ),
+            );
+          } catch (error) {
+            rethrow;
+          } finally {
+            emit(
+              BeneficiaryRegistrationPersistedState(
+                navigateToRoot: false,
+                householdModel: household,
+              ),
+            );
+          }
+        }
       },
       create: (value) async {
         final individual = value.individualModel;
@@ -159,18 +308,17 @@ class BeneficiaryRegistrationBloc
           );
         }
 
-        final createdAt = DateTime.now().millisecondsSinceEpoch;
-
-        emit(value.copyWith(loading: true));
-
         try {
+          final createdAt = DateTime.now().millisecondsSinceEpoch;
+
+          emit(value.copyWith(loading: true));
+
           final code = event.boundary.code;
           final name = event.boundary.name;
 
           final locality = code == null || name == null
               ? null
               : LocalityModel(code: code, name: name);
-
           await householdRepository.create(
             household.copyWith(
               address: address.copyWith(
@@ -196,28 +344,7 @@ class BeneficiaryRegistrationBloc
           );
 
           await projectBeneficiaryRepository.create(
-            ProjectBeneficiaryModel(
-              tag: event.tag,
-              rowVersion: 1,
-              tenantId: RegistrationDeliverySingleton().tenantId,
-              clientReferenceId: IdGen.i.identifier,
-              dateOfRegistration: dateOfRegistration.millisecondsSinceEpoch,
-              projectId: event.projectId,
-              beneficiaryClientReferenceId:
-                  beneficiaryType == BeneficiaryType.individual
-                      ? individual.clientReferenceId
-                      : household.clientReferenceId,
-              clientAuditDetails: ClientAuditDetails(
-                createdTime: createdAt,
-                lastModifiedTime: initialModifiedAt,
-                lastModifiedBy: event.userUuid,
-                createdBy: event.userUuid,
-              ),
-              auditDetails: AuditDetails(
-                createdBy: event.userUuid,
-                createdTime: createdAt,
-              ),
-            ),
+            value.projectBeneficiaryModel!,
           );
 
           await householdMemberRepository.create(
@@ -511,12 +638,21 @@ class BeneficiaryRegistrationEvent with _$BeneficiaryRegistrationEvent {
     required AddressModel addressModel,
   }) = BeneficiaryRegistrationUpdateIndividualDetailsEvent;
 
-  const factory BeneficiaryRegistrationEvent.create({
-    required String userUuid,
-    required String projectId,
-    required BoundaryModel boundary,
-    String? tag,
-  }) = BeneficiaryRegistrationCreateEvent;
+  const factory BeneficiaryRegistrationEvent.create(
+          {required String userUuid,
+          required String projectId,
+          required BoundaryModel boundary,
+          String? tag,
+          @Default(true) bool navigateToSummary}) =
+      BeneficiaryRegistrationCreateEvent;
+
+  const factory BeneficiaryRegistrationEvent.summary(
+          {required String userUuid,
+          required String projectId,
+          required BoundaryModel boundary,
+          String? tag,
+          @Default(true) bool navigateToSummary}) =
+      BeneficiaryRegistrationSummaryEvent;
 
   const factory BeneficiaryRegistrationEvent.validate({
     required String tag,
@@ -529,6 +665,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     AddressModel? addressModel,
     HouseholdModel? householdModel,
     IndividualModel? individualModel,
+    ProjectBeneficiaryModel? projectBeneficiaryModel,
     DateTime? registrationDate,
     String? searchQuery,
     @Default(false) bool loading,
@@ -562,6 +699,17 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     @Default(true) bool navigateToRoot,
     required HouseholdModel householdModel,
   }) = BeneficiaryRegistrationPersistedState;
+
+  const factory BeneficiaryRegistrationState.summary({
+    @Default(true) bool navigateToRoot,
+    HouseholdModel? householdModel,
+    IndividualModel? individualModel,
+    ProjectBeneficiaryModel? projectBeneficiaryModel,
+    DateTime? registrationDate,
+    AddressModel? addressModel,
+    @Default(false) bool loading,
+    @Default(false) bool isHeadOfHousehold,
+  }) = BeneficiaryRegistrationSummaryState;
 }
 
 class InvalidRegistrationStateException implements Exception {

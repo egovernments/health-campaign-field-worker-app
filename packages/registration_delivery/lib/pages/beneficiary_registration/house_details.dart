@@ -98,6 +98,7 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 address,
                                 householdModel,
                                 individualModel,
+                                projectBeneficiaryModel,
                                 registrationDate,
                                 searchQuery,
                                 loading,
@@ -226,6 +227,7 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               Column(children: [
                                 houseShowcaseData.typeOfStructure.buildWith(
                                   child: SelectionBox<String>(
+                                    title: i18.householdDetails.typeOfStructure,
                                     width: 120,
                                     options: RegistrationDeliverySingleton()
                                             .houseStructureTypes ??

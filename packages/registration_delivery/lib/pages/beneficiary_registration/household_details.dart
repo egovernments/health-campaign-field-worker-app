@@ -82,6 +82,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                         addressModel,
                         householdModel,
                         individualModel,
+                        projectBeneficiaryModel,
                         registrationDate,
                         searchQuery,
                         loading,

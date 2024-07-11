@@ -818,6 +818,10 @@ void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: SummaryRoute.page,
+                    path: 'beneficiary-summary',
+                  ),
                 ],
               ),
               AutoRoute(
