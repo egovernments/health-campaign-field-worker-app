@@ -57,9 +57,9 @@ import 'package:registration_delivery/pages/beneficiary_registration/individual_
     as _i14;
 import 'package:registration_delivery/pages/reason_for_deletion.dart' as _i15;
 import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
-    as _i19;
-import 'package:registration_delivery/pages/search_beneficiary.dart' as _i20;
-
+    as _i18;
+import 'package:registration_delivery/pages/search_beneficiary.dart' as _i19;
+import 'package:registration_delivery/pages/summary_page.dart' as _i22;
 
 abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
   @override
@@ -307,6 +307,17 @@ abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableBackToSearch: args.enableBackToSearch,
+        ),
+      );
+    },
+    SummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<SummaryRouteArgs>(
+          orElse: () => const SummaryRouteArgs());
+      return _i23.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i22.SummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
         ),
       );
     },
@@ -1024,8 +1035,6 @@ class ReferBeneficiaryRouteArgs {
     return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId}';
   }
 }
-
-/// generated route for
 /// [_i18.RefusedDeliveryPage]
 class RefusedDeliveryRoute
     extends _i23.PageRouteInfo<RefusedDeliveryRouteArgs> {
@@ -1207,5 +1216,43 @@ class SplashAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableBackToSearch: $enableBackToSearch}';
+  }
+}
+
+/// generated route for
+/// [_i22.SummaryPage]
+class SummaryRoute extends _i23.PageRouteInfo<SummaryRouteArgs> {
+  SummaryRoute({
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
+  }) : super(
+          SummaryRoute.name,
+          args: SummaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'SummaryRoute';
+
+  static const _i23.PageInfo<SummaryRouteArgs> page =
+      _i23.PageInfo<SummaryRouteArgs>(name);
+}
+
+class SummaryRouteArgs {
+  const SummaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final _i24.Key? key;
+
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
