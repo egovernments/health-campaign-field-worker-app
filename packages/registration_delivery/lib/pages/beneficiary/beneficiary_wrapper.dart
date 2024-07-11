@@ -56,6 +56,9 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
 
+    final serviceDefinationRepo =
+    context.repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>(context);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -63,6 +66,12 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             const ServiceEmptyState(),
             serviceDataRepository: service,
           ),
+        ),
+        BlocProvider(
+          create: (_) => ServiceDefinitionBloc(
+            const ServiceDefinitionEmptyState(),
+            serviceDefinitionDataRepository: serviceDefinition,
+          )..add(const ServiceDefinitionFetchEvent()),
         ),
         BlocProvider(
           create: (_) => FacilityBloc(

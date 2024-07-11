@@ -17,46 +17,46 @@ import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i26;
 import 'package:registration_delivery/models/entities/task.dart' as _i28;
-import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
+import 'package:registration_delivery/pages/beneficiary/beneficiary_checklist.dart'
     as _i2;
+import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
+    as _i3;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_wrapper.dart'
-    as _i4;
-import 'package:registration_delivery/pages/beneficiary/deliver_intervention.dart'
     as _i5;
-import 'package:registration_delivery/pages/beneficiary/dose_administered.dart'
+import 'package:registration_delivery/pages/beneficiary/deliver_intervention.dart'
     as _i6;
-import 'package:registration_delivery/pages/beneficiary/facility_selection.dart'
+import 'package:registration_delivery/pages/beneficiary/dose_administered.dart'
     as _i7;
+import 'package:registration_delivery/pages/beneficiary/facility_selection.dart'
+    as _i8;
 import 'package:registration_delivery/pages/beneficiary/household_overview.dart'
-    as _i12;
+    as _i13;
 import 'package:registration_delivery/pages/beneficiary/record_past_delivery_details.dart'
-    as _i15;
-import 'package:registration_delivery/pages/beneficiary/refer_beneficiary.dart'
     as _i16;
+import 'package:registration_delivery/pages/beneficiary/refer_beneficiary.dart'
+    as _i17;
 import 'package:registration_delivery/pages/beneficiary/side_effects.dart'
-    as _i19;
-import 'package:registration_delivery/pages/beneficiary/widgets/household_acknowledgement.dart'
-    as _i10;
-import 'package:registration_delivery/pages/beneficiary/widgets/splash_acknowledgement.dart'
     as _i20;
+import 'package:registration_delivery/pages/beneficiary/widgets/household_acknowledgement.dart'
+    as _i11;
+import 'package:registration_delivery/pages/beneficiary/widgets/splash_acknowledgement.dart'
+    as _i21;
 import 'package:registration_delivery/pages/beneficiary_registration/beneficiary_acknowledgement.dart'
     as _i1;
 import 'package:registration_delivery/pages/beneficiary_registration/beneficiary_registration_wrapper.dart'
-    as _i3;
+    as _i4;
 import 'package:registration_delivery/pages/beneficiary_registration/house_details.dart'
-    as _i8;
-import 'package:registration_delivery/pages/beneficiary_registration/household_details.dart'
     as _i9;
+import 'package:registration_delivery/pages/beneficiary_registration/household_details.dart'
+    as _i10;
 import 'package:registration_delivery/pages/beneficiary_registration/household_location.dart'
-    as _i11;
+    as _i12;
 import 'package:registration_delivery/pages/beneficiary_registration/individual_details.dart'
-    as _i13;
-import 'package:registration_delivery/pages/reason_for_deletion.dart' as _i14;
+    as _i14;
+import 'package:registration_delivery/pages/reason_for_deletion.dart' as _i15;
 import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
-    as _i17;
-import 'package:registration_delivery/pages/search_beneficiary.dart' as _i18;
-import 'package:registration_delivery/pages/summary_page.dart' as _i21;
-import 'package:registration_delivery/widgets/details_card.dart' as _i29;
+    as _i18;
+import 'package:registration_delivery/pages/search_beneficiary.dart' as _i19;
 
 abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
   @override
@@ -73,12 +73,24 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
         ),
       );
     },
+    BeneficiaryChecklistRoute.name: (routeData) {
+      final args = routeData.argsAs<BeneficiaryChecklistRouteArgs>(
+          orElse: () => const BeneficiaryChecklistRouteArgs());
+      return _i22.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i2.BeneficiaryChecklistPage(
+          key: args.key,
+          referralClientRefId: args.referralClientRefId,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     BeneficiaryDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<BeneficiaryDetailsRouteArgs>(
           orElse: () => const BeneficiaryDetailsRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i2.BeneficiaryDetailsPage(
+        child: _i3.BeneficiaryDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -89,7 +101,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i22.WrappedRoute(
-            child: _i3.BeneficiaryRegistrationWrapperPage(
+            child: _i4.BeneficiaryRegistrationWrapperPage(
           key: args.key,
           initialState: args.initialState,
         )),
@@ -99,7 +111,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
       final args = routeData.argsAs<BeneficiaryWrapperRouteArgs>();
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i4.BeneficiaryWrapperPage(
+        child: _i5.BeneficiaryWrapperPage(
           key: args.key,
           wrapper: args.wrapper,
           isEditing: args.isEditing,
@@ -111,7 +123,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const DeliverInterventionRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i5.DeliverInterventionPage(
+        child: _i6.DeliverInterventionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
@@ -123,7 +135,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const DoseAdministeredRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i6.DoseAdministeredPage(
+        child: _i7.DoseAdministeredPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -133,7 +145,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
       final args = routeData.argsAs<FacilitySelectionRouteArgs>();
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i7.FacilitySelectionPage(
+        child: _i8.FacilitySelectionPage(
           key: args.key,
           facilities: args.facilities,
         ),
@@ -144,7 +156,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const HouseDetailsRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i8.HouseDetailsPage(
+        child: _i9.HouseDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -155,7 +167,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const HouseHoldDetailsRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i9.HouseHoldDetailsPage(
+        child: _i10.HouseHoldDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -166,7 +178,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const HouseholdAcknowledgementRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i10.HouseholdAcknowledgementPage(
+        child: _i11.HouseholdAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableViewHousehold: args.enableViewHousehold,
@@ -178,7 +190,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const HouseholdLocationRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i11.HouseholdLocationPage(
+        child: _i12.HouseholdLocationPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -189,7 +201,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const HouseholdOverviewRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i12.HouseholdOverviewPage(
+        child: _i13.HouseholdOverviewPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -200,7 +212,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const IndividualDetailsRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i13.IndividualDetailsPage(
+        child: _i14.IndividualDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHeadOfHousehold: args.isHeadOfHousehold,
@@ -212,7 +224,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const ReasonForDeletionRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i14.ReasonForDeletionPage(
+        child: _i15.ReasonForDeletionPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHousholdDelete: args.isHousholdDelete,
@@ -224,7 +236,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const RecordPastDeliveryDetailsRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i15.RecordPastDeliveryDetailsPage(
+        child: _i16.RecordPastDeliveryDetailsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
@@ -235,7 +247,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
       final args = routeData.argsAs<ReferBeneficiaryRouteArgs>();
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i16.ReferBeneficiaryPage(
+        child: _i17.ReferBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isEditing: args.isEditing,
@@ -246,7 +258,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
     RegistrationDeliveryWrapperRoute.name: (routeData) {
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i17.RegistrationDeliveryWrapperPage(),
+        child: const _i18.RegistrationDeliveryWrapperPage(),
       );
     },
     SearchBeneficiaryRoute.name: (routeData) {
@@ -254,7 +266,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const SearchBeneficiaryRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i18.SearchBeneficiaryPage(
+        child: _i19.SearchBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -264,7 +276,7 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
       final args = routeData.argsAs<SideEffectsRouteArgs>();
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i19.SideEffectsPage(
+        child: _i20.SideEffectsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
@@ -277,21 +289,10 @@ abstract class $RegistrationDeliveryRoute extends _i22.AutoRouterModule {
           orElse: () => const SplashAcknowledgementRouteArgs());
       return _i22.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i20.SplashAcknowledgementPage(
+        child: _i21.SplashAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableBackToSearch: args.enableBackToSearch,
-        ),
-      );
-    },
-    SummaryRoute.name: (routeData) {
-      final args = routeData.argsAs<SummaryRouteArgs>();
-      return _i22.AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: _i21.SummaryPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-          summaryList: args.summaryList,
         ),
       );
     },
@@ -343,7 +344,51 @@ class BeneficiaryAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [_i2.BeneficiaryDetailsPage]
+/// [_i2.BeneficiaryChecklistPage]
+class BeneficiaryChecklistRoute
+    extends _i22.PageRouteInfo<BeneficiaryChecklistRouteArgs> {
+  BeneficiaryChecklistRoute({
+    _i23.Key? key,
+    String? referralClientRefId,
+    _i24.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i22.PageRouteInfo>? children,
+  }) : super(
+          BeneficiaryChecklistRoute.name,
+          args: BeneficiaryChecklistRouteArgs(
+            key: key,
+            referralClientRefId: referralClientRefId,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'BeneficiaryChecklistRoute';
+
+  static const _i22.PageInfo<BeneficiaryChecklistRouteArgs> page =
+      _i22.PageInfo<BeneficiaryChecklistRouteArgs>(name);
+}
+
+class BeneficiaryChecklistRouteArgs {
+  const BeneficiaryChecklistRouteArgs({
+    this.key,
+    this.referralClientRefId,
+    this.appLocalizations,
+  });
+
+  final _i23.Key? key;
+
+  final String? referralClientRefId;
+
+  final _i24.RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'BeneficiaryChecklistRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [_i3.BeneficiaryDetailsPage]
 class BeneficiaryDetailsRoute
     extends _i22.PageRouteInfo<BeneficiaryDetailsRouteArgs> {
   BeneficiaryDetailsRoute({
@@ -382,7 +427,7 @@ class BeneficiaryDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i3.BeneficiaryRegistrationWrapperPage]
+/// [_i4.BeneficiaryRegistrationWrapperPage]
 class BeneficiaryRegistrationWrapperRoute
     extends _i22.PageRouteInfo<BeneficiaryRegistrationWrapperRouteArgs> {
   BeneficiaryRegistrationWrapperRoute({
@@ -421,7 +466,7 @@ class BeneficiaryRegistrationWrapperRouteArgs {
 }
 
 /// generated route for
-/// [_i4.BeneficiaryWrapperPage]
+/// [_i5.BeneficiaryWrapperPage]
 class BeneficiaryWrapperRoute
     extends _i22.PageRouteInfo<BeneficiaryWrapperRouteArgs> {
   BeneficiaryWrapperRoute({
@@ -465,7 +510,7 @@ class BeneficiaryWrapperRouteArgs {
 }
 
 /// generated route for
-/// [_i5.DeliverInterventionPage]
+/// [_i6.DeliverInterventionPage]
 class DeliverInterventionRoute
     extends _i22.PageRouteInfo<DeliverInterventionRouteArgs> {
   DeliverInterventionRoute({
@@ -509,7 +554,7 @@ class DeliverInterventionRouteArgs {
 }
 
 /// generated route for
-/// [_i6.DoseAdministeredPage]
+/// [_i7.DoseAdministeredPage]
 class DoseAdministeredRoute
     extends _i22.PageRouteInfo<DoseAdministeredRouteArgs> {
   DoseAdministeredRoute({
@@ -548,7 +593,7 @@ class DoseAdministeredRouteArgs {
 }
 
 /// generated route for
-/// [_i7.FacilitySelectionPage]
+/// [_i8.FacilitySelectionPage]
 class FacilitySelectionRoute
     extends _i22.PageRouteInfo<FacilitySelectionRouteArgs> {
   FacilitySelectionRoute({
@@ -587,7 +632,7 @@ class FacilitySelectionRouteArgs {
 }
 
 /// generated route for
-/// [_i8.HouseDetailsPage]
+/// [_i9.HouseDetailsPage]
 class HouseDetailsRoute extends _i22.PageRouteInfo<HouseDetailsRouteArgs> {
   HouseDetailsRoute({
     _i23.Key? key,
@@ -625,7 +670,7 @@ class HouseDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i9.HouseHoldDetailsPage]
+/// [_i10.HouseHoldDetailsPage]
 class HouseHoldDetailsRoute
     extends _i22.PageRouteInfo<HouseHoldDetailsRouteArgs> {
   HouseHoldDetailsRoute({
@@ -664,7 +709,7 @@ class HouseHoldDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i10.HouseholdAcknowledgementPage]
+/// [_i11.HouseholdAcknowledgementPage]
 class HouseholdAcknowledgementRoute
     extends _i22.PageRouteInfo<HouseholdAcknowledgementRouteArgs> {
   HouseholdAcknowledgementRoute({
@@ -708,7 +753,7 @@ class HouseholdAcknowledgementRouteArgs {
 }
 
 /// generated route for
-/// [_i11.HouseholdLocationPage]
+/// [_i12.HouseholdLocationPage]
 class HouseholdLocationRoute
     extends _i22.PageRouteInfo<HouseholdLocationRouteArgs> {
   HouseholdLocationRoute({
@@ -747,7 +792,7 @@ class HouseholdLocationRouteArgs {
 }
 
 /// generated route for
-/// [_i12.HouseholdOverviewPage]
+/// [_i13.HouseholdOverviewPage]
 class HouseholdOverviewRoute
     extends _i22.PageRouteInfo<HouseholdOverviewRouteArgs> {
   HouseholdOverviewRoute({
@@ -786,7 +831,7 @@ class HouseholdOverviewRouteArgs {
 }
 
 /// generated route for
-/// [_i13.IndividualDetailsPage]
+/// [_i14.IndividualDetailsPage]
 class IndividualDetailsRoute
     extends _i22.PageRouteInfo<IndividualDetailsRouteArgs> {
   IndividualDetailsRoute({
@@ -830,7 +875,7 @@ class IndividualDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i14.ReasonForDeletionPage]
+/// [_i15.ReasonForDeletionPage]
 class ReasonForDeletionRoute
     extends _i22.PageRouteInfo<ReasonForDeletionRouteArgs> {
   ReasonForDeletionRoute({
@@ -874,7 +919,7 @@ class ReasonForDeletionRouteArgs {
 }
 
 /// generated route for
-/// [_i15.RecordPastDeliveryDetailsPage]
+/// [_i16.RecordPastDeliveryDetailsPage]
 class RecordPastDeliveryDetailsRoute
     extends _i22.PageRouteInfo<RecordPastDeliveryDetailsRouteArgs> {
   RecordPastDeliveryDetailsRoute({
@@ -918,7 +963,7 @@ class RecordPastDeliveryDetailsRouteArgs {
 }
 
 /// generated route for
-/// [_i16.ReferBeneficiaryPage]
+/// [_i17.ReferBeneficiaryPage]
 class ReferBeneficiaryRoute
     extends _i22.PageRouteInfo<ReferBeneficiaryRouteArgs> {
   ReferBeneficiaryRoute({
@@ -967,7 +1012,7 @@ class ReferBeneficiaryRouteArgs {
 }
 
 /// generated route for
-/// [_i17.RegistrationDeliveryWrapperPage]
+/// [_i18.RegistrationDeliveryWrapperPage]
 class RegistrationDeliveryWrapperRoute extends _i22.PageRouteInfo<void> {
   const RegistrationDeliveryWrapperRoute({List<_i22.PageRouteInfo>? children})
       : super(
@@ -981,7 +1026,7 @@ class RegistrationDeliveryWrapperRoute extends _i22.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i18.SearchBeneficiaryPage]
+/// [_i19.SearchBeneficiaryPage]
 class SearchBeneficiaryRoute
     extends _i22.PageRouteInfo<SearchBeneficiaryRouteArgs> {
   SearchBeneficiaryRoute({
@@ -1020,7 +1065,7 @@ class SearchBeneficiaryRouteArgs {
 }
 
 /// generated route for
-/// [_i19.SideEffectsPage]
+/// [_i20.SideEffectsPage]
 class SideEffectsRoute extends _i22.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
     _i23.Key? key,
@@ -1068,7 +1113,7 @@ class SideEffectsRouteArgs {
 }
 
 /// generated route for
-/// [_i20.SplashAcknowledgementPage]
+/// [_i21.SplashAcknowledgementPage]
 class SplashAcknowledgementRoute
     extends _i22.PageRouteInfo<SplashAcknowledgementRouteArgs> {
   SplashAcknowledgementRoute({
@@ -1108,48 +1153,5 @@ class SplashAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'SplashAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableBackToSearch: $enableBackToSearch}';
-  }
-}
-
-/// generated route for
-/// [_i21.SummaryPage]
-class SummaryRoute extends _i22.PageRouteInfo<SummaryRouteArgs> {
-  SummaryRoute({
-    _i23.Key? key,
-    _i24.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i29.LabelValueList> summaryList,
-    List<_i22.PageRouteInfo>? children,
-  }) : super(
-          SummaryRoute.name,
-          args: SummaryRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-            summaryList: summaryList,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'SummaryRoute';
-
-  static const _i22.PageInfo<SummaryRouteArgs> page =
-      _i22.PageInfo<SummaryRouteArgs>(name);
-}
-
-class SummaryRouteArgs {
-  const SummaryRouteArgs({
-    this.key,
-    this.appLocalizations,
-    required this.summaryList,
-  });
-
-  final _i23.Key? key;
-
-  final _i24.RegistrationDeliveryLocalization? appLocalizations;
-
-  final List<_i29.LabelValueList> summaryList;
-
-  @override
-  String toString() {
-    return 'SummaryRouteArgs{key: $key, appLocalizations: $appLocalizations, summaryList: $summaryList}';
   }
 }

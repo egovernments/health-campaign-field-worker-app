@@ -4,6 +4,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -118,13 +119,16 @@ class _IndividualDetailsPageState
                                 form.control(_idTypeKey).setErrors({'': true});
                               }
                               if (form.control(_genderKey).value == null) {
-                                form.control(_genderKey).setErrors({'': true});
+                                setState(() {
+                                  form.control(_genderKey).setErrors({'': true});
+                                });
                               }
                               final userId = RegistrationDeliverySingleton()
                                   .loggedInUserUuid;
                               final projectId =
                                   RegistrationDeliverySingleton().projectId;
                               form.markAllAsTouched();
+
                               if (!form.valid) return;
                               FocusManager.instance.primaryFocus?.unfocus();
 
@@ -526,27 +530,39 @@ class _IndividualDetailsPageState
                                     .translate(i18.common.coreCommonOk),
                               ),
                             ),
-                            DigitReactiveSearchDropdown<String>(
+                            LabeledField(
+                              isRequired: true,
                               label: localizations.translate(
                                 i18.individualDetails.genderLabelText,
                               ),
-                              form: form,
-                              menuItems: RegistrationDeliverySingleton()
-                                  .genderOptions!
-                                  .map(
-                                    (e) => e,
-                                  )
-                                  .toList(),
-                              formControlName: _genderKey,
-                              valueMapper: (value) {
-                                return localizations.translate(value);
-                              },
-                              isRequired: true,
-                              validationMessage: localizations.translate(
-                                i18.common.corecommonRequired,
+                              child: SelectionBox<String>(
+                                allowMultipleSelection: false,
+                                width: 120,
+                                options: RegistrationDeliverySingleton()
+                                    .genderOptions!
+                                    .map(
+                                      (e) => e,
+                                    )
+                                    .toList(),
+                                onSelectionChanged: (value){
+                                  setState(() {
+                                    if(value.isNotEmpty){
+                                      form.control(_genderKey).value = value.first;
+                                    }else{
+                                      form.control(_genderKey).value = null;
+                                      setState(() {
+                                        form.control(_genderKey).setErrors({'': true});
+                                      });
+                                    }
+                                  });
+                                },
+                                valueMapper: (value) {
+                                  return localizations.translate(value);
+                                },
+                                errorMessage:  form.control(_genderKey).hasErrors
+                                    ? localizations.translate(i18.common.corecommonRequired)
+                                    : null,
                               ),
-                              emptyText: localizations
-                                  .translate(i18.common.noMatchFound),
                             ),
                             individualDetailsShowcaseData.mobile.buildWith(
                               child: DigitTextFormField(
