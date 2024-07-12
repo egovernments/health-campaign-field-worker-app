@@ -41,8 +41,11 @@ mixin _$BeneficiaryRegistrationEvent {
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) =>
       throw _privateConstructorUsedError;
@@ -70,8 +73,11 @@ mixin _$BeneficiaryRegistrationEvent {
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) =>
       throw _privateConstructorUsedError;
@@ -99,8 +105,11 @@ mixin _$BeneficiaryRegistrationEvent {
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) =>
@@ -127,6 +136,8 @@ mixin _$BeneficiaryRegistrationEvent {
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) =>
       throw _privateConstructorUsedError;
@@ -147,6 +158,7 @@ mixin _$BeneficiaryRegistrationEvent {
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) =>
       throw _privateConstructorUsedError;
@@ -166,6 +178,7 @@ mixin _$BeneficiaryRegistrationEvent {
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) =>
@@ -287,8 +300,11 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return saveAddress(model);
@@ -319,8 +335,11 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return saveAddress?.call(model);
@@ -351,8 +370,11 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -385,6 +407,8 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return saveAddress(this);
@@ -408,6 +432,7 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return saveAddress?.call(this);
@@ -430,6 +455,7 @@ class _$BeneficiaryRegistrationSaveAddressEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -551,8 +577,11 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return saveHouseDetails(model);
@@ -583,8 +612,11 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return saveHouseDetails?.call(model);
@@ -615,8 +647,11 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -649,6 +684,8 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return saveHouseDetails(this);
@@ -672,6 +709,7 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return saveHouseDetails?.call(this);
@@ -694,6 +732,7 @@ class _$BeneficiaryRegistrationSaveHouseDetailsEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -828,8 +867,11 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return saveHouseholdDetails(household, registrationDate);
@@ -860,8 +902,11 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return saveHouseholdDetails?.call(household, registrationDate);
@@ -892,8 +937,11 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -926,6 +974,8 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return saveHouseholdDetails(this);
@@ -949,6 +999,7 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return saveHouseholdDetails?.call(this);
@@ -971,6 +1022,7 @@ class _$BeneficiaryRegistrationSaveHouseholdDetailsEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -1108,8 +1160,11 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return saveIndividualDetails(model, isHeadOfHousehold);
@@ -1140,8 +1195,11 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return saveIndividualDetails?.call(model, isHeadOfHousehold);
@@ -1172,8 +1230,11 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -1206,6 +1267,8 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return saveIndividualDetails(this);
@@ -1229,6 +1292,7 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return saveIndividualDetails?.call(this);
@@ -1251,6 +1315,7 @@ class _$BeneficiaryRegistrationSaveIndividualDetailsEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -1438,8 +1503,11 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return addMember(householdModel, individualModel, addressModel, userUuid,
@@ -1471,8 +1539,11 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return addMember?.call(householdModel, individualModel, addressModel,
@@ -1504,8 +1575,11 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -1539,6 +1613,8 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return addMember(this);
@@ -1562,6 +1638,7 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return addMember?.call(this);
@@ -1584,6 +1661,7 @@ class _$BeneficiaryRegistrationAddMemberEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -1742,8 +1820,11 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return updateHouseholdDetails(household, addressModel, tag);
@@ -1774,8 +1855,11 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return updateHouseholdDetails?.call(household, addressModel, tag);
@@ -1806,8 +1890,11 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -1840,6 +1927,8 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return updateHouseholdDetails(this);
@@ -1863,6 +1952,7 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return updateHouseholdDetails?.call(this);
@@ -1885,6 +1975,7 @@ class _$BeneficiaryRegistrationUpdateHouseholdDetailsEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -2051,8 +2142,11 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return updateIndividualDetails(model, tag, householdModel, addressModel);
@@ -2083,8 +2177,11 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return updateIndividualDetails?.call(
@@ -2116,8 +2213,11 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -2150,6 +2250,8 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return updateIndividualDetails(this);
@@ -2173,6 +2275,7 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return updateIndividualDetails?.call(this);
@@ -2195,6 +2298,7 @@ class _$BeneficiaryRegistrationUpdateIndividualDetailsEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -2232,7 +2336,11 @@ abstract class _$$BeneficiaryRegistrationCreateEventImplCopyWith<$Res> {
       __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<$Res>;
   @useResult
   $Res call(
-      {String userUuid, String projectId, BoundaryModel boundary, String? tag});
+      {String userUuid,
+      String projectId,
+      BoundaryModel boundary,
+      String? tag,
+      bool navigateToSummary});
 }
 
 /// @nodoc
@@ -2252,6 +2360,7 @@ class __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<$Res>
     Object? projectId = null,
     Object? boundary = null,
     Object? tag = freezed,
+    Object? navigateToSummary = null,
   }) {
     return _then(_$BeneficiaryRegistrationCreateEventImpl(
       userUuid: null == userUuid
@@ -2270,6 +2379,10 @@ class __$$BeneficiaryRegistrationCreateEventImplCopyWithImpl<$Res>
           ? _value.tag
           : tag // ignore: cast_nullable_to_non_nullable
               as String?,
+      navigateToSummary: null == navigateToSummary
+          ? _value.navigateToSummary
+          : navigateToSummary // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -2282,7 +2395,8 @@ class _$BeneficiaryRegistrationCreateEventImpl
       {required this.userUuid,
       required this.projectId,
       required this.boundary,
-      this.tag});
+      this.tag,
+      this.navigateToSummary = true});
 
   @override
   final String userUuid;
@@ -2292,10 +2406,13 @@ class _$BeneficiaryRegistrationCreateEventImpl
   final BoundaryModel boundary;
   @override
   final String? tag;
+  @override
+  @JsonKey()
+  final bool navigateToSummary;
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationEvent.create(userUuid: $userUuid, projectId: $projectId, boundary: $boundary, tag: $tag)';
+    return 'BeneficiaryRegistrationEvent.create(userUuid: $userUuid, projectId: $projectId, boundary: $boundary, tag: $tag, navigateToSummary: $navigateToSummary)';
   }
 
   @override
@@ -2309,12 +2426,14 @@ class _$BeneficiaryRegistrationCreateEventImpl
                 other.projectId == projectId) &&
             (identical(other.boundary, boundary) ||
                 other.boundary == boundary) &&
-            (identical(other.tag, tag) || other.tag == tag));
+            (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.navigateToSummary, navigateToSummary) ||
+                other.navigateToSummary == navigateToSummary));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, userUuid, projectId, boundary, tag);
+  int get hashCode => Object.hash(
+      runtimeType, userUuid, projectId, boundary, tag, navigateToSummary);
 
   @JsonKey(ignore: true)
   @override
@@ -2350,11 +2469,14 @@ class _$BeneficiaryRegistrationCreateEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
-    return create(userUuid, projectId, boundary, tag);
+    return create(userUuid, projectId, boundary, tag, navigateToSummary);
   }
 
   @override
@@ -2382,11 +2504,14 @@ class _$BeneficiaryRegistrationCreateEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
-    return create?.call(userUuid, projectId, boundary, tag);
+    return create?.call(userUuid, projectId, boundary, tag, navigateToSummary);
   }
 
   @override
@@ -2414,13 +2539,16 @@ class _$BeneficiaryRegistrationCreateEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
     if (create != null) {
-      return create(userUuid, projectId, boundary, tag);
+      return create(userUuid, projectId, boundary, tag, navigateToSummary);
     }
     return orElse();
   }
@@ -2448,6 +2576,8 @@ class _$BeneficiaryRegistrationCreateEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return create(this);
@@ -2471,6 +2601,7 @@ class _$BeneficiaryRegistrationCreateEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return create?.call(this);
@@ -2493,6 +2624,7 @@ class _$BeneficiaryRegistrationCreateEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -2509,15 +2641,345 @@ abstract class BeneficiaryRegistrationCreateEvent
       {required final String userUuid,
       required final String projectId,
       required final BoundaryModel boundary,
-      final String? tag}) = _$BeneficiaryRegistrationCreateEventImpl;
+      final String? tag,
+      final bool navigateToSummary}) = _$BeneficiaryRegistrationCreateEventImpl;
 
   String get userUuid;
   String get projectId;
   BoundaryModel get boundary;
   String? get tag;
+  bool get navigateToSummary;
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationCreateEventImplCopyWith<
           _$BeneficiaryRegistrationCreateEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BeneficiaryRegistrationSummaryEventImplCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationSummaryEventImplCopyWith(
+          _$BeneficiaryRegistrationSummaryEventImpl value,
+          $Res Function(_$BeneficiaryRegistrationSummaryEventImpl) then) =
+      __$$BeneficiaryRegistrationSummaryEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call(
+      {String userUuid,
+      String projectId,
+      BoundaryModel boundary,
+      String? tag,
+      bool navigateToSummary});
+}
+
+/// @nodoc
+class __$$BeneficiaryRegistrationSummaryEventImplCopyWithImpl<$Res>
+    extends _$BeneficiaryRegistrationEventCopyWithImpl<$Res,
+        _$BeneficiaryRegistrationSummaryEventImpl>
+    implements _$$BeneficiaryRegistrationSummaryEventImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationSummaryEventImplCopyWithImpl(
+      _$BeneficiaryRegistrationSummaryEventImpl _value,
+      $Res Function(_$BeneficiaryRegistrationSummaryEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? userUuid = null,
+    Object? projectId = null,
+    Object? boundary = null,
+    Object? tag = freezed,
+    Object? navigateToSummary = null,
+  }) {
+    return _then(_$BeneficiaryRegistrationSummaryEventImpl(
+      userUuid: null == userUuid
+          ? _value.userUuid
+          : userUuid // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectId: null == projectId
+          ? _value.projectId
+          : projectId // ignore: cast_nullable_to_non_nullable
+              as String,
+      boundary: null == boundary
+          ? _value.boundary
+          : boundary // ignore: cast_nullable_to_non_nullable
+              as BoundaryModel,
+      tag: freezed == tag
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      navigateToSummary: null == navigateToSummary
+          ? _value.navigateToSummary
+          : navigateToSummary // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BeneficiaryRegistrationSummaryEventImpl
+    implements BeneficiaryRegistrationSummaryEvent {
+  const _$BeneficiaryRegistrationSummaryEventImpl(
+      {required this.userUuid,
+      required this.projectId,
+      required this.boundary,
+      this.tag,
+      this.navigateToSummary = true});
+
+  @override
+  final String userUuid;
+  @override
+  final String projectId;
+  @override
+  final BoundaryModel boundary;
+  @override
+  final String? tag;
+  @override
+  @JsonKey()
+  final bool navigateToSummary;
+
+  @override
+  String toString() {
+    return 'BeneficiaryRegistrationEvent.summary(userUuid: $userUuid, projectId: $projectId, boundary: $boundary, tag: $tag, navigateToSummary: $navigateToSummary)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BeneficiaryRegistrationSummaryEventImpl &&
+            (identical(other.userUuid, userUuid) ||
+                other.userUuid == userUuid) &&
+            (identical(other.projectId, projectId) ||
+                other.projectId == projectId) &&
+            (identical(other.boundary, boundary) ||
+                other.boundary == boundary) &&
+            (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.navigateToSummary, navigateToSummary) ||
+                other.navigateToSummary == navigateToSummary));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, userUuid, projectId, boundary, tag, navigateToSummary);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BeneficiaryRegistrationSummaryEventImplCopyWith<
+          _$BeneficiaryRegistrationSummaryEventImpl>
+      get copyWith => __$$BeneficiaryRegistrationSummaryEventImplCopyWithImpl<
+          _$BeneficiaryRegistrationSummaryEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(AddressModel model) saveAddress,
+    required TResult Function(HouseholdModel model) saveHouseDetails,
+    required TResult Function(
+            HouseholdModel household, DateTime registrationDate)
+        saveHouseholdDetails,
+    required TResult Function(IndividualModel model, bool isHeadOfHousehold)
+        saveIndividualDetails,
+    required TResult Function(
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            AddressModel addressModel,
+            String userUuid,
+            String projectId,
+            String? tag,
+            BeneficiaryType beneficiaryType)
+        addMember,
+    required TResult Function(
+            HouseholdModel household, AddressModel? addressModel, String? tag)
+        updateHouseholdDetails,
+    required TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)
+        updateIndividualDetails,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
+    required TResult Function(String tag) validate,
+  }) {
+    return summary(userUuid, projectId, boundary, tag, navigateToSummary);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(AddressModel model)? saveAddress,
+    TResult? Function(HouseholdModel model)? saveHouseDetails,
+    TResult? Function(HouseholdModel household, DateTime registrationDate)?
+        saveHouseholdDetails,
+    TResult? Function(IndividualModel model, bool isHeadOfHousehold)?
+        saveIndividualDetails,
+    TResult? Function(
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            AddressModel addressModel,
+            String userUuid,
+            String projectId,
+            String? tag,
+            BeneficiaryType beneficiaryType)?
+        addMember,
+    TResult? Function(
+            HouseholdModel household, AddressModel? addressModel, String? tag)?
+        updateHouseholdDetails,
+    TResult? Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
+        updateIndividualDetails,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
+    TResult? Function(String tag)? validate,
+  }) {
+    return summary?.call(userUuid, projectId, boundary, tag, navigateToSummary);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(AddressModel model)? saveAddress,
+    TResult Function(HouseholdModel model)? saveHouseDetails,
+    TResult Function(HouseholdModel household, DateTime registrationDate)?
+        saveHouseholdDetails,
+    TResult Function(IndividualModel model, bool isHeadOfHousehold)?
+        saveIndividualDetails,
+    TResult Function(
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            AddressModel addressModel,
+            String userUuid,
+            String projectId,
+            String? tag,
+            BeneficiaryType beneficiaryType)?
+        addMember,
+    TResult Function(
+            HouseholdModel household, AddressModel? addressModel, String? tag)?
+        updateHouseholdDetails,
+    TResult Function(IndividualModel model, String? tag,
+            HouseholdModel householdModel, AddressModel addressModel)?
+        updateIndividualDetails,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
+    TResult Function(String tag)? validate,
+    required TResult orElse(),
+  }) {
+    if (summary != null) {
+      return summary(userUuid, projectId, boundary, tag, navigateToSummary);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BeneficiaryRegistrationSaveAddressEvent value)
+        saveAddress,
+    required TResult Function(
+            BeneficiaryRegistrationSaveHouseDetailsEvent value)
+        saveHouseDetails,
+    required TResult Function(
+            BeneficiaryRegistrationSaveHouseholdDetailsEvent value)
+        saveHouseholdDetails,
+    required TResult Function(
+            BeneficiaryRegistrationSaveIndividualDetailsEvent value)
+        saveIndividualDetails,
+    required TResult Function(BeneficiaryRegistrationAddMemberEvent value)
+        addMember,
+    required TResult Function(
+            BeneficiaryRegistrationUpdateHouseholdDetailsEvent value)
+        updateHouseholdDetails,
+    required TResult Function(
+            BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
+        updateIndividualDetails,
+    required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
+    required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
+  }) {
+    return summary(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BeneficiaryRegistrationSaveAddressEvent value)?
+        saveAddress,
+    TResult? Function(BeneficiaryRegistrationSaveHouseDetailsEvent value)?
+        saveHouseDetails,
+    TResult? Function(BeneficiaryRegistrationSaveHouseholdDetailsEvent value)?
+        saveHouseholdDetails,
+    TResult? Function(BeneficiaryRegistrationSaveIndividualDetailsEvent value)?
+        saveIndividualDetails,
+    TResult? Function(BeneficiaryRegistrationAddMemberEvent value)? addMember,
+    TResult? Function(BeneficiaryRegistrationUpdateHouseholdDetailsEvent value)?
+        updateHouseholdDetails,
+    TResult? Function(
+            BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
+        updateIndividualDetails,
+    TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
+    TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
+  }) {
+    return summary?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BeneficiaryRegistrationSaveAddressEvent value)?
+        saveAddress,
+    TResult Function(BeneficiaryRegistrationSaveHouseDetailsEvent value)?
+        saveHouseDetails,
+    TResult Function(BeneficiaryRegistrationSaveHouseholdDetailsEvent value)?
+        saveHouseholdDetails,
+    TResult Function(BeneficiaryRegistrationSaveIndividualDetailsEvent value)?
+        saveIndividualDetails,
+    TResult Function(BeneficiaryRegistrationAddMemberEvent value)? addMember,
+    TResult Function(BeneficiaryRegistrationUpdateHouseholdDetailsEvent value)?
+        updateHouseholdDetails,
+    TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
+        updateIndividualDetails,
+    TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
+    TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
+    required TResult orElse(),
+  }) {
+    if (summary != null) {
+      return summary(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BeneficiaryRegistrationSummaryEvent
+    implements BeneficiaryRegistrationEvent {
+  const factory BeneficiaryRegistrationSummaryEvent(
+          {required final String userUuid,
+          required final String projectId,
+          required final BoundaryModel boundary,
+          final String? tag,
+          final bool navigateToSummary}) =
+      _$BeneficiaryRegistrationSummaryEventImpl;
+
+  String get userUuid;
+  String get projectId;
+  BoundaryModel get boundary;
+  String? get tag;
+  bool get navigateToSummary;
+  @JsonKey(ignore: true)
+  _$$BeneficiaryRegistrationSummaryEventImplCopyWith<
+          _$BeneficiaryRegistrationSummaryEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -2614,8 +3076,11 @@ class _$BeneficiaryRegistrationTagEventImpl
             HouseholdModel householdModel, AddressModel addressModel)
         updateIndividualDetails,
     required TResult Function(String userUuid, String projectId,
-            BoundaryModel boundary, String? tag)
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
         create,
+    required TResult Function(String userUuid, String projectId,
+            BoundaryModel boundary, String? tag, bool navigateToSummary)
+        summary,
     required TResult Function(String tag) validate,
   }) {
     return validate(tag);
@@ -2646,8 +3111,11 @@ class _$BeneficiaryRegistrationTagEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult? Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult? Function(String tag)? validate,
   }) {
     return validate?.call(tag);
@@ -2678,8 +3146,11 @@ class _$BeneficiaryRegistrationTagEventImpl
             HouseholdModel householdModel, AddressModel addressModel)?
         updateIndividualDetails,
     TResult Function(String userUuid, String projectId, BoundaryModel boundary,
-            String? tag)?
+            String? tag, bool navigateToSummary)?
         create,
+    TResult Function(String userUuid, String projectId, BoundaryModel boundary,
+            String? tag, bool navigateToSummary)?
+        summary,
     TResult Function(String tag)? validate,
     required TResult orElse(),
   }) {
@@ -2712,6 +3183,8 @@ class _$BeneficiaryRegistrationTagEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)
         updateIndividualDetails,
     required TResult Function(BeneficiaryRegistrationCreateEvent value) create,
+    required TResult Function(BeneficiaryRegistrationSummaryEvent value)
+        summary,
     required TResult Function(BeneficiaryRegistrationTagEvent value) validate,
   }) {
     return validate(this);
@@ -2735,6 +3208,7 @@ class _$BeneficiaryRegistrationTagEventImpl
             BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult? Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult? Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult? Function(BeneficiaryRegistrationTagEvent value)? validate,
   }) {
     return validate?.call(this);
@@ -2757,6 +3231,7 @@ class _$BeneficiaryRegistrationTagEventImpl
     TResult Function(BeneficiaryRegistrationUpdateIndividualDetailsEvent value)?
         updateIndividualDetails,
     TResult Function(BeneficiaryRegistrationCreateEvent value)? create,
+    TResult Function(BeneficiaryRegistrationSummaryEvent value)? summary,
     TResult Function(BeneficiaryRegistrationTagEvent value)? validate,
     required TResult orElse(),
   }) {
@@ -2788,6 +3263,7 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -2814,6 +3290,16 @@ mixin _$BeneficiaryRegistrationState {
     required TResult Function(
             bool navigateToRoot, HouseholdModel householdModel)
         persisted,
+    required TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)
+        summary,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -2822,6 +3308,7 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -2847,6 +3334,16 @@ mixin _$BeneficiaryRegistrationState {
         addMember,
     TResult? Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult? Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -2855,6 +3352,7 @@ mixin _$BeneficiaryRegistrationState {
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -2880,6 +3378,16 @@ mixin _$BeneficiaryRegistrationState {
         addMember,
     TResult Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -2894,6 +3402,8 @@ mixin _$BeneficiaryRegistrationState {
         addMember,
     required TResult Function(BeneficiaryRegistrationPersistedState value)
         persisted,
+    required TResult Function(BeneficiaryRegistrationSummaryState value)
+        summary,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -2905,6 +3415,7 @@ mixin _$BeneficiaryRegistrationState {
         editIndividual,
     TResult? Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult? Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult? Function(BeneficiaryRegistrationSummaryState value)? summary,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -2916,6 +3427,7 @@ mixin _$BeneficiaryRegistrationState {
         editIndividual,
     TResult Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult Function(BeneficiaryRegistrationSummaryState value)? summary,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -2974,6 +3486,7 @@ abstract class _$$BeneficiaryRegistrationCreateStateImplCopyWith<$Res>
       {AddressModel? addressModel,
       HouseholdModel? householdModel,
       IndividualModel? individualModel,
+      ProjectBeneficiaryModel? projectBeneficiaryModel,
       DateTime? registrationDate,
       String? searchQuery,
       bool loading,
@@ -2996,6 +3509,7 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
     Object? addressModel = freezed,
     Object? householdModel = freezed,
     Object? individualModel = freezed,
+    Object? projectBeneficiaryModel = freezed,
     Object? registrationDate = freezed,
     Object? searchQuery = freezed,
     Object? loading = null,
@@ -3014,6 +3528,10 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
           ? _value.individualModel
           : individualModel // ignore: cast_nullable_to_non_nullable
               as IndividualModel?,
+      projectBeneficiaryModel: freezed == projectBeneficiaryModel
+          ? _value.projectBeneficiaryModel
+          : projectBeneficiaryModel // ignore: cast_nullable_to_non_nullable
+              as ProjectBeneficiaryModel?,
       registrationDate: freezed == registrationDate
           ? _value.registrationDate
           : registrationDate // ignore: cast_nullable_to_non_nullable
@@ -3042,6 +3560,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
       {this.addressModel,
       this.householdModel,
       this.individualModel,
+      this.projectBeneficiaryModel,
       this.registrationDate,
       this.searchQuery,
       this.loading = false,
@@ -3053,6 +3572,8 @@ class _$BeneficiaryRegistrationCreateStateImpl
   final HouseholdModel? householdModel;
   @override
   final IndividualModel? individualModel;
+  @override
+  final ProjectBeneficiaryModel? projectBeneficiaryModel;
   @override
   final DateTime? registrationDate;
   @override
@@ -3066,7 +3587,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, registrationDate: $registrationDate, searchQuery: $searchQuery, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, searchQuery: $searchQuery, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -3080,6 +3601,9 @@ class _$BeneficiaryRegistrationCreateStateImpl
                 other.householdModel == householdModel) &&
             (identical(other.individualModel, individualModel) ||
                 other.individualModel == individualModel) &&
+            (identical(
+                    other.projectBeneficiaryModel, projectBeneficiaryModel) ||
+                other.projectBeneficiaryModel == projectBeneficiaryModel) &&
             (identical(other.registrationDate, registrationDate) ||
                 other.registrationDate == registrationDate) &&
             (identical(other.searchQuery, searchQuery) ||
@@ -3095,6 +3619,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
       addressModel,
       householdModel,
       individualModel,
+      projectBeneficiaryModel,
       registrationDate,
       searchQuery,
       loading,
@@ -3115,6 +3640,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3141,9 +3667,26 @@ class _$BeneficiaryRegistrationCreateStateImpl
     required TResult Function(
             bool navigateToRoot, HouseholdModel householdModel)
         persisted,
+    required TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)
+        summary,
   }) {
-    return create(addressModel, householdModel, individualModel,
-        registrationDate, searchQuery, loading, isHeadOfHousehold);
+    return create(
+        addressModel,
+        householdModel,
+        individualModel,
+        projectBeneficiaryModel,
+        registrationDate,
+        searchQuery,
+        loading,
+        isHeadOfHousehold);
   }
 
   @override
@@ -3153,6 +3696,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3178,9 +3722,26 @@ class _$BeneficiaryRegistrationCreateStateImpl
         addMember,
     TResult? Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult? Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
   }) {
-    return create?.call(addressModel, householdModel, individualModel,
-        registrationDate, searchQuery, loading, isHeadOfHousehold);
+    return create?.call(
+        addressModel,
+        householdModel,
+        individualModel,
+        projectBeneficiaryModel,
+        registrationDate,
+        searchQuery,
+        loading,
+        isHeadOfHousehold);
   }
 
   @override
@@ -3190,6 +3751,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3215,11 +3777,28 @@ class _$BeneficiaryRegistrationCreateStateImpl
         addMember,
     TResult Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
     required TResult orElse(),
   }) {
     if (create != null) {
-      return create(addressModel, householdModel, individualModel,
-          registrationDate, searchQuery, loading, isHeadOfHousehold);
+      return create(
+          addressModel,
+          householdModel,
+          individualModel,
+          projectBeneficiaryModel,
+          registrationDate,
+          searchQuery,
+          loading,
+          isHeadOfHousehold);
     }
     return orElse();
   }
@@ -3236,6 +3815,8 @@ class _$BeneficiaryRegistrationCreateStateImpl
         addMember,
     required TResult Function(BeneficiaryRegistrationPersistedState value)
         persisted,
+    required TResult Function(BeneficiaryRegistrationSummaryState value)
+        summary,
   }) {
     return create(this);
   }
@@ -3250,6 +3831,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
         editIndividual,
     TResult? Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult? Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult? Function(BeneficiaryRegistrationSummaryState value)? summary,
   }) {
     return create?.call(this);
   }
@@ -3264,6 +3846,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
         editIndividual,
     TResult Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult Function(BeneficiaryRegistrationSummaryState value)? summary,
     required TResult orElse(),
   }) {
     if (create != null) {
@@ -3279,6 +3862,7 @@ abstract class BeneficiaryRegistrationCreateState
       {final AddressModel? addressModel,
       final HouseholdModel? householdModel,
       final IndividualModel? individualModel,
+      final ProjectBeneficiaryModel? projectBeneficiaryModel,
       final DateTime? registrationDate,
       final String? searchQuery,
       final bool loading,
@@ -3288,6 +3872,7 @@ abstract class BeneficiaryRegistrationCreateState
   @override
   HouseholdModel? get householdModel;
   IndividualModel? get individualModel;
+  ProjectBeneficiaryModel? get projectBeneficiaryModel;
   DateTime? get registrationDate;
   String? get searchQuery;
   bool get loading;
@@ -3450,6 +4035,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3476,6 +4062,16 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
     required TResult Function(
             bool navigateToRoot, HouseholdModel householdModel)
         persisted,
+    required TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)
+        summary,
   }) {
     return editHousehold(addressModel, householdModel, individualModel,
         registrationDate, projectBeneficiaryModel, loading);
@@ -3488,6 +4084,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3513,6 +4110,16 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         addMember,
     TResult? Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult? Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
   }) {
     return editHousehold?.call(addressModel, householdModel, individualModel,
         registrationDate, projectBeneficiaryModel, loading);
@@ -3525,6 +4132,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3550,6 +4158,16 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         addMember,
     TResult Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
     required TResult orElse(),
   }) {
     if (editHousehold != null) {
@@ -3571,6 +4189,8 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         addMember,
     required TResult Function(BeneficiaryRegistrationPersistedState value)
         persisted,
+    required TResult Function(BeneficiaryRegistrationSummaryState value)
+        summary,
   }) {
     return editHousehold(this);
   }
@@ -3585,6 +4205,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         editIndividual,
     TResult? Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult? Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult? Function(BeneficiaryRegistrationSummaryState value)? summary,
   }) {
     return editHousehold?.call(this);
   }
@@ -3599,6 +4220,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         editIndividual,
     TResult Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult Function(BeneficiaryRegistrationSummaryState value)? summary,
     required TResult orElse(),
   }) {
     if (editHousehold != null) {
@@ -3760,6 +4382,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3786,6 +4409,16 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
     required TResult Function(
             bool navigateToRoot, HouseholdModel householdModel)
         persisted,
+    required TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)
+        summary,
   }) {
     return editIndividual(householdModel, individualModel, addressModel,
         projectBeneficiaryModel, loading);
@@ -3798,6 +4431,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3823,6 +4457,16 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
         addMember,
     TResult? Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult? Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
   }) {
     return editIndividual?.call(householdModel, individualModel, addressModel,
         projectBeneficiaryModel, loading);
@@ -3835,6 +4479,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -3860,6 +4505,16 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
         addMember,
     TResult Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
     required TResult orElse(),
   }) {
     if (editIndividual != null) {
@@ -3881,6 +4536,8 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
         addMember,
     required TResult Function(BeneficiaryRegistrationPersistedState value)
         persisted,
+    required TResult Function(BeneficiaryRegistrationSummaryState value)
+        summary,
   }) {
     return editIndividual(this);
   }
@@ -3895,6 +4552,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
         editIndividual,
     TResult? Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult? Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult? Function(BeneficiaryRegistrationSummaryState value)? summary,
   }) {
     return editIndividual?.call(this);
   }
@@ -3909,6 +4567,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
         editIndividual,
     TResult Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult Function(BeneficiaryRegistrationSummaryState value)? summary,
     required TResult orElse(),
   }) {
     if (editIndividual != null) {
@@ -4040,6 +4699,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4066,6 +4726,16 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
     required TResult Function(
             bool navigateToRoot, HouseholdModel householdModel)
         persisted,
+    required TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)
+        summary,
   }) {
     return addMember(addressModel, householdModel, loading);
   }
@@ -4077,6 +4747,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4102,6 +4773,16 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
         addMember,
     TResult? Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult? Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
   }) {
     return addMember?.call(addressModel, householdModel, loading);
   }
@@ -4113,6 +4794,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4138,6 +4820,16 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
         addMember,
     TResult Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
     required TResult orElse(),
   }) {
     if (addMember != null) {
@@ -4158,6 +4850,8 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
         addMember,
     required TResult Function(BeneficiaryRegistrationPersistedState value)
         persisted,
+    required TResult Function(BeneficiaryRegistrationSummaryState value)
+        summary,
   }) {
     return addMember(this);
   }
@@ -4172,6 +4866,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
         editIndividual,
     TResult? Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult? Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult? Function(BeneficiaryRegistrationSummaryState value)? summary,
   }) {
     return addMember?.call(this);
   }
@@ -4186,6 +4881,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
         editIndividual,
     TResult Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult Function(BeneficiaryRegistrationSummaryState value)? summary,
     required TResult orElse(),
   }) {
     if (addMember != null) {
@@ -4301,6 +4997,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4327,6 +5024,16 @@ class _$BeneficiaryRegistrationPersistedStateImpl
     required TResult Function(
             bool navigateToRoot, HouseholdModel householdModel)
         persisted,
+    required TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)
+        summary,
   }) {
     return persisted(navigateToRoot, householdModel);
   }
@@ -4338,6 +5045,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4363,6 +5071,16 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         addMember,
     TResult? Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult? Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
   }) {
     return persisted?.call(navigateToRoot, householdModel);
   }
@@ -4374,6 +5092,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             AddressModel? addressModel,
             HouseholdModel? householdModel,
             IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
             bool loading,
@@ -4399,6 +5118,16 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         addMember,
     TResult Function(bool navigateToRoot, HouseholdModel householdModel)?
         persisted,
+    TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
     required TResult orElse(),
   }) {
     if (persisted != null) {
@@ -4419,6 +5148,8 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         addMember,
     required TResult Function(BeneficiaryRegistrationPersistedState value)
         persisted,
+    required TResult Function(BeneficiaryRegistrationSummaryState value)
+        summary,
   }) {
     return persisted(this);
   }
@@ -4433,6 +5164,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         editIndividual,
     TResult? Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult? Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult? Function(BeneficiaryRegistrationSummaryState value)? summary,
   }) {
     return persisted?.call(this);
   }
@@ -4447,6 +5179,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         editIndividual,
     TResult Function(BeneficiaryRegistrationAddMemberState value)? addMember,
     TResult Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult Function(BeneficiaryRegistrationSummaryState value)? summary,
     required TResult orElse(),
   }) {
     if (persisted != null) {
@@ -4470,5 +5203,418 @@ abstract class BeneficiaryRegistrationPersistedState
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationPersistedStateImplCopyWith<
           _$BeneficiaryRegistrationPersistedStateImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$BeneficiaryRegistrationSummaryStateImplCopyWith<$Res>
+    implements $BeneficiaryRegistrationStateCopyWith<$Res> {
+  factory _$$BeneficiaryRegistrationSummaryStateImplCopyWith(
+          _$BeneficiaryRegistrationSummaryStateImpl value,
+          $Res Function(_$BeneficiaryRegistrationSummaryStateImpl) then) =
+      __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {bool navigateToRoot,
+      HouseholdModel? householdModel,
+      IndividualModel? individualModel,
+      ProjectBeneficiaryModel? projectBeneficiaryModel,
+      DateTime? registrationDate,
+      AddressModel? addressModel,
+      bool loading,
+      bool isHeadOfHousehold});
+}
+
+/// @nodoc
+class __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>
+    extends _$BeneficiaryRegistrationStateCopyWithImpl<$Res,
+        _$BeneficiaryRegistrationSummaryStateImpl>
+    implements _$$BeneficiaryRegistrationSummaryStateImplCopyWith<$Res> {
+  __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl(
+      _$BeneficiaryRegistrationSummaryStateImpl _value,
+      $Res Function(_$BeneficiaryRegistrationSummaryStateImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? navigateToRoot = null,
+    Object? householdModel = freezed,
+    Object? individualModel = freezed,
+    Object? projectBeneficiaryModel = freezed,
+    Object? registrationDate = freezed,
+    Object? addressModel = freezed,
+    Object? loading = null,
+    Object? isHeadOfHousehold = null,
+  }) {
+    return _then(_$BeneficiaryRegistrationSummaryStateImpl(
+      navigateToRoot: null == navigateToRoot
+          ? _value.navigateToRoot
+          : navigateToRoot // ignore: cast_nullable_to_non_nullable
+              as bool,
+      householdModel: freezed == householdModel
+          ? _value.householdModel
+          : householdModel // ignore: cast_nullable_to_non_nullable
+              as HouseholdModel?,
+      individualModel: freezed == individualModel
+          ? _value.individualModel
+          : individualModel // ignore: cast_nullable_to_non_nullable
+              as IndividualModel?,
+      projectBeneficiaryModel: freezed == projectBeneficiaryModel
+          ? _value.projectBeneficiaryModel
+          : projectBeneficiaryModel // ignore: cast_nullable_to_non_nullable
+              as ProjectBeneficiaryModel?,
+      registrationDate: freezed == registrationDate
+          ? _value.registrationDate
+          : registrationDate // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      addressModel: freezed == addressModel
+          ? _value.addressModel
+          : addressModel // ignore: cast_nullable_to_non_nullable
+              as AddressModel?,
+      loading: null == loading
+          ? _value.loading
+          : loading // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isHeadOfHousehold: null == isHeadOfHousehold
+          ? _value.isHeadOfHousehold
+          : isHeadOfHousehold // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$BeneficiaryRegistrationSummaryStateImpl
+    implements BeneficiaryRegistrationSummaryState {
+  const _$BeneficiaryRegistrationSummaryStateImpl(
+      {this.navigateToRoot = true,
+      this.householdModel,
+      this.individualModel,
+      this.projectBeneficiaryModel,
+      this.registrationDate,
+      this.addressModel,
+      this.loading = false,
+      this.isHeadOfHousehold = false});
+
+  @override
+  @JsonKey()
+  final bool navigateToRoot;
+  @override
+  final HouseholdModel? householdModel;
+  @override
+  final IndividualModel? individualModel;
+  @override
+  final ProjectBeneficiaryModel? projectBeneficiaryModel;
+  @override
+  final DateTime? registrationDate;
+  @override
+  final AddressModel? addressModel;
+  @override
+  @JsonKey()
+  final bool loading;
+  @override
+  @JsonKey()
+  final bool isHeadOfHousehold;
+
+  @override
+  String toString() {
+    return 'BeneficiaryRegistrationState.summary(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$BeneficiaryRegistrationSummaryStateImpl &&
+            (identical(other.navigateToRoot, navigateToRoot) ||
+                other.navigateToRoot == navigateToRoot) &&
+            (identical(other.householdModel, householdModel) ||
+                other.householdModel == householdModel) &&
+            (identical(other.individualModel, individualModel) ||
+                other.individualModel == individualModel) &&
+            (identical(
+                    other.projectBeneficiaryModel, projectBeneficiaryModel) ||
+                other.projectBeneficiaryModel == projectBeneficiaryModel) &&
+            (identical(other.registrationDate, registrationDate) ||
+                other.registrationDate == registrationDate) &&
+            (identical(other.addressModel, addressModel) ||
+                other.addressModel == addressModel) &&
+            (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
+                other.isHeadOfHousehold == isHeadOfHousehold));
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      navigateToRoot,
+      householdModel,
+      individualModel,
+      projectBeneficiaryModel,
+      registrationDate,
+      addressModel,
+      loading,
+      isHeadOfHousehold);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$BeneficiaryRegistrationSummaryStateImplCopyWith<
+          _$BeneficiaryRegistrationSummaryStateImpl>
+      get copyWith => __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<
+          _$BeneficiaryRegistrationSummaryStateImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(
+            AddressModel? addressModel,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            String? searchQuery,
+            bool loading,
+            bool isHeadOfHousehold)
+        create,
+    required TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            List<IndividualModel> individualModel,
+            DateTime registrationDate,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            bool loading)
+        editHousehold,
+    required TResult Function(
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            AddressModel addressModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            bool loading)
+        editIndividual,
+    required TResult Function(AddressModel addressModel,
+            HouseholdModel householdModel, bool loading)
+        addMember,
+    required TResult Function(
+            bool navigateToRoot, HouseholdModel householdModel)
+        persisted,
+    required TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)
+        summary,
+  }) {
+    return summary(
+        navigateToRoot,
+        householdModel,
+        individualModel,
+        projectBeneficiaryModel,
+        registrationDate,
+        addressModel,
+        loading,
+        isHeadOfHousehold);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function(
+            AddressModel? addressModel,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            String? searchQuery,
+            bool loading,
+            bool isHeadOfHousehold)?
+        create,
+    TResult? Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            List<IndividualModel> individualModel,
+            DateTime registrationDate,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            bool loading)?
+        editHousehold,
+    TResult? Function(
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            AddressModel addressModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            bool loading)?
+        editIndividual,
+    TResult? Function(AddressModel addressModel, HouseholdModel householdModel,
+            bool loading)?
+        addMember,
+    TResult? Function(bool navigateToRoot, HouseholdModel householdModel)?
+        persisted,
+    TResult? Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
+  }) {
+    return summary?.call(
+        navigateToRoot,
+        householdModel,
+        individualModel,
+        projectBeneficiaryModel,
+        registrationDate,
+        addressModel,
+        loading,
+        isHeadOfHousehold);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(
+            AddressModel? addressModel,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            String? searchQuery,
+            bool loading,
+            bool isHeadOfHousehold)?
+        create,
+    TResult Function(
+            AddressModel addressModel,
+            HouseholdModel householdModel,
+            List<IndividualModel> individualModel,
+            DateTime registrationDate,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            bool loading)?
+        editHousehold,
+    TResult Function(
+            HouseholdModel householdModel,
+            IndividualModel individualModel,
+            AddressModel addressModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            bool loading)?
+        editIndividual,
+    TResult Function(AddressModel addressModel, HouseholdModel householdModel,
+            bool loading)?
+        addMember,
+    TResult Function(bool navigateToRoot, HouseholdModel householdModel)?
+        persisted,
+    TResult Function(
+            bool navigateToRoot,
+            HouseholdModel? householdModel,
+            IndividualModel? individualModel,
+            ProjectBeneficiaryModel? projectBeneficiaryModel,
+            DateTime? registrationDate,
+            AddressModel? addressModel,
+            bool loading,
+            bool isHeadOfHousehold)?
+        summary,
+    required TResult orElse(),
+  }) {
+    if (summary != null) {
+      return summary(
+          navigateToRoot,
+          householdModel,
+          individualModel,
+          projectBeneficiaryModel,
+          registrationDate,
+          addressModel,
+          loading,
+          isHeadOfHousehold);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(BeneficiaryRegistrationCreateState value) create,
+    required TResult Function(BeneficiaryRegistrationEditHouseholdState value)
+        editHousehold,
+    required TResult Function(BeneficiaryRegistrationEditIndividualState value)
+        editIndividual,
+    required TResult Function(BeneficiaryRegistrationAddMemberState value)
+        addMember,
+    required TResult Function(BeneficiaryRegistrationPersistedState value)
+        persisted,
+    required TResult Function(BeneficiaryRegistrationSummaryState value)
+        summary,
+  }) {
+    return summary(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(BeneficiaryRegistrationCreateState value)? create,
+    TResult? Function(BeneficiaryRegistrationEditHouseholdState value)?
+        editHousehold,
+    TResult? Function(BeneficiaryRegistrationEditIndividualState value)?
+        editIndividual,
+    TResult? Function(BeneficiaryRegistrationAddMemberState value)? addMember,
+    TResult? Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult? Function(BeneficiaryRegistrationSummaryState value)? summary,
+  }) {
+    return summary?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(BeneficiaryRegistrationCreateState value)? create,
+    TResult Function(BeneficiaryRegistrationEditHouseholdState value)?
+        editHousehold,
+    TResult Function(BeneficiaryRegistrationEditIndividualState value)?
+        editIndividual,
+    TResult Function(BeneficiaryRegistrationAddMemberState value)? addMember,
+    TResult Function(BeneficiaryRegistrationPersistedState value)? persisted,
+    TResult Function(BeneficiaryRegistrationSummaryState value)? summary,
+    required TResult orElse(),
+  }) {
+    if (summary != null) {
+      return summary(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class BeneficiaryRegistrationSummaryState
+    implements BeneficiaryRegistrationState {
+  const factory BeneficiaryRegistrationSummaryState(
+          {final bool navigateToRoot,
+          final HouseholdModel? householdModel,
+          final IndividualModel? individualModel,
+          final ProjectBeneficiaryModel? projectBeneficiaryModel,
+          final DateTime? registrationDate,
+          final AddressModel? addressModel,
+          final bool loading,
+          final bool isHeadOfHousehold}) =
+      _$BeneficiaryRegistrationSummaryStateImpl;
+
+  bool get navigateToRoot;
+  @override
+  HouseholdModel? get householdModel;
+  IndividualModel? get individualModel;
+  ProjectBeneficiaryModel? get projectBeneficiaryModel;
+  DateTime? get registrationDate;
+  AddressModel? get addressModel;
+  bool get loading;
+  bool get isHeadOfHousehold;
+  @override
+  @JsonKey(ignore: true)
+  _$$BeneficiaryRegistrationSummaryStateImplCopyWith<
+          _$BeneficiaryRegistrationSummaryStateImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

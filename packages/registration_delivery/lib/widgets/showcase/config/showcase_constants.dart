@@ -8,6 +8,7 @@ part 'household_location.dart';
 part 'household_overview.dart';
 part 'individual_details.dart';
 part 'search_beneficiaries_showcase.dart';
+part 'refused_delivery.dart';
 
 final searchBeneficiariesShowcaseData = _SearchBeneficiariesShowcaseData();
 final householdLocationShowcaseData = _HouseholdLocationShowcaseData();
@@ -16,3 +17,4 @@ final individualDetailsShowcaseData = _IndividualDetailsShowcaseData();
 final householdOverviewShowcaseData = _HouseholdOverviewShowcaseData();
 final deliverInterventionShowcaseData = _DeliverInterventionShowcaseData();
 final houseShowcaseData = _HouseholdShowcaseData();
+final refusedDeliveryShowcaseData = _RefusedDeliveryShowcaseData();

@@ -17,6 +17,7 @@ const householdDetailsShowcase = HouseholdDetailsShowcase();
 const individualDetailsShowcase = IndividualDetailsShowcase();
 const householdOverviewShowcase = HouseholdOverviewShowcase();
 const deliverInterventionShowcase = DeliverInterventionShowcase();
+const checklist = Checklist();
 
 class Common {
   const Common();
@@ -235,6 +236,7 @@ class BeneficiaryDetails {
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
   String get householdMemberSingular => 'BENEFICIARY_HOUSEHOLD_MEMBER';
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
+  String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
 }
 
 class IndividualDetails {
@@ -304,6 +306,8 @@ class HouseholdLocation {
 
   String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
 
+  String get villageLabel => 'VILLAGE_LABEL';
+
   String get householdAddressLine2LabelText =>
       'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
 
@@ -327,6 +331,46 @@ class AcknowledgementSuccess {
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
+class Checklist {
+  const Checklist();
+
+  String get checklist => 'CHECKLIST';
+
+  String get checklistlabel => 'CHECKLIST_LABEL';
+
+  String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
+
+  String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
+
+  String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
+
+  String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
+
+  String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
+
+  String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
+
+  String get checklistDialogSecondaryAction =>
+      'CHECKLIST_DIALOG_SECONDARY_ACTION';
+
+  String get checklistdate => 'CHECKLIST_DATE';
+
+  String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
+
+  String get notSelectedKey => 'NOT_SELECTED';
+
+  String get checklistBackDialogLabel => 'CHECKLIST_BACK_DIALOG_LABEL';
+
+  String get checklistBackDialogDescription =>
+      'CHECKLIST_BACK_DIALOG_DESCRITPTION';
+
+  String get checklistBackDialogPrimaryAction =>
+      'CHECKLIST_BACK_DIALOG_PRIMARY_ACTION';
+
+  String get checklistBackDialogSecondaryAction =>
+      'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
+}
+
 class HouseholdDetails {
   const HouseholdDetails();
 
@@ -347,6 +391,7 @@ class HouseholdDetails {
   String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
   String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
   String get selectStructureTypeError => 'PLEASE_SELECT_STRUCTURE_TYPE';
+  String get typeOfStructure => 'TYPE_OF_STRUCTURE';
 }
 
 class HouseholdOverView {
@@ -444,6 +489,11 @@ class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+
+  String get refusedDeliveryLabel => 'REFUSED_DELIVERY_LABEL';
+  String get refusedDeliveryVisitDateLabel => 'REFUSED_DELIVERY_VISIT_DATE';
+  String get reasonForRefusalLabel => 'REASON_FOR_REFUSAL_LABEL';
+  String get reasonForRefusalCommentLabel => 'REASON_FOR_REFUSAL_COMMENT_LABEL';
 
   String get deliverInterventionResourceLabel =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL';
@@ -785,6 +835,18 @@ class HouseholdOverviewShowcase {
 
 class DeliverInterventionShowcase {
   const DeliverInterventionShowcase();
+
+  String get dateOfVisitLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';
+  }
+
+  String get reasonOfRefusalLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_TO_DELIVER';
+  }
+
+  String get commentLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_DISTRIBUTED';
+  }
 
   String get memberCount {
     return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';
