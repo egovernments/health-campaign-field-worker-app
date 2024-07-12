@@ -3,12 +3,14 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/pages/beneficiary/refused_delivery.dart';
+import 'package:registration_delivery/utils/constants.dart';
 
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -18,10 +20,10 @@ import '../../widgets/localized.dart';
 
 @RoutePage()
 class BeneficiaryChecklistPage extends LocalizedStatefulWidget {
-  final String? referralClientRefId;
+  final String? beneficiaryClientRefId;
   const BeneficiaryChecklistPage({
     super.key,
-    this.referralClientRefId,
+    this.beneficiaryClientRefId,
     super.appLocalizations,
   });
 
@@ -44,6 +46,14 @@ class _BeneficiaryChecklistPageState
 
   @override
   void initState() {
+
+    context.read<ServiceBloc>().add(
+    ServiceChecklistEvent(
+      value: Random().nextInt(100).toString(),
+      submitTriggered: true,
+    ),
+  );
+
     super.initState();
   }
 
@@ -98,11 +108,101 @@ class _BeneficiaryChecklistPageState
                     child: DigitElevatedButton(
                       onPressed: () async {
                         // TODO: Submit checklist
+                        final router = context.router;
+                        submitTriggered = true;
+
+                        context.read<ServiceBloc>().add(
+                          const ServiceChecklistEvent(
+                            value: '',
+                            submitTriggered: true,
+                          ),
+                        );
+                       final isValid =
+                        checklistFormKey.currentState?.validate();
+                        if (!isValid!) {
+                          return;
+                        }
+                        final itemsAttributes = initialAttributes;
+
+                        var validChecklist = true;
+
+                        for (int i = 0; i < controller.length; i++) {
+                          if (itemsAttributes?[i].required == true &&
+                              ( (itemsAttributes?[i].dataType ==
+                                  'Boolean' &&
+                                  (controller[i].text == '')) )) {
+                              setState(() {
+                                validChecklist = false;
+                              });
+                          }
+                        }
+
+                        if (!validChecklist) {
+                          DigitToast.show(context,
+                              options: DigitToastOptions(
+                                localizations.translate(i18.common.corecommonRequired),
+                                true,
+                                theme,
+                              ));
+                          return;
+                        }
+                        List<ServiceAttributesModel> attributes = [];
+                        for (int i = 0; i < controller.length; i++) {
+                          final attribute = initialAttributes;
+                          attributes.add(ServiceAttributesModel(
+                              attributeCode: '${attribute?[i].code}',
+                              dataType: attribute?[i].dataType,
+                              clientReferenceId: IdGen.i.identifier,
+                              referenceId: widget.beneficiaryClientRefId,
+                              value: attribute?[i].dataType !=
+                                  'SingleValueList'
+                                  ? controller[i]
+                                  .text
+                                  .toString()
+                                  .trim()
+                                  .isNotEmpty
+                                  ? controller[i].text.toString()
+                                  : ''
+                                  : visibleChecklistIndexes.contains(i)
+                                  ? controller[i].text.toString()
+                                  : i18.checklist.notSelectedKey,
+                              rowVersion: 1,
+                              tenantId: attribute?[i].tenantId,
+                              additionalDetails: null));
+                        }
+
+                        context.read<ServiceBloc>().add(
+                          ServiceCreateEvent(
+                            serviceModel: ServiceModel(
+                              createdAt: DigitDateUtils
+                                  .getDateFromTimestamp(
+                                DateTime.now()
+                                    .toLocal()
+                                    .millisecondsSinceEpoch,
+                                dateFormat: Constants.checklistViewDateFormat,
+                              ),
+                              tenantId: selectedServiceDefinition!
+                                  .tenantId,
+                              clientId: widget.beneficiaryClientRefId
+                                  .toString(),
+                              serviceDefId: selectedServiceDefinition?.id,
+                              attributes: attributes,
+                              rowVersion: 1,
+                              accountId: RegistrationDeliverySingleton()
+                                  .projectId,
+                              additionalDetails:
+                              RegistrationDeliverySingleton()
+                                  .boundary
+                                  ?.code,
+                            ),
+                          ),
+                        );
 
                         DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
-                            titleText: 'Is the Spraying Successful?',
+                            titleText: localizations.translate(i18.deliverIntervention.beneficiaryChecklistDialogTitle),
+                            titlePadding: const EdgeInsets.only(top: kPadding),
                             barrierDismissible: false,
                             enableRecordPast: true,
                             dialogPadding: const EdgeInsets.fromLTRB(
@@ -111,6 +211,8 @@ class _BeneficiaryChecklistPageState
                               kPadding,
                               0,
                             ),
+
+                            contentPadding: EdgeInsets.zero,
                             primaryAction: DigitDialogActions(
                               label: localizations.translate(
                                 i18.common.coreCommonYes,

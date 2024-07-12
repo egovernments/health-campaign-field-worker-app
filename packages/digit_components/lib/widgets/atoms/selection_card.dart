@@ -10,6 +10,7 @@ class SelectionBox<T> extends StatefulWidget {
   final List<T>? initialSelection;
   final bool allowMultipleSelection;
   final String Function(T) valueMapper;
+  final bool isRequired;
 
   const SelectionBox({
     Key? key,
@@ -21,6 +22,7 @@ class SelectionBox<T> extends StatefulWidget {
     this.initialSelection,
     this.allowMultipleSelection = true,
     required this.valueMapper,
+    this.isRequired = false,
   }) : super(key: key);
 
   @override
@@ -109,7 +111,8 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         LabeledField(
-          label: widget.title ?? '',
+          label: widget.title,
+          isRequired: widget.isRequired,
           child: Container(
             padding: const EdgeInsets.all(kPadding * 3),
             decoration: BoxDecoration(
@@ -155,7 +158,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
                 fit: FlexFit.tight,
                 child: Text(
                   widget.errorMessage!,
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyLarge?.copyWith(
                     color: const DigitColors().lavaRed,
                   ),
                 ),
