@@ -91,6 +91,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     List<ReferralReasonType>? referralReasonList,
     @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
     List<CommonMasterModel>? houseStructureTypes,
+    @JsonKey(name: 'REFUSAL_REASONS')
+    List<CommonMasterModel>? refusalReasons,
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
   }) = _HCMWrapperModel;

@@ -86,6 +86,7 @@ class AppInitializationBloc
                     MasterEnums.symptomTypes.toValue(),
                     MasterEnums.referralReasons.toValue(),
                     MasterEnums.houseStructureTypes.toValue(),
+                    MasterEnums.refusalReasons.toValue(),
                     MasterEnums.bandWidthBatchSize.toValue(),
                     MasterEnums.downSyncBandwidthBatchSize.toValue(),
                     MasterEnums.hhDelReasons.toValue(),
@@ -116,7 +117,6 @@ class AppInitializationBloc
             ),
           ).toJson(),
         );
-
         final pgrServiceDefinitions =
             await mdmsRepository.searchPGRServiceDefinitions(
           envConfig.variables.mdmsApiPath,

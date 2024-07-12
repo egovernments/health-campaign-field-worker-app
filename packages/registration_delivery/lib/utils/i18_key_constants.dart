@@ -476,6 +476,11 @@ class DeliverIntervention {
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
 
+  String get refusedDeliveryLabel => 'REFUSED_DELIVERY_LABEL';
+  String get refusedDeliveryVisitDateLabel => 'REFUSED_DELIVERY_VISIT_DATE';
+  String get reasonForRefusalLabel => 'REASON_FOR_REFUSAL_LABEL';
+  String get reasonForRefusalCommentLabel => 'REASON_FOR_REFUSAL_COMMENT_LABEL';
+
   String get deliverInterventionResourceLabel =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL';
 
@@ -816,6 +821,18 @@ class HouseholdOverviewShowcase {
 
 class DeliverInterventionShowcase {
   const DeliverInterventionShowcase();
+
+  String get dateOfVisitLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';
+  }
+
+  String get reasonOfRefusalLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_TO_DELIVER';
+  }
+
+  String get commentLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_DISTRIBUTED';
+  }
 
   String get memberCount {
     return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';
