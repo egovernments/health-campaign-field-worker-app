@@ -35,12 +35,14 @@ import 'package:registration_delivery/pages/beneficiary/record_past_delivery_det
     as _i16;
 import 'package:registration_delivery/pages/beneficiary/refer_beneficiary.dart'
     as _i17;
+import 'package:registration_delivery/pages/beneficiary/refused_delivery.dart'
+    as _i18;
 import 'package:registration_delivery/pages/beneficiary/side_effects.dart'
-    as _i20;
+    as _i21;
 import 'package:registration_delivery/pages/beneficiary/widgets/household_acknowledgement.dart'
     as _i11;
 import 'package:registration_delivery/pages/beneficiary/widgets/splash_acknowledgement.dart'
-    as _i21;
+    as _i22;
 import 'package:registration_delivery/pages/beneficiary_registration/beneficiary_acknowledgement.dart'
     as _i1;
 import 'package:registration_delivery/pages/beneficiary_registration/beneficiary_registration_wrapper.dart'
@@ -256,10 +258,21 @@ abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
         ),
       );
     },
+    RefusedDeliveryRoute.name: (routeData) {
+      final args = routeData.argsAs<RefusedDeliveryRouteArgs>(
+          orElse: () => const RefusedDeliveryRouteArgs());
+      return _i23.AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: _i18.RefusedDeliveryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     RegistrationDeliveryWrapperRoute.name: (routeData) {
       return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const _i18.RegistrationDeliveryWrapperPage(),
+        child: const _i19.RegistrationDeliveryWrapperPage(),
       );
     },
     SearchBeneficiaryRoute.name: (routeData) {
@@ -267,7 +280,7 @@ abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
           orElse: () => const SearchBeneficiaryRouteArgs());
       return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i19.SearchBeneficiaryPage(
+        child: _i20.SearchBeneficiaryPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -277,7 +290,7 @@ abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
       final args = routeData.argsAs<SideEffectsRouteArgs>();
       return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i20.SideEffectsPage(
+        child: _i21.SideEffectsPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
@@ -290,7 +303,7 @@ abstract class $RegistrationDeliveryRoute extends _i23.AutoRouterModule {
           orElse: () => const SplashAcknowledgementRouteArgs());
       return _i23.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i21.SplashAcknowledgementPage(
+        child: _i22.SplashAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableBackToSearch: args.enableBackToSearch,
@@ -1022,11 +1035,49 @@ class ReferBeneficiaryRouteArgs {
     return 'ReferBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing, projectBeneficiaryClientRefId: $projectBeneficiaryClientRefId}';
   }
 }
+/// [_i18.RefusedDeliveryPage]
+class RefusedDeliveryRoute
+    extends _i23.PageRouteInfo<RefusedDeliveryRouteArgs> {
+  RefusedDeliveryRoute({
+    _i24.Key? key,
+    _i25.RegistrationDeliveryLocalization? appLocalizations,
+    List<_i23.PageRouteInfo>? children,
+  }) : super(
+          RefusedDeliveryRoute.name,
+          args: RefusedDeliveryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'RefusedDeliveryRoute';
+
+  static const _i23.PageInfo<RefusedDeliveryRouteArgs> page =
+      _i23.PageInfo<RefusedDeliveryRouteArgs>(name);
+}
+
+class RefusedDeliveryRouteArgs {
+  const RefusedDeliveryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final _i24.Key? key;
+
+  final _i25.RegistrationDeliveryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'RefusedDeliveryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
 
 /// generated route for
-/// [_i18.RegistrationDeliveryWrapperPage]
+/// [_i19.RegistrationDeliveryWrapperPage]
 class RegistrationDeliveryWrapperRoute extends _i23.PageRouteInfo<void> {
   const RegistrationDeliveryWrapperRoute({List<_i23.PageRouteInfo>? children})
+
       : super(
           RegistrationDeliveryWrapperRoute.name,
           initialChildren: children,
@@ -1038,7 +1089,7 @@ class RegistrationDeliveryWrapperRoute extends _i23.PageRouteInfo<void> {
 }
 
 /// generated route for
-/// [_i19.SearchBeneficiaryPage]
+/// [_i20.SearchBeneficiaryPage]
 class SearchBeneficiaryRoute
     extends _i23.PageRouteInfo<SearchBeneficiaryRouteArgs> {
   SearchBeneficiaryRoute({
@@ -1077,7 +1128,7 @@ class SearchBeneficiaryRouteArgs {
 }
 
 /// generated route for
-/// [_i20.SideEffectsPage]
+/// [_i21.SideEffectsPage]
 class SideEffectsRoute extends _i23.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
     _i24.Key? key,
@@ -1125,7 +1176,7 @@ class SideEffectsRouteArgs {
 }
 
 /// generated route for
-/// [_i21.SplashAcknowledgementPage]
+/// [_i22.SplashAcknowledgementPage]
 class SplashAcknowledgementRoute
     extends _i23.PageRouteInfo<SplashAcknowledgementRouteArgs> {
   SplashAcknowledgementRoute({

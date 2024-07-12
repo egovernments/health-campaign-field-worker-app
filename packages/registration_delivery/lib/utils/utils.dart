@@ -308,6 +308,7 @@ class RegistrationDeliverySingleton {
   List<String>? _symptomsTypes;
   List<String>? _referralReasons;
   List<String>? _houseStructureTypes;
+  List<String>? _refusalReasons;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -333,6 +334,7 @@ class RegistrationDeliverySingleton {
     required List<String>? symptomsTypes,
     required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
+    required List<String>? refusalReasons,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -349,6 +351,7 @@ class RegistrationDeliverySingleton {
     _symptomsTypes = symptomsTypes;
     _referralReasons = referralReasons;
     _houseStructureTypes = houseStructureTypes;
+    _refusalReasons = refusalReasons;
   }
 
   void setTenantId(String tenantId) {
@@ -375,6 +378,7 @@ class RegistrationDeliverySingleton {
   List<String>? get symptomsTypes => _symptomsTypes;
   List<String>? get referralReasons => _referralReasons;
   List<String>? get houseStructureTypes => _houseStructureTypes;
+  List<String>? get refusalReasons => _refusalReasons;
 }
 
 bool allDosesDelivered(

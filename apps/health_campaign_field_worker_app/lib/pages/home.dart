@@ -628,7 +628,12 @@ void setPackagesSingleton(BuildContext context) {
                 appConfiguration.referralReasons?.map((e) => e.code).toList(),
             houseStructureTypes: appConfiguration.houseStructureTypes
                 ?.map((e) => e.code)
-                .toList());
+                .toList(),
+        refusalReasons: appConfiguration.refusalReasons
+            ?.map((e) => e.code)
+            .toList(),
+        );
+
 
         AttendanceSingleton().setInitialData(
           projectId: context.projectId,
