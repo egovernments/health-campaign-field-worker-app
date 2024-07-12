@@ -48,6 +48,7 @@ class _HouseholdOverviewPageState
     final theme = Theme.of(context);
     final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType!;
 
+
     return PopScope(
       onPopInvoked: (didPop) async {
         context
@@ -57,7 +58,21 @@ class _HouseholdOverviewPageState
         context.router.maybePop();
       },
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+
         builder: (ctx, state) {
+
+          final projectBeneficiary =
+          RegistrationDeliverySingleton().beneficiaryType !=
+              BeneficiaryType.individual
+              ? [state.householdMemberWrapper.projectBeneficiaries.first]
+              : state.householdMemberWrapper.projectBeneficiaries
+              .where(
+                (element) =>
+            element.beneficiaryClientReferenceId ==
+                state.selectedIndividual?.clientReferenceId,
+          )
+              .toList();
+
           return Scaffold(
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
@@ -98,7 +113,7 @@ class _HouseholdOverviewPageState
                                       ),
                                       onPressed: () async {
                                         await context.router
-                                            .push(BeneficiaryChecklistRoute());
+                                            .push(BeneficiaryChecklistRoute(beneficiaryClientRefId: projectBeneficiary.first.beneficiaryClientReferenceId));
                                       },
                                     )
                                   : DigitElevatedButton(
@@ -119,7 +134,7 @@ class _HouseholdOverviewPageState
                                         );
 
                                         await context.router
-                                            .push(BeneficiaryChecklistRoute());
+                                            .push(BeneficiaryChecklistRoute(beneficiaryClientRefId: projectBeneficiary.first.beneficiaryClientReferenceId));
                                       },
                                       child: Center(
                                         child: Text(
