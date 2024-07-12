@@ -227,8 +227,10 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               Column(children: [
                                 houseShowcaseData.typeOfStructure.buildWith(
                                   child: SelectionBox<String>(
+                                    isRequired: true,
                                     title: i18.householdDetails.typeOfStructure,
                                     width: 120,
+                                    allowMultipleSelection: false,
                                     options: RegistrationDeliverySingleton()
                                             .houseStructureTypes ??
                                         [],

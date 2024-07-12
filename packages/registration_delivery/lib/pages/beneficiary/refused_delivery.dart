@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
@@ -11,6 +14,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../models/entities/additional_fields_type.dart';
+import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -69,8 +73,97 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                   child: DigitElevatedButton(
                     onPressed: () {
                       form.markAllAsTouched();
+
+                      if (form.control(_reasonOfRefusal).value == null) {
+                        setState(() {
+                          form.control(_reasonOfRefusal).setErrors({'': true});
+                        });
+                      }
+
                       if (!form.valid) return;
-                      // TODO: need to complete the next flow
+
+                      final reasonOfRefusal =
+                      form.control(_reasonOfRefusal).value;
+
+                      final refusalComment = form.control(_deliveryCommentKey).value;
+
+                      final projectBeneficiary =
+                      RegistrationDeliverySingleton().beneficiaryType !=
+                          BeneficiaryType.individual
+                          ? [registrationState.householdMemberWrapper.projectBeneficiaries.first]
+                          : registrationState.householdMemberWrapper.projectBeneficiaries
+                          .where(
+                            (element) =>
+                        element.beneficiaryClientReferenceId ==
+                            registrationState.selectedIndividual?.clientReferenceId,
+                      )
+                          .toList();
+
+                      context
+                          .read<DeliverInterventionBloc>()
+                          .add(
+                        DeliverInterventionSubmitEvent(
+                          task: TaskModel(
+                            projectBeneficiaryClientReferenceId: projectBeneficiary.first.clientReferenceId, //TODO: need to check for individual based campaign
+                            clientReferenceId:
+                            IdGen.i.identifier,
+                            tenantId:
+                            RegistrationDeliverySingleton()
+                                .tenantId,
+                            rowVersion: 1,
+                            auditDetails: AuditDetails(
+                              createdBy:
+                              RegistrationDeliverySingleton()
+                                  .loggedInUserUuid!,
+                              createdTime: context
+                                  .millisecondsSinceEpoch(),
+                            ),
+                            projectId:
+                            RegistrationDeliverySingleton()
+                                .projectId,
+                            status: Status
+                                .administeredFailed
+                                .toValue(),
+                            clientAuditDetails:
+                            ClientAuditDetails(
+                              createdBy:
+                              RegistrationDeliverySingleton()
+                                  .loggedInUserUuid!,
+                              createdTime: context
+                                  .millisecondsSinceEpoch(),
+                              lastModifiedBy:
+                              RegistrationDeliverySingleton()
+                                  .loggedInUserUuid,
+                              lastModifiedTime: context
+                                  .millisecondsSinceEpoch(),
+                            ),
+                            additionalFields:
+                            TaskAdditionalFields(
+                              version: 1,
+                              fields: [
+                                AdditionalField(
+                                  'taskStatus',
+                                  reasonOfRefusal,
+                                ),
+                                AdditionalField(
+                                  'comments',
+                                  refusalComment,
+                                ),
+                              ],
+                            ),
+                          ),
+                          isEditing: false,
+                          boundaryModel:
+                          RegistrationDeliverySingleton()
+                              .boundary!,
+                        ),
+                      );
+                      context
+                          .router
+                          .popAndPush(
+                          HouseholdAcknowledgementRoute(
+                            enableViewHousehold: true,
+                          ));
                     },
                     child: Center(
                       child: Text(
@@ -145,6 +238,7 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                         .refusalReasons ??
                                         [],
                                     onSelectionChanged: (value) {
+                                      form.control(_reasonOfRefusal).markAsTouched();
                                       setState(() {
                                         if(value.isNotEmpty){
                                           form.control(_reasonOfRefusal).value = value.first;
@@ -160,6 +254,9 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                       return localizations
                                           .translate(value.toString());
                                     },
+                                  errorMessage:  form.control(_reasonOfRefusal).hasErrors && form.control(_reasonOfRefusal).touched
+                                      ? localizations.translate(i18.common.corecommonRequired)
+                                      : null,
                                   ),
                               ),
                             ),

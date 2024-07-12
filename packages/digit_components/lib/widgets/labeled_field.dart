@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class LabeledField extends StatelessWidget {
   final Widget child;
-  final String label;
+  final String? label;
   final IconData? icon;
   final String? tooltipMessage;
   final TextStyle? labelStyle;
@@ -16,7 +16,7 @@ class LabeledField extends StatelessWidget {
   const LabeledField({
     super.key,
     required this.child,
-    required this.label,
+    this.label,
     this.icon,
     this.tooltipMessage,
     this.labelStyle,
@@ -34,11 +34,12 @@ class LabeledField extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
+            if(label != null)
             Row(
               children: [
                 Flexible(
                   child: Text(
-                    label,
+                    label!,
                     style: labelStyle ??
                         DigitTheme.instance.mobileTheme.textTheme.labelSmall,
                   ),
@@ -54,6 +55,7 @@ class LabeledField extends StatelessWidget {
                     : const SizedBox.shrink()
               ],
             ),
+            if(label != null)
             const SizedBox(height: 8),
             child,
           ],
