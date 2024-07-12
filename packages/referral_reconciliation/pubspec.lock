@@ -388,11 +388,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -420,11 +419,10 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "53ee8c0a7c992c0e8d1c9c867b6cf1d52e1728200f4b4436943a5d6c5e4984c3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+2"
+      path: "../digit_components"
+      relative: true
+    source: path
+    version: "1.0.0+3"
   digit_data_model:
     dependency: "direct main"
     description:

@@ -958,6 +958,9 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+  List<CommonMasterModel>? get houseStructureTypes =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig =>
       throw _privateConstructorUsedError;
@@ -1000,6 +1003,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+      List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
 }
 
@@ -1031,6 +1036,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
     Object? referralReasonList = freezed,
+    Object? houseStructureTypes = freezed,
     Object? firebaseConfig = freezed,
   }) {
     return _then(_value.copyWith(
@@ -1095,6 +1101,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
               as List<ReferralReasonType>?,
+      houseStructureTypes: freezed == houseStructureTypes
+          ? _value.houseStructureTypes
+          : houseStructureTypes // ignore: cast_nullable_to_non_nullable
+              as List<CommonMasterModel>?,
       firebaseConfig: freezed == firebaseConfig
           ? _value.firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
@@ -1137,6 +1147,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+      List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
 }
 
@@ -1166,6 +1178,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? symptomsTypeList = freezed,
     Object? searchHouseHoldFilters = freezed,
     Object? referralReasonList = freezed,
+    Object? houseStructureTypes = freezed,
     Object? firebaseConfig = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
@@ -1230,6 +1243,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._referralReasonList
           : referralReasonList // ignore: cast_nullable_to_non_nullable
               as List<ReferralReasonType>?,
+      houseStructureTypes: freezed == houseStructureTypes
+          ? _value._houseStructureTypes
+          : houseStructureTypes // ignore: cast_nullable_to_non_nullable
+              as List<CommonMasterModel>?,
       firebaseConfig: freezed == firebaseConfig
           ? _value._firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
@@ -1272,6 +1289,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+      final List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'FIREBASE_CONFIG')
       required final List<FirebaseConfig>? firebaseConfig})
       : _appConfig = appConfig,
@@ -1290,6 +1309,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _symptomsTypeList = symptomsTypeList,
         _searchHouseHoldFilters = searchHouseHoldFilters,
         _referralReasonList = referralReasonList,
+        _houseStructureTypes = houseStructureTypes,
         _firebaseConfig = firebaseConfig;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
@@ -1451,6 +1471,18 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<CommonMasterModel>? _houseStructureTypes;
+  @override
+  @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+  List<CommonMasterModel>? get houseStructureTypes {
+    final value = _houseStructureTypes;
+    if (value == null) return null;
+    if (_houseStructureTypes is EqualUnmodifiableListView)
+      return _houseStructureTypes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   final List<FirebaseConfig>? _firebaseConfig;
   @override
   @JsonKey(name: 'FIREBASE_CONFIG')
@@ -1464,7 +1496,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
 
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1506,6 +1538,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._referralReasonList, _referralReasonList) &&
             const DeepCollectionEquality()
+                .equals(other._houseStructureTypes, _houseStructureTypes) &&
+            const DeepCollectionEquality()
                 .equals(other._firebaseConfig, _firebaseConfig));
   }
 
@@ -1529,6 +1563,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       const DeepCollectionEquality().hash(_symptomsTypeList),
       const DeepCollectionEquality().hash(_searchHouseHoldFilters),
       const DeepCollectionEquality().hash(_referralReasonList),
+      const DeepCollectionEquality().hash(_houseStructureTypes),
       const DeepCollectionEquality().hash(_firebaseConfig));
 
   @JsonKey(ignore: true)
@@ -1578,6 +1613,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<SearchHouseHoldFilters>? searchHouseHoldFilters,
       @JsonKey(name: 'REFERRAL_REASONS')
       final List<ReferralReasonType>? referralReasonList,
+      @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+      final List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'FIREBASE_CONFIG')
       required final List<FirebaseConfig>?
           firebaseConfig}) = _$HCMWrapperModelImpl;
@@ -1630,6 +1667,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'REFERRAL_REASONS')
   List<ReferralReasonType>? get referralReasonList;
+  @override
+  @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+  List<CommonMasterModel>? get houseStructureTypes;
   @override
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig;

@@ -206,52 +206,12 @@ class _HouseholdLocationPageState
                                           ),
                                         );
 
-                              bloc.add(
-                                BeneficiaryRegistrationSaveAddressEvent(
-                                  addressModel,
-                                ),
-                              );
-                              router.push(HouseDetailsRoute());
-                            },
-                            editHousehold: (
-                              address,
-                              householdModel,
-                              individuals,
-                              registrationDate,
-                              projectBeneficiaryModel,
-                              loading,
-                            ) {
-                              var addressModel = address.copyWith(
-                                addressLine1: addressLine1 != null &&
-                                        addressLine1.trim().isNotEmpty
-                                    ? addressLine1
-                                    : null,
-                                addressLine2: addressLine2 != null &&
-                                        addressLine2.trim().isNotEmpty
-                                    ? addressLine2
-                                    : null,
-                                landmark: landmark != null &&
-                                        landmark.trim().isNotEmpty
-                                    ? landmark
-                                    : null,
-                                locality: address.locality,
-                                pincode: postalCode != null &&
-                                        postalCode.trim().isNotEmpty
-                                    ? postalCode
-                                    : null,
-                                type: AddressType.correspondence,
-                                latitude: form.control(_latKey).value,
-                                longitude: form.control(_lngKey).value,
-                                locationAccuracy:
-                                    form.control(_accuracyKey).value,
-                              );
-                              // TODO [Linking of Voucher for Household based project  need to be handled]
                                         bloc.add(
                                           BeneficiaryRegistrationSaveAddressEvent(
                                             addressModel,
                                           ),
                                         );
-                                        router.push(HouseHoldDetailsRoute());
+                                        router.push(HouseDetailsRoute());
                                       },
                                       editHousehold: (
                                         address,

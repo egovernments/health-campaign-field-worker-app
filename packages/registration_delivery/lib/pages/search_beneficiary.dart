@@ -499,24 +499,6 @@ class _SearchBeneficiaryPageState
     );
   }
 
-  /// Retrieves a list of [Status] objects based on the current search filter settings.
-  ///
-  /// This method accesses the `searchHouseHoldFilter` from the [RegistrationDeliverySingleton]
-  /// to determine which statuses to filter for in the search. It maps each filter identifier
-  /// to the corresponding [Status] enum value, effectively converting the list of filter
-  /// identifiers into a list of [Status] enum values.
-  ///
-  /// Returns:
-  ///   A list of [Status] objects that match the filter identifiers stored in
-  ///   `searchHouseHoldFilter`. If `searchHouseHoldFilter` is null or empty,
-  ///   an empty list of [Status] is returned.
-  getStatusToFilter() {
-    return (RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
-        .map((e) => Status.values.where((element) => element.toValue() == e))
-        .expand((element) => element)
-        .toList();
-  }
-
   getFilterIconNLabel() {
     return {
       'label': localizations.translate(
@@ -533,7 +515,7 @@ class _SearchBeneficiaryPageState
               color: const DigitColors().burningOrange),
           titleText: getFilterIconNLabel()['label'],
           content: StatusFilter(
-              status: getStatusToFilter(), selectedFilters: selectedFilters),
+              selectedFilters: selectedFilters),
         ));
 
     if (filters != null) {

@@ -5,16 +5,9 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/address.dart';
 import 'package:digit_data_model/models/entities/beneficiary_type.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:flutter/foundation.dart';
 import 'package:registration_delivery/models/entities/status.dart';
-import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-
-import '../../models/entities/household.dart';
-import '../../models/entities/household_member.dart';
-import '../../models/entities/project_beneficiary.dart';
-import '../../models/entities/referral.dart';
-import '../../models/entities/side_effect.dart';
 
 class StatusSearchBloc extends SearchHouseholdsBloc {
   StatusSearchBloc(
@@ -73,7 +66,9 @@ class StatusSearchBloc extends SearchHouseholdsBloc {
               sideEffectsList,
               referralsList);
         default:
-          print('status not found');
+          if (kDebugMode) {
+            print('status not found');
+          }
           break;
       }
 
@@ -86,7 +81,9 @@ class StatusSearchBloc extends SearchHouseholdsBloc {
       ));
     } catch (e) {
       // Handle errors and emit the error state
-      print('error searching by status: $e');
+      if (kDebugMode) {
+        print('error searching by status: $e');
+      }
       emit(state.copyWith(
         loading: false,
         householdMembers: [],
@@ -105,15 +102,14 @@ class StatusSearchBloc extends SearchHouseholdsBloc {
       List<SideEffectModel> sideEffectsList,
       List<ReferralModel> referralsList) async {
     // Fetch project beneficiaries based on project ID
-    List<ProjectBeneficiaryModel> beneficiaries =
-        await projectBeneficiary.search(
+    projectBeneficiariesList = await projectBeneficiary.search(
       ProjectBeneficiarySearchModel(
         projectId: [event.projectId],
       ),
     );
 
     // Extract individual client reference IDs from beneficiaries
-    final List<String> individualClientReferenceIds = beneficiaries
+    final List<String> individualClientReferenceIds = projectBeneficiariesList
         .map((e) => e.beneficiaryClientReferenceId.toString())
         .toList();
 
@@ -135,13 +131,6 @@ class StatusSearchBloc extends SearchHouseholdsBloc {
             .map((e) => e.householdClientReferenceId.toString())
             .toList(),
       ),
-    );
-
-    // Fetch project beneficiaries based on household or individual client reference IDs
-    projectBeneficiariesList = await fetchProjectBeneficiary(
-      beneficiaryType != BeneficiaryType.individual
-          ? householdList.map((e) => e.clientReferenceId).toList()
-          : individualClientReferenceIds,
     );
 
     // Group household members by household client reference ID
@@ -264,6 +253,7 @@ class StatusSearchBloc extends SearchHouseholdsBloc {
       null,
       householdClientReferenceIds,
     );
+
     final List<String> individualClientReferenceIds = householdMembersList
         .map((e) => e.individualClientReferenceId.toString())
         .toList();
@@ -277,7 +267,7 @@ class StatusSearchBloc extends SearchHouseholdsBloc {
           : individualClientReferenceIds,
     );
 
-// Group household members which do not have project beneficiaries
+    // Group household members which do not have project beneficiaries
     final groupedHouseholdsMembersWithoutBeneficiaries = householdMembersList
         .where((hm) => !projectBeneficiariesList
             .map((p) => p.beneficiaryClientReferenceId)

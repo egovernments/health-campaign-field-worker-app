@@ -1,17 +1,17 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class StatusFilter extends LocalizedStatefulWidget {
-  final List<Status> status;
   final List<Status>? selectedFilters;
   const StatusFilter({
     super.key,
     super.appLocalizations,
-    required this.status,
     this.selectedFilters,
   });
 
@@ -34,21 +34,18 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(kPadding),
-            child: GridView.builder(
-                physics:
-                    const NeverScrollableScrollPhysics(), // Disable GridView's scrolling
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 20.0,
-                  crossAxisSpacing: 15.0,
-                  childAspectRatio: 3.0,
-                ),
-                shrinkWrap: true,
-                itemCount: widget.status.length,
-                itemBuilder: (context, index) =>
-                    _buildButton(widget.status[index])),
+          SelectionBox<Status>(
+            options: getFilters() ?? [],
+            allowMultipleSelection: true,
+            width: 115,
+            onSelectionChanged: (selected) {
+              setState(() {
+                selectedButtons = selected;
+              });
+            },
+            valueMapper: (value) {
+              return localizations.translate(value.toValue().toString());
+            },
           ),
           const SizedBox(
             height: kPadding,
@@ -100,27 +97,10 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
     });
   }
 
-  Widget _buildButton(Status label) {
-    bool isSelected = selectedButtons.contains(label);
-    return GestureDetector(
-      onTap: () => selectButton(label),
-      child: Container(
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: isSelected ? const DigitColors().burningOrange : Colors.white,
-          border: Border.all(color: const DigitColors().cloudGray),
-          borderRadius: BorderRadius.circular(kPadding / 2),
-        ),
-        child: Text(
-          localizations.translate(label.toValue()),
-          style: TextStyle(
-            color: isSelected
-                ? const DigitColors().white
-                : const DigitColors().davyGray,
-            fontSize: 16,
-          ),
-        ),
-      ),
-    );
+  getFilters() {
+    return (RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
+        .map((e) => Status.values.where((element) => element.toValue() == e))
+        .expand((element) => element)
+        .toList();
   }
 }
