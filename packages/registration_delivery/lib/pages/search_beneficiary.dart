@@ -6,11 +6,13 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/status.dart';
 import '../router/registration_delivery_router.gm.dart';
+import '../utils/global_search_parameters.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
@@ -37,7 +39,7 @@ class _SearchBeneficiaryPageState
 
   double lat = 0.0;
   double long = 0.0;
-  List<Status> selectedFilters = [];
+  List<String> selectedFilters = [];
 
   SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
     loading: false,
@@ -79,43 +81,50 @@ class _SearchBeneficiaryPageState
           onNotification: (scrollNotification) {
             if (scrollNotification is ScrollUpdateNotification) {
               final metrics = scrollNotification.metrics;
-              if (metrics.atEdge &&
-                  isProximityEnabled &&
-                  searchController.text == '' &&
-                  metrics.pixels != 0) {
-                // [TODO: Handle the null check at Bloc level for Event parameters
-                blocWrapper.proximitySearchBloc
-                    .add(SearchHouseholdsEvent.searchByProximity(
-                  latitude: lat,
-                  longititude: long,
-                  projectId: RegistrationDeliverySingleton().projectId!,
-                  maxRadius: RegistrationDeliverySingleton().maxRadius!,
-                  offset: blocWrapper.proximitySearchBloc.state.offset,
-                  limit: blocWrapper.proximitySearchBloc.state.limit,
-                ));
-              } else if (metrics.atEdge &&
-                  searchController.text != '' &&
-                  metrics.pixels != 0) {
-                blocWrapper.searchByHeadBloc
-                    .add(SearchHouseholdsEvent.searchByHouseholdHead(
-                  searchText: searchController.text,
-                  projectId: RegistrationDeliverySingleton().projectId!,
-                  isProximityEnabled: isProximityEnabled,
-                  offset: blocWrapper.searchByHeadBloc.state.offset,
-                  limit: blocWrapper.searchByHeadBloc.state.limit,
-                ));
-              } else if (metrics.atEdge &&
-                  selectedFilters.isNotEmpty &&
-                  metrics.pixels != 0) {
-                blocWrapper.statusSearchBloc.add(
-                  SearchHouseholdsEvent.searchByStatus(
-                    projectId: RegistrationDeliverySingleton().projectId!,
-                    offset: blocWrapper.statusSearchBloc.state.offset,
-                    limit: blocWrapper.statusSearchBloc.state.limit,
-                    status: selectedFilters,
-                  ),
-                );
-              }
+              blocWrapper.individualGlobalSearchBloc
+                  .add(SearchHouseholdsEvent.paginate(scrollMetrics: metrics));
+              // if (metrics.atEdge &&
+              //     isProximityEnabled &&
+              //     searchController.text == '' &&
+              //     metrics.pixels != 0) {
+              //   // [TODO: Handle the null check at Bloc level for Event parameters
+              //   blocWrapper.individualGlobalSearchBloc
+              //       .add(SearchHouseholdsEvent.individualGlobalSearch(
+              //           globalSearchParams: GlobalSearchParameters(
+              //     isProximityEnabled: isProximityEnabled,
+              //     latitude: lat,
+              //     longitude: long,
+              //     maxRadius: RegistrationDeliverySingleton().maxRadius,
+              //     nameSearch: null,
+              //     filter: null,
+              //     offset: blocWrapper.individualGlobalSearchBloc.state.offset,
+              //     limit: blocWrapper.individualGlobalSearchBloc.state.limit,
+              //     beneficiaryType:
+              //         RegistrationDeliverySingleton().beneficiaryType,
+              //   )));
+              // } else if (metrics.atEdge &&
+              //     searchController.text != '' &&
+              //     metrics.pixels != 0) {
+              //   blocWrapper.searchByHeadBloc
+              //       .add(SearchHouseholdsEvent.searchByHouseholdHead(
+              //     searchText: searchController.text,
+              //     projectId: RegistrationDeliverySingleton().projectId!,
+              //     isProximityEnabled: isProximityEnabled,
+              //     offset: blocWrapper.searchByHeadBloc.state.offset,
+              //     limit: blocWrapper.searchByHeadBloc.state.limit,
+              //   ));
+              // } else if (metrics.atEdge &&
+              //     selectedFilters.isNotEmpty &&
+              //     metrics.pixels != 0) {
+              //   blocWrapper.individualGlobalSearchBloc.add(
+              //     SearchHouseholdsEvent.searchByStatus(
+              //       projectId: RegistrationDeliverySingleton().projectId!,
+              //       offset: blocWrapper.individualGlobalSearchBloc.state.offset,
+              //       limit: blocWrapper.individualGlobalSearchBloc.state.limit,
+              //       status: selectedFilters,
+              //     ),
+              //   );
+              // }
             }
             // Return true to allow the notification to continue to be dispatched to further ancestors.
 
@@ -175,24 +184,7 @@ class _SearchBeneficiaryPageState
                                                         .maxRadius !=
                                                     null &&
                                                 isProximityEnabled) {
-                                              blocWrapper.proximitySearchBloc
-                                                  .add(
-                                                SearchHouseholdsEvent
-                                                    .searchByProximity(
-                                                  latitude:
-                                                      locationState.latitude!,
-                                                  longititude:
-                                                      locationState.longitude!,
-                                                  projectId:
-                                                      RegistrationDeliverySingleton()
-                                                          .projectId!,
-                                                  maxRadius:
-                                                      RegistrationDeliverySingleton()
-                                                          .maxRadius!,
-                                                  offset: offset,
-                                                  limit: limit,
-                                                ),
-                                              );
+                                              triggerGlobalSearchEvent();
                                             } else {
                                               blocWrapper.clearEvent();
                                             }
@@ -225,42 +217,12 @@ class _SearchBeneficiaryPageState
                                     return;
                                   } else if (isProximityEnabled &&
                                       value.trim().length < 2) {
-                                    blocWrapper.proximitySearchBloc.add(
-                                      SearchHouseholdsEvent.searchByProximity(
-                                        latitude: locationState.latitude!,
-                                        longititude: locationState.longitude!,
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
-                                        maxRadius:
-                                            RegistrationDeliverySingleton()
-                                                .maxRadius!,
-                                        offset: offset,
-                                        limit: limit,
-                                      ),
-                                    );
+                                    triggerGlobalSearchEvent();
                                   } else {
                                     blocWrapper.searchHouseholdsBloc.add(
                                       const SearchHouseholdsClearEvent(),
                                     );
-                                    blocWrapper.searchByHeadBloc.add(
-                                      SearchHouseholdsEvent
-                                          .searchByHouseholdHead(
-                                        searchText: value,
-                                        projectId:
-                                            RegistrationDeliverySingleton()
-                                                .projectId!,
-                                        isProximityEnabled: isProximityEnabled,
-                                        latitude: locationState.latitude,
-                                        longitude: locationState.longitude,
-                                        maxRadius:
-                                            RegistrationDeliverySingleton()
-                                                .maxRadius,
-                                        tag: null,
-                                        offset: offset,
-                                        limit: limit,
-                                      ),
-                                    );
+                                    triggerGlobalSearchEvent();
                                   }
                                 },
                               ),
@@ -300,8 +262,8 @@ class _SearchBeneficiaryPageState
                                                       children: [
                                                         Text(
                                                             localizations
-                                                                .translate(filter
-                                                                    .toValue()),
+                                                                .translate(
+                                                                    filter),
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -514,27 +476,38 @@ class _SearchBeneficiaryPageState
           titleIcon: Icon(getFilterIconNLabel()['icon'],
               color: const DigitColors().burningOrange),
           titleText: getFilterIconNLabel()['label'],
-          content: StatusFilter(
-              selectedFilters: selectedFilters),
+          content: StatusFilter(selectedFilters: selectedFilters),
         ));
 
     if (filters != null) {
-      setState(() {
-        selectedFilters = filters;
-      });
-      blocWrapper.statusSearchBloc.add(
-        SearchHouseholdsEvent.searchByStatus(
-          projectId: RegistrationDeliverySingleton().projectId!,
-          offset: offset,
-          limit: limit,
-          status: filters,
-        ),
-      );
+      for (var filter in filters) {
+        if (!selectedFilters.contains(filter)) {
+          setState(() {
+            selectedFilters.add(filter);
+          });
+        }
+      }
+      triggerGlobalSearchEvent();
     } else {
       setState(() {
         selectedFilters = [];
       });
       blocWrapper.clearEvent();
     }
+  }
+
+  void triggerGlobalSearchEvent() {
+    blocWrapper.individualGlobalSearchBloc
+        .add(SearchHouseholdsEvent.individualGlobalSearch(
+            globalSearchParams: GlobalSearchParameters(
+      isProximityEnabled: isProximityEnabled,
+      latitude: lat,
+      longitude: long,
+      maxRadius: RegistrationDeliverySingleton().maxRadius,
+      nameSearch: searchController.text,
+      filter: selectedFilters,
+      offset: offset,
+      limit: limit,
+    )));
   }
 }

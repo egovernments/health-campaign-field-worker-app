@@ -22,6 +22,7 @@ class TagSearchBloc extends SearchHouseholdsBloc {
     required super.sideEffectDataRepository,
     required super.addressRepository,
     required super.referralDataRepository,
+    required super.individualGlobalSearchRepository,
   }) {
     on(handleSearchByTag);
   }

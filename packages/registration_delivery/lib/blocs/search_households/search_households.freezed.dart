@@ -46,6 +46,9 @@ mixin _$SearchHouseholdsEvent {
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -78,6 +81,9 @@ mixin _$SearchHouseholdsEvent {
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -110,6 +116,9 @@ mixin _$SearchHouseholdsEvent {
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -127,6 +136,9 @@ mixin _$SearchHouseholdsEvent {
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -141,6 +153,9 @@ mixin _$SearchHouseholdsEvent {
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -154,6 +169,8 @@ mixin _$SearchHouseholdsEvent {
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -249,6 +266,9 @@ class _$SearchHouseholdsInitializedEventImpl
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) {
     return initialize();
   }
@@ -284,6 +304,9 @@ class _$SearchHouseholdsInitializedEventImpl
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) {
     return initialize?.call();
   }
@@ -319,6 +342,9 @@ class _$SearchHouseholdsInitializedEventImpl
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -342,6 +368,9 @@ class _$SearchHouseholdsInitializedEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) {
     return initialize(this);
   }
@@ -359,6 +388,9 @@ class _$SearchHouseholdsInitializedEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) {
     return initialize?.call(this);
   }
@@ -375,6 +407,8 @@ class _$SearchHouseholdsInitializedEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -547,6 +581,9 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) {
     return searchByHousehold(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -583,6 +620,9 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) {
     return searchByHousehold?.call(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -619,6 +659,9 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -643,6 +686,9 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) {
     return searchByHousehold(this);
   }
@@ -660,6 +706,9 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) {
     return searchByHousehold?.call(this);
   }
@@ -676,6 +725,8 @@ class _$SearchHouseholdsByHouseholdsEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -842,6 +893,9 @@ class _$SearchHouseholdsByStatusEventImpl
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) {
     return searchByStatus(projectId, offset, limit, status);
   }
@@ -877,6 +931,9 @@ class _$SearchHouseholdsByStatusEventImpl
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) {
     return searchByStatus?.call(projectId, offset, limit, status);
   }
@@ -912,6 +969,9 @@ class _$SearchHouseholdsByStatusEventImpl
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) {
     if (searchByStatus != null) {
@@ -935,6 +995,9 @@ class _$SearchHouseholdsByStatusEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) {
     return searchByStatus(this);
   }
@@ -952,6 +1015,9 @@ class _$SearchHouseholdsByStatusEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) {
     return searchByStatus?.call(this);
   }
@@ -968,6 +1034,8 @@ class _$SearchHouseholdsByStatusEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) {
     if (searchByStatus != null) {
@@ -1185,6 +1253,9 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) {
     return searchByHouseholdHead(searchText, projectId, isProximityEnabled,
         latitude, longitude, maxRadius, tag, offset, limit);
@@ -1221,6 +1292,9 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) {
     return searchByHouseholdHead?.call(searchText, projectId,
         isProximityEnabled, latitude, longitude, maxRadius, tag, offset, limit);
@@ -1257,6 +1331,9 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
@@ -1281,6 +1358,9 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) {
     return searchByHouseholdHead(this);
   }
@@ -1298,6 +1378,9 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) {
     return searchByHouseholdHead?.call(this);
   }
@@ -1314,6 +1397,8 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
@@ -1507,6 +1592,9 @@ class _$SearchHouseholdsByProximityEventImpl
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) {
     return searchByProximity(
         latitude, longititude, projectId, maxRadius, offset, limit);
@@ -1543,6 +1631,9 @@ class _$SearchHouseholdsByProximityEventImpl
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) {
     return searchByProximity?.call(
         latitude, longititude, projectId, maxRadius, offset, limit);
@@ -1579,6 +1670,9 @@ class _$SearchHouseholdsByProximityEventImpl
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
@@ -1603,6 +1697,9 @@ class _$SearchHouseholdsByProximityEventImpl
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) {
     return searchByProximity(this);
   }
@@ -1620,6 +1717,9 @@ class _$SearchHouseholdsByProximityEventImpl
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) {
     return searchByProximity?.call(this);
   }
@@ -1636,6 +1736,8 @@ class _$SearchHouseholdsByProximityEventImpl
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
@@ -1773,6 +1875,9 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) {
     return searchByTag(tag, projectId);
   }
@@ -1808,6 +1913,9 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) {
     return searchByTag?.call(tag, projectId);
   }
@@ -1843,6 +1951,9 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) {
     if (searchByTag != null) {
@@ -1866,6 +1977,9 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) {
     return searchByTag(this);
   }
@@ -1883,6 +1997,9 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) {
     return searchByTag?.call(this);
   }
@@ -1899,6 +2016,8 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) {
     if (searchByTag != null) {
@@ -1990,6 +2109,9 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         searchByProximity,
     required TResult Function(String tag, String projectId) searchByTag,
     required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
   }) {
     return clear();
   }
@@ -2025,6 +2147,9 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         searchByProximity,
     TResult? Function(String tag, String projectId)? searchByTag,
     TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
   }) {
     return clear?.call();
   }
@@ -2060,6 +2185,9 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         searchByProximity,
     TResult Function(String tag, String projectId)? searchByTag,
     TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -2083,6 +2211,9 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         searchByProximity,
     required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
     required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
   }) {
     return clear(this);
   }
@@ -2100,6 +2231,9 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         searchByProximity,
     TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
   }) {
     return clear?.call(this);
   }
@@ -2116,6 +2250,8 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
     TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
     TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
     TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -2127,6 +2263,529 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
 
 abstract class SearchHouseholdsClearEvent implements SearchHouseholdsEvent {
   const factory SearchHouseholdsClearEvent() = _$SearchHouseholdsClearEventImpl;
+}
+
+/// @nodoc
+abstract class _$$IndividualGlobalSearchEventImplCopyWith<$Res> {
+  factory _$$IndividualGlobalSearchEventImplCopyWith(
+          _$IndividualGlobalSearchEventImpl value,
+          $Res Function(_$IndividualGlobalSearchEventImpl) then) =
+      __$$IndividualGlobalSearchEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({GlobalSearchParameters globalSearchParams});
+}
+
+/// @nodoc
+class __$$IndividualGlobalSearchEventImplCopyWithImpl<$Res>
+    extends _$SearchHouseholdsEventCopyWithImpl<$Res,
+        _$IndividualGlobalSearchEventImpl>
+    implements _$$IndividualGlobalSearchEventImplCopyWith<$Res> {
+  __$$IndividualGlobalSearchEventImplCopyWithImpl(
+      _$IndividualGlobalSearchEventImpl _value,
+      $Res Function(_$IndividualGlobalSearchEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? globalSearchParams = null,
+  }) {
+    return _then(_$IndividualGlobalSearchEventImpl(
+      globalSearchParams: null == globalSearchParams
+          ? _value.globalSearchParams
+          : globalSearchParams // ignore: cast_nullable_to_non_nullable
+              as GlobalSearchParameters,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$IndividualGlobalSearchEventImpl implements IndividualGlobalSearchEvent {
+  const _$IndividualGlobalSearchEventImpl({required this.globalSearchParams});
+
+  @override
+  final GlobalSearchParameters globalSearchParams;
+
+  @override
+  String toString() {
+    return 'SearchHouseholdsEvent.individualGlobalSearch(globalSearchParams: $globalSearchParams)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$IndividualGlobalSearchEventImpl &&
+            (identical(other.globalSearchParams, globalSearchParams) ||
+                other.globalSearchParams == globalSearchParams));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, globalSearchParams);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$IndividualGlobalSearchEventImplCopyWith<_$IndividualGlobalSearchEventImpl>
+      get copyWith => __$$IndividualGlobalSearchEventImplCopyWithImpl<
+          _$IndividualGlobalSearchEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
+    required TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)
+        searchByHousehold,
+    required TResult Function(
+            String projectId, int offset, int limit, List<Status> status)
+        searchByStatus,
+    required TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            String? tag,
+            int offset,
+            int limit)
+        searchByHouseholdHead,
+    required TResult Function(double latitude, double longititude,
+            String projectId, double maxRadius, int offset, int limit)
+        searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
+    required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
+  }) {
+    return individualGlobalSearch(globalSearchParams);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
+    TResult? Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult? Function(
+            String projectId, int offset, int limit, List<Status> status)?
+        searchByStatus,
+    TResult? Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            String? tag,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult? Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
+    TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
+  }) {
+    return individualGlobalSearch?.call(globalSearchParams);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
+    TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult Function(
+            String projectId, int offset, int limit, List<Status> status)?
+        searchByStatus,
+    TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            String? tag,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
+    TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
+    required TResult orElse(),
+  }) {
+    if (individualGlobalSearch != null) {
+      return individualGlobalSearch(globalSearchParams);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SearchHouseholdsInitializedEvent value)
+        initialize,
+    required TResult Function(SearchHouseholdsByHouseholdsEvent value)
+        searchByHousehold,
+    required TResult Function(SearchHouseholdsByStatusEvent value)
+        searchByStatus,
+    required TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)
+        searchByHouseholdHead,
+    required TResult Function(SearchHouseholdsByProximityEvent value)
+        searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
+    required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
+  }) {
+    return individualGlobalSearch(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult? Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult? Function(SearchHouseholdsByStatusEvent value)? searchByStatus,
+    TResult? Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult? Function(SearchHouseholdsByProximityEvent value)?
+        searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
+  }) {
+    return individualGlobalSearch?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult Function(SearchHouseholdsByStatusEvent value)? searchByStatus,
+    TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
+    required TResult orElse(),
+  }) {
+    if (individualGlobalSearch != null) {
+      return individualGlobalSearch(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class IndividualGlobalSearchEvent implements SearchHouseholdsEvent {
+  const factory IndividualGlobalSearchEvent(
+          {required final GlobalSearchParameters globalSearchParams}) =
+      _$IndividualGlobalSearchEventImpl;
+
+  GlobalSearchParameters get globalSearchParams;
+  @JsonKey(ignore: true)
+  _$$IndividualGlobalSearchEventImplCopyWith<_$IndividualGlobalSearchEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class _$$SearchHouseholdsPaginateEventImplCopyWith<$Res> {
+  factory _$$SearchHouseholdsPaginateEventImplCopyWith(
+          _$SearchHouseholdsPaginateEventImpl value,
+          $Res Function(_$SearchHouseholdsPaginateEventImpl) then) =
+      __$$SearchHouseholdsPaginateEventImplCopyWithImpl<$Res>;
+  @useResult
+  $Res call({ScrollMetrics scrollMetrics});
+}
+
+/// @nodoc
+class __$$SearchHouseholdsPaginateEventImplCopyWithImpl<$Res>
+    extends _$SearchHouseholdsEventCopyWithImpl<$Res,
+        _$SearchHouseholdsPaginateEventImpl>
+    implements _$$SearchHouseholdsPaginateEventImplCopyWith<$Res> {
+  __$$SearchHouseholdsPaginateEventImplCopyWithImpl(
+      _$SearchHouseholdsPaginateEventImpl _value,
+      $Res Function(_$SearchHouseholdsPaginateEventImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? scrollMetrics = null,
+  }) {
+    return _then(_$SearchHouseholdsPaginateEventImpl(
+      scrollMetrics: null == scrollMetrics
+          ? _value.scrollMetrics
+          : scrollMetrics // ignore: cast_nullable_to_non_nullable
+              as ScrollMetrics,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$SearchHouseholdsPaginateEventImpl
+    implements SearchHouseholdsPaginateEvent {
+  const _$SearchHouseholdsPaginateEventImpl({required this.scrollMetrics});
+
+  @override
+  final ScrollMetrics scrollMetrics;
+
+  @override
+  String toString() {
+    return 'SearchHouseholdsEvent.paginate(scrollMetrics: $scrollMetrics)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SearchHouseholdsPaginateEventImpl &&
+            (identical(other.scrollMetrics, scrollMetrics) ||
+                other.scrollMetrics == scrollMetrics));
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, scrollMetrics);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SearchHouseholdsPaginateEventImplCopyWith<
+          _$SearchHouseholdsPaginateEventImpl>
+      get copyWith => __$$SearchHouseholdsPaginateEventImplCopyWithImpl<
+          _$SearchHouseholdsPaginateEventImpl>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initialize,
+    required TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)
+        searchByHousehold,
+    required TResult Function(
+            String projectId, int offset, int limit, List<Status> status)
+        searchByStatus,
+    required TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            String? tag,
+            int offset,
+            int limit)
+        searchByHouseholdHead,
+    required TResult Function(double latitude, double longititude,
+            String projectId, double maxRadius, int offset, int limit)
+        searchByProximity,
+    required TResult Function(String tag, String projectId) searchByTag,
+    required TResult Function() clear,
+    required TResult Function(GlobalSearchParameters globalSearchParams)
+        individualGlobalSearch,
+    required TResult Function(ScrollMetrics scrollMetrics) paginate,
+  }) {
+    return paginate(scrollMetrics);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? whenOrNull<TResult extends Object?>({
+    TResult? Function()? initialize,
+    TResult? Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult? Function(
+            String projectId, int offset, int limit, List<Status> status)?
+        searchByStatus,
+    TResult? Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            String? tag,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult? Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult? Function(String tag, String projectId)? searchByTag,
+    TResult? Function()? clear,
+    TResult? Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult? Function(ScrollMetrics scrollMetrics)? paginate,
+  }) {
+    return paginate?.call(scrollMetrics);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initialize,
+    TResult Function(
+            String projectId,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            bool isProximityEnabled,
+            HouseholdModel householdModel)?
+        searchByHousehold,
+    TResult Function(
+            String projectId, int offset, int limit, List<Status> status)?
+        searchByStatus,
+    TResult Function(
+            String searchText,
+            String projectId,
+            bool isProximityEnabled,
+            double? latitude,
+            double? longitude,
+            double? maxRadius,
+            String? tag,
+            int offset,
+            int limit)?
+        searchByHouseholdHead,
+    TResult Function(double latitude, double longititude, String projectId,
+            double maxRadius, int offset, int limit)?
+        searchByProximity,
+    TResult Function(String tag, String projectId)? searchByTag,
+    TResult Function()? clear,
+    TResult Function(GlobalSearchParameters globalSearchParams)?
+        individualGlobalSearch,
+    TResult Function(ScrollMetrics scrollMetrics)? paginate,
+    required TResult orElse(),
+  }) {
+    if (paginate != null) {
+      return paginate(scrollMetrics);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(SearchHouseholdsInitializedEvent value)
+        initialize,
+    required TResult Function(SearchHouseholdsByHouseholdsEvent value)
+        searchByHousehold,
+    required TResult Function(SearchHouseholdsByStatusEvent value)
+        searchByStatus,
+    required TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)
+        searchByHouseholdHead,
+    required TResult Function(SearchHouseholdsByProximityEvent value)
+        searchByProximity,
+    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
+    required TResult Function(SearchHouseholdsClearEvent value) clear,
+    required TResult Function(IndividualGlobalSearchEvent value)
+        individualGlobalSearch,
+    required TResult Function(SearchHouseholdsPaginateEvent value) paginate,
+  }) {
+    return paginate(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult? mapOrNull<TResult extends Object?>({
+    TResult? Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult? Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult? Function(SearchHouseholdsByStatusEvent value)? searchByStatus,
+    TResult? Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult? Function(SearchHouseholdsByProximityEvent value)?
+        searchByProximity,
+    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult? Function(SearchHouseholdsClearEvent value)? clear,
+    TResult? Function(IndividualGlobalSearchEvent value)?
+        individualGlobalSearch,
+    TResult? Function(SearchHouseholdsPaginateEvent value)? paginate,
+  }) {
+    return paginate?.call(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(SearchHouseholdsInitializedEvent value)? initialize,
+    TResult Function(SearchHouseholdsByHouseholdsEvent value)?
+        searchByHousehold,
+    TResult Function(SearchHouseholdsByStatusEvent value)? searchByStatus,
+    TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
+        searchByHouseholdHead,
+    TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
+    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
+    TResult Function(SearchHouseholdsClearEvent value)? clear,
+    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
+    TResult Function(SearchHouseholdsPaginateEvent value)? paginate,
+    required TResult orElse(),
+  }) {
+    if (paginate != null) {
+      return paginate(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class SearchHouseholdsPaginateEvent implements SearchHouseholdsEvent {
+  const factory SearchHouseholdsPaginateEvent(
+          {required final ScrollMetrics scrollMetrics}) =
+      _$SearchHouseholdsPaginateEventImpl;
+
+  ScrollMetrics get scrollMetrics;
+  @JsonKey(ignore: true)
+  _$$SearchHouseholdsPaginateEventImplCopyWith<
+          _$SearchHouseholdsPaginateEventImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
