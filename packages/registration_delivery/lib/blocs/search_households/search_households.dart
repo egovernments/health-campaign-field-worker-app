@@ -14,6 +14,7 @@ import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
+import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/typedefs.dart';
 
@@ -230,6 +231,13 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required HouseholdModel householdModel,
   }) = SearchHouseholdsByHouseholdsEvent;
 
+  const factory SearchHouseholdsEvent.searchByStatus({
+    required String projectId,
+    required final int offset,
+    required final int limit,
+    required List<Status> status,
+  }) = SearchHouseholdsByStatusEvent;
+
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
@@ -284,10 +292,10 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
 @freezed
 class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
   const factory HouseholdMemberWrapper({
-    required HouseholdModel household,
-    required IndividualModel headOfHousehold,
-    required List<IndividualModel> members,
-    required List<ProjectBeneficiaryModel> projectBeneficiaries,
+    HouseholdModel? household,
+    IndividualModel? headOfHousehold,
+    List<IndividualModel>? members,
+    List<ProjectBeneficiaryModel>? projectBeneficiaries,
     double? distance,
     List<TaskModel>? tasks,
     List<SideEffectModel>? sideEffects,

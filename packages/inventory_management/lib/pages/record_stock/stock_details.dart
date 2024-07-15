@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
@@ -76,6 +77,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   void initState() {
     clearQRCodes();
     transportTypes = InventorySingleton().transportType;
+    context.read<LocationBloc>().add(const LoadLocationEvent());
     super.initState();
   }
 
@@ -275,246 +277,340 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       } else {
                                         FocusManager.instance.primaryFocus
                                             ?.unfocus();
-
-                                        final bloc =
-                                            context.read<RecordStockBloc>();
-
-                                        final productVariant = form
-                                            .control(_productVariantKey)
-                                            .value as ProductVariantModel;
-
-                                        switch (entryType) {
-                                          case StockRecordEntryType.receipt:
-                                            transactionReason =
-                                                TransactionReason.received
-                                                    .toValue();
-                                            break;
-                                          case StockRecordEntryType.dispatch:
-                                            transactionReason = null;
-                                            break;
-                                          case StockRecordEntryType.returned:
-                                            transactionReason =
-                                                TransactionReason.returned
-                                                    .toValue();
-                                            break;
-                                          default:
-                                            transactionReason = form
-                                                .control(
-                                                  _transactionReasonKey,
-                                                )
-                                                .value as String?;
-                                            break;
-                                        }
-
-                                        final quantity = form
-                                            .control(_transactionQuantityKey)
-                                            .value;
-
-                                        final waybillNumber = form
-                                            .control(_waybillNumberKey)
-                                            .value as String?;
-
-                                        final waybillQuantity = form
-                                            .control(_waybillQuantityKey)
-                                            .value as String?;
-
-                                        final vehicleNumber = form
-                                            .control(_vehicleNumberKey)
-                                            .value as String?;
-
-                                        final lat = locationState.latitude;
-                                        final lng = locationState.longitude;
-
-                                        final hasLocationData =
-                                            lat != null && lng != null;
-
-                                        final comments = form
-                                            .control(_commentsKey)
-                                            .value as String?;
-
-                                        final deliveryTeamName = form
-                                            .control(_deliveryTeamKey)
-                                            .value as String?;
-
-                                        String? senderId;
-                                        String? senderType;
-                                        String? receiverId;
-                                        String? receiverType;
-
-                                        final primaryType =
-                                            BlocProvider.of<RecordStockBloc>(
-                                          context,
-                                        ).state.primaryType;
-
-                                        final primaryId =
-                                            BlocProvider.of<RecordStockBloc>(
-                                          context,
-                                        ).state.primaryId;
-
-                                        switch (entryType) {
-                                          case StockRecordEntryType.receipt:
-                                          case StockRecordEntryType.loss:
-                                          case StockRecordEntryType.damaged:
-                                            if (deliveryTeamSelected) {
-                                              senderId = deliveryTeamName;
-                                              senderType = "STAFF";
-                                            } else {
-                                              senderId = secondaryParty?.id;
-                                              senderType = "WAREHOUSE";
-                                            }
-                                            receiverId = primaryId;
-                                            receiverType = primaryType;
-
-                                            break;
-                                          case StockRecordEntryType.dispatch:
-                                          case StockRecordEntryType.returned:
-                                            if (deliveryTeamSelected) {
-                                              receiverId = deliveryTeamName;
-                                              receiverType = "STAFF";
-                                            } else {
-                                              receiverId = secondaryParty?.id;
-                                              receiverType = "WAREHOUSE";
-                                            }
-                                            senderId = primaryId;
-                                            senderType = primaryType;
-                                            break;
-                                        }
-
-                                        final stockModel = StockModel(
-                                          clientReferenceId: IdGen.i.identifier,
-                                          productVariantId: productVariant.id,
-                                          transactionReason: transactionReason,
-                                          transactionType: transactionType,
-                                          referenceId: stockState.projectId,
-                                          referenceIdType: 'PROJECT',
-                                          quantity: quantity.toString(),
-                                          waybillNumber: waybillNumber,
-                                          receiverId: receiverId,
-                                          receiverType: receiverType,
-                                          senderId: senderId,
-                                          senderType: senderType,
-                                          auditDetails: AuditDetails(
-                                            createdBy: InventorySingleton()
-                                                .loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          clientAuditDetails:
-                                              ClientAuditDetails(
-                                            createdBy: InventorySingleton()
-                                                .loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy: InventorySingleton()
-                                                .loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          additionalFields: [
-                                                    waybillQuantity,
-                                                    vehicleNumber,
-                                                    comments,
-                                                  ].any((element) =>
-                                                      element != null) ||
-                                                  hasLocationData
-                                              ? StockAdditionalFields(
-                                                  version: 1,
-                                                  fields: [
-                                                    if (waybillQuantity !=
-                                                            null &&
-                                                        waybillQuantity
-                                                            .trim()
-                                                            .isNotEmpty)
-                                                      AdditionalField(
-                                                        'waybill_quantity',
-                                                        waybillQuantity,
-                                                      ),
-                                                    if (vehicleNumber != null &&
-                                                        vehicleNumber
-                                                            .trim()
-                                                            .isNotEmpty)
-                                                      AdditionalField(
-                                                        'vehicle_number',
-                                                        vehicleNumber,
-                                                      ),
-                                                    if (comments != null &&
-                                                        comments
-                                                            .trim()
-                                                            .isNotEmpty)
-                                                      AdditionalField(
-                                                        'comments',
-                                                        comments,
-                                                      ),
-                                                    if (deliveryTeamName !=
-                                                            null &&
-                                                        deliveryTeamName
-                                                            .trim()
-                                                            .isNotEmpty)
-                                                      AdditionalField(
-                                                        'deliveryTeam',
-                                                        deliveryTeamName,
-                                                      ),
-                                                    if (hasLocationData) ...[
-                                                      AdditionalField(
-                                                        'lat',
-                                                        lat,
-                                                      ),
-                                                      AdditionalField(
-                                                        'lng',
-                                                        lng,
-                                                      ),
-                                                    ],
-                                                  ],
-                                                )
-                                              : null,
-                                        );
-
-                                        bloc.add(
-                                          RecordStockSaveStockDetailsEvent(
-                                            stockModel: stockModel,
-                                          ),
-                                        );
-
-                                        final submit =
-                                            await DigitDialog.show<bool>(
-                                          context,
-                                          options: DigitDialogOptions(
-                                            key: const Key('submitDialog'),
-                                            titleText: localizations.translate(
-                                              i18.stockDetails.dialogTitle,
-                                            ),
-                                            contentText:
-                                                localizations.translate(
-                                              i18.stockDetails.dialogContent,
-                                            ),
-                                            primaryAction: DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonSubmit,
-                                              ),
-                                              action: (context) {
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop(true);
-                                              },
-                                            ),
-                                            secondaryAction: DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonCancel,
-                                              ),
-                                              action: (context) => Navigator.of(
+                                        context
+                                            .read<LocationBloc>()
+                                            .add(const LoadLocationEvent());
+                                        DigitComponentsUtils()
+                                            .showLocationCapturingDialog(
                                                 context,
-                                                rootNavigator: true,
-                                              ).pop(false),
-                                            ),
-                                          ),
-                                        );
+                                                localizations.translate(i18
+                                                    .common.locationCapturing),
+                                                DigitSyncDialogType.inProgress);
+                                        Future.delayed(
+                                            const Duration(seconds: 2),
+                                            () async {
+                                          DigitComponentsUtils()
+                                              .hideLocationDialog(context);
+                                          await DigitSyncDialog.show(context,
+                                              type:
+                                                  DigitSyncDialogType.complete,
+                                              label: localizations.translate(
+                                                  i18.common.locationCaptured),
+                                              primaryAction: DigitDialogActions(
+                                                  label: localizations
+                                                      .translate(i18
+                                                          .common.ctaProceed),
+                                                  action: (ctx) async {
+                                                    DigitComponentsUtils()
+                                                        .hideLocationDialog(
+                                                            context);
+                                                    final bloc = context.read<
+                                                        RecordStockBloc>();
 
-                                        if (submit ?? false) {
-                                          bloc.add(
-                                            const RecordStockCreateStockEntryEvent(),
-                                          );
-                                        }
+                                                    final productVariant = form
+                                                            .control(
+                                                                _productVariantKey)
+                                                            .value
+                                                        as ProductVariantModel;
+
+                                                    switch (entryType) {
+                                                      case StockRecordEntryType
+                                                            .receipt:
+                                                        transactionReason =
+                                                            TransactionReason
+                                                                .received
+                                                                .toValue();
+                                                        break;
+                                                      case StockRecordEntryType
+                                                            .dispatch:
+                                                        transactionReason =
+                                                            null;
+                                                        break;
+                                                      case StockRecordEntryType
+                                                            .returned:
+                                                        transactionReason =
+                                                            TransactionReason
+                                                                .returned
+                                                                .toValue();
+                                                        break;
+                                                      default:
+                                                        transactionReason = form
+                                                            .control(
+                                                              _transactionReasonKey,
+                                                            )
+                                                            .value as String?;
+                                                        break;
+                                                    }
+
+                                                    final quantity = form
+                                                        .control(
+                                                            _transactionQuantityKey)
+                                                        .value;
+
+                                                    final waybillNumber = form
+                                                        .control(
+                                                            _waybillNumberKey)
+                                                        .value as String?;
+
+                                                    final waybillQuantity = form
+                                                        .control(
+                                                            _waybillQuantityKey)
+                                                        .value as String?;
+
+                                                    final vehicleNumber = form
+                                                        .control(
+                                                            _vehicleNumberKey)
+                                                        .value as String?;
+
+                                                    final lat =
+                                                        locationState.latitude;
+                                                    final lng =
+                                                        locationState.longitude;
+
+                                                    final hasLocationData =
+                                                        lat != null &&
+                                                            lng != null;
+
+                                                    final comments = form
+                                                        .control(_commentsKey)
+                                                        .value as String?;
+
+                                                    final deliveryTeamName = form
+                                                        .control(
+                                                            _deliveryTeamKey)
+                                                        .value as String?;
+
+                                                    String? senderId;
+                                                    String? senderType;
+                                                    String? receiverId;
+                                                    String? receiverType;
+
+                                                    final primaryType =
+                                                        BlocProvider.of<
+                                                            RecordStockBloc>(
+                                                      context,
+                                                    ).state.primaryType;
+
+                                                    final primaryId =
+                                                        BlocProvider.of<
+                                                            RecordStockBloc>(
+                                                      context,
+                                                    ).state.primaryId;
+
+                                                    switch (entryType) {
+                                                      case StockRecordEntryType
+                                                            .receipt:
+                                                      case StockRecordEntryType
+                                                            .loss:
+                                                      case StockRecordEntryType
+                                                            .damaged:
+                                                        if (deliveryTeamSelected) {
+                                                          senderId =
+                                                              deliveryTeamName;
+                                                          senderType = "STAFF";
+                                                        } else {
+                                                          senderId =
+                                                              secondaryParty
+                                                                  ?.id;
+                                                          senderType =
+                                                              "WAREHOUSE";
+                                                        }
+                                                        receiverId = primaryId;
+                                                        receiverType =
+                                                            primaryType;
+
+                                                        break;
+                                                      case StockRecordEntryType
+                                                            .dispatch:
+                                                      case StockRecordEntryType
+                                                            .returned:
+                                                        if (deliveryTeamSelected) {
+                                                          receiverId =
+                                                              deliveryTeamName;
+                                                          receiverType =
+                                                              "STAFF";
+                                                        } else {
+                                                          receiverId =
+                                                              secondaryParty
+                                                                  ?.id;
+                                                          receiverType =
+                                                              "WAREHOUSE";
+                                                        }
+                                                        senderId = primaryId;
+                                                        senderType =
+                                                            primaryType;
+                                                        break;
+                                                    }
+
+                                                    final stockModel =
+                                                        StockModel(
+                                                      clientReferenceId:
+                                                          IdGen.i.identifier,
+                                                      productVariantId:
+                                                          productVariant.id,
+                                                      transactionReason:
+                                                          transactionReason,
+                                                      transactionType:
+                                                          transactionType,
+                                                      referenceId:
+                                                          stockState.projectId,
+                                                      referenceIdType:
+                                                          'PROJECT',
+                                                      quantity:
+                                                          quantity.toString(),
+                                                      waybillNumber:
+                                                          waybillNumber,
+                                                      receiverId: receiverId,
+                                                      receiverType:
+                                                          receiverType,
+                                                      senderId: senderId,
+                                                      senderType: senderType,
+                                                      auditDetails:
+                                                          AuditDetails(
+                                                        createdBy:
+                                                            InventorySingleton()
+                                                                .loggedInUserUuid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      clientAuditDetails:
+                                                          ClientAuditDetails(
+                                                        createdBy:
+                                                            InventorySingleton()
+                                                                .loggedInUserUuid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            InventorySingleton()
+                                                                .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      additionalFields: [
+                                                                waybillQuantity,
+                                                                vehicleNumber,
+                                                                comments,
+                                                              ].any((element) =>
+                                                                  element !=
+                                                                  null) ||
+                                                              hasLocationData
+                                                          ? StockAdditionalFields(
+                                                              version: 1,
+                                                              fields: [
+                                                                if (waybillQuantity !=
+                                                                        null &&
+                                                                    waybillQuantity
+                                                                        .trim()
+                                                                        .isNotEmpty)
+                                                                  AdditionalField(
+                                                                    'waybill_quantity',
+                                                                    waybillQuantity,
+                                                                  ),
+                                                                if (vehicleNumber !=
+                                                                        null &&
+                                                                    vehicleNumber
+                                                                        .trim()
+                                                                        .isNotEmpty)
+                                                                  AdditionalField(
+                                                                    'vehicle_number',
+                                                                    vehicleNumber,
+                                                                  ),
+                                                                if (comments !=
+                                                                        null &&
+                                                                    comments
+                                                                        .trim()
+                                                                        .isNotEmpty)
+                                                                  AdditionalField(
+                                                                    'comments',
+                                                                    comments,
+                                                                  ),
+                                                                if (deliveryTeamName !=
+                                                                        null &&
+                                                                    deliveryTeamName
+                                                                        .trim()
+                                                                        .isNotEmpty)
+                                                                  AdditionalField(
+                                                                    'deliveryTeam',
+                                                                    deliveryTeamName,
+                                                                  ),
+                                                                if (hasLocationData) ...[
+                                                                  AdditionalField(
+                                                                    'lat',
+                                                                    lat,
+                                                                  ),
+                                                                  AdditionalField(
+                                                                    'lng',
+                                                                    lng,
+                                                                  ),
+                                                                ],
+                                                              ],
+                                                            )
+                                                          : null,
+                                                    );
+
+                                                    bloc.add(
+                                                      RecordStockSaveStockDetailsEvent(
+                                                        stockModel: stockModel,
+                                                      ),
+                                                    );
+
+                                                    final submit =
+                                                        await DigitDialog.show<
+                                                            bool>(
+                                                      context,
+                                                      options:
+                                                          DigitDialogOptions(
+                                                        key: const Key(
+                                                            'submitDialog'),
+                                                        titleText: localizations
+                                                            .translate(
+                                                          i18.stockDetails
+                                                              .dialogTitle,
+                                                        ),
+                                                        contentText:
+                                                            localizations
+                                                                .translate(
+                                                          i18.stockDetails
+                                                              .dialogContent,
+                                                        ),
+                                                        primaryAction:
+                                                            DigitDialogActions(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.common
+                                                                .coreCommonSubmit,
+                                                          ),
+                                                          action: (context) {
+                                                            Navigator.of(
+                                                              context,
+                                                              rootNavigator:
+                                                                  true,
+                                                            ).pop(true);
+                                                          },
+                                                        ),
+                                                        secondaryAction:
+                                                            DigitDialogActions(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.common
+                                                                .coreCommonCancel,
+                                                          ),
+                                                          action: (context) =>
+                                                              Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pop(false),
+                                                        ),
+                                                      ),
+                                                    );
+
+                                                    if (submit ?? false) {
+                                                      bloc.add(
+                                                        const RecordStockCreateStockEntryEvent(),
+                                                      );
+                                                    }
+                                                  }));
+                                        });
                                       }
                                     },
                               child: Center(

@@ -187,7 +187,6 @@ class MemberCard extends StatelessWidget {
                                       .householdOverViewBeneficiaryReferredLabel
                                   : isBeneficiaryRefused
                                       ? Status.beneficiaryRefused.toValue()
-                                      // [TODO Need to update the localization]
                                       : i18.householdOverView
                                           .householdOverViewNotDeliveredIconLabel,
                         ),
@@ -225,10 +224,6 @@ class MemberCard extends StatelessWidget {
                       ? const Offstage()
                       : !isNotEligible
                           ? DigitElevatedButton(
-                              // padding: const EdgeInsets.only(
-                              //   left: kPadding / 2,
-                              //   right: kPadding / 2,
-                              // ),
                               onPressed: () {
                                 final bloc =
                                     context.read<HouseholdOverviewBloc>();

@@ -97,6 +97,10 @@ class Common {
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
 
   String get inactive => 'INACTIVE';
+
+  String get locationCapturing => 'CAPTURING_LOCATION';
+  String get locationCaptured => 'LOCATION_CAPTURED';
+  String get ctaProceed => 'PROCEED';
 }
 
 class AcknowledgementSuccess {

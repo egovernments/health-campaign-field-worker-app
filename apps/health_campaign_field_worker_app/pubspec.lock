@@ -68,11 +68,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "7a3719dcca80be6f9475bea2b1e5226e67fcc60f3c3c55d849aa4f7216512a43"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
+    version: "1.0.1+1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -483,11 +482,10 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "53ee8c0a7c992c0e8d1c9c867b6cf1d52e1728200f4b4436943a5d6c5e4984c3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+2"
+      path: "../../packages/digit_components"
+      relative: true
+    source: path
+    version: "1.0.0+3"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -506,10 +504,9 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: a040c9c413436aeb953fdea3bc99ef618641189b06e8f155d84ac83ba8d40fd1
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.2"
   digit_showcase:
     dependency: "direct main"
@@ -527,6 +524,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.4.3+1"
+  disable_battery_optimization:
+    dependency: "direct main"
+    description:
+      name: disable_battery_optimization
+      sha256: "6b2ba802f984af141faf1b6b5fb956d5ef01f9cd555597c35b9cc335a03185ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   disk_space:
     dependency: "direct main"
     description:
@@ -1093,11 +1098,10 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: "2be2d09552432266bef3c11f2cd6d12ce83f39339c925d350aeda764c2acfef9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
+    version: "1.0.2+1"
   io:
     dependency: transitive
     description:
@@ -1509,19 +1513,17 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "27f03bb51743cb9b25419fc1089507ee95693270a43233b92194298b1f87779c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
     version: "1.0.2"
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: c315da85605c6d08b9b05147ced61a93ecb566d98bafee1653681659cfde4b84
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
+    version: "1.0.2+1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -2056,5 +2058,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <3.9.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"

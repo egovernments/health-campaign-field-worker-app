@@ -54,9 +54,7 @@ class CustomValidator {
 }
 
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
-  if (currentCycle == null ||
-      currentCycle.startDate == null ||
-      currentCycle.endDate == null) {
+  if (currentCycle == null) {
     return false;
   }
 
@@ -306,6 +304,7 @@ class RegistrationDeliverySingleton {
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
   List<String>? _symptomsTypes;
+  List<String>? _searchHouseHoldFilter;
   List<String>? _referralReasons;
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
@@ -332,7 +331,8 @@ class RegistrationDeliverySingleton {
     required List<String>? householdMemberDeletionReasonOptions,
     required List<String>? deliveryCommentOptions,
     required List<String>? symptomsTypes,
-    required List<String>? referralReasons,
+    required List<String>? searchHouseHoldFilter,
+      required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
   }) {
@@ -349,6 +349,7 @@ class RegistrationDeliverySingleton {
         householdMemberDeletionReasonOptions;
     _deliveryCommentOptions = deliveryCommentOptions;
     _symptomsTypes = symptomsTypes;
+    _searchHouseHoldFilter = searchHouseHoldFilter;
     _referralReasons = referralReasons;
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
@@ -376,6 +377,7 @@ class RegistrationDeliverySingleton {
       _householdMemberDeletionReasonOptions;
   List<String>? get deliveryCommentOptions => _deliveryCommentOptions;
   List<String>? get symptomsTypes => _symptomsTypes;
+  List<String>? get searchHouseHoldFilter => _searchHouseHoldFilter;
   List<String>? get referralReasons => _referralReasons;
   List<String>? get houseStructureTypes => _houseStructureTypes;
   List<String>? get refusalReasons => _refusalReasons;
