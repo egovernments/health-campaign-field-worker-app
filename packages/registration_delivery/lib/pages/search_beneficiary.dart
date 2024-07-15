@@ -124,7 +124,18 @@ class _SearchBeneficiaryPageState
               //       status: selectedFilters,
               //     ),
               //   );
-              // }
+              // } else if (metrics.atEdge &&
+                  selectedFilters.isNotEmpty &&
+                  metrics.pixels != 0) {
+                blocWrapper.statusSearchBloc.add(
+                  SearchHouseholdsEvent.searchByStatus(
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    offset: blocWrapper.statusSearchBloc.state.offset,
+                    limit: blocWrapper.statusSearchBloc.state.limit,
+                    status: selectedFilters,
+                  ),
+                );
+              }
             }
             // Return true to allow the notification to continue to be dispatched to further ancestors.
 

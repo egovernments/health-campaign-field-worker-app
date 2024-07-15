@@ -23,11 +23,14 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
       StreamGroup.merge<SearchHouseholdsState>([
         searchHouseholdsBloc.stream,
         individualGlobalSearchBloc.stream,
+        statusSearchBloc.stream,
       ]);
 
   void dispatch(SearchHouseholdsEvent event) {
     if (event is SearchHouseholdsByStatusEvent) {
       individualGlobalSearchBloc.add(event);
+    } else if (event is SearchHouseholdsByStatusEvent) {
+      statusSearchBloc.add(event);
     } else {
       searchHouseholdsBloc.add(event);
     }
@@ -35,6 +38,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
 
   void clearEvent() {
     individualGlobalSearchBloc.add(const SearchHouseholdsEvent.clear());
+    statusSearchBloc.add(const SearchHouseholdsEvent.clear());
     searchHouseholdsBloc.add(const SearchHouseholdsEvent.clear());
   }
 
@@ -48,9 +52,11 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   FutureOr<void> close() {
     searchHouseholdsBloc.close();
     individualGlobalSearchBloc.close();
+    statusSearchBloc.close();
   }
 
   @override
   bool get isClosed =>
-      searchHouseholdsBloc.isClosed && individualGlobalSearchBloc.isClosed;
+      searchHouseholdsBloc.isClosed && individualGlobalSearchBloc.isClosed &&
+      statusSearchBloc.isClosed;
 }
