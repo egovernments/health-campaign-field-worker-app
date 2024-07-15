@@ -12,8 +12,6 @@ import 'package:auto_route/auto_route.dart' as _i24;
 import 'package:digit_data_model/data_model.dart' as _i29;
 import 'package:flutter/material.dart' as _i25;
 import 'package:registration_delivery/blocs/app_localization.dart' as _i26;
-import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart'
-    as _i27;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i28;
 import 'package:registration_delivery/models/entities/task.dart' as _i30;
@@ -60,6 +58,7 @@ import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
     as _i19;
 import 'package:registration_delivery/pages/search_beneficiary.dart' as _i20;
 import 'package:registration_delivery/pages/summary_page.dart' as _i23;
+import 'package:registration_delivery/registration_delivery.dart' as _i27;
 
 abstract class $RegistrationDeliveryRoute extends _i24.AutoRouterModule {
   @override
@@ -83,7 +82,7 @@ abstract class $RegistrationDeliveryRoute extends _i24.AutoRouterModule {
         routeData: routeData,
         child: _i2.BeneficiaryChecklistPage(
           key: args.key,
-          referralClientRefId: args.referralClientRefId,
+          beneficiaryClientRefId: args.beneficiaryClientRefId,
           appLocalizations: args.appLocalizations,
         ),
       );
@@ -374,14 +373,14 @@ class BeneficiaryChecklistRoute
     extends _i24.PageRouteInfo<BeneficiaryChecklistRouteArgs> {
   BeneficiaryChecklistRoute({
     _i25.Key? key,
-    String? referralClientRefId,
+    String? beneficiaryClientRefId,
     _i26.RegistrationDeliveryLocalization? appLocalizations,
     List<_i24.PageRouteInfo>? children,
   }) : super(
           BeneficiaryChecklistRoute.name,
           args: BeneficiaryChecklistRouteArgs(
             key: key,
-            referralClientRefId: referralClientRefId,
+            beneficiaryClientRefId: beneficiaryClientRefId,
             appLocalizations: appLocalizations,
           ),
           initialChildren: children,
@@ -396,19 +395,19 @@ class BeneficiaryChecklistRoute
 class BeneficiaryChecklistRouteArgs {
   const BeneficiaryChecklistRouteArgs({
     this.key,
-    this.referralClientRefId,
+    this.beneficiaryClientRefId,
     this.appLocalizations,
   });
 
   final _i25.Key? key;
 
-  final String? referralClientRefId;
+  final String? beneficiaryClientRefId;
 
   final _i26.RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
-    return 'BeneficiaryChecklistRouteArgs{key: $key, referralClientRefId: $referralClientRefId, appLocalizations: $appLocalizations}';
+    return 'BeneficiaryChecklistRouteArgs{key: $key, beneficiaryClientRefId: $beneficiaryClientRefId, appLocalizations: $appLocalizations}';
   }
 }
 

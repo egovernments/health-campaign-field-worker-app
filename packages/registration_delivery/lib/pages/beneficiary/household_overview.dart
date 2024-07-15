@@ -62,9 +62,9 @@ class _HouseholdOverviewPageState
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
                       BeneficiaryType.individual
-                  ? [state.householdMemberWrapper.projectBeneficiaries.first]
+                  ? [state.householdMemberWrapper.projectBeneficiaries?.first]
                   : state.householdMemberWrapper.projectBeneficiaries
-                      .where(
+                      ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
                             state.selectedIndividual?.clientReferenceId,
