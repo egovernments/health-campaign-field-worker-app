@@ -8,6 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:location/location.dart';
+import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
+import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
+import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -58,6 +61,18 @@ class MainApplicationState extends State<MainApplication>
       providers: [
         RepositoryProvider<LocalSqlDataStore>.value(value: widget.sql),
         RepositoryProvider<Isar>.value(value: widget.isar),
+        RepositoryProvider<IndividualGlobalSearchRepository>(
+          create: (context) => IndividualGlobalSearchRepository(
+            widget.sql,
+            IndividualOpLogManager(widget.isar),
+          ),
+        ),
+        RepositoryProvider<HouseHoldGlobalSearchRepository>(
+          create: (context) => HouseHoldGlobalSearchRepository(
+            widget.sql,
+            HouseholdOpLogManager(widget.isar),
+          ),
+        ),
       ],
       child: BlocProvider(
         create: (context) => AppInitializationBloc(
