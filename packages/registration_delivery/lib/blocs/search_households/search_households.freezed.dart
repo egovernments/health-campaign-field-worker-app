@@ -2374,10 +2374,10 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
 
 /// @nodoc
 mixin _$HouseholdMemberWrapper {
-  HouseholdModel get household => throw _privateConstructorUsedError;
-  IndividualModel get headOfHousehold => throw _privateConstructorUsedError;
-  List<IndividualModel> get members => throw _privateConstructorUsedError;
-  List<ProjectBeneficiaryModel> get projectBeneficiaries =>
+  HouseholdModel? get household => throw _privateConstructorUsedError;
+  IndividualModel? get headOfHousehold => throw _privateConstructorUsedError;
+  List<IndividualModel>? get members => throw _privateConstructorUsedError;
+  List<ProjectBeneficiaryModel>? get projectBeneficiaries =>
       throw _privateConstructorUsedError;
   double? get distance => throw _privateConstructorUsedError;
   List<TaskModel>? get tasks => throw _privateConstructorUsedError;
@@ -2396,10 +2396,10 @@ abstract class $HouseholdMemberWrapperCopyWith<$Res> {
       _$HouseholdMemberWrapperCopyWithImpl<$Res, HouseholdMemberWrapper>;
   @useResult
   $Res call(
-      {HouseholdModel household,
-      IndividualModel headOfHousehold,
-      List<IndividualModel> members,
-      List<ProjectBeneficiaryModel> projectBeneficiaries,
+      {HouseholdModel? household,
+      IndividualModel? headOfHousehold,
+      List<IndividualModel>? members,
+      List<ProjectBeneficiaryModel>? projectBeneficiaries,
       double? distance,
       List<TaskModel>? tasks,
       List<SideEffectModel>? sideEffects,
@@ -2420,32 +2420,32 @@ class _$HouseholdMemberWrapperCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? household = null,
-    Object? headOfHousehold = null,
-    Object? members = null,
-    Object? projectBeneficiaries = null,
+    Object? household = freezed,
+    Object? headOfHousehold = freezed,
+    Object? members = freezed,
+    Object? projectBeneficiaries = freezed,
     Object? distance = freezed,
     Object? tasks = freezed,
     Object? sideEffects = freezed,
     Object? referrals = freezed,
   }) {
     return _then(_value.copyWith(
-      household: null == household
+      household: freezed == household
           ? _value.household
           : household // ignore: cast_nullable_to_non_nullable
-              as HouseholdModel,
-      headOfHousehold: null == headOfHousehold
+              as HouseholdModel?,
+      headOfHousehold: freezed == headOfHousehold
           ? _value.headOfHousehold
           : headOfHousehold // ignore: cast_nullable_to_non_nullable
-              as IndividualModel,
-      members: null == members
+              as IndividualModel?,
+      members: freezed == members
           ? _value.members
           : members // ignore: cast_nullable_to_non_nullable
-              as List<IndividualModel>,
-      projectBeneficiaries: null == projectBeneficiaries
+              as List<IndividualModel>?,
+      projectBeneficiaries: freezed == projectBeneficiaries
           ? _value.projectBeneficiaries
           : projectBeneficiaries // ignore: cast_nullable_to_non_nullable
-              as List<ProjectBeneficiaryModel>,
+              as List<ProjectBeneficiaryModel>?,
       distance: freezed == distance
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
@@ -2476,10 +2476,10 @@ abstract class _$$HouseholdMemberWrapperImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {HouseholdModel household,
-      IndividualModel headOfHousehold,
-      List<IndividualModel> members,
-      List<ProjectBeneficiaryModel> projectBeneficiaries,
+      {HouseholdModel? household,
+      IndividualModel? headOfHousehold,
+      List<IndividualModel>? members,
+      List<ProjectBeneficiaryModel>? projectBeneficiaries,
       double? distance,
       List<TaskModel>? tasks,
       List<SideEffectModel>? sideEffects,
@@ -2499,32 +2499,32 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? household = null,
-    Object? headOfHousehold = null,
-    Object? members = null,
-    Object? projectBeneficiaries = null,
+    Object? household = freezed,
+    Object? headOfHousehold = freezed,
+    Object? members = freezed,
+    Object? projectBeneficiaries = freezed,
     Object? distance = freezed,
     Object? tasks = freezed,
     Object? sideEffects = freezed,
     Object? referrals = freezed,
   }) {
     return _then(_$HouseholdMemberWrapperImpl(
-      household: null == household
+      household: freezed == household
           ? _value.household
           : household // ignore: cast_nullable_to_non_nullable
-              as HouseholdModel,
-      headOfHousehold: null == headOfHousehold
+              as HouseholdModel?,
+      headOfHousehold: freezed == headOfHousehold
           ? _value.headOfHousehold
           : headOfHousehold // ignore: cast_nullable_to_non_nullable
-              as IndividualModel,
-      members: null == members
+              as IndividualModel?,
+      members: freezed == members
           ? _value._members
           : members // ignore: cast_nullable_to_non_nullable
-              as List<IndividualModel>,
-      projectBeneficiaries: null == projectBeneficiaries
+              as List<IndividualModel>?,
+      projectBeneficiaries: freezed == projectBeneficiaries
           ? _value._projectBeneficiaries
           : projectBeneficiaries // ignore: cast_nullable_to_non_nullable
-              as List<ProjectBeneficiaryModel>,
+              as List<ProjectBeneficiaryModel>?,
       distance: freezed == distance
           ? _value.distance
           : distance // ignore: cast_nullable_to_non_nullable
@@ -2549,10 +2549,10 @@ class __$$HouseholdMemberWrapperImplCopyWithImpl<$Res>
 
 class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
   const _$HouseholdMemberWrapperImpl(
-      {required this.household,
-      required this.headOfHousehold,
-      required final List<IndividualModel> members,
-      required final List<ProjectBeneficiaryModel> projectBeneficiaries,
+      {this.household,
+      this.headOfHousehold,
+      final List<IndividualModel>? members,
+      final List<ProjectBeneficiaryModel>? projectBeneficiaries,
       this.distance,
       final List<TaskModel>? tasks,
       final List<SideEffectModel>? sideEffects,
@@ -2564,24 +2564,28 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
         _referrals = referrals;
 
   @override
-  final HouseholdModel household;
+  final HouseholdModel? household;
   @override
-  final IndividualModel headOfHousehold;
-  final List<IndividualModel> _members;
+  final IndividualModel? headOfHousehold;
+  final List<IndividualModel>? _members;
   @override
-  List<IndividualModel> get members {
+  List<IndividualModel>? get members {
+    final value = _members;
+    if (value == null) return null;
     if (_members is EqualUnmodifiableListView) return _members;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_members);
+    return EqualUnmodifiableListView(value);
   }
 
-  final List<ProjectBeneficiaryModel> _projectBeneficiaries;
+  final List<ProjectBeneficiaryModel>? _projectBeneficiaries;
   @override
-  List<ProjectBeneficiaryModel> get projectBeneficiaries {
+  List<ProjectBeneficiaryModel>? get projectBeneficiaries {
+    final value = _projectBeneficiaries;
+    if (value == null) return null;
     if (_projectBeneficiaries is EqualUnmodifiableListView)
       return _projectBeneficiaries;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_projectBeneficiaries);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -2664,23 +2668,23 @@ class _$HouseholdMemberWrapperImpl implements _HouseholdMemberWrapper {
 
 abstract class _HouseholdMemberWrapper implements HouseholdMemberWrapper {
   const factory _HouseholdMemberWrapper(
-      {required final HouseholdModel household,
-      required final IndividualModel headOfHousehold,
-      required final List<IndividualModel> members,
-      required final List<ProjectBeneficiaryModel> projectBeneficiaries,
+      {final HouseholdModel? household,
+      final IndividualModel? headOfHousehold,
+      final List<IndividualModel>? members,
+      final List<ProjectBeneficiaryModel>? projectBeneficiaries,
       final double? distance,
       final List<TaskModel>? tasks,
       final List<SideEffectModel>? sideEffects,
       final List<ReferralModel>? referrals}) = _$HouseholdMemberWrapperImpl;
 
   @override
-  HouseholdModel get household;
+  HouseholdModel? get household;
   @override
-  IndividualModel get headOfHousehold;
+  IndividualModel? get headOfHousehold;
   @override
-  List<IndividualModel> get members;
+  List<IndividualModel>? get members;
   @override
-  List<ProjectBeneficiaryModel> get projectBeneficiaries;
+  List<ProjectBeneficiaryModel>? get projectBeneficiaries;
   @override
   double? get distance;
   @override

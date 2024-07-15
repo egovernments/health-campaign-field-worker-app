@@ -391,8 +391,8 @@ class _SearchBeneficiaryPageState
                               long,
                             ),
                             Coordinate(
-                              i.household.address?.latitude,
-                              i.household.address?.longitude,
+                              i.household?.address?.latitude,
+                              i.household?.address?.longitude,
                             ),
                           );
 
@@ -514,8 +514,7 @@ class _SearchBeneficiaryPageState
           titleIcon: Icon(getFilterIconNLabel()['icon'],
               color: const DigitColors().burningOrange),
           titleText: getFilterIconNLabel()['label'],
-          content: StatusFilter(
-              selectedFilters: selectedFilters),
+          content: StatusFilter(selectedFilters: selectedFilters),
         ));
 
     if (filters != null) {

@@ -3,8 +3,6 @@ import 'dart:math' as math;
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:registration_delivery/utils/utils.dart';
 
 import '../../../models/entities/household.dart';
 
@@ -78,6 +76,11 @@ class RegistrationDeliveryAddressRepo extends AddressLocalRepository {
               memberCount: household.memberCount,
               rowVersion: household.rowVersion,
               isDeleted: household.isDeleted,
+              additionalFields: household.additionalFields != null &&
+                      household.additionalFields.toString().isNotEmpty
+                  ? HouseholdAdditionalFieldsMapper.fromJson(
+                      household.additionalFields.toString())
+                  : null,
               auditDetails: AuditDetails(
                 createdBy: household.auditCreatedBy!,
                 createdTime: household.auditCreatedTime!,

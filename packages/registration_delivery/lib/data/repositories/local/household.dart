@@ -75,8 +75,11 @@ class HouseholdLocalRepository
               memberCount: household.memberCount,
               rowVersion: household.rowVersion,
               isDeleted: household.isDeleted,
-              additionalFields: HouseholdAdditionalFieldsMapper.fromJson(
-                  household.additionalFields.toString()),
+              additionalFields: household.additionalFields != null &&
+                      household.additionalFields.toString().isNotEmpty
+                  ? HouseholdAdditionalFieldsMapper.fromJson(
+                      household.additionalFields.toString())
+                  : null,
               auditDetails: (household.auditCreatedBy != null &&
                       household.auditCreatedTime != null)
                   ? AuditDetails(

@@ -144,7 +144,7 @@ class _RecordPastDeliveryDetailsPageState
                               taskSearch: TaskSearchModel(
                                 projectBeneficiaryClientReferenceId: bloc.state
                                     .householdMemberWrapper.projectBeneficiaries
-                                    .map((e) => e.clientReferenceId)
+                                    ?.map((e) => e.clientReferenceId)
                                     .toList(),
                               ),
                             ));

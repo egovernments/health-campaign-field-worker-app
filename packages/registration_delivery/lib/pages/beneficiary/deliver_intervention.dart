@@ -118,7 +118,7 @@ class _DeliverInterventionPageState
                             deliveryStrategy:
                                 DeliverStrategyType.direct.toValue(),
                             address:
-                                householdMember.members.first.address?.first,
+                                householdMember.members?.first.address?.first,
                             latitude: lat,
                             longitude: long,
                           ),
@@ -227,9 +227,9 @@ class _DeliverInterventionPageState
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
                       BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiaries.first]
+                  ? [householdMemberWrapper.projectBeneficiaries!.first]
                   : householdMemberWrapper.projectBeneficiaries
-                      .where(
+                      ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
                             state.selectedIndividual?.clientReferenceId,
@@ -394,7 +394,7 @@ class _DeliverInterventionPageState
                                                                 deliveryInterventionState,
                                                                 form,
                                                                 householdMemberWrapper,
-                                                                projectBeneficiary
+                                                                projectBeneficiary!
                                                                     .first);
                                                           }
                                                         },
