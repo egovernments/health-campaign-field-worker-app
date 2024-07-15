@@ -30,9 +30,77 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     var filterSelectQuery =
         await filterSearch(nameSelectQuery, params, super.sql);
 
-    final results = await filterSelectQuery.get();
+    await filterSelectQuery.limit(params.limit ?? 50,
+        offset: params.offset ?? 0);
 
-    return results;
+    final results = await filterSelectQuery.get();
+    return results
+        .map((e) {
+          final individual = e.readTableOrNull(sql.individual);
+          final address = e.readTableOrNull(sql.address);
+          final name = e.readTableOrNull(sql.name);
+
+          return IndividualModel(
+            id: individual?.id,
+            tenantId: individual?.tenantId,
+            clientReferenceId: individual!.clientReferenceId,
+            dateOfBirth: individual.dateOfBirth,
+            name: NameModel(
+              givenName: name?.givenName,
+              individualClientReferenceId: individual.clientReferenceId,
+              tenantId: individual.tenantId,
+              auditDetails: AuditDetails(
+                createdBy: individual.auditCreatedBy!,
+                createdTime: individual.auditCreatedTime!,
+                lastModifiedBy: individual.auditModifiedBy,
+                lastModifiedTime: individual.auditModifiedTime,
+              ),
+            ),
+            rowVersion: individual.rowVersion,
+            isDeleted: individual.isDeleted,
+            auditDetails: AuditDetails(
+              createdBy: individual.auditCreatedBy!,
+              createdTime: individual.auditCreatedTime!,
+              lastModifiedBy: individual.auditModifiedBy,
+              lastModifiedTime: individual.auditModifiedTime,
+            ),
+            address: address == null
+                ? null
+                : [
+                    AddressModel(
+                      id: address.id,
+                      relatedClientReferenceId:
+                          address.relatedClientReferenceId,
+                      tenantId: address.tenantId,
+                      doorNo: address.doorNo,
+                      latitude: address.latitude,
+                      longitude: address.longitude,
+                      landmark: address.landmark,
+                      locationAccuracy: address.locationAccuracy,
+                      addressLine1: address.addressLine1,
+                      addressLine2: address.addressLine2,
+                      city: address.city,
+                      pincode: address.pincode,
+                      locality: address.localityBoundaryCode != null
+                          ? LocalityModel(
+                              code: address.localityBoundaryCode!,
+                              name: address.localityBoundaryName,
+                            )
+                          : null,
+                      type: address.type,
+                      rowVersion: address.rowVersion,
+                      auditDetails: AuditDetails(
+                        createdBy: individual.auditCreatedBy!,
+                        createdTime: individual.auditCreatedTime!,
+                        lastModifiedBy: individual.auditModifiedBy,
+                        lastModifiedTime: individual.auditModifiedTime,
+                      ),
+                    ),
+                  ],
+          );
+        })
+        .where((element) => element.isDeleted != true)
+        .toList();
   }
 
   proximitySearch(
@@ -68,6 +136,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       ]);
       selectQuery = searchByName(selectQuery, params, sql);
     }
+    print(selectQuery.toString());
     return selectQuery;
   }
 
@@ -81,16 +150,27 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         selectQuery == null) {
       for (var filter in params.filter!) {
         if (filter == Status.registered.name) {
-          selectQuery = super.sql.individual.select().join([
-            joinProjectBeneficiary(sql),
-          ]);
+          selectQuery = super.sql.individual.select();
+          selectQuery = selectQuery.join([
+            leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(super.sql.individual.clientReferenceId),
+            )
+          ])
+            ..where(sql.projectBeneficiary.beneficiaryClientReferenceId
+                .isNotNull());
         } else if (filter == Status.notRegistered.name) {
           selectQuery = super.sql.individual.select();
-          selectQuery.where((a) => notExistsQuery(
-                sql.projectBeneficiary.select()
-                  ..where((b) => b.beneficiaryClientReferenceId
-                      .equalsExp(a.clientReferenceId)),
-              ));
+          selectQuery = selectQuery.join([
+            leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(super.sql.individual.clientReferenceId),
+            )
+          ])
+            ..where(
+                sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
         }
       }
     } else if (params.filter != null &&
@@ -98,22 +178,29 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         selectQuery != null) {
       for (var filter in params.filter!) {
         if (filter == Status.registered.name) {
-          selectQuery.join([
-            joinProjectBeneficiary(sql),
-          ]);
+          selectQuery = selectQuery.join([
+            leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(super.sql.individual.clientReferenceId),
+            )
+          ])
+            ..where(sql.projectBeneficiary.beneficiaryClientReferenceId
+                .isNotNull());
         } else if (filter == Status.notRegistered.name) {
-          selectQuery.where(
-            notExistsQuery(
-              sql.projectBeneficiary.select()
-                ..where(
-                  (b) => b.beneficiaryClientReferenceId
-                      .equalsExp(sql.individual.clientReferenceId),
-                ),
-            ),
-          );
+          selectQuery = selectQuery.join([
+            leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(super.sql.individual.clientReferenceId),
+            )
+          ])
+            ..where(
+                sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
         }
       }
     }
+    print(selectQuery.toString());
     return selectQuery;
   }
 

@@ -13,8 +13,8 @@ import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
 import '../../utils/global_search_parameters.dart';
 
-class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
-  IndividualGlobalSearchBloc(
+class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
+  HouseHoldGlobalSearchBloc(
       {required super.userUid,
       required super.projectId,
       required super.individual,
@@ -28,12 +28,12 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       required super.referralDataRepository,
       required super.individualGlobalSearchRepository,
       required super.houseHoldGlobalSearchRepository}) {
-    on<IndividualGlobalSearchEvent>(_individualGlobalSearch);
+    on<HouseHoldGlobalSearchEvent>(_houseHoldGlobalSearch);
     on<SearchHouseholdsPaginateEvent>(_paginate);
   }
 
-  Future<void> _individualGlobalSearch(
-    IndividualGlobalSearchEvent event,
+  Future<void> _houseHoldGlobalSearch(
+    HouseHoldGlobalSearchEvent event,
     SearchHouseholdsEmitter emit,
   ) async {
     final containers = <HouseholdMemberWrapper>[...state.householdMembers];
@@ -47,8 +47,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
 
     emit(state.copyWith(loading: true));
 
-    final results =
-        await individualGlobalSearchRepository.individualGlobalSearch(
+    final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
         isProximityEnabled: event.globalSearchParams.isProximityEnabled,
         latitude: event.globalSearchParams.latitude,
@@ -63,21 +62,29 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
 
     var list = results.map((e) => e).toList();
 
-    late List<String> individualClientReferenceIds = [];
+    late List<String> houseHoldClientReferenceIds = [];
 
     list.forEach((e) {
-      individualClientReferenceIds.add(e.clientReferenceId);
+      houseHoldClientReferenceIds.add(e.clientReferenceId);
     });
 
-    individualsList = await individual.search(IndividualSearchModel(
+    householdList = await household.search(HouseholdSearchModel(
         clientReferenceId:
-            individualClientReferenceIds.map((e) => e.toString()).toList()));
+            houseHoldClientReferenceIds.map((e) => e.toString()).toList()));
 
     // Search for individual results using the extracted IDs and search text.
     final List<HouseholdMemberModel> householdMembers =
         await fetchHouseholdMembersBulk(
-      individualClientReferenceIds,
       null,
+      houseHoldClientReferenceIds,
+    );
+
+    final List<String> individualClientReferenceIds = householdMembers
+        .map((e) => e.individualClientReferenceId.toString())
+        .toList();
+
+    individualsList = await individual.search(
+      IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
     );
 
     // Group household members by household client reference ID
@@ -93,7 +100,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
     projectBeneficiariesList = await projectBeneficiary.search(
         ProjectBeneficiarySearchModel(
             beneficiaryClientReferenceId:
-                individualClientReferenceIds.map((e) => e).toList()));
+                houseHoldClientReferenceIds.map((e) => e).toList()));
 
     for (final entry in groupedHouseholdsMembers.entries) {
       HouseholdModel filteredHousehold;

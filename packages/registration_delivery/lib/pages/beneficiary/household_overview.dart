@@ -60,10 +60,11 @@ class _HouseholdOverviewPageState
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (ctx, state) {
           final projectBeneficiary =
-              RegistrationDeliverySingleton().beneficiaryType !=
-                      BeneficiaryType.individual
-                  ? [state.householdMemberWrapper.projectBeneficiaries?.first]
-                  : state.householdMemberWrapper.projectBeneficiaries
+              // RegistrationDeliverySingleton().beneficiaryType !=
+              //         BeneficiaryType.individual
+              //     ? [state.householdMemberWrapper.projectBeneficiaries?.first]
+              //     :
+              state.householdMemberWrapper.projectBeneficiaries
                       ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==

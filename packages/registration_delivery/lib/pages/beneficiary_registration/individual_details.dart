@@ -511,16 +511,18 @@ class _IndividualDetailsPageState
                                 .genderOptions!
                                 .map(
                                   (e) => e,
-                            )
+                                )
                                 .toList(),
-                            onSelectionChanged: (value){
+                            onSelectionChanged: (value) {
                               setState(() {
-                                if(value.isNotEmpty){
+                                if (value.isNotEmpty) {
                                   form.control(_genderKey).value = value.first;
-                                }else{
+                                } else {
                                   form.control(_genderKey).value = null;
                                   setState(() {
-                                    form.control(_genderKey).setErrors({'': true});
+                                    form
+                                        .control(_genderKey)
+                                        .setErrors({'': true});
                                   });
                                 }
                               });
@@ -528,8 +530,9 @@ class _IndividualDetailsPageState
                             valueMapper: (value) {
                               return localizations.translate(value);
                             },
-                            errorMessage:  form.control(_genderKey).hasErrors
-                                ? localizations.translate(i18.common.corecommonRequired)
+                            errorMessage: form.control(_genderKey).hasErrors
+                                ? localizations
+                                    .translate(i18.common.corecommonRequired)
                                 : null,
                           ),
                         ]),
@@ -754,6 +757,12 @@ class _IndividualDetailsPageState
               barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
         }
 
+        return value.individualModel;
+      },
+      create: (value) {
+        return value.individualModel;
+      },
+      summary: (value) {
         return value.individualModel;
       },
     );

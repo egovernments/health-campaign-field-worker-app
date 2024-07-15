@@ -10,6 +10,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/local/household_global_search.dart';
 import '../../data/repositories/local/individual_global_search.dart';
 import '../../data/repositories/local/registration_delivery_address.dart';
 import '../../models/entities/household.dart';
@@ -44,21 +45,23 @@ class SearchHouseholdsBloc
   final SideEffectDataRepository sideEffectDataRepository;
   final ReferralDataRepository referralDataRepository;
   final IndividualGlobalSearchRepository individualGlobalSearchRepository;
+  final HouseHoldGlobalSearchRepository houseHoldGlobalSearchRepository;
 
-  SearchHouseholdsBloc({
-    required this.userUid,
-    required this.projectId,
-    required this.individual,
-    required this.householdMember,
-    required this.household,
-    required this.projectBeneficiary,
-    required this.taskDataRepository,
-    required this.beneficiaryType,
-    required this.sideEffectDataRepository,
-    required this.addressRepository,
-    required this.referralDataRepository,
-    required this.individualGlobalSearchRepository,
-  }) : super(const SearchHouseholdsState()) {
+  SearchHouseholdsBloc(
+      {required this.userUid,
+      required this.projectId,
+      required this.individual,
+      required this.householdMember,
+      required this.household,
+      required this.projectBeneficiary,
+      required this.taskDataRepository,
+      required this.beneficiaryType,
+      required this.sideEffectDataRepository,
+      required this.addressRepository,
+      required this.referralDataRepository,
+      required this.individualGlobalSearchRepository,
+      required this.houseHoldGlobalSearchRepository})
+      : super(const SearchHouseholdsState()) {
     on(_handleClear);
     on(_handleSearchByHousehold);
   }
@@ -276,11 +279,12 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required GlobalSearchParameters globalSearchParams,
   }) = IndividualGlobalSearchEvent;
 
+  const factory SearchHouseholdsEvent.houseHoldGlobalSearch({
+    required GlobalSearchParameters globalSearchParams,
+  }) = HouseHoldGlobalSearchEvent;
+
   const factory SearchHouseholdsEvent.paginate(
-  {
-    required ScrollMetrics scrollMetrics
-}
-      ) = SearchHouseholdsPaginateEvent;
+      {required ScrollMetrics scrollMetrics}) = SearchHouseholdsPaginateEvent;
 }
 
 @freezed

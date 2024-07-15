@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:async/async.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
+import 'household_global_seach.dart';
 import 'tag_by_search.dart';
 import 'proximity_search.dart';
 import 'search_households.dart';
@@ -12,25 +13,27 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   final SearchHouseholdsBloc searchHouseholdsBloc;
   final TagSearchBloc tagSearchBloc;
   final IndividualGlobalSearchBloc individualGlobalSearchBloc;
+  final HouseHoldGlobalSearchBloc houseHoldGlobalSearchBloc;
 
-  SearchBlocWrapper({
-    required this.searchHouseholdsBloc,
-    required this.tagSearchBloc,
-    required this.individualGlobalSearchBloc,
-  });
+  SearchBlocWrapper(
+      {required this.searchHouseholdsBloc,
+      required this.tagSearchBloc,
+      required this.individualGlobalSearchBloc,
+      required this.houseHoldGlobalSearchBloc});
 
   Stream<SearchHouseholdsState> get stateChanges =>
       StreamGroup.merge<SearchHouseholdsState>([
         searchHouseholdsBloc.stream,
         individualGlobalSearchBloc.stream,
-        statusSearchBloc.stream,
+        tagSearchBloc.stream,
+        houseHoldGlobalSearchBloc.stream
       ]);
 
   void dispatch(SearchHouseholdsEvent event) {
-    if (event is SearchHouseholdsByStatusEvent) {
+    if (event is IndividualGlobalSearchEvent) {
       individualGlobalSearchBloc.add(event);
-    } else if (event is SearchHouseholdsByStatusEvent) {
-      statusSearchBloc.add(event);
+    } else if (event is SearchHouseholdsByTagEvent) {
+      tagSearchBloc.add(event);
     } else {
       searchHouseholdsBloc.add(event);
     }
@@ -38,8 +41,9 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
 
   void clearEvent() {
     individualGlobalSearchBloc.add(const SearchHouseholdsEvent.clear());
-    statusSearchBloc.add(const SearchHouseholdsEvent.clear());
+    tagSearchBloc.add(const SearchHouseholdsEvent.clear());
     searchHouseholdsBloc.add(const SearchHouseholdsEvent.clear());
+    houseHoldGlobalSearchBloc.add(const SearchHouseholdsEvent.clear());
   }
 
   @override
@@ -52,11 +56,12 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   FutureOr<void> close() {
     searchHouseholdsBloc.close();
     individualGlobalSearchBloc.close();
-    statusSearchBloc.close();
+    tagSearchBloc.close();
   }
 
   @override
   bool get isClosed =>
-      searchHouseholdsBloc.isClosed && individualGlobalSearchBloc.isClosed &&
-      statusSearchBloc.isClosed;
+      searchHouseholdsBloc.isClosed &&
+      individualGlobalSearchBloc.isClosed &&
+      tagSearchBloc.isClosed;
 }
