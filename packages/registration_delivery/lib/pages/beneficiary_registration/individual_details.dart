@@ -159,55 +159,20 @@ class _IndividualDetailsPageState
                                 ),
                               );
                             } else {
-                              final submit = await DigitDialog.show<bool>(
-                                context,
-                                options: DigitDialogOptions(
-                                  titleText: localizations.translate(
-                                    i18.deliverIntervention.dialogTitle,
-                                  ),
-                                  contentText: localizations.translate(
-                                    i18.deliverIntervention.dialogContent,
-                                  ),
-                                  primaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonSubmit,
-                                    ),
-                                    action: (context) {
-                                      clickedStatus.value = true;
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(true);
-                                    },
-                                  ),
-                                  secondaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonCancel,
-                                    ),
-                                    action: (context) => Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(false),
-                                  ),
+                              clickedStatus.value = true;
+                              final scannerBloc =
+                                  context.read<DigitScannerBloc>();
+                              bloc.add(
+                                BeneficiaryRegistrationSummaryEvent(
+                                  projectId: projectId!,
+                                  userUuid: userId!,
+                                  boundary: boundary!,
+                                  tag: scannerBloc.state.qrCodes.isNotEmpty
+                                      ? scannerBloc.state.qrCodes.first
+                                      : null,
                                 ),
                               );
-                              if (submit ?? false) {
-                                if (context.mounted) {
-                                  final scannerBloc =
-                                      context.read<DigitScannerBloc>();
-                                  bloc.add(
-                                    BeneficiaryRegistrationSummaryEvent(
-                                      projectId: projectId!,
-                                      userUuid: userId!,
-                                      boundary: boundary!,
-                                      tag: scannerBloc.state.qrCodes.isNotEmpty
-                                          ? scannerBloc.state.qrCodes.first
-                                          : null,
-                                    ),
-                                  );
-                                  router.push(SummaryRoute());
-                                }
-                              }
+                              router.push(SummaryRoute());
                             }
                           },
                           editIndividual: (
@@ -507,6 +472,10 @@ class _IndividualDetailsPageState
                             ),
                             allowMultipleSelection: false,
                             width: 126,
+                            initialSelection:
+                                form.control(_genderKey).value != null
+                                    ? [form.control(_genderKey).value]
+                                    : [],
                             options: RegistrationDeliverySingleton()
                                 .genderOptions!
                                 .map(
