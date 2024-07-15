@@ -103,6 +103,12 @@ class BeneficiaryRegistrationBloc
           registrationDate: event.registrationDate,
         ));
       },
+      summary: (value) {
+        emit(value.copyWith(
+          householdModel: event.household,
+          registrationDate: event.registrationDate,
+        ));
+      },
     );
   }
 
@@ -194,9 +200,10 @@ class BeneficiaryRegistrationBloc
       summary: (value) async {
         if (event.navigateToSummary) {
           emit(BeneficiaryRegistrationState.create(
-            addressModel: value.householdModel?.address,
-            householdModel: value.householdModel,
-          ));
+              addressModel: value.householdModel?.address,
+              householdModel: value.householdModel,
+              individualModel: value.individualModel,
+              projectBeneficiaryModel: value.projectBeneficiaryModel));
         } else {
           final individual = value.individualModel;
           final household = value.householdModel;
@@ -279,6 +286,8 @@ class BeneficiaryRegistrationBloc
               BeneficiaryRegistrationPersistedState(
                 navigateToRoot: false,
                 householdModel: household,
+                addressModel: address,
+                individualModel: individual,
               ),
             );
           }
@@ -375,6 +384,8 @@ class BeneficiaryRegistrationBloc
             BeneficiaryRegistrationPersistedState(
               navigateToRoot: false,
               householdModel: household,
+              addressModel: address,
+              individualModel: individual,
             ),
           );
         }
@@ -731,6 +742,12 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationState.persisted({
     @Default(true) bool navigateToRoot,
     required HouseholdModel householdModel,
+    IndividualModel? individualModel,
+    ProjectBeneficiaryModel? projectBeneficiaryModel,
+    DateTime? registrationDate,
+    AddressModel? addressModel,
+    @Default(false) bool loading,
+    @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationPersistedState;
 
   const factory BeneficiaryRegistrationState.summary({
