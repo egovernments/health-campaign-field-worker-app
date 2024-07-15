@@ -137,6 +137,7 @@ class _HouseholdLocationPageState
                                         address,
                                         householdModel,
                                         individualModel,
+                                        projectBeneficiaryModel,
                                         registrationDate,
                                         searchQuery,
                                         loading,

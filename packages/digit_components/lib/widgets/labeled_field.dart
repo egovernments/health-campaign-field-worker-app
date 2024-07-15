@@ -11,6 +11,7 @@ class LabeledField extends StatelessWidget {
   final bool preferToolTipBelow;
   final TooltipTriggerMode tooltipTriggerMode;
   final TextStyle? textStyle;
+  final bool isRequired;
 
   const LabeledField({
     super.key,
@@ -23,6 +24,7 @@ class LabeledField extends StatelessWidget {
     this.preferToolTipBelow = false,
     this.tooltipTriggerMode = TooltipTriggerMode.tap,
     this.textStyle,
+    this.isRequired = false,
   });
 
   @override
@@ -41,6 +43,8 @@ class LabeledField extends StatelessWidget {
                         DigitTheme.instance.mobileTheme.textTheme.labelSmall,
                   ),
                 ),
+                if(isRequired) Text(' *', style: labelStyle ??
+                    DigitTheme.instance.mobileTheme.textTheme.labelSmall,),
                 icon != null
                     ? Tooltip(
                         message: tooltipMessage ?? '',

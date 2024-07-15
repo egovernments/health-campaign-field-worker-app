@@ -118,6 +118,10 @@ class AppRouter extends _$AppRouter {
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: SummaryRoute.page,
+                    path: 'beneficiary-summary',
+                  ),
                 ],
               ),
               AutoRoute(
@@ -130,12 +134,24 @@ class AppRouter extends _$AppRouter {
                     initial: true,
                   ),
                   AutoRoute(
+                    page: BeneficiaryChecklistRoute.page,
+                    path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(
                     page: BeneficiaryDetailsRoute.page,
                     path: 'beneficiary-details',
                   ),
                   AutoRoute(
+                    page: BeneficiaryChecklistRoute.page,
+                    path: 'beneficiary-checklist',
+                  ),
+                  AutoRoute(
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',
+                  ),
+                  AutoRoute(
+                    page: RefusedDeliveryRoute.page,
+                    path: 'refused-delivery',
                   ),
                   AutoRoute(
                     page: SideEffectsRoute.page,

@@ -5,6 +5,7 @@ class SelectionBox<T> extends StatefulWidget {
   final double? width;
   final String? errorMessage;
   final List<T> options;
+  final String? title;
   final Function(List<T>) onSelectionChanged;
   final List<T>? initialSelection;
   final bool allowMultipleSelection;
@@ -13,6 +14,7 @@ class SelectionBox<T> extends StatefulWidget {
   const SelectionBox({
     Key? key,
     this.width,
+    this.title,
     this.errorMessage,
     required this.options,
     required this.onSelectionChanged,
@@ -31,7 +33,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
   @override
   void initState() {
     super.initState();
-    if(widget.initialSelection != null) {
+    if (widget.initialSelection != null) {
       _selectedOptions.addAll(widget.initialSelection!);
     }
   }
@@ -106,20 +108,23 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(kPadding * 3),
-          decoration: BoxDecoration(
-            color: const DigitColors().alabasterWhite,
-            borderRadius: BorderRadius.circular(kPadding / 2),
-            border: Border.all(
-              color: const DigitColors().quillGray,
-              width: 1,
+        LabeledField(
+          label: widget.title ?? '',
+          child: Container(
+            padding: const EdgeInsets.all(kPadding * 3),
+            decoration: BoxDecoration(
+              color: const DigitColors().alabasterWhite,
+              borderRadius: BorderRadius.circular(kPadding / 2),
+              border: Border.all(
+                color: const DigitColors().quillGray,
+                width: 1,
+              ),
             ),
-          ),
-          child: Wrap(
-            spacing: kPadding * 3,
-            runSpacing: kPadding * 3,
-            children: widget.options.map(_buildOption).toList(),
+            child: Wrap(
+              spacing: kPadding * 3,
+              runSpacing: kPadding * 3,
+              children: widget.options.map(_buildOption).toList(),
+            ),
           ),
         ),
         const SizedBox(height: kPadding / 2),
