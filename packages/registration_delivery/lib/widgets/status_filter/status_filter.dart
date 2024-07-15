@@ -8,7 +8,7 @@ import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 
 class StatusFilter extends LocalizedStatefulWidget {
-  final List<Status>? selectedFilters;
+  final List<String>? selectedFilters;
   const StatusFilter({
     super.key,
     super.appLocalizations,
@@ -24,7 +24,7 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
 
   @override
   void initState() {
-    selectedButtons = widget.selectedFilters ?? [];
+    assignSelectedButtons();
     super.initState();
   }
 
@@ -38,6 +38,9 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
             options: getFilters() ?? [],
             allowMultipleSelection: true,
             width: 115,
+            initialSelection: [
+              ...selectedButtons
+            ], // [TODO : fix selected not displaying]
             onSelectionChanged: (selected) {
               setState(() {
                 selectedButtons = selected;
@@ -77,7 +80,8 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pop(context, selectedButtons);
+                      Navigator.pop(
+                          context, selectedButtons.map((e) => e.name).toList());
                     }),
               ),
             ],
@@ -102,5 +106,14 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
         .map((e) => Status.values.where((element) => element.toValue() == e))
         .expand((element) => element)
         .toList();
+  }
+
+  void assignSelectedButtons() {
+    setState(() {
+      selectedButtons = widget.selectedFilters!
+          .map((e) => Status.values.where((element) => element.toValue() == e))
+          .expand((element) => element)
+          .toList();
+    });
   }
 }

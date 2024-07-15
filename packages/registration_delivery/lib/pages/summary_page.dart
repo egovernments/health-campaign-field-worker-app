@@ -55,8 +55,6 @@ class _SummaryPageState extends LocalizedState<SummaryPage> {
               if (value.navigateToRoot) {
                 (router.parent() as StackRouter).maybePop();
               } else {
-                print('stack router:');
-                print(router.stack.first);
                 router.popUntil((route) =>
                     route.settings.name == SearchBeneficiaryRoute.name);
                 context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(

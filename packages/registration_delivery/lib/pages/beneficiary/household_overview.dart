@@ -59,18 +59,6 @@ class _HouseholdOverviewPageState
       },
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
         builder: (ctx, state) {
-          final projectBeneficiary =
-              RegistrationDeliverySingleton().beneficiaryType !=
-                      BeneficiaryType.individual
-                  ? [state.householdMemberWrapper.projectBeneficiaries?.first]
-                  : state.householdMemberWrapper.projectBeneficiaries
-                      ?.where(
-                        (element) =>
-                            element.beneficiaryClientReferenceId ==
-                            state.selectedIndividual?.clientReferenceId,
-                      )
-                      .toList();
-
           return Scaffold(
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
@@ -456,6 +444,8 @@ class _HouseholdOverviewPageState
                                     return MemberCard(
                                       isHead: isHead,
                                       individual: e,
+                                      projectBeneficiaries:
+                                          projectBeneficiary ?? [],
                                       tasks: taskData,
                                       sideEffects: sideEffectData,
                                       editMemberAction: () async {

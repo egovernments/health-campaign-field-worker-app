@@ -147,7 +147,14 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             additionalFields:
                                 HouseholdAdditionalFields(version: 1, fields: [
                               //[TODO: Use pregnant women form value based on project config
-                              ...?householdModel?.additionalFields?.fields,
+                              ...?householdModel?.additionalFields?.fields
+                                  .where((e) =>
+                                      e.key !=
+                                          AdditionalFieldsType.pregnantWomen
+                                              .toValue() &&
+                                      e.key !=
+                                          AdditionalFieldsType.children
+                                              .toValue()),
                               AdditionalField(
                                 AdditionalFieldsType.pregnantWomen.toValue(),
                                 pregnantWomen,
@@ -390,11 +397,11 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
-    final household = state.mapOrNull(
-      editHousehold: (value) {
-        return value.householdModel;
-      },
-    );
+    final household = state.mapOrNull(editHousehold: (value) {
+      return value.householdModel;
+    }, create: (value) {
+      return value.householdModel;
+    });
 
     final registrationDate = state.mapOrNull(
       editHousehold: (value) {

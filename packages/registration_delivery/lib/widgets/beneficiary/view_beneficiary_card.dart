@@ -93,15 +93,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         final projectBeneficiary =
             // RegistrationDeliverySingleton().beneficiaryType !=
             //         BeneficiaryType.individual
-            //     ? [householdMember.projectBeneficiaries.first]
+            //     ? [householdMember.projectBeneficiaries!.first]
             //     :
             householdMember.projectBeneficiaries
-                ?.where(
-                  (element) =>
-                      element.beneficiaryClientReferenceId ==
-                      e.clientReferenceId,
-                )
-                .toList();
+                    ?.where(
+                      (element) =>
+                          element.beneficiaryClientReferenceId ==
+                          e.clientReferenceId,
+                    )
+                    .toList();
 
         final taskData = (projectBeneficiary ?? []).isNotEmpty
             ? householdMember.tasks

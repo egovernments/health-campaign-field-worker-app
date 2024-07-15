@@ -129,6 +129,17 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                     additionalFields: HouseholdAdditionalFields(
                                         version: 1,
                                         fields: [
+                                          ...?householdModel
+                                              ?.additionalFields?.fields
+                                              .where((e) =>
+                                                  e.key !=
+                                                      AdditionalFieldsType
+                                                          .houseStructureTypes
+                                                          .toValue() &&
+                                                  e.key !=
+                                                      AdditionalFieldsType
+                                                          .noOfRooms
+                                                          .toValue()),
                                           AdditionalField(
                                             AdditionalFieldsType
                                                 .houseStructureTypes
