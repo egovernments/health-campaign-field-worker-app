@@ -489,6 +489,7 @@ class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+  String get beneficiaryChecklistDialogTitle => 'BENEFICIARY_CHECKLIST_DIALOG_TITLE';
 
   String get refusedDeliveryLabel => 'REFUSED_DELIVERY_LABEL';
   String get refusedDeliveryVisitDateLabel => 'REFUSED_DELIVERY_VISIT_DATE';
