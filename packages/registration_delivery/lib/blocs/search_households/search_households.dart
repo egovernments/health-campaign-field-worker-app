@@ -308,10 +308,10 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
 @freezed
 class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
   const factory HouseholdMemberWrapper({
-    required HouseholdModel household,
-    required IndividualModel headOfHousehold,
-    required List<IndividualModel> members,
-    required List<ProjectBeneficiaryModel> projectBeneficiaries,
+    HouseholdModel? household,
+    IndividualModel? headOfHousehold,
+    List<IndividualModel>? members,
+    List<ProjectBeneficiaryModel>? projectBeneficiaries,
     double? distance,
     List<TaskModel>? tasks,
     List<SideEffectModel>? sideEffects,

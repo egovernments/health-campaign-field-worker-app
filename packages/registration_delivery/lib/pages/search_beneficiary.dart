@@ -353,8 +353,8 @@ class _SearchBeneficiaryPageState
                               long,
                             ),
                             Coordinate(
-                              i.household.address?.latitude,
-                              i.household.address?.longitude,
+                              i.household?.address?.latitude,
+                              i.household?.address?.longitude,
                             ),
                           );
 

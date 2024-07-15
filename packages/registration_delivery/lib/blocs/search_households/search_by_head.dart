@@ -56,7 +56,7 @@
 //
 //     // Perform a series of asynchronous data retrieval operations based on the search criteria.
 //
-//     // Fetch household results based on proximity and other criteria.
+//     // Fetch hosehold results based on proximity and other criteria.
 //
 //     List<IndividualModel> individuals = [];
 //     List<IndividualModel> proximityBasedIndividualResults = [];
