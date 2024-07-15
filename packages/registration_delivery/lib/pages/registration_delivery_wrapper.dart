@@ -8,6 +8,7 @@ import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/proximity_search.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_by_head.dart';
+import '../blocs/search_households/search_by_status.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/tag_by_search.dart';
 import '../data/repositories/local/registration_delivery_address.dart';
@@ -142,11 +143,40 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) {
+              return StatusSearchBloc(
+                beneficiaryType:
+                    RegistrationDeliverySingleton().beneficiaryType!,
+                userUid: RegistrationDeliverySingleton().loggedInUserUuid!,
+                projectId: RegistrationDeliverySingleton().projectId!,
+                addressRepository:
+                    context.read<RegistrationDeliveryAddressRepo>(),
+                projectBeneficiary: context.repository<ProjectBeneficiaryModel,
+                    ProjectBeneficiarySearchModel>(context),
+                householdMember: context.repository<HouseholdMemberModel,
+                    HouseholdMemberSearchModel>(context),
+                household: context
+                    .repository<HouseholdModel, HouseholdSearchModel>(context),
+                individual:
+                    context.repository<IndividualModel, IndividualSearchModel>(
+                        context),
+                taskDataRepository:
+                    context.repository<TaskModel, TaskSearchModel>(context),
+                sideEffectDataRepository:
+                    context.repository<SideEffectModel, SideEffectSearchModel>(
+                        context),
+                referralDataRepository: context
+                    .repository<ReferralModel, ReferralSearchModel>(context),
+              );
+            },
+          ),
+          BlocProvider(
+            create: (context) {
               return SearchBlocWrapper(
                 searchHouseholdsBloc: context.read<SearchHouseholdsBloc>(),
                 searchByHeadBloc: context.read<SearchByHeadBloc>(),
                 proximitySearchBloc: context.read<ProximitySearchBloc>(),
                 tagSearchBloc: context.read<TagSearchBloc>(),
+                statusSearchBloc: context.read<StatusSearchBloc>(),
               );
             },
           ),

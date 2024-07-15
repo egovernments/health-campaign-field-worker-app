@@ -62,7 +62,7 @@ Future<void> initializeService(dio, isar) async {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
-
+  requestDisableBatteryOptimization();
   await service.configure(
     androidConfiguration: AndroidConfiguration(
       // this will be executed when app is in foreground or background in separated isolate

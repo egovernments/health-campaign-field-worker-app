@@ -45,6 +45,12 @@ class StatusMapper extends EnumMapper<Status> {
         return Status.inComplete;
       case "TO_ADMINISTER":
         return Status.toAdminister;
+      case "REGISTERED":
+        return Status.registered;
+      case "NOT_REGISTERED":
+        return Status.notRegistered;
+      case "CLOSED":
+        return Status.closed;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -73,6 +79,12 @@ class StatusMapper extends EnumMapper<Status> {
         return "IN_COMPLETE";
       case Status.toAdminister:
         return "TO_ADMINISTER";
+      case Status.registered:
+        return "REGISTERED";
+      case Status.notRegistered:
+        return "NOT_REGISTERED";
+      case Status.closed:
+        return "CLOSED";
     }
   }
 }

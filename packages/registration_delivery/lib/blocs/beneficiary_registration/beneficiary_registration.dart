@@ -394,13 +394,15 @@ class BeneficiaryRegistrationBloc
         emit(value.copyWith(loading: true));
         try {
           await householdRepository.update(
-            value.householdModel.copyWith(
+            event.household.copyWith(
               clientAuditDetails: ClientAuditDetails(
-                createdBy: value.householdModel.clientAuditDetails!.createdBy,
+                createdBy: value.householdModel.clientAuditDetails?.createdBy ??
+                    value.householdModel.auditDetails!.createdBy.toString(),
                 createdTime:
-                    value.householdModel.clientAuditDetails!.createdTime,
+                    value.householdModel.clientAuditDetails?.createdTime ??
+                        value.householdModel.auditDetails!.createdTime,
                 lastModifiedBy:
-                    value.householdModel.clientAuditDetails!.lastModifiedBy,
+                    RegistrationDeliverySingleton().loggedInUserUuid,
                 lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
               ),
               memberCount: event.household.memberCount,
@@ -421,6 +423,37 @@ class BeneficiaryRegistrationBloc
               await projectBeneficiaryRepository
                   .update(projectBeneficiary.first.copyWith(tag: event.tag));
             }
+          } else {
+            await projectBeneficiaryRepository.create(ProjectBeneficiaryModel(
+                rowVersion: 1,
+                clientReferenceId: IdGen.i.identifier,
+                dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+                projectId: RegistrationDeliverySingleton().projectId,
+                tenantId: RegistrationDeliverySingleton().tenantId,
+                beneficiaryClientReferenceId:
+                    beneficiaryType == BeneficiaryType.individual
+                        ? value.individualModel.first.clientReferenceId
+                        : value.householdModel.clientReferenceId,
+                clientAuditDetails: ClientAuditDetails(
+                  createdBy: RegistrationDeliverySingleton()
+                      .loggedInUserUuid
+                      .toString(),
+                  createdTime: DateTime.now().millisecondsSinceEpoch,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                  lastModifiedBy: RegistrationDeliverySingleton()
+                      .loggedInUserUuid
+                      .toString(),
+                ),
+                auditDetails: AuditDetails(
+                  createdBy: RegistrationDeliverySingleton()
+                      .loggedInUserUuid
+                      .toString(),
+                  createdTime: DateTime.now().millisecondsSinceEpoch,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                  lastModifiedBy: RegistrationDeliverySingleton()
+                      .loggedInUserUuid
+                      .toString(),
+                )));
           }
 
           for (var element in value.individualModel) {

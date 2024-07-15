@@ -153,9 +153,7 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
             projectBeneficiaries: filteredBeneficiaries,
             tasks: filteredTasks.isEmpty ? null : filteredTasks,
             sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
-            //TODO Need to added the side effects
             referrals: referralsList.isEmpty ? null : referralsList,
-            //TODO Need to addevid the referrals
           ),
         );
       }

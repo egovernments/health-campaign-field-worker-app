@@ -9,11 +9,13 @@ import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
+import '../models/entities/status.dart';
 import '../router/registration_delivery_router.gm.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/beneficiary/view_beneficiary_card.dart';
 import '../widgets/localized.dart';
+import '../widgets/status_filter/status_filter.dart';
 
 @RoutePage()
 class SearchBeneficiaryPage extends LocalizedStatefulWidget {
@@ -35,6 +37,7 @@ class _SearchBeneficiaryPageState
 
   double lat = 0.0;
   double long = 0.0;
+  List<Status> selectedFilters = [];
 
   SearchHouseholdsState searchHouseholdsState = const SearchHouseholdsState(
     loading: false,
@@ -47,7 +50,7 @@ class _SearchBeneficiaryPageState
   void initState() {
     // Initialize the BlocWrapper with instances of SearchHouseholdsBloc, SearchMemberBloc, and ProximitySearchBloc
     blocWrapper = context.read<SearchBlocWrapper>();
-
+    context.read<LocationBloc>().add(const LoadLocationEvent());
     // Listen to state changes
     blocWrapper.stateChanges.listen((state) {
       if (mounted) {
@@ -101,6 +104,17 @@ class _SearchBeneficiaryPageState
                   offset: blocWrapper.searchByHeadBloc.state.offset,
                   limit: blocWrapper.searchByHeadBloc.state.limit,
                 ));
+              } else if (metrics.atEdge &&
+                  selectedFilters.isNotEmpty &&
+                  metrics.pixels != 0) {
+                blocWrapper.statusSearchBloc.add(
+                  SearchHouseholdsEvent.searchByStatus(
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    offset: blocWrapper.statusSearchBloc.state.offset,
+                    limit: blocWrapper.statusSearchBloc.state.limit,
+                    status: selectedFilters,
+                  ),
+                );
               }
             }
             // Return true to allow the notification to continue to be dispatched to further ancestors.
@@ -138,6 +152,61 @@ class _SearchBeneficiaryPageState
                         builder: (context, locationState) {
                           return Column(
                             children: [
+                              locationState.latitude != null
+                                  ? Row(
+                                      children: [
+                                        Switch(
+                                          value: isProximityEnabled,
+                                          onChanged: (value) {
+                                            searchController.clear();
+                                            setState(() {
+                                              isProximityEnabled = value;
+                                              lat = locationState.latitude!;
+                                              long = locationState.longitude!;
+                                            });
+
+                                            if (locationState.hasPermissions &&
+                                                value &&
+                                                locationState.latitude !=
+                                                    null &&
+                                                locationState.longitude !=
+                                                    null &&
+                                                RegistrationDeliverySingleton()
+                                                        .maxRadius !=
+                                                    null &&
+                                                isProximityEnabled) {
+                                              blocWrapper.proximitySearchBloc
+                                                  .add(
+                                                SearchHouseholdsEvent
+                                                    .searchByProximity(
+                                                  latitude:
+                                                      locationState.latitude!,
+                                                  longititude:
+                                                      locationState.longitude!,
+                                                  projectId:
+                                                      RegistrationDeliverySingleton()
+                                                          .projectId!,
+                                                  maxRadius:
+                                                      RegistrationDeliverySingleton()
+                                                          .maxRadius!,
+                                                  offset: offset,
+                                                  limit: limit,
+                                                ),
+                                              );
+                                            } else {
+                                              blocWrapper.clearEvent();
+                                            }
+                                          },
+                                        ),
+                                        Text(
+                                          localizations.translate(
+                                            i18.searchBeneficiary
+                                                .proximityLabel,
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                  : const Offstage(),
                               DigitSearchBar(
                                 controller: searchController,
                                 hintText: localizations.translate(
@@ -195,59 +264,82 @@ class _SearchBeneficiaryPageState
                                   }
                                 },
                               ),
-                              locationState.latitude != null
-                                  ? Row(
-                                      children: [
-                                        Switch(
-                                          value: isProximityEnabled,
-                                          onChanged: (value) {
-                                            searchController.clear();
-                                            setState(() {
-                                              isProximityEnabled = value;
-                                              lat = locationState.latitude!;
-                                              long = locationState.longitude!;
-                                            });
-
-                                            if (locationState.hasPermissions &&
-                                                value &&
-                                                locationState.latitude !=
-                                                    null &&
-                                                locationState.longitude !=
-                                                    null &&
-                                                RegistrationDeliverySingleton()
-                                                        .maxRadius !=
-                                                    null &&
-                                                isProximityEnabled) {
-                                              blocWrapper.proximitySearchBloc
-                                                  .add(
-                                                SearchHouseholdsEvent
-                                                    .searchByProximity(
-                                                  latitude:
-                                                      locationState.latitude!,
-                                                  longititude:
-                                                      locationState.longitude!,
-                                                  projectId:
-                                                      RegistrationDeliverySingleton()
-                                                          .projectId!,
-                                                  maxRadius:
-                                                      RegistrationDeliverySingleton()
-                                                          .maxRadius!,
-                                                  offset: offset,
-                                                  limit: limit,
-                                                ),
-                                              );
-                                            } else {
-                                              blocWrapper.clearEvent();
-                                            }
-                                          },
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: DigitIconButton(
+                                  iconText: getFilterIconNLabel()['label'],
+                                  icon: getFilterIconNLabel()['icon'],
+                                  onPressed: () => showFilterDialog(),
+                                ),
+                              ),
+                              selectedFilters.isNotEmpty
+                                  ? Align(
+                                      alignment: Alignment.topLeft,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.horizontal,
+                                        child: Row(
+                                          children: [
+                                            for (var filter in selectedFilters)
+                                              Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      kPadding / 2),
+                                                  child: Container(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            kPadding / 2),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color:
+                                                              const DigitColors()
+                                                                  .cloudGray),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              kPadding / 2),
+                                                    ),
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                            localizations
+                                                                .translate(filter
+                                                                    .toValue()),
+                                                            style: TextStyle(
+                                                                color: const DigitColors()
+                                                                    .davyGray)),
+                                                        Text(
+                                                            '(${searchHouseholdsState.householdMembers.length})',
+                                                            style: TextStyle(
+                                                                color: const DigitColors()
+                                                                    .davyGray)),
+                                                        const SizedBox(
+                                                            width: kPadding),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              selectedFilters
+                                                                  .remove(
+                                                                      filter);
+                                                            });
+                                                            blocWrapper
+                                                                .clearEvent();
+                                                          },
+                                                          child: Container(
+                                                            color:
+                                                                const DigitColors()
+                                                                    .davyGray,
+                                                            child: Icon(
+                                                              Icons.close,
+                                                              color:
+                                                                  const DigitColors()
+                                                                      .white,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  )),
+                                          ],
                                         ),
-                                        Text(
-                                          localizations.translate(
-                                            i18.searchBeneficiary
-                                                .proximityLabel,
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     )
                                   : const Offstage(),
                             ],
@@ -299,8 +391,8 @@ class _SearchBeneficiaryPageState
                               long,
                             ),
                             Coordinate(
-                              i.household.address?.latitude,
-                              i.household.address?.longitude,
+                              i.household?.address?.latitude,
+                              i.household?.address?.longitude,
                             ),
                           );
 
@@ -405,5 +497,43 @@ class _SearchBeneficiaryPageState
         ),
       ),
     );
+  }
+
+  getFilterIconNLabel() {
+    return {
+      'label': localizations.translate(
+        i18.searchBeneficiary.filterLabel,
+      ),
+      'icon': Icons.filter_alt
+    };
+  }
+
+  showFilterDialog() async {
+    var filters = await DigitDialog.show(context,
+        options: DigitDialogOptions(
+          titleIcon: Icon(getFilterIconNLabel()['icon'],
+              color: const DigitColors().burningOrange),
+          titleText: getFilterIconNLabel()['label'],
+          content: StatusFilter(selectedFilters: selectedFilters),
+        ));
+
+    if (filters != null) {
+      setState(() {
+        selectedFilters = filters;
+      });
+      blocWrapper.statusSearchBloc.add(
+        SearchHouseholdsEvent.searchByStatus(
+          projectId: RegistrationDeliverySingleton().projectId!,
+          offset: offset,
+          limit: limit,
+          status: filters,
+        ),
+      );
+    } else {
+      setState(() {
+        selectedFilters = [];
+      });
+      blocWrapper.clearEvent();
+    }
   }
 }
