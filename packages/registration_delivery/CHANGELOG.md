@@ -60,3 +60,9 @@
 
 * Updated individual details file for exposing individual state
 * Updated household_overview for BeneficiaryChecklistRoute
+
+## 0.0.0-dev.10
+
+* Added pagination for filter search
+* Updated PageState class to public for customization
+* Updated digit_components
