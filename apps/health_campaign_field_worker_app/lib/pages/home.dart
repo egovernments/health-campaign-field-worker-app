@@ -639,8 +639,13 @@ void setPackagesSingleton(BuildContext context) {
                 .toList(),
             symptomsTypes:
                 appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-            referralReasons:
-                appConfiguration.referralReasons?.map((e) => e.code).toList(),
+            searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
+              ? appConfiguration.searchHouseHoldFilters!
+                  .map((e) => e.code)
+                  .toList()
+              : [],
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList(),
             houseStructureTypes: appConfiguration.houseStructureTypes
                 ?.map((e) => e.code)
                 .toList(),

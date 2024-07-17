@@ -48,3 +48,12 @@
 
 * Localization support added for missing fields
 * Added try catch for local repository to handle db lock
+
+## 1.0.2+1
+
+* Get Precise location on Submitting latitude longitude details
+
+## 0.0.0-dev.10
+
+* Updated PageState class to public for customization
+* Updated digit_components

@@ -38,3 +38,6 @@
 ## 1.0.1
 
 * Added try catch for local repository to handle db lock
+
+## 1.0.1+1
+* Get Precise location on Submitting latitude longitude details

@@ -72,6 +72,9 @@ class AppConfiguration {
 
   late List<SymptomsTypes>? symptomsTypes;
 
+  @Name('SEARCH_HOUSEHOLD_FILTERS')
+  late List<SearchHouseHoldFilters>? searchHouseHoldFilters;
+
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
@@ -163,6 +166,13 @@ class BackgroundServiceConfig {
 class HouseholdDeletionReasonOptions {
   late String name;
   late String code;
+}
+
+@embedded
+class SearchHouseHoldFilters {
+  late String name;
+  late String code;
+  late bool active;
 }
 
 @embedded

@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
@@ -26,10 +27,10 @@ class HouseHoldDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HouseHoldDetailsPage> createState() => _HouseHoldDetailsPageState();
+  State<HouseHoldDetailsPage> createState() => HouseHoldDetailsPageState();
 }
 
-class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
+class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _dateOfRegistrationKey = 'dateOfRegistration';
   static const _memberCountKey = 'memberCount';
   static const _pregnantWomenCountKey = 'pregnantWomenCount';
@@ -146,7 +147,14 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             additionalFields:
                                 HouseholdAdditionalFields(version: 1, fields: [
                               //[TODO: Use pregnant women form value based on project config
-                              ...?householdModel?.additionalFields?.fields,
+                              ...?householdModel?.additionalFields?.fields
+                                  .where((e) =>
+                                      e.key !=
+                                          AdditionalFieldsType.pregnantWomen
+                                              .toValue() &&
+                                      e.key !=
+                                          AdditionalFieldsType.children
+                                              .toValue()),
                               AdditionalField(
                                 AdditionalFieldsType.pregnantWomen.toValue(),
                                 pregnantWomen,
@@ -189,8 +197,9 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                         .clientAuditDetails!.createdBy,
                                     createdTime: householdModel
                                         .clientAuditDetails!.createdTime,
-                                    lastModifiedBy: householdModel
-                                        .clientAuditDetails!.lastModifiedBy,
+                                    lastModifiedBy:
+                                        RegistrationDeliverySingleton()
+                                            .loggedInUserUuid,
                                     lastModifiedTime:
                                         DateTime.now().millisecondsSinceEpoch,
                                   )
@@ -202,6 +211,14 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                         1,
                                 fields: [
                                   //[TODO: Use pregnant women form value based on project config
+                                  ...?householdModel.additionalFields?.fields
+                                      .where((e) =>
+                                          e.key !=
+                                              AdditionalFieldsType.pregnantWomen
+                                                  .toValue() &&
+                                          e.key !=
+                                              AdditionalFieldsType.children
+                                                  .toValue()),
                                   AdditionalField(
                                     AdditionalFieldsType.pregnantWomen
                                         .toValue(),
@@ -255,6 +272,20 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                         )
                                       : null,
                             ),
+                          ),
+                        );
+                        final overviewBloc =
+                            context.read<HouseholdOverviewBloc>();
+
+                        overviewBloc.add(
+                          HouseholdOverviewReloadEvent(
+                            projectId: RegistrationDeliverySingleton()
+                                .projectId
+                                .toString(),
+                            projectBeneficiaryType:
+                                RegistrationDeliverySingleton()
+                                        .beneficiaryType ??
+                                    BeneficiaryType.household,
                           ),
                         );
 
@@ -366,11 +397,11 @@ class _HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
-    final household = state.mapOrNull(
-      editHousehold: (value) {
-        return value.householdModel;
-      },
-    );
+    final household = state.mapOrNull(editHousehold: (value) {
+      return value.householdModel;
+    }, create: (value) {
+      return value.householdModel;
+    });
 
     final registrationDate = state.mapOrNull(
       editHousehold: (value) {

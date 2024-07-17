@@ -12,8 +12,6 @@ import 'package:auto_route/auto_route.dart' as _i24;
 import 'package:digit_data_model/data_model.dart' as _i29;
 import 'package:flutter/material.dart' as _i25;
 import 'package:registration_delivery/blocs/app_localization.dart' as _i26;
-import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart'
-    as _i27;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i28;
 import 'package:registration_delivery/models/entities/task.dart' as _i30;
@@ -60,6 +58,7 @@ import 'package:registration_delivery/pages/registration_delivery_wrapper.dart'
     as _i19;
 import 'package:registration_delivery/pages/search_beneficiary.dart' as _i20;
 import 'package:registration_delivery/pages/summary_page.dart' as _i23;
+import 'package:registration_delivery/registration_delivery.dart' as _i27;
 
 abstract class $RegistrationDeliveryRoute extends _i24.AutoRouterModule {
   @override

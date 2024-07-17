@@ -56,8 +56,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
 
-    final serviceDefinationRepo =
-    context.repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>(context);
+    final serviceDefinationRepo = context.repository<ServiceDefinitionModel,
+        ServiceDefinitionSearchModel>(context);
 
     return MultiBlocProvider(
       providers: [
@@ -142,7 +142,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
                   taskSearch: TaskSearchModel(
                 projectBeneficiaryClientReferenceId: houseHoldOverviewState
                     .householdMemberWrapper.projectBeneficiaries
-                    .map((e) => e.clientReferenceId)
+                    ?.map((e) => e.clientReferenceId)
                     .toList(),
               ))),
             child: BlocProvider(
@@ -155,7 +155,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               )..add(ReferralSearchEvent(ReferralSearchModel(
                   projectBeneficiaryClientReferenceId: houseHoldOverviewState
                       .householdMemberWrapper.projectBeneficiaries
-                      .map((e) => e.clientReferenceId)
+                      ?.map((e) => e.clientReferenceId)
                       .toList(),
                 ))),
               child: BlocProvider(

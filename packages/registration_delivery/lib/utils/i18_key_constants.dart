@@ -114,6 +114,8 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+  String get locationCapturing => 'CAPTURING_LOCATION';
+  String get locationCaptured => 'LOCATION_CAPTURED';
 }
 
 class SearchBeneficiary {
@@ -140,6 +142,12 @@ class SearchBeneficiary {
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
+
+  String get filterLabel => 'FILTER_LABEL';
+
+  String get clearFilter => 'CLEAR_FILTER';
+
+  String get applyFilter => 'APPLY_FILTER';
 
   String get yearsAbbr => 'YEARS_ABBR';
 
@@ -411,6 +419,12 @@ class HouseholdOverView {
 
   String get householdOverViewDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
+
+  String get householdOverViewRegisteredIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_REGISTERED_ICON_LABEL';
+
+  String get householdOverViewNotRegisteredIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_NOT_REGISTERED_ICON_LABEL';
 
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';

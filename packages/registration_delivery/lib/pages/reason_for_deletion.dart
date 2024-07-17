@@ -22,10 +22,10 @@ class ReasonForDeletionPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ReasonForDeletionPage> createState() => _ReasonForDeletionPageState();
+  State<ReasonForDeletionPage> createState() => ReasonForDeletionPageState();
 }
 
-class _ReasonForDeletionPageState
+class ReasonForDeletionPageState
     extends LocalizedState<ReasonForDeletionPage> {
   static const _reasonForDeletionKey = 'reasonForDeletion';
 
@@ -57,7 +57,7 @@ class _ReasonForDeletionPageState
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId!,
                                     householdModel:
-                                        state.householdMemberWrapper.household,
+                                        state.householdMemberWrapper.household!,
                                     individualModel: state.selectedIndividual!,
                                     projectBeneficiaryType:
                                         RegistrationDeliverySingleton()
@@ -69,12 +69,12 @@ class _ReasonForDeletionPageState
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId!,
                                     householdModel:
-                                        state.householdMemberWrapper.household,
+                                        state.householdMemberWrapper.household!,
                                     members:
-                                        state.householdMemberWrapper.members,
+                                        state.householdMemberWrapper.members!,
                                     projectBeneficiaryModel: state
                                         .householdMemberWrapper
-                                        .projectBeneficiaries
+                                        .projectBeneficiaries!
                                         .first,
                                     projectBeneficiaryType:
                                         RegistrationDeliverySingleton()
