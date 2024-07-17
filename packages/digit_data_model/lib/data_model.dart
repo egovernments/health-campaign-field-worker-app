@@ -277,4 +277,5 @@ enum DataModelType {
   hFReferral,
   attendanceRegister,
   attendance,
+  userAction,
 }

@@ -71,6 +71,7 @@ dependencies:
   referral_reconciliation: ^1.0.2
   digit_data_model: ^1.0.2
   registration_delivery: ^1.0.2
+  closed_household: ^0.0.1
 
 dev_dependencies:
   flutter_test:
