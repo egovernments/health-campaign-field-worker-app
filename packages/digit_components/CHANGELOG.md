@@ -107,3 +107,12 @@
 
 ## 1.0.0+2
 * DigitTextField component update
+
+## 1.0.0+3
+* Capture and Hide Location Dialog added to utils 
+
+## 1.0.0+4
+* Added new component selected box
+
+## 1.0.0+5
+* Added new component details_card

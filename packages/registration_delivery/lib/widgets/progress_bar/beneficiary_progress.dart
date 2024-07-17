@@ -22,10 +22,10 @@ class BeneficiaryProgressBar extends StatefulWidget {
   });
 
   @override
-  State<BeneficiaryProgressBar> createState() => _BeneficiaryProgressBarState();
+  State<BeneficiaryProgressBar> createState() => BeneficiaryProgressBarState();
 }
 
-class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
+class BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
   int current = 0;
 
   @override

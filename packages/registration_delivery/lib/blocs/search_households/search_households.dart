@@ -4,17 +4,23 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:stream_transform/stream_transform.dart';
 
+import '../../data/repositories/local/household_global_search.dart';
+import '../../data/repositories/local/individual_global_search.dart';
 import '../../data/repositories/local/registration_delivery_address.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
+import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
+import '../../utils/global_search_parameters.dart';
 import '../../utils/typedefs.dart';
 
 part 'search_households.freezed.dart';
@@ -38,20 +44,24 @@ class SearchHouseholdsBloc
   final TaskDataRepository taskDataRepository;
   final SideEffectDataRepository sideEffectDataRepository;
   final ReferralDataRepository referralDataRepository;
+  final IndividualGlobalSearchRepository individualGlobalSearchRepository;
+  final HouseHoldGlobalSearchRepository houseHoldGlobalSearchRepository;
 
-  SearchHouseholdsBloc({
-    required this.userUid,
-    required this.projectId,
-    required this.individual,
-    required this.householdMember,
-    required this.household,
-    required this.projectBeneficiary,
-    required this.taskDataRepository,
-    required this.beneficiaryType,
-    required this.sideEffectDataRepository,
-    required this.addressRepository,
-    required this.referralDataRepository,
-  }) : super(const SearchHouseholdsState()) {
+  SearchHouseholdsBloc(
+      {required this.userUid,
+      required this.projectId,
+      required this.individual,
+      required this.householdMember,
+      required this.household,
+      required this.projectBeneficiary,
+      required this.taskDataRepository,
+      required this.beneficiaryType,
+      required this.sideEffectDataRepository,
+      required this.addressRepository,
+      required this.referralDataRepository,
+      required this.individualGlobalSearchRepository,
+      required this.houseHoldGlobalSearchRepository})
+      : super(const SearchHouseholdsState()) {
     on(_handleClear);
     on(_handleSearchByHousehold);
   }
@@ -230,6 +240,13 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required HouseholdModel householdModel,
   }) = SearchHouseholdsByHouseholdsEvent;
 
+  const factory SearchHouseholdsEvent.searchByStatus({
+    required String projectId,
+    required final int offset,
+    required final int limit,
+    required List<Status> status,
+  }) = SearchHouseholdsByStatusEvent;
+
   const factory SearchHouseholdsEvent.searchByHouseholdHead({
     required String searchText,
     required String projectId,
@@ -257,6 +274,17 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
   }) = SearchHouseholdsByTagEvent;
 
   const factory SearchHouseholdsEvent.clear() = SearchHouseholdsClearEvent;
+
+  const factory SearchHouseholdsEvent.individualGlobalSearch({
+    required GlobalSearchParameters globalSearchParams,
+  }) = IndividualGlobalSearchEvent;
+
+  const factory SearchHouseholdsEvent.houseHoldGlobalSearch({
+    required GlobalSearchParameters globalSearchParams,
+  }) = HouseHoldGlobalSearchEvent;
+
+  const factory SearchHouseholdsEvent.paginate(
+      {required ScrollMetrics scrollMetrics}) = SearchHouseholdsPaginateEvent;
 }
 
 @freezed
@@ -284,10 +312,10 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
 @freezed
 class HouseholdMemberWrapper with _$HouseholdMemberWrapper {
   const factory HouseholdMemberWrapper({
-    required HouseholdModel household,
-    required IndividualModel headOfHousehold,
-    required List<IndividualModel> members,
-    required List<ProjectBeneficiaryModel> projectBeneficiaries,
+    HouseholdModel? household,
+    IndividualModel? headOfHousehold,
+    List<IndividualModel>? members,
+    List<ProjectBeneficiaryModel>? projectBeneficiaries,
     double? distance,
     List<TaskModel>? tasks,
     List<SideEffectModel>? sideEffects,

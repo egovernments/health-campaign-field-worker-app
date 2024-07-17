@@ -29,10 +29,10 @@ class BeneficiaryDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<BeneficiaryDetailsPage> createState() => _BeneficiaryDetailsPageState();
+  State<BeneficiaryDetailsPage> createState() => BeneficiaryDetailsPageState();
 }
 
-class _BeneficiaryDetailsPageState
+class BeneficiaryDetailsPageState
     extends LocalizedState<BeneficiaryDetailsPage> {
   @override
   void initState() {
@@ -54,9 +54,9 @@ class _BeneficiaryDetailsPageState
           final projectBeneficiary =
               RegistrationDeliverySingleton().beneficiaryType !=
                       BeneficiaryType.individual
-                  ? [householdMemberWrapper.projectBeneficiaries.first]
+                  ? [householdMemberWrapper.projectBeneficiaries?.first]
                   : householdMemberWrapper.projectBeneficiaries
-                      .where(
+                      ?.where(
                         (element) =>
                             element.beneficiaryClientReferenceId ==
                             state.selectedIndividual?.clientReferenceId,
@@ -68,7 +68,7 @@ class _BeneficiaryDetailsPageState
           final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary.first.clientReferenceId)
+                  projectBeneficiary?.first?.clientReferenceId)
               .toList();
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
@@ -263,7 +263,7 @@ class _BeneficiaryDetailsPageState
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
                                         ? householdMemberWrapper
-                                            .headOfHousehold.name?.givenName
+                                            .headOfHousehold?.name?.givenName
                                         : state.selectedIndividual?.name
                                                 ?.givenName ??
                                             '--',
@@ -275,7 +275,7 @@ class _BeneficiaryDetailsPageState
                                                       .beneficiaryType !=
                                                   BeneficiaryType.individual
                                               ? householdMemberWrapper
-                                                  .headOfHousehold.identifiers
+                                                  .headOfHousehold?.identifiers
                                               : state.selectedIndividual
                                                   ?.identifiers;
                                       if (identifiers == null ||
@@ -295,7 +295,7 @@ class _BeneficiaryDetailsPageState
                                                       .beneficiaryType !=
                                                   BeneficiaryType.individual
                                               ? householdMemberWrapper
-                                                  .headOfHousehold.identifiers
+                                                  .headOfHousehold?.identifiers
                                               : state.selectedIndividual
                                                   ?.identifiers;
                                       if (identifiers == null ||
@@ -316,7 +316,7 @@ class _BeneficiaryDetailsPageState
                                                       .beneficiaryType !=
                                                   BeneficiaryType.individual
                                               ? householdMemberWrapper
-                                                  .headOfHousehold.dateOfBirth
+                                                  .headOfHousehold?.dateOfBirth
                                               : state.selectedIndividual
                                                   ?.dateOfBirth;
                                       if (dob == null || dob.isEmpty) {
@@ -348,7 +348,7 @@ class _BeneficiaryDetailsPageState
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
                                         ? householdMemberWrapper.headOfHousehold
-                                            .gender?.name.sentenceCase
+                                            ?.gender?.name.sentenceCase
                                         : state.selectedIndividual?.gender?.name
                                                 .sentenceCase ??
                                             '--',
@@ -358,7 +358,7 @@ class _BeneficiaryDetailsPageState
                                                 .beneficiaryType !=
                                             BeneficiaryType.individual
                                         ? householdMemberWrapper
-                                            .headOfHousehold.mobileNumber
+                                            .headOfHousehold?.mobileNumber
                                         : state.selectedIndividual
                                                 ?.mobileNumber ??
                                             '--',
@@ -366,11 +366,13 @@ class _BeneficiaryDetailsPageState
                                         .deliverIntervention
                                         .dateOfRegistrationLabel): () {
                                       final date = projectBeneficiary
-                                          .first.dateOfRegistration;
+                                          ?.first?.dateOfRegistration;
 
                                       final registrationDate =
                                           DateTime.fromMillisecondsSinceEpoch(
-                                        date,
+                                        date ??
+                                            DateTime.now()
+                                                .millisecondsSinceEpoch,
                                       );
 
                                       return DateFormat('dd MMMM yyyy')

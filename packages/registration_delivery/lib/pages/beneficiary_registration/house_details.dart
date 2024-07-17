@@ -25,10 +25,10 @@ class HouseDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HouseDetailsPage> createState() => _HouseDetailsPageState();
+  State<HouseDetailsPage> createState() => HouseDetailsPageState();
 }
 
-class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
+class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
   static const _noOfRoomsKey = 'noOfRooms';
   List<String>? selectedHouseStructureTypes;
 
@@ -129,6 +129,17 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                     additionalFields: HouseholdAdditionalFields(
                                         version: 1,
                                         fields: [
+                                          ...?householdModel
+                                              ?.additionalFields?.fields
+                                              .where((e) =>
+                                                  e.key !=
+                                                      AdditionalFieldsType
+                                                          .houseStructureTypes
+                                                          .toValue() &&
+                                                  e.key !=
+                                                      AdditionalFieldsType
+                                                          .noOfRooms
+                                                          .toValue()),
                                           AdditionalField(
                                             AdditionalFieldsType
                                                 .houseStructureTypes

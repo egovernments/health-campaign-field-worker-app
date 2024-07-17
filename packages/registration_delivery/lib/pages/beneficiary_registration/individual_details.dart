@@ -37,11 +37,10 @@ class IndividualDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<IndividualDetailsPage> createState() => _IndividualDetailsPageState();
+  State<IndividualDetailsPage> createState() => IndividualDetailsPageState();
 }
 
-class _IndividualDetailsPageState
-    extends LocalizedState<IndividualDetailsPage> {
+class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
   static const _idTypeKey = 'idType';
   static const _idNumberKey = 'idNumber';
@@ -63,8 +62,17 @@ class _IndividualDetailsPageState
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
-        builder: (context, form, child) => BlocBuilder<
+        builder: (context, form, child) => BlocConsumer<
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
+          listener: (context, state) {
+            state.mapOrNull(
+              persisted: (value) {
+                if (value.navigateToRoot) {
+                  (router.parent() as StackRouter).maybePop();
+                }
+              },
+            );
+          },
           builder: (context, state) {
             return ScrollableContent(
               enableFixedButton: true,
@@ -150,55 +158,20 @@ class _IndividualDetailsPageState
                                 ),
                               );
                             } else {
-                              final submit = await DigitDialog.show<bool>(
-                                context,
-                                options: DigitDialogOptions(
-                                  titleText: localizations.translate(
-                                    i18.deliverIntervention.dialogTitle,
-                                  ),
-                                  contentText: localizations.translate(
-                                    i18.deliverIntervention.dialogContent,
-                                  ),
-                                  primaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonSubmit,
-                                    ),
-                                    action: (context) {
-                                      clickedStatus.value = true;
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(true);
-                                    },
-                                  ),
-                                  secondaryAction: DigitDialogActions(
-                                    label: localizations.translate(
-                                      i18.common.coreCommonCancel,
-                                    ),
-                                    action: (context) => Navigator.of(
-                                      context,
-                                      rootNavigator: true,
-                                    ).pop(false),
-                                  ),
+                              clickedStatus.value = true;
+                              final scannerBloc =
+                                  context.read<DigitScannerBloc>();
+                              bloc.add(
+                                BeneficiaryRegistrationSummaryEvent(
+                                  projectId: projectId!,
+                                  userUuid: userId!,
+                                  boundary: boundary!,
+                                  tag: scannerBloc.state.qrCodes.isNotEmpty
+                                      ? scannerBloc.state.qrCodes.first
+                                      : null,
                                 ),
                               );
-                              if (submit ?? false) {
-                                if (context.mounted) {
-                                  final scannerBloc =
-                                      context.read<DigitScannerBloc>();
-                                  bloc.add(
-                                    BeneficiaryRegistrationSummaryEvent(
-                                      projectId: projectId!,
-                                      userUuid: userId!,
-                                      boundary: boundary!,
-                                      tag: scannerBloc.state.qrCodes.isNotEmpty
-                                          ? scannerBloc.state.qrCodes.first
-                                          : null,
-                                    ),
-                                  );
-                                  router.push(SummaryRoute());
-                                }
-                              }
+                              router.push(SummaryRoute());
                             }
                           },
                           editIndividual: (
@@ -498,20 +471,26 @@ class _IndividualDetailsPageState
                             ),
                             allowMultipleSelection: false,
                             width: 126,
+                            initialSelection:
+                                form.control(_genderKey).value != null
+                                    ? [form.control(_genderKey).value]
+                                    : [],
                             options: RegistrationDeliverySingleton()
                                 .genderOptions!
                                 .map(
                                   (e) => e,
-                            )
+                                )
                                 .toList(),
-                            onSelectionChanged: (value){
+                            onSelectionChanged: (value) {
                               setState(() {
-                                if(value.isNotEmpty){
+                                if (value.isNotEmpty) {
                                   form.control(_genderKey).value = value.first;
-                                }else{
+                                } else {
                                   form.control(_genderKey).value = null;
                                   setState(() {
-                                    form.control(_genderKey).setErrors({'': true});
+                                    form
+                                        .control(_genderKey)
+                                        .setErrors({'': true});
                                   });
                                 }
                               });
@@ -519,8 +498,9 @@ class _IndividualDetailsPageState
                             valueMapper: (value) {
                               return localizations.translate(value);
                             },
-                            errorMessage:  form.control(_genderKey).hasErrors
-                                ? localizations.translate(i18.common.corecommonRequired)
+                            errorMessage: form.control(_genderKey).hasErrors
+                                ? localizations
+                                    .translate(i18.common.corecommonRequired)
                                 : null,
                           ),
                         ]),
@@ -745,6 +725,12 @@ class _IndividualDetailsPageState
               barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
         }
 
+        return value.individualModel;
+      },
+      create: (value) {
+        return value.individualModel;
+      },
+      summary: (value) {
         return value.individualModel;
       },
     );

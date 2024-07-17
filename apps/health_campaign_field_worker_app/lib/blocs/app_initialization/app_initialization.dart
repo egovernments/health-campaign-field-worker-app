@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -99,6 +100,7 @@ class AppInitializationBloc
                     MasterEnums.callSupport.toValue(),
                     MasterEnums.transportTypes.toValue(),
                     MasterEnums.firebaseConfig.toValue(),
+                    MasterEnums.searchHouseHoldFilters.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
@@ -149,6 +151,7 @@ class AppInitializationBloc
         );
         emit(const AppUninitialized());
       } catch (e) {
+        debugPrint('AppInitializationBloc: $e');
         /*Checks for if app initialization failed due to no internet or no retries left */
         emit(const AppInitializationState.failed());
       }

@@ -420,10 +420,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "53ee8c0a7c992c0e8d1c9c867b6cf1d52e1728200f4b4436943a5d6c5e4984c3"
+      sha256: c9fb77852995d45d26e7bec9c945002f33c99d1399cfe30696a925d3ed3ae57d
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+2"
+    version: "1.0.0+5"
   digit_data_model:
     dependency: "direct main"
     description:
