@@ -419,10 +419,11 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_components"
-      relative: true
-    source: path
-    version: "1.0.0+4"
+      name: digit_components
+      sha256: c9fb77852995d45d26e7bec9c945002f33c99d1399cfe30696a925d3ed3ae57d
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+5"
   digit_data_model:
     dependency: "direct main"
     description:
