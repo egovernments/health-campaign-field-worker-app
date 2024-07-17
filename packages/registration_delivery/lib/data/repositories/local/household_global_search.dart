@@ -125,7 +125,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       return null;
     } else if (params.isProximityEnabled) {
       selectQuery = super.sql.household.select().join([
-        joinIndividualAddress(sql),
+        joinHouseHoldAddress(sql),
       ]);
       performProximitySearch(selectQuery, params, sql);
       return selectQuery;
@@ -236,6 +236,15 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       sql.name,
       sql.name.individualClientReferenceId.equalsExp(
         sql.individual.clientReferenceId,
+      ),
+    );
+  }
+
+  joinHouseHoldAddress(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.address,
+      sql.address.relatedClientReferenceId.equalsExp(
+        sql.household.clientReferenceId,
       ),
     );
   }
