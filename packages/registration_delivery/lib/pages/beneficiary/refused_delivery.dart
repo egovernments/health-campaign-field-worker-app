@@ -24,10 +24,10 @@ class RefusedDeliveryPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<RefusedDeliveryPage> createState() => _RefusedDeliveryPageState();
+  State<RefusedDeliveryPage> createState() => RefusedDeliveryPageState();
 }
 
-class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
+class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
   static const _dataOfRefusalKey = 'dateOfAdministration';
   static const _reasonOfRefusal = 'reasonOfRefusal';
   static const _deliveryCommentKey = 'deliveryComment';

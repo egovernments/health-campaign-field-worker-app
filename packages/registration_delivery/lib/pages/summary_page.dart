@@ -23,10 +23,10 @@ class SummaryPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<SummaryPage> createState() => _SummaryPageState();
+  State<SummaryPage> createState() => SummaryPageState();
 }
 
-class _SummaryPageState extends LocalizedState<SummaryPage> {
+class SummaryPageState extends LocalizedState<SummaryPage> {
   final clickedStatus = ValueNotifier<bool>(false);
 
   String getLocalizedMessage(String code) {

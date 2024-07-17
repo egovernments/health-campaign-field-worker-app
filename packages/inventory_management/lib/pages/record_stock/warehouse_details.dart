@@ -25,10 +25,10 @@ class WarehouseDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<WarehouseDetailsPage> createState() => _WarehouseDetailsPageState();
+  State<WarehouseDetailsPage> createState() => WarehouseDetailsPageState();
 }
 
-class _WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
+class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   static const _dateOfEntryKey = 'dateOfReceipt';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _warehouseKey = 'warehouse';

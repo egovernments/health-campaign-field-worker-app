@@ -50,3 +50,13 @@
 ## 1.0.2+1
 
 * Get Precise location on Submitting latitude longitude details
+
+## 0.0.0-dev.8
+
+* Added query builder and registry updated changes
+* Added New screens - house details
+
+## 0.0.0-dev.9
+
+* Updated individual details file for exposing individual state
+* Updated household_overview for BeneficiaryChecklistRoute

@@ -422,7 +422,7 @@ packages:
       path: "../digit_components"
       relative: true
     source: path
-    version: "1.0.0+3"
+    version: "1.0.0+4"
   digit_data_model:
     dependency: "direct main"
     description:

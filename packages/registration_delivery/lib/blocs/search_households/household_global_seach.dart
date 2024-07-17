@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:bloc/src/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import '../../models/entities/household.dart';
@@ -102,6 +102,19 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
             beneficiaryClientReferenceId:
                 houseHoldClientReferenceIds.map((e) => e).toList()));
 
+    if (projectBeneficiariesList.isNotEmpty) {
+      taskList = await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+      sideEffectsList =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId:
+            taskList.map((e) => e.clientReferenceId).toList(),
+      ));
+      referralsList = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
+      ));
+    }
+
     for (final entry in groupedHouseholdsMembers.entries) {
       HouseholdModel filteredHousehold;
       List<IndividualModel> filteredIndividuals;
@@ -124,11 +137,9 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
       // Filter tasks based on project beneficiary client reference IDs
       filteredTasks = taskList
-          .where((element) => filteredIndividuals
-              .where((e) =>
-                  e.clientReferenceId ==
-                  element.projectBeneficiaryClientReferenceId)
-              .isNotEmpty)
+          .where((element) =>
+              projectBeneficiariesList.first.clientReferenceId ==
+              element.projectBeneficiaryClientReferenceId)
           .toList();
 
       // Find the head of the household

@@ -5,9 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'household_global_seach.dart';
 import 'tag_by_search.dart';
-import 'proximity_search.dart';
 import 'search_households.dart';
-import 'search_by_head.dart';
 
 class SearchBlocWrapper implements StateStreamableSource<Object?> {
   final SearchHouseholdsBloc searchHouseholdsBloc;
@@ -56,6 +54,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   FutureOr<void> close() {
     searchHouseholdsBloc.close();
     individualGlobalSearchBloc.close();
+    houseHoldGlobalSearchBloc.close();
     tagSearchBloc.close();
   }
 
@@ -63,5 +62,6 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
   bool get isClosed =>
       searchHouseholdsBloc.isClosed &&
       individualGlobalSearchBloc.isClosed &&
+      houseHoldGlobalSearchBloc.isClosed &&
       tagSearchBloc.isClosed;
 }

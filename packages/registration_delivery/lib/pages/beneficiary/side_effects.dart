@@ -32,10 +32,10 @@ class SideEffectsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<SideEffectsPage> createState() => _SideEffectsPageState();
+  State<SideEffectsPage> createState() => SideEffectsPageState();
 }
 
-class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
+class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   List<bool> symptomsValues = [];
   List<String> symptomsTypes = [];
   bool symptomsSelected = true;
