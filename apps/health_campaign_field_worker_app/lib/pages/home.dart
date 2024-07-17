@@ -445,18 +445,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.db: homeShowcaseData.db.buildWith(
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
-          label: i18.home.db,
+          label: i18.home.dashboard,
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
+            context.router.push(const YearlyDashboardRoute());
           },
         ),
       ),
@@ -480,6 +474,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -494,6 +489,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.db,
+      i18.home.dashboard,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -502,7 +498,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.dashboard)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -601,44 +598,41 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
-            loggedInUserUuid: context.loggedInUserUuid,
-            maxRadius: appConfiguration.maxRadius!,
-            projectId: context.projectId,
-            selectedBeneficiaryType: context.beneficiaryType,
-            projectType: context.selectedProjectType,
-            selectedProject: context.selectedProject,
-            genderOptions:
-                appConfiguration.genderOptions!.map((e) => e.code).toList(),
-            idTypeOptions:
-                appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-            householdDeletionReasonOptions: appConfiguration
-                .householdDeletionReasonOptions!
-                .map((e) => e.code)
-                .toList(),
-            householdMemberDeletionReasonOptions: appConfiguration
-                .householdMemberDeletionReasonOptions!
-                .map((e) => e.code)
-                .toList(),
-            deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-                .map((e) => e.code)
-                .toList(),
-            symptomsTypes:
-                appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-            searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
                   .map((e) => e.code)
                   .toList()
               : [],
           referralReasons:
               appConfiguration.referralReasons?.map((e) => e.code).toList(),
-            houseStructureTypes: appConfiguration.houseStructureTypes
-                ?.map((e) => e.code)
-                .toList(),
-        refusalReasons: appConfiguration.refusalReasons
-            ?.map((e) => e.code)
-            .toList(),
+          houseStructureTypes:
+              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+          refusalReasons:
+              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
         );
-
 
         AttendanceSingleton().setInitialData(
           projectId: context.projectId,

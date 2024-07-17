@@ -442,3 +442,18 @@ int getSyncCount(List<OpLog> oplogs) {
 
   return count;
 }
+
+class TotalDetails {
+  num noOfHousesVisited;
+  num noOfHousesSprayed;
+  num noOfHousesNotSprayed;
+  num bottlesUsed;
+  num noOfRemainingBottles;
+  TotalDetails({
+    this.noOfHousesVisited = 0,
+    this.noOfHousesSprayed = 0,
+    this.noOfHousesNotSprayed = 0,
+    this.bottlesUsed = 0,
+    this.noOfRemainingBottles = 0,
+  });
+}

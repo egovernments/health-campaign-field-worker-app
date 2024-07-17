@@ -32,6 +32,7 @@ import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
+import '../pages/dashboard/yearly_dashboard.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -107,8 +108,7 @@ class AppRouter extends _$AppRouter {
                       page: HouseHoldDetailsRoute.page,
                       path: 'household-details'),
                   AutoRoute(
-                      page: HouseDetailsRoute.page,
-                      path: 'house-details'),
+                      page: HouseDetailsRoute.page, path: 'house-details'),
                   AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
@@ -212,7 +212,10 @@ class AppRouter extends _$AppRouter {
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
         ),
-
+        AutoRoute(
+          page: YearlyDashboardRoute.page,
+          path: 'dashboard',
+        ),
         AutoRoute(
           page: FacilitySelectionRoute.page,
           path: 'select-facilities',
