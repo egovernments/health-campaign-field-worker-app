@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -88,13 +89,13 @@ class DeliverInterventionBloc
 
       final List<TaskModel> futureTask = tasks
           .where((element) =>
-              element.additionalFields?.fields
-                      .firstWhere(
+              element.additionalFields!.fields
+                      .firstWhereOrNull(
                         (a) =>
                             a.key ==
                             AdditionalFieldsType.deliveryStrategy.toValue(),
                       )
-                      .value ==
+                      ?.value ==
                   DeliverStrategyType.indirect.toValue() &&
               element.status == Status.delivered.toValue())
           .toList();

@@ -35,10 +35,10 @@ class InventoryReportDetailsPage extends LocalizedStatefulWidget {
 
   @override
   State<InventoryReportDetailsPage> createState() =>
-      _InventoryReportDetailsPageState();
+      InventoryReportDetailsPageState();
 }
 
-class _InventoryReportDetailsPageState
+class InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';

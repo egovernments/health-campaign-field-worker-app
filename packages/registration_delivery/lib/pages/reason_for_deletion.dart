@@ -22,10 +22,10 @@ class ReasonForDeletionPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ReasonForDeletionPage> createState() => _ReasonForDeletionPageState();
+  State<ReasonForDeletionPage> createState() => ReasonForDeletionPageState();
 }
 
-class _ReasonForDeletionPageState
+class ReasonForDeletionPageState
     extends LocalizedState<ReasonForDeletionPage> {
   static const _reasonForDeletionKey = 'reasonForDeletion';
 

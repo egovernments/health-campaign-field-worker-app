@@ -34,10 +34,10 @@ class DeliverInterventionPage extends LocalizedStatefulWidget {
 
   @override
   State<DeliverInterventionPage> createState() =>
-      _DeliverInterventionPageState();
+      DeliverInterventionPageState();
 }
 
-class _DeliverInterventionPageState
+class DeliverInterventionPageState
     extends LocalizedState<DeliverInterventionPage> {
   // Constants for form control keys
   static const _resourceDeliveredKey = 'resourceDelivered';

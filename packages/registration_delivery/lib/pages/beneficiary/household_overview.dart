@@ -88,7 +88,7 @@ class _HouseholdOverviewPageState
                                   ),
                                   onPressed: () async {
                                     await context.router
-                                        .push(DeliverInterventionRoute());
+                                        .push(BeneficiaryChecklistRoute());
                                   },
                                 )
                               : DigitElevatedButton(
@@ -113,8 +113,8 @@ class _HouseholdOverviewPageState
                                             ),
                                           );
 
-                                          await context.router
-                                              .push(DeliverInterventionRoute());
+                                          await context.router.push(
+                                              BeneficiaryChecklistRoute());
                                         },
                                   child: Center(
                                     child: Text(
@@ -292,7 +292,7 @@ class _HouseholdOverviewPageState
                                         getStatusAttributes(state,
                                                 deliverInterventionState)[
                                             'textLabel'],
-                                      ),
+                                      ), // [TODO: map task status accordingly based on projectBeneficiaries and tasks]
                                       iconTextColor: getStatusAttributes(state,
                                           deliverInterventionState)['color'],
                                       iconColor: getStatusAttributes(state,
@@ -356,22 +356,23 @@ class _HouseholdOverviewPageState
                                         ?.clientReferenceId;
 
                                     final projectBeneficiary =
-                                        // beneficiaryType !=
-                                        //         BeneficiaryType.individual
-                                        //     ? [
-                                        //         state.householdMemberWrapper
-                                        //             .projectBeneficiaries.first,
-                                        //       ]
-                                        //     :
-                                        state.householdMemberWrapper
-                                            .projectBeneficiaries
-                                            ?.where(
-                                              (element) =>
-                                                  element
-                                                      .beneficiaryClientReferenceId ==
-                                                  e.clientReferenceId,
-                                            )
-                                            .toList();
+                                        beneficiaryType !=
+                                                BeneficiaryType.individual
+                                            ? [
+                                                state
+                                                    .householdMemberWrapper
+                                                    .projectBeneficiaries!
+                                                    .first,
+                                              ]
+                                            : state.householdMemberWrapper
+                                                .projectBeneficiaries
+                                                ?.where(
+                                                  (element) =>
+                                                      element
+                                                          .beneficiaryClientReferenceId ==
+                                                      e.clientReferenceId,
+                                                )
+                                                .toList();
 
                                     final taskData = (projectBeneficiary ?? [])
                                             .isNotEmpty

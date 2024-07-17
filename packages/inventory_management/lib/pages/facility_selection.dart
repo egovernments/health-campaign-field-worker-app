@@ -22,10 +22,10 @@ class InventoryFacilitySelectionPage extends LocalizedStatefulWidget {
 
   @override
   State<InventoryFacilitySelectionPage> createState() =>
-      _InventoryFacilitySelectionPageState();
+      InventoryFacilitySelectionPageState();
 }
 
-class _InventoryFacilitySelectionPageState
+class InventoryFacilitySelectionPageState
     extends LocalizedState<InventoryFacilitySelectionPage> {
   static const _facilityName = 'facilityKey';
   static const _selectedFacility = 'selectedFacilityKey';

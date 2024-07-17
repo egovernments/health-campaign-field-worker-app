@@ -37,10 +37,10 @@ class DoseAdministeredPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<DoseAdministeredPage> createState() => _DoseAdministeredPageState();
+  State<DoseAdministeredPage> createState() => DoseAdministeredPageState();
 }
 
-class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
+class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   static const _doseAdministeredKey = 'doseAdministered';
   bool doseAdministered = false;
   bool formSubmitted = false;

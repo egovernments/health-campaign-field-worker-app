@@ -16,10 +16,10 @@ class StatusFilter extends LocalizedStatefulWidget {
   });
 
   @override
-  State<StatusFilter> createState() => _StatusFilterState();
+  State<StatusFilter> createState() => StatusFilterState();
 }
 
-class _StatusFilterState extends LocalizedState<StatusFilter> {
+class StatusFilterState extends LocalizedState<StatusFilter> {
   List<Status> selectedButtons = [];
 
   @override
@@ -37,7 +37,6 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
           SelectionBox<Status>(
             options: getFilters() ?? [],
             allowMultipleSelection: true,
-            width: 115,
             initialSelection: [
               ...selectedButtons
             ], // [TODO : fix selected not displaying]
