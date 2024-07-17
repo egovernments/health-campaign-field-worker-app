@@ -224,12 +224,16 @@ class _SearchBeneficiaryPageState
                               selectedFilters.isNotEmpty
                                   ? Align(
                                       alignment: Alignment.topLeft,
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: [
-                                            for (var filter in selectedFilters)
-                                              Padding(
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.05,
+                                        child: ListView.builder(
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: selectedFilters.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
                                                   padding: const EdgeInsets.all(
                                                       kPadding / 2),
                                                   child: Container(
@@ -248,9 +252,10 @@ class _SearchBeneficiaryPageState
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                            localizations
-                                                                .translate(
-                                                                    filter),
+                                                            localizations.translate(
+                                                                getStatus(
+                                                                    selectedFilters[
+                                                                        index])),
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -264,9 +269,9 @@ class _SearchBeneficiaryPageState
                                                         GestureDetector(
                                                           onTap: () {
                                                             setState(() {
-                                                              selectedFilters
-                                                                  .remove(
-                                                                      filter);
+                                                              selectedFilters.remove(
+                                                                  selectedFilters[
+                                                                      index]);
                                                             });
                                                             blocWrapper
                                                                 .clearEvent();
@@ -285,9 +290,8 @@ class _SearchBeneficiaryPageState
                                                         )
                                                       ],
                                                     ),
-                                                  )),
-                                          ],
-                                        ),
+                                                  ));
+                                            }),
                                       ),
                                     )
                                   : const Offstage(),
@@ -521,6 +525,34 @@ class _SearchBeneficiaryPageState
         offset: offset,
         limit: limit,
       )));
+    }
+  }
+
+  String getStatus(String selectedFilter) {
+    final statusMap = {
+      Status.delivered.toValue(): Status.delivered,
+      Status.notDelivered.toValue(): Status.notDelivered,
+      Status.visited.toValue(): Status.visited,
+      Status.notVisited.toValue(): Status.notVisited,
+      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+      Status.administeredSuccess.toValue(): Status.administeredSuccess,
+      Status.administeredFailed.toValue(): Status.administeredFailed,
+      Status.inComplete.toValue(): Status.inComplete,
+      Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closed.toValue(): Status.closed,
+      Status.registered.toValue(): Status.registered,
+      Status.notRegistered.toValue(): Status.notRegistered,
+    };
+
+    var mappedStatus = statusMap.entries
+        .where((element) => element.value.name == selectedFilter)
+        .first
+        .key;
+    if (mappedStatus != null) {
+      return mappedStatus;
+    } else {
+      return selectedFilter;
     }
   }
 }
