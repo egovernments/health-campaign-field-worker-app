@@ -277,9 +277,17 @@ class _SearchBeneficiaryPageState
                                                                 .clearEvent();
                                                           },
                                                           child: Container(
-                                                            color:
-                                                                const DigitColors()
-                                                                    .davyGray,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  const DigitColors()
+                                                                      .davyGray,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          kPadding /
+                                                                              2),
+                                                            ),
                                                             child: Icon(
                                                               Icons.close,
                                                               color:
@@ -371,7 +379,7 @@ class _SearchBeneficiaryPageState
                                   isProximityEnabled = false;
                                 });
                                 searchController.clear();
-
+                                selectedFilters.clear();
                                 blocWrapper.clearEvent();
                               },
                             ),
