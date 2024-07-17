@@ -17,10 +17,10 @@ class InventoryReportSelectionPage extends LocalizedStatefulWidget {
 
   @override
   State<InventoryReportSelectionPage> createState() =>
-      _InventoryReportSelectionPageState();
+      InventoryReportSelectionPageState();
 }
 
-class _InventoryReportSelectionPageState
+class InventoryReportSelectionPageState
     extends LocalizedState<InventoryReportSelectionPage> {
   @override
   void initState() {

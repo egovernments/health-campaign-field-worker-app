@@ -25,10 +25,10 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 
   @override
   State<ResourceBeneficiaryCard> createState() =>
-      _ResourceBeneficiaryCardState();
+      ResourceBeneficiaryCardState();
 }
 
-class _ResourceBeneficiaryCardState
+class ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
   @override
   Widget build(BuildContext context) {

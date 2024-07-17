@@ -27,10 +27,10 @@ class HouseholdLocationPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HouseholdLocationPage> createState() => _HouseholdLocationPageState();
+  State<HouseholdLocationPage> createState() => HouseholdLocationPageState();
 }
 
-class _HouseholdLocationPageState
+class HouseholdLocationPageState
     extends LocalizedState<HouseholdLocationPage> {
   static const _administrationAreaKey = 'administrationArea';
   static const _addressLine1Key = 'addressLine1';

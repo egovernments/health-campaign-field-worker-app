@@ -37,11 +37,10 @@ class IndividualDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<IndividualDetailsPage> createState() => _IndividualDetailsPageState();
+  State<IndividualDetailsPage> createState() => IndividualDetailsPageState();
 }
 
-class _IndividualDetailsPageState
-    extends LocalizedState<IndividualDetailsPage> {
+class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
   static const _idTypeKey = 'idType';
   static const _idNumberKey = 'idNumber';

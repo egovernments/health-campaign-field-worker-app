@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:bloc/src/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import '../../models/entities/household.dart';
@@ -94,6 +94,19 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         ProjectBeneficiarySearchModel(
             beneficiaryClientReferenceId:
                 individualClientReferenceIds.map((e) => e).toList()));
+
+    if (projectBeneficiariesList.isNotEmpty) {
+      taskList = await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+      sideEffectsList =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId:
+            taskList.map((e) => e.clientReferenceId).toList(),
+      ));
+      referralsList = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
+      ));
+    }
 
     for (final entry in groupedHouseholdsMembers.entries) {
       HouseholdModel filteredHousehold;

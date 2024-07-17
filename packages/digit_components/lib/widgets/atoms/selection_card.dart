@@ -81,20 +81,25 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
             width: 1,
           ),
         ),
-        child: Center(
-          child: Text(
-            widget.valueMapper(option),
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-            style: isSelected
-                ? textTheme.bodyMedium?.copyWith(
-                    color: const DigitColors().white,
-                    fontWeight: FontWeight.w700,
-                  )
-                : textTheme.bodyMedium?.copyWith(
-                    color: const DigitColors().woodsmokeBlack,
-                  ),
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                widget.valueMapper(option),
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: isSelected
+                    ? textTheme.bodyMedium?.copyWith(
+                        color: const DigitColors().white,
+                        fontWeight: FontWeight.w700,
+                      )
+                    : textTheme.bodyMedium?.copyWith(
+                        color: const DigitColors().woodsmokeBlack,
+                      ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -114,6 +119,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
           label: widget.title,
           isRequired: widget.isRequired,
           child: Container(
+            width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.all(kPadding * 3),
             decoration: BoxDecoration(
               color: const DigitColors().alabasterWhite,

@@ -95,13 +95,15 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             //         BeneficiaryType.individual
             //     ? [householdMember.projectBeneficiaries!.first]
             //     :
-            householdMember.projectBeneficiaries
-                    ?.where(
-                      (element) =>
-                          element.beneficiaryClientReferenceId ==
-                          e.clientReferenceId,
-                    )
-                    .toList();
+            householdMember.projectBeneficiaries?.where((element) {
+          if (RegistrationDeliverySingleton().beneficiaryType ==
+              BeneficiaryType.individual) {
+            return element.beneficiaryClientReferenceId == e.clientReferenceId;
+          } else {
+            return element.beneficiaryClientReferenceId ==
+                householdMember.household!.clientReferenceId;
+          }
+        }).toList();
 
         final taskData = (projectBeneficiary ?? []).isNotEmpty
             ? householdMember.tasks
@@ -257,11 +259,17 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
     final isBeneficiaryRefused =
         checkIfBeneficiaryRefused(householdMember.tasks);
-    final projectBeneficiary = householdMember.projectBeneficiaries
-        ?.where((p) =>
-            p.beneficiaryClientReferenceId ==
-            householdMember.headOfHousehold?.clientReferenceId)
-        .firstOrNull;
+    final projectBeneficiary = householdMember.projectBeneficiaries?.where((p) {
+      if (RegistrationDeliverySingleton().beneficiaryType ==
+          BeneficiaryType.individual) {
+        return p.beneficiaryClientReferenceId ==
+            householdMember.headOfHousehold?.clientReferenceId;
+      } else {
+        return p.beneficiaryClientReferenceId ==
+            householdMember.household?.clientReferenceId;
+      }
+    }).firstOrNull;
+
     final tasks = householdMember.tasks?.where((t) =>
         t.projectBeneficiaryClientReferenceId ==
         projectBeneficiary?.clientReferenceId);
@@ -289,7 +297,11 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
                   status: getStatus(
                       tasks ?? [],
-                      householdMember.projectBeneficiaries ?? [],
+                      householdMember.projectBeneficiaries!
+                          .where((element) =>
+                              element.beneficiaryClientReferenceId ==
+                              householdMember.household!.clientReferenceId)
+                          .toList(),
                       isNotEligible,
                       isBeneficiaryRefused),
                   title: [
@@ -398,17 +410,35 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       if (tasks.isEmpty) {
         return Status.registered.toValue();
       } else {
-        bool isIndividual = RegistrationDeliverySingleton().beneficiaryType ==
-            BeneficiaryType.individual;
-        if (isIndividual && !isNotEligible && !isBeneficiaryRefused ||
-            !isIndividual) {
-          return Status.visited.toValue();
-        } else {
-          return Status.notVisited.toValue();
-        }
+        return getTaskStatus(tasks).toValue();
       }
     } else {
       return Status.notRegistered.toValue();
     }
+  }
+
+  Status getTaskStatus(Iterable<TaskModel> tasks) {
+    final statusMap = {
+      Status.delivered.toValue(): Status.delivered,
+      Status.notDelivered.toValue(): Status.notDelivered,
+      Status.visited.toValue(): Status.visited,
+      Status.notVisited.toValue(): Status.notVisited,
+      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+      Status.administeredSuccess.toValue(): Status.administeredSuccess,
+      Status.administeredFailed.toValue(): Status.administeredFailed,
+      Status.inComplete.toValue(): Status.inComplete,
+      Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closed.toValue(): Status.closed,
+    };
+
+    for (var task in tasks) {
+      final mappedStatus = statusMap[task.status];
+      if (mappedStatus != null) {
+        return mappedStatus;
+      }
+    }
+
+    return Status.registered.toValue();
   }
 }

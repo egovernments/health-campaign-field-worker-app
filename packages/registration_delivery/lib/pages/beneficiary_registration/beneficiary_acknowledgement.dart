@@ -20,10 +20,10 @@ class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
 
   @override
   State<BeneficiaryAcknowledgementPage> createState() =>
-      _BeneficiaryAcknowledgementPageState();
+      BeneficiaryAcknowledgementPageState();
 }
 
-class _BeneficiaryAcknowledgementPageState
+class BeneficiaryAcknowledgementPageState
     extends LocalizedState<BeneficiaryAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {

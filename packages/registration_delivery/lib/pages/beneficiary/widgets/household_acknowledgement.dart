@@ -20,10 +20,10 @@ class HouseholdAcknowledgementPage extends LocalizedStatefulWidget {
 
   @override
   State<HouseholdAcknowledgementPage> createState() =>
-      _HouseholdAcknowledgementPageState();
+      HouseholdAcknowledgementPageState();
 }
 
-class _HouseholdAcknowledgementPageState
+class HouseholdAcknowledgementPageState
     extends LocalizedState<HouseholdAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {

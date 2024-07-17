@@ -16,10 +16,10 @@ class ManageStocksPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ManageStocksPage> createState() => _ManageStocksPageState();
+  State<ManageStocksPage> createState() => ManageStocksPageState();
 }
 
-class _ManageStocksPageState extends LocalizedState<ManageStocksPage> {
+class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
   @override
   initState() {
     super.initState();

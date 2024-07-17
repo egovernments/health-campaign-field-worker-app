@@ -21,10 +21,10 @@ class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
 
   @override
   State<InventoryAcknowledgementPage> createState() =>
-      _AcknowledgementPageState();
+      AcknowledgementPageState();
 }
 
-class _AcknowledgementPageState
+class AcknowledgementPageState
     extends LocalizedState<InventoryAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {

@@ -31,10 +31,10 @@ class RecordPastDeliveryDetailsPage extends LocalizedStatefulWidget {
 
   @override
   State<RecordPastDeliveryDetailsPage> createState() =>
-      _RecordPastDeliveryDetailsPageState();
+      RecordPastDeliveryDetailsPageState();
 }
 
-class _RecordPastDeliveryDetailsPageState
+class RecordPastDeliveryDetailsPageState
     extends LocalizedState<RecordPastDeliveryDetailsPage> {
   static const _recordDoseAdministeredKey = 'recordDoseAdministered';
   @override

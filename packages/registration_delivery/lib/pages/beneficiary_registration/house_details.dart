@@ -25,10 +25,10 @@ class HouseDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HouseDetailsPage> createState() => _HouseDetailsPageState();
+  State<HouseDetailsPage> createState() => HouseDetailsPageState();
 }
 
-class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
+class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
   static const _noOfRoomsKey = 'noOfRooms';
   List<String>? selectedHouseStructureTypes;
 

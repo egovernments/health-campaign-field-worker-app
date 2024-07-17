@@ -31,10 +31,10 @@ class StockDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<StockDetailsPage> createState() => _StockDetailsPageState();
+  State<StockDetailsPage> createState() => StockDetailsPageState();
 }
 
-class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
+class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
   static const _transactionQuantityKey = 'quantity';
