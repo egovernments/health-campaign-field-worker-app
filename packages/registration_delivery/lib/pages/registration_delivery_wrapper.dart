@@ -8,9 +8,7 @@ import 'package:registration_delivery/data/repositories/local/individual_global_
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../blocs/household_details/household_details.dart';
-import '../blocs/search_households/proximity_search.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_by_head.dart';
 import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/tag_by_search.dart';
 import '../data/repositories/local/household_global_search.dart';
