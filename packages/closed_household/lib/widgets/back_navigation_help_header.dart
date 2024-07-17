@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:closed_household/blocs/app_localization.dart';
+import 'package:closed_household/widgets/showcase/showcase_button.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
-import 'package:registration_delivery/blocs/app_localization.dart';
-import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 
@@ -48,7 +48,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                       },
                       icon: const Icon(Icons.arrow_left_sharp),
                       label: Text(
-                        RegistrationDeliveryLocalization.of(context).translate(
+                        ClosedHouseholdLocalization.of(context).translate(
                           i18.common.coreCommonBack,
                         ),
                         overflow: TextOverflow.ellipsis,
@@ -66,7 +66,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Text(
-                    RegistrationDeliveryLocalization.of(context)
+                    ClosedHouseholdLocalization.of(context)
                         .translate(i18.common.coreCommonHelp),
                     overflow: TextOverflow.ellipsis,
                   ),

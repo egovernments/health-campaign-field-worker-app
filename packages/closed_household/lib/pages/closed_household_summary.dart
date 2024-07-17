@@ -7,19 +7,19 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/extensions/extensions.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import '../../models/entities/action.dart' as action;
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/widgets/details_card.dart';
-import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
+import '../widgets/back_navigation_help_header.dart';
+import '../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class ClosedHouseholdSummaryPage extends LocalizedStatefulWidget {

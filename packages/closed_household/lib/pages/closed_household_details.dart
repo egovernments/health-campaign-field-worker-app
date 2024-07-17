@@ -4,7 +4,6 @@ import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../utils/i18_key_constants.dart' as i18;

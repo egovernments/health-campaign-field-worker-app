@@ -1,6 +1,5 @@
 import 'package:digit_showcase/showcase.dart';
 import 'package:flutter/material.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
 
 import '../localized.dart';
 
