@@ -30,10 +30,10 @@ class ClosedHouseholdSummaryPage extends LocalizedStatefulWidget {
 
   @override
   State<ClosedHouseholdSummaryPage> createState() =>
-      _ClosedHouseholdSummaryPageState();
+      ClosedHouseholdSummaryPageState();
 }
 
-class _ClosedHouseholdSummaryPageState
+class ClosedHouseholdSummaryPageState
     extends LocalizedState<ClosedHouseholdSummaryPage> {
   String getLocalizedMessage(String code) {
     return localizations.translate(code);
@@ -124,7 +124,9 @@ class _ClosedHouseholdSummaryPageState
                                 householdState.summary?.locationAccuracy,
                             additionalFields:
                                 householdState.summary?.additionalFields,
-                            beneficiaryTag: scannerState.qrCodes.first,
+                            beneficiaryTag: scannerState.qrCodes.isNotEmpty
+                                ? scannerState.qrCodes.first
+                                : null,
                             clientAuditDetails: ClientAuditDetails(
                               createdBy:
                                   ClosedHouseholdSingleton().loggedInUserUuid!,
@@ -139,6 +141,14 @@ class _ClosedHouseholdSummaryPageState
                           context.read<ClosedHouseholdBloc>().add(
                               ClosedHouseholdEvent.handleSubmit(
                                   userAction, false));
+                          ///clear the scanner
+                          context
+                              .read<DigitScannerBloc>()
+                              .add(
+                              const DigitScannerEvent
+                                  .handleScanner(
+                                  qrCode: [],
+                                  barCode: []));
                           context.router
                               .push(ClosedHouseholdAcknowledgementRoute());
                         },
@@ -166,7 +176,9 @@ class _ClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdDate),
-                            value: (DigitDateUtils.getDateFromTimestamp(DateTime.now().millisecondsSinceEpoch)).toString(),
+                            value: (DigitDateUtils.getDateFromTimestamp(
+                                    DateTime.now().millisecondsSinceEpoch, dateFormat: 'dd MMM yyyy'))
+                                .toString(),
                           ),
                           LabelValuePair(
                             label: localizations.translate(
@@ -190,8 +202,9 @@ class _ClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(i18
                                 .closeHousehold.closeHouseholdGpsAccuracyLabel),
-                            value: householdState.summary?.locationAccuracy
-                                    .toString() ??
+                            value: householdState.summary?.locationAccuracy != null
+                                ? '${householdState.summary?.locationAccuracy?.toStringAsFixed(2)  } ${localizations.translate(i18.common.coreCommonMeters)}'
+                                :
                                 localizations
                                     .translate(i18.common.coreCommonNA),
                           ),
@@ -215,7 +228,7 @@ class _ClosedHouseholdSummaryPageState
                         ),
                       );
                     } else {
-                      return Container(); // Return an empty container if qrCodes is empty
+                      return const SizedBox();
                     }
                   }),
                 ],
