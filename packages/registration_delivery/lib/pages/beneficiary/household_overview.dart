@@ -355,25 +355,16 @@ class _HouseholdOverviewPageState
                                             e.clientReferenceId)
                                         ?.clientReferenceId;
 
-                                    final projectBeneficiary =
-                                        // beneficiaryType !=
-                                        //         BeneficiaryType.individual
-                                        //     ? [
-                                        //         state
-                                        //             .householdMemberWrapper
-                                        //             .projectBeneficiaries!
-                                        //             .first,
-                                        //       ]
-                                        //     :
-                                        state.householdMemberWrapper
-                                            .projectBeneficiaries
-                                            ?.where(
-                                              (element) =>
-                                                  element
-                                                      .beneficiaryClientReferenceId ==
-                                                  e.clientReferenceId,
-                                            )
-                                            .toList();
+                                    final projectBeneficiary = state
+                                        .householdMemberWrapper
+                                        .projectBeneficiaries
+                                        ?.where(
+                                          (element) =>
+                                              element
+                                                  .beneficiaryClientReferenceId ==
+                                              e.clientReferenceId,
+                                        )
+                                        .toList();
 
                                     final taskData = (projectBeneficiary ?? [])
                                             .isNotEmpty

@@ -27,8 +27,16 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     var nameSelectQuery =
         await nameSearch(proximitySelectQuery, params, super.sql);
 
-    var filterSelectQuery =
-        await filterSearch(nameSelectQuery, params, super.sql);
+    var filterSelectQuery = nameSelectQuery;
+
+    if (params.filter != null && params.filter!.isNotEmpty) {
+      for (var element in params.filter!) {
+        filterSelectQuery =
+            await filterSearch(filterSelectQuery, element, super.sql);
+      }
+    } else {
+      filterSelectQuery = nameSelectQuery;
+    }
 
     await filterSelectQuery.limit(params.limit ?? 50,
         offset: params.offset ?? 0);
@@ -139,67 +147,32 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     return selectQuery;
   }
 
-  filterSearch(
-      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+  filterSearch(selectQuery, String filter, LocalSqlDataStore sql) async {
     var sql = super.sql;
-    if (params.filter == null || params.filter!.isEmpty) {
-      return selectQuery;
-    } else if (params.filter != null &&
-        params.filter!.isNotEmpty &&
-        selectQuery == null) {
-      for (var filter in params.filter!) {
-        if (filter == Status.registered.name) {
-          selectQuery = super.sql.individual.select();
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.individual.clientReferenceId),
-            )
-          ])
-            ..where(sql.projectBeneficiary.beneficiaryClientReferenceId
-                .isNotNull());
-        } else if (filter == Status.notRegistered.name) {
-          selectQuery = super.sql.individual.select();
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.individual.clientReferenceId),
-            )
-          ])
-            ..where(
-                sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
-        }
-      }
-    } else if (params.filter != null &&
-        params.filter!.isNotEmpty &&
-        selectQuery != null) {
-      for (var filter in params.filter!) {
-        if (filter == Status.registered.name) {
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.individual.clientReferenceId),
-            )
-          ])
-            ..where(sql.projectBeneficiary.beneficiaryClientReferenceId
-                .isNotNull());
-        } else if (filter == Status.notRegistered.name) {
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.individual.clientReferenceId),
-            )
-          ])
-            ..where(
-                sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
-        }
-      }
+    if (selectQuery == null) {
+      selectQuery = super.sql.individual.select().join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(super.sql.individual.clientReferenceId))
+      ])
+        ..where(filter == Status.registered.name
+            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+    } else if (selectQuery != null) {
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            filter == Status.registered.name
+                ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(super.sql.individual.clientReferenceId)
+                : sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(super.sql.individual.clientReferenceId))
+      ])
+        ..where(filter == Status.registered.name
+            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
     }
-    print(selectQuery.toString());
     return selectQuery;
   }
 
