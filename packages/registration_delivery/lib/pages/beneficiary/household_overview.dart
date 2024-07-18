@@ -659,10 +659,16 @@ class _HouseholdOverviewPageState
                               ),
                               Center(
                                 child: DigitIconButton(
-                                  onPressed: () => addIndividual(
-                                    context,
-                                    state.householdMemberWrapper.household!,
-                                  ),
+                                  onPressed: (state.householdMemberWrapper
+                                                  .projectBeneficiaries ??
+                                              [])
+                                          .isEmpty
+                                      ? null
+                                      : () => addIndividual(
+                                            context,
+                                            state.householdMemberWrapper
+                                                .household!,
+                                          ),
                                   iconText: localizations.translate(
                                     i18.householdOverView
                                         .householdOverViewAddActionText,
