@@ -297,6 +297,7 @@ class HouseholdLocation {
       'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
 
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
+  String get gpsAccuracyLabel => 'CLOSE_HOUSEHOLD_GPS_ACCURACY_LABEL';
 
   String get administrationAreaRequiredValidation =>
       'HOUSEHOLD_LOCATION_ADMINISTRATION_AREA_REQUIRED_VALIDATION';
@@ -722,6 +723,10 @@ class HouseholdLocationShowcase {
 
   String get administrativeArea {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get gpsAccuracy {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_GPS_ACCURACY_LABEL';
   }
 
   String get landmark {

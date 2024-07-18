@@ -8,17 +8,18 @@ class DigitIconButton extends StatelessWidget {
   final ImageIcon? imageIcon;
   final Color? iconColor;
   final Color? iconTextColor;
+  final bool? buttonDisabled;
 
-  const DigitIconButton({
-    super.key,
-    this.onPressed,
-    this.iconText,
-    this.icon,
-    this.iconSize,
-    this.imageIcon,
-    this.iconColor,
-    this.iconTextColor,
-  });
+  const DigitIconButton(
+      {super.key,
+      this.onPressed,
+      this.iconText,
+      this.icon,
+      this.iconSize,
+      this.imageIcon,
+      this.iconColor,
+      this.iconTextColor,
+      this.buttonDisabled = false});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,9 @@ class DigitIconButton extends StatelessWidget {
                 Icon(
                   icon,
                   size: iconSize,
-                  color: iconColor ?? theme.colorScheme.secondary,
+                  color: buttonDisabled == false
+                      ? iconColor ?? theme.colorScheme.secondary
+                      : theme.colorScheme.outline,
                 ),
           ),
           const SizedBox(
@@ -47,7 +50,9 @@ class DigitIconButton extends StatelessWidget {
             Text(
               iconText!,
               style: TextStyle(
-                  color: iconTextColor ?? theme.colorScheme.secondary,
+                  color: buttonDisabled == false
+                      ? iconTextColor ?? theme.colorScheme.secondary
+                      : theme.colorScheme.outline,
                   fontSize: 16),
             ),
         ],

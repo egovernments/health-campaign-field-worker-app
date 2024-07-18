@@ -239,7 +239,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 houseShowcaseData.typeOfStructure.buildWith(
                                   child: SelectionBox<String>(
                                     isRequired: true,
-                                    title: i18.householdDetails.typeOfStructure,
+                                    title: localizations.translate(
+                                        i18.householdDetails.typeOfStructure),
                                     width: 120,
                                     allowMultipleSelection: false,
                                     options: RegistrationDeliverySingleton()

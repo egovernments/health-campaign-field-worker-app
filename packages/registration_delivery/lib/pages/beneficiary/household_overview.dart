@@ -362,7 +362,14 @@ class _HouseholdOverviewPageState
                                           (element) =>
                                               element
                                                   .beneficiaryClientReferenceId ==
-                                              e.clientReferenceId,
+                                              (RegistrationDeliverySingleton()
+                                                          .beneficiaryType ==
+                                                      BeneficiaryType.individual
+                                                  ? e.clientReferenceId
+                                                  : state
+                                                      .householdMemberWrapper
+                                                      .household
+                                                      ?.clientReferenceId),
                                         )
                                         .toList();
 
@@ -650,6 +657,10 @@ class _HouseholdOverviewPageState
                               ),
                               Center(
                                 child: DigitIconButton(
+                                  buttonDisabled: (state.householdMemberWrapper
+                                              .projectBeneficiaries ??
+                                          [])
+                                      .isEmpty,
                                   onPressed: (state.householdMemberWrapper
                                                   .projectBeneficiaries ??
                                               [])
