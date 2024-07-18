@@ -57,3 +57,8 @@
 
 * Updated PageState class to public for customization
 * Updated digit_components
+
+## 0.0.0-dev.11
+
+* Added DeliveryTeam Facility in record stock screen
+* Added scanned resources to additional fields

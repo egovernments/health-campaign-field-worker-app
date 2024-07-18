@@ -14,10 +14,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -68,7 +70,22 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             state.mapOrNull(
               persisted: (value) {
                 if (value.navigateToRoot) {
-                  (router.parent() as StackRouter).maybePop();
+                  final overviewBloc = context.read<HouseholdOverviewBloc>();
+
+                  overviewBloc.add(
+                    HouseholdOverviewReloadEvent(
+                      projectId:
+                          RegistrationDeliverySingleton().projectId.toString(),
+                      projectBeneficiaryType:
+                          RegistrationDeliverySingleton().beneficiaryType ??
+                              BeneficiaryType.household,
+                    ),
+                  );
+                  HouseholdMemberWrapper memberWrapper =
+                      overviewBloc.state.householdMemberWrapper;
+                  final route = router.parent() as StackRouter;
+                  route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
+                  route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
                 }
               },
             );

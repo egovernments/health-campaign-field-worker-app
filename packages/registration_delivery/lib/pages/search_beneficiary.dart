@@ -277,9 +277,17 @@ class _SearchBeneficiaryPageState
                                                                 .clearEvent();
                                                           },
                                                           child: Container(
-                                                            color:
-                                                                const DigitColors()
-                                                                    .davyGray,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  const DigitColors()
+                                                                      .davyGray,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          kPadding /
+                                                                              2),
+                                                            ),
                                                             child: Icon(
                                                               Icons.close,
                                                               color:
@@ -371,7 +379,7 @@ class _SearchBeneficiaryPageState
                                   isProximityEnabled = false;
                                 });
                                 searchController.clear();
-
+                                selectedFilters.clear();
                                 blocWrapper.clearEvent();
                               },
                             ),
@@ -470,7 +478,10 @@ class _SearchBeneficiaryPageState
           content: StatusFilter(selectedFilters: selectedFilters),
         ));
 
-    if (filters != null) {
+    if (filters != null && filters.isNotEmpty) {
+      setState(() {
+        selectedFilters = [];
+      });
       for (var filter in filters) {
         if (!selectedFilters.contains(filter)) {
           setState(() {
@@ -480,9 +491,6 @@ class _SearchBeneficiaryPageState
       }
       triggerGlobalSearchEvent();
     } else {
-      setState(() {
-        selectedFilters = [];
-      });
       blocWrapper.clearEvent();
     }
   }
