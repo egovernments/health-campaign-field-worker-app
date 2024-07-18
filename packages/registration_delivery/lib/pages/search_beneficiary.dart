@@ -215,10 +215,15 @@ class _SearchBeneficiaryPageState
                               ),
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: DigitIconButton(
-                                  iconText: getFilterIconNLabel()['label'],
-                                  icon: getFilterIconNLabel()['icon'],
-                                  onPressed: () => showFilterDialog(),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: kPadding),
+                                  child: DigitIconButton(
+                                    textDirection: TextDirection.rtl,
+                                    iconText: getFilterIconNLabel()['label'],
+                                    icon: getFilterIconNLabel()['icon'],
+                                    onPressed: () => showFilterDialog(),
+                                  ),
                                 ),
                               ),
                               selectedFilters.isNotEmpty

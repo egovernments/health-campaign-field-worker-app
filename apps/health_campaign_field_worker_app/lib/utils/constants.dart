@@ -1,4 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/data/repositories/local/user_action.dart';
+import 'package:closed_household/data/repositories/oplog/oplog.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -122,6 +124,7 @@ class Constants {
         ),
       ),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      ClosedHouseholdLocalRepository(sql, ClosedHouseholdOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
@@ -223,6 +226,8 @@ class Constants {
         if (value == DataModelType.attendance)
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
+          HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userAction)
           HFReferralRemoteRepository(dio, actionMap: actions),
       ]);
     }
