@@ -24,16 +24,16 @@ class ClosedHouseholdLocalRepository extends LocalRepository<UserActionModel, Us
 
       select.watch().listen((results) {
         final data = results
-            .map((task) {
+            .map((userAction) {
           return UserActionModel(
-            id: task.id,
-            clientReferenceId: task.clientReferenceId,
-            rowVersion: task.rowVersion,
-            tenantId: task.tenantId,
-            isDeleted: task.isDeleted,
-            projectId: task.projectId,
-            status: task.status,
-            action: task.action,
+            id: userAction.id,
+            clientReferenceId: userAction.clientReferenceId,
+            rowVersion: userAction.rowVersion,
+            tenantId: userAction.tenantId,
+            isDeleted: userAction.isDeleted,
+            projectId: userAction.projectId,
+            status: userAction.status,
+            action: userAction.action,
           );
         })
             .whereNotNull()
