@@ -414,6 +414,7 @@ int getSyncCount(List<OpLog> oplogs) {
         case DataModelType.referral:
         case DataModelType.hFReferral:
         case DataModelType.attendance:
+        case DataModelType.userAction:
           return true;
         default:
           return false;
@@ -433,6 +434,7 @@ int getSyncCount(List<OpLog> oplogs) {
         case DataModelType.referral:
         case DataModelType.hFReferral:
         case DataModelType.attendance:
+        case DataModelType.userAction:
           return true;
         default:
           return false;

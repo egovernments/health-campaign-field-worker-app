@@ -64,50 +64,50 @@ class LabelValueList extends StatelessWidget {
       padding: padding ?? const EdgeInsets.symmetric(vertical: 8.0),
       child: item.isInline
           ? Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Label taking 30% width
-                Expanded(
-                  flex: 6, // 45% width
-                  child: Text(
-                    item.label,
-                    style: textTheme.headlineSmall?.copyWith(
-                      color: const DigitColors().woodsmokeBlack,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                    width: kPadding * 4), // Gap between label and value
-                // Value taking rest of the width
-                Expanded(
-                  flex: 8, // Remaining 55% width
-                  child: Text(
-                    item.value,
-                    style: textTheme.bodySmall?.copyWith(
-                      color: const DigitColors().woodsmokeBlack,
-                    ),
-                  ),
-                ),
-              ],
-            )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.label,
-                  style: textTheme.headlineSmall?.copyWith(
-                    color: const DigitColors().woodsmokeBlack,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  item.value,
-                  style: textTheme.bodySmall?.copyWith(
-                    color: const DigitColors().woodsmokeBlack,
-                  ),
-                ),
-              ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Label taking 30% width
+          Expanded(
+            flex: 6, // 45% width
+            child: Text(
+              item.label,
+              style: textTheme.headlineSmall?.copyWith(
+                color: const DigitColors().woodsmokeBlack,
+              ),
             ),
+          ),
+          const SizedBox(
+              width: kPadding * 4), // Gap between label and value
+          // Value taking rest of the width
+          Expanded(
+            flex: 8, // Remaining 55% width
+            child: Text(
+              item.value,
+              style: textTheme.bodySmall?.copyWith(
+                color: const DigitColors().woodsmokeBlack,
+              ),
+            ),
+          ),
+        ],
+      )
+          : Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            item.label,
+            style: textTheme.headlineSmall?.copyWith(
+              color: const DigitColors().woodsmokeBlack,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            item.value,
+            style: textTheme.bodySmall?.copyWith(
+              color: const DigitColors().woodsmokeBlack,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

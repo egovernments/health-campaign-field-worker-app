@@ -35,6 +35,7 @@ import 'tables/package_tables/stock.dart';
 import 'tables/package_tables/stock_reconciliation.dart';
 import 'tables/package_tables/task.dart';
 import 'tables/package_tables/task_resource.dart';
+import 'tables/package_tables/user_action.dart';
 import 'tables/pgr_service.dart';
 import 'tables/product.dart';
 import 'tables/product_variant.dart';
@@ -98,6 +99,7 @@ part 'sql_store.g.dart';
   TaskResource,
   SideEffect,
   Referral,
+  UserAction,
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// The constructor for `LocalSqlDataStore`.

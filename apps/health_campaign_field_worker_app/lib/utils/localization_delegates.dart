@@ -1,3 +1,6 @@
+import 'package:closed_household/blocs/app_localization.dart'
+    as closed_household_localization;
+import 'package:closed_household/utils/i18_key_constants.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:isar/isar.dart';
 import 'package:attendance_management/blocs/app_localization.dart'
@@ -58,6 +61,13 @@ getAppLocalizationDelegates({
     ),
     registration_delivery_localization.RegistrationDeliveryLocalization
         .getDelegate(
+      getLocalizationString(
+        isar,
+        selectedLocale,
+      ),
+      appConfig.languages!,
+    ),
+    closed_household_localization.ClosedHouseholdLocalization.getDelegate(
       getLocalizationString(
         isar,
         selectedLocale,
