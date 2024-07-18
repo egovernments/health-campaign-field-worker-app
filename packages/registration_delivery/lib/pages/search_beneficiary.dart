@@ -478,7 +478,10 @@ class _SearchBeneficiaryPageState
           content: StatusFilter(selectedFilters: selectedFilters),
         ));
 
-    if (filters != null) {
+    if (filters != null && filters.isNotEmpty) {
+      setState(() {
+        selectedFilters = [];
+      });
       for (var filter in filters) {
         if (!selectedFilters.contains(filter)) {
           setState(() {
@@ -488,9 +491,6 @@ class _SearchBeneficiaryPageState
       }
       triggerGlobalSearchEvent();
     } else {
-      setState(() {
-        selectedFilters = [];
-      });
       blocWrapper.clearEvent();
     }
   }

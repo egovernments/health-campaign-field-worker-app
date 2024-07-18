@@ -186,12 +186,8 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   builder: (context, form, child) {
                     return BlocBuilder<DigitScannerBloc, DigitScannerState>(
                         builder: (context, scannerState) {
-
-                      if (scannedResources.isNotEmpty ||
-                          scannerState.barCodes.isNotEmpty) {
+                      if (scannerState.barCodes.isNotEmpty) {
                         scannedResources.clear();
-                        scannedResources.addAll(scannerState.barCodes);
-                      } else {
                         scannedResources.addAll(scannerState.barCodes);
                       }
 
@@ -566,6 +562,12 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                                     lng,
                                                                   ),
                                                                 ],
+                                                                if (scannerState
+                                                                    .barCodes
+                                                                    .isNotEmpty)
+                                                                  addBarCodesToFields(
+                                                                      scannerState
+                                                                          .barCodes),
                                                               ],
                                                             )
                                                           : null,
@@ -1090,7 +1092,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   ///
   /// @param barCodes The list of GS1Barcode objects to be processed.
   /// @return A map where the keys and values are joined by '|'.
-  Map<String, String> addBarCodesToFields(List<GS1Barcode> barCodes) {
+  AdditionalField addBarCodesToFields(List<GS1Barcode> barCodes) {
     List<String> keys = [];
     List<String> values = [];
     for (var element in barCodes) {
@@ -1099,8 +1101,6 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         values.add(e.value.data.toString());
       }
     }
-    return {
-      keys.join('|'): values.join('|'),
-    };
+    return AdditionalField(keys.join('|'), values.join('|'));
   }
 }

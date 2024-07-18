@@ -136,7 +136,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       ]);
       selectQuery = searchByName(selectQuery, params, sql);
     }
-    print(selectQuery.toString());
     return selectQuery;
   }
 

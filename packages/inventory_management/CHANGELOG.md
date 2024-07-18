@@ -60,4 +60,5 @@
 
 ## 0.0.0-dev.11
 
-* Added DeliveryTeam Facility in record stock screen 
+* Added DeliveryTeam Facility in record stock screen
+* Added scanned resources to additional fields

@@ -176,33 +176,6 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     return selectQuery;
   }
 
-  joinName(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-      sql.name,
-      sql.name.individualClientReferenceId.equalsExp(
-        sql.individual.clientReferenceId,
-      ),
-    );
-  }
-
-  joinHouseHoldAddress(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-      sql.address,
-      sql.address.relatedClientReferenceId.equalsExp(
-        sql.household.clientReferenceId,
-      ),
-    );
-  }
-
-  joinIndividualAddress(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-      sql.address,
-      sql.address.relatedClientReferenceId.equalsExp(
-        sql.individual.clientReferenceId,
-      ),
-    );
-  }
-
   performProximitySearch(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     return (selectQuery
@@ -254,20 +227,6 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     ]));
   }
 
-  joinIndividual(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-      sql.individual,
-      sql.individual.clientReferenceId.equalsExp(
-        sql.name.individualClientReferenceId,
-      ),
-    );
-  }
-
-  joinProjectBeneficiary(LocalSqlDataStore sql) {
-    return leftOuterJoin(sql.projectBeneficiary,
-        sql.projectBeneficiary.clientReferenceId.isNotNull());
-  }
-
   filterSearch(selectQuery, String filter, LocalSqlDataStore sql) async {
     var sql = super.sql;
     if (selectQuery == null) {
@@ -295,5 +254,46 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
     }
     return selectQuery;
+  }
+
+  joinName(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.name,
+      sql.name.individualClientReferenceId.equalsExp(
+        sql.individual.clientReferenceId,
+      ),
+    );
+  }
+
+  joinHouseHoldAddress(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.address,
+      sql.address.relatedClientReferenceId.equalsExp(
+        sql.household.clientReferenceId,
+      ),
+    );
+  }
+
+  joinIndividualAddress(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.address,
+      sql.address.relatedClientReferenceId.equalsExp(
+        sql.individual.clientReferenceId,
+      ),
+    );
+  }
+
+  joinIndividual(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.individual,
+      sql.individual.clientReferenceId.equalsExp(
+        sql.name.individualClientReferenceId,
+      ),
+    );
+  }
+
+  joinProjectBeneficiary(LocalSqlDataStore sql) {
+    return leftOuterJoin(sql.projectBeneficiary,
+        sql.projectBeneficiary.clientReferenceId.isNotNull());
   }
 }
