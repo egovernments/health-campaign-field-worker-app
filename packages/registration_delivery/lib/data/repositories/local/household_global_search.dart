@@ -28,8 +28,16 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     var nameSelectQuery =
         await nameSearch(proximitySelectQuery, params, super.sql);
 
-    var filterSelectQuery =
-        await filterSearch(nameSelectQuery, params, super.sql);
+    var filterSelectQuery = nameSelectQuery;
+
+    if (params.filter != null && params.filter!.isNotEmpty) {
+      for (var element in params.filter!) {
+        filterSelectQuery =
+            await filterSearch(filterSelectQuery, element, super.sql);
+      }
+    } else {
+      filterSelectQuery = nameSelectQuery;
+    }
 
     await filterSelectQuery.limit(params.limit ?? 50,
         offset: params.offset ?? 0);
@@ -168,96 +176,6 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     return selectQuery;
   }
 
-  filterSearch(
-      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) async {
-    var sql = super.sql;
-    if (params.filter == null || params.filter!.isEmpty) {
-      return selectQuery;
-    } else if (params.filter != null &&
-        params.filter!.isNotEmpty &&
-        selectQuery == null) {
-      for (var filter in params.filter!) {
-        if (filter == Status.registered.name) {
-          selectQuery = super.sql.household.select();
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId),
-            )
-          ])
-            ..where(sql.projectBeneficiary.beneficiaryClientReferenceId
-                .isNotNull());
-        } else if (filter == Status.notRegistered.name) {
-          selectQuery = super.sql.household.select();
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId),
-            )
-          ])
-            ..where(
-                sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
-        }
-      }
-    } else if (params.filter != null &&
-        params.filter!.isNotEmpty &&
-        selectQuery != null) {
-      for (var filter in params.filter!) {
-        if (filter == Status.registered.name) {
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId),
-            )
-          ])
-            ..where(sql.projectBeneficiary.beneficiaryClientReferenceId
-                .isNotNull());
-        } else if (filter == Status.notRegistered.name) {
-          selectQuery = selectQuery.join([
-            leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId),
-            )
-          ])
-            ..where(
-                sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
-        }
-      }
-    }
-    return selectQuery;
-  }
-
-  joinName(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-      sql.name,
-      sql.name.individualClientReferenceId.equalsExp(
-        sql.individual.clientReferenceId,
-      ),
-    );
-  }
-
-  joinHouseHoldAddress(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-      sql.address,
-      sql.address.relatedClientReferenceId.equalsExp(
-        sql.household.clientReferenceId,
-      ),
-    );
-  }
-
-  joinIndividualAddress(LocalSqlDataStore sql) {
-    return leftOuterJoin(
-      sql.address,
-      sql.address.relatedClientReferenceId.equalsExp(
-        sql.individual.clientReferenceId,
-      ),
-    );
-  }
-
   performProximitySearch(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     return (selectQuery
@@ -307,6 +225,62 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
           ),
         ]),
     ]));
+  }
+
+  filterSearch(selectQuery, String filter, LocalSqlDataStore sql) async {
+    var sql = super.sql;
+    if (selectQuery == null) {
+      selectQuery = super.sql.household.select().join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(super.sql.household.clientReferenceId))
+      ])
+        ..where(filter == Status.registered.name
+            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+    } else if (selectQuery != null) {
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            filter == Status.registered.name
+                ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(super.sql.household.clientReferenceId)
+                : sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(super.sql.household.clientReferenceId))
+      ])
+        ..where(filter == Status.registered.name
+            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+    }
+    return selectQuery;
+  }
+
+  joinName(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.name,
+      sql.name.individualClientReferenceId.equalsExp(
+        sql.individual.clientReferenceId,
+      ),
+    );
+  }
+
+  joinHouseHoldAddress(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.address,
+      sql.address.relatedClientReferenceId.equalsExp(
+        sql.household.clientReferenceId,
+      ),
+    );
+  }
+
+  joinIndividualAddress(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.address,
+      sql.address.relatedClientReferenceId.equalsExp(
+        sql.individual.clientReferenceId,
+      ),
+    );
   }
 
   joinIndividual(LocalSqlDataStore sql) {

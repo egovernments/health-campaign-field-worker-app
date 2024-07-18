@@ -49,6 +49,8 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
 
+  List<GS1Barcode> scannedResources = [];
+
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
       _productVariantKey: FormControl<ProductVariantModel>(),
@@ -184,6 +186,11 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   builder: (context, form, child) {
                     return BlocBuilder<DigitScannerBloc, DigitScannerState>(
                         builder: (context, scannerState) {
+                      if (scannerState.barCodes.isNotEmpty) {
+                        scannedResources.clear();
+                        scannedResources.addAll(scannerState.barCodes);
+                      }
+
                       return ScrollableContent(
                         header: Column(children: [
                           BackNavigationHelpHeaderWidget(
@@ -213,8 +220,20 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                             0,
                           ),
                           child: ReactiveFormConsumer(
-                            builder: (context, form, child) =>
-                                DigitElevatedButton(
+                              builder: (context, form, child) {
+                            if (form
+                                    .control(_deliveryTeamKey)
+                                    .value
+                                    .toString()
+                                    .isEmpty ||
+                                form.control(_deliveryTeamKey).value == null ||
+                                scannerState.qrCodes.isNotEmpty) {
+                              form.control(_deliveryTeamKey).value =
+                                  scannerState.qrCodes.isNotEmpty
+                                      ? scannerState.qrCodes.last
+                                      : '';
+                            }
+                            return DigitElevatedButton(
                               onPressed: !form.valid
                                   ? null
                                   : () async {
@@ -543,6 +562,12 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                                     lng,
                                                                   ),
                                                                 ],
+                                                                if (scannerState
+                                                                    .barCodes
+                                                                    .isNotEmpty)
+                                                                  addBarCodesToFields(
+                                                                      scannerState
+                                                                          .barCodes),
                                                               ],
                                                             )
                                                           : null,
@@ -619,8 +644,8 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       .translate(i18.common.coreCommonSubmit),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                         ),
                         children: [
                           DigitCard(
@@ -704,7 +729,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   await context.router.push(
                                                           InventoryFacilitySelectionRoute(
                                                               facilities:
-                                                                  facilities))
+                                                                  allFacilities))
                                                       as FacilityModel?;
 
                                               if (facility == null) return;
@@ -760,7 +785,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   final facility =
                                                       await context.router.push(
                                                     InventoryFacilitySelectionRoute(
-                                                      facilities: facilities,
+                                                      facilities: allFacilities,
                                                     ),
                                                   ) as FacilityModel?;
 
@@ -1022,14 +1047,12 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                           ],
                                         ),
-                                        ...scannerState.barCodes
-                                            .map((e) => Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(e.elements.values
-                                                      .first.data
-                                                      .toString()),
-                                                ))
+                                        ...scannedResources.map((e) => Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(e
+                                                  .elements.values.first.data
+                                                  .toString()),
+                                            ))
                                       ])
                               ],
                             ),
@@ -1069,7 +1092,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   ///
   /// @param barCodes The list of GS1Barcode objects to be processed.
   /// @return A map where the keys and values are joined by '|'.
-  Map<String, String> addBarCodesToFields(List<GS1Barcode> barCodes) {
+  AdditionalField addBarCodesToFields(List<GS1Barcode> barCodes) {
     List<String> keys = [];
     List<String> values = [];
     for (var element in barCodes) {
@@ -1078,8 +1101,6 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         values.add(e.value.data.toString());
       }
     }
-    return {
-      keys.join('|'): values.join('|'),
-    };
+    return AdditionalField(keys.join('|'), values.join('|'));
   }
 }

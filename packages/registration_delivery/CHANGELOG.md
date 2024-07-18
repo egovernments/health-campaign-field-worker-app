@@ -66,3 +66,8 @@
 * Added pagination for filter search
 * Updated PageState class to public for customization
 * Updated digit_components
+
+## 0.0.0-dev.11
+
+* Fixed filter search bug fixes
+* Updated task status on view_beneficiary card

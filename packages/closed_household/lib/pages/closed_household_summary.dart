@@ -124,7 +124,7 @@ class _ClosedHouseholdSummaryPageState
                                 householdState.summary?.locationAccuracy,
                             additionalFields:
                                 householdState.summary?.additionalFields,
-                            beneficiaryTag: scannerState.qrCodes.first,
+                            beneficiaryTag: scannerState.qrCodes.isNotEmpty ? scannerState.qrCodes.first : null,
                             clientAuditDetails: ClientAuditDetails(
                               createdBy:
                                   ClosedHouseholdSingleton().loggedInUserUuid!,

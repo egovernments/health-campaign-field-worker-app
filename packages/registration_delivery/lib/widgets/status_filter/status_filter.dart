@@ -36,7 +36,7 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
         children: [
           SelectionBox<Status>(
             options: getFilters() ?? [],
-            allowMultipleSelection: true,
+            allowMultipleSelection: false,
             initialSelection: [
               ...selectedButtons
             ], // [TODO : fix selected not displaying]

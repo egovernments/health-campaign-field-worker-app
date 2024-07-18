@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
@@ -75,223 +77,246 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     final children =
                         form.control(_childrenCountKey).value as int;
 
-                    registrationState.maybeWhen(
-                      orElse: () {
-                        return;
-                      },
-                      create: (
-                        addressModel,
-                        householdModel,
-                        individualModel,
-                        projectBeneficiaryModel,
-                        registrationDate,
-                        searchQuery,
-                        loading,
-                        isHeadOfHousehold,
-                      ) {
-                        var household = householdModel;
-                        household ??= HouseholdModel(
-                          tenantId: RegistrationDeliverySingleton().tenantId,
-                          clientReferenceId:
-                              householdModel?.clientReferenceId ??
-                                  IdGen.i.identifier,
-                          rowVersion: 1,
-                          clientAuditDetails: ClientAuditDetails(
-                            createdBy: RegistrationDeliverySingleton()
-                                .loggedInUserUuid!,
-                            createdTime: context.millisecondsSinceEpoch(),
-                            lastModifiedBy: RegistrationDeliverySingleton()
-                                .loggedInUserUuid,
-                            lastModifiedTime: context.millisecondsSinceEpoch(),
-                          ),
-                          auditDetails: AuditDetails(
-                            createdBy: RegistrationDeliverySingleton()
-                                .loggedInUserUuid!,
-                            createdTime: context.millisecondsSinceEpoch(),
-                            lastModifiedBy: RegistrationDeliverySingleton()
-                                .loggedInUserUuid,
-                            lastModifiedTime: context.millisecondsSinceEpoch(),
-                          ),
-                        );
-
-                        household = household.copyWith(
-                            rowVersion: 1,
+                    if (memberCount < (pregnantWomen + children)) {
+                      DigitToast.show(context,
+                          options: DigitToastOptions(
+                              localizations.translate(
+                                  i18.householdDetails.memberCountError),
+                              true,
+                              theme));
+                    } else {
+                      registrationState.maybeWhen(
+                        orElse: () {
+                          return;
+                        },
+                        create: (
+                          addressModel,
+                          householdModel,
+                          individualModel,
+                          projectBeneficiaryModel,
+                          registrationDate,
+                          searchQuery,
+                          loading,
+                          isHeadOfHousehold,
+                        ) {
+                          var household = householdModel;
+                          household ??= HouseholdModel(
                             tenantId: RegistrationDeliverySingleton().tenantId,
                             clientReferenceId:
                                 householdModel?.clientReferenceId ??
                                     IdGen.i.identifier,
-                            memberCount: memberCount,
+                            rowVersion: 1,
                             clientAuditDetails: ClientAuditDetails(
                               createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid
-                                  .toString(),
+                                  .loggedInUserUuid!,
                               createdTime: context.millisecondsSinceEpoch(),
                               lastModifiedBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid
-                                  .toString(),
+                                  .loggedInUserUuid,
                               lastModifiedTime:
                                   context.millisecondsSinceEpoch(),
                             ),
                             auditDetails: AuditDetails(
                               createdBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid
-                                  .toString(),
+                                  .loggedInUserUuid!,
                               createdTime: context.millisecondsSinceEpoch(),
                               lastModifiedBy: RegistrationDeliverySingleton()
-                                  .loggedInUserUuid
-                                  .toString(),
+                                  .loggedInUserUuid,
                               lastModifiedTime:
                                   context.millisecondsSinceEpoch(),
                             ),
-                            address: addressModel,
-                            additionalFields:
-                                HouseholdAdditionalFields(version: 1, fields: [
-                              //[TODO: Use pregnant women form value based on project config
-                              ...?householdModel?.additionalFields?.fields
-                                  .where((e) =>
-                                      e.key !=
-                                          AdditionalFieldsType.pregnantWomen
-                                              .toValue() &&
-                                      e.key !=
-                                          AdditionalFieldsType.children
-                                              .toValue()),
-                              AdditionalField(
-                                AdditionalFieldsType.pregnantWomen.toValue(),
-                                pregnantWomen,
+                          );
+
+                          household = household.copyWith(
+                              rowVersion: 1,
+                              tenantId:
+                                  RegistrationDeliverySingleton().tenantId,
+                              clientReferenceId:
+                                  householdModel?.clientReferenceId ??
+                                      IdGen.i.identifier,
+                              memberCount: memberCount,
+                              clientAuditDetails: ClientAuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
                               ),
-                              AdditionalField(
-                                AdditionalFieldsType.children.toValue(),
-                                children,
-                              )
-                            ]));
+                              auditDetails: AuditDetails(
+                                createdBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                createdTime: context.millisecondsSinceEpoch(),
+                                lastModifiedBy: RegistrationDeliverySingleton()
+                                    .loggedInUserUuid
+                                    .toString(),
+                                lastModifiedTime:
+                                    context.millisecondsSinceEpoch(),
+                              ),
+                              address: addressModel,
+                              additionalFields: HouseholdAdditionalFields(
+                                  version: 1,
+                                  fields: [
+                                    //[TODO: Use pregnant women form value based on project config
+                                    ...?householdModel?.additionalFields?.fields
+                                        .where((e) =>
+                                            e.key !=
+                                                AdditionalFieldsType
+                                                    .pregnantWomen
+                                                    .toValue() &&
+                                            e.key !=
+                                                AdditionalFieldsType.children
+                                                    .toValue()),
+                                    AdditionalField(
+                                      AdditionalFieldsType.pregnantWomen
+                                          .toValue(),
+                                      pregnantWomen,
+                                    ),
+                                    AdditionalField(
+                                      AdditionalFieldsType.children.toValue(),
+                                      children,
+                                    )
+                                  ]));
 
-                        bloc.add(
-                          BeneficiaryRegistrationSaveHouseholdDetailsEvent(
-                            household: household,
-                            registrationDate: dateOfRegistration,
-                          ),
-                        );
-                        context.router.push(
-                          IndividualDetailsRoute(isHeadOfHousehold: true),
-                        );
-                      },
-                      editHousehold: (
-                        addressModel,
-                        householdModel,
-                        individuals,
-                        registrationDate,
-                        projectBeneficiaryModel,
-                        loading,
-                      ) {
-                        var household = householdModel.copyWith(
-                            memberCount: memberCount,
-                            address: addressModel,
-                            clientAuditDetails: (householdModel
-                                            .clientAuditDetails?.createdBy !=
-                                        null &&
-                                    householdModel
-                                            .clientAuditDetails?.createdTime !=
-                                        null)
-                                ? ClientAuditDetails(
-                                    createdBy: householdModel
-                                        .clientAuditDetails!.createdBy,
-                                    createdTime: householdModel
-                                        .clientAuditDetails!.createdTime,
-                                    lastModifiedBy:
-                                        RegistrationDeliverySingleton()
-                                            .loggedInUserUuid,
-                                    lastModifiedTime:
-                                        DateTime.now().millisecondsSinceEpoch,
-                                  )
-                                : null,
-                            rowVersion: householdModel.rowVersion,
-                            additionalFields: HouseholdAdditionalFields(
-                                version:
-                                    householdModel.additionalFields?.version ??
-                                        1,
-                                fields: [
-                                  //[TODO: Use pregnant women form value based on project config
-                                  ...?householdModel.additionalFields?.fields
-                                      .where((e) =>
-                                          e.key !=
-                                              AdditionalFieldsType.pregnantWomen
-                                                  .toValue() &&
-                                          e.key !=
-                                              AdditionalFieldsType.children
-                                                  .toValue()),
-                                  AdditionalField(
-                                    AdditionalFieldsType.pregnantWomen
-                                        .toValue(),
-                                    pregnantWomen,
-                                  ),
-                                  AdditionalField(
-                                    AdditionalFieldsType.children.toValue(),
-                                    children,
-                                  )
-                                ]));
-
-                        bloc.add(
-                          BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
-                            household: household.copyWith(
-                              clientAuditDetails:
-                                  (addressModel.clientAuditDetails?.createdBy !=
-                                              null &&
-                                          addressModel.clientAuditDetails
-                                                  ?.createdTime !=
-                                              null)
-                                      ? ClientAuditDetails(
-                                          createdBy: addressModel
-                                              .clientAuditDetails!.createdBy,
-                                          createdTime: addressModel
-                                              .clientAuditDetails!.createdTime,
-                                          lastModifiedBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid,
-                                          lastModifiedTime:
-                                              context.millisecondsSinceEpoch(),
-                                        )
-                                      : null,
+                          bloc.add(
+                            BeneficiaryRegistrationSaveHouseholdDetailsEvent(
+                              household: household,
+                              registrationDate: dateOfRegistration,
                             ),
-                            addressModel: addressModel.copyWith(
-                              clientAuditDetails:
-                                  (addressModel.clientAuditDetails?.createdBy !=
-                                              null &&
-                                          addressModel.clientAuditDetails
-                                                  ?.createdTime !=
-                                              null)
-                                      ? ClientAuditDetails(
-                                          createdBy: addressModel
-                                              .clientAuditDetails!.createdBy,
-                                          createdTime: addressModel
-                                              .clientAuditDetails!.createdTime,
-                                          lastModifiedBy:
-                                              RegistrationDeliverySingleton()
-                                                  .loggedInUserUuid,
-                                          lastModifiedTime:
-                                              context.millisecondsSinceEpoch(),
-                                        )
-                                      : null,
+                          );
+                          context.router.push(
+                            IndividualDetailsRoute(isHeadOfHousehold: true),
+                          );
+                        },
+                        editHousehold: (
+                          addressModel,
+                          householdModel,
+                          individuals,
+                          registrationDate,
+                          projectBeneficiaryModel,
+                          loading,
+                        ) {
+                          var household = householdModel.copyWith(
+                              memberCount: memberCount,
+                              address: addressModel,
+                              clientAuditDetails: (householdModel
+                                              .clientAuditDetails?.createdBy !=
+                                          null &&
+                                      householdModel.clientAuditDetails
+                                              ?.createdTime !=
+                                          null)
+                                  ? ClientAuditDetails(
+                                      createdBy: householdModel
+                                          .clientAuditDetails!.createdBy,
+                                      createdTime: householdModel
+                                          .clientAuditDetails!.createdTime,
+                                      lastModifiedBy:
+                                          RegistrationDeliverySingleton()
+                                              .loggedInUserUuid,
+                                      lastModifiedTime:
+                                          DateTime.now().millisecondsSinceEpoch,
+                                    )
+                                  : null,
+                              rowVersion: householdModel.rowVersion,
+                              additionalFields: HouseholdAdditionalFields(
+                                  version: householdModel
+                                          .additionalFields?.version ??
+                                      1,
+                                  fields: [
+                                    //[TODO: Use pregnant women form value based on project config
+                                    ...?householdModel.additionalFields?.fields
+                                        .where((e) =>
+                                            e.key !=
+                                                AdditionalFieldsType
+                                                    .pregnantWomen
+                                                    .toValue() &&
+                                            e.key !=
+                                                AdditionalFieldsType.children
+                                                    .toValue()),
+                                    AdditionalField(
+                                      AdditionalFieldsType.pregnantWomen
+                                          .toValue(),
+                                      pregnantWomen,
+                                    ),
+                                    AdditionalField(
+                                      AdditionalFieldsType.children.toValue(),
+                                      children,
+                                    )
+                                  ]));
+
+                          bloc.add(
+                            BeneficiaryRegistrationUpdateHouseholdDetailsEvent(
+                              household: household.copyWith(
+                                clientAuditDetails: (addressModel
+                                                .clientAuditDetails
+                                                ?.createdBy !=
+                                            null &&
+                                        addressModel.clientAuditDetails
+                                                ?.createdTime !=
+                                            null)
+                                    ? ClientAuditDetails(
+                                        createdBy: addressModel
+                                            .clientAuditDetails!.createdBy,
+                                        createdTime: addressModel
+                                            .clientAuditDetails!.createdTime,
+                                        lastModifiedBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      )
+                                    : null,
+                              ),
+                              addressModel: addressModel.copyWith(
+                                clientAuditDetails: (addressModel
+                                                .clientAuditDetails
+                                                ?.createdBy !=
+                                            null &&
+                                        addressModel.clientAuditDetails
+                                                ?.createdTime !=
+                                            null)
+                                    ? ClientAuditDetails(
+                                        createdBy: addressModel
+                                            .clientAuditDetails!.createdBy,
+                                        createdTime: addressModel
+                                            .clientAuditDetails!.createdTime,
+                                        lastModifiedBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      )
+                                    : null,
+                              ),
                             ),
-                          ),
-                        );
-                        final overviewBloc =
-                            context.read<HouseholdOverviewBloc>();
+                          );
+                          final overviewBloc =
+                              context.read<HouseholdOverviewBloc>();
 
-                        overviewBloc.add(
-                          HouseholdOverviewReloadEvent(
-                            projectId: RegistrationDeliverySingleton()
-                                .projectId
-                                .toString(),
-                            projectBeneficiaryType:
-                                RegistrationDeliverySingleton()
-                                        .beneficiaryType ??
-                                    BeneficiaryType.household,
-                          ),
-                        );
-
-                        (router.parent() as StackRouter).maybePop();
-                      },
-                    );
+                          overviewBloc.add(
+                            HouseholdOverviewReloadEvent(
+                              projectId: RegistrationDeliverySingleton()
+                                  .projectId
+                                  .toString(),
+                              projectBeneficiaryType:
+                                  RegistrationDeliverySingleton()
+                                          .beneficiaryType ??
+                                      BeneficiaryType.household,
+                            ),
+                          );
+                          HouseholdMemberWrapper memberWrapper =
+                              overviewBloc.state.householdMemberWrapper;
+                          final route = router.parent() as StackRouter;
+                          route.popUntilRouteWithName(
+                              SearchBeneficiaryRoute.name);
+                          route.push(
+                              BeneficiaryWrapperRoute(wrapper: memberWrapper));
+                        },
+                      );
+                    }
                   },
                   child: Center(
                     child: Text(

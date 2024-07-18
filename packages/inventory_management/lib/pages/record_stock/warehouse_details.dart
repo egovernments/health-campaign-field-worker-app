@@ -421,7 +421,7 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                                 builder: (context) =>
                                                     const DigitScannerPage(
                                                   quantity: 1,
-                                                  isGS1code: true,
+                                                  isGS1code: false,
                                                   singleValue: false,
                                                 ),
                                                 settings: const RouteSettings(

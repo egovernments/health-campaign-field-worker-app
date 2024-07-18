@@ -391,6 +391,7 @@ class HouseholdDetails {
   String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
   String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
   String get selectStructureTypeError => 'PLEASE_SELECT_STRUCTURE_TYPE';
+  String get memberCountError => 'MEMBER_COUNT_ERROR';
   String get typeOfStructure => 'TYPE_OF_STRUCTURE';
 }
 
@@ -489,7 +490,8 @@ class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
-  String get beneficiaryChecklistDialogTitle => 'BENEFICIARY_CHECKLIST_DIALOG_TITLE';
+  String get beneficiaryChecklistDialogTitle =>
+      'BENEFICIARY_CHECKLIST_DIALOG_TITLE';
 
   String get refusedDeliveryLabel => 'REFUSED_DELIVERY_LABEL';
   String get refusedDeliveryVisitDateLabel => 'REFUSED_DELIVERY_VISIT_DATE';
