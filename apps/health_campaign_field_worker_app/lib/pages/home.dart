@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/models/entities/user_action.dart';
 import 'package:closed_household/pages/closed_household_details.dart';
 import 'package:closed_household/pages/closed_household_wrapper.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
@@ -571,6 +572,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
+                context.read<LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -602,6 +604,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
+                context.read<RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
