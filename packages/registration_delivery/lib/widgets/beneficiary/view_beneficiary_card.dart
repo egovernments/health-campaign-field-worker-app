@@ -47,7 +47,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     super.didUpdateWidget(oldWidget);
   }
 
-  bool _isCardExpanded = true;
+  bool _isCardExpanded = false;
 
   bool get isCardExpanded => _isCardExpanded;
 
@@ -91,10 +91,6 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     final tableData = householdMember.members?.map(
       (e) {
         final projectBeneficiary =
-            // RegistrationDeliverySingleton().beneficiaryType !=
-            //         BeneficiaryType.individual
-            //     ? [householdMember.projectBeneficiaries!.first]
-            //     :
             householdMember.projectBeneficiaries?.where((element) {
           if (RegistrationDeliverySingleton().beneficiaryType ==
               BeneficiaryType.individual) {
@@ -297,11 +293,17 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
                   status: getStatus(
                       tasks ?? [],
-                      householdMember.projectBeneficiaries!
-                          .where((element) =>
-                              element.beneficiaryClientReferenceId ==
-                              householdMember.household!.clientReferenceId)
-                          .toList(),
+                      householdMember.projectBeneficiaries!.where((element) {
+                        if (RegistrationDeliverySingleton().beneficiaryType ==
+                            BeneficiaryType.individual) {
+                          return element.beneficiaryClientReferenceId ==
+                              householdMember
+                                  .headOfHousehold?.clientReferenceId;
+                        } else {
+                          return element.beneficiaryClientReferenceId ==
+                              householdMember.household?.clientReferenceId;
+                        }
+                      }).toList(),
                       isNotEligible,
                       isBeneficiaryRefused),
                   title: [
