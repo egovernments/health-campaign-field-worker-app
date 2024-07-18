@@ -38695,6 +38695,1123 @@ class ReferralCompanion extends UpdateCompanion<ReferralData> {
   }
 }
 
+class $UserActionTable extends UserAction
+    with TableInfo<$UserActionTable, UserActionData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $UserActionTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _tenantIdMeta =
+      const VerificationMeta('tenantId');
+  @override
+  late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
+      'tenant_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectIdMeta =
+      const VerificationMeta('projectId');
+  @override
+  late final GeneratedColumn<String> projectId = GeneratedColumn<String>(
+      'project_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientReferenceIdMeta =
+      const VerificationMeta('clientReferenceId');
+  @override
+  late final GeneratedColumn<String> clientReferenceId =
+      GeneratedColumn<String>('client_reference_id', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _latitudeMeta =
+      const VerificationMeta('latitude');
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+      'latitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _longitudeMeta =
+      const VerificationMeta('longitude');
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+      'longitude', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _locationAccuracyMeta =
+      const VerificationMeta('locationAccuracy');
+  @override
+  late final GeneratedColumn<double> locationAccuracy = GeneratedColumn<double>(
+      'location_accuracy', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _boundaryCodeMeta =
+      const VerificationMeta('boundaryCode');
+  @override
+  late final GeneratedColumn<String> boundaryCode = GeneratedColumn<String>(
+      'boundary_code', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _additionalFieldsMeta =
+      const VerificationMeta('additionalFields');
+  @override
+  late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
+      'additional_fields', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedByMeta =
+      const VerificationMeta('auditCreatedBy');
+  @override
+  late final GeneratedColumn<String> auditCreatedBy = GeneratedColumn<String>(
+      'audit_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditCreatedTimeMeta =
+      const VerificationMeta('auditCreatedTime');
+  @override
+  late final GeneratedColumn<int> auditCreatedTime = GeneratedColumn<int>(
+      'audit_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedByMeta =
+      const VerificationMeta('auditModifiedBy');
+  @override
+  late final GeneratedColumn<String> auditModifiedBy = GeneratedColumn<String>(
+      'audit_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _auditModifiedTimeMeta =
+      const VerificationMeta('auditModifiedTime');
+  @override
+  late final GeneratedColumn<int> auditModifiedTime = GeneratedColumn<int>(
+      'audit_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _nonRecoverableErrorMeta =
+      const VerificationMeta('nonRecoverableError');
+  @override
+  late final GeneratedColumn<bool> nonRecoverableError = GeneratedColumn<bool>(
+      'non_recoverable_error', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("non_recoverable_error" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _clientCreatedTimeMeta =
+      const VerificationMeta('clientCreatedTime');
+  @override
+  late final GeneratedColumn<int> clientCreatedTime = GeneratedColumn<int>(
+      'client_created_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _clientCreatedByMeta =
+      const VerificationMeta('clientCreatedBy');
+  @override
+  late final GeneratedColumn<String> clientCreatedBy = GeneratedColumn<String>(
+      'client_created_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedByMeta =
+      const VerificationMeta('clientModifiedBy');
+  @override
+  late final GeneratedColumn<String> clientModifiedBy = GeneratedColumn<String>(
+      'client_modified_by', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _clientModifiedTimeMeta =
+      const VerificationMeta('clientModifiedTime');
+  @override
+  late final GeneratedColumn<int> clientModifiedTime = GeneratedColumn<int>(
+      'client_modified_time', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _rowVersionMeta =
+      const VerificationMeta('rowVersion');
+  @override
+  late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
+      'row_version', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _isDeletedMeta =
+      const VerificationMeta('isDeleted');
+  @override
+  late final GeneratedColumn<bool> isDeleted = GeneratedColumn<bool>(
+      'is_deleted', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_deleted" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _actionMeta = const VerificationMeta('action');
+  @override
+  late final GeneratedColumn<String> action = GeneratedColumn<String>(
+      'action', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _beneficiaryTagsMeta =
+      const VerificationMeta('beneficiaryTags');
+  @override
+  late final GeneratedColumn<String> beneficiaryTags = GeneratedColumn<String>(
+      'beneficiary_tags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _resourceTagsMeta =
+      const VerificationMeta('resourceTags');
+  @override
+  late final GeneratedColumn<String> resourceTags = GeneratedColumn<String>(
+      'resource_tags', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        tenantId,
+        projectId,
+        clientReferenceId,
+        latitude,
+        longitude,
+        locationAccuracy,
+        boundaryCode,
+        status,
+        additionalFields,
+        auditCreatedBy,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        nonRecoverableError,
+        clientCreatedTime,
+        clientCreatedBy,
+        clientModifiedBy,
+        clientModifiedTime,
+        rowVersion,
+        isDeleted,
+        action,
+        beneficiaryTags,
+        resourceTags
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_action';
+  @override
+  VerificationContext validateIntegrity(Insertable<UserActionData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('tenant_id')) {
+      context.handle(_tenantIdMeta,
+          tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
+    }
+    if (data.containsKey('project_id')) {
+      context.handle(_projectIdMeta,
+          projectId.isAcceptableOrUnknown(data['project_id']!, _projectIdMeta));
+    }
+    if (data.containsKey('client_reference_id')) {
+      context.handle(
+          _clientReferenceIdMeta,
+          clientReferenceId.isAcceptableOrUnknown(
+              data['client_reference_id']!, _clientReferenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_clientReferenceIdMeta);
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(_latitudeMeta,
+          latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta));
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(_longitudeMeta,
+          longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
+    if (data.containsKey('location_accuracy')) {
+      context.handle(
+          _locationAccuracyMeta,
+          locationAccuracy.isAcceptableOrUnknown(
+              data['location_accuracy']!, _locationAccuracyMeta));
+    }
+    if (data.containsKey('boundary_code')) {
+      context.handle(
+          _boundaryCodeMeta,
+          boundaryCode.isAcceptableOrUnknown(
+              data['boundary_code']!, _boundaryCodeMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('additional_fields')) {
+      context.handle(
+          _additionalFieldsMeta,
+          additionalFields.isAcceptableOrUnknown(
+              data['additional_fields']!, _additionalFieldsMeta));
+    }
+    if (data.containsKey('audit_created_by')) {
+      context.handle(
+          _auditCreatedByMeta,
+          auditCreatedBy.isAcceptableOrUnknown(
+              data['audit_created_by']!, _auditCreatedByMeta));
+    }
+    if (data.containsKey('audit_created_time')) {
+      context.handle(
+          _auditCreatedTimeMeta,
+          auditCreatedTime.isAcceptableOrUnknown(
+              data['audit_created_time']!, _auditCreatedTimeMeta));
+    }
+    if (data.containsKey('audit_modified_by')) {
+      context.handle(
+          _auditModifiedByMeta,
+          auditModifiedBy.isAcceptableOrUnknown(
+              data['audit_modified_by']!, _auditModifiedByMeta));
+    }
+    if (data.containsKey('audit_modified_time')) {
+      context.handle(
+          _auditModifiedTimeMeta,
+          auditModifiedTime.isAcceptableOrUnknown(
+              data['audit_modified_time']!, _auditModifiedTimeMeta));
+    }
+    if (data.containsKey('non_recoverable_error')) {
+      context.handle(
+          _nonRecoverableErrorMeta,
+          nonRecoverableError.isAcceptableOrUnknown(
+              data['non_recoverable_error']!, _nonRecoverableErrorMeta));
+    }
+    if (data.containsKey('client_created_time')) {
+      context.handle(
+          _clientCreatedTimeMeta,
+          clientCreatedTime.isAcceptableOrUnknown(
+              data['client_created_time']!, _clientCreatedTimeMeta));
+    }
+    if (data.containsKey('client_created_by')) {
+      context.handle(
+          _clientCreatedByMeta,
+          clientCreatedBy.isAcceptableOrUnknown(
+              data['client_created_by']!, _clientCreatedByMeta));
+    }
+    if (data.containsKey('client_modified_by')) {
+      context.handle(
+          _clientModifiedByMeta,
+          clientModifiedBy.isAcceptableOrUnknown(
+              data['client_modified_by']!, _clientModifiedByMeta));
+    }
+    if (data.containsKey('client_modified_time')) {
+      context.handle(
+          _clientModifiedTimeMeta,
+          clientModifiedTime.isAcceptableOrUnknown(
+              data['client_modified_time']!, _clientModifiedTimeMeta));
+    }
+    if (data.containsKey('row_version')) {
+      context.handle(
+          _rowVersionMeta,
+          rowVersion.isAcceptableOrUnknown(
+              data['row_version']!, _rowVersionMeta));
+    }
+    if (data.containsKey('is_deleted')) {
+      context.handle(_isDeletedMeta,
+          isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
+    }
+    if (data.containsKey('action')) {
+      context.handle(_actionMeta,
+          action.isAcceptableOrUnknown(data['action']!, _actionMeta));
+    }
+    if (data.containsKey('beneficiary_tags')) {
+      context.handle(
+          _beneficiaryTagsMeta,
+          beneficiaryTags.isAcceptableOrUnknown(
+              data['beneficiary_tags']!, _beneficiaryTagsMeta));
+    }
+    if (data.containsKey('resource_tags')) {
+      context.handle(
+          _resourceTagsMeta,
+          resourceTags.isAcceptableOrUnknown(
+              data['resource_tags']!, _resourceTagsMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  @override
+  UserActionData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return UserActionData(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id']),
+      tenantId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      projectId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_id']),
+      clientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_reference_id'])!,
+      latitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}latitude']),
+      longitude: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}longitude']),
+      locationAccuracy: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}location_accuracy']),
+      boundaryCode: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}boundary_code']),
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status']),
+      additionalFields: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      auditCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
+      auditCreatedTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}audit_created_time']),
+      auditModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}audit_modified_by']),
+      auditModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
+      nonRecoverableError: attachedDatabase.typeMapping.read(
+          DriftSqlType.bool, data['${effectivePrefix}non_recoverable_error']),
+      clientCreatedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_created_time']),
+      clientCreatedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_created_by']),
+      clientModifiedBy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}client_modified_by']),
+      clientModifiedTime: attachedDatabase.typeMapping.read(
+          DriftSqlType.int, data['${effectivePrefix}client_modified_time']),
+      rowVersion: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      isDeleted: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
+      action: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}action']),
+      beneficiaryTags: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}beneficiary_tags']),
+      resourceTags: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}resource_tags']),
+    );
+  }
+
+  @override
+  $UserActionTable createAlias(String alias) {
+    return $UserActionTable(attachedDatabase, alias);
+  }
+}
+
+class UserActionData extends DataClass implements Insertable<UserActionData> {
+  final String? id;
+  final String? tenantId;
+  final String? projectId;
+  final String clientReferenceId;
+  final double? latitude;
+  final double? longitude;
+  final double? locationAccuracy;
+  final String? boundaryCode;
+  final String? status;
+  final String? additionalFields;
+  final String? auditCreatedBy;
+  final int? auditCreatedTime;
+  final String? auditModifiedBy;
+  final int? auditModifiedTime;
+  final bool? nonRecoverableError;
+  final int? clientCreatedTime;
+  final String? clientCreatedBy;
+  final String? clientModifiedBy;
+  final int? clientModifiedTime;
+  final int? rowVersion;
+  final bool? isDeleted;
+  final String? action;
+  final String? beneficiaryTags;
+  final String? resourceTags;
+  const UserActionData(
+      {this.id,
+      this.tenantId,
+      this.projectId,
+      required this.clientReferenceId,
+      this.latitude,
+      this.longitude,
+      this.locationAccuracy,
+      this.boundaryCode,
+      this.status,
+      this.additionalFields,
+      this.auditCreatedBy,
+      this.auditCreatedTime,
+      this.auditModifiedBy,
+      this.auditModifiedTime,
+      this.nonRecoverableError,
+      this.clientCreatedTime,
+      this.clientCreatedBy,
+      this.clientModifiedBy,
+      this.clientModifiedTime,
+      this.rowVersion,
+      this.isDeleted,
+      this.action,
+      this.beneficiaryTags,
+      this.resourceTags});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || id != null) {
+      map['id'] = Variable<String>(id);
+    }
+    if (!nullToAbsent || tenantId != null) {
+      map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || projectId != null) {
+      map['project_id'] = Variable<String>(projectId);
+    }
+    map['client_reference_id'] = Variable<String>(clientReferenceId);
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
+    }
+    if (!nullToAbsent || locationAccuracy != null) {
+      map['location_accuracy'] = Variable<double>(locationAccuracy);
+    }
+    if (!nullToAbsent || boundaryCode != null) {
+      map['boundary_code'] = Variable<String>(boundaryCode);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<String>(status);
+    }
+    if (!nullToAbsent || additionalFields != null) {
+      map['additional_fields'] = Variable<String>(additionalFields);
+    }
+    if (!nullToAbsent || auditCreatedBy != null) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy);
+    }
+    if (!nullToAbsent || auditCreatedTime != null) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime);
+    }
+    if (!nullToAbsent || auditModifiedBy != null) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy);
+    }
+    if (!nullToAbsent || auditModifiedTime != null) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime);
+    }
+    if (!nullToAbsent || nonRecoverableError != null) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError);
+    }
+    if (!nullToAbsent || clientCreatedTime != null) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime);
+    }
+    if (!nullToAbsent || clientCreatedBy != null) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy);
+    }
+    if (!nullToAbsent || clientModifiedBy != null) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy);
+    }
+    if (!nullToAbsent || clientModifiedTime != null) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime);
+    }
+    if (!nullToAbsent || rowVersion != null) {
+      map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || isDeleted != null) {
+      map['is_deleted'] = Variable<bool>(isDeleted);
+    }
+    if (!nullToAbsent || action != null) {
+      map['action'] = Variable<String>(action);
+    }
+    if (!nullToAbsent || beneficiaryTags != null) {
+      map['beneficiary_tags'] = Variable<String>(beneficiaryTags);
+    }
+    if (!nullToAbsent || resourceTags != null) {
+      map['resource_tags'] = Variable<String>(resourceTags);
+    }
+    return map;
+  }
+
+  UserActionCompanion toCompanion(bool nullToAbsent) {
+    return UserActionCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      tenantId: tenantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tenantId),
+      projectId: projectId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectId),
+      clientReferenceId: Value(clientReferenceId),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      locationAccuracy: locationAccuracy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationAccuracy),
+      boundaryCode: boundaryCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(boundaryCode),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+      additionalFields: additionalFields == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalFields),
+      auditCreatedBy: auditCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedBy),
+      auditCreatedTime: auditCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditCreatedTime),
+      auditModifiedBy: auditModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedBy),
+      auditModifiedTime: auditModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(auditModifiedTime),
+      nonRecoverableError: nonRecoverableError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nonRecoverableError),
+      clientCreatedTime: clientCreatedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedTime),
+      clientCreatedBy: clientCreatedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientCreatedBy),
+      clientModifiedBy: clientModifiedBy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedBy),
+      clientModifiedTime: clientModifiedTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(clientModifiedTime),
+      rowVersion: rowVersion == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rowVersion),
+      isDeleted: isDeleted == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDeleted),
+      action:
+          action == null && nullToAbsent ? const Value.absent() : Value(action),
+      beneficiaryTags: beneficiaryTags == null && nullToAbsent
+          ? const Value.absent()
+          : Value(beneficiaryTags),
+      resourceTags: resourceTags == null && nullToAbsent
+          ? const Value.absent()
+          : Value(resourceTags),
+    );
+  }
+
+  factory UserActionData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return UserActionData(
+      id: serializer.fromJson<String?>(json['id']),
+      tenantId: serializer.fromJson<String?>(json['tenantId']),
+      projectId: serializer.fromJson<String?>(json['projectId']),
+      clientReferenceId: serializer.fromJson<String>(json['clientReferenceId']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      locationAccuracy: serializer.fromJson<double?>(json['locationAccuracy']),
+      boundaryCode: serializer.fromJson<String?>(json['boundaryCode']),
+      status: serializer.fromJson<String?>(json['status']),
+      additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
+      auditCreatedTime: serializer.fromJson<int?>(json['auditCreatedTime']),
+      auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
+      auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
+      nonRecoverableError:
+          serializer.fromJson<bool?>(json['nonRecoverableError']),
+      clientCreatedTime: serializer.fromJson<int?>(json['clientCreatedTime']),
+      clientCreatedBy: serializer.fromJson<String?>(json['clientCreatedBy']),
+      clientModifiedBy: serializer.fromJson<String?>(json['clientModifiedBy']),
+      clientModifiedTime: serializer.fromJson<int?>(json['clientModifiedTime']),
+      rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
+      action: serializer.fromJson<String?>(json['action']),
+      beneficiaryTags: serializer.fromJson<String?>(json['beneficiaryTags']),
+      resourceTags: serializer.fromJson<String?>(json['resourceTags']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String?>(id),
+      'tenantId': serializer.toJson<String?>(tenantId),
+      'projectId': serializer.toJson<String?>(projectId),
+      'clientReferenceId': serializer.toJson<String>(clientReferenceId),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
+      'locationAccuracy': serializer.toJson<double?>(locationAccuracy),
+      'boundaryCode': serializer.toJson<String?>(boundaryCode),
+      'status': serializer.toJson<String?>(status),
+      'additionalFields': serializer.toJson<String?>(additionalFields),
+      'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
+      'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
+      'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
+      'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
+      'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
+      'clientCreatedTime': serializer.toJson<int?>(clientCreatedTime),
+      'clientCreatedBy': serializer.toJson<String?>(clientCreatedBy),
+      'clientModifiedBy': serializer.toJson<String?>(clientModifiedBy),
+      'clientModifiedTime': serializer.toJson<int?>(clientModifiedTime),
+      'rowVersion': serializer.toJson<int?>(rowVersion),
+      'isDeleted': serializer.toJson<bool?>(isDeleted),
+      'action': serializer.toJson<String?>(action),
+      'beneficiaryTags': serializer.toJson<String?>(beneficiaryTags),
+      'resourceTags': serializer.toJson<String?>(resourceTags),
+    };
+  }
+
+  UserActionData copyWith(
+          {Value<String?> id = const Value.absent(),
+          Value<String?> tenantId = const Value.absent(),
+          Value<String?> projectId = const Value.absent(),
+          String? clientReferenceId,
+          Value<double?> latitude = const Value.absent(),
+          Value<double?> longitude = const Value.absent(),
+          Value<double?> locationAccuracy = const Value.absent(),
+          Value<String?> boundaryCode = const Value.absent(),
+          Value<String?> status = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent(),
+          Value<String?> auditCreatedBy = const Value.absent(),
+          Value<int?> auditCreatedTime = const Value.absent(),
+          Value<String?> auditModifiedBy = const Value.absent(),
+          Value<int?> auditModifiedTime = const Value.absent(),
+          Value<bool?> nonRecoverableError = const Value.absent(),
+          Value<int?> clientCreatedTime = const Value.absent(),
+          Value<String?> clientCreatedBy = const Value.absent(),
+          Value<String?> clientModifiedBy = const Value.absent(),
+          Value<int?> clientModifiedTime = const Value.absent(),
+          Value<int?> rowVersion = const Value.absent(),
+          Value<bool?> isDeleted = const Value.absent(),
+          Value<String?> action = const Value.absent(),
+          Value<String?> beneficiaryTags = const Value.absent(),
+          Value<String?> resourceTags = const Value.absent()}) =>
+      UserActionData(
+        id: id.present ? id.value : this.id,
+        tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        projectId: projectId.present ? projectId.value : this.projectId,
+        clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+        latitude: latitude.present ? latitude.value : this.latitude,
+        longitude: longitude.present ? longitude.value : this.longitude,
+        locationAccuracy: locationAccuracy.present
+            ? locationAccuracy.value
+            : this.locationAccuracy,
+        boundaryCode:
+            boundaryCode.present ? boundaryCode.value : this.boundaryCode,
+        status: status.present ? status.value : this.status,
+        additionalFields: additionalFields.present
+            ? additionalFields.value
+            : this.additionalFields,
+        auditCreatedBy:
+            auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
+        auditCreatedTime: auditCreatedTime.present
+            ? auditCreatedTime.value
+            : this.auditCreatedTime,
+        auditModifiedBy: auditModifiedBy.present
+            ? auditModifiedBy.value
+            : this.auditModifiedBy,
+        auditModifiedTime: auditModifiedTime.present
+            ? auditModifiedTime.value
+            : this.auditModifiedTime,
+        nonRecoverableError: nonRecoverableError.present
+            ? nonRecoverableError.value
+            : this.nonRecoverableError,
+        clientCreatedTime: clientCreatedTime.present
+            ? clientCreatedTime.value
+            : this.clientCreatedTime,
+        clientCreatedBy: clientCreatedBy.present
+            ? clientCreatedBy.value
+            : this.clientCreatedBy,
+        clientModifiedBy: clientModifiedBy.present
+            ? clientModifiedBy.value
+            : this.clientModifiedBy,
+        clientModifiedTime: clientModifiedTime.present
+            ? clientModifiedTime.value
+            : this.clientModifiedTime,
+        rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
+        action: action.present ? action.value : this.action,
+        beneficiaryTags: beneficiaryTags.present
+            ? beneficiaryTags.value
+            : this.beneficiaryTags,
+        resourceTags:
+            resourceTags.present ? resourceTags.value : this.resourceTags,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('UserActionData(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('projectId: $projectId, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('status: $status, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('action: $action, ')
+          ..write('beneficiaryTags: $beneficiaryTags, ')
+          ..write('resourceTags: $resourceTags')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        id,
+        tenantId,
+        projectId,
+        clientReferenceId,
+        latitude,
+        longitude,
+        locationAccuracy,
+        boundaryCode,
+        status,
+        additionalFields,
+        auditCreatedBy,
+        auditCreatedTime,
+        auditModifiedBy,
+        auditModifiedTime,
+        nonRecoverableError,
+        clientCreatedTime,
+        clientCreatedBy,
+        clientModifiedBy,
+        clientModifiedTime,
+        rowVersion,
+        isDeleted,
+        action,
+        beneficiaryTags,
+        resourceTags
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is UserActionData &&
+          other.id == this.id &&
+          other.tenantId == this.tenantId &&
+          other.projectId == this.projectId &&
+          other.clientReferenceId == this.clientReferenceId &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.locationAccuracy == this.locationAccuracy &&
+          other.boundaryCode == this.boundaryCode &&
+          other.status == this.status &&
+          other.additionalFields == this.additionalFields &&
+          other.auditCreatedBy == this.auditCreatedBy &&
+          other.auditCreatedTime == this.auditCreatedTime &&
+          other.auditModifiedBy == this.auditModifiedBy &&
+          other.auditModifiedTime == this.auditModifiedTime &&
+          other.nonRecoverableError == this.nonRecoverableError &&
+          other.clientCreatedTime == this.clientCreatedTime &&
+          other.clientCreatedBy == this.clientCreatedBy &&
+          other.clientModifiedBy == this.clientModifiedBy &&
+          other.clientModifiedTime == this.clientModifiedTime &&
+          other.rowVersion == this.rowVersion &&
+          other.isDeleted == this.isDeleted &&
+          other.action == this.action &&
+          other.beneficiaryTags == this.beneficiaryTags &&
+          other.resourceTags == this.resourceTags);
+}
+
+class UserActionCompanion extends UpdateCompanion<UserActionData> {
+  final Value<String?> id;
+  final Value<String?> tenantId;
+  final Value<String?> projectId;
+  final Value<String> clientReferenceId;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
+  final Value<double?> locationAccuracy;
+  final Value<String?> boundaryCode;
+  final Value<String?> status;
+  final Value<String?> additionalFields;
+  final Value<String?> auditCreatedBy;
+  final Value<int?> auditCreatedTime;
+  final Value<String?> auditModifiedBy;
+  final Value<int?> auditModifiedTime;
+  final Value<bool?> nonRecoverableError;
+  final Value<int?> clientCreatedTime;
+  final Value<String?> clientCreatedBy;
+  final Value<String?> clientModifiedBy;
+  final Value<int?> clientModifiedTime;
+  final Value<int?> rowVersion;
+  final Value<bool?> isDeleted;
+  final Value<String?> action;
+  final Value<String?> beneficiaryTags;
+  final Value<String?> resourceTags;
+  final Value<int> rowid;
+  const UserActionCompanion({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    this.clientReferenceId = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
+    this.boundaryCode = const Value.absent(),
+    this.status = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.action = const Value.absent(),
+    this.beneficiaryTags = const Value.absent(),
+    this.resourceTags = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  UserActionCompanion.insert({
+    this.id = const Value.absent(),
+    this.tenantId = const Value.absent(),
+    this.projectId = const Value.absent(),
+    required String clientReferenceId,
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.locationAccuracy = const Value.absent(),
+    this.boundaryCode = const Value.absent(),
+    this.status = const Value.absent(),
+    this.additionalFields = const Value.absent(),
+    this.auditCreatedBy = const Value.absent(),
+    this.auditCreatedTime = const Value.absent(),
+    this.auditModifiedBy = const Value.absent(),
+    this.auditModifiedTime = const Value.absent(),
+    this.nonRecoverableError = const Value.absent(),
+    this.clientCreatedTime = const Value.absent(),
+    this.clientCreatedBy = const Value.absent(),
+    this.clientModifiedBy = const Value.absent(),
+    this.clientModifiedTime = const Value.absent(),
+    this.rowVersion = const Value.absent(),
+    this.isDeleted = const Value.absent(),
+    this.action = const Value.absent(),
+    this.beneficiaryTags = const Value.absent(),
+    this.resourceTags = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : clientReferenceId = Value(clientReferenceId);
+  static Insertable<UserActionData> custom({
+    Expression<String>? id,
+    Expression<String>? tenantId,
+    Expression<String>? projectId,
+    Expression<String>? clientReferenceId,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
+    Expression<double>? locationAccuracy,
+    Expression<String>? boundaryCode,
+    Expression<String>? status,
+    Expression<String>? additionalFields,
+    Expression<String>? auditCreatedBy,
+    Expression<int>? auditCreatedTime,
+    Expression<String>? auditModifiedBy,
+    Expression<int>? auditModifiedTime,
+    Expression<bool>? nonRecoverableError,
+    Expression<int>? clientCreatedTime,
+    Expression<String>? clientCreatedBy,
+    Expression<String>? clientModifiedBy,
+    Expression<int>? clientModifiedTime,
+    Expression<int>? rowVersion,
+    Expression<bool>? isDeleted,
+    Expression<String>? action,
+    Expression<String>? beneficiaryTags,
+    Expression<String>? resourceTags,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (tenantId != null) 'tenant_id': tenantId,
+      if (projectId != null) 'project_id': projectId,
+      if (clientReferenceId != null) 'client_reference_id': clientReferenceId,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (locationAccuracy != null) 'location_accuracy': locationAccuracy,
+      if (boundaryCode != null) 'boundary_code': boundaryCode,
+      if (status != null) 'status': status,
+      if (additionalFields != null) 'additional_fields': additionalFields,
+      if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
+      if (auditCreatedTime != null) 'audit_created_time': auditCreatedTime,
+      if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
+      if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
+      if (nonRecoverableError != null)
+        'non_recoverable_error': nonRecoverableError,
+      if (clientCreatedTime != null) 'client_created_time': clientCreatedTime,
+      if (clientCreatedBy != null) 'client_created_by': clientCreatedBy,
+      if (clientModifiedBy != null) 'client_modified_by': clientModifiedBy,
+      if (clientModifiedTime != null)
+        'client_modified_time': clientModifiedTime,
+      if (rowVersion != null) 'row_version': rowVersion,
+      if (isDeleted != null) 'is_deleted': isDeleted,
+      if (action != null) 'action': action,
+      if (beneficiaryTags != null) 'beneficiary_tags': beneficiaryTags,
+      if (resourceTags != null) 'resource_tags': resourceTags,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  UserActionCompanion copyWith(
+      {Value<String?>? id,
+      Value<String?>? tenantId,
+      Value<String?>? projectId,
+      Value<String>? clientReferenceId,
+      Value<double?>? latitude,
+      Value<double?>? longitude,
+      Value<double?>? locationAccuracy,
+      Value<String?>? boundaryCode,
+      Value<String?>? status,
+      Value<String?>? additionalFields,
+      Value<String?>? auditCreatedBy,
+      Value<int?>? auditCreatedTime,
+      Value<String?>? auditModifiedBy,
+      Value<int?>? auditModifiedTime,
+      Value<bool?>? nonRecoverableError,
+      Value<int?>? clientCreatedTime,
+      Value<String?>? clientCreatedBy,
+      Value<String?>? clientModifiedBy,
+      Value<int?>? clientModifiedTime,
+      Value<int?>? rowVersion,
+      Value<bool?>? isDeleted,
+      Value<String?>? action,
+      Value<String?>? beneficiaryTags,
+      Value<String?>? resourceTags,
+      Value<int>? rowid}) {
+    return UserActionCompanion(
+      id: id ?? this.id,
+      tenantId: tenantId ?? this.tenantId,
+      projectId: projectId ?? this.projectId,
+      clientReferenceId: clientReferenceId ?? this.clientReferenceId,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      locationAccuracy: locationAccuracy ?? this.locationAccuracy,
+      boundaryCode: boundaryCode ?? this.boundaryCode,
+      status: status ?? this.status,
+      additionalFields: additionalFields ?? this.additionalFields,
+      auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
+      auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
+      auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
+      auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
+      nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
+      clientCreatedTime: clientCreatedTime ?? this.clientCreatedTime,
+      clientCreatedBy: clientCreatedBy ?? this.clientCreatedBy,
+      clientModifiedBy: clientModifiedBy ?? this.clientModifiedBy,
+      clientModifiedTime: clientModifiedTime ?? this.clientModifiedTime,
+      rowVersion: rowVersion ?? this.rowVersion,
+      isDeleted: isDeleted ?? this.isDeleted,
+      action: action ?? this.action,
+      beneficiaryTags: beneficiaryTags ?? this.beneficiaryTags,
+      resourceTags: resourceTags ?? this.resourceTags,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (tenantId.present) {
+      map['tenant_id'] = Variable<String>(tenantId.value);
+    }
+    if (projectId.present) {
+      map['project_id'] = Variable<String>(projectId.value);
+    }
+    if (clientReferenceId.present) {
+      map['client_reference_id'] = Variable<String>(clientReferenceId.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
+    }
+    if (locationAccuracy.present) {
+      map['location_accuracy'] = Variable<double>(locationAccuracy.value);
+    }
+    if (boundaryCode.present) {
+      map['boundary_code'] = Variable<String>(boundaryCode.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (additionalFields.present) {
+      map['additional_fields'] = Variable<String>(additionalFields.value);
+    }
+    if (auditCreatedBy.present) {
+      map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
+    }
+    if (auditCreatedTime.present) {
+      map['audit_created_time'] = Variable<int>(auditCreatedTime.value);
+    }
+    if (auditModifiedBy.present) {
+      map['audit_modified_by'] = Variable<String>(auditModifiedBy.value);
+    }
+    if (auditModifiedTime.present) {
+      map['audit_modified_time'] = Variable<int>(auditModifiedTime.value);
+    }
+    if (nonRecoverableError.present) {
+      map['non_recoverable_error'] = Variable<bool>(nonRecoverableError.value);
+    }
+    if (clientCreatedTime.present) {
+      map['client_created_time'] = Variable<int>(clientCreatedTime.value);
+    }
+    if (clientCreatedBy.present) {
+      map['client_created_by'] = Variable<String>(clientCreatedBy.value);
+    }
+    if (clientModifiedBy.present) {
+      map['client_modified_by'] = Variable<String>(clientModifiedBy.value);
+    }
+    if (clientModifiedTime.present) {
+      map['client_modified_time'] = Variable<int>(clientModifiedTime.value);
+    }
+    if (rowVersion.present) {
+      map['row_version'] = Variable<int>(rowVersion.value);
+    }
+    if (isDeleted.present) {
+      map['is_deleted'] = Variable<bool>(isDeleted.value);
+    }
+    if (action.present) {
+      map['action'] = Variable<String>(action.value);
+    }
+    if (beneficiaryTags.present) {
+      map['beneficiary_tags'] = Variable<String>(beneficiaryTags.value);
+    }
+    if (resourceTags.present) {
+      map['resource_tags'] = Variable<String>(resourceTags.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('UserActionCompanion(')
+          ..write('id: $id, ')
+          ..write('tenantId: $tenantId, ')
+          ..write('projectId: $projectId, ')
+          ..write('clientReferenceId: $clientReferenceId, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('locationAccuracy: $locationAccuracy, ')
+          ..write('boundaryCode: $boundaryCode, ')
+          ..write('status: $status, ')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('auditCreatedBy: $auditCreatedBy, ')
+          ..write('auditCreatedTime: $auditCreatedTime, ')
+          ..write('auditModifiedBy: $auditModifiedBy, ')
+          ..write('auditModifiedTime: $auditModifiedTime, ')
+          ..write('nonRecoverableError: $nonRecoverableError, ')
+          ..write('clientCreatedTime: $clientCreatedTime, ')
+          ..write('clientCreatedBy: $clientCreatedBy, ')
+          ..write('clientModifiedBy: $clientModifiedBy, ')
+          ..write('clientModifiedTime: $clientModifiedTime, ')
+          ..write('rowVersion: $rowVersion, ')
+          ..write('isDeleted: $isDeleted, ')
+          ..write('action: $action, ')
+          ..write('beneficiaryTags: $beneficiaryTags, ')
+          ..write('resourceTags: $resourceTags, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e) : super(e);
   late final $AttendanceRegisterTable attendanceRegister =
@@ -38747,6 +39864,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $TaskResourceTable taskResource = $TaskResourceTable(this);
   late final $SideEffectTable sideEffect = $SideEffectTable(this);
   late final $ReferralTable referral = $ReferralTable(this);
+  late final $UserActionTable userAction = $UserActionTable(this);
   late final Index attendanceClientref = Index('attendance_clientref',
       'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
   late final Index attendanceIndividualid = Index('attendance_individualid',
@@ -38857,6 +39975,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         taskResource,
         sideEffect,
         referral,
+        userAction,
         attendanceClientref,
         attendanceIndividualid,
         projectClinetref,

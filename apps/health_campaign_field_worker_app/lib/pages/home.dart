@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/pages/closed_household_details.dart';
+import 'package:closed_household/pages/closed_household_wrapper.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:closed_household/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -460,6 +464,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.closeHouseHoldLabel: homeShowcaseData.closeHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home_filled,
+          label: i18.home.closeHouseHoldLabel,
+          onPressed: () {
+            context.router.push(ClosedHouseholdWrapperRoute());
+          },
+        ),
+      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -480,6 +493,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.closeHouseHoldLabel: homeShowcaseData.closeHouseHold.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -494,6 +508,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.db,
+      i18.home.closeHouseHoldLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -502,11 +517,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db || element == i18.home.closeHouseHoldLabel) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) => f != i18.home.db && f != i18.home.closeHouseHoldLabel)  // TODO: need to add close household inside mdms
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -637,6 +652,11 @@ void setPackagesSingleton(BuildContext context) {
         refusalReasons: appConfiguration.refusalReasons
             ?.map((e) => e.code)
             .toList(),
+        );
+
+        ClosedHouseholdSingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.projectId,
         );
 
 
