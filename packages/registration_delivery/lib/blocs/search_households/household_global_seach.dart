@@ -62,7 +62,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     var list = results.map((e) => e).toList();
 
-    if (event.globalSearchParams.filter!.contains(Status.closed.name)) {
+    if (event.globalSearchParams.filter!.contains(Status.closeHousehold.name)) {
       List<UserActionModel> closedHouseholds = [];
 
       list.forEach((e) {

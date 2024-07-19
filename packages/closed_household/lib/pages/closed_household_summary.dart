@@ -119,7 +119,7 @@ class ClosedHouseholdSummaryPageState
                             clientReferenceId: IdGen.i.identifier,
                             latitude: householdState.summary?.latitude,
                             longitude: householdState.summary?.longitude,
-                            boundary: ClosedHouseholdSingleton().boundary?.code,
+                            boundaryCode: ClosedHouseholdSingleton().boundary?.code,
                             locationAccuracy:
                                 householdState.summary?.locationAccuracy,
                             additionalFields:

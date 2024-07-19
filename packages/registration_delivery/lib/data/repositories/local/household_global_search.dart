@@ -3,8 +3,8 @@ import 'dart:math' as math;
 
 import 'package:closed_household/closed_household.dart'
     hide Status, StatusMapper;
-import 'package:closed_household/closed_household.dart' as closeStatus
-    show Status, StatusMapper;
+import 'package:closed_household/closed_household.dart' as closed_status
+    show Status;
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
@@ -51,7 +51,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
 
       final results = await filterSelectQuery.get();
 
-      if (params.filter?.contains(Status.closed.name) ?? false) {
+      if (params.filter?.contains(Status.closeHousehold.name) ?? false) {
         return results
             .map((e) {
               final userAction = e.readTableOrNull(sql.userAction);
@@ -80,18 +80,18 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
                           lastModifiedTime: userAction?.clientModifiedTime,
                         )
                       : null,
-                  beneficiaryTag: userAction.beneficiaryTags != null &&
-                          userAction.beneficiaryTags.isNotEmpty
-                      ? userAction.beneficiaryTags
+                  beneficiaryTag: userAction.beneficiaryTag != null &&
+                          userAction.beneficiaryTag.isNotEmpty
+                      ? userAction.beneficiaryTag
                       : null,
-                  boundary: userAction.boundaryCode,
+                  boundaryCode: userAction.boundaryCode,
                   isDeleted: userAction.isDeleted,
                   latitude: userAction.latitude,
                   longitude: userAction.longitude,
                   locationAccuracy: userAction.locationAccuracy,
                   nonRecoverableError: userAction.nonRecoverableError,
                   projectId: userAction.projectId,
-                  resourceTag: userAction.resourceTags,
+                  resourceTag: userAction.resourceTag,
                   status: userAction.status,
                   additionalFields: userAction?.additionalFields != null &&
                           userAction?.additionalFields.isNotEmpty
@@ -291,10 +291,10 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   filterSearch(selectQuery, String filter, LocalSqlDataStore sql) async {
     var sql = super.sql;
     if (selectQuery == null) {
-      if (filter == Status.closed.name) {
+      if (filter == Status.closeHousehold.name) {
         selectQuery = super.sql.userAction.select().join([])
           ..where(sql.userAction.status
-              .equals(closeStatus.Status.closeHousehold.toValue()));
+              .equals(closed_status.Status.closeHousehold.toValue()));
       } else {
         selectQuery = super.sql.household.select().join([
           leftOuterJoin(
@@ -307,15 +307,15 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       }
     } else if (selectQuery != null) {
-      if (filter == Status.closed.name) {
+      if (filter == Status.closeHousehold.name) {
         selectQuery = selectQuery.join([
           leftOuterJoin(
               sql.userAction,
               sql.userAction.status
-                  .equals(closeStatus.Status.closeHousehold.toValue()))
+                  .equals(closed_status.Status.closeHousehold.toValue()))
         ])
           ..where(sql.userAction.status
-              .equals(closeStatus.Status.closeHousehold.toValue()));
+              .equals(closed_status.Status.closeHousehold.toValue()));
       } else {
         selectQuery = selectQuery.join([
           leftOuterJoin(

@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/data/repositories/local/user_action.dart';
 import 'package:closed_household/data/repositories/oplog/oplog.dart';
+import 'package:closed_household/data/repositories/remote/user_action.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -144,6 +145,7 @@ class Constants {
         sql,
         HFReferralOpLogManager(isar),
       ),
+      ClosedHouseholdLocalRepository(sql, ClosedHouseholdOpLogManager(isar)),
     ];
   }
 
@@ -228,7 +230,7 @@ class Constants {
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userAction)
-          HFReferralRemoteRepository(dio, actionMap: actions),
+          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

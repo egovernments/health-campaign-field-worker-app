@@ -431,7 +431,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       Status.administeredFailed.toValue(): Status.administeredFailed,
       Status.inComplete.toValue(): Status.inComplete,
       Status.toAdminister.toValue(): Status.toAdminister,
-      Status.closed.toValue(): Status.closed,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
     };
 
     for (var task in tasks) {
