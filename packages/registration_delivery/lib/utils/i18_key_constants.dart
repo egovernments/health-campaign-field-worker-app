@@ -116,6 +116,7 @@ class Common {
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
   String get locationCapturing => 'CAPTURING_LOCATION';
   String get locationCaptured => 'LOCATION_CAPTURED';
+  String get coreCommonSummaryDetails => 'CORE_COMMON_SUMMARY_DETAILS';
 }
 
 class SearchBeneficiary {
@@ -508,6 +509,9 @@ class DeliverIntervention {
   String get resourceDeliveredLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
 
+  String get typeOfInsecticideUsed =>
+      'DELIVER_INTERVENTION_TYPE_OF_INSECTICIDE_USED';
+
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
@@ -516,6 +520,9 @@ class DeliverIntervention {
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+
+  String get deliveryDetailsLabel =>
+      'DELIVER_INTERVENTION_DELIVERY_DETAILS_LABEL';
 
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 

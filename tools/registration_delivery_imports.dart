@@ -869,6 +869,10 @@ void _addRegistrationRoutesAndImportToRouterFile(String routerFilePath) {
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: DeliverySummaryRoute.page,
+                    path: 'delivery-summary',
+                  ),
                 ],
               ),
             ]),
