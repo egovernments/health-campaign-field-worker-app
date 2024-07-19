@@ -5,7 +5,6 @@ part 'status.mapper.dart';
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum Status {
   @MappableValue("CLOSED_HOUSEHOLD") closeHousehold,
-  @MappableValue("LOCATION_CAPTURE") locationCapture,
   @MappableValue("REFUSED") refused,
   @MappableValue("SPRAYED") sprayed,
   @MappableValue("INELIGIBLE") ineligible,
