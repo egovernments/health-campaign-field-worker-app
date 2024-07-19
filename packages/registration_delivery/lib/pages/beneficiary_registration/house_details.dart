@@ -102,7 +102,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 registrationDate,
                                 searchQuery,
                                 loading,
-                                isClosedHousehold,
+                                selectedClosedHouseholdID,
                                 isHeadOfHousehold,
                               ) {
                                 var houseModel = HouseholdModel(

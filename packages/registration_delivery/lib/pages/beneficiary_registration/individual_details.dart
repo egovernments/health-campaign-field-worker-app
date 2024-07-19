@@ -141,7 +141,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            isClosedHousehold,
+                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {
@@ -178,6 +178,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             } else {
                               clickedStatus.value = true;
                               final scannerBloc =
+
                                   context.read<DigitScannerBloc>();
                               bloc.add(
                                 BeneficiaryRegistrationSummaryEvent(

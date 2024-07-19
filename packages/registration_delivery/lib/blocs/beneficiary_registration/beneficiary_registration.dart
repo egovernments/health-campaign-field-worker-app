@@ -153,6 +153,7 @@ class BeneficiaryRegistrationBloc
             : LocalityModel(code: code, name: name);
         emit(BeneficiaryRegistrationSummaryState(
             navigateToRoot: false,
+            selectedClosedHouseholdID: value.selectedClosedHouseholdID,
             householdModel: household?.copyWith(
                 address: address?.copyWith(
               relatedClientReferenceId: household.clientReferenceId,
@@ -200,6 +201,7 @@ class BeneficiaryRegistrationBloc
       summary: (value) async {
         if (event.navigateToSummary) {
           emit(BeneficiaryRegistrationState.create(
+              selectedClosedHouseholdID: value.selectedClosedHouseholdID,
               addressModel: value.householdModel?.address,
               householdModel: value.householdModel,
               individualModel: value.individualModel,
@@ -712,7 +714,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     DateTime? registrationDate,
     String? searchQuery,
-    String? isClosedHousehold,
+    String? selectedClosedHouseholdID,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationCreateState;
@@ -758,7 +760,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     DateTime? registrationDate,
     AddressModel? addressModel,
-    String? isClosedHousehold,
+    String? selectedClosedHouseholdID,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSummaryState;

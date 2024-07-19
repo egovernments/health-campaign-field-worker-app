@@ -377,7 +377,7 @@ class _SearchBeneficiaryPageState
                                                   h.key == 'householdHead')
                                               .firstOrNull
                                               ?.value,
-                                              isClosedHousehold: i.clientReferenceId,
+                                              selectedClosedHouseholdID: i.clientReferenceId,
                                         ),
                                       ),
                                     );

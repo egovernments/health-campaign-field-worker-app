@@ -123,7 +123,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   projectBeneficiaryModel,
                                   registrationDate,
                                   addressModel,
-                                  isClosedHousehold,
+                                  selectedClosedHouseholdID,
                                   loading,
                                   isHeadOfHousehold,
                                 ) async {
@@ -172,12 +172,12 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             tag: projectBeneficiaryModel?.tag,
                                             navigateToSummary: false),
                                       );
-                                      if(isClosedHousehold != null&& householdModel != null) {
+                                      if(selectedClosedHouseholdID != null&& householdModel != null) {
                                         context
                                             .read<ClosedHouseholdBloc>()
                                             .add(
                                             ClosedHouseholdEvent.handleUpdate(
-                                                isClosedHousehold,
+                                                selectedClosedHouseholdID,
                                                 householdModel
                                                     .clientReferenceId));
                                       }
