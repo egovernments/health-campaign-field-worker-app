@@ -502,7 +502,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               RemoteRepository<UserActionModel,
                   UserActionSearchModel>>(
             create: (_) =>
-                ClosedHouseholdRemoteRepository(dio, actionMap: actions),
+                UserActionRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
       ]);

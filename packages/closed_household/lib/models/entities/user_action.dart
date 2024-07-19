@@ -53,7 +53,7 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
-  final String? boundary;
+  final String? boundaryCode;
   final int? rowVersion;
   final String? resourceTag;
   final String? beneficiaryTag;
@@ -71,7 +71,7 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
     this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
-    this.boundary,
+    this.boundaryCode,
     this.rowVersion,
     this.beneficiaryTag,
     this.resourceTag,
@@ -103,11 +103,11 @@ class UserActionModel extends EntityModel with UserActionModelMappable {
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
-      boundaryCode: Value(boundary),
+      boundaryCode: Value(boundaryCode),
       rowVersion: Value(rowVersion),
       action: Value(action),
-      beneficiaryTags: Value(beneficiaryTag),
-      resourceTags: Value(resourceTag),
+      beneficiaryTag: Value(beneficiaryTag),
+      resourceTag: Value(resourceTag),
       latitude: Value(latitude),
       longitude: Value(longitude),
       locationAccuracy: Value(locationAccuracy),

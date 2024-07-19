@@ -117,6 +117,8 @@ class Common {
   String get locationCapturing => 'CAPTURING_LOCATION';
   String get locationCaptured => 'LOCATION_CAPTURED';
   String get coreCommonSummaryDetails => 'CORE_COMMON_SUMMARY_DETAILS';
+
+  String get metersNear => 'METERS_NEAR';
 }
 
 class SearchBeneficiary {

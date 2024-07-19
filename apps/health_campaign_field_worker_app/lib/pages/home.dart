@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/models/entities/user_action.dart';
-import 'package:closed_household/pages/closed_household_details.dart';
-import 'package:closed_household/pages/closed_household_wrapper.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';

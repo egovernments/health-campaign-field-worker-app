@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:flutter/material.dart';
@@ -122,6 +123,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   projectBeneficiaryModel,
                                   registrationDate,
                                   addressModel,
+                                  isClosedHousehold,
                                   loading,
                                   isHeadOfHousehold,
                                 ) async {
@@ -170,6 +172,16 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             tag: projectBeneficiaryModel?.tag,
                                             navigateToSummary: false),
                                       );
+                                      if(isClosedHousehold != null&& householdModel != null) {
+                                        context
+                                            .read<ClosedHouseholdBloc>()
+                                            .add(
+                                            ClosedHouseholdEvent.handleUpdate(
+                                                isClosedHousehold,
+                                                householdModel
+                                                    .clientReferenceId));
+                                      }
+
                                     }
                                   }
                                 },

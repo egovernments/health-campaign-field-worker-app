@@ -1,9 +1,9 @@
 import 'package:closed_household/models/entities/user_action.dart';
 import 'package:digit_data_model/data_model.dart';
 
-class ClosedHouseholdRemoteRepository
+class UserActionRemoteRepository
     extends RemoteRepository<UserActionModel, UserActionSearchModel> {
-  ClosedHouseholdRemoteRepository(
+  UserActionRemoteRepository(
       super.dio, {
         required super.actionMap,
         super.entityName = 'UserAction',

@@ -712,6 +712,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     DateTime? registrationDate,
     String? searchQuery,
+    String? isClosedHousehold,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationCreateState;
@@ -757,6 +758,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     DateTime? registrationDate,
     AddressModel? addressModel,
+    String? isClosedHousehold,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSummaryState;

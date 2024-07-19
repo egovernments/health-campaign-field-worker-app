@@ -6,6 +6,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:registration_delivery/pages/beneficiary/widgets/view_closed_household.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -346,7 +347,48 @@ class _SearchBeneficiaryPageState
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
                     return searchHouseholdsState.closedHouseholds.isNotEmpty
-                        ? closedWidget()
+                        ? SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, index) {
+                                final i = searchHouseholdsState.closedHouseholds
+                                    .elementAt(index);
+
+                                final distance = calculateDistance(
+                                  Coordinate(
+                                    lat,
+                                    long,
+                                  ),
+                                  Coordinate(
+                                    i.latitude,
+                                    i.longitude,
+                                  ),
+                                );
+
+                                return ViewClosedHouseholdCard(
+                                  userAction: i,
+                                  onOpenPressed: () async {
+                                    await context.router.push(
+                                      BeneficiaryRegistrationWrapperRoute(
+                                        initialState:
+                                            BeneficiaryRegistrationCreateState(
+                                          searchQuery: i
+                                              .additionalFields?.fields
+                                              .where((h) =>
+                                                  h.key == 'householdHead')
+                                              .firstOrNull
+                                              ?.value,
+                                              isClosedHousehold: i.clientReferenceId,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  distance: distance,
+                                );
+                              },
+                              childCount:
+                                  searchHouseholdsState.closedHouseholds.length,
+                            ),
+                          )
                         : SliverList(
                             delegate: SliverChildBuilderDelegate(
                               (ctx, index) {
@@ -547,7 +589,7 @@ class _SearchBeneficiaryPageState
       Status.administeredFailed.toValue(): Status.administeredFailed,
       Status.inComplete.toValue(): Status.inComplete,
       Status.toAdminister.toValue(): Status.toAdminister,
-      Status.closed.toValue(): Status.closed,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
       Status.registered.toValue(): Status.registered,
       Status.notRegistered.toValue(): Status.notRegistered,
     };
@@ -561,37 +603,5 @@ class _SearchBeneficiaryPageState
     } else {
       return selectedFilter;
     }
-  }
-
-  closedWidget() {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (ctx, index) {
-          final i = searchHouseholdsState.closedHouseholds.elementAt(index);
-          final distance = calculateDistance(
-            Coordinate(
-              lat,
-              long,
-            ),
-            Coordinate(
-              i.latitude,
-              i.longitude,
-            ),
-          );
-
-          return Container(
-            margin: const EdgeInsets.only(bottom: kPadding),
-            child: const DigitCard(
-              child: Text(
-                '',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          );
-        },
-        childCount: searchHouseholdsState.householdMembers.length,
-      ),
-    );
   }
 }
