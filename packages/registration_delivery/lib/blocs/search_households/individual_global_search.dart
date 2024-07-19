@@ -29,7 +29,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       required super.individualGlobalSearchRepository,
       required super.houseHoldGlobalSearchRepository}) {
     on<IndividualGlobalSearchEvent>(_individualGlobalSearch);
-    on<SearchHouseholdsPaginateEvent>(_paginate);
   }
 
   Future<void> _individualGlobalSearch(
@@ -174,7 +173,4 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       limit: event.globalSearchParams.limit!,
     ));
   }
-
-  FutureOr<void> _paginate(SearchHouseholdsPaginateEvent event,
-      Emitter<SearchHouseholdsState> emit) {}
 }

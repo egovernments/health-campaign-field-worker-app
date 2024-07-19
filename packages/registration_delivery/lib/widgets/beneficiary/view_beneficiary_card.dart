@@ -29,10 +29,10 @@ class ViewBeneficiaryCard extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ViewBeneficiaryCard> createState() => _ViewBeneficiaryCardState();
+  State<ViewBeneficiaryCard> createState() => ViewBeneficiaryCardState();
 }
 
-class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
+class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
   late HouseholdMemberWrapper householdMember;
 
   @override

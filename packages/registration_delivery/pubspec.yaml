@@ -40,6 +40,7 @@ dependencies:
   stream_transform: ^2.1.0
   async: ^2.11.0
   formula_parser: ^2.0.1
+  closed_household: ^0.0.0-dev.1
 
 
 dev_dependencies:

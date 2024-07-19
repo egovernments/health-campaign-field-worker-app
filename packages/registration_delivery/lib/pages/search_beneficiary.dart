@@ -6,7 +6,6 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -346,54 +345,58 @@ class _SearchBeneficiaryPageState
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (ctx, index) {
-                          final i = searchHouseholdsState.householdMembers
-                              .elementAt(index);
-                          final distance = calculateDistance(
-                            Coordinate(
-                              lat,
-                              long,
-                            ),
-                            Coordinate(
-                              i.household?.address?.latitude,
-                              i.household?.address?.longitude,
-                            ),
-                          );
-
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: kPadding),
-                            child: ViewBeneficiaryCard(
-                              distance: isProximityEnabled ? distance : null,
-                              householdMember: i,
-                              onOpenPressed: () async {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
-
-                                scannerBloc.add(
-                                  const DigitScannerEvent.handleScanner(),
-                                );
-
-                                await context.router.push(
-                                  BeneficiaryWrapperRoute(
-                                    wrapper: i,
+                    return searchHouseholdsState.closedHouseholds.isNotEmpty
+                        ? closedWidget()
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, index) {
+                                final i = searchHouseholdsState.householdMembers
+                                    .elementAt(index);
+                                final distance = calculateDistance(
+                                  Coordinate(
+                                    lat,
+                                    long,
+                                  ),
+                                  Coordinate(
+                                    i.household?.address?.latitude,
+                                    i.household?.address?.longitude,
                                   ),
                                 );
-                                setState(() {
-                                  isProximityEnabled = false;
-                                });
-                                searchController.clear();
-                                selectedFilters.clear();
-                                blocWrapper.clearEvent();
+
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.only(bottom: kPadding),
+                                  child: ViewBeneficiaryCard(
+                                    distance:
+                                        isProximityEnabled ? distance : null,
+                                    householdMember: i,
+                                    onOpenPressed: () async {
+                                      final scannerBloc =
+                                          context.read<DigitScannerBloc>();
+
+                                      scannerBloc.add(
+                                        const DigitScannerEvent.handleScanner(),
+                                      );
+
+                                      await context.router.push(
+                                        BeneficiaryWrapperRoute(
+                                          wrapper: i,
+                                        ),
+                                      );
+                                      setState(() {
+                                        isProximityEnabled = false;
+                                      });
+                                      searchController.clear();
+                                      selectedFilters.clear();
+                                      blocWrapper.clearEvent();
+                                    },
+                                  ),
+                                );
                               },
+                              childCount:
+                                  searchHouseholdsState.householdMembers.length,
                             ),
                           );
-                        },
-                        childCount:
-                            searchHouseholdsState.householdMembers.length,
-                      ),
-                    );
                   },
                 ),
               ),
@@ -500,15 +503,6 @@ class _SearchBeneficiaryPageState
     }
   }
 
-  triggerClearEvent() {
-    blocWrapper.clearEvent();
-    setState(() {
-      isProximityEnabled = false;
-      searchController.clear();
-      selectedFilters = [];
-    });
-  }
-
   void triggerGlobalSearchEvent() {
     blocWrapper.clearEvent();
     if (RegistrationDeliverySingleton().beneficiaryType ==
@@ -567,5 +561,37 @@ class _SearchBeneficiaryPageState
     } else {
       return selectedFilter;
     }
+  }
+
+  closedWidget() {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (ctx, index) {
+          final i = searchHouseholdsState.closedHouseholds.elementAt(index);
+          final distance = calculateDistance(
+            Coordinate(
+              lat,
+              long,
+            ),
+            Coordinate(
+              i.latitude,
+              i.longitude,
+            ),
+          );
+
+          return Container(
+            margin: const EdgeInsets.only(bottom: kPadding),
+            child: const DigitCard(
+              child: Text(
+                '',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          );
+        },
+        childCount: searchHouseholdsState.householdMembers.length,
+      ),
+    );
   }
 }

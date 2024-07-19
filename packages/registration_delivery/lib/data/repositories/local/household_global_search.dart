@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:closed_household/closed_household.dart'
+    hide Status, StatusMapper;
+import 'package:closed_household/closed_household.dart' as closeStatus
+    show Status, StatusMapper;
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
@@ -39,92 +43,149 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       filterSelectQuery = nameSelectQuery;
     }
 
-    await filterSelectQuery.limit(params.limit ?? 50,
-        offset: params.offset ?? 0);
+    if (filterSelectQuery == null) {
+      return [];
+    } else {
+      await filterSelectQuery.limit(params.limit ?? 50,
+          offset: params.offset ?? 0);
 
-    final results = await filterSelectQuery.get();
+      final results = await filterSelectQuery.get();
 
-    return results
-        .map((e) {
-          final household = e.readTable(sql.household);
-          final address = e.readTableOrNull(sql.address);
+      if (params.filter?.contains(Status.closed.name) ?? false) {
+        return results
+            .map((e) {
+              final userAction = e.readTableOrNull(sql.userAction);
 
-          return HouseholdModel(
-            id: household.id,
-            tenantId: household.tenantId,
-            clientReferenceId: household.clientReferenceId,
-            memberCount: household.memberCount,
-            rowVersion: household.rowVersion,
-            isDeleted: household.isDeleted,
-            additionalFields: household.additionalFields != null &&
-                    household.additionalFields.toString().isNotEmpty
-                ? HouseholdAdditionalFieldsMapper.fromJson(
-                    household.additionalFields.toString())
-                : null,
-            auditDetails: (household.auditCreatedBy != null &&
-                    household.auditCreatedTime != null)
-                ? AuditDetails(
-                    createdBy: household.auditCreatedBy!,
-                    createdTime: household.auditCreatedTime!,
-                    lastModifiedBy: household.auditModifiedBy,
-                    lastModifiedTime: household.auditModifiedTime,
-                  )
-                : null,
-            clientAuditDetails: (household.clientCreatedBy != null &&
-                    household.clientCreatedTime != null)
-                ? ClientAuditDetails(
-                    createdBy: household.clientCreatedBy!,
-                    createdTime: household.clientCreatedTime!,
-                    lastModifiedBy: household.clientModifiedBy,
-                    lastModifiedTime: household.clientModifiedTime,
-                  )
-                : null,
-            address: address == null
-                ? null
-                : AddressModel(
-                    id: address.id,
-                    relatedClientReferenceId: household.clientReferenceId,
-                    tenantId: address.tenantId,
-                    doorNo: address.doorNo,
-                    latitude: address.latitude,
-                    longitude: address.longitude,
-                    landmark: address.landmark,
-                    locationAccuracy: address.locationAccuracy,
-                    addressLine1: address.addressLine1,
-                    addressLine2: address.addressLine2,
-                    city: address.city,
-                    pincode: address.pincode,
-                    locality: address.localityBoundaryCode != null
-                        ? LocalityModel(
-                            code: address.localityBoundaryCode!,
-                            name: address.localityBoundaryName,
-                          )
-                        : null,
-                    type: address.type,
-                    rowVersion: address.rowVersion,
-                    auditDetails: (household.auditCreatedBy != null &&
-                            household.auditCreatedBy != null)
-                        ? AuditDetails(
-                            createdBy: household.auditCreatedBy!,
-                            createdTime: household.auditCreatedTime!,
-                            lastModifiedBy: household.auditModifiedBy,
-                            lastModifiedTime: household.auditModifiedTime,
-                          )
-                        : null,
-                    clientAuditDetails: (household.clientCreatedBy != null &&
-                            household.clientCreatedTime != null)
-                        ? ClientAuditDetails(
-                            createdBy: household.clientCreatedBy!,
-                            createdTime: household.clientCreatedTime!,
-                            lastModifiedBy: household.clientModifiedBy,
-                            lastModifiedTime: household.clientModifiedTime,
-                          )
-                        : null,
-                  ),
-          );
-        })
-        .where((element) => element.isDeleted != true)
-        .toList();
+              return UserActionModel(
+                  id: userAction?.id,
+                  tenantId: userAction?.tenantId,
+                  action: userAction?.action,
+                  clientReferenceId: userAction?.clientReferenceId,
+                  rowVersion: userAction?.rowVersion,
+                  auditDetails: (userAction?.auditCreatedBy != null &&
+                          userAction?.auditCreatedTime != null)
+                      ? AuditDetails(
+                          createdBy: userAction?.auditCreatedBy!,
+                          createdTime: userAction?.auditCreatedTime!,
+                          lastModifiedBy: userAction?.auditModifiedBy,
+                          lastModifiedTime: userAction?.auditModifiedTime,
+                        )
+                      : null,
+                  clientAuditDetails: (userAction?.clientCreatedBy != null &&
+                          userAction?.clientCreatedTime != null)
+                      ? ClientAuditDetails(
+                          createdBy: userAction?.clientCreatedBy!,
+                          createdTime: userAction?.clientCreatedTime!,
+                          lastModifiedBy: userAction?.clientModifiedBy,
+                          lastModifiedTime: userAction?.clientModifiedTime,
+                        )
+                      : null,
+                  beneficiaryTag: userAction.beneficiaryTags != null &&
+                          userAction.beneficiaryTags.isNotEmpty
+                      ? userAction.beneficiaryTags
+                      : null,
+                  boundary: userAction.boundaryCode,
+                  isDeleted: userAction.isDeleted,
+                  latitude: userAction.latitude,
+                  longitude: userAction.longitude,
+                  locationAccuracy: userAction.locationAccuracy,
+                  nonRecoverableError: userAction.nonRecoverableError,
+                  projectId: userAction.projectId,
+                  resourceTag: userAction.resourceTags,
+                  status: userAction.status,
+                  additionalFields: userAction?.additionalFields != null &&
+                          userAction?.additionalFields.isNotEmpty
+                      ? UserActionAdditionalFieldsMapper.fromJson(
+                          userAction!.additionalFields.toString())
+                      : null);
+            })
+            .where((element) => element.isDeleted != true)
+            .toList();
+      } else {
+        return results
+            .map((e) {
+              final household = e.readTable(sql.household);
+              final address = e.readTableOrNull(sql.address);
+
+              return HouseholdModel(
+                id: household.id,
+                tenantId: household.tenantId,
+                clientReferenceId: household.clientReferenceId,
+                memberCount: household.memberCount,
+                rowVersion: household.rowVersion,
+                isDeleted: household.isDeleted,
+                additionalFields: household.additionalFields != null &&
+                        household.additionalFields.toString().isNotEmpty
+                    ? HouseholdAdditionalFieldsMapper.fromJson(
+                        household.additionalFields.toString())
+                    : null,
+                auditDetails: (household.auditCreatedBy != null &&
+                        household.auditCreatedTime != null)
+                    ? AuditDetails(
+                        createdBy: household.auditCreatedBy!,
+                        createdTime: household.auditCreatedTime!,
+                        lastModifiedBy: household.auditModifiedBy,
+                        lastModifiedTime: household.auditModifiedTime,
+                      )
+                    : null,
+                clientAuditDetails: (household.clientCreatedBy != null &&
+                        household.clientCreatedTime != null)
+                    ? ClientAuditDetails(
+                        createdBy: household.clientCreatedBy!,
+                        createdTime: household.clientCreatedTime!,
+                        lastModifiedBy: household.clientModifiedBy,
+                        lastModifiedTime: household.clientModifiedTime,
+                      )
+                    : null,
+                address: address == null
+                    ? null
+                    : AddressModel(
+                        id: address.id,
+                        relatedClientReferenceId: household.clientReferenceId,
+                        tenantId: address.tenantId,
+                        doorNo: address.doorNo,
+                        latitude: address.latitude,
+                        longitude: address.longitude,
+                        landmark: address.landmark,
+                        locationAccuracy: address.locationAccuracy,
+                        addressLine1: address.addressLine1,
+                        addressLine2: address.addressLine2,
+                        city: address.city,
+                        pincode: address.pincode,
+                        locality: address.localityBoundaryCode != null
+                            ? LocalityModel(
+                                code: address.localityBoundaryCode!,
+                                name: address.localityBoundaryName,
+                              )
+                            : null,
+                        type: address.type,
+                        rowVersion: address.rowVersion,
+                        auditDetails: (household.auditCreatedBy != null &&
+                                household.auditCreatedBy != null)
+                            ? AuditDetails(
+                                createdBy: household.auditCreatedBy!,
+                                createdTime: household.auditCreatedTime!,
+                                lastModifiedBy: household.auditModifiedBy,
+                                lastModifiedTime: household.auditModifiedTime,
+                              )
+                            : null,
+                        clientAuditDetails: (household.clientCreatedBy !=
+                                    null &&
+                                household.clientCreatedTime != null)
+                            ? ClientAuditDetails(
+                                createdBy: household.clientCreatedBy!,
+                                createdTime: household.clientCreatedTime!,
+                                lastModifiedBy: household.clientModifiedBy,
+                                lastModifiedTime: household.clientModifiedTime,
+                              )
+                            : null,
+                      ),
+              );
+            })
+            .where((element) => element.isDeleted != true)
+            .toList();
+      }
+    }
   }
 
   proximitySearch(
@@ -230,28 +291,45 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   filterSearch(selectQuery, String filter, LocalSqlDataStore sql) async {
     var sql = super.sql;
     if (selectQuery == null) {
-      selectQuery = super.sql.household.select().join([
-        leftOuterJoin(
-            sql.projectBeneficiary,
-            sql.projectBeneficiary.beneficiaryClientReferenceId
-                .equalsExp(super.sql.household.clientReferenceId))
-      ])
-        ..where(filter == Status.registered.name
-            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      if (filter == Status.closed.name) {
+        selectQuery = super.sql.userAction.select().join([])
+          ..where(sql.userAction.status
+              .equals(closeStatus.Status.closeHousehold.toValue()));
+      } else {
+        selectQuery = super.sql.household.select().join([
+          leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(super.sql.household.clientReferenceId))
+        ])
+          ..where(filter == Status.registered.name
+              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      }
     } else if (selectQuery != null) {
-      selectQuery = selectQuery.join([
-        leftOuterJoin(
-            sql.projectBeneficiary,
-            filter == Status.registered.name
-                ? sql.projectBeneficiary.beneficiaryClientReferenceId
-                    .equalsExp(super.sql.household.clientReferenceId)
-                : sql.projectBeneficiary.beneficiaryClientReferenceId
-                    .equalsExp(super.sql.household.clientReferenceId))
-      ])
-        ..where(filter == Status.registered.name
-            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      if (filter == Status.closed.name) {
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.userAction,
+              sql.userAction.status
+                  .equals(closeStatus.Status.closeHousehold.toValue()))
+        ])
+          ..where(sql.userAction.status
+              .equals(closeStatus.Status.closeHousehold.toValue()));
+      } else {
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.projectBeneficiary,
+              filter == Status.registered.name
+                  ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                      .equalsExp(super.sql.household.clientReferenceId)
+                  : sql.projectBeneficiary.beneficiaryClientReferenceId
+                      .equalsExp(super.sql.household.clientReferenceId))
+        ])
+          ..where(filter == Status.registered.name
+              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      }
     }
     return selectQuery;
   }
