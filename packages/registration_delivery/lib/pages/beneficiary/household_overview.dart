@@ -80,7 +80,7 @@ class _HouseholdOverviewPageState
                           margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                           padding: const EdgeInsets.fromLTRB(
                               kPadding, 0, kPadding, 0),
-                          child: deliverInterventionState.tasks?.first.status ==
+                          child: deliverInterventionState.tasks?.last.status ==
                                   Status.administeredSuccess.toValue()
                               ? DigitOutLineButton(
                                   label: localizations.translate(
