@@ -225,46 +225,59 @@ class _HouseholdOverviewPageState
                                             label: localizations.translate(i18
                                                 .householdOverView
                                                 .householdOverViewDeleteLabel),
-                                            action: () => DigitDialog.show(
-                                              context,
-                                              options: DigitDialogOptions(
-                                                titleText:
-                                                    localizations.translate(i18
-                                                        .householdOverView
-                                                        .householdOverViewActionCardTitle),
-                                                primaryAction:
-                                                    DigitDialogActions(
-                                                  label: localizations.translate(i18
-                                                      .householdOverView
-                                                      .householdOverViewPrimaryActionLabel),
-                                                  action: (ctx) {
-                                                    Navigator.of(
-                                                      ctx,
-                                                      rootNavigator: true,
-                                                    )
-                                                      ..pop()
-                                                      ..pop();
-                                                    context.router.push(
-                                                      ReasonForDeletionRoute(
-                                                        isHousholdDelete: true,
+                                            action: (state.householdMemberWrapper
+                                                            .projectBeneficiaries ??
+                                                        [])
+                                                    .isEmpty
+                                                ? null
+                                                : () {
+                                                    DigitDialog.show(
+                                                      context,
+                                                      options:
+                                                          DigitDialogOptions(
+                                                        titleText: localizations
+                                                            .translate(i18
+                                                                .householdOverView
+                                                                .householdOverViewActionCardTitle),
+                                                        primaryAction:
+                                                            DigitDialogActions(
+                                                          label: localizations
+                                                              .translate(i18
+                                                                  .householdOverView
+                                                                  .householdOverViewPrimaryActionLabel),
+                                                          action: (ctx) {
+                                                            Navigator.of(
+                                                              ctx,
+                                                              rootNavigator:
+                                                                  true,
+                                                            )
+                                                              ..pop()
+                                                              ..pop();
+                                                            context.router.push(
+                                                              ReasonForDeletionRoute(
+                                                                isHousholdDelete:
+                                                                    true,
+                                                              ),
+                                                            );
+                                                          },
+                                                        ),
+                                                        secondaryAction:
+                                                            DigitDialogActions(
+                                                          label: localizations
+                                                              .translate(i18
+                                                                  .householdOverView
+                                                                  .householdOverViewSecondaryActionLabel),
+                                                          action: (context) {
+                                                            Navigator.of(
+                                                              context,
+                                                              rootNavigator:
+                                                                  true,
+                                                            ).pop();
+                                                          },
+                                                        ),
                                                       ),
                                                     );
                                                   },
-                                                ),
-                                                secondaryAction:
-                                                    DigitDialogActions(
-                                                  label: localizations.translate(i18
-                                                      .householdOverView
-                                                      .householdOverViewSecondaryActionLabel),
-                                                  action: (context) {
-                                                    Navigator.of(
-                                                      context,
-                                                      rootNavigator: true,
-                                                    ).pop();
-                                                  },
-                                                ),
-                                              ),
-                                            ),
                                           ),
                                         ],
                                       ),
