@@ -1,13 +1,10 @@
 import 'package:closed_household/models/entities/user_action.dart';
-import 'package:flutter/material.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
+import 'package:flutter/material.dart';
 
+import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/beneficiary/beneficiary_card.dart';
 import '../../../widgets/localized.dart';
-
 
 class ViewClosedHouseholdCard extends LocalizedStatefulWidget {
   final UserActionModel userAction;
@@ -23,10 +20,12 @@ class ViewClosedHouseholdCard extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ViewClosedHouseholdCard> createState() => _ViewClosedHouseholdCardState();
+  State<ViewClosedHouseholdCard> createState() =>
+      _ViewClosedHouseholdCardState();
 }
 
-class _ViewClosedHouseholdCardState extends LocalizedState<ViewClosedHouseholdCard> {
+class _ViewClosedHouseholdCardState
+    extends LocalizedState<ViewClosedHouseholdCard> {
   late UserActionModel userAction;
 
   @override
@@ -51,7 +50,6 @@ class _ViewClosedHouseholdCardState extends LocalizedState<ViewClosedHouseholdCa
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-
     return DigitCard(
       child: Column(
         children: [
@@ -63,11 +61,14 @@ class _ViewClosedHouseholdCardState extends LocalizedState<ViewClosedHouseholdCa
                 width: MediaQuery.of(context).size.width / 1.8,
                 child: BeneficiaryCard(
                   status: widget.userAction.status ?? '',
-                  title: widget.userAction.additionalFields!=null ?widget.userAction.additionalFields?.fields
-                      .where((h) => h.key == 'householdHead')
-                      .firstOrNull
-                      ?.value : 'Unnamed',
-                  description: '${widget.distance?.toStringAsFixed(2)} ${localizations.translate(i18.common.metersNear)}',
+                  title: widget.userAction.additionalFields != null
+                      ? widget.userAction.additionalFields?.fields
+                          .where((h) => h.key == 'householdHead')
+                          .firstOrNull
+                          ?.value
+                      : 'Unnamed',
+                  description:
+                      '${((widget.distance ?? 0) / 1000).toStringAsFixed(2)} ${localizations.translate(i18.common.metersNear)}',
                 ),
               ),
               Flexible(
@@ -78,7 +79,7 @@ class _ViewClosedHouseholdCardState extends LocalizedState<ViewClosedHouseholdCa
                     ),
                   ),
                   label:
-                  localizations.translate(i18.searchBeneficiary.iconLabel),
+                      localizations.translate(i18.searchBeneficiary.iconLabel),
                   onPressed: widget.onOpenPressed,
                 ),
               ),

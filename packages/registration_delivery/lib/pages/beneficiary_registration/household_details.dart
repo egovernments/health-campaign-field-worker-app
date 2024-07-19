@@ -442,7 +442,10 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
     return fb.group(<String, Object>{
       _dateOfRegistrationKey:
           FormControl<DateTime>(value: registrationDate, validators: []),
-      _memberCountKey: FormControl<int>(value: household?.memberCount ?? 1),
+      _memberCountKey: FormControl<int>(
+        value: household?.memberCount ?? 1,
+    validators: [Validators.max<int>(20)],
+      ),
       _pregnantWomenCountKey: FormControl<int>(
           value: household?.additionalFields?.fields
                       .where((h) =>
@@ -457,7 +460,9 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                       ?.value
                       .toString() ??
                   '0')
-              : 0),
+              : 0,
+        validators: [Validators.max<int>(20)],
+      ),
       _childrenCountKey: FormControl<int>(
           value: household?.additionalFields?.fields
                       .where((h) =>
@@ -472,7 +477,9 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                       ?.value
                       .toString() ??
                   '0')
-              : 0)
+              : 0,
+        validators: [Validators.max<int>(20)],
+      )
     });
   }
 }

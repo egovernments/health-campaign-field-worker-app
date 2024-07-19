@@ -730,9 +730,15 @@ class DeliverInterventionPageState
     final bloc = context.read<DeliverInterventionBloc>().state;
 
     // Add controllers for each product variant to the _controllers list.
+    var groupedVariants = <String, List<ProductVariantModel>>{};
 
-    _controllers.addAll(
-        [productVariants?.first].map((e) => productVariants?.indexOf(e!)));
+    variants?.forEach((variant) {
+      if (!groupedVariants.containsKey(variant.productId)) {
+        groupedVariants[variant.productId!] = [];
+      }
+      groupedVariants[variant.productId]!.add(variant);
+    });
+    _controllers.addAll(groupedVariants.keys.mapIndexed((e, i) => i));
 
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
