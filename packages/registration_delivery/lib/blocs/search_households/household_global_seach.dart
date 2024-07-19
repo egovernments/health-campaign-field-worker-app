@@ -37,6 +37,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     SearchHouseholdsEmitter emit,
   ) async {
     final containers = <HouseholdMemberWrapper>[...state.householdMembers];
+    final List<UserActionModel> closedHouseholds = [...state.closedHouseholds];
 
     List<HouseholdModel> householdList = [];
     List<IndividualModel> individualsList = [];
@@ -63,7 +64,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     var list = results.map((e) => e).toList();
 
     if (event.globalSearchParams.filter!.contains(Status.closeHousehold.name)) {
-      List<UserActionModel> closedHouseholds = [];
 
       list.forEach((e) {
         closedHouseholds.add(e);
@@ -71,6 +71,9 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
       emit(state.copyWith(
         loading: false,
+        offset:
+            event.globalSearchParams.offset! + event.globalSearchParams.limit!,
+        limit: event.globalSearchParams.limit!,
         closedHouseholds: closedHouseholds,
       ));
     } else {
