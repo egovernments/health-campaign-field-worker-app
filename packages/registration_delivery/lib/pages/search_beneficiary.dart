@@ -367,6 +367,10 @@ class _SearchBeneficiaryPageState
                                 return ViewClosedHouseholdCard(
                                   userAction: i,
                                   onOpenPressed: () async {
+                                    setState(() {
+                                      selectedFilters = [];
+                                    });
+                                    blocWrapper.clearEvent();
                                     await context.router.push(
                                       BeneficiaryRegistrationWrapperRoute(
                                         initialState:
@@ -377,7 +381,7 @@ class _SearchBeneficiaryPageState
                                                   h.key == 'householdHead')
                                               .firstOrNull
                                               ?.value,
-                                              isClosedHousehold: i.clientReferenceId,
+                                              selectedClosedHouseholdID: i.clientReferenceId,
                                         ),
                                       ),
                                     );
