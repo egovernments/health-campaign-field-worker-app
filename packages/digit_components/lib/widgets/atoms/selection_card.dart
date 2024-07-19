@@ -83,6 +83,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
               child: Text(
@@ -90,11 +91,11 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: isSelected
-                    ? textTheme.bodyMedium?.copyWith(
+                    ? textTheme.bodyLarge?.copyWith(
                         color: const DigitColors().white,
                         fontWeight: FontWeight.w700,
                       )
-                    : textTheme.bodyMedium?.copyWith(
+                    : textTheme.bodyLarge?.copyWith(
                         color: const DigitColors().woodsmokeBlack,
                       ),
               ),

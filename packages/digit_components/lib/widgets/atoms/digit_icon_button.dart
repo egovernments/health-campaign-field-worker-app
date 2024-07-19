@@ -8,18 +8,19 @@ class DigitIconButton extends StatelessWidget {
   final ImageIcon? imageIcon;
   final Color? iconColor;
   final Color? iconTextColor;
-  final bool? buttonDisabled;
+  final TextDirection textDirection;
 
-  const DigitIconButton(
-      {super.key,
-      this.onPressed,
-      this.iconText,
-      this.icon,
-      this.iconSize,
-      this.imageIcon,
-      this.iconColor,
-      this.iconTextColor,
-      this.buttonDisabled = false});
+  const DigitIconButton({
+    super.key,
+    this.onPressed,
+    this.iconText,
+    this.icon,
+    this.iconSize,
+    this.imageIcon,
+    this.iconColor,
+    this.iconTextColor,
+    this.textDirection = TextDirection.ltr,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +32,7 @@ class DigitIconButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Row(
+        textDirection: textDirection,
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
