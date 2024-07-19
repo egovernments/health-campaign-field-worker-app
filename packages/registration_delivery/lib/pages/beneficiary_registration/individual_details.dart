@@ -340,7 +340,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           individualDetailsShowcaseData.nameOfIndividual
                               .buildWith(
                             child: DigitTextFormField(
-                              formControlName: 'individualName',
+                              formControlName: _individualNameKey,
                               label: localizations.translate(
                                 i18.individualDetails.nameLabelText,
                               ),

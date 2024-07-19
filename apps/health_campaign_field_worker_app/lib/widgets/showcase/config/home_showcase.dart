@@ -24,7 +24,7 @@ class _HomePageShowcaseData {
         supervisorSyncData,
         deleteAll,
         db,
-    closeHouseHold,
+        closeHouseHold,
       ];
 
   final distributorProgressBar = ShowcaseItemBuilder(
@@ -102,5 +102,4 @@ class _HomePageShowcaseData {
   final closeHouseHold = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.closeHouseHoldLabel,
   );
-
 }

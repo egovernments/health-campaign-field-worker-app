@@ -40,7 +40,9 @@ class DigitIconButton extends StatelessWidget {
                 Icon(
                   icon,
                   size: iconSize,
-                  color: iconColor ?? theme.colorScheme.secondary,
+                  color: buttonDisabled == false
+                      ? iconColor ?? theme.colorScheme.secondary
+                      : theme.colorScheme.outline,
                 ),
           ),
           const SizedBox(
@@ -50,7 +52,9 @@ class DigitIconButton extends StatelessWidget {
             Text(
               iconText!,
               style: TextStyle(
-                  color: iconTextColor ?? theme.colorScheme.secondary,
+                  color: buttonDisabled == false
+                      ? iconTextColor ?? theme.colorScheme.secondary
+                      : theme.colorScheme.outline,
                   fontSize: 16),
             ),
         ],

@@ -370,6 +370,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               .buildWith(
                             child: DigitIntegerFormPicker(
                               minimum: 1,
+                              maximum: 20,
                               form: form,
                               formControlName: _memberCountKey,
                               label: localizations.translate(
@@ -384,6 +385,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               .buildWith(
                             child: DigitIntegerFormPicker(
                               minimum: 0,
+                              maximum: 20,
                               form: form,
                               formControlName: _pregnantWomenCountKey,
                               label: localizations.translate(
@@ -398,6 +400,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                               .buildWith(
                             child: DigitIntegerFormPicker(
                               minimum: 0,
+                              maximum: 20,
                               form: form,
                               formControlName: _childrenCountKey,
                               label: localizations.translate(
