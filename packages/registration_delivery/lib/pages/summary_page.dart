@@ -172,16 +172,14 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             tag: projectBeneficiaryModel?.tag,
                                             navigateToSummary: false),
                                       );
-                                      if(selectedClosedHouseholdID != null&& householdModel != null) {
-                                        context
-                                            .read<ClosedHouseholdBloc>()
-                                            .add(
+                                      if (selectedClosedHouseholdID != null &&
+                                          householdModel != null) {
+                                        context.read<ClosedHouseholdBloc>().add(
                                             ClosedHouseholdEvent.handleUpdate(
                                                 selectedClosedHouseholdID,
                                                 householdModel
                                                     .clientReferenceId));
                                       }
-
                                     }
                                   }
                                 },
