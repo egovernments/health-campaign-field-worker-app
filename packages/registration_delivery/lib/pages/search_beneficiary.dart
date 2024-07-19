@@ -265,7 +265,7 @@ class _SearchBeneficiaryPageState
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            '(${searchHouseholdsState.householdMembers.length})',
+                                                            '(${selectedFilters.contains(Status.closeHousehold.name) ? searchHouseholdsState.closedHouseholds.length : searchHouseholdsState.householdMembers.length})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -381,7 +381,8 @@ class _SearchBeneficiaryPageState
                                                   h.key == 'householdHead')
                                               .firstOrNull
                                               ?.value,
-                                              selectedClosedHouseholdID: i.clientReferenceId,
+                                          selectedClosedHouseholdID:
+                                              i.clientReferenceId,
                                         ),
                                       ),
                                     );
