@@ -9,6 +9,7 @@ class DigitIconButton extends StatelessWidget {
   final Color? iconColor;
   final Color? iconTextColor;
   final TextDirection textDirection;
+  final bool buttonDisabled;
 
   const DigitIconButton({
     super.key,
@@ -20,6 +21,7 @@ class DigitIconButton extends StatelessWidget {
     this.iconColor,
     this.iconTextColor,
     this.textDirection = TextDirection.ltr,
+    this.buttonDisabled = false,
   });
 
   @override
