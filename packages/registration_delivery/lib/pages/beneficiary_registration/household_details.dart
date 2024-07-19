@@ -96,6 +96,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           projectBeneficiaryModel,
                           registrationDate,
                           searchQuery,
+                          isClosedHousehold,
                           loading,
                           isHeadOfHousehold,
                         ) {

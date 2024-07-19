@@ -132,6 +132,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               projectBeneficiaryModel,
                               registrationDate,
                               searchQuery,
+                              isClosedHousehold,
                               loading,
                               isHeadOfHousehold,
                             ) {
