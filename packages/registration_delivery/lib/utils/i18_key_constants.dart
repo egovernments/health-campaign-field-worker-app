@@ -116,6 +116,8 @@ class Common {
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
   String get locationCapturing => 'CAPTURING_LOCATION';
   String get locationCaptured => 'LOCATION_CAPTURED';
+
+  String get metersNear => 'METERS_NEAR';
 }
 
 class SearchBeneficiary {
