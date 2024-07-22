@@ -40,6 +40,18 @@ class ClosedHouseholdSummaryPageState
   }
 
   @override
+  void initState() {
+    context
+        .read<DigitScannerBloc>()
+        .add(
+        const DigitScannerEvent
+            .handleScanner(
+            qrCode: [],
+            barCode: []));
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
         builder: (context, householdState) {
@@ -59,55 +71,30 @@ class ClosedHouseholdSummaryPageState
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      GestureDetector(
-                        onTap: () {
+                      DigitOutlineIconButton(
+                        buttonStyle: OutlinedButton.styleFrom(
+                          shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.zero,
+                          ),
+                        ),
+                        onPressed: () {
                           Navigator.of(context).push(
-                            //[TODO: Add the route to auto_route]
+                            // [TODO: Add the route to auto_route]
                             MaterialPageRoute(
-                              builder: (context) => const DigitScannerPage(
+                              builder: (context) =>
+                              const DigitScannerPage(
                                 quantity: 1,
                                 isGS1code: false,
                                 singleValue: true,
-                                isEditEnabled: true,
                               ),
-                              settings:
-                                  const RouteSettings(name: '/qr-scanner'),
+                              settings: const RouteSettings(
+                                  name: '/qr-scanner'),
                             ),
                           );
                         },
-                        child: Container(
-                          color: const DigitColors().seaShellGray,
-                          padding: const EdgeInsets.symmetric(
-                              vertical: kPadding, horizontal: kPadding * 3),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.qr_code_scanner,
-                                color: const DigitColors().burningOrange,
-                                size: kPadding * 3,
-                              ),
-                              const SizedBox(
-                                width: kPadding,
-                              ),
-                              Flexible(
-                                child: Text(
-                                  localizations.translate(i18.closeHousehold
-                                      .closeHouseholdVoucherScannerLabel),
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        color:
-                                            const DigitColors().burningOrange,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 19,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        icon: Icons.qr_code,
+                        label: localizations.translate(i18.closeHousehold
+                            .closeHouseholdVoucherScannerLabel),
                       ),
                       DigitElevatedButton(
                         onPressed: () {
@@ -122,8 +109,7 @@ class ClosedHouseholdSummaryPageState
                             boundaryCode: ClosedHouseholdSingleton().boundary?.code,
                             locationAccuracy:
                                 householdState.summary?.locationAccuracy,
-                            additionalFields:
-                                householdState.summary?.additionalFields,
+                            additionalFields: householdState.summary?.additionalFields,
                             beneficiaryTag: scannerState.qrCodes.isNotEmpty
                                 ? scannerState.qrCodes.first
                                 : null,
@@ -142,13 +128,6 @@ class ClosedHouseholdSummaryPageState
                               ClosedHouseholdEvent.handleSubmit(
                                   userAction, false));
                           ///clear the scanner
-                          context
-                              .read<DigitScannerBloc>()
-                              .add(
-                              const DigitScannerEvent
-                                  .handleScanner(
-                                  qrCode: [],
-                                  barCode: []));
                           context.router
                               .push(ClosedHouseholdAcknowledgementRoute());
                         },
