@@ -546,6 +546,9 @@ class _SearchBeneficiaryPageState
       }
       triggerGlobalSearchEvent();
     } else {
+      setState(() {
+        selectedFilters = [];
+      });
       blocWrapper.clearEvent();
     }
   }

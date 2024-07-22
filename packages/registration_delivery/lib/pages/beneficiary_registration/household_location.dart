@@ -303,7 +303,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                 i18.householdLocation.gpsAccuracyLabel,
                               ),
                               readOnly: true,
-                              isRequired: true,
                               validationMessages: {
                                 'required': (_) => localizations.translate(
                                       i18.common.corecommonRequired,
