@@ -1,13 +1,11 @@
 import 'dart:async';
 
 import 'package:closed_household/models/entities/user_action.dart';
-import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../models/entities/status.dart';
-import '../pages/closed_household_details.dart';
 
 part 'closed_household.freezed.dart';
 
