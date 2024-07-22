@@ -15,20 +15,21 @@ import '../../models/entities/task.dart';
 import '../../utils/global_search_parameters.dart';
 
 class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
-  HouseHoldGlobalSearchBloc(
-      {required super.userUid,
-      required super.projectId,
-      required super.individual,
-      required super.householdMember,
-      required super.household,
-      required super.projectBeneficiary,
-      required super.taskDataRepository,
-      required super.beneficiaryType,
-      required super.sideEffectDataRepository,
-      required super.addressRepository,
-      required super.referralDataRepository,
-      required super.individualGlobalSearchRepository,
-      required super.houseHoldGlobalSearchRepository}) {
+  HouseHoldGlobalSearchBloc({
+    required super.userUid,
+    required super.projectId,
+    required super.individual,
+    required super.householdMember,
+    required super.household,
+    required super.projectBeneficiary,
+    required super.taskDataRepository,
+    required super.beneficiaryType,
+    required super.sideEffectDataRepository,
+    required super.addressRepository,
+    required super.referralDataRepository,
+    required super.individualGlobalSearchRepository,
+    required super.houseHoldGlobalSearchRepository,
+  }) {
     on<HouseHoldGlobalSearchEvent>(_houseHoldGlobalSearch);
   }
 
@@ -41,6 +42,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     List<HouseholdModel> householdList = [];
     List<IndividualModel> individualsList = [];
+    List<HouseholdMemberModel> householdMembersList = [];
     List<ProjectBeneficiaryModel> projectBeneficiariesList = [];
     List<TaskModel> taskList = [];
     List<SideEffectModel> sideEffectsList = [];
@@ -64,7 +66,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     var list = results.map((e) => e).toList();
 
     if (event.globalSearchParams.filter!.contains(Status.closeHousehold.name)) {
-
       list.forEach((e) {
         closedHouseholds.add(e);
       });
@@ -88,29 +89,18 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
               houseHoldClientReferenceIds.map((e) => e.toString()).toList()));
 
       // Search for individual results using the extracted IDs and search text.
-      final List<HouseholdMemberModel> householdMembers =
-          await fetchHouseholdMembersBulk(
+      householdMembersList = await fetchHouseholdMembersBulk(
         null,
         houseHoldClientReferenceIds,
       );
 
-      final List<String> individualClientReferenceIds = householdMembers
+      final List<String> individualClientReferenceIds = householdMembersList
           .map((e) => e.individualClientReferenceId.toString())
           .toList();
 
       individualsList = await individual.search(
         IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
       );
-
-      // Group household members by household client reference ID
-      final groupedHouseholdsMembers = householdMembers
-          .groupListsBy((element) => element.householdClientReferenceId);
-
-      householdList = await household.search(HouseholdSearchModel(
-        clientReferenceId: householdMembers
-            .map((e) => e.householdClientReferenceId.toString())
-            .toList(),
-      ));
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
@@ -130,6 +120,9 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
               projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
         ));
       }
+
+      final groupedHouseholdsMembers = householdMembersList
+          .groupListsBy((element) => element.householdClientReferenceId);
 
       for (final entry in groupedHouseholdsMembers.entries) {
         HouseholdModel filteredHousehold;
