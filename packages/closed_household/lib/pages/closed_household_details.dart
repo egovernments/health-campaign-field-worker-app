@@ -39,7 +39,6 @@ class ClosedHouseholdDetailsPageState
 
   @override
   void initState() {
-
     context.read<LocationBloc>().add(const LoadLocationEvent());
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -64,12 +63,11 @@ class ClosedHouseholdDetailsPageState
         form: () => buildForm(bloc.state),
         builder: (_, form, __) => BlocListener<LocationBloc, LocationState>(
           listener: (context, locationState) {
-            if(locationState.accuracy!=null){
+            if (locationState.accuracy != null) {
               //Hide the dialog after 1 seconds
               Future.delayed(const Duration(seconds: 1), () {
                 DigitComponentsUtils().hideLocationDialog(context);
               });
-
             }
             final lat = locationState.latitude;
             final lng = locationState.longitude;
@@ -111,15 +109,23 @@ class ClosedHouseholdDetailsPageState
                           latitude: form.control(_latKey).value,
                           longitude: form.control(_lngKey).value,
                           locationAccuracy: form.control(_accuracyKey).value,
-                          additionalFields: UserActionAdditionalFields(
-                            version: 1,
-                            fields: [
-                              AdditionalField(
-                                'householdHead',
-                                form.control(_householdHeadNameKey).value ?? '',
-                              ),
-                            ],
-                          ),
+                          additionalFields: form
+                                      .control(_householdHeadNameKey)
+                                      .value !=
+                                  null
+                              ? UserActionAdditionalFields(
+                                  version: 1,
+                                  fields: [
+                                    AdditionalField(
+                                      'householdHead',
+                                      form
+                                              .control(_householdHeadNameKey)
+                                              .value ??
+                                          '',
+                                    ),
+                                  ],
+                                )
+                              : null,
                         );
                         context.read<ClosedHouseholdBloc>().add(
                               ClosedHouseholdEvent.handleSummary(summary),
@@ -195,7 +201,6 @@ class ClosedHouseholdDetailsPageState
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
-        value: '',
         validators: [],
       ),
       _latKey: FormControl<double>(
