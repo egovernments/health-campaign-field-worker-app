@@ -37,6 +37,7 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
           SelectionBox<Status>(
             options: getFilters() ?? [],
             allowMultipleSelection: false,
+            equalWidthOptions: true,
             initialSelection: [
               ...selectedButtons
             ], // [TODO : fix selected not displaying]
@@ -110,9 +111,11 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
   void assignSelectedButtons() {
     setState(() {
       selectedButtons = widget.selectedFilters!
-          .map((e) => Status.values.where((element) => element.toValue() == e))
+          .map((e) => Status.values.where((element) => element.name == e))
           .expand((element) => element)
           .toList();
+
+
     });
   }
 }

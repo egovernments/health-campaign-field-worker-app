@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -328,6 +329,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home,
+          enableCustomIcon: true,
+          customIconSize: 48,
+          customIcon: Constants.closedHouseholdSvg,
+          label: i18.home.closedHouseHoldLabel,
+          onPressed: () {
+            context.router.push(DeliverySummaryRoute());
+          },
+        ),
+      ),
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
@@ -463,15 +476,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.closeHouseHoldLabel: homeShowcaseData.closeHouseHold.buildWith(
-        child: HomeItemCard(
-          icon: Icons.home_filled,
-          label: i18.home.closeHouseHoldLabel,
-          onPressed: () {
-            context.router.push(ClosedHouseholdWrapperRoute());
-          },
-        ),
-      ),
     };
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
@@ -492,12 +496,13 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
-      i18.home.closeHouseHoldLabel: homeShowcaseData.closeHouseHold.showcaseKey,
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
+      i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.myCheckList,
@@ -507,7 +512,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.db,
-      i18.home.closeHouseHoldLabel,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -516,11 +520,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db || element == i18.home.closeHouseHoldLabel) // TODO: need to add close household inside mdms
+            element == i18.home.db || element == i18.home.closedHouseHoldLabel) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db && f != i18.home.closeHouseHoldLabel)  // TODO: need to add close household inside mdms
+        .where((f) => f != i18.home.db && f != i18.home.closedHouseHoldLabel)  // TODO: need to add close household inside mdms
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
