@@ -187,37 +187,33 @@ class _SearchBeneficiaryPageState
                                       ],
                                     )
                                   : const Offstage(),
-                              if (selectedFilters
-                                  .contains(Status.closeHousehold.name))
-                                const Offstage()
-                              else
-                                DigitSearchBar(
-                                  controller: searchController,
-                                  hintText: localizations.translate(
-                                    i18.searchBeneficiary
-                                        .beneficiarySearchHintText,
-                                  ),
-                                  textCapitalization: TextCapitalization.words,
-                                  onChanged: (value) {
-                                    if (value.isEmpty) {
-                                      blocWrapper.clearEvent();
-                                    }
-                                    if (value.trim().length < 2 &&
-                                        !isProximityEnabled) {
-                                      blocWrapper.clearEvent();
-
-                                      return;
-                                    } else if (isProximityEnabled &&
-                                        value.trim().length < 2) {
-                                      triggerGlobalSearchEvent();
-                                    } else {
-                                      blocWrapper.searchHouseholdsBloc.add(
-                                        const SearchHouseholdsClearEvent(),
-                                      );
-                                      triggerGlobalSearchEvent();
-                                    }
-                                  },
+                              DigitSearchBar(
+                                controller: searchController,
+                                hintText: localizations.translate(
+                                  i18.searchBeneficiary
+                                      .beneficiarySearchHintText,
                                 ),
+                                textCapitalization: TextCapitalization.words,
+                                onChanged: (value) {
+                                  if (value.isEmpty) {
+                                    blocWrapper.clearEvent();
+                                  }
+                                  if (value.trim().length < 2 &&
+                                      !isProximityEnabled) {
+                                    blocWrapper.clearEvent();
+
+                                    return;
+                                  } else if (isProximityEnabled &&
+                                      value.trim().length < 2) {
+                                    triggerGlobalSearchEvent();
+                                  } else {
+                                    blocWrapper.searchHouseholdsBloc.add(
+                                      const SearchHouseholdsClearEvent(),
+                                    );
+                                    triggerGlobalSearchEvent();
+                                  }
+                                },
+                              ),
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Padding(
