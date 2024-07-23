@@ -250,8 +250,12 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         months: ageInMonths,
       ),
       RegistrationDeliverySingleton().projectType,
-      householdMember.tasks?.last,
-      householdMember.sideEffects,
+      (householdMember.tasks ?? []).isNotEmpty
+          ? householdMember.tasks?.last
+          : null,
+      (householdMember.sideEffects ?? []).isNotEmpty
+          ? householdMember.sideEffects
+          : null,
     );
 
     final isBeneficiaryRefused =

@@ -127,7 +127,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
       for (final entry in groupedHouseholdsMembers.entries) {
         HouseholdModel filteredHousehold;
         List<IndividualModel> filteredIndividuals;
-        List<TaskModel> filteredTasks;
+        List<TaskModel> filteredTasks = [];
         final householdId = entry.key;
         if (householdId == null) continue;
 
@@ -145,11 +145,13 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
             .toList();
 
         // Filter tasks based on project beneficiary client reference IDs
-        filteredTasks = taskList
-            .where((element) =>
-                projectBeneficiariesList.first.clientReferenceId ==
-                element.projectBeneficiaryClientReferenceId)
-            .toList();
+        for (var beneficiary in projectBeneficiariesList) {
+          var tasksForBeneficiary = taskList.where((element) =>
+              beneficiary.clientReferenceId ==
+              element.projectBeneficiaryClientReferenceId);
+
+          filteredTasks.addAll(tasksForBeneficiary);
+        }
 
         // Find the head of the household
         final head = filteredIndividuals.firstWhereOrNull(

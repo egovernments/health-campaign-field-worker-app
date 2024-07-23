@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recase/recase.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
@@ -187,7 +188,8 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                   value: deliverState.householdMemberWrapper
                                           ?.household?.address?.locality?.code
                                           .split('_')
-                                          .last ??
+                                          .last
+                                          .titleCase ??
                                       localizations
                                           .translate(i18.common.coreCommonNA),
                                   isInline: true),
