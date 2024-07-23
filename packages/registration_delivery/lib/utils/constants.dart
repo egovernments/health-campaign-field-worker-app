@@ -9,6 +9,7 @@ class Constants {
   final String deliveryTeam = 'Delivery Team';
   final String notAvailable = 'N/A';
   final String dateTimeExtFormat = 'dd-MM-yyyy';
+  final String dateMonthYearFormat = 'dd MMMM yyyy';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
 }
 

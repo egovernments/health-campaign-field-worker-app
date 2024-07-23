@@ -16,6 +16,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../blocs/search_households/search_households.dart';
+import '../utils/constants.dart';
 import '../utils/utils.dart';
 
 @RoutePage()
@@ -372,7 +373,8 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                                         ?.dateOfBirth ??
                                                                     '')
                                                         .toString(),
-                                                    dateFormat: "dd MMMM yyyy")
+                                                    dateFormat: Constants()
+                                                        .dateMonthYearFormat)
                                                 .toString()
                                             : localizations.translate(
                                                 i18.common.coreCommonNA)),
