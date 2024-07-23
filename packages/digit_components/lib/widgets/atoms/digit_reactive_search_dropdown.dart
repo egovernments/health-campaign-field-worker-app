@@ -53,7 +53,7 @@ class _DigitReactiveSearchDropdownState<T>
   Widget build(BuildContext context) {
     return LabeledField(
       padding: widget.padding ?? const EdgeInsets.only(top: kPadding * 2),
-      label: '${widget.label}${widget.isRequired ? '*' : ''}',
+      label: '${widget.label}${widget.isRequired ? ' *' : ''}',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,

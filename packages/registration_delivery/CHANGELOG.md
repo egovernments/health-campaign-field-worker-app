@@ -1,7 +1,8 @@
 ## 1.0.3-dev.1
 
-* Fixed filter search bug fixes
+* Fixed filter search bug fixes and improvements
 * Updated task status on view_beneficiary card
+* Implemented closed household flow filter and update
 
 ## 0.0.0-dev.10
 

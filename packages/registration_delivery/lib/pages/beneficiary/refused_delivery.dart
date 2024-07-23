@@ -145,7 +145,8 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                               .toValue(),
                                           reasonOfRefusal,
                                         ),
-                                        AdditionalField(
+                                        if (refusalComment != null)
+                                          AdditionalField(
                                           AdditionalFieldsType.deliveryComment
                                               .toValue(),
                                           refusalComment,

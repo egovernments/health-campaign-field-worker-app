@@ -17,7 +17,6 @@ import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
-import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/global_search_parameters.dart';
 import '../../utils/typedefs.dart';
@@ -275,10 +274,6 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
   const factory SearchHouseholdsEvent.houseHoldGlobalSearch({
     required GlobalSearchParameters globalSearchParams,
   }) = HouseHoldGlobalSearchEvent;
-
-  const factory SearchHouseholdsEvent.closedHouseholdSearch({
-    required GlobalSearchParameters globalSearchParams,
-  }) = ClosedHouseholdSearchEvent;
 }
 
 @freezed

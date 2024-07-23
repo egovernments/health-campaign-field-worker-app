@@ -1,16 +1,12 @@
 import 'dart:async';
 import 'dart:math' as math;
-
-import 'package:closed_household/closed_household.dart'
-    hide Status, StatusMapper;
-import 'package:closed_household/closed_household.dart' as closed_status
-    show Status;
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/entities/household.dart';
 import '../../../models/entities/status.dart';
 import '../../../utils/global_search_parameters.dart';
+import 'closed_household_search.dart';
 
 class HouseHoldGlobalSearchRepository extends LocalRepository {
   HouseHoldGlobalSearchRepository(super.sql, super.opLogManager);
@@ -24,84 +20,37 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   DataModelType get type => throw UnimplementedError();
 
   houseHoldGlobalSearch(GlobalSearchParameters params) async {
-    dynamic selectQuery;
-
-    var proximitySelectQuery =
-        await proximitySearch(selectQuery, params, super.sql);
-
-    var nameSelectQuery =
-        await nameSearch(proximitySelectQuery, params, super.sql);
-
-    var filterSelectQuery = nameSelectQuery;
-
-    if (params.filter != null && params.filter!.isNotEmpty) {
-      for (var element in params.filter!) {
-        filterSelectQuery =
-            await filterSearch(filterSelectQuery, element, super.sql);
-      }
+    if (params.filter!.contains(Status.closeHousehold.name)) {
+      return await ClosedHouseholdHoldSearchLocalRepository()
+          .performClosedHouseholdSearch(params, super.sql);
     } else {
-      filterSelectQuery = nameSelectQuery;
-    }
+      dynamic selectQuery;
 
-    if (filterSelectQuery == null) {
-      return [];
-    } else {
-      await filterSelectQuery.limit(params.limit ?? 50,
-          offset: params.offset ?? 0);
+      var proximitySelectQuery =
+          await proximitySearch(selectQuery, params, super.sql);
 
-      final results = await filterSelectQuery.get();
+      var nameSelectQuery =
+          await nameSearch(proximitySelectQuery, params, super.sql);
 
-      if (params.filter?.contains(Status.closeHousehold.name) ?? false) {
-        return results
-            .map((e) {
-              final userAction = e.readTableOrNull(sql.userAction);
+      var filterSelectQuery = nameSelectQuery;
 
-              return UserActionModel(
-                  id: userAction?.id,
-                  tenantId: userAction?.tenantId,
-                  action: userAction?.action,
-                  clientReferenceId: userAction?.clientReferenceId,
-                  rowVersion: userAction?.rowVersion,
-                  auditDetails: (userAction?.auditCreatedBy != null &&
-                          userAction?.auditCreatedTime != null)
-                      ? AuditDetails(
-                          createdBy: userAction?.auditCreatedBy!,
-                          createdTime: userAction?.auditCreatedTime!,
-                          lastModifiedBy: userAction?.auditModifiedBy,
-                          lastModifiedTime: userAction?.auditModifiedTime,
-                        )
-                      : null,
-                  clientAuditDetails: (userAction?.clientCreatedBy != null &&
-                          userAction?.clientCreatedTime != null)
-                      ? ClientAuditDetails(
-                          createdBy: userAction?.clientCreatedBy!,
-                          createdTime: userAction?.clientCreatedTime!,
-                          lastModifiedBy: userAction?.clientModifiedBy,
-                          lastModifiedTime: userAction?.clientModifiedTime,
-                        )
-                      : null,
-                  beneficiaryTag: userAction.beneficiaryTag != null &&
-                          userAction.beneficiaryTag.isNotEmpty
-                      ? userAction.beneficiaryTag
-                      : null,
-                  boundaryCode: userAction.boundaryCode,
-                  isDeleted: userAction.isDeleted,
-                  latitude: userAction.latitude,
-                  longitude: userAction.longitude,
-                  locationAccuracy: userAction.locationAccuracy,
-                  nonRecoverableError: userAction.nonRecoverableError,
-                  projectId: userAction.projectId,
-                  resourceTag: userAction.resourceTag,
-                  status: userAction.status,
-                  additionalFields: userAction?.additionalFields != null &&
-                          userAction?.additionalFields.isNotEmpty
-                      ? UserActionAdditionalFieldsMapper.fromJson(
-                          userAction!.additionalFields.toString())
-                      : null);
-            })
-            .where((element) => element.isDeleted != true)
-            .toList();
+      if (params.filter != null && params.filter!.isNotEmpty) {
+        for (var filter in params.filter!) {
+          filterSelectQuery =
+              await filterSearch(filterSelectQuery, params, filter, super.sql);
+        }
       } else {
+        filterSelectQuery = nameSelectQuery;
+      }
+
+      if (filterSelectQuery == null) {
+        return [];
+      } else {
+        await filterSelectQuery.limit(params.limit ?? 50,
+            offset: params.offset ?? 0);
+
+        final results = await filterSelectQuery.get();
+
         return results
             .map((e) {
               final household = e.readTable(sql.household);
@@ -288,48 +237,32 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     ]));
   }
 
-  filterSearch(selectQuery, String filter, LocalSqlDataStore sql) async {
+  filterSearch(selectQuery, GlobalSearchParameters params, String filter,
+      LocalSqlDataStore sql) async {
     var sql = super.sql;
     if (selectQuery == null) {
-      if (filter == Status.closeHousehold.name) {
-        selectQuery = super.sql.userAction.select().join([])
-          ..where(sql.userAction.status
-              .equals(closed_status.Status.closeHousehold.toValue()));
-      } else {
-        selectQuery = super.sql.household.select().join([
-          leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId))
-        ])
-          ..where(filter == Status.registered.name
-              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
-      }
+      selectQuery = super.sql.household.select().join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(super.sql.household.clientReferenceId))
+      ])
+        ..where(filter == Status.registered.name
+            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
     } else if (selectQuery != null) {
-      if (filter == Status.closeHousehold.name) {
-        selectQuery = selectQuery.join([
-          leftOuterJoin(
-              sql.userAction,
-              sql.userAction.status
-                  .equals(closed_status.Status.closeHousehold.toValue()))
-        ])
-          ..where(sql.userAction.status
-              .equals(closed_status.Status.closeHousehold.toValue()));
-      } else {
-        selectQuery = selectQuery.join([
-          leftOuterJoin(
-              sql.projectBeneficiary,
-              filter == Status.registered.name
-                  ? sql.projectBeneficiary.beneficiaryClientReferenceId
-                      .equalsExp(super.sql.household.clientReferenceId)
-                  : sql.projectBeneficiary.beneficiaryClientReferenceId
-                      .equalsExp(super.sql.household.clientReferenceId))
-        ])
-          ..where(filter == Status.registered.name
-              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
-      }
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            filter == Status.registered.name
+                ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(super.sql.household.clientReferenceId)
+                : sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(super.sql.household.clientReferenceId))
+      ])
+        ..where(filter == Status.registered.name
+            ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
+            : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
     }
     return selectQuery;
   }

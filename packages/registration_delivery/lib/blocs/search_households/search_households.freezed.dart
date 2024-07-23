@@ -47,8 +47,6 @@ mixin _$SearchHouseholdsEvent {
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -82,8 +80,6 @@ mixin _$SearchHouseholdsEvent {
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -117,8 +113,6 @@ mixin _$SearchHouseholdsEvent {
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -138,8 +132,6 @@ mixin _$SearchHouseholdsEvent {
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -156,7 +148,6 @@ mixin _$SearchHouseholdsEvent {
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
@@ -171,7 +162,6 @@ mixin _$SearchHouseholdsEvent {
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -268,8 +258,6 @@ class _$SearchHouseholdsInitializedEventImpl
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return initialize();
   }
@@ -306,8 +294,6 @@ class _$SearchHouseholdsInitializedEventImpl
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return initialize?.call();
   }
@@ -344,8 +330,6 @@ class _$SearchHouseholdsInitializedEventImpl
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -371,8 +355,6 @@ class _$SearchHouseholdsInitializedEventImpl
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return initialize(this);
   }
@@ -392,7 +374,6 @@ class _$SearchHouseholdsInitializedEventImpl
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return initialize?.call(this);
   }
@@ -410,7 +391,6 @@ class _$SearchHouseholdsInitializedEventImpl
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (initialize != null) {
@@ -584,8 +564,6 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return searchByHousehold(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -623,8 +601,6 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return searchByHousehold?.call(projectId, latitude, longitude, maxRadius,
         isProximityEnabled, householdModel);
@@ -662,8 +638,6 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -690,8 +664,6 @@ class _$SearchHouseholdsByHouseholdsEventImpl
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return searchByHousehold(this);
   }
@@ -711,7 +683,6 @@ class _$SearchHouseholdsByHouseholdsEventImpl
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return searchByHousehold?.call(this);
   }
@@ -729,7 +700,6 @@ class _$SearchHouseholdsByHouseholdsEventImpl
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByHousehold != null) {
@@ -953,8 +923,6 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return searchByHouseholdHead(searchText, projectId, isProximityEnabled,
         latitude, longitude, maxRadius, tag, offset, limit);
@@ -992,8 +960,6 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return searchByHouseholdHead?.call(searchText, projectId,
         isProximityEnabled, latitude, longitude, maxRadius, tag, offset, limit);
@@ -1031,8 +997,6 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
@@ -1059,8 +1023,6 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return searchByHouseholdHead(this);
   }
@@ -1080,7 +1042,6 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return searchByHouseholdHead?.call(this);
   }
@@ -1098,7 +1059,6 @@ class _$SearchHouseholdsSearchByHouseholdHeadEventImpl
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByHouseholdHead != null) {
@@ -1293,8 +1253,6 @@ class _$SearchHouseholdsByProximityEventImpl
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return searchByProximity(
         latitude, longititude, projectId, maxRadius, offset, limit);
@@ -1332,8 +1290,6 @@ class _$SearchHouseholdsByProximityEventImpl
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return searchByProximity?.call(
         latitude, longititude, projectId, maxRadius, offset, limit);
@@ -1371,8 +1327,6 @@ class _$SearchHouseholdsByProximityEventImpl
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
@@ -1399,8 +1353,6 @@ class _$SearchHouseholdsByProximityEventImpl
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return searchByProximity(this);
   }
@@ -1420,7 +1372,6 @@ class _$SearchHouseholdsByProximityEventImpl
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return searchByProximity?.call(this);
   }
@@ -1438,7 +1389,6 @@ class _$SearchHouseholdsByProximityEventImpl
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByProximity != null) {
@@ -1577,8 +1527,6 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return searchByTag(tag, projectId);
   }
@@ -1615,8 +1563,6 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return searchByTag?.call(tag, projectId);
   }
@@ -1653,8 +1599,6 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByTag != null) {
@@ -1680,8 +1624,6 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return searchByTag(this);
   }
@@ -1701,7 +1643,6 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return searchByTag?.call(this);
   }
@@ -1719,7 +1660,6 @@ class _$SearchHouseholdsByTagEventImpl implements SearchHouseholdsByTagEvent {
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (searchByTag != null) {
@@ -1812,8 +1752,6 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return clear();
   }
@@ -1850,8 +1788,6 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return clear?.call();
   }
@@ -1888,8 +1824,6 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -1915,8 +1849,6 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return clear(this);
   }
@@ -1936,7 +1868,6 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return clear?.call(this);
   }
@@ -1954,7 +1885,6 @@ class _$SearchHouseholdsClearEventImpl implements SearchHouseholdsClearEvent {
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (clear != null) {
@@ -2066,8 +1996,6 @@ class _$IndividualGlobalSearchEventImpl implements IndividualGlobalSearchEvent {
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return individualGlobalSearch(globalSearchParams);
   }
@@ -2104,8 +2032,6 @@ class _$IndividualGlobalSearchEventImpl implements IndividualGlobalSearchEvent {
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return individualGlobalSearch?.call(globalSearchParams);
   }
@@ -2142,8 +2068,6 @@ class _$IndividualGlobalSearchEventImpl implements IndividualGlobalSearchEvent {
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (individualGlobalSearch != null) {
@@ -2169,8 +2093,6 @@ class _$IndividualGlobalSearchEventImpl implements IndividualGlobalSearchEvent {
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return individualGlobalSearch(this);
   }
@@ -2190,7 +2112,6 @@ class _$IndividualGlobalSearchEventImpl implements IndividualGlobalSearchEvent {
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return individualGlobalSearch?.call(this);
   }
@@ -2208,7 +2129,6 @@ class _$IndividualGlobalSearchEventImpl implements IndividualGlobalSearchEvent {
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (individualGlobalSearch != null) {
@@ -2327,8 +2247,6 @@ class _$HouseHoldGlobalSearchEventImpl implements HouseHoldGlobalSearchEvent {
         individualGlobalSearch,
     required TResult Function(GlobalSearchParameters globalSearchParams)
         houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
   }) {
     return houseHoldGlobalSearch(globalSearchParams);
   }
@@ -2365,8 +2283,6 @@ class _$HouseHoldGlobalSearchEventImpl implements HouseHoldGlobalSearchEvent {
         individualGlobalSearch,
     TResult? Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
   }) {
     return houseHoldGlobalSearch?.call(globalSearchParams);
   }
@@ -2403,8 +2319,6 @@ class _$HouseHoldGlobalSearchEventImpl implements HouseHoldGlobalSearchEvent {
         individualGlobalSearch,
     TResult Function(GlobalSearchParameters globalSearchParams)?
         houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (houseHoldGlobalSearch != null) {
@@ -2430,8 +2344,6 @@ class _$HouseHoldGlobalSearchEventImpl implements HouseHoldGlobalSearchEvent {
         individualGlobalSearch,
     required TResult Function(HouseHoldGlobalSearchEvent value)
         houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
   }) {
     return houseHoldGlobalSearch(this);
   }
@@ -2451,7 +2363,6 @@ class _$HouseHoldGlobalSearchEventImpl implements HouseHoldGlobalSearchEvent {
     TResult? Function(IndividualGlobalSearchEvent value)?
         individualGlobalSearch,
     TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
   }) {
     return houseHoldGlobalSearch?.call(this);
   }
@@ -2469,7 +2380,6 @@ class _$HouseHoldGlobalSearchEventImpl implements HouseHoldGlobalSearchEvent {
     TResult Function(SearchHouseholdsClearEvent value)? clear,
     TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
     TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
     required TResult orElse(),
   }) {
     if (houseHoldGlobalSearch != null) {
@@ -2487,267 +2397,6 @@ abstract class HouseHoldGlobalSearchEvent implements SearchHouseholdsEvent {
   GlobalSearchParameters get globalSearchParams;
   @JsonKey(ignore: true)
   _$$HouseHoldGlobalSearchEventImplCopyWith<_$HouseHoldGlobalSearchEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$ClosedHouseholdSearchEventImplCopyWith<$Res> {
-  factory _$$ClosedHouseholdSearchEventImplCopyWith(
-          _$ClosedHouseholdSearchEventImpl value,
-          $Res Function(_$ClosedHouseholdSearchEventImpl) then) =
-      __$$ClosedHouseholdSearchEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({GlobalSearchParameters globalSearchParams});
-}
-
-/// @nodoc
-class __$$ClosedHouseholdSearchEventImplCopyWithImpl<$Res>
-    extends _$SearchHouseholdsEventCopyWithImpl<$Res,
-        _$ClosedHouseholdSearchEventImpl>
-    implements _$$ClosedHouseholdSearchEventImplCopyWith<$Res> {
-  __$$ClosedHouseholdSearchEventImplCopyWithImpl(
-      _$ClosedHouseholdSearchEventImpl _value,
-      $Res Function(_$ClosedHouseholdSearchEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? globalSearchParams = null,
-  }) {
-    return _then(_$ClosedHouseholdSearchEventImpl(
-      globalSearchParams: null == globalSearchParams
-          ? _value.globalSearchParams
-          : globalSearchParams // ignore: cast_nullable_to_non_nullable
-              as GlobalSearchParameters,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$ClosedHouseholdSearchEventImpl implements ClosedHouseholdSearchEvent {
-  const _$ClosedHouseholdSearchEventImpl({required this.globalSearchParams});
-
-  @override
-  final GlobalSearchParameters globalSearchParams;
-
-  @override
-  String toString() {
-    return 'SearchHouseholdsEvent.closedHouseholdSearch(globalSearchParams: $globalSearchParams)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ClosedHouseholdSearchEventImpl &&
-            (identical(other.globalSearchParams, globalSearchParams) ||
-                other.globalSearchParams == globalSearchParams));
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, globalSearchParams);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ClosedHouseholdSearchEventImplCopyWith<_$ClosedHouseholdSearchEventImpl>
-      get copyWith => __$$ClosedHouseholdSearchEventImplCopyWithImpl<
-          _$ClosedHouseholdSearchEventImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function() initialize,
-    required TResult Function(
-            String projectId,
-            double? latitude,
-            double? longitude,
-            double? maxRadius,
-            bool isProximityEnabled,
-            HouseholdModel householdModel)
-        searchByHousehold,
-    required TResult Function(
-            String searchText,
-            String projectId,
-            bool isProximityEnabled,
-            double? latitude,
-            double? longitude,
-            double? maxRadius,
-            String? tag,
-            int offset,
-            int limit)
-        searchByHouseholdHead,
-    required TResult Function(double latitude, double longititude,
-            String projectId, double maxRadius, int offset, int limit)
-        searchByProximity,
-    required TResult Function(String tag, String projectId) searchByTag,
-    required TResult Function() clear,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        individualGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        houseHoldGlobalSearch,
-    required TResult Function(GlobalSearchParameters globalSearchParams)
-        closedHouseholdSearch,
-  }) {
-    return closedHouseholdSearch(globalSearchParams);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function()? initialize,
-    TResult? Function(
-            String projectId,
-            double? latitude,
-            double? longitude,
-            double? maxRadius,
-            bool isProximityEnabled,
-            HouseholdModel householdModel)?
-        searchByHousehold,
-    TResult? Function(
-            String searchText,
-            String projectId,
-            bool isProximityEnabled,
-            double? latitude,
-            double? longitude,
-            double? maxRadius,
-            String? tag,
-            int offset,
-            int limit)?
-        searchByHouseholdHead,
-    TResult? Function(double latitude, double longititude, String projectId,
-            double maxRadius, int offset, int limit)?
-        searchByProximity,
-    TResult? Function(String tag, String projectId)? searchByTag,
-    TResult? Function()? clear,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        individualGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        houseHoldGlobalSearch,
-    TResult? Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
-  }) {
-    return closedHouseholdSearch?.call(globalSearchParams);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function()? initialize,
-    TResult Function(
-            String projectId,
-            double? latitude,
-            double? longitude,
-            double? maxRadius,
-            bool isProximityEnabled,
-            HouseholdModel householdModel)?
-        searchByHousehold,
-    TResult Function(
-            String searchText,
-            String projectId,
-            bool isProximityEnabled,
-            double? latitude,
-            double? longitude,
-            double? maxRadius,
-            String? tag,
-            int offset,
-            int limit)?
-        searchByHouseholdHead,
-    TResult Function(double latitude, double longititude, String projectId,
-            double maxRadius, int offset, int limit)?
-        searchByProximity,
-    TResult Function(String tag, String projectId)? searchByTag,
-    TResult Function()? clear,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        individualGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        houseHoldGlobalSearch,
-    TResult Function(GlobalSearchParameters globalSearchParams)?
-        closedHouseholdSearch,
-    required TResult orElse(),
-  }) {
-    if (closedHouseholdSearch != null) {
-      return closedHouseholdSearch(globalSearchParams);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(SearchHouseholdsInitializedEvent value)
-        initialize,
-    required TResult Function(SearchHouseholdsByHouseholdsEvent value)
-        searchByHousehold,
-    required TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)
-        searchByHouseholdHead,
-    required TResult Function(SearchHouseholdsByProximityEvent value)
-        searchByProximity,
-    required TResult Function(SearchHouseholdsByTagEvent value) searchByTag,
-    required TResult Function(SearchHouseholdsClearEvent value) clear,
-    required TResult Function(IndividualGlobalSearchEvent value)
-        individualGlobalSearch,
-    required TResult Function(HouseHoldGlobalSearchEvent value)
-        houseHoldGlobalSearch,
-    required TResult Function(ClosedHouseholdSearchEvent value)
-        closedHouseholdSearch,
-  }) {
-    return closedHouseholdSearch(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(SearchHouseholdsInitializedEvent value)? initialize,
-    TResult? Function(SearchHouseholdsByHouseholdsEvent value)?
-        searchByHousehold,
-    TResult? Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
-        searchByHouseholdHead,
-    TResult? Function(SearchHouseholdsByProximityEvent value)?
-        searchByProximity,
-    TResult? Function(SearchHouseholdsByTagEvent value)? searchByTag,
-    TResult? Function(SearchHouseholdsClearEvent value)? clear,
-    TResult? Function(IndividualGlobalSearchEvent value)?
-        individualGlobalSearch,
-    TResult? Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult? Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
-  }) {
-    return closedHouseholdSearch?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(SearchHouseholdsInitializedEvent value)? initialize,
-    TResult Function(SearchHouseholdsByHouseholdsEvent value)?
-        searchByHousehold,
-    TResult Function(SearchHouseholdsSearchByHouseholdHeadEvent value)?
-        searchByHouseholdHead,
-    TResult Function(SearchHouseholdsByProximityEvent value)? searchByProximity,
-    TResult Function(SearchHouseholdsByTagEvent value)? searchByTag,
-    TResult Function(SearchHouseholdsClearEvent value)? clear,
-    TResult Function(IndividualGlobalSearchEvent value)? individualGlobalSearch,
-    TResult Function(HouseHoldGlobalSearchEvent value)? houseHoldGlobalSearch,
-    TResult Function(ClosedHouseholdSearchEvent value)? closedHouseholdSearch,
-    required TResult orElse(),
-  }) {
-    if (closedHouseholdSearch != null) {
-      return closedHouseholdSearch(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class ClosedHouseholdSearchEvent implements SearchHouseholdsEvent {
-  const factory ClosedHouseholdSearchEvent(
-          {required final GlobalSearchParameters globalSearchParams}) =
-      _$ClosedHouseholdSearchEventImpl;
-
-  GlobalSearchParameters get globalSearchParams;
-  @JsonKey(ignore: true)
-  _$$ClosedHouseholdSearchEventImplCopyWith<_$ClosedHouseholdSearchEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 

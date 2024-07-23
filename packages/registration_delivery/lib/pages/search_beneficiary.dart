@@ -174,6 +174,7 @@ class _SearchBeneficiaryPageState
                                               triggerGlobalSearchEvent();
                                             } else {
                                               blocWrapper.clearEvent();
+                                              triggerGlobalSearchEvent();
                                             }
                                           },
                                         ),
@@ -186,33 +187,37 @@ class _SearchBeneficiaryPageState
                                       ],
                                     )
                                   : const Offstage(),
-                              DigitSearchBar(
-                                controller: searchController,
-                                hintText: localizations.translate(
-                                  i18.searchBeneficiary
-                                      .beneficiarySearchHintText,
-                                ),
-                                textCapitalization: TextCapitalization.words,
-                                onChanged: (value) {
-                                  if (value.isEmpty) {
-                                    blocWrapper.clearEvent();
-                                  }
-                                  if (value.trim().length < 2 &&
-                                      !isProximityEnabled) {
-                                    blocWrapper.clearEvent();
+                              if (selectedFilters
+                                  .contains(Status.closeHousehold.name))
+                                const Offstage()
+                              else
+                                DigitSearchBar(
+                                  controller: searchController,
+                                  hintText: localizations.translate(
+                                    i18.searchBeneficiary
+                                        .beneficiarySearchHintText,
+                                  ),
+                                  textCapitalization: TextCapitalization.words,
+                                  onChanged: (value) {
+                                    if (value.isEmpty) {
+                                      blocWrapper.clearEvent();
+                                    }
+                                    if (value.trim().length < 2 &&
+                                        !isProximityEnabled) {
+                                      blocWrapper.clearEvent();
 
-                                    return;
-                                  } else if (isProximityEnabled &&
-                                      value.trim().length < 2) {
-                                    triggerGlobalSearchEvent();
-                                  } else {
-                                    blocWrapper.searchHouseholdsBloc.add(
-                                      const SearchHouseholdsClearEvent(),
-                                    );
-                                    triggerGlobalSearchEvent();
-                                  }
-                                },
-                              ),
+                                      return;
+                                    } else if (isProximityEnabled &&
+                                        value.trim().length < 2) {
+                                      triggerGlobalSearchEvent();
+                                    } else {
+                                      blocWrapper.searchHouseholdsBloc.add(
+                                        const SearchHouseholdsClearEvent(),
+                                      );
+                                      triggerGlobalSearchEvent();
+                                    }
+                                  },
+                                ),
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Padding(
@@ -280,6 +285,7 @@ class _SearchBeneficiaryPageState
                                                             });
                                                             blocWrapper
                                                                 .clearEvent();
+                                                            triggerGlobalSearchEvent();
                                                           },
                                                           child: Container(
                                                             decoration:
@@ -546,7 +552,11 @@ class _SearchBeneficiaryPageState
       }
       triggerGlobalSearchEvent();
     } else {
+      setState(() {
+        selectedFilters = [];
+      });
       blocWrapper.clearEvent();
+      triggerGlobalSearchEvent();
     }
   }
 
@@ -554,31 +564,39 @@ class _SearchBeneficiaryPageState
     blocWrapper.clearEvent();
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
-      blocWrapper.individualGlobalSearchBloc
-          .add(SearchHouseholdsEvent.individualGlobalSearch(
-              globalSearchParams: GlobalSearchParameters(
-        isProximityEnabled: isProximityEnabled,
-        latitude: lat,
-        longitude: long,
-        maxRadius: RegistrationDeliverySingleton().maxRadius,
-        nameSearch: searchController.text,
-        filter: selectedFilters,
-        offset: offset,
-        limit: limit,
-      )));
+      if (isProximityEnabled ||
+          selectedFilters.isNotEmpty ||
+          searchController.text.isNotEmpty) {
+        blocWrapper.individualGlobalSearchBloc
+            .add(SearchHouseholdsEvent.individualGlobalSearch(
+                globalSearchParams: GlobalSearchParameters(
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          longitude: long,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text,
+          filter: selectedFilters,
+          offset: offset,
+          limit: limit,
+        )));
+      }
     } else {
-      blocWrapper.houseHoldGlobalSearchBloc
-          .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
-              globalSearchParams: GlobalSearchParameters(
-        isProximityEnabled: isProximityEnabled,
-        latitude: lat,
-        longitude: long,
-        maxRadius: RegistrationDeliverySingleton().maxRadius,
-        nameSearch: searchController.text,
-        filter: selectedFilters,
-        offset: offset,
-        limit: limit,
-      )));
+      if (isProximityEnabled ||
+          selectedFilters.isNotEmpty ||
+          searchController.text.isNotEmpty) {
+        blocWrapper.houseHoldGlobalSearchBloc
+            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
+                globalSearchParams: GlobalSearchParameters(
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          longitude: long,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text,
+          filter: selectedFilters,
+          offset: offset,
+          limit: limit,
+        )));
+      }
     }
   }
 

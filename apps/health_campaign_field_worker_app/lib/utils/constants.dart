@@ -170,6 +170,8 @@ class Constants {
     _version = version;
   }
 
+  static const String closedHouseholdSvg = 'assets/icons/svg/closed_household.svg';
+
   static List<RemoteRepository> getRemoteRepositories(
     Dio dio,
     Map<DataModelType, Map<ApiOperation, String>> actionMap,
