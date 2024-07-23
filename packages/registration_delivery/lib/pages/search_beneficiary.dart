@@ -93,7 +93,9 @@ class _SearchBeneficiaryPageState
                     maxRadius: RegistrationDeliverySingleton().maxRadius,
                     nameSearch: searchController.text,
                     filter: selectedFilters,
-                    offset: blocWrapper.individualGlobalSearchBloc.state.offset,
+                    offset:
+                        blocWrapper.individualGlobalSearchBloc.state.offset +
+                            blocWrapper.individualGlobalSearchBloc.state.limit,
                     limit: blocWrapper.individualGlobalSearchBloc.state.limit,
                   )));
                 } else {
@@ -106,7 +108,8 @@ class _SearchBeneficiaryPageState
                     maxRadius: RegistrationDeliverySingleton().maxRadius,
                     nameSearch: searchController.text,
                     filter: selectedFilters,
-                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset,
+                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset +
+                        blocWrapper.houseHoldGlobalSearchBloc.state.limit,
                     limit: blocWrapper.houseHoldGlobalSearchBloc.state.limit,
                   )));
                 }
@@ -386,7 +389,8 @@ class _SearchBeneficiaryPageState
                                       ),
                                     );
                                   },
-                                  distance: distance,
+                                  distance:
+                                      isProximityEnabled ? distance : null,
                                 );
                               },
                               childCount:
@@ -399,49 +403,49 @@ class _SearchBeneficiaryPageState
                                 final i = searchHouseholdsState.householdMembers
                                     .elementAt(index);
                                 final projectBeneficiaries =
-                                i.projectBeneficiaries?.where((element) {
+                                    i.projectBeneficiaries?.where((element) {
                                   if (RegistrationDeliverySingleton()
-                                      .beneficiaryType ==
+                                          .beneficiaryType ==
                                       BeneficiaryType.individual) {
                                     return element
-                                        .beneficiaryClientReferenceId ==
+                                            .beneficiaryClientReferenceId ==
                                         i.household?.clientReferenceId;
                                   } else {
                                     return element
-                                        .beneficiaryClientReferenceId ==
+                                            .beneficiaryClientReferenceId ==
                                         i.household!.clientReferenceId;
                                   }
                                 }).toList();
                                 final taskData = (projectBeneficiaries ?? [])
-                                    .isNotEmpty &&
-                                    i.tasks != null
+                                            .isNotEmpty &&
+                                        i.tasks != null
                                     ? i.tasks
-                                    ?.where((element) =>
-                                element
-                                    .projectBeneficiaryClientReferenceId ==
-                                    projectBeneficiaries
-                                        ?.first.clientReferenceId)
-                                    .toList()
+                                        ?.where((element) =>
+                                            element
+                                                .projectBeneficiaryClientReferenceId ==
+                                            projectBeneficiaries
+                                                ?.first.clientReferenceId)
+                                        .toList()
                                     : null;
                                 final referralData = (projectBeneficiaries ??
-                                    [])
-                                    .isNotEmpty
+                                            [])
+                                        .isNotEmpty
                                     ? i.referrals
-                                    ?.where((element) =>
-                                element
-                                    .projectBeneficiaryClientReferenceId ==
-                                    projectBeneficiaries
-                                        ?.first.clientReferenceId)
-                                    .toList()
+                                        ?.where((element) =>
+                                            element
+                                                .projectBeneficiaryClientReferenceId ==
+                                            projectBeneficiaries
+                                                ?.first.clientReferenceId)
+                                        .toList()
                                     : null;
                                 final sideEffects =
-                                taskData != null && taskData.isNotEmpty
-                                    ? i.sideEffects
-                                    ?.where((element) =>
-                                element.taskClientReferenceId ==
-                                    taskData.last.clientReferenceId)
-                                    .toList()
-                                    : null;
+                                    taskData != null && taskData.isNotEmpty
+                                        ? i.sideEffects
+                                            ?.where((element) =>
+                                                element.taskClientReferenceId ==
+                                                taskData.last.clientReferenceId)
+                                            .toList()
+                                        : null;
                                 final memberWrapper = HouseholdMemberWrapper(
                                   household: i.household,
                                   headOfHousehold: i.headOfHousehold,

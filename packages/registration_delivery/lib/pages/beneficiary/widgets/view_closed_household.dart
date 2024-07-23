@@ -67,8 +67,11 @@ class _ViewClosedHouseholdCardState
                           .firstOrNull
                           ?.value
                       : 'Unnamed',
-                  description:
-                      '${((widget.distance ?? 0) / 1000).toStringAsFixed(2)} ${localizations.translate(i18.common.metersNear)}',
+                  description: widget.distance != null
+                      ? ((widget.distance!) * 1000).round() > 999
+                          ? '(${((widget.distance!).round())} km)'
+                          : '(${((widget.distance!) * 1000).round()} mts)'
+                      : '',
                 ),
               ),
               Flexible(
