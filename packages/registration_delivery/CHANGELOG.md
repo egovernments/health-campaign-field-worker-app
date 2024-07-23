@@ -1,3 +1,8 @@
+## 1.0.3-dev.2
+
+* Closed household search fixes
+* Tasks status fixes on beneficiary card and overview page
+
 ## 1.0.3-dev.1
 
 * Fixed filter search bug fixes and improvements
