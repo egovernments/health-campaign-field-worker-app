@@ -176,6 +176,11 @@ class ClosedHouseholdDetailsPageState
                             label: localizations.translate(
                               i18.closeHousehold.headNameLabel,
                             ),
+                            validationMessages: {
+                              'maxLength': (object) => localizations
+                                  .translate(i18.common.maxCharsRequired)
+                                  .replaceAll('{}', maxLength.toString()),
+                            },
                           ),
                         ]),
                       ],
@@ -198,7 +203,9 @@ class ClosedHouseholdDetailsPageState
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
-        validators: [],
+        validators: [
+          Validators.maxLength(200),
+        ],
       ),
       _latKey: FormControl<double>(
           value: state.userActions?.first.latitude, validators: []),

@@ -179,28 +179,11 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 2,
-                  ),
-                  SizedBox(
-                    height: kPadding * 2,
-                    width: kPadding * 2,
-                    child: Icon(
-                      Icons.info,
-                      color: const DigitColors().lavaRed,
-                      size: kPadding * 2,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: kPadding / 2),
               Flexible(
                 fit: FlexFit.tight,
                 child: Text(
                   widget.errorMessage!,
-                  style: textTheme.bodyLarge?.copyWith(
+                  style: textTheme.bodySmall?.copyWith(
                     color: const DigitColors().lavaRed,
                   ),
                 ),
