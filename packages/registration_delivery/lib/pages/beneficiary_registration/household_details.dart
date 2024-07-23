@@ -455,8 +455,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                         (children + pregnantWomen);
                                   }
                                 },
-                                // disableDecrement:
-                                //     (memberCount == children + pregnantWomen),
                                 form: form,
                                 formControlName: _memberCountKey,
                                 label: localizations.translate(
