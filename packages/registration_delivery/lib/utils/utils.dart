@@ -47,7 +47,7 @@ class CustomValidator {
   ) {
     if (control.value != null &&
         control.value.toString().isNotEmpty &&
-        control.value.toString().length < 10) {
+        control.value.toString().length < 9) {
       return {'minLength': true};
     }
   }
@@ -332,7 +332,7 @@ class RegistrationDeliverySingleton {
     required List<String>? deliveryCommentOptions,
     required List<String>? symptomsTypes,
     required List<String>? searchHouseHoldFilter,
-      required List<String>? referralReasons,
+    required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
   }) {

@@ -76,13 +76,6 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                       onPressed: isClicked
                           ? null
                           : () async {
-                              final bloc =
-                                  context.read<DeliverInterventionBloc>();
-                              final userId = RegistrationDeliverySingleton()
-                                  .loggedInUserUuid;
-                              final projectId =
-                                  RegistrationDeliverySingleton().projectId;
-
                               final submit = await DigitDialog.show<bool>(
                                 context,
                                 options: DigitDialogOptions(
@@ -314,7 +307,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                         return DigitCard(
                           child: LabelValueList(
                               heading: localizations.translate(
-                                  i18.deliverIntervention.deliveryDetailsLabel),
+                                  '${RegistrationDeliverySingleton().selectedProject?.name}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                               withDivider: true,
                               items: [
                                 LabelValuePair(
@@ -342,6 +335,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                                   localizations.translate(e.sku ??
                                                       e.variation.toString()))
                                               .toList()
+                                              .join(', ')
                                               .toString() ??
                                           localizations
                                               .translate(i18.common.coreCommonNA),

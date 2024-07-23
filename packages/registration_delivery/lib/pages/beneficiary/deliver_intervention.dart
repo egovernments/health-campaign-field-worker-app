@@ -70,40 +70,29 @@ class DeliverInterventionPageState
       FormGroup form,
       HouseholdMemberWrapper householdMember,
       ProjectBeneficiaryModel projectBeneficiary) async {
-    await DigitSyncDialog.show(context,
-        type: DigitSyncDialogType.complete,
-        label: localizations.translate(i18.common.locationCaptured),
-        primaryAction: DigitDialogActions(
-          label: localizations.translate(
-            i18.beneficiaryDetails.ctaProceed,
-          ),
-          action: (ctx) async {
-            DigitComponentsUtils().hideLocationDialog(context);
-            final lat = locationState.latitude;
-            final long = locationState.longitude;
-            context.read<DeliverInterventionBloc>().add(
-                  DeliverInterventionSubmitEvent(
-                      task: _getTaskModel(
-                        context,
-                        form: form,
-                        oldTask: null,
-                        projectBeneficiaryClientReferenceId:
-                            projectBeneficiary.clientReferenceId,
-                        dose: deliverInterventionState.dose,
-                        cycle: deliverInterventionState.cycle,
-                        deliveryStrategy: DeliverStrategyType.direct.toValue(),
-                        address: householdMember.members?.first.address?.first,
-                        latitude: lat,
-                        longitude: long,
-                      ),
-                      isEditing: false,
-                      boundaryModel: RegistrationDeliverySingleton().boundary!,
-                      navigateToSummary: true,
-                      householdMemberWrapper: householdMember),
-                );
-            context.router.push(DeliverySummaryRoute());
-          },
-        ));
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+    context.read<DeliverInterventionBloc>().add(
+          DeliverInterventionSubmitEvent(
+              task: _getTaskModel(
+                context,
+                form: form,
+                oldTask: null,
+                projectBeneficiaryClientReferenceId:
+                    projectBeneficiary.clientReferenceId,
+                dose: deliverInterventionState.dose,
+                cycle: deliverInterventionState.cycle,
+                deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                address: householdMember.members?.first.address?.first,
+                latitude: lat,
+                longitude: long,
+              ),
+              isEditing: false,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              navigateToSummary: true,
+              householdMemberWrapper: householdMember),
+        );
+    context.router.push(DeliverySummaryRoute());
   }
 
   void handleLocationState(
@@ -730,15 +719,20 @@ class DeliverInterventionPageState
     final bloc = context.read<DeliverInterventionBloc>().state;
 
     // Add controllers for each product variant to the _controllers list.
-    var groupedVariants = <String, List<ProductVariantModel>>{};
 
-    variants?.forEach((variant) {
-      if (!groupedVariants.containsKey(variant.productId)) {
-        groupedVariants[variant.productId!] = [];
-      }
-      groupedVariants[variant.productId]!.add(variant);
-    });
-    _controllers.addAll(groupedVariants.keys.mapIndexed((e, i) => i));
+    if ((bloc.tasks?.last.resources ?? []).isNotEmpty) {
+      _controllers.addAll(bloc.tasks!.last.resources!.mapIndexed((e, i) => i));
+    } else {
+      var groupedVariants = <String, List<ProductVariantModel>>{};
+      variants?.forEach((variant) {
+        if (!groupedVariants.containsKey(variant.productId)) {
+          groupedVariants[variant.productId!] = [];
+        }
+        groupedVariants[variant.productId]!.add(variant);
+      });
+
+      _controllers.addAll(groupedVariants.keys.mapIndexed((e, i) => i));
+    }
 
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
