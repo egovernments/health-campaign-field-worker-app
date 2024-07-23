@@ -101,7 +101,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           }
         }).toList();
 
-        final taskData = (projectBeneficiary ?? []).isNotEmpty
+        final taskData = (projectBeneficiary ?? []).isNotEmpty &&
+                householdMember.tasks != null
             ? householdMember.tasks
                 ?.where((element) =>
                     element.projectBeneficiaryClientReferenceId ==
@@ -304,7 +305,10 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                               householdMember.household?.clientReferenceId;
                         }
                       }).toList(),
-                      isNotEligible,
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                              BeneficiaryType.individual
+                          ? isNotEligible
+                          : false,
                       isBeneficiaryRefused),
                   title: [
                     householdMember.headOfHousehold?.name?.givenName,
@@ -417,30 +421,5 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     } else {
       return Status.notRegistered.toValue();
     }
-  }
-
-  Status getTaskStatus(Iterable<TaskModel> tasks) {
-    final statusMap = {
-      Status.delivered.toValue(): Status.delivered,
-      Status.notDelivered.toValue(): Status.notDelivered,
-      Status.visited.toValue(): Status.visited,
-      Status.notVisited.toValue(): Status.notVisited,
-      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
-      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
-      Status.administeredSuccess.toValue(): Status.administeredSuccess,
-      Status.administeredFailed.toValue(): Status.administeredFailed,
-      Status.inComplete.toValue(): Status.inComplete,
-      Status.toAdminister.toValue(): Status.toAdminister,
-      Status.closeHousehold.toValue(): Status.closeHousehold,
-    };
-
-    for (var task in tasks) {
-      final mappedStatus = statusMap[task.status];
-      if (mappedStatus != null) {
-        return mappedStatus;
-      }
-    }
-
-    return Status.registered.toValue();
   }
 }

@@ -773,21 +773,18 @@ class _HouseholdOverviewPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.last.status ==
-                  Status.administeredSuccess.toValue()
-              ? i18.householdOverView.householdOverViewDeliveredIconLabel
-              : i18.householdOverView.householdOverViewNotDeliveredIconLabel)
-          : i18.householdOverView.householdOverViewRegisteredIconLabel;
+          ? getTaskStatus(deliverInterventionState.tasks ?? []).toValue()
+          : Status.registered.toValue();
 
       color = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.first.status ==
+          ? (deliverInterventionState.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
       icon = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.first.status ==
+          ? (deliverInterventionState.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)
