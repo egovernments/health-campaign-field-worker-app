@@ -316,6 +316,81 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   isInline: true),
                             ]),
                       ),
+                      DigitCard(
+                        child: LabelValueList(
+                            heading: localizations.translate(i18
+                                .individualDetails.individualsDetailsLabelText),
+                            withDivider: true,
+                            items: [
+                              LabelValuePair(
+                                label: localizations.translate(
+                                    i18.individualDetails.nameLabelText),
+                                value: householdState.maybeWhen(
+                                    orElse: () => localizations
+                                        .translate(i18.common.coreCommonNA),
+                                    summary: (
+                                      navigateToRoot,
+                                      householdModel,
+                                      individualModel,
+                                      projectBeneficiaryModel,
+                                      registrationDate,
+                                      addressModel,
+                                      selectedClosedHouseholdID,
+                                      loading,
+                                      isHeadOfHousehold,
+                                    ) =>
+                                        individualModel?.name?.givenName ??
+                                        localizations.translate(
+                                            i18.common.coreCommonNA)),
+                              ),
+                              LabelValuePair(
+                                label: localizations.translate(
+                                    i18.individualDetails.dobLabelText),
+                                value: householdState.maybeWhen(
+                                    orElse: () => localizations
+                                        .translate(i18.common.coreCommonNA),
+                                    summary: (
+                                      navigateToRoot,
+                                      householdModel,
+                                      individualModel,
+                                      projectBeneficiaryModel,
+                                      registrationDate,
+                                      addressModel,
+                                      selectedClosedHouseholdID,
+                                      loading,
+                                      isHeadOfHousehold,
+                                    ) =>
+                                        individualModel?.dateOfBirth ??
+                                        localizations.translate(
+                                            i18.common.coreCommonNA)),
+                              ),
+                              LabelValuePair(
+                                label: localizations.translate(
+                                    i18.individualDetails.genderLabelText),
+                                value: householdState.maybeWhen(
+                                    orElse: () => localizations
+                                        .translate(i18.common.coreCommonNA),
+                                    summary: (
+                                      navigateToRoot,
+                                      householdModel,
+                                      individualModel,
+                                      projectBeneficiaryModel,
+                                      registrationDate,
+                                      addressModel,
+                                      selectedClosedHouseholdID,
+                                      loading,
+                                      isHeadOfHousehold,
+                                    ) =>
+                                        individualModel?.gender != null
+                                            ? localizations.translate(
+                                                individualModel?.gender?.name
+                                                        .toUpperCase() ??
+                                                    '')
+                                            : localizations.translate(
+                                                i18.common.coreCommonNA)),
+                              ),
+                            ]),
+                      ),
                     ],
                   ),
                 )
