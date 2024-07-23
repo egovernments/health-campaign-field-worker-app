@@ -337,7 +337,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () {
-            context.router.push(DeliverySummaryRoute());
+            context.router.push(ClosedHouseholdWrapperRoute());
           },
         ),
       ),

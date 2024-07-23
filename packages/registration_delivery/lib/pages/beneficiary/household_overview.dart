@@ -772,7 +772,7 @@ class _HouseholdOverviewPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.first.status ==
+          ? (deliverInterventionState.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? i18.householdOverView.householdOverViewDeliveredIconLabel
               : i18.householdOverView.householdOverViewNotDeliveredIconLabel)
