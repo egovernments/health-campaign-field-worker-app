@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:closed_household/models/entities/user_action.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -164,6 +165,11 @@ class NetworkManager {
             case "Referrals":
               final entity = entityList
                   .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
+                  .toList();
+              await local.bulkCreate(entity);
+            case "UserAction":
+              final entity = entityList
+                  .map((e) => UserActionModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             default:

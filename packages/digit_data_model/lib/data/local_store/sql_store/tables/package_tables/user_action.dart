@@ -28,8 +28,8 @@ class UserAction extends Table {
       boolean().nullable().withDefault(const Constant(false))();
 
   TextColumn get action => text().nullable()();
-  TextColumn get beneficiaryTags => text().nullable()();
-  TextColumn get resourceTags => text().nullable()();
+  TextColumn get beneficiaryTag => text().nullable()();
+  TextColumn get resourceTag => text().nullable()();
 
 
   @override

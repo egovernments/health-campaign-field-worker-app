@@ -33,7 +33,7 @@ class DigitSearchBar extends StatelessWidget {
       shape: RoundedRectangleBorder(
         side: BorderSide(color: theme.scaffoldBackgroundColor, width: 1),
         borderRadius: BorderRadius.circular(
-            borderRadius != null ? (borderRadius! * 3) : 30),
+            borderRadius != null ? (borderRadius! * 3) : 12),
       ),
       margin: margin,
       child: Padding(
@@ -57,17 +57,17 @@ class DigitSearchBar extends StatelessWidget {
             fillColor: theme.cardColor,
             contentPadding: contentPadding ??
                 const EdgeInsets.only(
-                  left: 16.0,
+                  left: 0,
                   bottom: 8.0,
                   top: 8.0,
                 ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
+              borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
               borderSide: BorderSide(color: theme.cardColor),
             ),
             enabledBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: theme.scaffoldBackgroundColor),
-              borderRadius: BorderRadius.circular(borderRadius ?? 10.0),
+              borderRadius: BorderRadius.circular(borderRadius ?? 0.0),
             ),
           ),
         ),

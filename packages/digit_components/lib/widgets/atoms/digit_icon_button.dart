@@ -8,6 +8,8 @@ class DigitIconButton extends StatelessWidget {
   final ImageIcon? imageIcon;
   final Color? iconColor;
   final Color? iconTextColor;
+  final TextDirection textDirection;
+  final bool buttonDisabled;
 
   const DigitIconButton({
     super.key,
@@ -18,6 +20,8 @@ class DigitIconButton extends StatelessWidget {
     this.imageIcon,
     this.iconColor,
     this.iconTextColor,
+    this.textDirection = TextDirection.ltr,
+    this.buttonDisabled = false,
   });
 
   @override
@@ -30,6 +34,7 @@ class DigitIconButton extends StatelessWidget {
       ),
       onPressed: onPressed,
       child: Row(
+        textDirection: textDirection,
         mainAxisSize: MainAxisSize.min,
         children: [
           Flexible(
@@ -37,7 +42,9 @@ class DigitIconButton extends StatelessWidget {
                 Icon(
                   icon,
                   size: iconSize,
-                  color: iconColor ?? theme.colorScheme.secondary,
+                  color: buttonDisabled == false
+                      ? iconColor ?? theme.colorScheme.secondary
+                      : theme.colorScheme.outline,
                 ),
           ),
           const SizedBox(
@@ -47,7 +54,9 @@ class DigitIconButton extends StatelessWidget {
             Text(
               iconText!,
               style: TextStyle(
-                  color: iconTextColor ?? theme.colorScheme.secondary,
+                  color: buttonDisabled == false
+                      ? iconTextColor ?? theme.colorScheme.secondary
+                      : theme.colorScheme.outline,
                   fontSize: 16),
             ),
         ],

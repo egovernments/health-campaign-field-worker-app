@@ -38838,17 +38838,17 @@ class $UserActionTable extends UserAction
   late final GeneratedColumn<String> action = GeneratedColumn<String>(
       'action', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _beneficiaryTagsMeta =
-      const VerificationMeta('beneficiaryTags');
+  static const VerificationMeta _beneficiaryTagMeta =
+      const VerificationMeta('beneficiaryTag');
   @override
-  late final GeneratedColumn<String> beneficiaryTags = GeneratedColumn<String>(
-      'beneficiary_tags', aliasedName, true,
+  late final GeneratedColumn<String> beneficiaryTag = GeneratedColumn<String>(
+      'beneficiary_tag', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _resourceTagsMeta =
-      const VerificationMeta('resourceTags');
+  static const VerificationMeta _resourceTagMeta =
+      const VerificationMeta('resourceTag');
   @override
-  late final GeneratedColumn<String> resourceTags = GeneratedColumn<String>(
-      'resource_tags', aliasedName, true,
+  late final GeneratedColumn<String> resourceTag = GeneratedColumn<String>(
+      'resource_tag', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
@@ -38874,8 +38874,8 @@ class $UserActionTable extends UserAction
         rowVersion,
         isDeleted,
         action,
-        beneficiaryTags,
-        resourceTags
+        beneficiaryTag,
+        resourceTag
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -39004,17 +39004,17 @@ class $UserActionTable extends UserAction
       context.handle(_actionMeta,
           action.isAcceptableOrUnknown(data['action']!, _actionMeta));
     }
-    if (data.containsKey('beneficiary_tags')) {
+    if (data.containsKey('beneficiary_tag')) {
       context.handle(
-          _beneficiaryTagsMeta,
-          beneficiaryTags.isAcceptableOrUnknown(
-              data['beneficiary_tags']!, _beneficiaryTagsMeta));
+          _beneficiaryTagMeta,
+          beneficiaryTag.isAcceptableOrUnknown(
+              data['beneficiary_tag']!, _beneficiaryTagMeta));
     }
-    if (data.containsKey('resource_tags')) {
+    if (data.containsKey('resource_tag')) {
       context.handle(
-          _resourceTagsMeta,
-          resourceTags.isAcceptableOrUnknown(
-              data['resource_tags']!, _resourceTagsMeta));
+          _resourceTagMeta,
+          resourceTag.isAcceptableOrUnknown(
+              data['resource_tag']!, _resourceTagMeta));
     }
     return context;
   }
@@ -39069,10 +39069,10 @@ class $UserActionTable extends UserAction
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       action: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}action']),
-      beneficiaryTags: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}beneficiary_tags']),
-      resourceTags: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}resource_tags']),
+      beneficiaryTag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}beneficiary_tag']),
+      resourceTag: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}resource_tag']),
     );
   }
 
@@ -39105,8 +39105,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
   final int? rowVersion;
   final bool? isDeleted;
   final String? action;
-  final String? beneficiaryTags;
-  final String? resourceTags;
+  final String? beneficiaryTag;
+  final String? resourceTag;
   const UserActionData(
       {this.id,
       this.tenantId,
@@ -39130,8 +39130,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       this.rowVersion,
       this.isDeleted,
       this.action,
-      this.beneficiaryTags,
-      this.resourceTags});
+      this.beneficiaryTag,
+      this.resourceTag});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -39199,11 +39199,11 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
     if (!nullToAbsent || action != null) {
       map['action'] = Variable<String>(action);
     }
-    if (!nullToAbsent || beneficiaryTags != null) {
-      map['beneficiary_tags'] = Variable<String>(beneficiaryTags);
+    if (!nullToAbsent || beneficiaryTag != null) {
+      map['beneficiary_tag'] = Variable<String>(beneficiaryTag);
     }
-    if (!nullToAbsent || resourceTags != null) {
-      map['resource_tags'] = Variable<String>(resourceTags);
+    if (!nullToAbsent || resourceTag != null) {
+      map['resource_tag'] = Variable<String>(resourceTag);
     }
     return map;
   }
@@ -39270,12 +39270,12 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           : Value(isDeleted),
       action:
           action == null && nullToAbsent ? const Value.absent() : Value(action),
-      beneficiaryTags: beneficiaryTags == null && nullToAbsent
+      beneficiaryTag: beneficiaryTag == null && nullToAbsent
           ? const Value.absent()
-          : Value(beneficiaryTags),
-      resourceTags: resourceTags == null && nullToAbsent
+          : Value(beneficiaryTag),
+      resourceTag: resourceTag == null && nullToAbsent
           ? const Value.absent()
-          : Value(resourceTags),
+          : Value(resourceTag),
     );
   }
 
@@ -39306,8 +39306,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       action: serializer.fromJson<String?>(json['action']),
-      beneficiaryTags: serializer.fromJson<String?>(json['beneficiaryTags']),
-      resourceTags: serializer.fromJson<String?>(json['resourceTags']),
+      beneficiaryTag: serializer.fromJson<String?>(json['beneficiaryTag']),
+      resourceTag: serializer.fromJson<String?>(json['resourceTag']),
     );
   }
   @override
@@ -39336,8 +39336,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'action': serializer.toJson<String?>(action),
-      'beneficiaryTags': serializer.toJson<String?>(beneficiaryTags),
-      'resourceTags': serializer.toJson<String?>(resourceTags),
+      'beneficiaryTag': serializer.toJson<String?>(beneficiaryTag),
+      'resourceTag': serializer.toJson<String?>(resourceTag),
     };
   }
 
@@ -39364,8 +39364,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           Value<int?> rowVersion = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<String?> action = const Value.absent(),
-          Value<String?> beneficiaryTags = const Value.absent(),
-          Value<String?> resourceTags = const Value.absent()}) =>
+          Value<String?> beneficiaryTag = const Value.absent(),
+          Value<String?> resourceTag = const Value.absent()}) =>
       UserActionData(
         id: id.present ? id.value : this.id,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
@@ -39411,11 +39411,9 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         action: action.present ? action.value : this.action,
-        beneficiaryTags: beneficiaryTags.present
-            ? beneficiaryTags.value
-            : this.beneficiaryTags,
-        resourceTags:
-            resourceTags.present ? resourceTags.value : this.resourceTags,
+        beneficiaryTag:
+            beneficiaryTag.present ? beneficiaryTag.value : this.beneficiaryTag,
+        resourceTag: resourceTag.present ? resourceTag.value : this.resourceTag,
       );
   @override
   String toString() {
@@ -39442,8 +39440,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           ..write('rowVersion: $rowVersion, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('action: $action, ')
-          ..write('beneficiaryTags: $beneficiaryTags, ')
-          ..write('resourceTags: $resourceTags')
+          ..write('beneficiaryTag: $beneficiaryTag, ')
+          ..write('resourceTag: $resourceTag')
           ..write(')'))
         .toString();
   }
@@ -39472,8 +39470,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
         rowVersion,
         isDeleted,
         action,
-        beneficiaryTags,
-        resourceTags
+        beneficiaryTag,
+        resourceTag
       ]);
   @override
   bool operator ==(Object other) =>
@@ -39501,8 +39499,8 @@ class UserActionData extends DataClass implements Insertable<UserActionData> {
           other.rowVersion == this.rowVersion &&
           other.isDeleted == this.isDeleted &&
           other.action == this.action &&
-          other.beneficiaryTags == this.beneficiaryTags &&
-          other.resourceTags == this.resourceTags);
+          other.beneficiaryTag == this.beneficiaryTag &&
+          other.resourceTag == this.resourceTag);
 }
 
 class UserActionCompanion extends UpdateCompanion<UserActionData> {
@@ -39528,8 +39526,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
   final Value<int?> rowVersion;
   final Value<bool?> isDeleted;
   final Value<String?> action;
-  final Value<String?> beneficiaryTags;
-  final Value<String?> resourceTags;
+  final Value<String?> beneficiaryTag;
+  final Value<String?> resourceTag;
   final Value<int> rowid;
   const UserActionCompanion({
     this.id = const Value.absent(),
@@ -39554,8 +39552,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     this.rowVersion = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.action = const Value.absent(),
-    this.beneficiaryTags = const Value.absent(),
-    this.resourceTags = const Value.absent(),
+    this.beneficiaryTag = const Value.absent(),
+    this.resourceTag = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   UserActionCompanion.insert({
@@ -39581,8 +39579,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     this.rowVersion = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.action = const Value.absent(),
-    this.beneficiaryTags = const Value.absent(),
-    this.resourceTags = const Value.absent(),
+    this.beneficiaryTag = const Value.absent(),
+    this.resourceTag = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : clientReferenceId = Value(clientReferenceId);
   static Insertable<UserActionData> custom({
@@ -39608,8 +39606,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     Expression<int>? rowVersion,
     Expression<bool>? isDeleted,
     Expression<String>? action,
-    Expression<String>? beneficiaryTags,
-    Expression<String>? resourceTags,
+    Expression<String>? beneficiaryTag,
+    Expression<String>? resourceTag,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -39637,8 +39635,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       if (rowVersion != null) 'row_version': rowVersion,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (action != null) 'action': action,
-      if (beneficiaryTags != null) 'beneficiary_tags': beneficiaryTags,
-      if (resourceTags != null) 'resource_tags': resourceTags,
+      if (beneficiaryTag != null) 'beneficiary_tag': beneficiaryTag,
+      if (resourceTag != null) 'resource_tag': resourceTag,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -39666,8 +39664,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       Value<int?>? rowVersion,
       Value<bool?>? isDeleted,
       Value<String?>? action,
-      Value<String?>? beneficiaryTags,
-      Value<String?>? resourceTags,
+      Value<String?>? beneficiaryTag,
+      Value<String?>? resourceTag,
       Value<int>? rowid}) {
     return UserActionCompanion(
       id: id ?? this.id,
@@ -39692,8 +39690,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
       rowVersion: rowVersion ?? this.rowVersion,
       isDeleted: isDeleted ?? this.isDeleted,
       action: action ?? this.action,
-      beneficiaryTags: beneficiaryTags ?? this.beneficiaryTags,
-      resourceTags: resourceTags ?? this.resourceTags,
+      beneficiaryTag: beneficiaryTag ?? this.beneficiaryTag,
+      resourceTag: resourceTag ?? this.resourceTag,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -39767,11 +39765,11 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
     if (action.present) {
       map['action'] = Variable<String>(action.value);
     }
-    if (beneficiaryTags.present) {
-      map['beneficiary_tags'] = Variable<String>(beneficiaryTags.value);
+    if (beneficiaryTag.present) {
+      map['beneficiary_tag'] = Variable<String>(beneficiaryTag.value);
     }
-    if (resourceTags.present) {
-      map['resource_tags'] = Variable<String>(resourceTags.value);
+    if (resourceTag.present) {
+      map['resource_tag'] = Variable<String>(resourceTag.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -39804,8 +39802,8 @@ class UserActionCompanion extends UpdateCompanion<UserActionData> {
           ..write('rowVersion: $rowVersion, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('action: $action, ')
-          ..write('beneficiaryTags: $beneficiaryTags, ')
-          ..write('resourceTags: $resourceTags, ')
+          ..write('beneficiaryTag: $beneficiaryTag, ')
+          ..write('resourceTag: $resourceTag, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();

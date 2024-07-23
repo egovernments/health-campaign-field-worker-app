@@ -12,11 +12,11 @@ import 'package:registration_delivery/models/entities/deliver_strategy_type.dart
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/beneficiary/resource_beneficiary_card.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -70,112 +70,29 @@ class DeliverInterventionPageState
       FormGroup form,
       HouseholdMemberWrapper householdMember,
       ProjectBeneficiaryModel projectBeneficiary) async {
-    if (shouldSubmit == false) {
-      await DigitSyncDialog.show(context,
-          type: DigitSyncDialogType.complete,
-          label: localizations.translate(i18.common.locationCaptured),
-          primaryAction: DigitDialogActions(
-            label: localizations.translate(
-              i18.beneficiaryDetails.ctaProceed,
-            ),
-            action: (ctx) async {
-              DigitComponentsUtils().hideLocationDialog(context);
-              final lat = locationState.latitude;
-              final long = locationState.longitude;
-              shouldSubmit = await DigitDialog.show<bool>(
+    final lat = locationState.latitude;
+    final long = locationState.longitude;
+    context.read<DeliverInterventionBloc>().add(
+          DeliverInterventionSubmitEvent(
+              task: _getTaskModel(
                 context,
-                options: DigitDialogOptions(
-                  titleText: localizations
-                      .translate(i18.deliverIntervention.dialogTitle),
-                  contentText: localizations
-                      .translate(i18.deliverIntervention.dialogContent),
-                  primaryAction: DigitDialogActions(
-                    label: localizations.translate(i18.common.coreCommonSubmit),
-                    action: (ctx) {
-                      clickedStatus.value = true;
-                      Navigator.of(context, rootNavigator: true).pop(true);
-                    },
-                  ),
-                  secondaryAction: DigitDialogActions(
-                    label: localizations.translate(i18.common.coreCommonCancel),
-                    action: (context) =>
-                        Navigator.of(context, rootNavigator: true).pop(false),
-                  ),
-                ),
-              );
-              if (shouldSubmit ?? false) {
-                if (context.mounted) {
-                  context.read<DeliverInterventionBloc>().add(
-                        DeliverInterventionSubmitEvent(
-                          task: _getTaskModel(
-                            context,
-                            form: form,
-                            oldTask: null,
-                            projectBeneficiaryClientReferenceId:
-                                projectBeneficiary.clientReferenceId,
-                            dose: deliverInterventionState.dose,
-                            cycle: deliverInterventionState.cycle,
-                            deliveryStrategy:
-                                DeliverStrategyType.direct.toValue(),
-                            address:
-                                householdMember.members?.first.address?.first,
-                            latitude: lat,
-                            longitude: long,
-                          ),
-                          isEditing: false,
-                          boundaryModel:
-                              RegistrationDeliverySingleton().boundary!,
-                        ),
-                      );
-
-                  if (deliverInterventionState.futureDeliveries != null &&
-                      deliverInterventionState.futureDeliveries!.isNotEmpty &&
-                      RegistrationDeliverySingleton()
-                              .projectType
-                              ?.cycles
-                              ?.isNotEmpty ==
-                          true) {
-                    context.router.popUntilRouteWithName(
-                      BeneficiaryWrapperRoute.name,
-                    );
-                    context.router.push(
-                      SplashAcknowledgementRoute(
-                        enableBackToSearch: false,
-                      ),
-                    );
-                  } else {
-                    final reloadState = context.read<HouseholdOverviewBloc>();
-
-                    Future.delayed(
-                      const Duration(
-                        milliseconds: 1000,
-                      ),
-                      () {
-                        reloadState.add(
-                          HouseholdOverviewReloadEvent(
-                            projectId:
-                                RegistrationDeliverySingleton().projectId!,
-                            projectBeneficiaryType:
-                                RegistrationDeliverySingleton()
-                                    .beneficiaryType!,
-                          ),
-                        );
-                      },
-                    ).then(
-                      (value) {
-                        context.router.popAndPush(
-                          HouseholdAcknowledgementRoute(
-                            enableViewHousehold: true,
-                          ),
-                        );
-                      },
-                    );
-                  }
-                }
-              }
-            },
-          ));
-    }
+                form: form,
+                oldTask: null,
+                projectBeneficiaryClientReferenceId:
+                    projectBeneficiary.clientReferenceId,
+                dose: deliverInterventionState.dose,
+                cycle: deliverInterventionState.cycle,
+                deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                address: householdMember.members?.first.address?.first,
+                latitude: lat,
+                longitude: long,
+              ),
+              isEditing: false,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              navigateToSummary: true,
+              householdMemberWrapper: householdMember),
+        );
+    context.router.push(DeliverySummaryRoute());
   }
 
   void handleLocationState(
@@ -668,8 +585,7 @@ class DeliverInterventionPageState
         }
       }
       bool hasDuplicateProductIdOrNoProductId =
-          groupedVariants.values.any((variants) => variants.length > 1) ||
-              deliveredProducts.any((ele) => ele?.productId == null);
+          deliveredProducts.any((ele) => ele?.productId == null);
 
       return hasDuplicateProductIdOrNoProductId;
     }
@@ -804,8 +720,19 @@ class DeliverInterventionPageState
 
     // Add controllers for each product variant to the _controllers list.
 
-    _controllers
-        .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
+    if ((bloc.tasks?.last.resources ?? []).isNotEmpty) {
+      _controllers.addAll(bloc.tasks!.last.resources!.mapIndexed((e, i) => i));
+    } else {
+      var groupedVariants = <String, List<ProductVariantModel>>{};
+      variants?.forEach((variant) {
+        if (!groupedVariants.containsKey(variant.productId)) {
+          groupedVariants[variant.productId!] = [];
+        }
+        groupedVariants[variant.productId]!.add(variant);
+      });
+
+      _controllers.addAll(groupedVariants.keys.mapIndexed((e, i) => i));
+    }
 
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
@@ -844,7 +771,7 @@ class DeliverInterventionPageState
                         (element) =>
                             element.id ==
                             productVariants
-                                .elementAt(_controllers.indexOf(e))
+                                ?.elementAt(_controllers.indexOf(e))
                                 .productVariantId,
                       )
                     : null,

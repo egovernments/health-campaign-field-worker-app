@@ -105,6 +105,7 @@ class MemberCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: DigitIconButton(
+                    buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
                     onPressed: (projectBeneficiaries ?? []).isEmpty
                         ? null
                         : () => DigitActionDialog.show(

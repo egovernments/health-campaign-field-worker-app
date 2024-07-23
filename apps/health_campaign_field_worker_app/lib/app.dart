@@ -1,4 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/blocs/closed_household.dart';
+import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
@@ -24,6 +26,7 @@ import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 import 'utils/localization_delegates.dart';
+import 'utils/typedefs.dart';
 import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
@@ -296,6 +299,16 @@ class MainApplicationState extends State<MainApplication>
                                 ProjectFacilityModel,
                                 ProjectFacilitySearchModel>(),
                           ),
+                        ),
+                        BlocProvider(
+                          create: (_) {
+                            return ClosedHouseholdBloc(
+                              const ClosedHouseholdState(),
+                              closedHouseholdRepository: context
+                                  .repository<UserActionModel, UserActionSearchModel>(),
+                            );
+                          },
+                          lazy: false,
                         ),
                       ],
                       child: BlocBuilder<LocalizationBloc, LocalizationState>(

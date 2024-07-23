@@ -49,8 +49,8 @@ class StatusMapper extends EnumMapper<Status> {
         return Status.registered;
       case "NOT_REGISTERED":
         return Status.notRegistered;
-      case "CLOSED":
-        return Status.closed;
+      case "CLOSED_HOUSEHOLD":
+        return Status.closeHousehold;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -83,8 +83,8 @@ class StatusMapper extends EnumMapper<Status> {
         return "REGISTERED";
       case Status.notRegistered:
         return "NOT_REGISTERED";
-      case Status.closed:
-        return "CLOSED";
+      case Status.closeHousehold:
+        return "CLOSED_HOUSEHOLD";
     }
   }
 }

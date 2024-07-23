@@ -4,12 +4,14 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/scanner.dart';
@@ -51,7 +53,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
   bool manualCode = false;
   bool flashStatus = false;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  final _resourceController = TextEditingController();
+  static const _manualCodeFormKey = 'manualCode';
 
   @override
   void initState() {
@@ -184,8 +186,6 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                         );
                                     setState(() {
                                       manualCode = true;
-                                      _resourceController.value =
-                                          const TextEditingValue();
                                     });
                                   },
                                   child: Padding(
@@ -402,77 +402,100 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                         ),
                       ],
                     )
-                  : DigitCard(
-                      child: ScrollableContent(
-                        backgroundColor: theme.colorScheme.onError,
-                        header: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              manualCode = false;
-                              initializeCameras();
-                            });
-                          },
-                          child: const Align(
-                            alignment: Alignment.topRight,
-                            child: Icon(Icons.close),
-                          ),
-                        ),
-                        footer: DigitElevatedButton(
-                          onPressed: () async {
-                            final bloc = context.read<DigitScannerBloc>();
-                            codes.add(_resourceController.value.text);
-                            bloc.add(
-                              DigitScannerEvent.handleScanner(
-                                barCode: state.barCodes,
-                                qrCode: codes,
+                  : BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                      builder: (context, state) {
+                      return ReactiveFormBuilder(
+                          form: () => buildForm(),
+                          builder: (context, form, child) {
+                            return DigitCard(
+                              child: ScrollableContent(
+                                backgroundColor: theme.colorScheme.onError,
+                                header: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      manualCode = false;
+                                      initializeCameras();
+                                    });
+                                  },
+                                  child: const Align(
+                                    alignment: Alignment.topRight,
+                                    child: Icon(Icons.close),
+                                  ),
+                                ),
+                                footer: DigitElevatedButton(
+                                  onPressed: () async {
+                                    if (form
+                                                .control(_manualCodeFormKey)
+                                                .value ==
+                                            null ||
+                                        form
+                                            .control(_manualCodeFormKey)
+                                            .value
+                                            .toString()
+                                            .trim()
+                                            .isEmpty) {
+                                      DigitToast.show(context,
+                                          options: DigitToastOptions(
+                                            localizations.translate(
+                                                i18.scanner.enterManualCode),
+                                            true,
+                                            theme,
+                                          ));
+                                    } else {
+                                      final bloc =
+                                          context.read<DigitScannerBloc>();
+                                      codes.add(form
+                                          .control(_manualCodeFormKey)
+                                          .value);
+                                      bloc.add(
+                                        DigitScannerEvent.handleScanner(
+                                          barCode: state.barCodes,
+                                          qrCode: codes,
+                                        ),
+                                      );
+                                      if (widget.isGS1code &&
+                                          result.length < widget.quantity) {
+                                        DigitScannerUtils().buildDialog(
+                                          context,
+                                          localizations,
+                                          widget.quantity,
+                                        );
+                                      }
+
+                                      setState(() {
+                                        manualCode = false;
+                                        initializeCameras();
+                                      });
+                                    }
+                                  },
+                                  child: Text(localizations.translate(
+                                    i18.common.coreCommonSubmit,
+                                  )),
+                                ),
+                                children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.scanner.enterManualCode,
+                                      ),
+                                      style: theme.textTheme.headlineLarge,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: kPadding * 2,
+                                  ),
+                                  DigitTextFormField(
+                                    formControlName: _manualCodeFormKey,
+                                    label: localizations.translate(
+                                      i18.scanner.resourceCode,
+                                    ),
+                                  ),
+                                ],
                               ),
                             );
-                            if (widget.isGS1code &&
-                                result.length < widget.quantity) {
-                              DigitScannerUtils().buildDialog(
-                                context,
-                                localizations,
-                                widget.quantity,
-                              );
-                            }
-
-                            setState(() {
-                              manualCode = false;
-                              initializeCameras();
-                            });
-                          },
-                          child: Text(localizations.translate(
-                            i18.common.coreCommonSubmit,
-                          )),
-                        ),
-                        children: [
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              localizations.translate(
-                                i18.scanner.enterManualCode,
-                              ),
-                              style: theme.textTheme.headlineLarge,
-                            ),
-                          ),
-                          const SizedBox(
-                            height: kPadding * 2,
-                          ),
-                          Text(localizations.translate(
-                            i18.scanner.manualCodeDescription,
-                          )),
-                          const SizedBox(
-                            height: kPadding * 2,
-                          ),
-                          DigitTextField(
-                            label: localizations.translate(
-                              i18.scanner.resourceCode,
-                            ),
-                            controller: _resourceController,
-                          ),
-                        ],
-                      ),
-                    )
+                          });
+                    })
               : const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -576,5 +599,10 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
           ? ImageFormatGroup.nv21
           : ImageFormatGroup.bgra8888,
     );
+  }
+
+  FormGroup buildForm() {
+    return fb
+        .group(<String, Object>{_manualCodeFormKey: FormControl<String>()});
   }
 }

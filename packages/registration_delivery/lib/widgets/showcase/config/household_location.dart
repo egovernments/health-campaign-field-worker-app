@@ -10,6 +10,7 @@ class _HouseholdLocationShowcaseData {
 
   List<ShowcaseItemBuilder> get showcaseData => [
         administrativeArea,
+        gpsAccuracy,
         addressLine1,
         addressLine2,
         landmark,
@@ -18,6 +19,10 @@ class _HouseholdLocationShowcaseData {
 
   final administrativeArea = ShowcaseItemBuilder(
     messageLocalizationKey: i18.householdLocationShowcase.administrativeArea,
+  );
+
+  final gpsAccuracy = ShowcaseItemBuilder(
+    messageLocalizationKey: i18.householdLocationShowcase.gpsAccuracy,
   );
 
   final landmark = ShowcaseItemBuilder(

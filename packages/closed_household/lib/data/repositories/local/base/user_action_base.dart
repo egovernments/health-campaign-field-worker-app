@@ -10,8 +10,8 @@ abstract class UserActionLocalBaseRepository
       super.sql, super.opLogManager,);
 
   @override
-  DataModelType get type => DataModelType.task;
+  DataModelType get type => DataModelType.userAction;
 
   @override
-  TableInfo get table => sql.task;
+  TableInfo get table => sql.userAction;
 }

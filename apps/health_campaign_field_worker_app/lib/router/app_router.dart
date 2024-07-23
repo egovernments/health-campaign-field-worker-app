@@ -184,6 +184,10 @@ class AppRouter extends _$AppRouter {
                     path: 'household-acknowledgement',
                   ),
                   AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                  AutoRoute(
+                    page: DeliverySummaryRoute.page,
+                    path: 'delivery-summary',
+                  ),
                 ],
               ),
             ]),

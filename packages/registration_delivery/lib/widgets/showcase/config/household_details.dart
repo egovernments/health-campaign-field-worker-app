@@ -11,6 +11,8 @@ class _HouseholdDetailsShowcaseData {
   List<ShowcaseItemBuilder> get showcaseData => [
         dateOfRegistration,
         numberOfMembersLivingInHousehold,
+        numberOfPregnantWomenInHousehold,
+        numberOfChildrenBelow5InHousehold,
       ];
 
   final dateOfRegistration = ShowcaseItemBuilder(

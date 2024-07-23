@@ -27,8 +27,6 @@ class StatusMapper extends EnumMapper<Status> {
     switch (value) {
       case "CLOSED_HOUSEHOLD":
         return Status.closeHousehold;
-      case "LOCATION_CAPTURE":
-        return Status.locationCapture;
       case "REFUSED":
         return Status.refused;
       case "SPRAYED":
@@ -47,8 +45,6 @@ class StatusMapper extends EnumMapper<Status> {
     switch (self) {
       case Status.closeHousehold:
         return "CLOSED_HOUSEHOLD";
-      case Status.locationCapture:
-        return "LOCATION_CAPTURE";
       case Status.refused:
         return "REFUSED";
       case Status.sprayed:
