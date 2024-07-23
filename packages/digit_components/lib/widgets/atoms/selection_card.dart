@@ -11,6 +11,7 @@ class SelectionBox<T> extends StatefulWidget {
   final bool allowMultipleSelection;
   final String Function(T) valueMapper;
   final bool isRequired;
+  final bool equalWidthOptions;
 
   const SelectionBox({
     Key? key,
@@ -23,6 +24,7 @@ class SelectionBox<T> extends StatefulWidget {
     this.allowMultipleSelection = true,
     required this.valueMapper,
     this.isRequired = false,
+    this.equalWidthOptions = false,
   }) : super(key: key);
 
   @override
@@ -31,6 +33,7 @@ class SelectionBox<T> extends StatefulWidget {
 
 class _SelectionBoxState<T> extends State<SelectionBox<T>> {
   final List<T> _selectedOptions = [];
+  double? _maxOptionWidth;
 
   @override
   void initState() {
@@ -38,6 +41,37 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
     if (widget.initialSelection != null) {
       _selectedOptions.addAll(widget.initialSelection!);
     }
+
+    if (widget.equalWidthOptions) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _calculateMaxOptionWidth();
+      });
+    }
+  }
+
+  void _calculateMaxOptionWidth() {
+    double maxWidth = 0;
+    final textTheme = Theme.of(context).textTheme;
+
+    for (var option in widget.options) {
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: widget.valueMapper(option),
+          style: textTheme.bodyLarge?.copyWith(
+            color: const DigitColors().woodsmokeBlack,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      if (textPainter.size.width > maxWidth) {
+        maxWidth = textPainter.size.width;
+      }
+    }
+
+    setState(() {
+      _maxOptionWidth = maxWidth + kPadding * 5; /// Add padding
+    });
   }
 
   void _onOptionTap(T option) {
@@ -68,7 +102,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
     return GestureDetector(
       onTap: () => _onOptionTap(option),
       child: Container(
-        width: widget.width,
+        width: widget.equalWidthOptions ? _maxOptionWidth : widget.width,
         padding: const EdgeInsets.symmetric(
             vertical: kPadding, horizontal: kPadding * 2),
         decoration: BoxDecoration(
@@ -83,6 +117,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Flexible(
               child: Text(
@@ -90,13 +125,13 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: isSelected
-                    ? textTheme.bodyMedium?.copyWith(
-                        color: const DigitColors().white,
-                        fontWeight: FontWeight.w700,
-                      )
-                    : textTheme.bodyMedium?.copyWith(
-                        color: const DigitColors().woodsmokeBlack,
-                      ),
+                    ? textTheme.bodyLarge?.copyWith(
+                  color: const DigitColors().white,
+                  fontWeight: FontWeight.w700,
+                )
+                    : textTheme.bodyLarge?.copyWith(
+                  color: const DigitColors().woodsmokeBlack,
+                ),
               ),
             ),
           ],
@@ -120,16 +155,17 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
           isRequired: widget.isRequired,
           child: Container(
             width: MediaQuery.of(context).size.width,
-            padding: const EdgeInsets.all(kPadding * 3),
+            padding: const EdgeInsets.all(kPadding * 2),
             decoration: BoxDecoration(
               color: const DigitColors().alabasterWhite,
               borderRadius: BorderRadius.circular(kPadding / 2),
               border: Border.all(
-                color: const DigitColors().quillGray,
+                color: widget.errorMessage != null ?const DigitColors().lavaRed: const DigitColors().quillGray,
                 width: 1,
               ),
             ),
             child: Wrap(
+              alignment: WrapAlignment.center,
               spacing: kPadding * 3,
               runSpacing: kPadding * 3,
               children: widget.options.map(_buildOption).toList(),
@@ -143,28 +179,11 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 2,
-                  ),
-                  SizedBox(
-                    height: kPadding * 2,
-                    width: kPadding * 2,
-                    child: Icon(
-                      Icons.info,
-                      color: const DigitColors().lavaRed,
-                      size: kPadding * 2,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: kPadding / 2),
               Flexible(
                 fit: FlexFit.tight,
                 child: Text(
                   widget.errorMessage!,
-                  style: textTheme.bodyLarge?.copyWith(
+                  style: textTheme.bodySmall?.copyWith(
                     color: const DigitColors().lavaRed,
                   ),
                 ),

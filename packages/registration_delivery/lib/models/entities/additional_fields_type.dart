@@ -47,4 +47,6 @@ enum AdditionalFieldsType {
   noOfRooms,
   @MappableValue("houseStructureTypes")
   houseStructureTypes,
+  @MappableValue("reasonOfRefusal")
+  reasonOfRefusal,
 }

@@ -47,7 +47,7 @@ class CustomValidator {
   ) {
     if (control.value != null &&
         control.value.toString().isNotEmpty &&
-        control.value.toString().length < 10) {
+        control.value.toString().length < 9) {
       return {'minLength': true};
     }
   }
@@ -89,7 +89,7 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.toValue());
+      tasks.last.status == Status.administeredFailed.toValue());
 
   return isBeneficiaryRefused;
 }
@@ -332,7 +332,7 @@ class RegistrationDeliverySingleton {
     required List<String>? deliveryCommentOptions,
     required List<String>? symptomsTypes,
     required List<String>? searchHouseHoldFilter,
-      required List<String>? referralReasons,
+    required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
   }) {
@@ -427,4 +427,31 @@ bool allDosesDelivered(
       return false;
     }
   }
+}
+
+Status getTaskStatus(Iterable<TaskModel> tasks) {
+  final statusMap = {
+    Status.delivered.toValue(): Status.delivered,
+    Status.notDelivered.toValue(): Status.notDelivered,
+    Status.visited.toValue(): Status.visited,
+    Status.notVisited.toValue(): Status.notVisited,
+    Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+    Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+    Status.administeredSuccess.toValue(): Status.administeredSuccess,
+    Status.administeredFailed.toValue(): Status.administeredFailed,
+    Status.inComplete.toValue(): Status.inComplete,
+    Status.toAdminister.toValue(): Status.toAdminister,
+    Status.closeHousehold.toValue(): Status.closeHousehold,
+  };
+
+  if (tasks.isEmpty) {
+    return Status.registered.toValue();
+  } else {
+    final mappedStatus = statusMap[tasks.last.status];
+    if (mappedStatus != null) {
+      return mappedStatus;
+    }
+  }
+
+  return Status.registered.toValue();
 }

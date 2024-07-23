@@ -91,6 +91,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             );
           },
           builder: (context, state) {
+            // context.
             return ScrollableContent(
               enableFixedButton: true,
               header: const Column(children: [
@@ -141,6 +142,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
+                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {
@@ -340,7 +342,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           individualDetailsShowcaseData.nameOfIndividual
                               .buildWith(
                             child: DigitTextFormField(
-                              formControlName: 'individualName',
+                              formControlName: _individualNameKey,
                               label: localizations.translate(
                                 i18.individualDetails.nameLabelText,
                               ),
@@ -549,6 +551,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
                           BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                            buildWhen: (p, c) {
+                              return true;
+                            },
                             builder: (context, state) => state
                                     .qrCodes.isNotEmpty
                                 ? Row(
@@ -570,7 +575,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         child: Text(
                                           overflow: TextOverflow.ellipsis,
                                           localizations
-                                              .translate(state.qrCodes.first),
+                                              .translate(state.qrCodes.last),
                                         ),
                                       ),
                                       Padding(

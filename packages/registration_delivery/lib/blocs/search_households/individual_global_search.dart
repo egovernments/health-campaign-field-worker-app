@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import '../../models/entities/household.dart';
@@ -29,7 +28,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       required super.individualGlobalSearchRepository,
       required super.houseHoldGlobalSearchRepository}) {
     on<IndividualGlobalSearchEvent>(_individualGlobalSearch);
-    on<SearchHouseholdsPaginateEvent>(_paginate);
   }
 
   Future<void> _individualGlobalSearch(
@@ -174,7 +172,4 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       limit: event.globalSearchParams.limit!,
     ));
   }
-
-  FutureOr<void> _paginate(SearchHouseholdsPaginateEvent event,
-      Emitter<SearchHouseholdsState> emit) {}
 }

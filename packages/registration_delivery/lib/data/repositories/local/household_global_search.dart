@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:math' as math;
-
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/entities/household.dart';
 import '../../../models/entities/status.dart';
 import '../../../utils/global_search_parameters.dart';
+import 'closed_household_search.dart';
 
 class HouseHoldGlobalSearchRepository extends LocalRepository {
   HouseHoldGlobalSearchRepository(super.sql, super.opLogManager);
@@ -20,111 +20,121 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   DataModelType get type => throw UnimplementedError();
 
   houseHoldGlobalSearch(GlobalSearchParameters params) async {
-    dynamic selectQuery;
-
-    var proximitySelectQuery =
-        await proximitySearch(selectQuery, params, super.sql);
-
-    var nameSelectQuery =
-        await nameSearch(proximitySelectQuery, params, super.sql);
-
-    var filterSelectQuery = nameSelectQuery;
-
-    if (params.filter != null && params.filter!.isNotEmpty) {
-      for (var element in params.filter!) {
-        filterSelectQuery =
-            await filterSearch(filterSelectQuery, element, super.sql);
-      }
+    if (params.filter!.contains(Status.closeHousehold.name)) {
+      return await ClosedHouseholdHoldSearchLocalRepository()
+          .performClosedHouseholdSearch(params, super.sql);
     } else {
-      filterSelectQuery = nameSelectQuery;
+      dynamic selectQuery;
+
+      var proximitySelectQuery =
+          await proximitySearch(selectQuery, params, super.sql);
+
+      var nameSelectQuery =
+          await nameSearch(proximitySelectQuery, params, super.sql);
+
+      var filterSelectQuery = nameSelectQuery;
+
+      if (params.filter != null && params.filter!.isNotEmpty) {
+        for (var filter in params.filter!) {
+          filterSelectQuery =
+              await filterSearch(filterSelectQuery, params, filter, super.sql);
+        }
+      } else {
+        filterSelectQuery = nameSelectQuery;
+      }
+
+      if (filterSelectQuery == null) {
+        return [];
+      } else {
+        await filterSelectQuery.limit(params.limit ?? 50,
+            offset: params.offset ?? 0);
+
+        final results = await filterSelectQuery.get();
+
+        return results
+            .map((e) {
+              final household = e.readTable(sql.household);
+              final address = e.readTableOrNull(sql.address);
+
+              return HouseholdModel(
+                id: household.id,
+                tenantId: household.tenantId,
+                clientReferenceId: household.clientReferenceId,
+                memberCount: household.memberCount,
+                rowVersion: household.rowVersion,
+                isDeleted: household.isDeleted,
+                additionalFields: household.additionalFields != null &&
+                        household.additionalFields.toString().isNotEmpty
+                    ? HouseholdAdditionalFieldsMapper.fromJson(
+                        household.additionalFields.toString())
+                    : null,
+                auditDetails: (household.auditCreatedBy != null &&
+                        household.auditCreatedTime != null)
+                    ? AuditDetails(
+                        createdBy: household.auditCreatedBy!,
+                        createdTime: household.auditCreatedTime!,
+                        lastModifiedBy: household.auditModifiedBy,
+                        lastModifiedTime: household.auditModifiedTime,
+                      )
+                    : null,
+                clientAuditDetails: (household.clientCreatedBy != null &&
+                        household.clientCreatedTime != null)
+                    ? ClientAuditDetails(
+                        createdBy: household.clientCreatedBy!,
+                        createdTime: household.clientCreatedTime!,
+                        lastModifiedBy: household.clientModifiedBy,
+                        lastModifiedTime: household.clientModifiedTime,
+                      )
+                    : null,
+                address: address == null
+                    ? null
+                    : AddressModel(
+                        id: address.id,
+                        relatedClientReferenceId: household.clientReferenceId,
+                        tenantId: address.tenantId,
+                        doorNo: address.doorNo,
+                        latitude: address.latitude,
+                        longitude: address.longitude,
+                        landmark: address.landmark,
+                        locationAccuracy: address.locationAccuracy,
+                        addressLine1: address.addressLine1,
+                        addressLine2: address.addressLine2,
+                        city: address.city,
+                        pincode: address.pincode,
+                        locality: address.localityBoundaryCode != null
+                            ? LocalityModel(
+                                code: address.localityBoundaryCode!,
+                                name: address.localityBoundaryName,
+                              )
+                            : null,
+                        type: address.type,
+                        rowVersion: address.rowVersion,
+                        auditDetails: (household.auditCreatedBy != null &&
+                                household.auditCreatedBy != null)
+                            ? AuditDetails(
+                                createdBy: household.auditCreatedBy!,
+                                createdTime: household.auditCreatedTime!,
+                                lastModifiedBy: household.auditModifiedBy,
+                                lastModifiedTime: household.auditModifiedTime,
+                              )
+                            : null,
+                        clientAuditDetails: (household.clientCreatedBy !=
+                                    null &&
+                                household.clientCreatedTime != null)
+                            ? ClientAuditDetails(
+                                createdBy: household.clientCreatedBy!,
+                                createdTime: household.clientCreatedTime!,
+                                lastModifiedBy: household.clientModifiedBy,
+                                lastModifiedTime: household.clientModifiedTime,
+                              )
+                            : null,
+                      ),
+              );
+            })
+            .where((element) => element.isDeleted != true)
+            .toList();
+      }
     }
-
-    await filterSelectQuery.limit(params.limit ?? 50,
-        offset: params.offset ?? 0);
-
-    final results = await filterSelectQuery.get();
-
-    return results
-        .map((e) {
-          final household = e.readTable(sql.household);
-          final address = e.readTableOrNull(sql.address);
-
-          return HouseholdModel(
-            id: household.id,
-            tenantId: household.tenantId,
-            clientReferenceId: household.clientReferenceId,
-            memberCount: household.memberCount,
-            rowVersion: household.rowVersion,
-            isDeleted: household.isDeleted,
-            additionalFields: household.additionalFields != null &&
-                    household.additionalFields.toString().isNotEmpty
-                ? HouseholdAdditionalFieldsMapper.fromJson(
-                    household.additionalFields.toString())
-                : null,
-            auditDetails: (household.auditCreatedBy != null &&
-                    household.auditCreatedTime != null)
-                ? AuditDetails(
-                    createdBy: household.auditCreatedBy!,
-                    createdTime: household.auditCreatedTime!,
-                    lastModifiedBy: household.auditModifiedBy,
-                    lastModifiedTime: household.auditModifiedTime,
-                  )
-                : null,
-            clientAuditDetails: (household.clientCreatedBy != null &&
-                    household.clientCreatedTime != null)
-                ? ClientAuditDetails(
-                    createdBy: household.clientCreatedBy!,
-                    createdTime: household.clientCreatedTime!,
-                    lastModifiedBy: household.clientModifiedBy,
-                    lastModifiedTime: household.clientModifiedTime,
-                  )
-                : null,
-            address: address == null
-                ? null
-                : AddressModel(
-                    id: address.id,
-                    relatedClientReferenceId: household.clientReferenceId,
-                    tenantId: address.tenantId,
-                    doorNo: address.doorNo,
-                    latitude: address.latitude,
-                    longitude: address.longitude,
-                    landmark: address.landmark,
-                    locationAccuracy: address.locationAccuracy,
-                    addressLine1: address.addressLine1,
-                    addressLine2: address.addressLine2,
-                    city: address.city,
-                    pincode: address.pincode,
-                    locality: address.localityBoundaryCode != null
-                        ? LocalityModel(
-                            code: address.localityBoundaryCode!,
-                            name: address.localityBoundaryName,
-                          )
-                        : null,
-                    type: address.type,
-                    rowVersion: address.rowVersion,
-                    auditDetails: (household.auditCreatedBy != null &&
-                            household.auditCreatedBy != null)
-                        ? AuditDetails(
-                            createdBy: household.auditCreatedBy!,
-                            createdTime: household.auditCreatedTime!,
-                            lastModifiedBy: household.auditModifiedBy,
-                            lastModifiedTime: household.auditModifiedTime,
-                          )
-                        : null,
-                    clientAuditDetails: (household.clientCreatedBy != null &&
-                            household.clientCreatedTime != null)
-                        ? ClientAuditDetails(
-                            createdBy: household.clientCreatedBy!,
-                            createdTime: household.clientCreatedTime!,
-                            lastModifiedBy: household.clientModifiedBy,
-                            lastModifiedTime: household.clientModifiedTime,
-                          )
-                        : null,
-                  ),
-          );
-        })
-        .where((element) => element.isDeleted != true)
-        .toList();
   }
 
   proximitySearch(
@@ -227,7 +237,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     ]));
   }
 
-  filterSearch(selectQuery, String filter, LocalSqlDataStore sql) async {
+  filterSearch(selectQuery, GlobalSearchParameters params, String filter,
+      LocalSqlDataStore sql) async {
     var sql = super.sql;
     if (selectQuery == null) {
       selectQuery = super.sql.household.select().join([

@@ -35,6 +35,7 @@ class _BeneficiaryChecklistPageState
     extends LocalizedState<BeneficiaryChecklistPage> {
   String isStateChanged = '';
   var submitTriggered = false;
+  var validFields = true;
   List<TextEditingController> controller = [];
   List<TextEditingController> additionalController = [];
   List<AttributesModel>? initialAttributes;
@@ -131,18 +132,13 @@ class _BeneficiaryChecklistPageState
                                   'Boolean' &&
                                   (controller[i].text == '')) )) {
                               setState(() {
+                                validFields = false;
                                 validChecklist = false;
                               });
                           }
                         }
 
                         if (!validChecklist) {
-                          DigitToast.show(context,
-                              options: DigitToastOptions(
-                                localizations.translate(i18.common.corecommonRequired),
-                                true,
-                                theme,
-                              ));
                           return;
                         }
                         List<ServiceAttributesModel> attributes = [];
@@ -247,17 +243,9 @@ class _BeneficiaryChecklistPageState
                     Form(
                       key: checklistFormKey, //assigning key to form
                       child: DigitCard(
+                        padding: EdgeInsets.zero,
+
                         child: Column(children: [
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
-                              '${localizations.translate(
-                                selectedServiceDefinition!.code.toString(),
-                              )} ${localizations.translate(i18.checklist.checklist)}',
-                              style: theme.textTheme.displayMedium,
-                              textAlign: TextAlign.left,
-                            ),
-                          ),
                           ...initialAttributes!.map((
                             e,
                           ) {
@@ -400,7 +388,7 @@ class _BeneficiaryChecklistPageState
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Padding(
-                                            padding: const EdgeInsets.all(8),
+                                            padding: EdgeInsets.zero,
                                             child: Column(
                                               children: [
                                                 Text(
@@ -431,6 +419,8 @@ class _BeneficiaryChecklistPageState
                                                         i18.common.coreCommonNo,
                                                       );
                                               },
+                                              errorMessage: ( !validFields &&
+                                                  (controller[index].text == '')) ? localizations.translate(i18.common.corecommonRequired) : null,
                                               initialSelection:
                                                   controller[index].text ==
                                                           'true'
@@ -453,10 +443,17 @@ class _BeneficiaryChecklistPageState
                                                               submitTriggered,
                                                         ),
                                                       );
+                                                  setState(() {
+                                                    controller[index].value =
+                                                        TextEditingValue(
+                                                          text: curValue.first
+                                                              .toString(),
+                                                        );
+                                                  });
+                                                }else{
                                                   controller[index].value =
-                                                      TextEditingValue(
-                                                    text: curValue.first
-                                                        .toString(),
+                                                      const TextEditingValue(
+                                                    text: '',
                                                   );
                                                 }
                                               },

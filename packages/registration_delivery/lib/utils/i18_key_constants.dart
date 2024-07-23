@@ -116,6 +116,9 @@ class Common {
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
   String get locationCapturing => 'CAPTURING_LOCATION';
   String get locationCaptured => 'LOCATION_CAPTURED';
+  String get coreCommonSummaryDetails => 'CORE_COMMON_SUMMARY_DETAILS';
+
+  String get metersNear => 'METERS_NEAR';
 }
 
 class SearchBeneficiary {
@@ -297,6 +300,7 @@ class HouseholdLocation {
       'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
 
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
+  String get gpsAccuracyLabel => 'CLOSE_HOUSEHOLD_GPS_ACCURACY_LABEL';
 
   String get administrationAreaRequiredValidation =>
       'HOUSEHOLD_LOCATION_ADMINISTRATION_AREA_REQUIRED_VALIDATION';
@@ -507,6 +511,9 @@ class DeliverIntervention {
   String get resourceDeliveredLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
 
+  String get typeOfInsecticideUsed =>
+      'DELIVER_INTERVENTION_TYPE_OF_INSECTICIDE_USED';
+
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
@@ -515,6 +522,9 @@ class DeliverIntervention {
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+
+  String get deliveryDetailsLabel =>
+      'DELIVER_INTERVENTION_DELIVERY_DETAILS_LABEL';
 
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 
@@ -722,6 +732,10 @@ class HouseholdLocationShowcase {
 
   String get administrativeArea {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
+  }
+
+  String get gpsAccuracy {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_GPS_ACCURACY_LABEL';
   }
 
   String get landmark {
