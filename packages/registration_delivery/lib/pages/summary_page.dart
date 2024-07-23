@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:recase/recase.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
@@ -215,7 +217,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   value: householdState.householdModel?.address
                                           ?.locality?.code
                                           .split('_')
-                                          .last ??
+                                          .last
+                                          .toString()
+                                          .titleCase ??
                                       localizations
                                           .translate(i18.common.coreCommonNA),
                                   isInline: true),
@@ -360,9 +364,18 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       loading,
                                       isHeadOfHousehold,
                                     ) =>
-                                        individualModel?.dateOfBirth ??
-                                        localizations.translate(
-                                            i18.common.coreCommonNA)),
+                                        individualModel?.dateOfBirth != null
+                                            ? DigitDateUtils.getFilteredDate(
+                                                    DigitDateUtils
+                                                            .getFormattedDateToDateTime(
+                                                                individualModel
+                                                                        ?.dateOfBirth ??
+                                                                    '')
+                                                        .toString(),
+                                                    dateFormat: "dd MMMM yyyy")
+                                                .toString()
+                                            : localizations.translate(
+                                                i18.common.coreCommonNA)),
                               ),
                               LabelValuePair(
                                 label: localizations.translate(

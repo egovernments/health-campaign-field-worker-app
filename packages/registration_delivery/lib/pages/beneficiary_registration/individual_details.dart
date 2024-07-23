@@ -91,6 +91,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             );
           },
           builder: (context, state) {
+            // context.
             return ScrollableContent(
               enableFixedButton: true,
               header: const Column(children: [
@@ -178,7 +179,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             } else {
                               clickedStatus.value = true;
                               final scannerBloc =
-
                                   context.read<DigitScannerBloc>();
                               bloc.add(
                                 BeneficiaryRegistrationSummaryEvent(
@@ -551,6 +551,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
                           BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                            buildWhen: (p, c) {
+                              return true;
+                            },
                             builder: (context, state) => state
                                     .qrCodes.isNotEmpty
                                 ? Row(
@@ -572,7 +575,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                         child: Text(
                                           overflow: TextOverflow.ellipsis,
                                           localizations
-                                              .translate(state.qrCodes.first),
+                                              .translate(state.qrCodes.last),
                                         ),
                                       ),
                                       Padding(
