@@ -2,6 +2,7 @@
 
 * Closed household search fixes
 * Tasks status fixes on beneficiary card and overview page
+* Updated digit_components and digit_scanner versions
 
 ## 1.0.3-dev.1
 

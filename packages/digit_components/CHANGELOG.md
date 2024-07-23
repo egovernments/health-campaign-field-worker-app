@@ -1,3 +1,6 @@
+## 1.0.0+7
+* Added buttonDisabled for DigitIconButton
+
 ## 1.0.0+6
 * Added text direction for DigitIconButton
 * SelectionBox UI fixes
