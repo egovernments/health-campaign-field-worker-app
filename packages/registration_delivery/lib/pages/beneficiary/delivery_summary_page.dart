@@ -304,14 +304,14 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                     productVariants
                                             .where((p) =>
                                                 p.id == e.productVariantId)
-                                            .first
-                                            .sku ??
+                                            .firstOrNull
+                                            ?.sku ??
                                         productVariants
                                             .where((p) =>
                                                 p.id == e.productVariantId)
-                                            .first
-                                            .variation
-                                            .toString(),
+                                            .firstOrNull
+                                            ?.variation ??
+                                        i18.common.coreCommonNA,
                                     e.quantity ?? '0'))
                                 .toList();
                             return resourcesDelivered;
@@ -349,10 +349,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                       : localizations.translate(deliverState
                                               .oldTask?.additionalFields?.fields
                                               .where((d) =>
-                                                  d.key ==
-                                                  AdditionalFieldsType
-                                                      .reasonOfRefusal
-                                                      .toValue())
+                                                  d.key == AdditionalFieldsType.reasonOfRefusal.toValue())
                                               .firstOrNull
                                               ?.value ??
                                           i18.common.coreCommonNA),
