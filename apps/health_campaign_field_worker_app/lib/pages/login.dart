@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/atoms/privacy_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -25,6 +26,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   var passwordVisible = false;
   static const _userId = 'userId';
   static const _password = 'password';
+  static const _privacyCheck = 'privacyCheck';
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +117,13 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         obscureText: !passwordVisible,
                         suffix: buildPasswordVisibility(),
                       ),
+                      const PrivacyComponent(
+                        formControlName: _privacyCheck,
+                        text: 'By clicking, I accept the ',
+                        linkText: 'Privacy Policy',
+                        validationMessage:
+                        'You must accept the privacy policy to proceed.',
+                      ),
                       const SizedBox(height: 16),
                       DigitElevatedButton(
                         onPressed: () {
@@ -197,5 +206,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           validators: [Validators.required],
           value: '',
         ),
+    _privacyCheck: FormControl<bool>(
+      validators: [Validators.requiredTrue],
+      value: false,
+    )
       });
 }
