@@ -197,21 +197,17 @@ class _SearchBeneficiaryPageState
                                 onChanged: (value) {
                                   if (value.isEmpty) {
                                     blocWrapper.clearEvent();
+                                    triggerGlobalSearchEvent();
                                   }
                                   if (value.trim().length < 2 &&
                                       !isProximityEnabled) {
                                     blocWrapper.clearEvent();
-
-                                    return;
-                                  } else if (isProximityEnabled &&
-                                      value.trim().length < 2) {
-                                    triggerGlobalSearchEvent();
                                   } else {
                                     blocWrapper.searchHouseholdsBloc.add(
                                       const SearchHouseholdsClearEvent(),
                                     );
-                                    triggerGlobalSearchEvent();
                                   }
+                                  triggerGlobalSearchEvent();
                                 },
                               ),
                               Align(
