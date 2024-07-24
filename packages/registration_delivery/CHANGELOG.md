@@ -1,3 +1,7 @@
+## 1.0.3-dev.3
+
+* Pagination offset fix
+
 ## 1.0.3-dev.2
 
 * Closed household search fixes
