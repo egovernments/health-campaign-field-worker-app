@@ -1533,10 +1533,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: f585fefa762ac708358455d76c43476a66df236b5855ffcc87a18840acf9666c
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.3-dev.2"
   remove_emoji_input_formatter:
     dependency: transitive

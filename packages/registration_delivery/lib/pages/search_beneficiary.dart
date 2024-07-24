@@ -94,8 +94,7 @@ class _SearchBeneficiaryPageState
                     nameSearch: searchController.text,
                     filter: selectedFilters,
                     offset:
-                        blocWrapper.individualGlobalSearchBloc.state.offset +
-                            blocWrapper.individualGlobalSearchBloc.state.limit,
+                        blocWrapper.individualGlobalSearchBloc.state.offset,
                     limit: blocWrapper.individualGlobalSearchBloc.state.limit,
                   )));
                 } else {
@@ -108,8 +107,7 @@ class _SearchBeneficiaryPageState
                     maxRadius: RegistrationDeliverySingleton().maxRadius,
                     nameSearch: searchController.text,
                     filter: selectedFilters,
-                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset +
-                        blocWrapper.houseHoldGlobalSearchBloc.state.limit,
+                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset,
                     limit: blocWrapper.houseHoldGlobalSearchBloc.state.limit,
                   )));
                 }
