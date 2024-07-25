@@ -10,6 +10,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../router/closed_household_router.gm.dart';
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -101,23 +102,19 @@ class ClosedHouseholdDetailsPageState
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
+                        final String? householdHeadName = form.control(_householdHeadNameKey).value as String?;
                         final summary = UserActionModel(
                           clientReferenceId: IdGen.i.identifier,
                           latitude: form.control(_latKey).value,
                           longitude: form.control(_lngKey).value,
                           locationAccuracy: form.control(_accuracyKey).value,
-                          additionalFields: form
-                                      .control(_householdHeadNameKey)
-                                      .value !=
-                                  null
+                          additionalFields: householdHeadName!=null && householdHeadName.toString().trim().isNotEmpty
                               ? UserActionAdditionalFields(
                                   version: 1,
                                   fields: [
                                     AdditionalField(
                                       'householdHead',
-                                      form
-                                              .control(_householdHeadNameKey)
-                                              .value ??
+                                      householdHeadName.trim() ??
                                           '',
                                     ),
                                   ],
@@ -203,7 +200,9 @@ class ClosedHouseholdDetailsPageState
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
+        value: null,
         validators: [
+          CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
       ),
