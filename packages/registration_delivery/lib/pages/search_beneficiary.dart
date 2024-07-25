@@ -66,12 +66,6 @@ class _SearchBeneficiaryPageState
   }
 
   @override
-  void dispose() {
-    blocWrapper.clearEvent();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -93,9 +87,7 @@ class _SearchBeneficiaryPageState
                     maxRadius: RegistrationDeliverySingleton().maxRadius,
                     nameSearch: searchController.text,
                     filter: selectedFilters,
-                    offset:
-                        blocWrapper.individualGlobalSearchBloc.state.offset +
-                            blocWrapper.individualGlobalSearchBloc.state.limit,
+                    offset: blocWrapper.individualGlobalSearchBloc.state.offset,
                     limit: blocWrapper.individualGlobalSearchBloc.state.limit,
                   )));
                 } else {
@@ -108,8 +100,7 @@ class _SearchBeneficiaryPageState
                     maxRadius: RegistrationDeliverySingleton().maxRadius,
                     nameSearch: searchController.text,
                     filter: selectedFilters,
-                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset +
-                        blocWrapper.houseHoldGlobalSearchBloc.state.limit,
+                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset,
                     limit: blocWrapper.houseHoldGlobalSearchBloc.state.limit,
                   )));
                 }
@@ -197,21 +188,17 @@ class _SearchBeneficiaryPageState
                                 onChanged: (value) {
                                   if (value.isEmpty) {
                                     blocWrapper.clearEvent();
+                                    triggerGlobalSearchEvent();
                                   }
                                   if (value.trim().length < 2 &&
                                       !isProximityEnabled) {
                                     blocWrapper.clearEvent();
-
-                                    return;
-                                  } else if (isProximityEnabled &&
-                                      value.trim().length < 2) {
-                                    triggerGlobalSearchEvent();
                                   } else {
                                     blocWrapper.searchHouseholdsBloc.add(
                                       const SearchHouseholdsClearEvent(),
                                     );
-                                    triggerGlobalSearchEvent();
                                   }
+                                  triggerGlobalSearchEvent();
                                 },
                               ),
                               Align(

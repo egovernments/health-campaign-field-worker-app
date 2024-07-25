@@ -2,8 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/blocs/search_households/household_global_seach.dart';
-import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/extensions/extensions.dart';
@@ -44,43 +42,32 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
         context.repository<ReferralModel, ReferralSearchModel>(context);
 
     return BlocProvider(
-      create: (context) {
-        return SearchBlocWrapper(
-            searchHouseholdsBloc: context.read<SearchHouseholdsBloc>(),
-            tagSearchBloc: context.read<TagSearchBloc>(),
-            individualGlobalSearchBloc:
-                context.read<IndividualGlobalSearchBloc>(),
-            houseHoldGlobalSearchBloc:
-                context.read<HouseHoldGlobalSearchBloc>());
-      },
-      child: BlocProvider(
-        create: (_) => HouseholdOverviewBloc(
-            HouseholdOverviewState(
-              householdMemberWrapper: HouseholdMemberWrapper(
-                  household: initialState.householdModel,
-                  headOfHousehold: null,
-                  members: [],
-                  projectBeneficiaries: []),
-            ),
-            individualRepository: individual,
-            householdRepository: household,
-            householdMemberRepository: householdMember,
-            projectBeneficiaryRepository: projectBeneficiary,
-            beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
-            taskDataRepository: task,
-            sideEffectDataRepository: sideEffect,
-            referralDataRepository: referral),
-        child: BlocProvider(
-          create: (context) => BeneficiaryRegistrationBloc(
-            initialState,
-            individualRepository: individual,
-            householdRepository: household,
-            householdMemberRepository: householdMember,
-            projectBeneficiaryRepository: projectBeneficiary,
-            beneficiaryType: beneficiaryType!,
+      create: (_) => HouseholdOverviewBloc(
+          HouseholdOverviewState(
+            householdMemberWrapper: HouseholdMemberWrapper(
+                household: initialState.householdModel,
+                headOfHousehold: null,
+                members: [],
+                projectBeneficiaries: []),
           ),
-          child: this,
+          individualRepository: individual,
+          householdRepository: household,
+          householdMemberRepository: householdMember,
+          projectBeneficiaryRepository: projectBeneficiary,
+          beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
+          taskDataRepository: task,
+          sideEffectDataRepository: sideEffect,
+          referralDataRepository: referral),
+      child: BlocProvider(
+        create: (context) => BeneficiaryRegistrationBloc(
+          initialState,
+          individualRepository: individual,
+          householdRepository: household,
+          householdMemberRepository: householdMember,
+          projectBeneficiaryRepository: projectBeneficiary,
+          beneficiaryType: beneficiaryType!,
         ),
+        child: this,
       ),
     );
   }

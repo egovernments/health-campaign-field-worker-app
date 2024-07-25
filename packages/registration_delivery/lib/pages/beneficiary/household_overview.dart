@@ -63,14 +63,7 @@ class _HouseholdOverviewPageState
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
                 : ScrollableContent(
-                    header: BackNavigationHelpHeaderWidget(
-                      handleBack: () {
-                        context
-                            .read<SearchBlocWrapper>()
-                            .searchHouseholdsBloc
-                            .add(const SearchHouseholdsClearEvent());
-                      },
-                    ),
+                    header: const BackNavigationHelpHeaderWidget(),
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual,

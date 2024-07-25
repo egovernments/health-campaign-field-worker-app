@@ -718,9 +718,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       ),
     );
 
+    String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
-        givenName: form.control(_individualNameKey).value,
+        givenName: individualName?.trim(),
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -770,7 +771,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery,
+        value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
       _idTypeKey: FormControl<String>(
         value: individual?.identifiers?.firstOrNull?.identifierType,
