@@ -3,6 +3,23 @@
 
 import 'package:digit_data_model/models/entities/boundary.dart';
 import 'package:digit_data_model/utils/utils.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+
+
+/// This class contains custom validators for form controls.
+class CustomValidator {
+  /// Validates that control's value must be `true`
+  static Map<String, dynamic>? requiredMin(
+      AbstractControl<dynamic> control,
+      ) {
+    return control.value == null ||
+        control.value.toString().length >= 2 ||
+        control.value.toString().trim().isEmpty
+        ? null
+        : {'required': true};
+  }
+
+}
 
 class ClosedHouseholdSingleton {
   static final ClosedHouseholdSingleton _singleton =
