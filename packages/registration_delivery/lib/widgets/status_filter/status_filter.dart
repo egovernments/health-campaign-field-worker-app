@@ -62,10 +62,9 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                     label: localizations.translate(
                       i18.searchBeneficiary.clearFilter,
                     ),
-                    onPressed: () {
+                    onPressed: selectedButtons.isEmpty ? null : () {
                       setState(() {
                         selectedButtons.clear();
-                        Navigator.pop(context);
                       });
                     }),
               ),

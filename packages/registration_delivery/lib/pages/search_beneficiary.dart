@@ -530,6 +530,8 @@ class _SearchBeneficiaryPageState
   showFilterDialog() async {
     var filters = await DigitDialog.show(context,
         options: DigitDialogOptions(
+          isCloseIcon: true,
+          barrierDismissible: true,
           titleIcon: Icon(getFilterIconNLabel()['icon'],
               color: const DigitColors().burningOrange),
           titleText: getFilterIconNLabel()['label'],
