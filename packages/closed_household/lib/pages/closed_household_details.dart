@@ -102,19 +102,19 @@ class ClosedHouseholdDetailsPageState
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
-                        final String householdHeadName = form.control(_householdHeadNameKey).value.toString().trim();
+                        final String? householdHeadName = form.control(_householdHeadNameKey).value as String?;
                         final summary = UserActionModel(
                           clientReferenceId: IdGen.i.identifier,
                           latitude: form.control(_latKey).value,
                           longitude: form.control(_lngKey).value,
                           locationAccuracy: form.control(_accuracyKey).value,
-                          additionalFields: form.control(_householdHeadNameKey).value!=null && householdHeadName.isNotEmpty
+                          additionalFields: householdHeadName!=null && householdHeadName.toString().trim().isNotEmpty
                               ? UserActionAdditionalFields(
                                   version: 1,
                                   fields: [
                                     AdditionalField(
                                       'householdHead',
-                                      householdHeadName ??
+                                      householdHeadName.trim() ??
                                           '',
                                     ),
                                   ],
