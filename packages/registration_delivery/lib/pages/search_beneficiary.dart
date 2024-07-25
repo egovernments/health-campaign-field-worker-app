@@ -65,11 +65,11 @@ class _SearchBeneficiaryPageState
     super.initState();
   }
 
-  @override
-  void dispose() {
-    blocWrapper.clearEvent();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   blocWrapper.clearEvent();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
