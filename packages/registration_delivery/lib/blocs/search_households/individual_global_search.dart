@@ -109,7 +109,8 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
     for (final entry in groupedHouseholdsMembers.entries) {
       HouseholdModel filteredHousehold;
       List<IndividualModel> filteredIndividuals;
-      List<TaskModel> filteredTasks;
+      List<TaskModel> filteredTasks = [];
+      List<ProjectBeneficiaryModel> filteredBeneficiaries = [];
       final householdId = entry.key;
       if (householdId == null) continue;
 
@@ -125,15 +126,20 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       filteredIndividuals = individualsList
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
+      // Filter beneficiaries based on individual client reference IDs
+      filteredBeneficiaries = projectBeneficiariesList
+          .where((element) =>
+              membersIds.contains(element.beneficiaryClientReferenceId))
+          .toList();
 
       // Filter tasks based on project beneficiary client reference IDs
-      filteredTasks = taskList
-          .where((element) => filteredIndividuals
-              .where((e) =>
-                  e.clientReferenceId ==
-                  element.projectBeneficiaryClientReferenceId)
-              .isNotEmpty)
-          .toList();
+      for (var beneficiary in filteredBeneficiaries) {
+        var tasksForBeneficiary = taskList.where((element) =>
+            beneficiary.clientReferenceId ==
+            element.projectBeneficiaryClientReferenceId);
+
+        filteredTasks.addAll(tasksForBeneficiary);
+      }
 
       // Find the head of the household
       final head = filteredIndividuals.firstWhereOrNull(
@@ -155,7 +161,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           household: filteredHousehold,
           headOfHousehold: head,
           members: filteredIndividuals,
-          projectBeneficiaries: projectBeneficiariesList,
+          projectBeneficiaries: filteredBeneficiaries,
           tasks: filteredTasks.isEmpty ? null : filteredTasks,
           sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
           referrals: referralsList.isEmpty ? null : referralsList,

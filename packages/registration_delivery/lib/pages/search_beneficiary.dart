@@ -402,67 +402,14 @@ class _SearchBeneficiaryPageState
                               (ctx, index) {
                                 final i = searchHouseholdsState.householdMembers
                                     .elementAt(index);
-                                final projectBeneficiaries =
-                                    i.projectBeneficiaries?.where((element) {
-                                  if (RegistrationDeliverySingleton()
-                                          .beneficiaryType ==
-                                      BeneficiaryType.individual) {
-                                    return element
-                                            .beneficiaryClientReferenceId ==
-                                        i.household?.clientReferenceId;
-                                  } else {
-                                    return element
-                                            .beneficiaryClientReferenceId ==
-                                        i.household!.clientReferenceId;
-                                  }
-                                }).toList();
-                                final taskData = (projectBeneficiaries ?? [])
-                                            .isNotEmpty &&
-                                        i.tasks != null
-                                    ? i.tasks
-                                        ?.where((element) =>
-                                            element
-                                                .projectBeneficiaryClientReferenceId ==
-                                            projectBeneficiaries
-                                                ?.first.clientReferenceId)
-                                        .toList()
-                                    : null;
-                                final referralData = (projectBeneficiaries ??
-                                            [])
-                                        .isNotEmpty
-                                    ? i.referrals
-                                        ?.where((element) =>
-                                            element
-                                                .projectBeneficiaryClientReferenceId ==
-                                            projectBeneficiaries
-                                                ?.first.clientReferenceId)
-                                        .toList()
-                                    : null;
-                                final sideEffects =
-                                    taskData != null && taskData.isNotEmpty
-                                        ? i.sideEffects
-                                            ?.where((element) =>
-                                                element.taskClientReferenceId ==
-                                                taskData.last.clientReferenceId)
-                                            .toList()
-                                        : null;
-                                final memberWrapper = HouseholdMemberWrapper(
-                                  household: i.household,
-                                  headOfHousehold: i.headOfHousehold,
-                                  members: i.members,
-                                  projectBeneficiaries: projectBeneficiaries,
-                                  tasks: taskData,
-                                  sideEffects: sideEffects,
-                                  referrals: referralData,
-                                );
                                 final distance = calculateDistance(
                                   Coordinate(
                                     lat,
                                     long,
                                   ),
                                   Coordinate(
-                                    memberWrapper.household?.address?.latitude,
-                                    memberWrapper.household?.address?.longitude,
+                                    i.household?.address?.latitude,
+                                    i.household?.address?.longitude,
                                   ),
                                 );
 
@@ -472,7 +419,7 @@ class _SearchBeneficiaryPageState
                                   child: ViewBeneficiaryCard(
                                     distance:
                                         isProximityEnabled ? distance : null,
-                                    householdMember: memberWrapper,
+                                    householdMember: i,
                                     onOpenPressed: () async {
                                       final scannerBloc =
                                           context.read<DigitScannerBloc>();
@@ -483,7 +430,7 @@ class _SearchBeneficiaryPageState
 
                                       await context.router.push(
                                         BeneficiaryWrapperRoute(
-                                          wrapper: memberWrapper,
+                                          wrapper: i,
                                         ),
                                       );
                                       setState(() {

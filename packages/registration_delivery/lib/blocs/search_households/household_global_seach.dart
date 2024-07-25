@@ -128,6 +128,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         HouseholdModel filteredHousehold;
         List<IndividualModel> filteredIndividuals;
         List<TaskModel> filteredTasks = [];
+        List<ProjectBeneficiaryModel> filteredBeneficiaries = [];
         final householdId = entry.key;
         if (householdId == null) continue;
 
@@ -143,9 +144,15 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         filteredIndividuals = individualsList
             .where((element) => membersIds.contains(element.clientReferenceId))
             .toList();
+        // Filter beneficiaries based on filtered household client reference IDs
+        filteredBeneficiaries = projectBeneficiariesList
+            .where((element) =>
+                element.beneficiaryClientReferenceId ==
+                filteredHousehold.clientReferenceId)
+            .toList();
 
         // Filter tasks based on project beneficiary client reference IDs
-        for (var beneficiary in projectBeneficiariesList) {
+        for (var beneficiary in filteredBeneficiaries) {
           var tasksForBeneficiary = taskList.where((element) =>
               beneficiary.clientReferenceId ==
               element.projectBeneficiaryClientReferenceId);
@@ -173,7 +180,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
             household: filteredHousehold,
             headOfHousehold: head,
             members: filteredIndividuals,
-            projectBeneficiaries: projectBeneficiariesList,
+            projectBeneficiaries: filteredBeneficiaries,
             tasks: filteredTasks.isEmpty ? null : filteredTasks,
             sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
             referrals: referralsList.isEmpty ? null : referralsList,
