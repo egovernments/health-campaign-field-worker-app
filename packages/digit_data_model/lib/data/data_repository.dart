@@ -74,16 +74,14 @@ abstract class RemoteRepository<D extends EntityModel,
         int? offSet,
         int? limit,
       }) async {
-    const int defaultBatchSize = 100; // Default batch size for fetching data
-    int remainingLimit = limit ?? defaultBatchSize; // Set to the provided limit or default batch size
+     int defaultBatchSize = limit ?? 100; /// Default batch size for fetching data
     int currentOffset = offSet ?? 0;
 
     List<D> allResults = [];
     bool hasMoreData = true;
     List<Map<String, dynamic>>? lastResponse;
 
-    while (hasMoreData && remainingLimit > 0) {
-      int batchSize = defaultBatchSize;
+    while (hasMoreData) {
 
       Response response;
 
@@ -94,7 +92,7 @@ abstract class RemoteRepository<D extends EntityModel,
               searchPath,
               queryParameters: {
                 'offset': currentOffset,
-                'limit': batchSize,
+                'limit': defaultBatchSize,
                 'tenantId': DigitDataModelSingleton().tenantId,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
               },
@@ -114,7 +112,7 @@ abstract class RemoteRepository<D extends EntityModel,
           },
         );
       } catch (error) {
-        break; // Break out of the loop if an error occurs
+        break; /// Break out of the loop if an error occurs
       }
 
       final responseMap = response.data;
@@ -139,7 +137,7 @@ abstract class RemoteRepository<D extends EntityModel,
         );
       }
 
-      final entityResponse = responseMap[key];
+      final entityResponse = await responseMap[key];
 
       if (entityResponse is! List) {
         throw InvalidApiResponseException(
@@ -152,7 +150,7 @@ abstract class RemoteRepository<D extends EntityModel,
       final entityList = entityResponse.whereType<Map<String, dynamic>>().toList();
 
       if (lastResponse != null && lastResponse.toString() == entityList.toString()) {
-        // If the last response is equal to the current response, stop fetching more data
+        /// If the last response is equal to the current response, stop fetching more data
         break;
       }
 
@@ -165,12 +163,11 @@ abstract class RemoteRepository<D extends EntityModel,
       }
 
       if (currentBatch.isEmpty) {
-        hasMoreData = false;
+        hasMoreData = false; /// if no more data stop fetching
       } else {
         allResults.addAll(currentBatch);
-        currentOffset += batchSize;
-        remainingLimit -= currentBatch.length;
-        lastResponse = entityList; // Update lastResponse to the current response
+        currentOffset += defaultBatchSize;
+        lastResponse = entityList; /// Update lastResponse to the current response
       }
     }
 
