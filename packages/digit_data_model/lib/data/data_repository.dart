@@ -70,88 +70,114 @@ abstract class RemoteRepository<D extends EntityModel,
 
   @override
   FutureOr<List<D>> search(
-    R query, {
-    int? offSet,
-    int? limit,
-  }) async {
-    Response response;
+      R query, {
+        int? offSet,
+        int? limit,
+      }) async {
+    const int defaultBatchSize = 100; // Default batch size for fetching data
+    int remainingLimit = limit ?? defaultBatchSize; // Set to the provided limit or default batch size
+    int currentOffset = offSet ?? 0;
 
-    try {
-      response = await executeFuture(
-        future: () async {
-          return await dio.post(
-            searchPath,
-            queryParameters: {
-              'offset': offSet ?? 0,
-              'limit': limit ?? 100,
-              'tenantId': DigitDataModelSingleton().tenantId,
-              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
-            },
-            data: entityName == 'User'
-                ? query.toMap()
-                : {
-                    isPlural
-                            ? entityNamePlural
-                            : entityName == 'ServiceDefinition'
-                                ? 'ServiceDefinitionCriteria'
-                                : entityName == 'Downsync'
-                                    ? 'DownsyncCriteria'
-                                    : entityName:
-                        isPlural ? [query.toMap()] : query.toMap(),
-                  },
-          );
-        },
-      );
-    } catch (error) {
-      return [];
-    }
+    List<D> allResults = [];
+    bool hasMoreData = true;
+    List<Map<String, dynamic>>? lastResponse;
 
-    final responseMap = (response.data);
+    while (hasMoreData && remainingLimit > 0) {
+      int batchSize = defaultBatchSize;
 
-    if (responseMap is! Map<String, dynamic>) {
-      throw InvalidApiResponseException(
-        data: query.toMap(),
-        path: searchPath,
-        response: responseMap,
-      );
-    }
+      Response response;
 
-    if (!responseMap.containsKey(
-      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+      try {
+        response = await executeFuture(
+          future: () async {
+            return await dio.post(
+              searchPath,
+              queryParameters: {
+                'offset': currentOffset,
+                'limit': batchSize,
+                'tenantId': DigitDataModelSingleton().tenantId,
+                if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+              },
+              data: entityName == 'User'
+                  ? query.toMap()
+                  : {
+                isPlural
+                    ? entityNamePlural
+                    : entityName == 'ServiceDefinition'
+                    ? 'ServiceDefinitionCriteria'
+                    : entityName == 'Downsync'
+                    ? 'DownsyncCriteria'
+                    : entityName:
+                isPlural ? [query.toMap()] : query.toMap(),
+              },
+            );
+          },
+        );
+      } catch (error) {
+        break; // Break out of the loop if an error occurs
+      }
+
+      final responseMap = response.data;
+
+      if (responseMap is! Map<String, dynamic>) {
+        throw InvalidApiResponseException(
+          data: query.toMap(),
+          path: searchPath,
+          response: responseMap,
+        );
+      }
+
+      String key = (isSearchResponsePlural || entityName == 'ServiceDefinition')
           ? entityNamePlural
-          : entityName,
-    )) {
-      throw InvalidApiResponseException(
-        data: query.toMap(),
-        path: searchPath,
-        response: responseMap,
-      );
+          : entityName;
+
+      if (!responseMap.containsKey(key)) {
+        throw InvalidApiResponseException(
+          data: query.toMap(),
+          path: searchPath,
+          response: responseMap,
+        );
+      }
+
+      final entityResponse = responseMap[key];
+
+      if (entityResponse is! List) {
+        throw InvalidApiResponseException(
+          data: query.toMap(),
+          path: searchPath,
+          response: responseMap,
+        );
+      }
+
+      final entityList = entityResponse.whereType<Map<String, dynamic>>().toList();
+
+      if (lastResponse != null && lastResponse.toString() == entityList.toString()) {
+        // If the last response is equal to the current response, stop fetching more data
+        break;
+      }
+
+      List<D> currentBatch;
+
+      try {
+        currentBatch = entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
+      } catch (e) {
+        rethrow;
+      }
+
+      if (currentBatch.isEmpty) {
+        hasMoreData = false;
+      } else {
+        allResults.addAll(currentBatch);
+        currentOffset += batchSize;
+        remainingLimit -= currentBatch.length;
+        lastResponse = entityList; // Update lastResponse to the current response
+      }
     }
 
-    final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'ServiceDefinition')
-            ? entityNamePlural
-            : entityName];
-
-    if (entityResponse is! List) {
-      throw InvalidApiResponseException(
-        data: query.toMap(),
-        path: searchPath,
-        response: responseMap,
-      );
-    }
-
-    final entityList = entityResponse.whereType<Map<String, dynamic>>();
-    var mapperRes = <D>[];
-    try {
-      mapperRes =
-          entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
-    } catch (e) {
-      rethrow ;
-    }
-
-    return mapperRes;
+    return allResults;
   }
+
+
 
   FutureOr<Response> singleCreate(D entity) async {
     return await dio.post(
