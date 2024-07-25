@@ -491,10 +491,9 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "5c4702cfa2d05aa98756c1ecdae2593ad5cc4254a47341588b3269e004a22525"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_components"
+      relative: true
+    source: path
     version: "1.0.0+7"
   digit_data_model:
     dependency: "direct main"
@@ -1533,10 +1532,9 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: f585fefa762ac708358455d76c43476a66df236b5855ffcc87a18840acf9666c
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.3-dev.2"
   remove_emoji_input_formatter:
     dependency: transitive

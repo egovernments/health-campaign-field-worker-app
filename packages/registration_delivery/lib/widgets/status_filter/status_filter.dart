@@ -38,9 +38,7 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
             options: getFilters() ?? [],
             allowMultipleSelection: false,
             equalWidthOptions: true,
-            initialSelection: [
-              ...selectedButtons
-            ], // [TODO : fix selected not displaying]
+            initialSelection: [...selectedButtons],
             onSelectionChanged: (selected) {
               setState(() {
                 selectedButtons = selected;
@@ -79,8 +77,9 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pop(
-                          context, selectedButtons.map((e) => e.name).toList());
+                      var selected =
+                          selectedButtons.map((e) => e.name).toList();
+                      Navigator.pop(context, selected);
                     }),
               ),
             ],
@@ -101,10 +100,15 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
   }
 
   getFilters() {
-    return (RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
+    var finalStatues = <Status>[];
+    finalStatues.addAll((RegistrationDeliverySingleton()
+                .searchHouseHoldFilter ??
+            [])
         .map((e) => Status.values.where((element) => element.toValue() == e))
         .expand((element) => element)
-        .toList();
+        .toList());
+
+    return finalStatues;
   }
 
   void assignSelectedButtons() {
@@ -113,8 +117,6 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
           .map((e) => Status.values.where((element) => element.name == e))
           .expand((element) => element)
           .toList();
-
-
     });
   }
 }

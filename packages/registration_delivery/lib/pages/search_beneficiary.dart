@@ -66,6 +66,11 @@ class _SearchBeneficiaryPageState
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -324,14 +329,17 @@ class _SearchBeneficiaryPageState
                 ),
               BlocListener<DigitScannerBloc, DigitScannerState>(
                 listener: (context, scannerState) {
-                  context.read<SearchBlocWrapper>().tagSearchBloc.add(
-                        SearchHouseholdsEvent.searchByTag(
-                          tag: scannerState.qrCodes.isNotEmpty
-                              ? scannerState.qrCodes.lastOrNull!
-                              : '',
-                          projectId: RegistrationDeliverySingleton().projectId!,
-                        ),
-                      );
+                  if (scannerState.qrCodes.isNotEmpty) {
+                    context.read<SearchBlocWrapper>().tagSearchBloc.add(
+                          SearchHouseholdsEvent.searchByTag(
+                            tag: scannerState.qrCodes.isNotEmpty
+                                ? scannerState.qrCodes.lastOrNull!
+                                : '',
+                            projectId:
+                                RegistrationDeliverySingleton().projectId!,
+                          ),
+                        );
+                  }
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
@@ -463,6 +471,7 @@ class _SearchBeneficiaryPageState
                               ),
                             ));
                             searchController.clear();
+                            selectedFilters = [];
                             blocWrapper.clearEvent();
                           }
                         : null,
@@ -480,6 +489,8 @@ class _SearchBeneficiaryPageState
                     ),
                     onPressed: () {
                       blocWrapper.clearEvent();
+                      selectedFilters = [];
+                      searchController.clear();
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const DigitScannerPage(
@@ -529,13 +540,9 @@ class _SearchBeneficiaryPageState
       setState(() {
         selectedFilters = [];
       });
-      for (var filter in filters) {
-        if (!selectedFilters.contains(filter)) {
-          setState(() {
-            selectedFilters.add(filter);
-          });
-        }
-      }
+      setState(() {
+        selectedFilters.addAll(filters);
+      });
       triggerGlobalSearchEvent();
     } else {
       setState(() {
@@ -552,7 +559,8 @@ class _SearchBeneficiaryPageState
         BeneficiaryType.individual) {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty) {
+          searchController.text.isNotEmpty ||
+          searchController.text.length > 2) {
         blocWrapper.individualGlobalSearchBloc
             .add(SearchHouseholdsEvent.individualGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
@@ -577,7 +585,7 @@ class _SearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text,
+          nameSearch: searchController.text.trim(),
           filter: selectedFilters,
           offset: offset,
           limit: limit,
