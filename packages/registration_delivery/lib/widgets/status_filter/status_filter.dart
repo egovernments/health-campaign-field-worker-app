@@ -16,10 +16,10 @@ class StatusFilter extends LocalizedStatefulWidget {
   });
 
   @override
-  State<StatusFilter> createState() => _StatusFilterState();
+  State<StatusFilter> createState() => StatusFilterState();
 }
 
-class _StatusFilterState extends LocalizedState<StatusFilter> {
+class StatusFilterState extends LocalizedState<StatusFilter> {
   List<Status> selectedButtons = [];
 
   @override
@@ -36,11 +36,9 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
         children: [
           SelectionBox<Status>(
             options: getFilters() ?? [],
-            allowMultipleSelection: true,
-            width: 115,
-            initialSelection: [
-              ...selectedButtons
-            ], // [TODO : fix selected not displaying]
+            allowMultipleSelection: false,
+            equalWidthOptions: true,
+            initialSelection: [...selectedButtons],
             onSelectionChanged: (selected) {
               setState(() {
                 selectedButtons = selected;
@@ -62,10 +60,9 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
                     label: localizations.translate(
                       i18.searchBeneficiary.clearFilter,
                     ),
-                    onPressed: () {
+                    onPressed: selectedButtons.isEmpty ? null : () {
                       setState(() {
                         selectedButtons.clear();
-                        Navigator.pop(context);
                       });
                     }),
               ),
@@ -80,8 +77,9 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
                       ),
                     ),
                     onPressed: () {
-                      Navigator.pop(
-                          context, selectedButtons.map((e) => e.name).toList());
+                      var selected =
+                          selectedButtons.map((e) => e.name).toList();
+                      Navigator.pop(context, selected);
                     }),
               ),
             ],
@@ -102,16 +100,21 @@ class _StatusFilterState extends LocalizedState<StatusFilter> {
   }
 
   getFilters() {
-    return (RegistrationDeliverySingleton().searchHouseHoldFilter ?? [])
+    var finalStatues = <Status>[];
+    finalStatues.addAll((RegistrationDeliverySingleton()
+                .searchHouseHoldFilter ??
+            [])
         .map((e) => Status.values.where((element) => element.toValue() == e))
         .expand((element) => element)
-        .toList();
+        .toList());
+
+    return finalStatues;
   }
 
   void assignSelectedButtons() {
     setState(() {
       selectedButtons = widget.selectedFilters!
-          .map((e) => Status.values.where((element) => element.toValue() == e))
+          .map((e) => Status.values.where((element) => element.name == e))
           .expand((element) => element)
           .toList();
     });

@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/models/entities/user_action.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:closed_household/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -12,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -325,6 +329,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home,
+          enableCustomIcon: true,
+          customIconSize: 48,
+          customIcon: Constants.closedHouseholdSvg,
+          label: i18.home.closedHouseHoldLabel,
+          onPressed: () {
+            context.router.push(ClosedHouseholdWrapperRoute());
+          },
+        ),
+      ),
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.buildWith(
         child: HomeItemCard(
@@ -475,11 +491,14 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+      i18.home.closedHouseHoldLabel:
+          homeShowcaseData.closedHouseHold.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
+      i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.myCheckList,
@@ -500,10 +519,15 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .contains(element) ||
             element == i18.home.db ||
             element == i18.home.dashboard)
+// TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) =>
+            f != i18.home.db &&
+            f !=
+                i18.home
+                    .closedHouseHoldLabel) // TODO: need to add close household inside mdms
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -553,6 +577,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -584,6 +610,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -632,6 +660,11 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
           refusalReasons:
               appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+        );
+
+        ClosedHouseholdSingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.projectId,
         );
 
         AttendanceSingleton().setInitialData(

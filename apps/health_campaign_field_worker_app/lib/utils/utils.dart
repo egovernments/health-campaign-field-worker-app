@@ -5,6 +5,8 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
+import 'package:closed_household/closed_household.dart'
+    as closed_household_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -395,6 +397,7 @@ initializeAllMappers() async {
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
+    Future(() => closed_household_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -414,6 +417,7 @@ int getSyncCount(List<OpLog> oplogs) {
         case DataModelType.referral:
         case DataModelType.hFReferral:
         case DataModelType.attendance:
+        case DataModelType.userAction:
           return true;
         default:
           return false;
@@ -433,6 +437,7 @@ int getSyncCount(List<OpLog> oplogs) {
         case DataModelType.referral:
         case DataModelType.hFReferral:
         case DataModelType.attendance:
+        case DataModelType.userAction:
           return true;
         default:
           return false;

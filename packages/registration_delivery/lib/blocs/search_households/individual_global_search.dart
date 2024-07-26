@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:bloc/src/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -29,7 +28,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       required super.individualGlobalSearchRepository,
       required super.houseHoldGlobalSearchRepository}) {
     on<IndividualGlobalSearchEvent>(_individualGlobalSearch);
-    on<SearchHouseholdsPaginateEvent>(_paginate);
   }
 
   Future<void> _individualGlobalSearch(
@@ -95,10 +93,24 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
             beneficiaryClientReferenceId:
                 individualClientReferenceIds.map((e) => e).toList()));
 
+    if (projectBeneficiariesList.isNotEmpty) {
+      taskList = await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+      sideEffectsList =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId:
+            taskList.map((e) => e.clientReferenceId).toList(),
+      ));
+      referralsList = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
+      ));
+    }
+
     for (final entry in groupedHouseholdsMembers.entries) {
       HouseholdModel filteredHousehold;
       List<IndividualModel> filteredIndividuals;
-      List<TaskModel> filteredTasks;
+      List<TaskModel> filteredTasks = [];
+      List<ProjectBeneficiaryModel> filteredBeneficiaries = [];
       final householdId = entry.key;
       if (householdId == null) continue;
 
@@ -114,15 +126,20 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       filteredIndividuals = individualsList
           .where((element) => membersIds.contains(element.clientReferenceId))
           .toList();
+      // Filter beneficiaries based on individual client reference IDs
+      filteredBeneficiaries = projectBeneficiariesList
+          .where((element) =>
+              membersIds.contains(element.beneficiaryClientReferenceId))
+          .toList();
 
       // Filter tasks based on project beneficiary client reference IDs
-      filteredTasks = taskList
-          .where((element) => filteredIndividuals
-              .where((e) =>
-                  e.clientReferenceId ==
-                  element.projectBeneficiaryClientReferenceId)
-              .isNotEmpty)
-          .toList();
+      for (var beneficiary in filteredBeneficiaries) {
+        var tasksForBeneficiary = taskList.where((element) =>
+            beneficiary.clientReferenceId ==
+            element.projectBeneficiaryClientReferenceId);
+
+        filteredTasks.addAll(tasksForBeneficiary);
+      }
 
       // Find the head of the household
       final head = filteredIndividuals.firstWhereOrNull(
@@ -144,7 +161,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           household: filteredHousehold,
           headOfHousehold: head,
           members: filteredIndividuals,
-          projectBeneficiaries: projectBeneficiariesList,
+          projectBeneficiaries: filteredBeneficiaries,
           tasks: filteredTasks.isEmpty ? null : filteredTasks,
           sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
           referrals: referralsList.isEmpty ? null : referralsList,
@@ -161,7 +178,4 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       limit: event.globalSearchParams.limit!,
     ));
   }
-
-  FutureOr<void> _paginate(SearchHouseholdsPaginateEvent event,
-      Emitter<SearchHouseholdsState> emit) {}
 }

@@ -105,34 +105,37 @@ class MemberCard extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.topRight,
                   child: DigitIconButton(
-                    onPressed: () => DigitActionDialog.show(
-                      context,
-                      widget: ActionCard(
-                        items: [
-                          ActionCardModel(
-                            icon: Icons.person,
-                            label: localizations.translate(
-                              i18.memberCard.assignAsHouseholdhead,
+                    buttonDisabled: (projectBeneficiaries ?? []).isEmpty,
+                    onPressed: (projectBeneficiaries ?? []).isEmpty
+                        ? null
+                        : () => DigitActionDialog.show(
+                              context,
+                              widget: ActionCard(
+                                items: [
+                                  ActionCardModel(
+                                    icon: Icons.person,
+                                    label: localizations.translate(
+                                      i18.memberCard.assignAsHouseholdhead,
+                                    ),
+                                    action: isHead ? null : setAsHeadAction,
+                                  ),
+                                  ActionCardModel(
+                                    icon: Icons.edit,
+                                    label: localizations.translate(
+                                      i18.memberCard.editIndividualDetails,
+                                    ),
+                                    action: editMemberAction,
+                                  ),
+                                  ActionCardModel(
+                                    icon: Icons.delete,
+                                    label: localizations.translate(
+                                      i18.memberCard.deleteIndividualActionText,
+                                    ),
+                                    action: isHead ? null : deleteMemberAction,
+                                  ),
+                                ],
+                              ),
                             ),
-                            action: isHead ? null : setAsHeadAction,
-                          ),
-                          ActionCardModel(
-                            icon: Icons.edit,
-                            label: localizations.translate(
-                              i18.memberCard.editIndividualDetails,
-                            ),
-                            action: editMemberAction,
-                          ),
-                          ActionCardModel(
-                            icon: Icons.delete,
-                            label: localizations.translate(
-                              i18.memberCard.deleteIndividualActionText,
-                            ),
-                            action: isHead ? null : deleteMemberAction,
-                          ),
-                        ],
-                      ),
-                    ),
                     iconText: localizations.translate(
                       i18.memberCard.editDetails,
                     ),

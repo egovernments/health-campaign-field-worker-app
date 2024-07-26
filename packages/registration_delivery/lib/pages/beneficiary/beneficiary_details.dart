@@ -29,10 +29,10 @@ class BeneficiaryDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<BeneficiaryDetailsPage> createState() => _BeneficiaryDetailsPageState();
+  State<BeneficiaryDetailsPage> createState() => BeneficiaryDetailsPageState();
 }
 
-class _BeneficiaryDetailsPageState
+class BeneficiaryDetailsPageState
     extends LocalizedState<BeneficiaryDetailsPage> {
   @override
   void initState() {

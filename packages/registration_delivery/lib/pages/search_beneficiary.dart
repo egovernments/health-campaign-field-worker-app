@@ -6,7 +6,7 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
+import 'package:registration_delivery/pages/beneficiary/widgets/view_closed_household.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -67,7 +67,6 @@ class _SearchBeneficiaryPageState
 
   @override
   void dispose() {
-    blocWrapper.clearEvent();
     super.dispose();
   }
 
@@ -81,64 +80,37 @@ class _SearchBeneficiaryPageState
           onNotification: (scrollNotification) {
             if (scrollNotification is ScrollUpdateNotification) {
               final metrics = scrollNotification.metrics;
-              blocWrapper.individualGlobalSearchBloc
-                  .add(SearchHouseholdsEvent.paginate(scrollMetrics: metrics));
-              // if (metrics.atEdge &&
-              //     isProximityEnabled &&
-              //     searchController.text == '' &&
-              //     metrics.pixels != 0) {
-              //   // [TODO: Handle the null check at Bloc level for Event parameters
-              //   blocWrapper.individualGlobalSearchBloc
-              //       .add(SearchHouseholdsEvent.individualGlobalSearch(
-              //           globalSearchParams: GlobalSearchParameters(
-              //     isProximityEnabled: isProximityEnabled,
-              //     latitude: lat,
-              //     longitude: long,
-              //     maxRadius: RegistrationDeliverySingleton().maxRadius,
-              //     nameSearch: null,
-              //     filter: null,
-              //     offset: blocWrapper.individualGlobalSearchBloc.state.offset,
-              //     limit: blocWrapper.individualGlobalSearchBloc.state.limit,
-              //     beneficiaryType:
-              //         RegistrationDeliverySingleton().beneficiaryType,
-              //   )));
-              // } else if (metrics.atEdge &&
-              //     searchController.text != '' &&
-              //     metrics.pixels != 0) {
-              //   blocWrapper.searchByHeadBloc
-              //       .add(SearchHouseholdsEvent.searchByHouseholdHead(
-              //     searchText: searchController.text,
-              //     projectId: RegistrationDeliverySingleton().projectId!,
-              //     isProximityEnabled: isProximityEnabled,
-              //     offset: blocWrapper.searchByHeadBloc.state.offset,
-              //     limit: blocWrapper.searchByHeadBloc.state.limit,
-              //   ));
-              // } else if (metrics.atEdge &&
-              //     selectedFilters.isNotEmpty &&
-              //     metrics.pixels != 0) {
-              //   blocWrapper.individualGlobalSearchBloc.add(
-              //     SearchHouseholdsEvent.searchByStatus(
-              //       projectId: RegistrationDeliverySingleton().projectId!,
-              //       offset: blocWrapper.individualGlobalSearchBloc.state.offset,
-              //       limit: blocWrapper.individualGlobalSearchBloc.state.limit,
-              //       status: selectedFilters,
-              //     ),
-              //   );
-              // } else if (metrics.atEdge &&
-              //     selectedFilters.isNotEmpty &&
-              //     metrics.pixels != 0) {
-              //   blocWrapper.statusSearchBloc.add(
-              //     SearchHouseholdsEvent.searchByStatus(
-              //       projectId: RegistrationDeliverySingleton().projectId!,
-              //       offset: blocWrapper.statusSearchBloc.state.offset,
-              //       limit: blocWrapper.statusSearchBloc.state.limit,
-              //       status: selectedFilters,
-              //     ),
-              //   );
-              // }
+              if (metrics.atEdge && metrics.pixels != 0) {
+                if (RegistrationDeliverySingleton().beneficiaryType ==
+                    BeneficiaryType.individual) {
+                  blocWrapper.individualGlobalSearchBloc
+                      .add(SearchHouseholdsEvent.individualGlobalSearch(
+                          globalSearchParams: GlobalSearchParameters(
+                    isProximityEnabled: isProximityEnabled,
+                    latitude: lat,
+                    longitude: long,
+                    maxRadius: RegistrationDeliverySingleton().maxRadius,
+                    nameSearch: searchController.text,
+                    filter: selectedFilters,
+                    offset: blocWrapper.individualGlobalSearchBloc.state.offset,
+                    limit: blocWrapper.individualGlobalSearchBloc.state.limit,
+                  )));
+                } else {
+                  blocWrapper.houseHoldGlobalSearchBloc
+                      .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
+                          globalSearchParams: GlobalSearchParameters(
+                    isProximityEnabled: isProximityEnabled,
+                    latitude: lat,
+                    longitude: long,
+                    maxRadius: RegistrationDeliverySingleton().maxRadius,
+                    nameSearch: searchController.text,
+                    filter: selectedFilters,
+                    offset: blocWrapper.houseHoldGlobalSearchBloc.state.offset,
+                    limit: blocWrapper.houseHoldGlobalSearchBloc.state.limit,
+                  )));
+                }
+              }
             }
-            // Return true to allow the notification to continue to be dispatched to further ancestors.
-
             return true;
           },
           child: ScrollableContent(
@@ -198,6 +170,7 @@ class _SearchBeneficiaryPageState
                                               triggerGlobalSearchEvent();
                                             } else {
                                               blocWrapper.clearEvent();
+                                              triggerGlobalSearchEvent();
                                             }
                                           },
                                         ),
@@ -220,40 +193,45 @@ class _SearchBeneficiaryPageState
                                 onChanged: (value) {
                                   if (value.isEmpty) {
                                     blocWrapper.clearEvent();
+                                    triggerGlobalSearchEvent();
                                   }
                                   if (value.trim().length < 2 &&
                                       !isProximityEnabled) {
                                     blocWrapper.clearEvent();
-
-                                    return;
-                                  } else if (isProximityEnabled &&
-                                      value.trim().length < 2) {
-                                    triggerGlobalSearchEvent();
                                   } else {
                                     blocWrapper.searchHouseholdsBloc.add(
                                       const SearchHouseholdsClearEvent(),
                                     );
-                                    triggerGlobalSearchEvent();
                                   }
+                                  triggerGlobalSearchEvent();
                                 },
                               ),
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: DigitIconButton(
-                                  iconText: getFilterIconNLabel()['label'],
-                                  icon: getFilterIconNLabel()['icon'],
-                                  onPressed: () => showFilterDialog(),
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.only(left: kPadding),
+                                  child: DigitIconButton(
+                                    textDirection: TextDirection.rtl,
+                                    iconText: getFilterIconNLabel()['label'],
+                                    icon: getFilterIconNLabel()['icon'],
+                                    onPressed: () => showFilterDialog(),
+                                  ),
                                 ),
                               ),
                               selectedFilters.isNotEmpty
                                   ? Align(
                                       alignment: Alignment.topLeft,
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.horizontal,
-                                        child: Row(
-                                          children: [
-                                            for (var filter in selectedFilters)
-                                              Padding(
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.05,
+                                        child: ListView.builder(
+                                            shrinkWrap: true,
+                                            scrollDirection: Axis.horizontal,
+                                            itemCount: selectedFilters.length,
+                                            itemBuilder: (context, index) {
+                                              return Padding(
                                                   padding: const EdgeInsets.all(
                                                       kPadding / 2),
                                                   child: Container(
@@ -272,14 +250,15 @@ class _SearchBeneficiaryPageState
                                                     child: Row(
                                                       children: [
                                                         Text(
-                                                            localizations
-                                                                .translate(
-                                                                    filter),
+                                                            localizations.translate(
+                                                                getStatus(
+                                                                    selectedFilters[
+                                                                        index])),
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            '(${searchHouseholdsState.householdMembers.length})',
+                                                            '(${selectedFilters.contains(Status.closeHousehold.name) ? searchHouseholdsState.closedHouseholds.length : searchHouseholdsState.householdMembers.length})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -288,17 +267,26 @@ class _SearchBeneficiaryPageState
                                                         GestureDetector(
                                                           onTap: () {
                                                             setState(() {
-                                                              selectedFilters
-                                                                  .remove(
-                                                                      filter);
+                                                              selectedFilters.remove(
+                                                                  selectedFilters[
+                                                                      index]);
                                                             });
                                                             blocWrapper
                                                                 .clearEvent();
+                                                            triggerGlobalSearchEvent();
                                                           },
                                                           child: Container(
-                                                            color:
-                                                                const DigitColors()
-                                                                    .davyGray,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color:
+                                                                  const DigitColors()
+                                                                      .davyGray,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          kPadding /
+                                                                              2),
+                                                            ),
                                                             child: Icon(
                                                               Icons.close,
                                                               color:
@@ -309,9 +297,8 @@ class _SearchBeneficiaryPageState
                                                         )
                                                       ],
                                                     ),
-                                                  )),
-                                          ],
-                                        ),
+                                                  ));
+                                            }),
                                       ),
                                     )
                                   : const Offstage(),
@@ -342,65 +329,119 @@ class _SearchBeneficiaryPageState
                 ),
               BlocListener<DigitScannerBloc, DigitScannerState>(
                 listener: (context, scannerState) {
-                  context.read<SearchBlocWrapper>().tagSearchBloc.add(
-                        SearchHouseholdsEvent.searchByTag(
-                          tag: scannerState.qrCodes.isNotEmpty
-                              ? scannerState.qrCodes.lastOrNull!
-                              : '',
-                          projectId: RegistrationDeliverySingleton().projectId!,
-                        ),
-                      );
+                  if (scannerState.qrCodes.isNotEmpty) {
+                    context.read<SearchBlocWrapper>().tagSearchBloc.add(
+                          SearchHouseholdsEvent.searchByTag(
+                            tag: scannerState.qrCodes.isNotEmpty
+                                ? scannerState.qrCodes.lastOrNull!
+                                : '',
+                            projectId:
+                                RegistrationDeliverySingleton().projectId!,
+                          ),
+                        );
+                  }
                 },
                 child: BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    return SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (ctx, index) {
-                          final i = searchHouseholdsState.householdMembers
-                              .elementAt(index);
-                          final distance = calculateDistance(
-                            Coordinate(
-                              lat,
-                              long,
-                            ),
-                            Coordinate(
-                              i.household?.address?.latitude,
-                              i.household?.address?.longitude,
-                            ),
-                          );
+                    return searchHouseholdsState.closedHouseholds.isNotEmpty
+                        ? SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, index) {
+                                final i = searchHouseholdsState.closedHouseholds
+                                    .elementAt(index);
 
-                          return Container(
-                            margin: const EdgeInsets.only(bottom: kPadding),
-                            child: ViewBeneficiaryCard(
-                              distance: isProximityEnabled ? distance : null,
-                              householdMember: i,
-                              onOpenPressed: () async {
-                                final scannerBloc =
-                                    context.read<DigitScannerBloc>();
-
-                                scannerBloc.add(
-                                  const DigitScannerEvent.handleScanner(),
-                                );
-
-                                await context.router.push(
-                                  BeneficiaryWrapperRoute(
-                                    wrapper: i,
+                                final distance = calculateDistance(
+                                  Coordinate(
+                                    lat,
+                                    long,
+                                  ),
+                                  Coordinate(
+                                    i.latitude,
+                                    i.longitude,
                                   ),
                                 );
-                                setState(() {
-                                  isProximityEnabled = false;
-                                });
-                                searchController.clear();
 
-                                blocWrapper.clearEvent();
+                                return ViewClosedHouseholdCard(
+                                  userAction: i,
+                                  onOpenPressed: () async {
+                                    setState(() {
+                                      selectedFilters = [];
+                                    });
+                                    blocWrapper.clearEvent();
+                                    await context.router.push(
+                                      BeneficiaryRegistrationWrapperRoute(
+                                        initialState:
+                                            BeneficiaryRegistrationCreateState(
+                                          searchQuery: i
+                                              .additionalFields?.fields
+                                              .where((h) =>
+                                                  h.key == 'householdHead')
+                                              .firstOrNull
+                                              ?.value,
+                                          selectedClosedHouseholdID:
+                                              i.clientReferenceId,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  distance:
+                                      isProximityEnabled ? distance : null,
+                                );
                               },
+                              childCount:
+                                  searchHouseholdsState.closedHouseholds.length,
+                            ),
+                          )
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (ctx, index) {
+                                final i = searchHouseholdsState.householdMembers
+                                    .elementAt(index);
+                                final distance = calculateDistance(
+                                  Coordinate(
+                                    lat,
+                                    long,
+                                  ),
+                                  Coordinate(
+                                    i.household?.address?.latitude,
+                                    i.household?.address?.longitude,
+                                  ),
+                                );
+
+                                return Container(
+                                  margin:
+                                      const EdgeInsets.only(bottom: kPadding),
+                                  child: ViewBeneficiaryCard(
+                                    distance:
+                                        isProximityEnabled ? distance : null,
+                                    householdMember: i,
+                                    onOpenPressed: () async {
+                                      final scannerBloc =
+                                          context.read<DigitScannerBloc>();
+
+                                      scannerBloc.add(
+                                        const DigitScannerEvent.handleScanner(),
+                                      );
+
+                                      await context.router.push(
+                                        BeneficiaryWrapperRoute(
+                                          wrapper: i,
+                                        ),
+                                      );
+                                      setState(() {
+                                        isProximityEnabled = false;
+                                      });
+                                      searchController.clear();
+                                      selectedFilters.clear();
+                                      blocWrapper.clearEvent();
+                                    },
+                                  ),
+                                );
+                              },
+                              childCount:
+                                  searchHouseholdsState.householdMembers.length,
                             ),
                           );
-                        },
-                        childCount:
-                            searchHouseholdsState.householdMembers.length,
-                      ),
-                    );
                   },
                 ),
               ),
@@ -430,6 +471,7 @@ class _SearchBeneficiaryPageState
                               ),
                             ));
                             searchController.clear();
+                            selectedFilters = [];
                             blocWrapper.clearEvent();
                           }
                         : null,
@@ -447,6 +489,8 @@ class _SearchBeneficiaryPageState
                     ),
                     onPressed: () {
                       blocWrapper.clearEvent();
+                      selectedFilters = [];
+                      searchController.clear();
                       Navigator.of(context).push(
                         MaterialPageRoute(
                           builder: (context) => const DigitScannerPage(
@@ -484,57 +528,97 @@ class _SearchBeneficiaryPageState
   showFilterDialog() async {
     var filters = await DigitDialog.show(context,
         options: DigitDialogOptions(
+          isCloseIcon: true,
+          barrierDismissible: true,
           titleIcon: Icon(getFilterIconNLabel()['icon'],
               color: const DigitColors().burningOrange),
           titleText: getFilterIconNLabel()['label'],
           content: StatusFilter(selectedFilters: selectedFilters),
         ));
 
-    if (filters != null) {
-      for (var filter in filters) {
-        if (!selectedFilters.contains(filter)) {
-          setState(() {
-            selectedFilters.add(filter);
-          });
-        }
-      }
+    if (filters != null && filters.isNotEmpty) {
+      setState(() {
+        selectedFilters = [];
+      });
+      setState(() {
+        selectedFilters.addAll(filters);
+      });
       triggerGlobalSearchEvent();
     } else {
       setState(() {
         selectedFilters = [];
       });
       blocWrapper.clearEvent();
+      triggerGlobalSearchEvent();
     }
   }
 
   void triggerGlobalSearchEvent() {
+    blocWrapper.clearEvent();
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
-      blocWrapper.individualGlobalSearchBloc
-          .add(SearchHouseholdsEvent.individualGlobalSearch(
-              globalSearchParams: GlobalSearchParameters(
-        isProximityEnabled: isProximityEnabled,
-        latitude: lat,
-        longitude: long,
-        maxRadius: RegistrationDeliverySingleton().maxRadius,
-        nameSearch: searchController.text,
-        filter: selectedFilters,
-        offset: offset,
-        limit: limit,
-      )));
+      if (isProximityEnabled ||
+          selectedFilters.isNotEmpty ||
+          searchController.text.isNotEmpty ||
+          searchController.text.length > 2) {
+        blocWrapper.individualGlobalSearchBloc
+            .add(SearchHouseholdsEvent.individualGlobalSearch(
+                globalSearchParams: GlobalSearchParameters(
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          longitude: long,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text,
+          filter: selectedFilters,
+          offset: offset,
+          limit: limit,
+        )));
+      }
     } else {
-      blocWrapper.houseHoldGlobalSearchBloc
-          .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
-              globalSearchParams: GlobalSearchParameters(
-        isProximityEnabled: isProximityEnabled,
-        latitude: lat,
-        longitude: long,
-        maxRadius: RegistrationDeliverySingleton().maxRadius,
-        nameSearch: searchController.text,
-        filter: selectedFilters,
-        offset: offset,
-        limit: limit,
-      )));
+      if (isProximityEnabled ||
+          selectedFilters.isNotEmpty ||
+          searchController.text.isNotEmpty) {
+        blocWrapper.houseHoldGlobalSearchBloc
+            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
+                globalSearchParams: GlobalSearchParameters(
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          longitude: long,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text.trim(),
+          filter: selectedFilters,
+          offset: offset,
+          limit: limit,
+        )));
+      }
+    }
+  }
+
+  String getStatus(String selectedFilter) {
+    final statusMap = {
+      Status.delivered.toValue(): Status.delivered,
+      Status.notDelivered.toValue(): Status.notDelivered,
+      Status.visited.toValue(): Status.visited,
+      Status.notVisited.toValue(): Status.notVisited,
+      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+      Status.administeredSuccess.toValue(): Status.administeredSuccess,
+      Status.administeredFailed.toValue(): Status.administeredFailed,
+      Status.inComplete.toValue(): Status.inComplete,
+      Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
+      Status.registered.toValue(): Status.registered,
+      Status.notRegistered.toValue(): Status.notRegistered,
+    };
+
+    var mappedStatus = statusMap.entries
+        .where((element) => element.value.name == selectedFilter)
+        .first
+        .key;
+    if (mappedStatus != null) {
+      return mappedStatus;
+    } else {
+      return selectedFilter;
     }
   }
 }

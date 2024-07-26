@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -24,10 +25,10 @@ class RefusedDeliveryPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<RefusedDeliveryPage> createState() => _RefusedDeliveryPageState();
+  State<RefusedDeliveryPage> createState() => RefusedDeliveryPageState();
 }
 
-class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
+class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
   static const _dataOfRefusalKey = 'dateOfAdministration';
   static const _reasonOfRefusal = 'reasonOfRefusal';
   static const _deliveryCommentKey = 'deliveryComment';
@@ -105,6 +106,9 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
 
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(
+                                  navigateToSummary: true,
+                                  householdMemberWrapper:
+                                      registrationState.householdMemberWrapper,
                                   task: TaskModel(
                                     projectBeneficiaryClientReferenceId:
                                         projectBeneficiary?.first
@@ -137,11 +141,14 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                       version: 1,
                                       fields: [
                                         AdditionalField(
-                                          'taskStatus',
+                                          AdditionalFieldsType.reasonOfRefusal
+                                              .toValue(),
                                           reasonOfRefusal,
                                         ),
-                                        AdditionalField(
-                                          'comments',
+                                        if (refusalComment != null)
+                                          AdditionalField(
+                                          AdditionalFieldsType.deliveryComment
+                                              .toValue(),
                                           refusalComment,
                                         ),
                                       ],
@@ -152,10 +159,7 @@ class _RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                       RegistrationDeliverySingleton().boundary!,
                                 ),
                               );
-                          context.router
-                              .popAndPush(HouseholdAcknowledgementRoute(
-                            enableViewHousehold: true,
-                          ));
+                          context.router.push(DeliverySummaryRoute());
                         },
                         child: Center(
                           child: Text(

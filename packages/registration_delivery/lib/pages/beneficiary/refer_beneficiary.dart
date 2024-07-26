@@ -31,10 +31,10 @@ class ReferBeneficiaryPage extends LocalizedStatefulWidget {
     required this.projectBeneficiaryClientRefId,
   });
   @override
-  State<ReferBeneficiaryPage> createState() => _ReferBeneficiaryPageState();
+  State<ReferBeneficiaryPage> createState() => ReferBeneficiaryPageState();
 }
 
-class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
+class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   static const _dateOfReferralKey = 'dateOfReferral';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _referredByKey = 'referredBy';

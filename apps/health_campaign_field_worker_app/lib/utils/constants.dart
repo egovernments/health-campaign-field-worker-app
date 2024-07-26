@@ -1,4 +1,8 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/data/repositories/local/user_action.dart';
+import 'package:closed_household/data/repositories/oplog/oplog.dart';
+import 'package:closed_household/data/repositories/remote/user_action.dart';
+import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -121,6 +125,7 @@ class Constants {
         ),
       ),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      ClosedHouseholdLocalRepository(sql, ClosedHouseholdOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
@@ -140,6 +145,7 @@ class Constants {
         sql,
         HFReferralOpLogManager(isar),
       ),
+      ClosedHouseholdLocalRepository(sql, ClosedHouseholdOpLogManager(isar)),
     ];
   }
 
@@ -163,6 +169,8 @@ class Constants {
 
     _version = version;
   }
+
+  static const String closedHouseholdSvg = 'assets/icons/svg/closed_household.svg';
 
   static List<RemoteRepository> getRemoteRepositories(
     Dio dio,
@@ -223,6 +231,8 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userAction)
+          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -258,6 +268,7 @@ class Constants {
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
         hierarchyType: envConfig.variables.hierarchyType);
     RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);

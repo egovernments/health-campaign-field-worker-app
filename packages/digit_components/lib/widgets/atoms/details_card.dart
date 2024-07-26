@@ -72,6 +72,7 @@ class LabelValueList extends StatelessWidget {
                   child: Text(
                     item.label,
                     style: textTheme.headlineSmall?.copyWith(
+                      height: 1.14,
                       color: const DigitColors().woodsmokeBlack,
                     ),
                   ),
@@ -83,7 +84,8 @@ class LabelValueList extends StatelessWidget {
                   flex: 8, // Remaining 55% width
                   child: Text(
                     item.value,
-                    style: textTheme.bodySmall?.copyWith(
+                    style: textTheme.bodyLarge?.copyWith(
+                      height: 1.14,
                       color: const DigitColors().woodsmokeBlack,
                     ),
                   ),
@@ -102,7 +104,7 @@ class LabelValueList extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   item.value,
-                  style: textTheme.bodySmall?.copyWith(
+                  style: textTheme.bodyMedium?.copyWith(
                     color: const DigitColors().woodsmokeBlack,
                   ),
                 ),

@@ -20,7 +20,9 @@ class DigitScannerBloc extends Bloc<DigitScannerEvent, DigitScannerState> {
     DigitScannerEmitter emit,
   ) async {
     try {
-      emit(state.copyWith(barCodes: event.barCode, qrCodes: event.qrCode));
+      emit(state.copyWith(loading: true));
+      emit(state.copyWith(
+          barCodes: event.barCode, qrCodes: event.qrCode));
     } catch (error) {
       rethrow;
     } finally {

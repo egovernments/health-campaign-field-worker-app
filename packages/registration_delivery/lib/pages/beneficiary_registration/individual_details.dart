@@ -14,10 +14,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/household_overview/household_overview.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -37,11 +39,10 @@ class IndividualDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<IndividualDetailsPage> createState() => _IndividualDetailsPageState();
+  State<IndividualDetailsPage> createState() => IndividualDetailsPageState();
 }
 
-class _IndividualDetailsPageState
-    extends LocalizedState<IndividualDetailsPage> {
+class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
   static const _idTypeKey = 'idType';
   static const _idNumberKey = 'idNumber';
@@ -69,12 +70,28 @@ class _IndividualDetailsPageState
             state.mapOrNull(
               persisted: (value) {
                 if (value.navigateToRoot) {
-                  (router.parent() as StackRouter).maybePop();
+                  final overviewBloc = context.read<HouseholdOverviewBloc>();
+
+                  overviewBloc.add(
+                    HouseholdOverviewReloadEvent(
+                      projectId:
+                          RegistrationDeliverySingleton().projectId.toString(),
+                      projectBeneficiaryType:
+                          RegistrationDeliverySingleton().beneficiaryType ??
+                              BeneficiaryType.household,
+                    ),
+                  );
+                  HouseholdMemberWrapper memberWrapper =
+                      overviewBloc.state.householdMemberWrapper;
+                  final route = router.parent() as StackRouter;
+                  route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
+                  route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
                 }
               },
             );
           },
           builder: (context, state) {
+            // context.
             return ScrollableContent(
               enableFixedButton: true,
               header: const Column(children: [
@@ -125,6 +142,7 @@ class _IndividualDetailsPageState
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
+                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {
@@ -324,7 +342,7 @@ class _IndividualDetailsPageState
                           individualDetailsShowcaseData.nameOfIndividual
                               .buildWith(
                             child: DigitTextFormField(
-                              formControlName: 'individualName',
+                              formControlName: _individualNameKey,
                               label: localizations.translate(
                                 i18.individualDetails.nameLabelText,
                               ),
@@ -533,6 +551,9 @@ class _IndividualDetailsPageState
                             (RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.individual))
                           BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                            buildWhen: (p, c) {
+                              return true;
+                            },
                             builder: (context, state) => state
                                     .qrCodes.isNotEmpty
                                 ? Row(
@@ -554,7 +575,7 @@ class _IndividualDetailsPageState
                                         child: Text(
                                           overflow: TextOverflow.ellipsis,
                                           localizations
-                                              .translate(state.qrCodes.first),
+                                              .translate(state.qrCodes.last),
                                         ),
                                       ),
                                       Padding(
@@ -697,9 +718,10 @@ class _IndividualDetailsPageState
       ),
     );
 
+    String? individualName = form.control(_individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
-        givenName: form.control(_individualNameKey).value,
+        givenName: individualName?.trim(),
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -749,7 +771,7 @@ class _IndividualDetailsPageState
           CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery,
+        value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
       _idTypeKey: FormControl<String>(
         value: individual?.identifiers?.firstOrNull?.identifierType,

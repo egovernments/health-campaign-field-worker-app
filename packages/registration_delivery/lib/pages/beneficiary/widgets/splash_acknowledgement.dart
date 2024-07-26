@@ -19,10 +19,10 @@ class SplashAcknowledgementPage extends LocalizedStatefulWidget {
 
   @override
   State<SplashAcknowledgementPage> createState() =>
-      _SplashAcknowledgementPageState();
+      SplashAcknowledgementPageState();
 }
 
-class _SplashAcknowledgementPageState
+class SplashAcknowledgementPageState
     extends LocalizedState<SplashAcknowledgementPage> {
   @override
   void initState() {

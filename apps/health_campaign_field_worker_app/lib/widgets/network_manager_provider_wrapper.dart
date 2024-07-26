@@ -1,6 +1,10 @@
 import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/data/repositories/local/user_action.dart';
+import 'package:closed_household/data/repositories/oplog/oplog.dart';
+import 'package:closed_household/data/repositories/remote/user_action.dart';
+import 'package:closed_household/models/entities/user_action.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -264,6 +268,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           StockReconciliationOpLogManager(isar),
         ),
       ),
+      RepositoryProvider<
+          LocalRepository<UserActionModel,
+              UserActionSearchModel>>(
+        create: (_) => ClosedHouseholdLocalRepository(
+          sql,
+          ClosedHouseholdOpLogManager(isar),
+        ),
+      ),
       // INFO Need to add packages here
     ];
   }
@@ -484,6 +496,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                   StockReconciliationSearchModel>>(
             create: (_) =>
                 StockReconciliationRemoteRepository(dio, actionMap: actions),
+          ),
+        if (value == DataModelType.userAction)
+          RepositoryProvider<
+              RemoteRepository<UserActionModel,
+                  UserActionSearchModel>>(
+            create: (_) =>
+                UserActionRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
       ]);

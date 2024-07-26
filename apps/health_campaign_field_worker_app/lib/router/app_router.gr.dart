@@ -314,6 +314,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...ReferralReconciliationRoute().pagesMap,
     ...DigitScannerPackageRoute().pagesMap,
     ...RegistrationDeliveryRoute().pagesMap,
+    ...ClosedHouseholdPackageRoute().pagesMap,
   };
 }
 

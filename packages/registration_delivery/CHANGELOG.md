@@ -1,38 +1,40 @@
-## 0.0.0-dev.1
+## 1.0.3-dev.2
 
-* Registration and Delivery Initial Release
+* Closed household search fixes
+* Tasks status fixes on beneficiary card and overview page
+* Updated digit_components and digit_scanner versions
 
-## 0.0.0-dev.2
+## 1.0.3-dev.1
 
-* Boundary v2 Integrated, to use Boundary v1  0.0.0-dev.1 version can be used
+* Fixed filter search bug fixes and improvements
+* Updated task status on view_beneficiary card
+* Implemented closed household flow filter and update
 
-## 0.0.0-dev.3
+## 0.0.0-dev.10
 
-* Updated digit_data_model to latest version
+* Added pagination for filter search
+* Updated PageState class to public for customization
+* Updated digit_components
 
-## 0.0.0-dev.4
+## 0.0.0-dev.9
 
-* Added null check for fetching product variants
+* Updated individual details file for exposing individual state
+* Updated household_overview for BeneficiaryChecklistRoute
 
-## 0.0.0-dev.5
+## 0.0.0-dev.8
 
-* Facility dialog empty pop up fix on initial load
+* Added query builder and registry updated changes
+* Added New screens - house details
 
-## 0.0.0-dev.6
+## 1.0.2+1
 
-* Updated digit_scanner to latest version
+* Get Precise location on Submitting latitude longitude details
 
-## 0.0.0-dev.7
+## 1.0.2
 
-* Fixed Duplicate routing issue
-
-## 1.0.0
-
-* Initial stable version
-
-## 1.0.0+1
-
-* Updated digit_showcase to latest version
+* Added try catch for local repository to handle db lock
+* Localisation support added for missing fields
+* Bug fixes and enhancements
 
 ## 1.0.1
 
@@ -41,12 +43,38 @@
 * Added HouseholdDetailsBloc in registration_delivery_wrapper page
 * Updated digit_data_model to latest version
 
-## 1.0.2
+## 1.0.0+1
 
-* Added try catch for local repository to handle db lock
-* Localisation support added for missing fields
-* Bug fixes and enhancements
+* Updated digit_showcase to latest version
 
-## 1.0.2+1
+## 1.0.0
 
-* Get Precise location on Submitting latitude longitude details
+* Initial stable version
+
+## 0.0.0-dev.7
+
+* Fixed Duplicate routing issue
+
+## 0.0.0-dev.6
+
+* Updated digit_scanner to latest version
+
+## 0.0.0-dev.5
+
+* Facility dialog empty pop up fix on initial load
+
+## 0.0.0-dev.4
+
+* Added null check for fetching product variants
+
+## 0.0.0-dev.3
+
+* Updated digit_data_model to latest version
+
+## 0.0.0-dev.2
+
+* Boundary v2 Integrated, to use Boundary v1  0.0.0-dev.1 version can be used
+
+## 0.0.0-dev.1
+
+* Registration and Delivery Initial Release

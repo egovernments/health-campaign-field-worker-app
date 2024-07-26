@@ -25,26 +25,17 @@ class HouseDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<HouseDetailsPage> createState() => _HouseDetailsPageState();
+  State<HouseDetailsPage> createState() => HouseDetailsPageState();
 }
 
-class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
+class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
   static const _noOfRoomsKey = 'noOfRooms';
+  static const _householdStructureKey = 'householdStructure';
   List<String>? selectedHouseStructureTypes;
 
   @override
   void initState() {
     final registrationState = context.read<BeneficiaryRegistrationBloc>().state;
-    setState(() {
-      selectedHouseStructureTypes = registrationState
-          .householdModel?.additionalFields?.fields
-          .where((e) =>
-              e.key == AdditionalFieldsType.houseStructureTypes.toValue())
-          .first
-          .value
-          .toString()
-          .split("|");
-    });
 
     super.initState();
   }
@@ -78,16 +69,17 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       child: DigitElevatedButton(
                         onPressed: () {
                           form.markAllAsTouched();
+                          if (form.control(_householdStructureKey).value == null) {
+                            setState(() {
+                              form
+                                  .control(_householdStructureKey)
+                                  .setErrors({'': true});
+                            });
+                          }
+
                           if (!form.valid) return;
-                          if ((selectedHouseStructureTypes ?? []).isEmpty) {
-                            DigitToast.show(context,
-                                options: DigitToastOptions(
-                                  localizations.translate(i18.householdDetails
-                                      .selectStructureTypeError),
-                                  true,
-                                  theme,
-                                ));
-                          } else {
+                          selectedHouseStructureTypes = form.control(_householdStructureKey).value;
+
                             final noOfRooms =
                                 form.control(_noOfRoomsKey).value as int;
                             registrationState.maybeWhen(
@@ -102,6 +94,7 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 registrationDate,
                                 searchQuery,
                                 loading,
+                                selectedClosedHouseholdID,
                                 isHeadOfHousehold,
                               ) {
                                 var houseModel = HouseholdModel(
@@ -115,6 +108,7 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                       createdTime:
                                           context.millisecondsSinceEpoch(),
                                     ),
+                                    memberCount: householdModel?.memberCount,
                                     clientAuditDetails: ClientAuditDetails(
                                       createdBy: RegistrationDeliverySingleton()
                                           .loggedInUserUuid!,
@@ -207,7 +201,6 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 router.push(HouseHoldDetailsRoute());
                               },
                             );
-                          }
                         },
                         child: Center(
                           child: Text(
@@ -239,8 +232,9 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 houseShowcaseData.typeOfStructure.buildWith(
                                   child: SelectionBox<String>(
                                     isRequired: true,
-                                    title: i18.householdDetails.typeOfStructure,
-                                    width: 120,
+                                    title: localizations.translate(
+                                        i18.householdDetails.typeOfStructure),
+                                    equalWidthOptions: true,
                                     allowMultipleSelection: false,
                                     options: RegistrationDeliverySingleton()
                                             .houseStructureTypes ??
@@ -259,14 +253,37 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                         .toString()
                                         .split("|"),
                                     onSelectionChanged: (values) {
-                                      setState(() {
-                                        selectedHouseStructureTypes = values;
-                                      });
+                                      form
+                                          .control(_householdStructureKey)
+                                          .markAsTouched();
+                                      if(values.isEmpty){
+                                        form
+                                            .control(_householdStructureKey)
+                                            .value = null;
+                                        setState(() {
+                                          form
+                                              .control(_householdStructureKey)
+                                              .setErrors({'': true});
+                                        });
+                                      }else{
+                                        setState(() {
+                                          form.control(_householdStructureKey).value = values;
+                                        });
+                                      }
                                     },
                                     valueMapper: (value) {
                                       return localizations
                                           .translate(value.toString());
                                     },
+                                    errorMessage: form
+                                        .control(_householdStructureKey)
+                                        .hasErrors &&
+                                        form
+                                            .control(_householdStructureKey)
+                                            .touched
+                                        ? localizations.translate(i18.householdDetails
+                                        .selectStructureTypeError)
+                                        : null,
                                   ),
                                 ),
                                 houseShowcaseData.noOfRooms.buildWith(
@@ -309,6 +326,16 @@ class _HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       .toString() ??
                   '1')
               : 1),
+      _householdStructureKey: FormControl<List<String>>(
+        value: state
+            .householdModel?.additionalFields?.fields
+            .where((e) =>
+        e.key == AdditionalFieldsType.houseStructureTypes.toValue())
+            .first
+            .value
+            .toString()
+            .split("|"),
+      )
     });
   }
 }

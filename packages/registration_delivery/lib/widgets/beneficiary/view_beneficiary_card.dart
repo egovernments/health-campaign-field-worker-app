@@ -29,10 +29,10 @@ class ViewBeneficiaryCard extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ViewBeneficiaryCard> createState() => _ViewBeneficiaryCardState();
+  State<ViewBeneficiaryCard> createState() => ViewBeneficiaryCardState();
 }
 
-class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
+class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
   late HouseholdMemberWrapper householdMember;
 
   @override
@@ -47,7 +47,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     super.didUpdateWidget(oldWidget);
   }
 
-  bool _isCardExpanded = true;
+  bool _isCardExpanded = false;
 
   bool get isCardExpanded => _isCardExpanded;
 
@@ -91,19 +91,18 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     final tableData = householdMember.members?.map(
       (e) {
         final projectBeneficiary =
-            // RegistrationDeliverySingleton().beneficiaryType !=
-            //         BeneficiaryType.individual
-            //     ? [householdMember.projectBeneficiaries!.first]
-            //     :
-            householdMember.projectBeneficiaries
-                    ?.where(
-                      (element) =>
-                          element.beneficiaryClientReferenceId ==
-                          e.clientReferenceId,
-                    )
-                    .toList();
+            householdMember.projectBeneficiaries?.where((element) {
+          if (RegistrationDeliverySingleton().beneficiaryType ==
+              BeneficiaryType.individual) {
+            return element.beneficiaryClientReferenceId == e.clientReferenceId;
+          } else {
+            return element.beneficiaryClientReferenceId ==
+                householdMember.household!.clientReferenceId;
+          }
+        }).toList();
 
-        final taskData = (projectBeneficiary ?? []).isNotEmpty
+        final taskData = (projectBeneficiary ?? []).isNotEmpty &&
+                householdMember.tasks != null
             ? householdMember.tasks
                 ?.where((element) =>
                     element.projectBeneficiaryClientReferenceId ==
@@ -251,17 +250,27 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         months: ageInMonths,
       ),
       RegistrationDeliverySingleton().projectType,
-      householdMember.tasks?.last,
-      householdMember.sideEffects,
+      (householdMember.tasks ?? []).isNotEmpty
+          ? householdMember.tasks?.last
+          : null,
+      (householdMember.sideEffects ?? []).isNotEmpty
+          ? householdMember.sideEffects
+          : null,
     );
 
     final isBeneficiaryRefused =
         checkIfBeneficiaryRefused(householdMember.tasks);
-    final projectBeneficiary = householdMember.projectBeneficiaries
-        ?.where((p) =>
-            p.beneficiaryClientReferenceId ==
-            householdMember.headOfHousehold?.clientReferenceId)
-        .firstOrNull;
+    final projectBeneficiary = householdMember.projectBeneficiaries?.where((p) {
+      if (RegistrationDeliverySingleton().beneficiaryType ==
+          BeneficiaryType.individual) {
+        return p.beneficiaryClientReferenceId ==
+            householdMember.headOfHousehold?.clientReferenceId;
+      } else {
+        return p.beneficiaryClientReferenceId ==
+            householdMember.household?.clientReferenceId;
+      }
+    }).firstOrNull;
+
     final tasks = householdMember.tasks?.where((t) =>
         t.projectBeneficiaryClientReferenceId ==
         projectBeneficiary?.clientReferenceId);
@@ -290,7 +299,10 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                   status: getStatus(
                       tasks ?? [],
                       householdMember.projectBeneficiaries ?? [],
-                      isNotEligible,
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                              BeneficiaryType.individual
+                          ? isNotEligible
+                          : false,
                       isBeneficiaryRefused),
                   title: [
                     householdMember.headOfHousehold?.name?.givenName,
@@ -398,14 +410,7 @@ class _ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       if (tasks.isEmpty) {
         return Status.registered.toValue();
       } else {
-        bool isIndividual = RegistrationDeliverySingleton().beneficiaryType ==
-            BeneficiaryType.individual;
-        if (isIndividual && !isNotEligible && !isBeneficiaryRefused ||
-            !isIndividual) {
-          return Status.visited.toValue();
-        } else {
-          return Status.notVisited.toValue();
-        }
+        return getTaskStatus(tasks).toValue();
       }
     } else {
       return Status.notRegistered.toValue();
