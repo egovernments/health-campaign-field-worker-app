@@ -160,7 +160,6 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 individuals,
                                 registrationDate,
                                 projectBeneficiaryModel,
-                                taskModel,
                                 loading,
                               ) {
                                 var houseModel = householdModel.copyWith(

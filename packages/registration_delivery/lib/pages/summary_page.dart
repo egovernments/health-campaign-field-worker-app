@@ -125,7 +125,6 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   projectBeneficiaryModel,
                                   registrationDate,
                                   addressModel,
-                                  taskModel,
                                   loading,
                                   isHeadOfHousehold,
                                 ) async {
@@ -331,7 +330,6 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       projectBeneficiaryModel,
                                       registrationDate,
                                       addressModel,
-                                      taskModel,
                                       loading,
                                       isHeadOfHousehold,
                                     ) =>
@@ -352,7 +350,6 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       projectBeneficiaryModel,
                                       registrationDate,
                                       addressModel,
-                                      taskModel,
                                       loading,
                                       isHeadOfHousehold,
                                     ) =>
@@ -383,7 +380,6 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       projectBeneficiaryModel,
                                       registrationDate,
                                       addressModel,
-                                      taskModel,
                                       loading,
                                       isHeadOfHousehold,
                                     ) =>
