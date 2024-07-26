@@ -1,3 +1,7 @@
+## 1.0.3-dev.3
+
+* Closed household flow change
+
 ## 1.0.3-dev.2
 
 * Closed household search fixes

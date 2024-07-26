@@ -69,9 +69,10 @@ dependencies:
   digit_scanner: ^1.0.3-dev.1
   inventory_management: ^1.0.2
   referral_reconciliation: ^1.0.2
-  digit_data_model: ^1.0.2
-  registration_delivery: ^1.0.3-dev.2
+  digit_data_model: ^1.0.3-dev.2
+  registration_delivery: ^1.0.3-dev.3
   disable_battery_optimization: ^1.1.1
+  closed_household: ^0.0.0-dev.2
 
 dev_dependencies:
   flutter_test:

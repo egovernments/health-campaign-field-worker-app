@@ -1,6 +1,6 @@
 name: closed_household
 description: This package enables health facility workers to mark household closed and update.
-version: 0.0.0-dev.1
+version: 0.0.0-dev.2
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/closed_household
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -40,6 +40,7 @@ dependencies:
   stream_transform: ^2.1.0
   async: ^2.11.0
   formula_parser: ^2.0.1
+  registration_delivery: ^1.0.3-dev.2
 
 
 dev_dependencies:

@@ -1,5 +1,4 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:closed_household/blocs/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
@@ -126,7 +125,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   projectBeneficiaryModel,
                                   registrationDate,
                                   addressModel,
-                                  selectedClosedHouseholdID,
+                                  taskModel,
                                   loading,
                                   isHeadOfHousehold,
                                 ) async {
@@ -175,14 +174,6 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                             tag: projectBeneficiaryModel?.tag,
                                             navigateToSummary: false),
                                       );
-                                      if (selectedClosedHouseholdID != null &&
-                                          householdModel != null) {
-                                        context.read<ClosedHouseholdBloc>().add(
-                                            ClosedHouseholdEvent.handleUpdate(
-                                                selectedClosedHouseholdID,
-                                                householdModel
-                                                    .clientReferenceId));
-                                      }
                                     }
                                   }
                                 },
@@ -340,7 +331,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       projectBeneficiaryModel,
                                       registrationDate,
                                       addressModel,
-                                      selectedClosedHouseholdID,
+                                      taskModel,
                                       loading,
                                       isHeadOfHousehold,
                                     ) =>
@@ -361,7 +352,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       projectBeneficiaryModel,
                                       registrationDate,
                                       addressModel,
-                                      selectedClosedHouseholdID,
+                                      taskModel,
                                       loading,
                                       isHeadOfHousehold,
                                     ) =>
@@ -392,7 +383,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       projectBeneficiaryModel,
                                       registrationDate,
                                       addressModel,
-                                      selectedClosedHouseholdID,
+                                      taskModel,
                                       loading,
                                       isHeadOfHousehold,
                                     ) =>

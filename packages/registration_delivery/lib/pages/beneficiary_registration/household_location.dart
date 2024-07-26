@@ -143,7 +143,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) {
@@ -212,6 +211,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                             individuals,
                             registrationDate,
                             projectBeneficiaryModel,
+                            taskModel,
                             loading,
                           ) {
                             var addressModel = address.copyWith(

@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:closed_household/models/entities/user_action.dart';
+import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -15,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -337,7 +335,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () {
-            context.router.push(ClosedHouseholdWrapperRoute());
+            context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
       ),
@@ -496,7 +494,8 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
-      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.closedHouseHoldLabel:
+          homeShowcaseData.closedHouseHold.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -520,11 +519,18 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db || element == i18.home.closedHouseHoldLabel) // TODO: need to add close household inside mdms
+            element == i18.home.db ||
+            element ==
+                i18.home
+                    .closedHouseHoldLabel) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db && f != i18.home.closedHouseHoldLabel)  // TODO: need to add close household inside mdms
+        .where((f) =>
+            f != i18.home.db &&
+            f !=
+                i18.home
+                    .closedHouseHoldLabel) // TODO: need to add close household inside mdms
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -574,7 +580,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
-                context.read<LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -606,7 +611,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
-                context.read<RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -621,49 +625,47 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
-            loggedInUserUuid: context.loggedInUserUuid,
-            maxRadius: appConfiguration.maxRadius!,
-            projectId: context.projectId,
-            selectedBeneficiaryType: context.beneficiaryType,
-            projectType: context.selectedProjectType,
-            selectedProject: context.selectedProject,
-            genderOptions:
-                appConfiguration.genderOptions!.map((e) => e.code).toList(),
-            idTypeOptions:
-                appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-            householdDeletionReasonOptions: appConfiguration
-                .householdDeletionReasonOptions!
-                .map((e) => e.code)
-                .toList(),
-            householdMemberDeletionReasonOptions: appConfiguration
-                .householdMemberDeletionReasonOptions!
-                .map((e) => e.code)
-                .toList(),
-            deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-                .map((e) => e.code)
-                .toList(),
-            symptomsTypes:
-                appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-            searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
               ? appConfiguration.searchHouseHoldFilters!
                   .map((e) => e.code)
                   .toList()
               : [],
           referralReasons:
               appConfiguration.referralReasons?.map((e) => e.code).toList(),
-            houseStructureTypes: appConfiguration.houseStructureTypes
-                ?.map((e) => e.code)
-                .toList(),
-        refusalReasons: appConfiguration.refusalReasons
-            ?.map((e) => e.code)
-            .toList(),
+          houseStructureTypes:
+              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+          refusalReasons:
+              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
         );
 
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
         );
-
 
         AttendanceSingleton().setInitialData(
           projectId: context.projectId,

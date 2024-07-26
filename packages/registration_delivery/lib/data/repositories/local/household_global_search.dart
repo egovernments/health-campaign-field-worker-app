@@ -8,7 +8,6 @@ import '../../../models/entities/household.dart';
 import '../../../models/entities/status.dart';
 import '../../../models/entities/task_resource.dart';
 import '../../../utils/global_search_parameters.dart';
-import 'closed_household_search.dart';
 
 class HouseHoldGlobalSearchRepository extends LocalRepository {
   HouseHoldGlobalSearchRepository(super.sql, super.opLogManager);
@@ -22,10 +21,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   DataModelType get type => throw UnimplementedError();
 
   houseHoldGlobalSearch(GlobalSearchParameters params) async {
-    if (params.filter!.contains(Status.closeHousehold.name)) {
-      return await ClosedHouseholdHoldSearchLocalRepository()
-          .performClosedHouseholdSearch(params, super.sql);
-    } else if (params.filter!.contains(Status.registered.name) ||
+    if (params.filter!.contains(Status.registered.name) ||
         params.filter!.contains(Status.notRegistered.name)) {
       dynamic selectQuery;
 

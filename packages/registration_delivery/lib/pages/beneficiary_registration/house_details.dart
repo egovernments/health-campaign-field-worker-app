@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +93,6 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 registrationDate,
                                 searchQuery,
                                 loading,
-                                selectedClosedHouseholdID,
                                 isHeadOfHousehold,
                               ) {
                                 var houseModel = HouseholdModel(
@@ -162,6 +160,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 individuals,
                                 registrationDate,
                                 projectBeneficiaryModel,
+                                taskModel,
                                 loading,
                               ) {
                                 var houseModel = householdModel.copyWith(

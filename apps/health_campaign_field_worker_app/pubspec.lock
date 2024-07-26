@@ -338,13 +338,12 @@ packages:
     source: hosted
     version: "1.1.1"
   closed_household:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      name: closed_household
-      sha256: "47d46553b034fceac6acda81e16f10b2d51a93cb509f5d596480a2bb6ff8aea3"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.0-dev.1"
+      path: "../../packages/closed_household"
+      relative: true
+    source: path
+    version: "0.0.0-dev.2"
   code_builder:
     dependency: transitive
     description:
@@ -498,11 +497,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "1258b5e96c6f63d32ab042a1d739360c93cab302e2f230b416dc4c54021e5e55"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3-dev.1"
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.3-dev.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -1535,7 +1533,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.3-dev.2"
+    version: "1.0.3-dev.3"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

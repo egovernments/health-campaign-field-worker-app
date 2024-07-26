@@ -441,20 +441,24 @@ class _HouseholdOverviewPageState
                                                 taskData.last.clientReferenceId)
                                             .toList()
                                         : null;
-                                    final ageInYears =
-                                        DigitDateUtils.calculateAge(
-                                      DigitDateUtils.getFormattedDateToDateTime(
-                                            e.dateOfBirth!,
-                                          ) ??
-                                          DateTime.now(),
-                                    ).years;
-                                    final ageInMonths =
-                                        DigitDateUtils.calculateAge(
-                                      DigitDateUtils.getFormattedDateToDateTime(
-                                            e.dateOfBirth!,
-                                          ) ??
-                                          DateTime.now(),
-                                    ).months;
+                                    final ageInYears = e.dateOfBirth != null
+                                        ? DigitDateUtils.calculateAge(
+                                            DigitDateUtils
+                                                    .getFormattedDateToDateTime(
+                                                  e.dateOfBirth!,
+                                                ) ??
+                                                DateTime.now(),
+                                          ).years
+                                        : 0;
+                                    final ageInMonths = e.dateOfBirth != null
+                                        ? DigitDateUtils.calculateAge(
+                                            DigitDateUtils
+                                                    .getFormattedDateToDateTime(
+                                                  e.dateOfBirth!,
+                                                ) ??
+                                                DateTime.now(),
+                                          ).months
+                                        : 0;
                                     final currentCycle =
                                         RegistrationDeliverySingleton()
                                             .projectType

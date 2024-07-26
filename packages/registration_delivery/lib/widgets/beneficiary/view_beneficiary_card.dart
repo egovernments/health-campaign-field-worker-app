@@ -305,7 +305,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                           : false,
                       isBeneficiaryRefused),
                   title: [
-                    householdMember.headOfHousehold?.name?.givenName,
+                    householdMember.headOfHousehold?.name?.givenName ??
+                        localizations.translate(i18.common.coreCommonNA),
                     householdMember.headOfHousehold?.name?.familyName,
                   ].whereNotNull().join(''),
                 ),
