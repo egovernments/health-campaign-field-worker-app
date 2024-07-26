@@ -213,7 +213,6 @@ class BeneficiaryRegistrationBloc
           final individual = value.individualModel;
           final household = value.householdModel;
           final address = value.householdModel?.address;
-          final closedTask = value.taskModel;
 
           final dateOfRegistration =
               value.projectBeneficiaryModel?.dateOfRegistration;
@@ -448,8 +447,10 @@ class BeneficiaryRegistrationBloc
             ));
 
             if (task.isNotEmpty) {
-              await taskDataRepository.update(
-                  task.last.copyWith(status: Status.notDelivered.toValue()));
+              if (task.last.status == Status.closeHousehold.toValue()) {
+                await taskDataRepository.update(
+                    task.last.copyWith(status: Status.notDelivered.toValue()));
+              }
             }
           } else {
             await projectBeneficiaryRepository.create(ProjectBeneficiaryModel(
