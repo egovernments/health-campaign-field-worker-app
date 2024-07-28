@@ -298,24 +298,15 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                       : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
                   status: getStatus(
                       tasks ?? [],
-                      householdMember.projectBeneficiaries!.where((element) {
-                        if (RegistrationDeliverySingleton().beneficiaryType ==
-                            BeneficiaryType.individual) {
-                          return element.beneficiaryClientReferenceId ==
-                              householdMember
-                                  .headOfHousehold?.clientReferenceId;
-                        } else {
-                          return element.beneficiaryClientReferenceId ==
-                              householdMember.household?.clientReferenceId;
-                        }
-                      }).toList(),
+                      householdMember.projectBeneficiaries ?? [],
                       RegistrationDeliverySingleton().beneficiaryType ==
                               BeneficiaryType.individual
                           ? isNotEligible
                           : false,
                       isBeneficiaryRefused),
                   title: [
-                    householdMember.headOfHousehold?.name?.givenName,
+                    householdMember.headOfHousehold?.name?.givenName ??
+                        localizations.translate(i18.common.coreCommonNA),
                     householdMember.headOfHousehold?.name?.familyName,
                   ].whereNotNull().join(''),
                 ),

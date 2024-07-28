@@ -92,16 +92,17 @@ class DeliverInterventionBloc
       );
 
       final List<TaskModel> futureTask = tasks
-          .where((element) =>
-              element.additionalFields!.fields
-                      .firstWhereOrNull(
-                        (a) =>
-                            a.key ==
-                            AdditionalFieldsType.deliveryStrategy.toValue(),
-                      )
-                      ?.value ==
-                  DeliverStrategyType.indirect.toValue() &&
-              element.status == Status.delivered.toValue())
+          .where((element) => element.additionalFields != null
+              ? element.additionalFields!.fields
+                          .firstWhereOrNull(
+                            (a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryStrategy.toValue(),
+                          )
+                          ?.value ==
+                      DeliverStrategyType.indirect.toValue() &&
+                  element.status == Status.delivered.toValue()
+              : false)
           .toList();
 
       if (tasks.isNotEmpty) {

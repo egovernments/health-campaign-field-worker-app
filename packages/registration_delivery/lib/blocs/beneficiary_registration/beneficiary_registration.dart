@@ -6,9 +6,11 @@ import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/project_beneficiary.dart';
+import '../../models/entities/status.dart';
 import '../../utils/typedefs.dart';
 import '../../utils/utils.dart';
 
@@ -27,6 +29,8 @@ class BeneficiaryRegistrationBloc
 
   final ProjectBeneficiaryDataRepository projectBeneficiaryRepository;
 
+  final TaskDataRepository taskDataRepository;
+
   final BeneficiaryType beneficiaryType;
 
   BeneficiaryRegistrationBloc(
@@ -35,6 +39,7 @@ class BeneficiaryRegistrationBloc
     required this.householdRepository,
     required this.householdMemberRepository,
     required this.projectBeneficiaryRepository,
+    required this.taskDataRepository,
     required this.beneficiaryType,
   }) {
     on(_handleSaveAddress);
@@ -153,7 +158,6 @@ class BeneficiaryRegistrationBloc
             : LocalityModel(code: code, name: name);
         emit(BeneficiaryRegistrationSummaryState(
             navigateToRoot: false,
-            selectedClosedHouseholdID: value.selectedClosedHouseholdID,
             householdModel: household?.copyWith(
                 address: address?.copyWith(
               relatedClientReferenceId: household.clientReferenceId,
@@ -201,7 +205,6 @@ class BeneficiaryRegistrationBloc
       summary: (value) async {
         if (event.navigateToSummary) {
           emit(BeneficiaryRegistrationState.create(
-              selectedClosedHouseholdID: value.selectedClosedHouseholdID,
               addressModel: value.householdModel?.address,
               householdModel: value.householdModel,
               individualModel: value.individualModel,
@@ -210,6 +213,7 @@ class BeneficiaryRegistrationBloc
           final individual = value.individualModel;
           final household = value.householdModel;
           final address = value.householdModel?.address;
+
           final dateOfRegistration =
               value.projectBeneficiaryModel?.dateOfRegistration;
           if (individual == null) {
@@ -436,6 +440,18 @@ class BeneficiaryRegistrationBloc
               await projectBeneficiaryRepository
                   .update(projectBeneficiary.first.copyWith(tag: event.tag));
             }
+
+            var task = await taskDataRepository.search(TaskSearchModel(
+              projectBeneficiaryClientReferenceId:
+                  projectBeneficiary.map((e) => e.clientReferenceId).toList(),
+            ));
+
+            if (task.isNotEmpty) {
+              if (task.last.status == Status.closeHousehold.toValue()) {
+                await taskDataRepository.update(
+                    task.last.copyWith(status: Status.notDelivered.toValue()));
+              }
+            }
           } else {
             await projectBeneficiaryRepository.create(ProjectBeneficiaryModel(
                 rowVersion: 1,
@@ -484,16 +500,15 @@ class BeneficiaryRegistrationBloc
               ),
             );
           }
-        } catch (error) {
-          rethrow;
-        } finally {
           emit(value.copyWith(loading: false));
           emit(
             BeneficiaryRegistrationPersistedState(
               householdModel: value.householdModel,
             ),
           );
-        }
+        } catch (error) {
+          rethrow;
+        } finally {}
       },
     );
   }
@@ -714,7 +729,6 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     DateTime? registrationDate,
     String? searchQuery,
-    String? selectedClosedHouseholdID,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationCreateState;
@@ -760,7 +774,6 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     DateTime? registrationDate,
     AddressModel? addressModel,
-    String? selectedClosedHouseholdID,
     @Default(false) bool loading,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationSummaryState;

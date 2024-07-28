@@ -1,3 +1,6 @@
+## 1.0.3-dev.2
+* Reverted user_actions db changes to accommodate closed_household flow changes
+
 ## 1.0.3-dev.1
 
 * Added new user_actions db

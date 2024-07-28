@@ -55,14 +55,9 @@ abstract class $ClosedHouseholdPackageRoute extends _i5.AutoRouterModule {
       );
     },
     ClosedHouseholdWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<ClosedHouseholdWrapperRouteArgs>(
-          orElse: () => const ClosedHouseholdWrapperRouteArgs());
       return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i4.ClosedHouseholdWrapperPage(
-          key: args.key,
-          isEditing: args.isEditing,
-        ),
+        child: const _i4.ClosedHouseholdWrapperPage(),
       );
     },
   };
@@ -187,39 +182,14 @@ class ClosedHouseholdSummaryRouteArgs {
 
 /// generated route for
 /// [_i4.ClosedHouseholdWrapperPage]
-class ClosedHouseholdWrapperRoute
-    extends _i5.PageRouteInfo<ClosedHouseholdWrapperRouteArgs> {
-  ClosedHouseholdWrapperRoute({
-    _i6.Key? key,
-    bool isEditing = false,
-    List<_i5.PageRouteInfo>? children,
-  }) : super(
+class ClosedHouseholdWrapperRoute extends _i5.PageRouteInfo<void> {
+  const ClosedHouseholdWrapperRoute({List<_i5.PageRouteInfo>? children})
+      : super(
           ClosedHouseholdWrapperRoute.name,
-          args: ClosedHouseholdWrapperRouteArgs(
-            key: key,
-            isEditing: isEditing,
-          ),
           initialChildren: children,
         );
 
   static const String name = 'ClosedHouseholdWrapperRoute';
 
-  static const _i5.PageInfo<ClosedHouseholdWrapperRouteArgs> page =
-      _i5.PageInfo<ClosedHouseholdWrapperRouteArgs>(name);
-}
-
-class ClosedHouseholdWrapperRouteArgs {
-  const ClosedHouseholdWrapperRouteArgs({
-    this.key,
-    this.isEditing = false,
-  });
-
-  final _i6.Key? key;
-
-  final bool isEditing;
-
-  @override
-  String toString() {
-    return 'ClosedHouseholdWrapperRouteArgs{key: $key, isEditing: $isEditing}';
-  }
+  static const _i5.PageInfo<void> page = _i5.PageInfo<void>(name);
 }

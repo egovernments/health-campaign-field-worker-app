@@ -34,7 +34,7 @@ class DigitDialog extends StatelessWidget {
           padding: options.dialogPadding != null
               ? options.dialogPadding!
               : const EdgeInsets.all(kPadding),
-          child: options.title,
+          child: options.title(context),
         ),
         content: SizedBox(
           width: MediaQuery.of(context).size.width,
@@ -117,6 +117,7 @@ class DigitDialogOptions {
   final String? contentText;
   final Widget? _titleWidget;
   final Widget? _contentWidget;
+  final bool isCloseIcon;
   final DigitDialogActions? primaryAction;
   final DigitDialogActions? secondaryAction;
   final bool barrierDismissible;
@@ -134,6 +135,7 @@ class DigitDialogOptions {
     Widget? content,
     this.primaryAction,
     this.secondaryAction,
+    this.isCloseIcon = false,
     this.barrierDismissible = false,
     this.enableRecordPast = false,
     this.isScrollable = false,
@@ -148,7 +150,7 @@ class DigitDialogOptions {
   })  : _titleWidget = title,
         _contentWidget = content;
 
-  Widget? get title {
+  Widget? title(BuildContext context) {
     if (_titleWidget != null) return _titleWidget;
     if (titleText != null) {
       return Row(
@@ -164,6 +166,11 @@ class DigitDialogOptions {
               style: DigitTheme.instance.mobileTheme.textTheme.headlineMedium,
             ),
           ),
+          if (isCloseIcon)
+            InkWell(
+              onTap: () => Navigator.of(context).pop(),
+              child: const Icon(Icons.close),
+            ),
         ],
       );
     }

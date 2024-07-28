@@ -65,6 +65,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
           householdRepository: household,
           householdMemberRepository: householdMember,
           projectBeneficiaryRepository: projectBeneficiary,
+          taskDataRepository: task,
           beneficiaryType: beneficiaryType!,
         ),
         child: this,

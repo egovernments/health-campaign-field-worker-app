@@ -1,3 +1,6 @@
+## 1.0.0+8
+* Added close icon button for digit_dialog
+
 ## 1.0.0+7
 * Added buttonDisabled for DigitIconButton
 

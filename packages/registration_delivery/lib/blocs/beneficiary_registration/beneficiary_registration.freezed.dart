@@ -3268,7 +3268,6 @@ mixin _$BeneficiaryRegistrationState {
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         create,
@@ -3307,7 +3306,6 @@ mixin _$BeneficiaryRegistrationState {
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         summary,
@@ -3322,7 +3320,6 @@ mixin _$BeneficiaryRegistrationState {
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -3361,7 +3358,6 @@ mixin _$BeneficiaryRegistrationState {
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -3376,7 +3372,6 @@ mixin _$BeneficiaryRegistrationState {
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -3415,7 +3410,6 @@ mixin _$BeneficiaryRegistrationState {
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -3531,7 +3525,6 @@ abstract class _$$BeneficiaryRegistrationCreateStateImplCopyWith<$Res>
       ProjectBeneficiaryModel? projectBeneficiaryModel,
       DateTime? registrationDate,
       String? searchQuery,
-      String? selectedClosedHouseholdID,
       bool loading,
       bool isHeadOfHousehold});
 }
@@ -3555,7 +3548,6 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
     Object? projectBeneficiaryModel = freezed,
     Object? registrationDate = freezed,
     Object? searchQuery = freezed,
-    Object? selectedClosedHouseholdID = freezed,
     Object? loading = null,
     Object? isHeadOfHousehold = null,
   }) {
@@ -3584,10 +3576,6 @@ class __$$BeneficiaryRegistrationCreateStateImplCopyWithImpl<$Res>
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
-      selectedClosedHouseholdID: freezed == selectedClosedHouseholdID
-          ? _value.selectedClosedHouseholdID
-          : selectedClosedHouseholdID // ignore: cast_nullable_to_non_nullable
-              as String?,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -3611,7 +3599,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
       this.projectBeneficiaryModel,
       this.registrationDate,
       this.searchQuery,
-      this.selectedClosedHouseholdID,
       this.loading = false,
       this.isHeadOfHousehold = false});
 
@@ -3628,8 +3615,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
   @override
   final String? searchQuery;
   @override
-  final String? selectedClosedHouseholdID;
-  @override
   @JsonKey()
   final bool loading;
   @override
@@ -3638,7 +3623,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, searchQuery: $searchQuery, selectedClosedHouseholdID: $selectedClosedHouseholdID, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.create(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, searchQuery: $searchQuery, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -3659,9 +3644,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
                 other.registrationDate == registrationDate) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
-            (identical(other.selectedClosedHouseholdID,
-                    selectedClosedHouseholdID) ||
-                other.selectedClosedHouseholdID == selectedClosedHouseholdID) &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
                 other.isHeadOfHousehold == isHeadOfHousehold));
@@ -3676,7 +3658,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
       projectBeneficiaryModel,
       registrationDate,
       searchQuery,
-      selectedClosedHouseholdID,
       loading,
       isHeadOfHousehold);
 
@@ -3698,7 +3679,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         create,
@@ -3737,7 +3717,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         summary,
@@ -3749,7 +3728,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
         projectBeneficiaryModel,
         registrationDate,
         searchQuery,
-        selectedClosedHouseholdID,
         loading,
         isHeadOfHousehold);
   }
@@ -3764,7 +3742,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -3803,7 +3780,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -3815,7 +3791,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
         projectBeneficiaryModel,
         registrationDate,
         searchQuery,
-        selectedClosedHouseholdID,
         loading,
         isHeadOfHousehold);
   }
@@ -3830,7 +3805,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -3869,7 +3843,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -3883,7 +3856,6 @@ class _$BeneficiaryRegistrationCreateStateImpl
           projectBeneficiaryModel,
           registrationDate,
           searchQuery,
-          selectedClosedHouseholdID,
           loading,
           isHeadOfHousehold);
     }
@@ -3952,7 +3924,6 @@ abstract class BeneficiaryRegistrationCreateState
       final ProjectBeneficiaryModel? projectBeneficiaryModel,
       final DateTime? registrationDate,
       final String? searchQuery,
-      final String? selectedClosedHouseholdID,
       final bool loading,
       final bool isHeadOfHousehold}) = _$BeneficiaryRegistrationCreateStateImpl;
 
@@ -3964,7 +3935,6 @@ abstract class BeneficiaryRegistrationCreateState
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
   DateTime? get registrationDate;
   String? get searchQuery;
-  String? get selectedClosedHouseholdID;
   @override
   bool get loading;
   bool get isHeadOfHousehold;
@@ -4129,7 +4099,6 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         create,
@@ -4168,7 +4137,6 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         summary,
@@ -4187,7 +4155,6 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -4226,7 +4193,6 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -4245,7 +4211,6 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -4284,7 +4249,6 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -4507,7 +4471,6 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         create,
@@ -4546,7 +4509,6 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         summary,
@@ -4565,7 +4527,6 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -4604,7 +4565,6 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -4623,7 +4583,6 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -4662,7 +4621,6 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -4855,7 +4813,6 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         create,
@@ -4894,7 +4851,6 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         summary,
@@ -4912,7 +4868,6 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -4951,7 +4906,6 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -4969,7 +4923,6 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -5008,7 +4961,6 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -5264,7 +5216,6 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         create,
@@ -5303,7 +5254,6 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         summary,
@@ -5329,7 +5279,6 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -5368,7 +5317,6 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -5394,7 +5342,6 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -5433,7 +5380,6 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -5553,7 +5499,6 @@ abstract class _$$BeneficiaryRegistrationSummaryStateImplCopyWith<$Res>
       ProjectBeneficiaryModel? projectBeneficiaryModel,
       DateTime? registrationDate,
       AddressModel? addressModel,
-      String? selectedClosedHouseholdID,
       bool loading,
       bool isHeadOfHousehold});
 }
@@ -5577,7 +5522,6 @@ class __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>
     Object? projectBeneficiaryModel = freezed,
     Object? registrationDate = freezed,
     Object? addressModel = freezed,
-    Object? selectedClosedHouseholdID = freezed,
     Object? loading = null,
     Object? isHeadOfHousehold = null,
   }) {
@@ -5606,10 +5550,6 @@ class __$$BeneficiaryRegistrationSummaryStateImplCopyWithImpl<$Res>
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
               as AddressModel?,
-      selectedClosedHouseholdID: freezed == selectedClosedHouseholdID
-          ? _value.selectedClosedHouseholdID
-          : selectedClosedHouseholdID // ignore: cast_nullable_to_non_nullable
-              as String?,
       loading: null == loading
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
@@ -5633,7 +5573,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
       this.projectBeneficiaryModel,
       this.registrationDate,
       this.addressModel,
-      this.selectedClosedHouseholdID,
       this.loading = false,
       this.isHeadOfHousehold = false});
 
@@ -5651,8 +5590,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
   @override
   final AddressModel? addressModel;
   @override
-  final String? selectedClosedHouseholdID;
-  @override
   @JsonKey()
   final bool loading;
   @override
@@ -5661,7 +5598,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.summary(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, addressModel: $addressModel, selectedClosedHouseholdID: $selectedClosedHouseholdID, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.summary(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -5682,9 +5619,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
                 other.registrationDate == registrationDate) &&
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel) &&
-            (identical(other.selectedClosedHouseholdID,
-                    selectedClosedHouseholdID) ||
-                other.selectedClosedHouseholdID == selectedClosedHouseholdID) &&
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
                 other.isHeadOfHousehold == isHeadOfHousehold));
@@ -5699,7 +5633,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
       projectBeneficiaryModel,
       registrationDate,
       addressModel,
-      selectedClosedHouseholdID,
       loading,
       isHeadOfHousehold);
 
@@ -5721,7 +5654,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         create,
@@ -5760,7 +5692,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)
         summary,
@@ -5772,7 +5703,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
         projectBeneficiaryModel,
         registrationDate,
         addressModel,
-        selectedClosedHouseholdID,
         loading,
         isHeadOfHousehold);
   }
@@ -5787,7 +5717,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -5826,7 +5755,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -5838,7 +5766,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
         projectBeneficiaryModel,
         registrationDate,
         addressModel,
-        selectedClosedHouseholdID,
         loading,
         isHeadOfHousehold);
   }
@@ -5853,7 +5780,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             String? searchQuery,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         create,
@@ -5892,7 +5818,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             ProjectBeneficiaryModel? projectBeneficiaryModel,
             DateTime? registrationDate,
             AddressModel? addressModel,
-            String? selectedClosedHouseholdID,
             bool loading,
             bool isHeadOfHousehold)?
         summary,
@@ -5906,7 +5831,6 @@ class _$BeneficiaryRegistrationSummaryStateImpl
           projectBeneficiaryModel,
           registrationDate,
           addressModel,
-          selectedClosedHouseholdID,
           loading,
           isHeadOfHousehold);
     }
@@ -5975,7 +5899,6 @@ abstract class BeneficiaryRegistrationSummaryState
           final ProjectBeneficiaryModel? projectBeneficiaryModel,
           final DateTime? registrationDate,
           final AddressModel? addressModel,
-          final String? selectedClosedHouseholdID,
           final bool loading,
           final bool isHeadOfHousehold}) =
       _$BeneficiaryRegistrationSummaryStateImpl;
@@ -5988,7 +5911,6 @@ abstract class BeneficiaryRegistrationSummaryState
   DateTime? get registrationDate;
   @override
   AddressModel? get addressModel;
-  String? get selectedClosedHouseholdID;
   @override
   bool get loading;
   bool get isHeadOfHousehold;

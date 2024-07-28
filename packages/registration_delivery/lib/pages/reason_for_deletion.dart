@@ -25,8 +25,7 @@ class ReasonForDeletionPage extends LocalizedStatefulWidget {
   State<ReasonForDeletionPage> createState() => ReasonForDeletionPageState();
 }
 
-class ReasonForDeletionPageState
-    extends LocalizedState<ReasonForDeletionPage> {
+class ReasonForDeletionPageState extends LocalizedState<ReasonForDeletionPage> {
   static const _reasonForDeletionKey = 'reasonForDeletion';
 
   @override
@@ -82,12 +81,39 @@ class ReasonForDeletionPageState
                                   ),
                                 );
 
-                        context.router.maybePop();
+                        // context.router.maybePop();
+                        final parent = context.router.parent() as StackRouter;
 
                         if (widget.isHousholdDelete) {
                           (context.router.parent() as StackRouter).maybePop();
                         }
-                        context.router.push(BeneficiaryAcknowledgementRoute());
+                        parent.popUntil((route) =>
+                            route.settings.name ==
+                            BeneficiaryWrapperRoute.name);
+                        final reloadState =
+                            context.read<HouseholdOverviewBloc>();
+                        Future.delayed(
+                          const Duration(milliseconds: 500),
+                          () {
+                            reloadState.add(
+                              HouseholdOverviewReloadEvent(
+                                projectId:
+                                    RegistrationDeliverySingleton().projectId!,
+                                projectBeneficiaryType:
+                                    RegistrationDeliverySingleton()
+                                        .beneficiaryType!,
+                              ),
+                            );
+                          },
+                        ).then(
+                          (value) => context.router.push(
+                            HouseholdAcknowledgementRoute(
+                              enableViewHousehold: true,
+                            ),
+                          ),
+                        );
+                        // context.router.push(HouseholdAcknowledgementRoute(
+                        //     enableViewHousehold: true));
                       } else {
                         DigitToast.show(context,
                             options: DigitToastOptions(
