@@ -1,17 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:closed_household/models/entities/user_action.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-
 import 'repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
-import '../utils/constants.dart';
 import 'local_store/secure_store/secure_store.dart';
 import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';
@@ -165,11 +162,6 @@ class NetworkManager {
             case "Referrals":
               final entity = entityList
                   .map((e) => ReferralModelMapper.fromJson(jsonEncode(e)))
-                  .toList();
-              await local.bulkCreate(entity);
-            case "UserAction":
-              final entity = entityList
-                  .map((e) => UserActionModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             default:

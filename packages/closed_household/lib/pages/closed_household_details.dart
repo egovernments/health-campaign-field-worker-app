@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/closed_household.dart';
+import 'package:closed_household/utils/extensions/extensions.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
@@ -7,9 +8,12 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../router/closed_household_router.gm.dart';
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -53,7 +57,6 @@ class ClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final router = context.router;
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -89,7 +92,6 @@ class ClosedHouseholdDetailsPageState
               header: const Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
-                    //showcaseButton: ShowcaseButton(), //TODO:
                     showHelp: false,
                   ),
                 ],
@@ -101,32 +103,22 @@ class ClosedHouseholdDetailsPageState
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
-                        final summary = UserActionModel(
-                          clientReferenceId: IdGen.i.identifier,
-                          latitude: form.control(_latKey).value,
-                          longitude: form.control(_lngKey).value,
-                          locationAccuracy: form.control(_accuracyKey).value,
-                          additionalFields: form
-                                      .control(_householdHeadNameKey)
-                                      .value !=
-                                  null
-                              ? UserActionAdditionalFields(
-                                  version: 1,
-                                  fields: [
-                                    AdditionalField(
-                                      'householdHead',
-                                      form
-                                              .control(_householdHeadNameKey)
-                                              .value ??
-                                          '',
-                                    ),
-                                  ],
-                                )
-                              : null,
-                        );
+                        final String? householdHeadName = form
+                            .control(_householdHeadNameKey)
+                            .value as String?;
+
                         context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSummary(summary),
+                              ClosedHouseholdEvent.handleSummary(
+                                latitude: locationState.latitude!,
+                                longitude: locationState.longitude!,
+                                locationAccuracy: locationState.accuracy!,
+                                householdHeadName: householdHeadName != null &&
+                                        householdHeadName.isNotEmpty
+                                    ? householdHeadName
+                                    : null,
+                              ),
                             );
+
                         context.router.push(ClosedHouseholdSummaryRoute());
                       },
                       child: Center(
@@ -203,18 +195,15 @@ class ClosedHouseholdDetailsPageState
         validators: [Validators.required],
       ),
       _householdHeadNameKey: FormControl<String>(
+        value: null,
         validators: [
+          CustomValidator.requiredMin,
           Validators.maxLength(200),
         ],
       ),
-      _latKey: FormControl<double>(
-          value: state.userActions?.first.latitude, validators: []),
-      _lngKey: FormControl<double>(
-        value: state.userActions?.first.longitude,
-      ),
-      _accuracyKey: FormControl<double>(
-        value: state.userActions?.first.locationAccuracy,
-      ),
+      _latKey: FormControl<double>(validators: []),
+      _lngKey: FormControl<double>(),
+      _accuracyKey: FormControl<double>(),
     });
   }
 }

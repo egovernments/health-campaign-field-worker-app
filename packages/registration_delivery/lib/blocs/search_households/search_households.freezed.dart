@@ -2409,8 +2409,6 @@ mixin _$SearchHouseholdsState {
   String? get tag => throw _privateConstructorUsedError;
   List<HouseholdMemberWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
-  List<UserActionModel> get closedHouseholds =>
-      throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchHouseholdsStateCopyWith<SearchHouseholdsState> get copyWith =>
@@ -2429,8 +2427,7 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
       bool loading,
       String? searchQuery,
       String? tag,
-      List<HouseholdMemberWrapper> householdMembers,
-      List<UserActionModel> closedHouseholds});
+      List<HouseholdMemberWrapper> householdMembers});
 }
 
 /// @nodoc
@@ -2453,7 +2450,6 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
     Object? searchQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
-    Object? closedHouseholds = null,
   }) {
     return _then(_value.copyWith(
       offset: null == offset
@@ -2480,10 +2476,6 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
           ? _value.householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
               as List<HouseholdMemberWrapper>,
-      closedHouseholds: null == closedHouseholds
-          ? _value.closedHouseholds
-          : closedHouseholds // ignore: cast_nullable_to_non_nullable
-              as List<UserActionModel>,
     ) as $Val);
   }
 }
@@ -2503,8 +2495,7 @@ abstract class _$$SearchHouseholdsStateImplCopyWith<$Res>
       bool loading,
       String? searchQuery,
       String? tag,
-      List<HouseholdMemberWrapper> householdMembers,
-      List<UserActionModel> closedHouseholds});
+      List<HouseholdMemberWrapper> householdMembers});
 }
 
 /// @nodoc
@@ -2525,7 +2516,6 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
     Object? searchQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
-    Object? closedHouseholds = null,
   }) {
     return _then(_$SearchHouseholdsStateImpl(
       offset: null == offset
@@ -2552,10 +2542,6 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
           ? _value._householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
               as List<HouseholdMemberWrapper>,
-      closedHouseholds: null == closedHouseholds
-          ? _value._closedHouseholds
-          : closedHouseholds // ignore: cast_nullable_to_non_nullable
-              as List<UserActionModel>,
     ));
   }
 }
@@ -2569,10 +2555,8 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
       this.loading = false,
       this.searchQuery,
       this.tag,
-      final List<HouseholdMemberWrapper> householdMembers = const [],
-      final List<UserActionModel> closedHouseholds = const []})
+      final List<HouseholdMemberWrapper> householdMembers = const []})
       : _householdMembers = householdMembers,
-        _closedHouseholds = closedHouseholds,
         super._();
 
   @override
@@ -2598,19 +2582,9 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
     return EqualUnmodifiableListView(_householdMembers);
   }
 
-  final List<UserActionModel> _closedHouseholds;
-  @override
-  @JsonKey()
-  List<UserActionModel> get closedHouseholds {
-    if (_closedHouseholds is EqualUnmodifiableListView)
-      return _closedHouseholds;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_closedHouseholds);
-  }
-
   @override
   String toString() {
-    return 'SearchHouseholdsState(offset: $offset, limit: $limit, loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers, closedHouseholds: $closedHouseholds)';
+    return 'SearchHouseholdsState(offset: $offset, limit: $limit, loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers)';
   }
 
   @override
@@ -2625,21 +2599,12 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
                 other.searchQuery == searchQuery) &&
             (identical(other.tag, tag) || other.tag == tag) &&
             const DeepCollectionEquality()
-                .equals(other._householdMembers, _householdMembers) &&
-            const DeepCollectionEquality()
-                .equals(other._closedHouseholds, _closedHouseholds));
+                .equals(other._householdMembers, _householdMembers));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      offset,
-      limit,
-      loading,
-      searchQuery,
-      tag,
-      const DeepCollectionEquality().hash(_householdMembers),
-      const DeepCollectionEquality().hash(_closedHouseholds));
+  int get hashCode => Object.hash(runtimeType, offset, limit, loading,
+      searchQuery, tag, const DeepCollectionEquality().hash(_householdMembers));
 
   @JsonKey(ignore: true)
   @override
@@ -2656,8 +2621,7 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
           final bool loading,
           final String? searchQuery,
           final String? tag,
-          final List<HouseholdMemberWrapper> householdMembers,
-          final List<UserActionModel> closedHouseholds}) =
+          final List<HouseholdMemberWrapper> householdMembers}) =
       _$SearchHouseholdsStateImpl;
   const _SearchHouseholdsState._() : super._();
 
@@ -2673,8 +2637,6 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   String? get tag;
   @override
   List<HouseholdMemberWrapper> get householdMembers;
-  @override
-  List<UserActionModel> get closedHouseholds;
   @override
   @JsonKey(ignore: true)
   _$$SearchHouseholdsStateImplCopyWith<_$SearchHouseholdsStateImpl>
