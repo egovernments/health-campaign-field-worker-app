@@ -89,7 +89,8 @@ class _SearchBeneficiaryPageState
                   final metrics = scrollNotification.metrics;
                   if (metrics.atEdge &&
                       isProximityEnabled &&
-                      searchController.text == '') {
+                      searchController.text == '' &&
+                      metrics.pixels != 0) {
                     blocWrapper.proximitySearchBloc
                         .add(SearchHouseholdsEvent.searchByProximity(
                       latitude: lat,
