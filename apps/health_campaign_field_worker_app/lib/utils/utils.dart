@@ -125,6 +125,42 @@ class CustomValidator {
 
     return null;
   }
+
+  static Map<String, dynamic>? voucherNumber(
+    AbstractControl<dynamic> control,
+  ) {
+    const pattern = r'^[0-9]+$';
+
+    return control.value == null ||
+            (control.value.toString().trim().length == 5 &&
+                RegExp(pattern).hasMatch(control.value.toString().trim()))
+        ? null
+        : {'voucherNumber': true};
+  }
+
+  static Map<String, dynamic>? batchNumber4(
+    AbstractControl<dynamic> control,
+  ) {
+    const pattern = r'^[a-zA-Z0-9]+$';
+
+    return control.value == null ||
+            (control.value.toString().trim().length == 4 &&
+                RegExp(pattern).hasMatch(control.value.toString().trim()))
+        ? null
+        : {'batchNumber': true};
+  }
+
+  static Map<String, dynamic>? batchNumber7(
+    AbstractControl<dynamic> control,
+  ) {
+    const pattern = r'^[a-zA-Z][0-9]*$';
+
+    return control.value == null ||
+            (control.value.toString().trim().length == 7 &&
+                RegExp(pattern).hasMatch(control.value.toString().trim()))
+        ? null
+        : {'batchNumber': true};
+  }
 }
 
 setBgRunning(bool isBgRunning) async {
@@ -512,10 +548,10 @@ bool allDosesDelivered(
           lastDose == selectedCycle.deliveries?.length &&
           lastCycle != null &&
           lastCycle == selectedCycle.id &&
-          tasks?.last.status != Status.delivered.name) {
+          tasks?.last.status != Status.delivered.toValue()) {
         return true;
       } else if (selectedCycle.id == lastCycle &&
-          tasks?.last.status == Status.delivered.name) {
+          tasks?.last.status == Status.delivered.toValue()) {
         return false;
       } else if ((sideEffects ?? []).isNotEmpty) {
         return recordedSideEffect(selectedCycle, tasks?.last, sideEffects);

@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:drift/src/runtime/api/runtime_api.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -412,6 +413,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.viewSummaryReportsPerformanceLabel:
+          homeShowcaseData.summaryReportPerformance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.viewSummaryReportsPerformanceLabel,
+          onPressed: () {
+            context.router.push(
+              PerformamnceSummaryReportDetailsRoute(),
+            );
+          },
+        ),
+      ),
       i18.home.db: homeShowcaseData.db.buildWith(
         child: HomeItemCard(
           icon: Icons.table_chart,
@@ -476,6 +489,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.viewSummaryReportsPerformanceLabel:
+          homeShowcaseData.summaryReportPerformance.showcaseKey,
       i18.home.db: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
           homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
@@ -491,6 +506,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
+      i18.home.viewSummaryReportsPerformanceLabel,
       i18.home.db,
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,

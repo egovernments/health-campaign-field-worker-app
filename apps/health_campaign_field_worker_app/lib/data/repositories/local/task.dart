@@ -97,6 +97,10 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               sql.task.auditCreatedBy.equals(
                 userId,
               ),
+            if (query.status != null)
+              sql.task.status.equals(
+                query.status!,
+              ),
           ])))
         .get();
 
@@ -130,6 +134,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                   lastModifiedBy: resources.auditModifiedBy,
                   lastModifiedTime: resources.auditModifiedTime,
                 ),
+                additionalFields: resources.additionalFields == null
+                    ? null
+                    : TaskResourceAdditionalFieldsMapper.fromJson(
+                        resources.additionalFields!,
+                      ),
               ),
             );
       } else {
@@ -232,6 +241,11 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                       lastModifiedBy: resources.auditModifiedBy,
                       lastModifiedTime: resources.auditModifiedTime,
                     ),
+                    additionalFields: resources.additionalFields == null
+                        ? null
+                        : TaskResourceAdditionalFieldsMapper.fromJson(
+                            resources.additionalFields!,
+                          ),
                   ),
                 ],
         );

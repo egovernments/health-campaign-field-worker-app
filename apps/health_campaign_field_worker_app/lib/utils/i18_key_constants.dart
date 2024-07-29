@@ -130,6 +130,7 @@ class Common {
   String get noResultsFound => 'NO_RESULTS_FOUND';
 
   String get coreCommonWarning => 'CORE_COMMON_WARNING';
+  String get coreCommonWarningText => 'CORE_COMMON_WARNING_TEXT';
 
   String get coreQuantityWasted => 'CORE_QUANTITY_WASTED';
   String get facilitySearchHeaderLabel => 'FACILITY_SEARCH_HEADER_LABEL';
@@ -211,6 +212,10 @@ class HomeShowcase {
 
   String get inventoryReport {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_INVENTORY_REPORT';
+  }
+
+  String get summaryReportPerformance {
+    return 'COMMUNITY_DISTRIBUTOR_HOME_SHOWCASE_PERFORMANCE_SUMMARY_REPORT';
   }
 
   String get deleteAll {
@@ -851,6 +856,8 @@ class Home {
   String get stockReconciliationLabel => 'HOME_STOCK_RECONCILIATION_LABEL';
 
   String get viewReportsLabel => 'HOME_VIEW_REPORTS_LABEL';
+  String get viewSummaryReportsPerformanceLabel =>
+      'HOME_VIEW_PERFORMANCE_SUMMARY_REPORTS_LABEL';
 
   String get syncDataLabel => 'HOME_SYNC_DATA_LABEL';
 
@@ -1055,6 +1062,8 @@ class IndividualDetails {
   String get lastNameLengthError => 'LAST_NAME_LENGTH_ERROR_MESSAGE';
 
   String get lastNameIsRequiredError => 'LAST_NAME_REQUIRED_ERROR_MESSAGE';
+
+  String get headAgeValidError => 'HEAD_VALID_AGE_ERROR_MESSAGE';
 }
 
 class HouseholdLocation {
@@ -1432,7 +1441,12 @@ class StockDetails {
   /// Waybill number label
   String get waybillNumberLabel => 'STOCK_DETAILS_WAYBILL_NUMBER';
 
+  String get voucherNumberValidation =>
+      'STOCK_DETAILS_WAYBILL_NUMBER_VALIDATION';
+
   String get batchNumberLabel => 'STOCK_DETAILS_BATCH_NUMBER';
+
+  String get batchNumberValidation => 'STOCK_DETAILS_BATCH_NUMBER_VALIDATION';
 
   String get dateOfExpiryLabel => 'STOCK_DETAILS_DATE_OF_EXPIRY';
 
