@@ -10,7 +10,7 @@ _$AuditDetailsModelImpl _$$AuditDetailsModelImplFromJson(
         Map<String, dynamic> json) =>
     _$AuditDetailsModelImpl(
       createdBy: json['createdBy'] as String,
-      createdTime: json['createdTime'] as int,
+      createdTime: (json['createdTime'] as num).toInt(),
       lastModifiedBy: json['lastModifiedBy'] as String?,
       lastModifiedTime: json['lastModifiedTime'] as String?,
     );

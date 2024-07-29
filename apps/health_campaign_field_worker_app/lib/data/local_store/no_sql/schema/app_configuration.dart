@@ -46,6 +46,9 @@ class AppConfiguration {
   @Name('BANDWIDTH_BATCH_SIZE')
   late List<BandwidthBatchSize>? bandwidthBatchSize;
 
+  @Name('DOWNSYNC-BANDWIDTH_BATCH_SIZE')
+  late List<BandwidthBatchSize>? downSyncBandwidthBatchSize;
+
   @Name('ID_TYPE_OPTIONS_POPULATOR')
   late List<IdTypeOptions>? idTypeOptions;
 

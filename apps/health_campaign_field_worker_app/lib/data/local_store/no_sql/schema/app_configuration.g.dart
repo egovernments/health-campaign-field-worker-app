@@ -59,86 +59,92 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'DeliveryCommentOptions',
     ),
-    r'FIREBASE_CONFIG': PropertySchema(
+    r'DOWNSYNC-BANDWIDTH_BATCH_SIZE': PropertySchema(
       id: 7,
+      name: r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+      type: IsarType.objectList,
+      target: r'BandwidthBatchSize',
+    ),
+    r'FIREBASE_CONFIG': PropertySchema(
+      id: 8,
       name: r'FIREBASE_CONFIG',
       type: IsarType.object,
       target: r'FirebaseConfig',
     ),
     r'GENDER_OPTIONS_POPULATOR': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'GENDER_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'GenderOptions',
     ),
     r'HOUSEHOLD_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'HOUSEHOLD_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdDeletionReasonOptions',
     ),
     r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'HOUSEHOLD_MEMBER_DELETION_REASON_OPTIONS',
       type: IsarType.objectList,
       target: r'HouseholdMemberDeletionReasonOptions',
     ),
     r'ID_TYPE_OPTIONS_POPULATOR': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'ID_TYPE_OPTIONS_POPULATOR',
       type: IsarType.objectList,
       target: r'IdTypeOptions',
     ),
     r'LANGUAGES': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'LANGUAGES',
       type: IsarType.objectList,
       target: r'Languages',
     ),
     r'NETWORK_DETECTION': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'NETWORK_DETECTION',
       type: IsarType.string,
     ),
     r'PERSISTENCE_MODE': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'PERSISTENCE_MODE',
       type: IsarType.string,
     ),
     r'PROXIMITY_SEARCH_RANGE': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 16,
+      id: 17,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 17,
+      id: 18,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 18,
+      id: 19,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'referralReasons': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -266,6 +272,20 @@ int _appConfigurationEstimateSize(
           final value = list[i];
           bytesCount += DeliveryCommentOptionsSchema.estimateSize(
               value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
+    final list = object.downSyncBandwidthBatchSize;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[BandwidthBatchSize]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              BandwidthBatchSizeSchema.estimateSize(value, offsets, allOffsets);
         }
       }
     }
@@ -471,62 +491,68 @@ void _appConfigurationSerialize(
     DeliveryCommentOptionsSchema.serialize,
     object.deliveryCommentOptions,
   );
-  writer.writeObject<FirebaseConfig>(
+  writer.writeObjectList<BandwidthBatchSize>(
     offsets[7],
+    allOffsets,
+    BandwidthBatchSizeSchema.serialize,
+    object.downSyncBandwidthBatchSize,
+  );
+  writer.writeObject<FirebaseConfig>(
+    offsets[8],
     allOffsets,
     FirebaseConfigSchema.serialize,
     object.firebaseConfig,
   );
   writer.writeObjectList<GenderOptions>(
-    offsets[8],
+    offsets[9],
     allOffsets,
     GenderOptionsSchema.serialize,
     object.genderOptions,
   );
   writer.writeObjectList<HouseholdDeletionReasonOptions>(
-    offsets[9],
+    offsets[10],
     allOffsets,
     HouseholdDeletionReasonOptionsSchema.serialize,
     object.householdDeletionReasonOptions,
   );
   writer.writeObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[10],
+    offsets[11],
     allOffsets,
     HouseholdMemberDeletionReasonOptionsSchema.serialize,
     object.householdMemberDeletionReasonOptions,
   );
   writer.writeObjectList<IdTypeOptions>(
-    offsets[11],
+    offsets[12],
     allOffsets,
     IdTypeOptionsSchema.serialize,
     object.idTypeOptions,
   );
   writer.writeObjectList<Languages>(
-    offsets[12],
+    offsets[13],
     allOffsets,
     LanguagesSchema.serialize,
     object.languages,
   );
-  writer.writeString(offsets[13], object.networkDetection);
-  writer.writeString(offsets[14], object.persistenceMode);
-  writer.writeDouble(offsets[15], object.maxRadius);
-  writer.writeString(offsets[16], object.syncMethod);
-  writer.writeString(offsets[17], object.syncTrigger);
-  writer.writeString(offsets[18], object.tenantId);
+  writer.writeString(offsets[14], object.networkDetection);
+  writer.writeString(offsets[15], object.persistenceMode);
+  writer.writeDouble(offsets[16], object.maxRadius);
+  writer.writeString(offsets[17], object.syncMethod);
+  writer.writeString(offsets[18], object.syncTrigger);
+  writer.writeString(offsets[19], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[19],
+    offsets[20],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[20],
+    offsets[21],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[21],
+    offsets[22],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -581,64 +607,70 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     DeliveryCommentOptions(),
   );
-  object.firebaseConfig = reader.readObjectOrNull<FirebaseConfig>(
+  object.downSyncBandwidthBatchSize = reader.readObjectList<BandwidthBatchSize>(
     offsets[7],
+    BandwidthBatchSizeSchema.deserialize,
+    allOffsets,
+    BandwidthBatchSize(),
+  );
+  object.firebaseConfig = reader.readObjectOrNull<FirebaseConfig>(
+    offsets[8],
     FirebaseConfigSchema.deserialize,
     allOffsets,
   );
   object.genderOptions = reader.readObjectList<GenderOptions>(
-    offsets[8],
+    offsets[9],
     GenderOptionsSchema.deserialize,
     allOffsets,
     GenderOptions(),
   );
   object.householdDeletionReasonOptions =
       reader.readObjectList<HouseholdDeletionReasonOptions>(
-    offsets[9],
+    offsets[10],
     HouseholdDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdDeletionReasonOptions(),
   );
   object.householdMemberDeletionReasonOptions =
       reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
-    offsets[10],
+    offsets[11],
     HouseholdMemberDeletionReasonOptionsSchema.deserialize,
     allOffsets,
     HouseholdMemberDeletionReasonOptions(),
   );
   object.idTypeOptions = reader.readObjectList<IdTypeOptions>(
-    offsets[11],
+    offsets[12],
     IdTypeOptionsSchema.deserialize,
     allOffsets,
     IdTypeOptions(),
   );
   object.languages = reader.readObjectList<Languages>(
-    offsets[12],
+    offsets[13],
     LanguagesSchema.deserialize,
     allOffsets,
     Languages(),
   );
-  object.networkDetection = reader.readStringOrNull(offsets[13]);
-  object.persistenceMode = reader.readStringOrNull(offsets[14]);
-  object.maxRadius = reader.readDoubleOrNull(offsets[15]);
-  object.syncMethod = reader.readStringOrNull(offsets[16]);
-  object.syncTrigger = reader.readStringOrNull(offsets[17]);
-  object.tenantId = reader.readStringOrNull(offsets[18]);
+  object.networkDetection = reader.readStringOrNull(offsets[14]);
+  object.persistenceMode = reader.readStringOrNull(offsets[15]);
+  object.maxRadius = reader.readDoubleOrNull(offsets[16]);
+  object.syncMethod = reader.readStringOrNull(offsets[17]);
+  object.syncTrigger = reader.readStringOrNull(offsets[18]);
+  object.tenantId = reader.readStringOrNull(offsets[19]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[19],
+    offsets[20],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.id = id;
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[20],
+    offsets[21],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[21],
+    offsets[22],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -701,73 +733,80 @@ P _appConfigurationDeserializeProp<P>(
         DeliveryCommentOptions(),
       )) as P;
     case 7:
+      return (reader.readObjectList<BandwidthBatchSize>(
+        offset,
+        BandwidthBatchSizeSchema.deserialize,
+        allOffsets,
+        BandwidthBatchSize(),
+      )) as P;
+    case 8:
       return (reader.readObjectOrNull<FirebaseConfig>(
         offset,
         FirebaseConfigSchema.deserialize,
         allOffsets,
       )) as P;
-    case 8:
+    case 9:
       return (reader.readObjectList<GenderOptions>(
         offset,
         GenderOptionsSchema.deserialize,
         allOffsets,
         GenderOptions(),
       )) as P;
-    case 9:
+    case 10:
       return (reader.readObjectList<HouseholdDeletionReasonOptions>(
         offset,
         HouseholdDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdDeletionReasonOptions(),
       )) as P;
-    case 10:
+    case 11:
       return (reader.readObjectList<HouseholdMemberDeletionReasonOptions>(
         offset,
         HouseholdMemberDeletionReasonOptionsSchema.deserialize,
         allOffsets,
         HouseholdMemberDeletionReasonOptions(),
       )) as P;
-    case 11:
+    case 12:
       return (reader.readObjectList<IdTypeOptions>(
         offset,
         IdTypeOptionsSchema.deserialize,
         allOffsets,
         IdTypeOptions(),
       )) as P;
-    case 12:
+    case 13:
       return (reader.readObjectList<Languages>(
         offset,
         LanguagesSchema.deserialize,
         allOffsets,
         Languages(),
       )) as P;
-    case 13:
-      return (reader.readStringOrNull(offset)) as P;
     case 14:
       return (reader.readStringOrNull(offset)) as P;
     case 15:
-      return (reader.readDoubleOrNull(offset)) as P;
-    case 16:
       return (reader.readStringOrNull(offset)) as P;
+    case 16:
+      return (reader.readDoubleOrNull(offset)) as P;
     case 17:
       return (reader.readStringOrNull(offset)) as P;
     case 18:
       return (reader.readStringOrNull(offset)) as P;
     case 19:
+      return (reader.readStringOrNull(offset)) as P;
+    case 20:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 20:
+    case 21:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 21:
+    case 22:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -1436,6 +1475,113 @@ extension AppConfigurationQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'DELIVERY_COMMENT_OPTIONS_POPULATOR',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'DOWNSYNC-BANDWIDTH_BATCH_SIZE',
         lower,
         includeLower,
         upper,
@@ -3281,6 +3427,13 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      downSyncBandwidthBatchSizeElement(FilterQuery<BandwidthBatchSize> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'DOWNSYNC-BANDWIDTH_BATCH_SIZE');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       firebaseConfig(FilterQuery<FirebaseConfig> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'FIREBASE_CONFIG');
@@ -3637,6 +3790,13 @@ extension AppConfigurationQueryProperty
       QQueryOperations> deliveryCommentOptionsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'DELIVERY_COMMENT_OPTIONS_POPULATOR');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<BandwidthBatchSize>?, QQueryOperations>
+      downSyncBandwidthBatchSizeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'DOWNSYNC-BANDWIDTH_BATCH_SIZE');
     });
   }
 
