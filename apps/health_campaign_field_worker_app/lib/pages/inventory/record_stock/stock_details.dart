@@ -833,30 +833,40 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                       // print(entryType);
                                       List<FacilityModel> filteredFacility = [];
-                                      if (entryType ==
-                                              StockRecordEntryType.receipt &&
-                                          (boundaryType != null &&
-                                              boundaryType.isNotEmpty)) {
+
+                                      if (context.isCommunityDistributor) {
                                         filteredFacility =
                                             getFilteredFacilities(
                                           facilities,
-                                          boundaryType,
-                                          "childBoundaryType",
-                                        );
-                                      } else if ((entryType ==
-                                                  StockRecordEntryType
-                                                      .returned ||
-                                              entryType ==
-                                                  StockRecordEntryType
-                                                      .dispatch) &&
-                                          (boundaryType != null &&
-                                              boundaryType.isNotEmpty)) {
-                                        filteredFacility =
-                                            getFilteredFacilities(
-                                          facilities,
-                                          boundaryType,
+                                          "LGA",
                                           "parentBoundaryType",
                                         );
+                                      } else {
+                                        if (entryType ==
+                                                StockRecordEntryType.receipt &&
+                                            (boundaryType != null &&
+                                                boundaryType.isNotEmpty)) {
+                                          filteredFacility =
+                                              getFilteredFacilities(
+                                            facilities,
+                                            boundaryType,
+                                            "childBoundaryType",
+                                          );
+                                        } else if ((entryType ==
+                                                    StockRecordEntryType
+                                                        .returned ||
+                                                entryType ==
+                                                    StockRecordEntryType
+                                                        .dispatch) &&
+                                            (boundaryType != null &&
+                                                boundaryType.isNotEmpty)) {
+                                          filteredFacility =
+                                              getFilteredFacilities(
+                                            facilities,
+                                            boundaryType,
+                                            "parentBoundaryType",
+                                          );
+                                        }
                                       }
 
                                       //TODO below pseudocode
