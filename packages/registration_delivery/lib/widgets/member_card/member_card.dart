@@ -20,8 +20,8 @@ import '../action_card/action_card.dart';
 class MemberCard extends StatelessWidget {
   final String name;
   final String? gender;
-  final int years;
-  final int months;
+  final int? years;
+  final int? months;
   final bool isHead;
   final IndividualModel individual;
   final List<ProjectBeneficiaryModel>? projectBeneficiaries;
@@ -43,9 +43,9 @@ class MemberCard extends StatelessWidget {
     required this.individual,
     required this.name,
     this.gender,
-    required this.years,
+    this.years,
     this.isHead = false,
-    this.months = 0,
+    this.months,
     required this.localizations,
     required this.isDelivered,
     required this.setAsHeadAction,
@@ -156,13 +156,15 @@ class MemberCard extends StatelessWidget {
                     gender != null
                         ? localizations
                             .translate('CORE_COMMON_${gender?.toUpperCase()}')
-                        : ' - ',
+                        : ' -- ',
                     style: theme.textTheme.bodyMedium,
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}",
+                    years!=null && months != null ?
+                    " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
+                    : "|   --" ,
                     style: theme.textTheme.bodyMedium,
                   ),
                 ),
