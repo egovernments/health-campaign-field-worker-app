@@ -382,7 +382,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 .buildWith(
                               child: DigitIntegerFormPicker(
                                 minimum: 0,
-                                maximum: 20,
+                                maximum: 10,
                                 onChange: () {
                                   int pregnantWomen = form
                                       .control(_pregnantWomenCountKey)
@@ -440,7 +440,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 minimum: children + pregnantWomen != 0
                                     ? children + pregnantWomen
                                     : 1,
-                                maximum: 20,
+                                maximum: 30,
                                 onChange: () {
                                   int pregnantWomen = form
                                       .control(_pregnantWomenCountKey)
@@ -496,7 +496,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
           FormControl<DateTime>(value: registrationDate, validators: []),
       _memberCountKey: FormControl<int>(
         value: household?.memberCount ?? 1,
-        validators: [Validators.max<int>(20)],
       ),
       _pregnantWomenCountKey: FormControl<int>(
         value: household?.additionalFields?.fields
@@ -513,7 +512,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     .toString() ??
                 '0')
             : 0,
-        validators: [Validators.max<int>(20)],
       ),
       _childrenCountKey: FormControl<int>(
         value: household?.additionalFields?.fields
@@ -530,7 +528,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     .toString() ??
                 '0')
             : 0,
-        validators: [Validators.max<int>(20)],
       )
     });
   }

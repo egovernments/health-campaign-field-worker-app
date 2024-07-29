@@ -322,16 +322,13 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                           .typeOfInsecticideUsed),
                                   value: deliverState.oldTask?.status ==
                                           Status.administeredFailed.toValue()
-                                      ? deliverState.oldTask?.additionalFields?.fields
-                                              .where((d) =>
-                                                  d.key ==
-                                                  AdditionalFieldsType
-                                                      .reasonOfRefusal
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value ??
-                                          localizations.translate(
-                                              i18.common.coreCommonNA)
+                                      ? getLocalizedMessage(
+                                      deliverState.oldTask?.additionalFields?.fields
+                                          .where(
+                                            (d) => d.key == AdditionalFieldsType.reasonOfRefusal.toValue(),
+                                      )
+                                          .firstOrNull
+                                          ?.value ?? i18.common.coreCommonNA)
                                       : variants
                                               ?.map((e) =>
                                                   localizations.translate(e.sku ??

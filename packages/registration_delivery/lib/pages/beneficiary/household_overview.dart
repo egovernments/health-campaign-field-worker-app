@@ -88,7 +88,7 @@ class _HouseholdOverviewPageState
                                   onPressed: (state.householdMemberWrapper
                                                   .projectBeneficiaries ??
                                               [])
-                                          .isEmpty
+                                          .isEmpty || deliverInterventionState.tasks?.last.status == Status.closeHousehold.toValue()
                                       ? null
                                       : () async {
                                           final bloc =
@@ -284,7 +284,8 @@ class _HouseholdOverviewPageState
                                                   .householdMemberWrapper
                                                   .headOfHousehold
                                                   ?.name
-                                                  ?.givenName,
+                                                  ?.givenName ?? localizations.translate(
+                                                  i18.common.coreCommonNA),
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
@@ -643,7 +644,7 @@ class _HouseholdOverviewPageState
                                               sideEffectData,
                                             )
                                           : false,
-                                      name: e.name?.givenName ?? ' - ',
+                                      name: e.name?.givenName ?? ' - - ',
                                       years: (e.dateOfBirth == null
                                               ? null
                                               : DigitDateUtils.calculateAge(
@@ -652,8 +653,7 @@ class _HouseholdOverviewPageState
                                                         e.dateOfBirth!,
                                                       ) ??
                                                       DateTime.now(),
-                                                ).years) ??
-                                          0,
+                                                ).years),
                                       months: (e.dateOfBirth == null
                                               ? null
                                               : DigitDateUtils.calculateAge(
@@ -662,8 +662,7 @@ class _HouseholdOverviewPageState
                                                         e.dateOfBirth!,
                                                       ) ??
                                                       DateTime.now(),
-                                                ).months) ??
-                                          0,
+                                                ).months),
                                       gender: e.gender?.name,
                                       isBeneficiaryRefused:
                                           isBeneficiaryRefused &&

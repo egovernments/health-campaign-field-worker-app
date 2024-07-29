@@ -83,7 +83,11 @@ class DigitIntegerFormPicker extends StatelessWidget {
                     top: _borderSide,
                   ),
                   icon: Icons.add, onPressed: () {
-                form.control(formControlName).value += 1;
+                    if(maximum != null && form.control(formControlName).value == maximum) {
+                      form.control(formControlName).value =maximum;
+                    }else{
+                      form.control(formControlName).value += 1;
+                    }
                 if (onChange != null) {
                   onChange!();
                 }
