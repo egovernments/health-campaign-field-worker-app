@@ -35,7 +35,7 @@ abstract class DataRepository<D extends EntityModel,
 
 /// `RemoteRepository` is an abstract class that extends `DataRepository` and provides additional functionality for remote repositories.
 abstract class RemoteRepository<D extends EntityModel,
-    R extends EntitySearchModel> extends DataRepository<D, R> {
+R extends EntitySearchModel> extends DataRepository<D, R> {
   final Dio dio;
   final String entityName;
   final bool isPlural;
@@ -61,12 +61,12 @@ abstract class RemoteRepository<D extends EntityModel,
   String get bulkDeletePath => actionMap[ApiOperation.bulkDelete] ?? '';
 
   RemoteRepository(
-    this.dio, {
-    required this.actionMap,
-    required this.entityName,
-    this.isPlural = false,
-    this.isSearchResponsePlural = false,
-  });
+      this.dio, {
+        required this.actionMap,
+        required this.entityName,
+        this.isPlural = false,
+        this.isSearchResponsePlural = false,
+      });
 
   @override
   FutureOr<List<D>> search(
@@ -74,107 +74,84 @@ abstract class RemoteRepository<D extends EntityModel,
         int? offSet,
         int? limit,
       }) async {
-     int defaultBatchSize = limit ?? 100; /// Default batch size for fetching data
-    int currentOffset = offSet ?? 0;
+    Response response;
 
-    List<D> allResults = [];
-    bool hasMoreData = true;
-    List<Map<String, dynamic>>? lastResponse;
-
-    while (hasMoreData) {
-
-      Response response;
-
-      try {
-        response = await executeFuture(
-          future: () async {
-            return await dio.post(
-              searchPath,
-              queryParameters: {
-                'offset': currentOffset,
-                'limit': defaultBatchSize,
-                'tenantId': DigitDataModelSingleton().tenantId,
-                if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
-              },
-              data: entityName == 'User'
-                  ? query.toMap()
-                  : {
-                isPlural
-                    ? entityNamePlural
-                    : entityName == 'ServiceDefinition'
-                    ? 'ServiceDefinitionCriteria'
-                    : entityName == 'Downsync'
-                    ? 'DownsyncCriteria'
-                    : entityName:
-                isPlural ? [query.toMap()] : query.toMap(),
-              },
-            );
-          },
-        );
-      } catch (error) {
-        break; /// Break out of the loop if an error occurs
-      }
-
-      final responseMap = response.data;
-
-      if (responseMap is! Map<String, dynamic>) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
-
-      String key = (isSearchResponsePlural || entityName == 'ServiceDefinition')
-          ? entityNamePlural
-          : entityName;
-
-      if (!responseMap.containsKey(key)) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
-
-      final entityResponse = await responseMap[key];
-
-      if (entityResponse is! List) {
-        throw InvalidApiResponseException(
-          data: query.toMap(),
-          path: searchPath,
-          response: responseMap,
-        );
-      }
-
-      final entityList = entityResponse.whereType<Map<String, dynamic>>().toList();
-
-      if (lastResponse != null && lastResponse.toString() == entityList.toString()) {
-        /// If the last response is equal to the current response, stop fetching more data
-        break;
-      }
-
-      List<D> currentBatch;
-
-      try {
-        currentBatch = entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
-      } catch (e) {
-        rethrow;
-      }
-
-      if (currentBatch.isEmpty) {
-        hasMoreData = false; /// if no more data stop fetching
-      } else {
-        allResults.addAll(currentBatch);
-        currentOffset += defaultBatchSize;
-        lastResponse = entityList; /// Update lastResponse to the current response
-      }
+    try {
+      response = await executeFuture(
+        future: () async {
+          return await dio.post(
+            searchPath,
+            queryParameters: {
+              'offset': offSet ?? 0,
+              'limit': limit ?? 100,
+              'tenantId': DigitDataModelSingleton().tenantId,
+              if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
+            },
+            data: entityName == 'User'
+                ? query.toMap()
+                : {
+              isPlural
+                  ? entityNamePlural
+                  : entityName == 'ServiceDefinition'
+                  ? 'ServiceDefinitionCriteria'
+                  : entityName == 'Downsync'
+                  ? 'DownsyncCriteria'
+                  : entityName:
+              isPlural ? [query.toMap()] : query.toMap(),
+            },
+          );
+        },
+      );
+    } catch (error) {
+      return [];
     }
 
-    return allResults;
+    final responseMap = (response.data);
+
+    if (responseMap is! Map<String, dynamic>) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
+
+    if (!responseMap.containsKey(
+      (isSearchResponsePlural || entityName == 'ServiceDefinition')
+          ? entityNamePlural
+          : entityName,
+    )) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
+
+    final entityResponse = await responseMap[
+    (isSearchResponsePlural || entityName == 'ServiceDefinition')
+        ? entityNamePlural
+        : entityName];
+
+    if (entityResponse is! List) {
+      throw InvalidApiResponseException(
+        data: query.toMap(),
+        path: searchPath,
+        response: responseMap,
+      );
+    }
+
+    final entityList = entityResponse.whereType<Map<String, dynamic>>();
+    var mapperRes = <D>[];
+    try {
+      mapperRes =
+          entityList.map((e) => MapperContainer.globals.fromMap<D>(e)).toList();
+    } catch (e) {
+      rethrow ;
+    }
+
+    return mapperRes;
   }
-
-
 
   FutureOr<Response> singleCreate(D entity) async {
     return await dio.post(
@@ -187,10 +164,10 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Map<String, dynamic>> downSync(
-    R query, {
-    int? offSet,
-    int? limit,
-  }) async {
+      R query, {
+        int? offSet,
+        int? limit,
+      }) async {
     Response response;
 
     try {
@@ -206,7 +183,7 @@ abstract class RemoteRepository<D extends EntityModel,
             },
             data: {
               entityName == 'Downsync' ? 'DownsyncCriteria' : entityName:
-                  query.toMap(),
+              query.toMap(),
             },
           );
         },
@@ -294,9 +271,9 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Response> dumpError(
-    List<EntityModel> entities,
-    DataOperation operation,
-  ) async {
+      List<EntityModel> entities,
+      DataOperation operation,
+      ) async {
     return executeFuture(
       future: () async {
         String url = "";
@@ -371,9 +348,9 @@ abstract class RemoteRepository<D extends EntityModel,
           data: entityName == 'User'
               ? {entityName: entity.toMap()}
               : {
-                  entityName: [entity.toMap()],
-                  "apiOperation": "UPDATE",
-                },
+            entityName: [entity.toMap()],
+            "apiOperation": "UPDATE",
+          },
         );
       },
     );
