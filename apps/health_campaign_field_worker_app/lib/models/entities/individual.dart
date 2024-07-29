@@ -12,6 +12,8 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
   final List<String>? id;
   final List<String>? userUuid;
   final String? dateOfBirth;
+  final int? limit;
+  final int? offset;
   final List<String>? clientReferenceId;
   final String? tenantId;
   final NameSearchModel? name;
@@ -22,6 +24,8 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
     this.id,
     this.userUuid,
     this.dateOfBirth,
+    this.limit,
+    this.offset,
     this.clientReferenceId,
     this.tenantId,
     this.name,
@@ -36,6 +40,8 @@ class IndividualSearchModel extends EntitySearchModel with IndividualSearchModel
     this.id,
     this.userUuid,
     this.dateOfBirth,
+    this.limit,
+    this.offset,
     this.clientReferenceId,
     this.tenantId,
     this.name,

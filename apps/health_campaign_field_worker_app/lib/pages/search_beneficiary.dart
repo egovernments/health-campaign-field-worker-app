@@ -102,6 +102,21 @@ class _SearchBeneficiaryPageState
                     setState(() {
                       offset = (offset + limit);
                     });
+                  } else if (metrics.atEdge &&
+                      searchController.text != '' &&
+                      metrics.pixels != 0) {
+                    blocWrapper.searchByHeadBloc
+                        .add(SearchHouseholdsEvent.searchByHouseholdHead(
+                      searchText: searchController.text,
+                      projectId: context.projectId,
+                      isProximityEnabled: isProximityEnabled,
+                      offset: offset + limit,
+                      limit: limit,
+                    ));
+
+                    setState(() {
+                      offset = (offset + limit);
+                    });
                   }
                 }
                 // Return true to allow the notification to continue to be dispatched to further ancestors.
@@ -149,16 +164,17 @@ class _SearchBeneficiaryPageState
                                     textCapitalization:
                                         TextCapitalization.words,
                                     onChanged: (value) {
+                                      blocWrapper.clearEvent();
                                       if (value.isEmpty) {
                                         blocWrapper.clearEvent();
                                       }
-                                      if (value.trim().length < 2 &&
+                                      if (value.trim().length < 3 &&
                                           !isProximityEnabled) {
                                         blocWrapper.clearEvent();
 
                                         return;
                                       } else if (isProximityEnabled &&
-                                          value.trim().length < 2) {
+                                          value.trim().length < 3) {
                                         blocWrapper.proximitySearchBloc.add(
                                           SearchHouseholdsEvent
                                               .searchByProximity(
@@ -348,7 +364,7 @@ class _SearchBeneficiaryPageState
                           context.router
                               .push(BeneficiaryRegistrationWrapperRoute(
                             initialState: BeneficiaryRegistrationCreateState(
-                              searchQuery: searchHouseholdsState.searchQuery,
+                              searchQuery: searchController.text,
                             ),
                           ));
                           searchController.clear();

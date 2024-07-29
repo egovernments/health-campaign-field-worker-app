@@ -30,6 +30,12 @@ class IndividualSearchModelMapper
   static String? _$dateOfBirth(IndividualSearchModel v) => v.dateOfBirth;
   static const Field<IndividualSearchModel, String> _f$dateOfBirth =
       Field('dateOfBirth', _$dateOfBirth, opt: true);
+  static int? _$limit(IndividualSearchModel v) => v.limit;
+  static const Field<IndividualSearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
+  static int? _$offset(IndividualSearchModel v) => v.offset;
+  static const Field<IndividualSearchModel, int> _f$offset =
+      Field('offset', _$offset, opt: true);
   static List<String>? _$clientReferenceId(IndividualSearchModel v) =>
       v.clientReferenceId;
   static const Field<IndividualSearchModel, List<String>> _f$clientReferenceId =
@@ -65,6 +71,8 @@ class IndividualSearchModelMapper
     #id: _f$id,
     #userUuid: _f$userUuid,
     #dateOfBirth: _f$dateOfBirth,
+    #limit: _f$limit,
+    #offset: _f$offset,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
     #name: _f$name,
@@ -90,6 +98,8 @@ class IndividualSearchModelMapper
         id: data.dec(_f$id),
         userUuid: data.dec(_f$userUuid),
         dateOfBirth: data.dec(_f$dateOfBirth),
+        limit: data.dec(_f$limit),
+        offset: data.dec(_f$offset),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
         name: data.dec(_f$name),
@@ -172,6 +182,8 @@ abstract class IndividualSearchModelCopyWith<
       {List<String>? id,
       List<String>? userUuid,
       String? dateOfBirth,
+      int? limit,
+      int? offset,
       List<String>? clientReferenceId,
       String? tenantId,
       NameSearchModel? name,
@@ -229,6 +241,8 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           {Object? id = $none,
           Object? userUuid = $none,
           Object? dateOfBirth = $none,
+          Object? limit = $none,
+          Object? offset = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
           Object? name = $none,
@@ -239,6 +253,8 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
         if (id != $none) #id: id,
         if (userUuid != $none) #userUuid: userUuid,
         if (dateOfBirth != $none) #dateOfBirth: dateOfBirth,
+        if (limit != $none) #limit: limit,
+        if (offset != $none) #offset: offset,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
         if (name != $none) #name: name,
@@ -252,6 +268,8 @@ class _IndividualSearchModelCopyWithImpl<$R, $Out>
           id: data.get(#id, or: $value.id),
           userUuid: data.get(#userUuid, or: $value.userUuid),
           dateOfBirth: data.get(#dateOfBirth, or: $value.dateOfBirth),
+          limit: data.get(#limit, or: $value.limit),
+          offset: data.get(#offset, or: $value.offset),
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
