@@ -6,18 +6,17 @@ import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_response.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:digit_firebase_services/digit_firebase_services.dart'
-    as firebase_services;
 
-import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/entity_mapper.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -65,6 +64,7 @@ class Constants {
           OpLogSchema,
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
+          DashboardResponseSchema,
         ],
         name: 'HCM',
         inspector: true,
@@ -170,7 +170,8 @@ class Constants {
     _version = version;
   }
 
-  static const String closedHouseholdSvg = 'assets/icons/svg/closed_household.svg';
+  static const String closedHouseholdSvg =
+      'assets/icons/svg/closed_household.svg';
 
   static List<RemoteRepository> getRemoteRepositories(
     Dio dio,
@@ -240,12 +241,12 @@ class Constants {
   }
 
   static String getEndPoint({
-    required AppInitialized state,
+    required List<ServiceRegistry> serviceRegistry,
     required String service,
     required String action,
     required String entityName,
   }) {
-    final actionResult = state.serviceRegistryList
+    final actionResult = serviceRegistry
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) => element.entityName == entityName)

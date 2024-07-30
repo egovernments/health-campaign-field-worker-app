@@ -6,6 +6,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/digit_dss.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -32,6 +33,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
   final Isar isar;
   final MdmsRepository mdmsRepository;
+  final DashboardRemoteRepository dashboardRemoteRepo;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -126,6 +128,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.individualRemoteRepository,
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
+    required this.dashboardRemoteRepo,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -434,6 +437,87 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
+      try {
+        final startDate = DateTime(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day)
+            .toLocal()
+            .millisecondsSinceEpoch;
+        final endDate = DateTime(DateTime.now().year, DateTime.now().month,
+                DateTime.now().day, 11, 59)
+            .toLocal()
+            .millisecondsSinceEpoch;
+        await isar.writeTxn(() async {
+          await isar.dashboardResponses.clear();
+        });
+        await dashboardRemoteRepo.searchAndWriteToDB(
+          apiEndPoint: 'dashboard-analytics/dashboard/getChartV2',
+          query: {
+            "aggregationRequestDto": {
+              "visualizationType": "METRIC",
+              "visualizationCode": "populationCoveredToday",
+              "queryType": "",
+              "filters": {},
+              "moduleLevel": "",
+              "aggregationFactors": null,
+              "requestDate": {
+                "startDate": startDate,
+                "endDate": endDate,
+                "interval": "day",
+                "title": "home"
+              }
+            },
+            "headers": {"tenantId": envConfig.variables.tenantId}
+          },
+          projectId: event.model.id,
+          isar: isar,
+        );
+        await dashboardRemoteRepo.searchAndWriteToDB(
+          apiEndPoint: 'dashboard-analytics/dashboard/getChartV2',
+          query: {
+            "aggregationRequestDto": {
+              "visualizationType": "METRIC",
+              "visualizationCode": "totalPopulationCovered",
+              "queryType": "",
+              "filters": {},
+              "moduleLevel": "",
+              "aggregationFactors": null,
+              "requestDate": {
+                "startDate": startDate,
+                "endDate": endDate,
+                "interval": "day",
+                "title": "home"
+              }
+            },
+            "headers": {"tenantId": envConfig.variables.tenantId}
+          },
+          projectId: event.model.id,
+          isar: isar,
+        );
+        await dashboardRemoteRepo.searchAndWriteToDB(
+          apiEndPoint: 'dashboard-analytics/dashboard/getChartV2',
+          query: {
+            "aggregationRequestDto": {
+              "visualizationType": "METRIC",
+              "visualizationCode": "todayDistributions",
+              "queryType": "",
+              "filters": {},
+              "moduleLevel": "",
+              "aggregationFactors": null,
+              "requestDate": {
+                "startDate": startDate,
+                "endDate": endDate,
+                "interval": "day",
+                "title": "home"
+              }
+            },
+            "headers": {"tenantId": envConfig.variables.tenantId}
+          },
+          projectId: event.model.id,
+          isar: isar,
+        );
+      } catch (e) {
+        print(e);
+      }
       final configResult = await mdmsRepository.searchAppConfig(
         envConfig.variables.mdmsApiPath,
         MdmsRequestModel(

@@ -72,6 +72,7 @@ dependencies:
   digit_data_model: ^1.0.2
   registration_delivery: ^1.0.3-dev.2
   disable_battery_optimization: ^1.1.1
+  digit_dss: ^0.0.1
 
 dev_dependencies:
   flutter_test:

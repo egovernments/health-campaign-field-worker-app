@@ -1,28 +1,42 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_dss/blocs/dashboard.dart';
+import 'package:digit_dss/widgets/back_navigation_help_header.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../router/app_router.dart';
 import '../../utils/utils.dart';
 import '../../widgets/dashboard/dashboard_metric_card.dart';
 import '../../widgets/localized.dart';
 
 @RoutePage()
-class YearlyDashboardPage extends LocalizedStatefulWidget {
-  const YearlyDashboardPage({super.key});
+class UserDashboardPage extends LocalizedStatefulWidget {
+  const UserDashboardPage({
+    super.key,
+  });
 
   @override
   State<StatefulWidget> createState() {
-    return YearlyDashboardPageState();
+    return UserDashboardPageState();
   }
 }
 
-class YearlyDashboardPageState extends LocalizedState<YearlyDashboardPage> {
+class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
   @override
   void initState() {
+    context.read<DashboardBloc>().add(DashboardRefreshEvent(
+          projectId: DashboardSingleton().projectId,
+          syncFromServer: false,
+          selectedDate: DateTime.now(),
+        ));
+
     super.initState();
   }
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -90,10 +104,16 @@ class YearlyDashboardPageState extends LocalizedState<YearlyDashboardPage> {
         TableData(
           e['name'].toString(),
           cellKey: 'userID',
+          style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium?.apply(
+            color: const DigitColors().burningOrange,
+          ),
         ),
         TableData(
           e['noOfHousesVisited'].toString(),
           cellKey: 'noOfHousesVisited',
+          style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium?.apply(
+            color: const DigitColors().darkSpringGreen,
+          ),
         ),
         TableData(
           e['noOfHousesSprayed'].toString(),
@@ -142,7 +162,12 @@ class YearlyDashboardPageState extends LocalizedState<YearlyDashboardPage> {
 
     tableData.add(TableDataRow([
       TableData('Total'),
-      TableData(totalDetails.noOfHousesVisited.toString()),
+      TableData(
+        totalDetails.noOfHousesVisited.toString(),
+        style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium?.apply(
+          color: const DigitColors().darkSpringGreen,
+        ),
+      ),
       TableData(totalDetails.noOfHousesSprayed.toString()),
       TableData(totalDetails.noOfHousesNotSprayed.toString()),
       TableData(totalDetails.bottlesUsed.toString()),
@@ -150,25 +175,80 @@ class YearlyDashboardPageState extends LocalizedState<YearlyDashboardPage> {
       TableData(''),
     ]));
 
-    return Scaffold(
-      body: Column(
-        children: [
-          const DashboardMetricCard(),
-          Padding(
-            padding: const EdgeInsets.all(kPadding),
-            child: DigitTable(
-              headerList: headerList,
-              tableData: tableData,
-              height: ((tableData.length) + 1) * 65,
-              columnWidth: 140,
-              columnRowFixedHeight: 65,
-              scrollPhysics: tableData.length > 5
-                  ? const ClampingScrollPhysics()
-                  : const NeverScrollableScrollPhysics(),
-            ),
+    return BlocConsumer<DashboardBloc, DashboardState>(
+        listener: (context, dashboardState) {
+      dashboardState.maybeWhen(
+          orElse: () => false,
+          loading: () {
+            if (!isLoading) {
+              setState(() {
+                isLoading = true;
+              });
+              Loaders.showLoadingDialog(context);
+            }
+          },
+          fetched: (metricData, tableData, selectedDate) {
+            Navigator.of(context, rootNavigator: true).pop();
+            setState(() {
+              isLoading = false;
+            });
+          },
+          error: () {
+            Navigator.of(context, rootNavigator: true).pop();
+            setState(() {
+              isLoading = false;
+            });
+            DigitToast.show(context,
+                options: DigitToastOptions(
+                    'Please connect to the internet to refresh the dashboard',
+                    true,
+                    DigitTheme.instance.mobileTheme));
+          });
+    }, builder: (context, dashboardState) {
+      return Scaffold(
+        body: ScrollableContent(
+          footer: PoweredByDigit(
+            version: DashboardSingleton().appVersion,
           ),
-        ],
-      ),
-    );
+          header: const Column(children: [
+            BackNavigationHelpHeaderWidget(
+              showHelp: false,
+            ),
+          ]),
+          children: [
+            dashboardState.maybeWhen(
+                orElse: () => const SizedBox.shrink(),
+                fetched: (metricData, tableData, selectedDate) {
+                  return DashboardMetricCard(
+                    selectedDate: selectedDate ?? DateTime.now(),
+                  );
+                }),
+            Padding(
+              padding: const EdgeInsets.all(kPadding),
+              child: DigitTable(
+                headerList: headerList,
+                tableData: tableData,
+                height: ((tableData.length) + 1) * 65,
+                columnWidth: 140,
+                columnRowFixedHeight: 65,
+                scrollPhysics: tableData.length > 5
+                    ? const ClampingScrollPhysics()
+                    : const NeverScrollableScrollPhysics(),
+              ),
+            ),
+            const Align(
+              alignment: Alignment.center,
+              child: DigitInfoCard(
+                title: 'Note',
+                description:
+                    'Scroll the bar to right to view all the details against a worker'
+                    '\n\nHouse coverage ratio = Total houses sprayed / Total houses visited'
+                    '\n\nRoom coverage ratio = Total rooms sprayed / Total rooms available',
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 }

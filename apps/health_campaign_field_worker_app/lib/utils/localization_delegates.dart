@@ -1,16 +1,17 @@
-import 'package:closed_household/blocs/app_localization.dart'
-    as closed_household_localization;
-import 'package:closed_household/utils/i18_key_constants.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:isar/isar.dart';
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
+import 'package:closed_household/blocs/app_localization.dart'
+    as closed_household_localization;
+import 'package:digit_dss/blocs/app_localization.dart'
+    as digit_dss_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
     as scanner_localization;
-import 'package:referral_reconciliation/blocs/app_localization.dart'
-    as referral_reconciliation_localization;
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
+import 'package:isar/isar.dart';
+import 'package:referral_reconciliation/blocs/app_localization.dart'
+    as referral_reconciliation_localization;
 import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
 
@@ -74,5 +75,12 @@ getAppLocalizationDelegates({
       ),
       appConfig.languages!,
     ),
+    digit_dss_localization.DashboardLocalization.getDelegate(
+      getLocalizationString(
+        isar,
+        selectedLocale,
+      ),
+      appConfig.languages!,
+    )
   ];
 }

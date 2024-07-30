@@ -105,10 +105,11 @@ abstract class _$AppRouter extends RootStackRouter {
           orElse: () => const ChecklistWrapperRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ChecklistWrapperPage(
+        child: WrappedRoute(
+            child: ChecklistWrapperPage(
           key: args.key,
           isEditing: args.isEditing,
-        ),
+        )),
       );
     },
     ComplaintTypeRoute.name: (routeData) {
@@ -220,10 +221,11 @@ abstract class _$AppRouter extends RootStackRouter {
           orElse: () => const ComplaintsRegistrationWrapperRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: ComplaintsRegistrationWrapperPage(
+        child: WrappedRoute(
+            child: ComplaintsRegistrationWrapperPage(
           key: args.key,
           pgrServiceModel: args.pgrServiceModel,
-        ),
+        )),
       );
     },
     HomeRoute.name: (routeData) {
@@ -303,18 +305,13 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    YearlyDashboardRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const YearlyDashboardPage(),
-      );
-    },
     ...InventoryRoute().pagesMap,
     ...AttendanceRoute().pagesMap,
     ...ReferralReconciliationRoute().pagesMap,
     ...DigitScannerPackageRoute().pagesMap,
     ...RegistrationDeliveryRoute().pagesMap,
     ...ClosedHouseholdPackageRoute().pagesMap,
+    ...DashboardRoute().pagesMap,
   };
 }
 
@@ -1308,18 +1305,4 @@ class UserQRDetailsRouteArgs {
   String toString() {
     return 'UserQRDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-}
-
-/// generated route for
-/// [YearlyDashboardPage]
-class YearlyDashboardRoute extends PageRouteInfo<void> {
-  const YearlyDashboardRoute({List<PageRouteInfo>? children})
-      : super(
-          YearlyDashboardRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'YearlyDashboardRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }

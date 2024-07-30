@@ -4,6 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/router/dashboard_router.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +36,6 @@ import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
 import '../pages/complaints/registration/complaints_registration_wrapper.dart';
 import '../pages/complaints_acknowledgement.dart';
-import '../pages/dashboard/yearly_dashboard.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -57,6 +58,7 @@ part 'app_router.gr.dart';
     DigitScannerPackageRoute,
     RegistrationDeliveryRoute,
     ClosedHouseholdPackageRoute,
+    DashboardRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -89,7 +91,10 @@ class AppRouter extends _$AppRouter {
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
-
+        AutoRoute(
+          page: UserDashboardRoute.page,
+          path: 'dashboard',
+        ),
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,
             path: 'registration-delivery-wrapper',
@@ -236,10 +241,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
-        ),
-        AutoRoute(
-          page: YearlyDashboardRoute.page,
-          path: 'dashboard',
         ),
         AutoRoute(
           page: FacilitySelectionRoute.page,
