@@ -205,48 +205,73 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                     DigitTheme.instance.mobileTheme));
           });
     }, builder: (context, dashboardState) {
-      return Scaffold(
-        body: ScrollableContent(
-          footer: PoweredByDigit(
-            version: DashboardSingleton().appVersion,
+      return RefreshIndicator(
+        onRefresh: () {
+          dashboardState.maybeWhen(
+              orElse: () => false,
+              fetched: (metricData, tableData, selectedDate) async {
+                bool isConnected = await getIsConnected();
+                if (isConnected) {
+                  context.read<DashboardBloc>().add(DashboardRefreshEvent(
+                        projectId: DashboardSingleton().projectId,
+                        syncFromServer: true,
+                        selectedDate: selectedDate ?? DateTime.now(),
+                      ));
+                } else {
+                  DigitToast.show(context,
+                      options: DigitToastOptions(
+                        'Please connect to the internet to refresh the dashboard',
+                        true,
+                        DigitTheme.instance.mobileTheme,
+                      ));
+                }
+              });
+
+          return Future<void>.delayed(const Duration(seconds: 1));
+        },
+        child: Scaffold(
+          body: ScrollableContent(
+            footer: PoweredByDigit(
+              version: DashboardSingleton().appVersion,
+            ),
+            header: const Column(children: [
+              BackNavigationHelpHeaderWidget(
+                showHelp: false,
+              ),
+            ]),
+            children: [
+              dashboardState.maybeWhen(
+                  orElse: () => const SizedBox.shrink(),
+                  fetched: (metricData, tableData, selectedDate) {
+                    return DashboardMetricCard(
+                      selectedDate: selectedDate ?? DateTime.now(),
+                    );
+                  }),
+              Padding(
+                padding: const EdgeInsets.all(kPadding),
+                child: DigitTable(
+                  headerList: headerList,
+                  tableData: tableData,
+                  height: ((tableData.length) + 1) * 65,
+                  columnWidth: 140,
+                  columnRowFixedHeight: 65,
+                  scrollPhysics: tableData.length > 5
+                      ? const ClampingScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
+                ),
+              ),
+              const Align(
+                alignment: Alignment.center,
+                child: DigitInfoCard(
+                  title: 'Note',
+                  description:
+                      'Scroll the bar to right to view all the details against a worker'
+                      '\n\nHouse coverage ratio = Total houses sprayed / Total houses visited'
+                      '\n\nRoom coverage ratio = Total rooms sprayed / Total rooms available',
+                ),
+              )
+            ],
           ),
-          header: const Column(children: [
-            BackNavigationHelpHeaderWidget(
-              showHelp: false,
-            ),
-          ]),
-          children: [
-            dashboardState.maybeWhen(
-                orElse: () => const SizedBox.shrink(),
-                fetched: (metricData, tableData, selectedDate) {
-                  return DashboardMetricCard(
-                    selectedDate: selectedDate ?? DateTime.now(),
-                  );
-                }),
-            Padding(
-              padding: const EdgeInsets.all(kPadding),
-              child: DigitTable(
-                headerList: headerList,
-                tableData: tableData,
-                height: ((tableData.length) + 1) * 65,
-                columnWidth: 140,
-                columnRowFixedHeight: 65,
-                scrollPhysics: tableData.length > 5
-                    ? const ClampingScrollPhysics()
-                    : const NeverScrollableScrollPhysics(),
-              ),
-            ),
-            const Align(
-              alignment: Alignment.center,
-              child: DigitInfoCard(
-                title: 'Note',
-                description:
-                    'Scroll the bar to right to view all the details against a worker'
-                    '\n\nHouse coverage ratio = Total houses sprayed / Total houses visited'
-                    '\n\nRoom coverage ratio = Total rooms sprayed / Total rooms available',
-              ),
-            )
-          ],
         ),
       );
     });
