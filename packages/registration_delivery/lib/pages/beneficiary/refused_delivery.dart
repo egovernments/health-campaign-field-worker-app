@@ -222,7 +222,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                     ),
                                     isRequired: true,
                                     child: SelectionBox<String>(
-                                      width: 122,
+                                      width: 128,
                                       allowMultipleSelection: false,
                                       options: RegistrationDeliverySingleton()
                                               .refusalReasons ??

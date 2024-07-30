@@ -14,6 +14,10 @@ import 'package:location/location.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -313,8 +317,18 @@ class MainApplicationState extends State<MainApplication>
                           create: (_) {
                             return ClosedHouseholdBloc(
                               const ClosedHouseholdState(),
-                              closedHouseholdRepository: context.repository<
-                                  UserActionModel, UserActionSearchModel>(),
+                              householdMemberRepository: context.repository<
+                                  HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>(),
+                              householdRepository: context.repository<
+                                  HouseholdModel, HouseholdSearchModel>(),
+                              individualRepository: context.repository<
+                                  IndividualModel, IndividualSearchModel>(),
+                              projectBeneficiaryRepository: context.repository<
+                                  ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>(),
+                              taskRepository: context
+                                  .repository<TaskModel, TaskSearchModel>(),
                             );
                           },
                           lazy: false,

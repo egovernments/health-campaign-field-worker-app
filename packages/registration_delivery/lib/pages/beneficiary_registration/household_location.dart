@@ -143,7 +143,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) {
@@ -287,7 +286,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                     .administrationAreaFormLabel,
                               ),
                               readOnly: true,
-                              isRequired: true,
                               validationMessages: {
                                 'required': (_) => localizations.translate(
                                       i18.householdLocation

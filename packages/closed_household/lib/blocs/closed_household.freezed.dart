@@ -16,32 +16,48 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$ClosedHouseholdEvent {
+  double get latitude => throw _privateConstructorUsedError;
+  double get longitude => throw _privateConstructorUsedError;
+  double get locationAccuracy => throw _privateConstructorUsedError;
+  String? get householdHeadName => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserActionModel userAction, bool isEditing)
-        handleSubmit,
-    required TResult Function(UserActionModel summary) handleSummary,
     required TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)
-        handleUpdate,
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? householdHeadName,
+            String? tag,
+            BuildContext? context)
+        handleSubmit,
+    required TResult Function(double latitude, double longitude,
+            double locationAccuracy, String? householdHeadName)
+        handleSummary,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult? Function(UserActionModel summary)? handleSummary,
     TResult? Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? householdHeadName,
+            String? tag,
+            BuildContext? context)?
+        handleSubmit,
+    TResult? Function(double latitude, double longitude,
+            double locationAccuracy, String? householdHeadName)?
+        handleSummary,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult Function(UserActionModel summary)? handleSummary,
-    TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
+    TResult Function(double latitude, double longitude, double locationAccuracy,
+            String? householdHeadName, String? tag, BuildContext? context)?
+        handleSubmit,
+    TResult Function(double latitude, double longitude, double locationAccuracy,
+            String? householdHeadName)?
+        handleSummary,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -49,23 +65,24 @@ mixin _$ClosedHouseholdEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(ClosedHouseholdSubmitEvent value) handleSubmit,
     required TResult Function(ClosedHouseholdSummaryEvent value) handleSummary,
-    required TResult Function(ClosedHouseholdUpdateEvent value) handleUpdate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
     TResult? Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult? Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
     TResult Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
     required TResult orElse(),
   }) =>
+      throw _privateConstructorUsedError;
+
+  @JsonKey(ignore: true)
+  $ClosedHouseholdEventCopyWith<ClosedHouseholdEvent> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -74,6 +91,12 @@ abstract class $ClosedHouseholdEventCopyWith<$Res> {
   factory $ClosedHouseholdEventCopyWith(ClosedHouseholdEvent value,
           $Res Function(ClosedHouseholdEvent) then) =
       _$ClosedHouseholdEventCopyWithImpl<$Res, ClosedHouseholdEvent>;
+  @useResult
+  $Res call(
+      {double latitude,
+      double longitude,
+      double locationAccuracy,
+      String? householdHeadName});
 }
 
 /// @nodoc
@@ -86,16 +109,52 @@ class _$ClosedHouseholdEventCopyWithImpl<$Res,
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? latitude = null,
+    Object? longitude = null,
+    Object? locationAccuracy = null,
+    Object? householdHeadName = freezed,
+  }) {
+    return _then(_value.copyWith(
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      locationAccuracy: null == locationAccuracy
+          ? _value.locationAccuracy
+          : locationAccuracy // ignore: cast_nullable_to_non_nullable
+              as double,
+      householdHeadName: freezed == householdHeadName
+          ? _value.householdHeadName
+          : householdHeadName // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
 }
 
 /// @nodoc
-abstract class _$$ClosedHouseholdSubmitEventImplCopyWith<$Res> {
+abstract class _$$ClosedHouseholdSubmitEventImplCopyWith<$Res>
+    implements $ClosedHouseholdEventCopyWith<$Res> {
   factory _$$ClosedHouseholdSubmitEventImplCopyWith(
           _$ClosedHouseholdSubmitEventImpl value,
           $Res Function(_$ClosedHouseholdSubmitEventImpl) then) =
       __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({UserActionModel userAction, bool isEditing});
+  $Res call(
+      {double latitude,
+      double longitude,
+      double locationAccuracy,
+      String? householdHeadName,
+      String? tag,
+      BuildContext? context});
 }
 
 /// @nodoc
@@ -111,18 +170,38 @@ class __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? userAction = null,
-    Object? isEditing = null,
+    Object? latitude = null,
+    Object? longitude = null,
+    Object? locationAccuracy = null,
+    Object? householdHeadName = freezed,
+    Object? tag = freezed,
+    Object? context = freezed,
   }) {
     return _then(_$ClosedHouseholdSubmitEventImpl(
-      null == userAction
-          ? _value.userAction
-          : userAction // ignore: cast_nullable_to_non_nullable
-              as UserActionModel,
-      null == isEditing
-          ? _value.isEditing
-          : isEditing // ignore: cast_nullable_to_non_nullable
-              as bool,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      locationAccuracy: null == locationAccuracy
+          ? _value.locationAccuracy
+          : locationAccuracy // ignore: cast_nullable_to_non_nullable
+              as double,
+      householdHeadName: freezed == householdHeadName
+          ? _value.householdHeadName
+          : householdHeadName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      tag: freezed == tag
+          ? _value.tag
+          : tag // ignore: cast_nullable_to_non_nullable
+              as String?,
+      context: freezed == context
+          ? _value.context
+          : context // ignore: cast_nullable_to_non_nullable
+              as BuildContext?,
     ));
   }
 }
@@ -130,16 +209,33 @@ class __$$ClosedHouseholdSubmitEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
-  const _$ClosedHouseholdSubmitEventImpl(this.userAction, this.isEditing);
+  const _$ClosedHouseholdSubmitEventImpl(
+      {this.latitude = 0,
+      this.longitude = 0,
+      this.locationAccuracy = 0,
+      this.householdHeadName,
+      this.tag,
+      this.context});
 
   @override
-  final UserActionModel userAction;
+  @JsonKey()
+  final double latitude;
   @override
-  final bool isEditing;
+  @JsonKey()
+  final double longitude;
+  @override
+  @JsonKey()
+  final double locationAccuracy;
+  @override
+  final String? householdHeadName;
+  @override
+  final String? tag;
+  @override
+  final BuildContext? context;
 
   @override
   String toString() {
-    return 'ClosedHouseholdEvent.handleSubmit(userAction: $userAction, isEditing: $isEditing)';
+    return 'ClosedHouseholdEvent.handleSubmit(latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, householdHeadName: $householdHeadName, tag: $tag, context: $context)';
   }
 
   @override
@@ -147,14 +243,21 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClosedHouseholdSubmitEventImpl &&
-            (identical(other.userAction, userAction) ||
-                other.userAction == userAction) &&
-            (identical(other.isEditing, isEditing) ||
-                other.isEditing == isEditing));
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.locationAccuracy, locationAccuracy) ||
+                other.locationAccuracy == locationAccuracy) &&
+            (identical(other.householdHeadName, householdHeadName) ||
+                other.householdHeadName == householdHeadName) &&
+            (identical(other.tag, tag) || other.tag == tag) &&
+            (identical(other.context, context) || other.context == context));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userAction, isEditing);
+  int get hashCode => Object.hash(runtimeType, latitude, longitude,
+      locationAccuracy, householdHeadName, tag, context);
 
   @JsonKey(ignore: true)
   @override
@@ -166,40 +269,55 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserActionModel userAction, bool isEditing)
-        handleSubmit,
-    required TResult Function(UserActionModel summary) handleSummary,
     required TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)
-        handleUpdate,
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? householdHeadName,
+            String? tag,
+            BuildContext? context)
+        handleSubmit,
+    required TResult Function(double latitude, double longitude,
+            double locationAccuracy, String? householdHeadName)
+        handleSummary,
   }) {
-    return handleSubmit(userAction, isEditing);
+    return handleSubmit(
+        latitude, longitude, locationAccuracy, householdHeadName, tag, context);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult? Function(UserActionModel summary)? handleSummary,
     TResult? Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? householdHeadName,
+            String? tag,
+            BuildContext? context)?
+        handleSubmit,
+    TResult? Function(double latitude, double longitude,
+            double locationAccuracy, String? householdHeadName)?
+        handleSummary,
   }) {
-    return handleSubmit?.call(userAction, isEditing);
+    return handleSubmit?.call(
+        latitude, longitude, locationAccuracy, householdHeadName, tag, context);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult Function(UserActionModel summary)? handleSummary,
-    TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
+    TResult Function(double latitude, double longitude, double locationAccuracy,
+            String? householdHeadName, String? tag, BuildContext? context)?
+        handleSubmit,
+    TResult Function(double latitude, double longitude, double locationAccuracy,
+            String? householdHeadName)?
+        handleSummary,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
-      return handleSubmit(userAction, isEditing);
+      return handleSubmit(latitude, longitude, locationAccuracy,
+          householdHeadName, tag, context);
     }
     return orElse();
   }
@@ -209,7 +327,6 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(ClosedHouseholdSubmitEvent value) handleSubmit,
     required TResult Function(ClosedHouseholdSummaryEvent value) handleSummary,
-    required TResult Function(ClosedHouseholdUpdateEvent value) handleUpdate,
   }) {
     return handleSubmit(this);
   }
@@ -219,7 +336,6 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
     TResult? Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult? Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
   }) {
     return handleSubmit?.call(this);
   }
@@ -229,7 +345,6 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
     TResult Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
     required TResult orElse(),
   }) {
     if (handleSubmit != null) {
@@ -241,24 +356,43 @@ class _$ClosedHouseholdSubmitEventImpl implements ClosedHouseholdSubmitEvent {
 
 abstract class ClosedHouseholdSubmitEvent implements ClosedHouseholdEvent {
   const factory ClosedHouseholdSubmitEvent(
-          final UserActionModel userAction, final bool isEditing) =
-      _$ClosedHouseholdSubmitEventImpl;
+      {final double latitude,
+      final double longitude,
+      final double locationAccuracy,
+      final String? householdHeadName,
+      final String? tag,
+      final BuildContext? context}) = _$ClosedHouseholdSubmitEventImpl;
 
-  UserActionModel get userAction;
-  bool get isEditing;
+  @override
+  double get latitude;
+  @override
+  double get longitude;
+  @override
+  double get locationAccuracy;
+  @override
+  String? get householdHeadName;
+  String? get tag;
+  BuildContext? get context;
+  @override
   @JsonKey(ignore: true)
   _$$ClosedHouseholdSubmitEventImplCopyWith<_$ClosedHouseholdSubmitEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$ClosedHouseholdSummaryEventImplCopyWith<$Res> {
+abstract class _$$ClosedHouseholdSummaryEventImplCopyWith<$Res>
+    implements $ClosedHouseholdEventCopyWith<$Res> {
   factory _$$ClosedHouseholdSummaryEventImplCopyWith(
           _$ClosedHouseholdSummaryEventImpl value,
           $Res Function(_$ClosedHouseholdSummaryEventImpl) then) =
       __$$ClosedHouseholdSummaryEventImplCopyWithImpl<$Res>;
+  @override
   @useResult
-  $Res call({UserActionModel summary});
+  $Res call(
+      {double latitude,
+      double longitude,
+      double locationAccuracy,
+      String? householdHeadName});
 }
 
 /// @nodoc
@@ -274,13 +408,28 @@ class __$$ClosedHouseholdSummaryEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? summary = null,
+    Object? latitude = null,
+    Object? longitude = null,
+    Object? locationAccuracy = null,
+    Object? householdHeadName = freezed,
   }) {
     return _then(_$ClosedHouseholdSummaryEventImpl(
-      null == summary
-          ? _value.summary
-          : summary // ignore: cast_nullable_to_non_nullable
-              as UserActionModel,
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      locationAccuracy: null == locationAccuracy
+          ? _value.locationAccuracy
+          : locationAccuracy // ignore: cast_nullable_to_non_nullable
+              as double,
+      householdHeadName: freezed == householdHeadName
+          ? _value.householdHeadName
+          : householdHeadName // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -288,14 +437,27 @@ class __$$ClosedHouseholdSummaryEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
-  const _$ClosedHouseholdSummaryEventImpl(this.summary);
+  const _$ClosedHouseholdSummaryEventImpl(
+      {this.latitude = 0,
+      this.longitude = 0,
+      this.locationAccuracy = 0,
+      this.householdHeadName});
 
   @override
-  final UserActionModel summary;
+  @JsonKey()
+  final double latitude;
+  @override
+  @JsonKey()
+  final double longitude;
+  @override
+  @JsonKey()
+  final double locationAccuracy;
+  @override
+  final String? householdHeadName;
 
   @override
   String toString() {
-    return 'ClosedHouseholdEvent.handleSummary(summary: $summary)';
+    return 'ClosedHouseholdEvent.handleSummary(latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, householdHeadName: $householdHeadName)';
   }
 
   @override
@@ -303,11 +465,19 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ClosedHouseholdSummaryEventImpl &&
-            (identical(other.summary, summary) || other.summary == summary));
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.locationAccuracy, locationAccuracy) ||
+                other.locationAccuracy == locationAccuracy) &&
+            (identical(other.householdHeadName, householdHeadName) ||
+                other.householdHeadName == householdHeadName));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, summary);
+  int get hashCode => Object.hash(
+      runtimeType, latitude, longitude, locationAccuracy, householdHeadName);
 
   @JsonKey(ignore: true)
   @override
@@ -319,40 +489,55 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(UserActionModel userAction, bool isEditing)
-        handleSubmit,
-    required TResult Function(UserActionModel summary) handleSummary,
     required TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)
-        handleUpdate,
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? householdHeadName,
+            String? tag,
+            BuildContext? context)
+        handleSubmit,
+    required TResult Function(double latitude, double longitude,
+            double locationAccuracy, String? householdHeadName)
+        handleSummary,
   }) {
-    return handleSummary(summary);
+    return handleSummary(
+        latitude, longitude, locationAccuracy, householdHeadName);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult? Function(UserActionModel summary)? handleSummary,
     TResult? Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
+            double latitude,
+            double longitude,
+            double locationAccuracy,
+            String? householdHeadName,
+            String? tag,
+            BuildContext? context)?
+        handleSubmit,
+    TResult? Function(double latitude, double longitude,
+            double locationAccuracy, String? householdHeadName)?
+        handleSummary,
   }) {
-    return handleSummary?.call(summary);
+    return handleSummary?.call(
+        latitude, longitude, locationAccuracy, householdHeadName);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult Function(UserActionModel summary)? handleSummary,
-    TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
+    TResult Function(double latitude, double longitude, double locationAccuracy,
+            String? householdHeadName, String? tag, BuildContext? context)?
+        handleSubmit,
+    TResult Function(double latitude, double longitude, double locationAccuracy,
+            String? householdHeadName)?
+        handleSummary,
     required TResult orElse(),
   }) {
     if (handleSummary != null) {
-      return handleSummary(summary);
+      return handleSummary(
+          latitude, longitude, locationAccuracy, householdHeadName);
     }
     return orElse();
   }
@@ -362,7 +547,6 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
   TResult map<TResult extends Object?>({
     required TResult Function(ClosedHouseholdSubmitEvent value) handleSubmit,
     required TResult Function(ClosedHouseholdSummaryEvent value) handleSummary,
-    required TResult Function(ClosedHouseholdUpdateEvent value) handleUpdate,
   }) {
     return handleSummary(this);
   }
@@ -372,7 +556,6 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
   TResult? mapOrNull<TResult extends Object?>({
     TResult? Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
     TResult? Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult? Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
   }) {
     return handleSummary?.call(this);
   }
@@ -382,7 +565,6 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
     TResult Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
     required TResult orElse(),
   }) {
     if (handleSummary != null) {
@@ -393,178 +575,23 @@ class _$ClosedHouseholdSummaryEventImpl implements ClosedHouseholdSummaryEvent {
 }
 
 abstract class ClosedHouseholdSummaryEvent implements ClosedHouseholdEvent {
-  const factory ClosedHouseholdSummaryEvent(final UserActionModel summary) =
-      _$ClosedHouseholdSummaryEventImpl;
+  const factory ClosedHouseholdSummaryEvent(
+      {final double latitude,
+      final double longitude,
+      final double locationAccuracy,
+      final String? householdHeadName}) = _$ClosedHouseholdSummaryEventImpl;
 
-  UserActionModel get summary;
+  @override
+  double get latitude;
+  @override
+  double get longitude;
+  @override
+  double get locationAccuracy;
+  @override
+  String? get householdHeadName;
+  @override
   @JsonKey(ignore: true)
   _$$ClosedHouseholdSummaryEventImplCopyWith<_$ClosedHouseholdSummaryEventImpl>
-      get copyWith => throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class _$$ClosedHouseholdUpdateEventImplCopyWith<$Res> {
-  factory _$$ClosedHouseholdUpdateEventImplCopyWith(
-          _$ClosedHouseholdUpdateEventImpl value,
-          $Res Function(_$ClosedHouseholdUpdateEventImpl) then) =
-      __$$ClosedHouseholdUpdateEventImplCopyWithImpl<$Res>;
-  @useResult
-  $Res call({String selectedClientReferenceId, String selectedHouseholdId});
-}
-
-/// @nodoc
-class __$$ClosedHouseholdUpdateEventImplCopyWithImpl<$Res>
-    extends _$ClosedHouseholdEventCopyWithImpl<$Res,
-        _$ClosedHouseholdUpdateEventImpl>
-    implements _$$ClosedHouseholdUpdateEventImplCopyWith<$Res> {
-  __$$ClosedHouseholdUpdateEventImplCopyWithImpl(
-      _$ClosedHouseholdUpdateEventImpl _value,
-      $Res Function(_$ClosedHouseholdUpdateEventImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? selectedClientReferenceId = null,
-    Object? selectedHouseholdId = null,
-  }) {
-    return _then(_$ClosedHouseholdUpdateEventImpl(
-      null == selectedClientReferenceId
-          ? _value.selectedClientReferenceId
-          : selectedClientReferenceId // ignore: cast_nullable_to_non_nullable
-              as String,
-      null == selectedHouseholdId
-          ? _value.selectedHouseholdId
-          : selectedHouseholdId // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
-  }
-}
-
-/// @nodoc
-
-class _$ClosedHouseholdUpdateEventImpl implements ClosedHouseholdUpdateEvent {
-  const _$ClosedHouseholdUpdateEventImpl(
-      this.selectedClientReferenceId, this.selectedHouseholdId);
-
-  @override
-  final String selectedClientReferenceId;
-  @override
-  final String selectedHouseholdId;
-
-  @override
-  String toString() {
-    return 'ClosedHouseholdEvent.handleUpdate(selectedClientReferenceId: $selectedClientReferenceId, selectedHouseholdId: $selectedHouseholdId)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$ClosedHouseholdUpdateEventImpl &&
-            (identical(other.selectedClientReferenceId,
-                    selectedClientReferenceId) ||
-                other.selectedClientReferenceId == selectedClientReferenceId) &&
-            (identical(other.selectedHouseholdId, selectedHouseholdId) ||
-                other.selectedHouseholdId == selectedHouseholdId));
-  }
-
-  @override
-  int get hashCode =>
-      Object.hash(runtimeType, selectedClientReferenceId, selectedHouseholdId);
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$ClosedHouseholdUpdateEventImplCopyWith<_$ClosedHouseholdUpdateEventImpl>
-      get copyWith => __$$ClosedHouseholdUpdateEventImplCopyWithImpl<
-          _$ClosedHouseholdUpdateEventImpl>(this, _$identity);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(UserActionModel userAction, bool isEditing)
-        handleSubmit,
-    required TResult Function(UserActionModel summary) handleSummary,
-    required TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)
-        handleUpdate,
-  }) {
-    return handleUpdate(selectedClientReferenceId, selectedHouseholdId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult? Function(UserActionModel summary)? handleSummary,
-    TResult? Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
-  }) {
-    return handleUpdate?.call(selectedClientReferenceId, selectedHouseholdId);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeWhen<TResult extends Object?>({
-    TResult Function(UserActionModel userAction, bool isEditing)? handleSubmit,
-    TResult Function(UserActionModel summary)? handleSummary,
-    TResult Function(
-            String selectedClientReferenceId, String selectedHouseholdId)?
-        handleUpdate,
-    required TResult orElse(),
-  }) {
-    if (handleUpdate != null) {
-      return handleUpdate(selectedClientReferenceId, selectedHouseholdId);
-    }
-    return orElse();
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult map<TResult extends Object?>({
-    required TResult Function(ClosedHouseholdSubmitEvent value) handleSubmit,
-    required TResult Function(ClosedHouseholdSummaryEvent value) handleSummary,
-    required TResult Function(ClosedHouseholdUpdateEvent value) handleUpdate,
-  }) {
-    return handleUpdate(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult? mapOrNull<TResult extends Object?>({
-    TResult? Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
-    TResult? Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult? Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
-  }) {
-    return handleUpdate?.call(this);
-  }
-
-  @override
-  @optionalTypeArgs
-  TResult maybeMap<TResult extends Object?>({
-    TResult Function(ClosedHouseholdSubmitEvent value)? handleSubmit,
-    TResult Function(ClosedHouseholdSummaryEvent value)? handleSummary,
-    TResult Function(ClosedHouseholdUpdateEvent value)? handleUpdate,
-    required TResult orElse(),
-  }) {
-    if (handleUpdate != null) {
-      return handleUpdate(this);
-    }
-    return orElse();
-  }
-}
-
-abstract class ClosedHouseholdUpdateEvent implements ClosedHouseholdEvent {
-  const factory ClosedHouseholdUpdateEvent(
-      final String selectedClientReferenceId,
-      final String selectedHouseholdId) = _$ClosedHouseholdUpdateEventImpl;
-
-  String get selectedClientReferenceId;
-  String get selectedHouseholdId;
-  @JsonKey(ignore: true)
-  _$$ClosedHouseholdUpdateEventImplCopyWith<_$ClosedHouseholdUpdateEventImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -572,10 +599,10 @@ abstract class ClosedHouseholdUpdateEvent implements ClosedHouseholdEvent {
 mixin _$ClosedHouseholdState {
   bool get loading => throw _privateConstructorUsedError;
   bool get isEditing => throw _privateConstructorUsedError;
-  List<UserActionModel>? get userActions => throw _privateConstructorUsedError;
-  UserActionModel? get summary => throw _privateConstructorUsedError;
-  String? get selectedClientReferenceId => throw _privateConstructorUsedError;
-  String? get selectedHouseholdId => throw _privateConstructorUsedError;
+  double get latitude => throw _privateConstructorUsedError;
+  double get longitude => throw _privateConstructorUsedError;
+  double get locationAccuracy => throw _privateConstructorUsedError;
+  String? get householdHeadName => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ClosedHouseholdStateCopyWith<ClosedHouseholdState> get copyWith =>
@@ -591,10 +618,10 @@ abstract class $ClosedHouseholdStateCopyWith<$Res> {
   $Res call(
       {bool loading,
       bool isEditing,
-      List<UserActionModel>? userActions,
-      UserActionModel? summary,
-      String? selectedClientReferenceId,
-      String? selectedHouseholdId});
+      double latitude,
+      double longitude,
+      double locationAccuracy,
+      String? householdHeadName});
 }
 
 /// @nodoc
@@ -613,10 +640,10 @@ class _$ClosedHouseholdStateCopyWithImpl<$Res,
   $Res call({
     Object? loading = null,
     Object? isEditing = null,
-    Object? userActions = freezed,
-    Object? summary = freezed,
-    Object? selectedClientReferenceId = freezed,
-    Object? selectedHouseholdId = freezed,
+    Object? latitude = null,
+    Object? longitude = null,
+    Object? locationAccuracy = null,
+    Object? householdHeadName = freezed,
   }) {
     return _then(_value.copyWith(
       loading: null == loading
@@ -627,21 +654,21 @@ class _$ClosedHouseholdStateCopyWithImpl<$Res,
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
-      userActions: freezed == userActions
-          ? _value.userActions
-          : userActions // ignore: cast_nullable_to_non_nullable
-              as List<UserActionModel>?,
-      summary: freezed == summary
-          ? _value.summary
-          : summary // ignore: cast_nullable_to_non_nullable
-              as UserActionModel?,
-      selectedClientReferenceId: freezed == selectedClientReferenceId
-          ? _value.selectedClientReferenceId
-          : selectedClientReferenceId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      selectedHouseholdId: freezed == selectedHouseholdId
-          ? _value.selectedHouseholdId
-          : selectedHouseholdId // ignore: cast_nullable_to_non_nullable
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      locationAccuracy: null == locationAccuracy
+          ? _value.locationAccuracy
+          : locationAccuracy // ignore: cast_nullable_to_non_nullable
+              as double,
+      householdHeadName: freezed == householdHeadName
+          ? _value.householdHeadName
+          : householdHeadName // ignore: cast_nullable_to_non_nullable
               as String?,
     ) as $Val);
   }
@@ -658,10 +685,10 @@ abstract class _$$ClosedHouseholdStateImplCopyWith<$Res>
   $Res call(
       {bool loading,
       bool isEditing,
-      List<UserActionModel>? userActions,
-      UserActionModel? summary,
-      String? selectedClientReferenceId,
-      String? selectedHouseholdId});
+      double latitude,
+      double longitude,
+      double locationAccuracy,
+      String? householdHeadName});
 }
 
 /// @nodoc
@@ -677,10 +704,10 @@ class __$$ClosedHouseholdStateImplCopyWithImpl<$Res>
   $Res call({
     Object? loading = null,
     Object? isEditing = null,
-    Object? userActions = freezed,
-    Object? summary = freezed,
-    Object? selectedClientReferenceId = freezed,
-    Object? selectedHouseholdId = freezed,
+    Object? latitude = null,
+    Object? longitude = null,
+    Object? locationAccuracy = null,
+    Object? householdHeadName = freezed,
   }) {
     return _then(_$ClosedHouseholdStateImpl(
       loading: null == loading
@@ -691,21 +718,21 @@ class __$$ClosedHouseholdStateImplCopyWithImpl<$Res>
           ? _value.isEditing
           : isEditing // ignore: cast_nullable_to_non_nullable
               as bool,
-      userActions: freezed == userActions
-          ? _value._userActions
-          : userActions // ignore: cast_nullable_to_non_nullable
-              as List<UserActionModel>?,
-      summary: freezed == summary
-          ? _value.summary
-          : summary // ignore: cast_nullable_to_non_nullable
-              as UserActionModel?,
-      selectedClientReferenceId: freezed == selectedClientReferenceId
-          ? _value.selectedClientReferenceId
-          : selectedClientReferenceId // ignore: cast_nullable_to_non_nullable
-              as String?,
-      selectedHouseholdId: freezed == selectedHouseholdId
-          ? _value.selectedHouseholdId
-          : selectedHouseholdId // ignore: cast_nullable_to_non_nullable
+      latitude: null == latitude
+          ? _value.latitude
+          : latitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      longitude: null == longitude
+          ? _value.longitude
+          : longitude // ignore: cast_nullable_to_non_nullable
+              as double,
+      locationAccuracy: null == locationAccuracy
+          ? _value.locationAccuracy
+          : locationAccuracy // ignore: cast_nullable_to_non_nullable
+              as double,
+      householdHeadName: freezed == householdHeadName
+          ? _value.householdHeadName
+          : householdHeadName // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -717,11 +744,10 @@ class _$ClosedHouseholdStateImpl implements _ClosedHouseholdState {
   const _$ClosedHouseholdStateImpl(
       {this.loading = false,
       this.isEditing = false,
-      final List<UserActionModel>? userActions,
-      this.summary,
-      this.selectedClientReferenceId,
-      this.selectedHouseholdId})
-      : _userActions = userActions;
+      this.latitude = 0,
+      this.longitude = 0,
+      this.locationAccuracy = 0,
+      this.householdHeadName});
 
   @override
   @JsonKey()
@@ -729,26 +755,21 @@ class _$ClosedHouseholdStateImpl implements _ClosedHouseholdState {
   @override
   @JsonKey()
   final bool isEditing;
-  final List<UserActionModel>? _userActions;
   @override
-  List<UserActionModel>? get userActions {
-    final value = _userActions;
-    if (value == null) return null;
-    if (_userActions is EqualUnmodifiableListView) return _userActions;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
+  @JsonKey()
+  final double latitude;
   @override
-  final UserActionModel? summary;
+  @JsonKey()
+  final double longitude;
   @override
-  final String? selectedClientReferenceId;
+  @JsonKey()
+  final double locationAccuracy;
   @override
-  final String? selectedHouseholdId;
+  final String? householdHeadName;
 
   @override
   String toString() {
-    return 'ClosedHouseholdState(loading: $loading, isEditing: $isEditing, userActions: $userActions, summary: $summary, selectedClientReferenceId: $selectedClientReferenceId, selectedHouseholdId: $selectedHouseholdId)';
+    return 'ClosedHouseholdState(loading: $loading, isEditing: $isEditing, latitude: $latitude, longitude: $longitude, locationAccuracy: $locationAccuracy, householdHeadName: $householdHeadName)';
   }
 
   @override
@@ -759,25 +780,19 @@ class _$ClosedHouseholdStateImpl implements _ClosedHouseholdState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.isEditing, isEditing) ||
                 other.isEditing == isEditing) &&
-            const DeepCollectionEquality()
-                .equals(other._userActions, _userActions) &&
-            (identical(other.summary, summary) || other.summary == summary) &&
-            (identical(other.selectedClientReferenceId,
-                    selectedClientReferenceId) ||
-                other.selectedClientReferenceId == selectedClientReferenceId) &&
-            (identical(other.selectedHouseholdId, selectedHouseholdId) ||
-                other.selectedHouseholdId == selectedHouseholdId));
+            (identical(other.latitude, latitude) ||
+                other.latitude == latitude) &&
+            (identical(other.longitude, longitude) ||
+                other.longitude == longitude) &&
+            (identical(other.locationAccuracy, locationAccuracy) ||
+                other.locationAccuracy == locationAccuracy) &&
+            (identical(other.householdHeadName, householdHeadName) ||
+                other.householdHeadName == householdHeadName));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      loading,
-      isEditing,
-      const DeepCollectionEquality().hash(_userActions),
-      summary,
-      selectedClientReferenceId,
-      selectedHouseholdId);
+  int get hashCode => Object.hash(runtimeType, loading, isEditing, latitude,
+      longitude, locationAccuracy, householdHeadName);
 
   @JsonKey(ignore: true)
   @override
@@ -792,23 +807,23 @@ abstract class _ClosedHouseholdState implements ClosedHouseholdState {
   const factory _ClosedHouseholdState(
       {final bool loading,
       final bool isEditing,
-      final List<UserActionModel>? userActions,
-      final UserActionModel? summary,
-      final String? selectedClientReferenceId,
-      final String? selectedHouseholdId}) = _$ClosedHouseholdStateImpl;
+      final double latitude,
+      final double longitude,
+      final double locationAccuracy,
+      final String? householdHeadName}) = _$ClosedHouseholdStateImpl;
 
   @override
   bool get loading;
   @override
   bool get isEditing;
   @override
-  List<UserActionModel>? get userActions;
+  double get latitude;
   @override
-  UserActionModel? get summary;
+  double get longitude;
   @override
-  String? get selectedClientReferenceId;
+  double get locationAccuracy;
   @override
-  String? get selectedHouseholdId;
+  String? get householdHeadName;
   @override
   @JsonKey(ignore: true)
   _$$ClosedHouseholdStateImplCopyWith<_$ClosedHouseholdStateImpl>

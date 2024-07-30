@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -94,7 +93,6 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 registrationDate,
                                 searchQuery,
                                 loading,
-                                selectedClosedHouseholdID,
                                 isHeadOfHousehold,
                               ) {
                                 var houseModel = HouseholdModel(
@@ -289,6 +287,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 houseShowcaseData.noOfRooms.buildWith(
                                   child: DigitIntegerFormPicker(
                                     minimum: 1,
+                                    maximum: 20,
                                     form: form,
                                     formControlName: _noOfRoomsKey,
                                     label: localizations.translate(

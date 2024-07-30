@@ -2,9 +2,8 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:closed_household/models/entities/user_action.dart';
+import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -339,7 +338,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           customIcon: Constants.closedHouseholdSvg,
           label: i18.home.closedHouseHoldLabel,
           onPressed: () {
-            context.router.push(ClosedHouseholdWrapperRoute());
+            context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
       ),
@@ -492,9 +491,9 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -520,8 +519,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            element == i18.home.dashboard)
-// TODO: need to add close household inside mdms
+            element == i18.home.dashboard ||
+// TODO: need to add close household and dashboard inside mdms
+
+            element ==
+                i18.home
+                    .closedHouseHoldLabel) // TODO: need to add close household and dashboard inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -529,7 +532,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             f != i18.home.db &&
             f !=
                 i18.home
-                    .closedHouseHoldLabel) // TODO: need to add close household inside mdms
+                    .closedHouseHoldLabel) // TODO: need to add close household and dashboard inside mdms
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -579,8 +582,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
-                context.read<
-                    LocalRepository<UserActionModel, UserActionSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -612,8 +613,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
-                context.read<
-                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -670,6 +669,7 @@ void setPackagesSingleton(BuildContext context) {
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
         );
 
         AttendanceSingleton().setInitialData(
@@ -726,6 +726,7 @@ void setPackagesSingleton(BuildContext context) {
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
             appVersion: Constants().version,
+            //[TODO: Need to move to constants]
             actionPath: Constants.getEndPoint(
               serviceRegistry: serviceRegistry,
               service: 'DASHBOARD',

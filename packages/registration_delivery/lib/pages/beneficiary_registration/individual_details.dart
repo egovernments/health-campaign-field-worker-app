@@ -142,7 +142,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             projectBeneficiaryModel,
                             registrationDate,
                             searchQuery,
-                            selectedClosedHouseholdID,
                             loading,
                             isHeadOfHousehold,
                           ) async {

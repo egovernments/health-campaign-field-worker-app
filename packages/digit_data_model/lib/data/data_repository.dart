@@ -35,7 +35,7 @@ abstract class DataRepository<D extends EntityModel,
 
 /// `RemoteRepository` is an abstract class that extends `DataRepository` and provides additional functionality for remote repositories.
 abstract class RemoteRepository<D extends EntityModel,
-    R extends EntitySearchModel> extends DataRepository<D, R> {
+R extends EntitySearchModel> extends DataRepository<D, R> {
   final Dio dio;
   final String entityName;
   final bool isPlural;
@@ -61,19 +61,19 @@ abstract class RemoteRepository<D extends EntityModel,
   String get bulkDeletePath => actionMap[ApiOperation.bulkDelete] ?? '';
 
   RemoteRepository(
-    this.dio, {
-    required this.actionMap,
-    required this.entityName,
-    this.isPlural = false,
-    this.isSearchResponsePlural = false,
-  });
+      this.dio, {
+        required this.actionMap,
+        required this.entityName,
+        this.isPlural = false,
+        this.isSearchResponsePlural = false,
+      });
 
   @override
   FutureOr<List<D>> search(
-    R query, {
-    int? offSet,
-    int? limit,
-  }) async {
+      R query, {
+        int? offSet,
+        int? limit,
+      }) async {
     Response response;
 
     try {
@@ -90,15 +90,15 @@ abstract class RemoteRepository<D extends EntityModel,
             data: entityName == 'User'
                 ? query.toMap()
                 : {
-                    isPlural
-                            ? entityNamePlural
-                            : entityName == 'ServiceDefinition'
-                                ? 'ServiceDefinitionCriteria'
-                                : entityName == 'Downsync'
-                                    ? 'DownsyncCriteria'
-                                    : entityName:
-                        isPlural ? [query.toMap()] : query.toMap(),
-                  },
+              isPlural
+                  ? entityNamePlural
+                  : entityName == 'ServiceDefinition'
+                  ? 'ServiceDefinitionCriteria'
+                  : entityName == 'Downsync'
+                  ? 'DownsyncCriteria'
+                  : entityName:
+              isPlural ? [query.toMap()] : query.toMap(),
+            },
           );
         },
       );
@@ -129,9 +129,9 @@ abstract class RemoteRepository<D extends EntityModel,
     }
 
     final entityResponse = await responseMap[
-        (isSearchResponsePlural || entityName == 'ServiceDefinition')
-            ? entityNamePlural
-            : entityName];
+    (isSearchResponsePlural || entityName == 'ServiceDefinition')
+        ? entityNamePlural
+        : entityName];
 
     if (entityResponse is! List) {
       throw InvalidApiResponseException(
@@ -164,10 +164,10 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Map<String, dynamic>> downSync(
-    R query, {
-    int? offSet,
-    int? limit,
-  }) async {
+      R query, {
+        int? offSet,
+        int? limit,
+      }) async {
     Response response;
 
     try {
@@ -183,7 +183,7 @@ abstract class RemoteRepository<D extends EntityModel,
             },
             data: {
               entityName == 'Downsync' ? 'DownsyncCriteria' : entityName:
-                  query.toMap(),
+              query.toMap(),
             },
           );
         },
@@ -271,9 +271,9 @@ abstract class RemoteRepository<D extends EntityModel,
   }
 
   FutureOr<Response> dumpError(
-    List<EntityModel> entities,
-    DataOperation operation,
-  ) async {
+      List<EntityModel> entities,
+      DataOperation operation,
+      ) async {
     return executeFuture(
       future: () async {
         String url = "";
@@ -348,9 +348,9 @@ abstract class RemoteRepository<D extends EntityModel,
           data: entityName == 'User'
               ? {entityName: entity.toMap()}
               : {
-                  entityName: [entity.toMap()],
-                  "apiOperation": "UPDATE",
-                },
+            entityName: [entity.toMap()],
+            "apiOperation": "UPDATE",
+          },
         );
       },
     );

@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:closed_household/closed_household.dart' hide Status;
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -38,7 +36,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     SearchHouseholdsEmitter emit,
   ) async {
     final containers = <HouseholdMemberWrapper>[...state.householdMembers];
-    final List<UserActionModel> closedHouseholds = [...state.closedHouseholds];
 
     List<HouseholdModel> householdList = [];
     List<IndividualModel> individualsList = [];
@@ -65,20 +62,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     var finalResults = results.map((e) => e).toList();
 
-    if (event.globalSearchParams.filter!.contains(Status.closeHousehold.name)) {
-      finalResults.forEach((e) {
-        closedHouseholds.add(e);
-      });
-
-      emit(state.copyWith(
-        loading: false,
-        offset:
-            event.globalSearchParams.offset! + event.globalSearchParams.limit!,
-        limit: event.globalSearchParams.limit!,
-        closedHouseholds: closedHouseholds,
-      ));
-    } else if (event.globalSearchParams.filter!
-            .contains(Status.registered.name) ||
+    if (event.globalSearchParams.filter!.contains(Status.registered.name) ||
         event.globalSearchParams.filter!.contains(Status.notRegistered.name)) {
       late List<String> houseHoldClientReferenceIds = [];
 
@@ -109,11 +93,15 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
 
-      _processTasksAndRelatedData(
+      List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
+      taskList = tasksRelated[0];
+      sideEffectsList = tasksRelated[1];
+      referralsList = tasksRelated[2];
+
       // Process household entries and add to containers
-      _processHouseholdEntries(
+      await _processHouseholdEntries(
         householdMembersList,
         householdList,
         individualsList,
@@ -178,11 +166,15 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         taskList.add(element);
       });
 
-      _processTasksAndRelatedData(
+      List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
+      taskList = tasksRelated[0];
+      sideEffectsList = tasksRelated[1];
+      referralsList = tasksRelated[2];
+
       // Process household entries and add to containers
-      _processHouseholdEntries(
+      await _processHouseholdEntries(
         householdMembersList,
         householdList,
         individualsList,
@@ -231,11 +223,15 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
 
-      _processTasksAndRelatedData(
+      List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
+      taskList = tasksRelated[0];
+      sideEffectsList = tasksRelated[1];
+      referralsList = tasksRelated[2];
+
       // Process household entries and add to containers
-      _processHouseholdEntries(
+      await _processHouseholdEntries(
         householdMembersList,
         householdList,
         individualsList,
@@ -257,7 +253,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     }
   }
 
-  void _processHouseholdEntries(
+  Future<void> _processHouseholdEntries(
     List<HouseholdMemberModel> householdMembersList,
     List<HouseholdModel> householdList,
     List<IndividualModel> individualsList,
@@ -266,7 +262,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     List<SideEffectModel> sideEffectsList,
     List<ReferralModel> referralsList,
     List<HouseholdMemberWrapper> containers,
-  ) {
+  ) async {
     final groupedHouseholdsMembers = householdMembersList
         .groupListsBy((element) => element.householdClientReferenceId);
 
@@ -336,7 +332,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     }
   }
 
-  Future<void> _processTasksAndRelatedData(
+  Future<List<dynamic>> _processTasksAndRelatedData(
     List<ProjectBeneficiaryModel> projectBeneficiariesList,
     List<TaskModel> taskList,
     List<SideEffectModel> sideEffectsList,
@@ -357,5 +353,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
             projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
       ));
     }
+    return [
+      taskList,
+      sideEffectsList,
+      referralsList,
+    ];
   }
 }
