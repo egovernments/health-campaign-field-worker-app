@@ -222,7 +222,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                     ),
                                     isRequired: true,
                                     child: SelectionBox<String>(
-                                      width: 128,
+                                      width: MediaQuery.of(context).size.width*.36,
                                       allowMultipleSelection: false,
                                       options: RegistrationDeliverySingleton()
                                               .refusalReasons ??

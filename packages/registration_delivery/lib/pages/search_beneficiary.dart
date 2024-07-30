@@ -503,10 +503,10 @@ class _SearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim(),
+          nameSearch: searchController.text.trim().length > 2 ? searchController.text.trim() : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
-          offset: offset,
-          limit: limit,
+                  offset: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.offset: offset,
+                  limit: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.limit: limit,
         )));
       }
     } else {
