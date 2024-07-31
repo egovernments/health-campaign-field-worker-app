@@ -92,7 +92,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         final results = await filterSelectQuery.get();
         var data = results
             .map((e) {
-              final task = e.readTable(sql.task);
+              final task = e.readTableOrNull(sql.task);
               final resources = e.readTableOrNull(sql.taskResource);
 
               return TaskModel(
@@ -162,8 +162,35 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     } else if (params.isProximityEnabled) {
       selectQuery = super.sql.address.select().join([
         joinHouseHoldAddress(sql),
-      ]);
-      performProximitySearch(selectQuery, params, sql);
+      ])
+        ..where(buildAnd([
+          sql.address.relatedClientReferenceId.isNotNull(),
+          sql.household.clientReferenceId.isNotNull(),
+          CustomExpression<bool>('''
+              (6371393 * acos(
+                  cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
+                  * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
+                  + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
+              )) <= ${params.maxRadius!}
+            '''),
+          sql.address.longitude.isNotNull(),
+          sql.address.latitude.isNotNull(),
+        ]))
+        ..orderBy([
+          if (params.latitude != null &&
+              params.longitude != null &&
+              params.maxRadius != null)
+            OrderingTerm(
+              expression: CustomExpression<double>('''
+                (6371393 * acos(
+                    cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
+                    * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
+                    + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
+                ))
+              '''),
+              mode: OrderingMode.asc,
+            ),
+        ]);
       return selectQuery;
     }
   }
@@ -191,7 +218,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         leftOuterJoin(
             sql.household,
             sql.household.clientReferenceId
-                .equalsExp(sql.householdMember.householdClientReferenceId))
+                .equalsExp(sql.householdMember.householdClientReferenceId)),
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.household.clientReferenceId))
       ]);
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
@@ -204,53 +235,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     return selectQuery;
   }
 
-  performProximitySearch(
-      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
-    return (selectQuery
-          ..where(buildAnd([
-            sql.address.relatedClientReferenceId.isNotNull(),
-            sql.household.clientReferenceId.isNotNull(),
-            if (params.latitude != null &&
-                params.longitude != null &&
-                params.maxRadius != null)
-              CustomExpression<bool>('''
-              (6371393 * acos(
-                  cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
-                  * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
-                  + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
-              )) <= ${params.maxRadius!}
-            '''),
-            if (params.latitude != null &&
-                params.longitude != null &&
-                params.maxRadius != null)
-              sql.address.longitude.isNotNull(),
-            sql.address.latitude.isNotNull(),
-          ])))
-        .orderBy([
-      if (params.latitude != null &&
-          params.longitude != null &&
-          params.maxRadius != null)
-        OrderingTerm(
-          expression: CustomExpression<double>('''
-                (6371393 * acos(
-                    cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
-                    * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
-                    + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
-                ))
-              '''),
-          mode: OrderingMode.asc,
-        ),
-    ]);
-  }
-
   searchByName(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
-    return selectQuery.where(buildAnd([
-      if (params.nameSearch != null)
-        sql.name.givenName.contains(
-          params.nameSearch!,
-        ),
-    ]));
+    return selectQuery.where(sql.name.givenName.contains(
+      params.nameSearch!,
+    ));
   }
 
   filterSearch(selectQuery, GlobalSearchParameters params, String filter,
@@ -259,11 +248,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     if (selectQuery == null) {
       if (filter == Status.registered.name ||
           filter == Status.notRegistered.name) {
-        selectQuery = super.sql.household.select().join([
+        selectQuery = sql.household.select().join([
           leftOuterJoin(
               sql.projectBeneficiary,
               sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId))
+                  .equalsExp(sql.household.clientReferenceId))
         ])
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
@@ -279,11 +268,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         selectQuery = selectQuery.join([
           leftOuterJoin(
               sql.projectBeneficiary,
-              filter == Status.registered.name
-                  ? sql.projectBeneficiary.beneficiaryClientReferenceId
-                      .equalsExp(super.sql.household.clientReferenceId)
-                  : sql.projectBeneficiary.beneficiaryClientReferenceId
-                      .equalsExp(super.sql.household.clientReferenceId))
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(super.sql.household.clientReferenceId))
         ])
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
@@ -311,11 +297,20 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       Status.closeHousehold.name: Status.closeHousehold,
     };
     var applyFilter = filter;
-    selectQuery = sql.select(sql.task).join([]);
-
-    selectQuery.where(sql.task.status.equals(
-      statusMap[applyFilter]!.toValue(),
-    ));
+    if (selectQuery == null) {
+      selectQuery = sql.select(sql.task).join([])
+        ..where(sql.task.status.equals(
+          statusMap[applyFilter]!.toValue(),
+        ));
+    } else {
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.task,
+            sql.task.projectBeneficiaryClientReferenceId
+                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId))
+      ])
+        ..where(sql.task.status.equals(statusMap[filter]!.toValue()));
+    }
 
     return selectQuery;
   }
@@ -461,31 +456,18 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     JoinedSelectStatement selectQuery = filterSelectQuery;
     var query =
         selectQuery.constructQuery().buffer.toString().replaceAll(';', '');
+    var variables = selectQuery.constructQuery().introducedVariables;
+    var indexesLength = selectQuery.constructQuery().variableIndices;
 
     var totalCount;
 
     try {
-      if (params.filter!.contains(Status.registered.name) ||
-          params.filter!.contains(Status.notRegistered.name)) {
-        if (params.isProximityEnabled) {
-          // [TODO: Implement for proximity search]
-        } else if (params.nameSearch != null &&
-            params.nameSearch!.isNotEmpty &&
-            params.nameSearch!.length > 2) {
-          // [TODO: Implement for name search]
-        } else {
-          totalCount = await sql
-              .customSelect('SELECT COUNT(*) AS total_count FROM ($query)')
-              .get();
-        }
-      } else {
-        totalCount = await sql.customSelect(
-          'SELECT COUNT(*) AS total_count FROM ($query)',
-          variables: [
-            Variable(statusMap[params.filter!.first]!.toValue()),
-          ],
-        ).get();
-      }
+      totalCount = await sql
+          .customSelect('SELECT COUNT(*) AS total_count FROM ($query)',
+              variables: indexesLength.isNotEmpty
+                  ? variables.map((e) => Variable(e.value)).toList()
+                  : [])
+          .get();
     } catch (e) {
       debugPrint('error in total $e');
     }
