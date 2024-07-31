@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../models/entities/household.dart';
@@ -21,10 +22,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   DataModelType get type => throw UnimplementedError();
 
   houseHoldGlobalSearch(GlobalSearchParameters params) async {
+    dynamic selectQuery;
+    late int? count = params.totalCount == 0 ? 0 : params.totalCount;
+
     if (params.filter!.contains(Status.registered.name) ||
         params.filter!.contains(Status.notRegistered.name)) {
-      dynamic selectQuery;
-
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
@@ -45,16 +47,20 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (filterSelectQuery == null) {
         return [];
       } else {
+        if (params.offset == 0 &&
+            params.filter != null &&
+            params.filter!.isNotEmpty) {
+          count = await _getTotalCount(filterSelectQuery, params, super.sql);
+        }
+
         await filterSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
         final results = await filterSelectQuery.get();
 
-        return _returnHouseHoldModel(results);
+        return _returnHouseHoldModel(results, count);
       }
     } else if (params.filter!.isNotEmpty && params.filter != null) {
-      dynamic selectQuery;
-
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
@@ -75,12 +81,16 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (filterSelectQuery == null) {
         return [];
       } else {
+        if (params.offset == 0 &&
+            params.filter != null &&
+            params.filter!.isNotEmpty) {
+          count = await _getTotalCount(filterSelectQuery, params, super.sql);
+        }
         await filterSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
         final results = await filterSelectQuery.get();
-
-        return results
+        var data = results
             .map((e) {
               final task = e.readTable(sql.task);
               final resources = e.readTableOrNull(sql.taskResource);
@@ -117,10 +127,10 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             })
             .where((element) => element.isDeleted != true)
             .toList();
+
+        return {"data": data, "total_count": count};
       }
     } else {
-      dynamic selectQuery;
-
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
@@ -130,12 +140,17 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (nameSelectQuery == null) {
         return [];
       } else {
+        if (params.offset == 0 &&
+            params.filter != null &&
+            params.filter!.isNotEmpty) {
+          count = await _getTotalCount(nameSelectQuery, params, super.sql);
+        }
         await nameSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
         final results = await nameSelectQuery.get();
 
-        return _returnHouseHoldModel(results);
+        return _returnHouseHoldModel(results, count);
       }
     }
   }
@@ -232,11 +247,9 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     return selectQuery.where(buildAnd([
       if (params.nameSearch != null)
-        buildOr([
-          sql.name.givenName.contains(
-            params.nameSearch!,
-          ),
-        ]),
+        sql.name.givenName.contains(
+          params.nameSearch!,
+        ),
     ]));
   }
 
@@ -277,7 +290,6 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       } else {
         var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
-
         selectQuery = filterSearchQuery;
       }
     }
@@ -344,13 +356,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     );
   }
 
-  joinProjectBeneficiary(LocalSqlDataStore sql) {
-    return leftOuterJoin(sql.projectBeneficiary,
-        sql.projectBeneficiary.clientReferenceId.isNotNull());
-  }
-
-  _returnHouseHoldModel(results) {
-    return results
+  _returnHouseHoldModel(results, totalCount) {
+    var data = results
         .map((e) {
           final household = e.readTable(sql.household);
           final address = e.readTableOrNull(sql.address);
@@ -431,5 +438,57 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         })
         .where((element) => element.isDeleted != true)
         .toList();
+
+    return {'total_count': totalCount, 'data': data};
+  }
+
+  _getTotalCount(filterSelectQuery, GlobalSearchParameters params,
+      LocalSqlDataStore sql) async {
+    final statusMap = {
+      Status.delivered.name: Status.delivered,
+      Status.notDelivered.name: Status.notDelivered,
+      Status.visited.name: Status.visited,
+      Status.notVisited.name: Status.notVisited,
+      Status.beneficiaryRefused.name: Status.beneficiaryRefused,
+      Status.beneficiaryReferred.name: Status.beneficiaryReferred,
+      Status.administeredSuccess.name: Status.administeredSuccess,
+      Status.administeredFailed.name: Status.administeredFailed,
+      Status.inComplete.name: Status.inComplete,
+      Status.toAdminister.name: Status.toAdminister,
+      Status.closeHousehold.name: Status.closeHousehold,
+    };
+
+    JoinedSelectStatement selectQuery = filterSelectQuery;
+    var query =
+        selectQuery.constructQuery().buffer.toString().replaceAll(';', '');
+
+    var totalCount;
+
+    try {
+      if (params.filter!.contains(Status.registered.name) ||
+          params.filter!.contains(Status.notRegistered.name)) {
+        if (params.isProximityEnabled) {
+          // [TODO: Implement for proximity search]
+        } else if (params.nameSearch != null &&
+            params.nameSearch!.isNotEmpty &&
+            params.nameSearch!.length > 2) {
+          // [TODO: Implement for name search]
+        } else {
+          totalCount = await sql
+              .customSelect('SELECT COUNT(*) AS total_count FROM ($query)')
+              .get();
+        }
+      } else {
+        totalCount = await sql.customSelect(
+          'SELECT COUNT(*) AS total_count FROM ($query)',
+          variables: [
+            Variable(statusMap[params.filter!.first]!.toValue()),
+          ],
+        ).get();
+      }
+    } catch (e) {
+      debugPrint('error in total $e');
+    }
+    return totalCount == null ? 0 : totalCount.first.data['total_count'];
   }
 }

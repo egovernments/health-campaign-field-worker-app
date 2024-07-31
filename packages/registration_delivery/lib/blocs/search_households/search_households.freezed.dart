@@ -2409,6 +2409,7 @@ mixin _$SearchHouseholdsState {
   String? get tag => throw _privateConstructorUsedError;
   List<HouseholdMemberWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
+  int get totalResults => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $SearchHouseholdsStateCopyWith<SearchHouseholdsState> get copyWith =>
@@ -2427,7 +2428,8 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
       bool loading,
       String? searchQuery,
       String? tag,
-      List<HouseholdMemberWrapper> householdMembers});
+      List<HouseholdMemberWrapper> householdMembers,
+      int totalResults});
 }
 
 /// @nodoc
@@ -2450,6 +2452,7 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
     Object? searchQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
+    Object? totalResults = null,
   }) {
     return _then(_value.copyWith(
       offset: null == offset
@@ -2476,6 +2479,10 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
           ? _value.householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
               as List<HouseholdMemberWrapper>,
+      totalResults: null == totalResults
+          ? _value.totalResults
+          : totalResults // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -2495,7 +2502,8 @@ abstract class _$$SearchHouseholdsStateImplCopyWith<$Res>
       bool loading,
       String? searchQuery,
       String? tag,
-      List<HouseholdMemberWrapper> householdMembers});
+      List<HouseholdMemberWrapper> householdMembers,
+      int totalResults});
 }
 
 /// @nodoc
@@ -2516,6 +2524,7 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
     Object? searchQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
+    Object? totalResults = null,
   }) {
     return _then(_$SearchHouseholdsStateImpl(
       offset: null == offset
@@ -2542,6 +2551,10 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
           ? _value._householdMembers
           : householdMembers // ignore: cast_nullable_to_non_nullable
               as List<HouseholdMemberWrapper>,
+      totalResults: null == totalResults
+          ? _value.totalResults
+          : totalResults // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -2555,7 +2568,8 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
       this.loading = false,
       this.searchQuery,
       this.tag,
-      final List<HouseholdMemberWrapper> householdMembers = const []})
+      final List<HouseholdMemberWrapper> householdMembers = const [],
+      this.totalResults = 0})
       : _householdMembers = householdMembers,
         super._();
 
@@ -2583,8 +2597,12 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
   }
 
   @override
+  @JsonKey()
+  final int totalResults;
+
+  @override
   String toString() {
-    return 'SearchHouseholdsState(offset: $offset, limit: $limit, loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers)';
+    return 'SearchHouseholdsState(offset: $offset, limit: $limit, loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers, totalResults: $totalResults)';
   }
 
   @override
@@ -2599,12 +2617,21 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
                 other.searchQuery == searchQuery) &&
             (identical(other.tag, tag) || other.tag == tag) &&
             const DeepCollectionEquality()
-                .equals(other._householdMembers, _householdMembers));
+                .equals(other._householdMembers, _householdMembers) &&
+            (identical(other.totalResults, totalResults) ||
+                other.totalResults == totalResults));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, offset, limit, loading,
-      searchQuery, tag, const DeepCollectionEquality().hash(_householdMembers));
+  int get hashCode => Object.hash(
+      runtimeType,
+      offset,
+      limit,
+      loading,
+      searchQuery,
+      tag,
+      const DeepCollectionEquality().hash(_householdMembers),
+      totalResults);
 
   @JsonKey(ignore: true)
   @override
@@ -2616,13 +2643,13 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
 
 abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   const factory _SearchHouseholdsState(
-          {final int offset,
-          final int limit,
-          final bool loading,
-          final String? searchQuery,
-          final String? tag,
-          final List<HouseholdMemberWrapper> householdMembers}) =
-      _$SearchHouseholdsStateImpl;
+      {final int offset,
+      final int limit,
+      final bool loading,
+      final String? searchQuery,
+      final String? tag,
+      final List<HouseholdMemberWrapper> householdMembers,
+      final int totalResults}) = _$SearchHouseholdsStateImpl;
   const _SearchHouseholdsState._() : super._();
 
   @override
@@ -2637,6 +2664,8 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   String? get tag;
   @override
   List<HouseholdMemberWrapper> get householdMembers;
+  @override
+  int get totalResults;
   @override
   @JsonKey(ignore: true)
   _$$SearchHouseholdsStateImplCopyWith<_$SearchHouseholdsStateImpl>
