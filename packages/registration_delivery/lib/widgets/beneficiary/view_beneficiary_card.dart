@@ -166,8 +166,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         final rowTableData = [
           TableData(
             [
-              e.name?.givenName,
-              e.name?.familyName,
+              e.name?.givenName ?? '--',
+              (e.name?.familyName?.trim().isNotEmpty ?? false) ? e.name?.familyName : null,
             ].whereNotNull().join('-'),
             cellKey: 'beneficiary',
           ),
@@ -195,7 +195,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           ),
           TableData(
             e.dateOfBirth == null
-                ? ''
+                ? '--'
                 : '${DigitDateUtils.calculateAge(
                     DigitDateUtils.getFormattedDateToDateTime(
                           e.dateOfBirth!,
@@ -210,7 +210,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             cellKey: 'age',
           ),
           TableData(
-            e.gender?.name ?? '--',
+            e.gender?.name == null ? '--' : localizations.translate('CORE_COMMON_${ e.gender?.name.toUpperCase()}'),
             cellKey: 'gender',
           ),
         ];
