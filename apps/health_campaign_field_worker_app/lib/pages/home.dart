@@ -9,6 +9,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -27,7 +29,6 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
-import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
@@ -467,7 +468,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.dashboard,
           onPressed: () {
-            context.router.push(UserDashboardRoute());
+            context.router.push(const UserDashboardRoute());
           },
         ),
       ),
@@ -519,12 +520,10 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            element == i18.home.dashboard ||
-// TODO: need to add close household and dashboard inside mdms
-
+            element == i18.home.closedHouseHoldLabel ||
             element ==
                 i18.home
-                    .closedHouseHoldLabel) // TODO: need to add close household and dashboard inside mdms
+                    .dashboard) // TODO: need to add close household inside mdms
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -532,7 +531,7 @@ class _HomePageState extends LocalizedState<HomePage> {
             f != i18.home.db &&
             f !=
                 i18.home
-                    .closedHouseHoldLabel) // TODO: need to add close household and dashboard inside mdms
+                    .closedHouseHoldLabel) // TODO: need to add close household inside mdms
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -624,10 +623,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (
-        AppConfiguration appConfiguration,
-        List<ServiceRegistry> serviceRegistry,
-      ) {
+      initialized: (AppConfiguration appConfiguration,
+          List<ServiceRegistry> serviceRegistry) {
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -726,12 +723,12 @@ void setPackagesSingleton(BuildContext context) {
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
             appVersion: Constants().version,
-            //[TODO: Need to move to constants]
+            selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(
               serviceRegistry: serviceRegistry,
-              service: 'DASHBOARD',
-              action: 'search',
-              entityName: 'DashBoard',
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
             ));
       });
 }

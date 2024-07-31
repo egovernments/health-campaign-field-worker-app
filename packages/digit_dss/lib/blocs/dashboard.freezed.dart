@@ -427,7 +427,7 @@ mixin _$DashboardState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)
+            List<TableWrapper>? tableData, DateTime? selectedDate)
         fetched,
     required TResult Function() error,
   }) =>
@@ -436,7 +436,7 @@ mixin _$DashboardState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult? Function()? error,
   }) =>
@@ -445,7 +445,7 @@ mixin _$DashboardState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),
@@ -535,7 +535,7 @@ class _$DashboardLoadingStateImpl implements DashboardLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)
+            List<TableWrapper>? tableData, DateTime? selectedDate)
         fetched,
     required TResult Function() error,
   }) {
@@ -547,7 +547,7 @@ class _$DashboardLoadingStateImpl implements DashboardLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult? Function()? error,
   }) {
@@ -559,7 +559,7 @@ class _$DashboardLoadingStateImpl implements DashboardLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),
@@ -618,7 +618,7 @@ abstract class _$$DashboardFetchedStateImplCopyWith<$Res> {
   @useResult
   $Res call(
       {Map<String, MetricWrapper>? metricData,
-      List<TableDataRow>? tableData,
+      List<TableWrapper>? tableData,
       DateTime? selectedDate});
 }
 
@@ -645,7 +645,7 @@ class __$$DashboardFetchedStateImplCopyWithImpl<$Res>
       tableData: freezed == tableData
           ? _value._tableData
           : tableData // ignore: cast_nullable_to_non_nullable
-              as List<TableDataRow>?,
+              as List<TableWrapper>?,
       selectedDate: freezed == selectedDate
           ? _value.selectedDate
           : selectedDate // ignore: cast_nullable_to_non_nullable
@@ -659,7 +659,7 @@ class __$$DashboardFetchedStateImplCopyWithImpl<$Res>
 class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   const _$DashboardFetchedStateImpl(
       {final Map<String, MetricWrapper>? metricData,
-      final List<TableDataRow>? tableData,
+      final List<TableWrapper>? tableData,
       this.selectedDate})
       : _metricData = metricData,
         _tableData = tableData;
@@ -674,9 +674,9 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
     return EqualUnmodifiableMapView(value);
   }
 
-  final List<TableDataRow>? _tableData;
+  final List<TableWrapper>? _tableData;
   @override
-  List<TableDataRow>? get tableData {
+  List<TableWrapper>? get tableData {
     final value = _tableData;
     if (value == null) return null;
     if (_tableData is EqualUnmodifiableListView) return _tableData;
@@ -724,7 +724,7 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)
+            List<TableWrapper>? tableData, DateTime? selectedDate)
         fetched,
     required TResult Function() error,
   }) {
@@ -736,7 +736,7 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult? Function()? error,
   }) {
@@ -748,7 +748,7 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),
@@ -797,11 +797,11 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
 abstract class DashboardFetchedState implements DashboardState {
   const factory DashboardFetchedState(
       {final Map<String, MetricWrapper>? metricData,
-      final List<TableDataRow>? tableData,
+      final List<TableWrapper>? tableData,
       final DateTime? selectedDate}) = _$DashboardFetchedStateImpl;
 
   Map<String, MetricWrapper>? get metricData;
-  List<TableDataRow>? get tableData;
+  List<TableWrapper>? get tableData;
   DateTime? get selectedDate;
   @JsonKey(ignore: true)
   _$$DashboardFetchedStateImplCopyWith<_$DashboardFetchedStateImpl>
@@ -849,7 +849,7 @@ class _$DashboardErrorStateImpl implements DashboardErrorState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)
+            List<TableWrapper>? tableData, DateTime? selectedDate)
         fetched,
     required TResult Function() error,
   }) {
@@ -861,7 +861,7 @@ class _$DashboardErrorStateImpl implements DashboardErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult? Function()? error,
   }) {
@@ -873,7 +873,7 @@ class _$DashboardErrorStateImpl implements DashboardErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableDataRow>? tableData, DateTime? selectedDate)?
+            List<TableWrapper>? tableData, DateTime? selectedDate)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),

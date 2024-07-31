@@ -17,6 +17,7 @@ import 'package:recase/recase.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
+import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
@@ -33,7 +34,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
   final Isar isar;
   final MdmsRepository mdmsRepository;
-  final DashboardRemoteRepository dashboardRemoteRepo;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -98,6 +98,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       productVariantRemoteRepository;
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantLocalRepository;
+  final DashboardRemoteRepository dashboardRemoteRepository;
   BuildContext context;
 
   ProjectBloc({
@@ -128,7 +129,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.individualRemoteRepository,
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
-    required this.dashboardRemoteRepo,
+    required this.dashboardRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -446,75 +447,28 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 DateTime.now().day, 11, 59)
             .toLocal()
             .millisecondsSinceEpoch;
-        await isar.writeTxn(() async {
-          await isar.dashboardResponses.clear();
-        });
-        await dashboardRemoteRepo.searchAndWriteToDB(
-          apiEndPoint: 'dashboard-analytics/dashboard/getChartV2',
-          query: {
-            "aggregationRequestDto": {
-              "visualizationType": "METRIC",
-              "visualizationCode": "populationCoveredToday",
-              "queryType": "",
-              "filters": {},
-              "moduleLevel": "",
-              "aggregationFactors": null,
-              "requestDate": {
-                "startDate": startDate,
-                "endDate": endDate,
-                "interval": "day",
-                "title": "home"
-              }
-            },
-            "headers": {"tenantId": envConfig.variables.tenantId}
-          },
-          projectId: event.model.id,
-          isar: isar,
-        );
-        await dashboardRemoteRepo.searchAndWriteToDB(
-          apiEndPoint: 'dashboard-analytics/dashboard/getChartV2',
-          query: {
-            "aggregationRequestDto": {
-              "visualizationType": "METRIC",
-              "visualizationCode": "totalPopulationCovered",
-              "queryType": "",
-              "filters": {},
-              "moduleLevel": "",
-              "aggregationFactors": null,
-              "requestDate": {
-                "startDate": startDate,
-                "endDate": endDate,
-                "interval": "day",
-                "title": "home"
-              }
-            },
-            "headers": {"tenantId": envConfig.variables.tenantId}
-          },
-          projectId: event.model.id,
-          isar: isar,
-        );
-        await dashboardRemoteRepo.searchAndWriteToDB(
-          apiEndPoint: 'dashboard-analytics/dashboard/getChartV2',
-          query: {
-            "aggregationRequestDto": {
-              "visualizationType": "METRIC",
-              "visualizationCode": "todayDistributions",
-              "queryType": "",
-              "filters": {},
-              "moduleLevel": "",
-              "aggregationFactors": null,
-              "requestDate": {
-                "startDate": startDate,
-                "endDate": endDate,
-                "interval": "day",
-                "title": "home"
-              }
-            },
-            "headers": {"tenantId": envConfig.variables.tenantId}
-          },
-          projectId: event.model.id,
-          isar: isar,
-        );
+        final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+        final dashboardActionPath = Constants.getEndPoint(
+            serviceRegistry: serviceRegistry,
+            service: DashboardResponseModel.schemaName.toUpperCase(),
+            action: ApiOperation.search.toValue(),
+            entityName: DashboardResponseModel.schemaName);
+        if (event.model.additionalDetails?.enableDashboard == true &&
+            event.model.additionalDetails?.dashboardConfig != null) {
+          await processDashboardConfig(
+            event.model.additionalDetails!.dashboardConfig!,
+            startDate,
+            endDate,
+            isar,
+            DateTime.now(),
+            dashboardRemoteRepository,
+            dashboardActionPath.trim().isNotEmpty
+                ? dashboardActionPath
+                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+            envConfig.variables.tenantId,
+            event.model.id,
+          );
+        }
       } catch (e) {
         print(e);
       }

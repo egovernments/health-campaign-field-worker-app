@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_response.dart';
-import 'package:digit_dss/data/remote/dashboard.dart';
-import 'package:digit_dss/utils/utils.dart';
+import 'package:digit_components/theme/colors.dart';
+import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_dss/digit_dss.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
@@ -14,9 +16,11 @@ typedef DashboardEmitter = Emitter<DashboardState>;
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final Isar isar;
+  BuildContext context;
   final DashboardRemoteRepository dashboardRemoteRepo;
   DashboardBloc(
     super.initialState, {
+    required this.context,
     required this.isar,
     required this.dashboardRemoteRepo,
   }) {
@@ -29,107 +33,53 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     DashboardEmitter emit,
   ) async {
     emit(const DashboardState.loading());
-    final isConnected = await getIsConnected();
-    if (isConnected && event.syncFromServer) {
-      emit(const DashboardState.loading());
-      final startDate = DateTime(event.selectedDate.year,
-              event.selectedDate.month, event.selectedDate.day)
-          .toLocal()
-          .millisecondsSinceEpoch;
-      final endDate = DateTime(event.selectedDate.year,
-              event.selectedDate.month, event.selectedDate.day, 11, 59)
-          .toLocal()
-          .millisecondsSinceEpoch;
-
-      try {
-        await isar.writeTxn(() async {
-          await isar.dashboardResponses.clear();
-        });
-        await dashboardRemoteRepo.searchAndWriteToDB(
-          apiEndPoint: DashboardSingleton().actionPath,
-          lastSelectedDate: event.selectedDate,
-          query: {
-            "aggregationRequestDto": {
-              "visualizationType": "METRIC",
-              "visualizationCode": "populationCoveredToday",
-              "queryType": "",
-              "filters": {},
-              "moduleLevel": "",
-              "aggregationFactors": null,
-              "requestDate": {
-                "startDate": startDate,
-                "endDate": endDate,
-                "interval": "day",
-                "title": "home"
-              }
-            },
-            "headers": {
-              "tenantId": DashboardSingleton().tenantId,
-            }
-          },
-          projectId: event.projectId,
-          isar: isar,
-        );
-        await dashboardRemoteRepo.searchAndWriteToDB(
-          apiEndPoint: DashboardSingleton().actionPath,
-          lastSelectedDate: event.selectedDate,
-          query: {
-            "aggregationRequestDto": {
-              "visualizationType": "METRIC",
-              "visualizationCode": "totalPopulationCovered",
-              "queryType": "",
-              "filters": {},
-              "moduleLevel": "",
-              "aggregationFactors": null,
-              "requestDate": {
-                "startDate": startDate,
-                "endDate": endDate,
-                "interval": "day",
-                "title": "home"
-              }
-            },
-            "headers": {
-              "tenantId": DashboardSingleton().tenantId,
-            }
-          },
-          projectId: event.projectId,
-          isar: isar,
-        );
-        await dashboardRemoteRepo.searchAndWriteToDB(
-          apiEndPoint: DashboardSingleton().actionPath,
-          lastSelectedDate: event.selectedDate,
-          query: {
-            "aggregationRequestDto": {
-              "visualizationType": "METRIC",
-              "visualizationCode": "todayDistributions",
-              "queryType": "",
-              "filters": {},
-              "moduleLevel": "",
-              "aggregationFactors": null,
-              "requestDate": {
-                "startDate": startDate,
-                "endDate": endDate,
-                "interval": "day",
-                "title": "home"
-              }
-            },
-            "headers": {
-              "tenantId": DashboardSingleton().tenantId,
-            }
-          },
-          projectId: event.projectId,
-          isar: isar,
-        );
-
-        add(DashboardEvent.handleSearch(selectedDate: event.selectedDate));
-      } catch (e) {
-        print(e);
-        emit(const DashboardErrorState());
-      }
-    } else if (!isConnected && event.syncFromServer) {
+    bool enableDashboard = DashboardSingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.enableDashboard ??
+        false;
+    Map<String, List<String>> dashboardConfig = DashboardSingleton()
+            .selectedProject
+            ?.additionalDetails
+            ?.dashboardConfig ??
+        {};
+    if (!enableDashboard || dashboardConfig.keys.isEmpty) {
       emit(const DashboardErrorState());
     } else {
-      add(const DashboardEvent.handleSearch());
+      final isConnected = await getIsConnected();
+      if (isConnected && event.syncFromServer) {
+        final startDate = DateTime(event.selectedDate.year,
+                event.selectedDate.month, event.selectedDate.day)
+            .toLocal()
+            .millisecondsSinceEpoch;
+        final endDate = DateTime(event.selectedDate.year,
+                event.selectedDate.month, event.selectedDate.day, 11, 59)
+            .toLocal()
+            .millisecondsSinceEpoch;
+
+        try {
+          await processDashboardConfig(
+            dashboardConfig,
+            startDate,
+            endDate,
+            isar,
+            event.selectedDate,
+            dashboardRemoteRepo,
+            DashboardSingleton().actionPath,
+            DashboardSingleton().tenantId,
+            DashboardSingleton().projectId,
+          );
+
+          add(DashboardEvent.handleSearch(selectedDate: event.selectedDate));
+        } catch (e) {
+          print(e);
+          emit(const DashboardErrorState());
+        }
+      } else if (!isConnected && event.syncFromServer) {
+        emit(const DashboardErrorState());
+      } else {
+        add(const DashboardEvent.handleSearch());
+      }
     }
   }
 
@@ -138,52 +88,120 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     DashboardEmitter emit,
   ) async {
     try {
-      final dashboardCharts = await isar.dashboardResponses.where().findAll();
-      final totalHouseSprayedChart = dashboardCharts
-          .where((d) =>
-              d.visualizationCode == 'populationCoveredToday' &&
-              d.chartType == 'metric')
-          .firstOrNull
-          ?.data
-          ?.firstOrNull;
-      final totalHousesSprayed = MetricWrapper(
-          // header: totalHouseSprayedChart?.headerName ?? '',
-          header: 'Total houses sprayed today',
-          value: totalHouseSprayedChart?.headerValue ?? '0',
-          insight: totalHouseSprayedChart?.insight);
-      final targetAchievementChart = dashboardCharts
-          .where((d) =>
-              d.visualizationCode == 'todayDistributions' &&
-              d.chartType == 'metric')
-          .firstOrNull
-          ?.data
-          ?.firstOrNull;
-      final targetAchievement = MetricWrapper(
-          header: '% of target achieved today',
-          // header: targetAchievementChart?.headerName ?? '',
-          value: targetAchievementChart?.headerValue ?? '0',
-          insight: targetAchievementChart?.insight);
-      final noOfBottlesChart = dashboardCharts
-          .where((d) =>
-              d.visualizationCode == 'totalPopulationCovered' &&
-              d.chartType == 'metric')
-          .firstOrNull
-          ?.data
-          ?.firstOrNull;
-      final noOfBottlesUsed = MetricWrapper(
-          header: 'No. of bottles used today',
-          // header: noOfBottlesChart?.headerName ?? '',
-          value: noOfBottlesChart?.headerValue ?? '0',
-          insight: noOfBottlesChart?.insight);
+      final metricCharts = await isar.dashboardResponses
+          .where()
+          .filter()
+          .chartTypeEqualTo('metric')
+          .findAll();
+      Map<String, MetricWrapper> metrics = {};
+      List<TableWrapper> tableWrapperList = [];
+      for (DashboardResponse chart in metricCharts) {
+        if ((chart.data ?? []).isNotEmpty) {
+          for (DashboardChartData data in (chart.data ?? [])) {
+            metrics.addAll({
+              data.headerName.toString(): MetricWrapper(
+                header: data.headerName ?? '',
+                value: data.headerValue ?? '0',
+                insight: data.insight,
+              ),
+            });
+          }
+        }
+      }
+      final tableCharts = await isar.dashboardResponses
+          .where()
+          .filter()
+          .chartTypeEqualTo('xtable')
+          .findAll();
+      for (DashboardResponse chart in tableCharts) {
+        if ((chart.data ?? []).isNotEmpty) {
+          // TotalDetails totalDetails = TotalDetails();
+          final List<TableHeader> tableHeaderList = chart.data?.first.plots
+                  ?.where((p) =>
+                      p.name != "S.N." &&
+                      p.name != "startDate" &&
+                      p.name != "endDate" &&
+                      p.name != null)
+                  .map((e) {
+                final headerData = transformToLocaleCode(e.name ?? '');
+                return TableHeader(
+                  headerData ?? '',
+                  cellKey: e.name,
+                );
+              }).toList() ??
+              [];
+
+          final tableDetails = chart.data?.map((e) {
+            final rowTableData = e.plots
+                ?.where((p) =>
+                    p.name != "S.N." &&
+                    p.name != "startDate" &&
+                    p.name != "endDate")
+                .mapIndexed(
+                  (i, plot) => TableData(
+                    plot.symbol == "number" || plot.symbol == "percentage"
+                        ? double.parse(plot.value.toString()) ==
+                                double.parse(plot.value.toString()).toInt()
+                            ? double.parse(plot.value.toString())
+                                .toInt()
+                                .toString()
+                            : double.parse(plot.value.toString())
+                                .toStringAsFixed(2)
+                        : plot.label.toString(),
+                    cellKey: plot.name,
+                    style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium
+                        ?.apply(
+                      color: i == 0
+                          ? const DigitColors().burningOrange
+                          : const DigitColors().woodsmokeBlack,
+                    ),
+                  ),
+                )
+                .toList();
+            return TableDataRow(rowTableData ?? []);
+          }).toList();
+          tableWrapperList.add(TableWrapper(
+            headerList: tableHeaderList,
+            tableData: tableDetails ?? [],
+          ));
+
+          // for (int i = 0; i < (chart.data ?? []).length; i++) {
+          //   totalDetails.noOfHousesVisited +=
+          //       int.parse(tableDetails?[i]['noOfHousesVisited'].toString());
+          //   totalDetails.noOfHousesSprayed +=
+          //       int.parse(chartData[i]['noOfHousesSprayed'].toString());
+          //   totalDetails.noOfHousesNotSprayed +=
+          //       (int.parse(chartData[i]['noOfHousesVisited'].toString()) -
+          //           int.parse(chartData[i]['noOfHousesSprayed'].toString()));
+          //   totalDetails.bottlesUsed +=
+          //       int.parse(chartData[i]['bottlesUsed'].toString());
+          //   totalDetails.noOfRemainingBottles +=
+          //       (int.parse(chartData[i]['totalBottles'].toString()) -
+          //           int.parse(chartData[i]['bottlesUsed'].toString()));
+          // }
+          //
+          // tableData.add(TableDataRow([
+          //   TableData('Total'),
+          //   TableData(
+          //     totalDetails.noOfHousesVisited.toString(),
+          //     style:
+          //         DigitTheme.instance.mobileTheme.textTheme.bodyMedium?.apply(
+          //       color: const DigitColors().darkSpringGreen,
+          //     ),
+          //   ),
+          //   TableData(totalDetails.noOfHousesSprayed.toString()),
+          //   TableData(totalDetails.noOfHousesNotSprayed.toString()),
+          //   TableData(totalDetails.bottlesUsed.toString()),
+          //   TableData(totalDetails.noOfRemainingBottles.toString()),
+          //   TableData(''),
+          // ]));
+        }
+      }
 
       emit(DashboardFetchedState(
-        metricData: {
-          totalHousesSprayed.header: totalHousesSprayed,
-          noOfBottlesUsed.header: noOfBottlesUsed,
-          targetAchievement.header: targetAchievement,
-        },
-        tableData: null,
-        selectedDate: dashboardCharts.first.lastSelectedDate ??
+        metricData: metrics,
+        tableData: tableWrapperList,
+        selectedDate: metricCharts.firstOrNull?.lastSelectedDate ??
             event.selectedDate ??
             DateTime.now(),
       ));
@@ -210,7 +228,7 @@ class DashboardState with _$DashboardState {
   const factory DashboardState.loading() = DashboardLoadingState;
   const factory DashboardState.fetched({
     Map<String, MetricWrapper>? metricData,
-    List<TableDataRow>? tableData,
+    List<TableWrapper>? tableData,
     DateTime? selectedDate,
   }) = DashboardFetchedState;
   const factory DashboardState.error() = DashboardErrorState;
@@ -225,5 +243,15 @@ class MetricWrapper {
     required this.header,
     required this.value,
     this.insight,
+  });
+}
+
+class TableWrapper {
+  final List<TableHeader> headerList;
+  final List<TableDataRow> tableData;
+
+  TableWrapper({
+    required this.headerList,
+    required this.tableData,
   });
 }

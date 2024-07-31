@@ -20,13 +20,25 @@ class DashboardRemoteRepository {
     required Isar isar,
   }) async {
     try {
-      final response = await _client.post(apiEndPoint, data: query);
+      final response = await _client.post(
+        apiEndPoint,
+        data: query,
+      );
 
       final dashboardResponse = DashboardResponseModelMapper.fromMap(
         json.decode(response.data)['responseData'],
       );
 
       if (dashboardResponse != null) {
+        await isar.writeTxn(() async {
+          await isar.dashboardResponses
+              .where()
+              .filter()
+              .projectIdEqualTo(projectId)
+              .visualizationCodeEqualTo(dashboardResponse.visualizationCode)
+              .chartTypeEqualTo(dashboardResponse.chartType)
+              .deleteAll();
+        });
         final data = dashboardResponse;
         final chart = DashboardResponse();
         chart.chartType = data.chartType;
@@ -37,14 +49,13 @@ class DashboardRemoteRepository {
         chart.drillDownChartId = data.drillDownChartId;
         chart.hideInsights = data.hideInsights;
         chart.showLabel = data.showLabel;
-        final chartData = DashboardChartData();
         final dataPlots = data.data?.map((c) {
-          final plot = DashboardPlot();
-          final insight = Insight();
+          final chartData = DashboardChartData();
           chartData.headerValue = c.headerValue;
           chartData.headerName = c.headerName;
           chartData.headerSymbol = c.headerSymbol;
           chartData.plots = c.plots?.map((p) {
+            final plot = DashboardPlot();
             plot.label = p.label;
             plot.strValue = p.strValue;
             plot.name = p.name;
@@ -52,6 +63,7 @@ class DashboardRemoteRepository {
             plot.symbol = p.symbol;
             return plot;
           }).toList();
+          final insight = Insight();
           insight.value = c.insight?.value;
           insight.name = c.insight?.name;
           insight.colorCode = c.insight?.colorCode;

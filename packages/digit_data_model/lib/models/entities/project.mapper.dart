@@ -818,16 +818,31 @@ class ProjectAdditionalDetailsMapper
       v.projectType;
   static const Field<ProjectAdditionalDetails, ProjectTypeModel>
       _f$projectType = Field('projectType', _$projectType, opt: true);
+  static bool? _$enableDashboard(ProjectAdditionalDetails v) =>
+      v.enableDashboard;
+  static const Field<ProjectAdditionalDetails, bool> _f$enableDashboard =
+      Field('enableDashboard', _$enableDashboard, opt: true, def: false);
+  static Map<String, List<String>>? _$dashboardConfig(
+          ProjectAdditionalDetails v) =>
+      v.dashboardConfig;
+  static const Field<ProjectAdditionalDetails, Map<String, List<String>>>
+      _f$dashboardConfig =
+      Field('dashboardConfig', _$dashboardConfig, opt: true);
 
   @override
   final MappableFields<ProjectAdditionalDetails> fields = const {
     #projectType: _f$projectType,
+    #enableDashboard: _f$enableDashboard,
+    #dashboardConfig: _f$dashboardConfig,
   };
   @override
   final bool ignoreNull = true;
 
   static ProjectAdditionalDetails _instantiate(DecodingData data) {
-    return ProjectAdditionalDetails(projectType: data.dec(_f$projectType));
+    return ProjectAdditionalDetails(
+        projectType: data.dec(_f$projectType),
+        enableDashboard: data.dec(_f$enableDashboard),
+        dashboardConfig: data.dec(_f$dashboardConfig));
   }
 
   @override
@@ -891,7 +906,12 @@ abstract class ProjectAdditionalDetailsCopyWith<
     $Out> implements ClassCopyWith<$R, $In, $Out> {
   ProjectTypeModelCopyWith<$R, ProjectTypeModel, ProjectTypeModel>?
       get projectType;
-  $R call({ProjectTypeModel? projectType});
+  MapCopyWith<$R, String, List<String>,
+      ObjectCopyWith<$R, List<String>, List<String>>>? get dashboardConfig;
+  $R call(
+      {ProjectTypeModel? projectType,
+      bool? enableDashboard,
+      Map<String, List<String>>? dashboardConfig});
   ProjectAdditionalDetailsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
 }
@@ -910,11 +930,29 @@ class _ProjectAdditionalDetailsCopyWithImpl<$R, $Out>
       get projectType =>
           $value.projectType?.copyWith.$chain((v) => call(projectType: v));
   @override
-  $R call({Object? projectType = $none}) => $apply(
-      FieldCopyWithData({if (projectType != $none) #projectType: projectType}));
+  MapCopyWith<$R, String, List<String>,
+          ObjectCopyWith<$R, List<String>, List<String>>>?
+      get dashboardConfig => $value.dashboardConfig != null
+          ? MapCopyWith(
+              $value.dashboardConfig!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(dashboardConfig: v))
+          : null;
+  @override
+  $R call(
+          {Object? projectType = $none,
+          Object? enableDashboard = $none,
+          Object? dashboardConfig = $none}) =>
+      $apply(FieldCopyWithData({
+        if (projectType != $none) #projectType: projectType,
+        if (enableDashboard != $none) #enableDashboard: enableDashboard,
+        if (dashboardConfig != $none) #dashboardConfig: dashboardConfig
+      }));
   @override
   ProjectAdditionalDetails $make(CopyWithData data) => ProjectAdditionalDetails(
-      projectType: data.get(#projectType, or: $value.projectType));
+      projectType: data.get(#projectType, or: $value.projectType),
+      enableDashboard: data.get(#enableDashboard, or: $value.enableDashboard),
+      dashboardConfig: data.get(#dashboardConfig, or: $value.dashboardConfig));
 
   @override
   ProjectAdditionalDetailsCopyWith<$R2, ProjectAdditionalDetails, $Out2>

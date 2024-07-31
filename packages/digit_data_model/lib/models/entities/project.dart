@@ -1,7 +1,6 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/project_type.dart';
 import 'package:drift/drift.dart';
 
 part 'project.mapper.dart';
@@ -179,8 +178,12 @@ class ProjectAdditionalFields extends AdditionalFields
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectAdditionalDetails with ProjectAdditionalDetailsMappable {
   final ProjectTypeModel? projectType;
+  final bool? enableDashboard;
+  final Map<String, List<String>>? dashboardConfig;
 
   ProjectAdditionalDetails({
     this.projectType,
+    this.enableDashboard = false,
+    this.dashboardConfig,
   }) : super();
 }
