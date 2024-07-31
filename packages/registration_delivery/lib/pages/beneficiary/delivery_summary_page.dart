@@ -341,15 +341,18 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               Status.delivered.toValue()
                                       ? variants
                                               ?.map((e) =>
-                                                  '${localizations.translate(e.productName)} : ${e.quantityDelivered}')
+                                                  '${getLocalizedMessage(e.productName)} : ${e.quantityDelivered}')
                                               .toList()
                                               .join('\n') ??
                                           localizations.translate(
                                               i18.common.coreCommonNA)
-                                      : localizations.translate(deliverState
+                                      : getLocalizedMessage(deliverState
                                               .oldTask?.additionalFields?.fields
                                               .where((d) =>
-                                                  d.key == AdditionalFieldsType.reasonOfRefusal.toValue())
+                                                  d.key ==
+                                                  AdditionalFieldsType
+                                                      .reasonOfRefusal
+                                                      .toValue())
                                               .firstOrNull
                                               ?.value ??
                                           i18.common.coreCommonNA),
