@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
-import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import '../../models/entities/household.dart';

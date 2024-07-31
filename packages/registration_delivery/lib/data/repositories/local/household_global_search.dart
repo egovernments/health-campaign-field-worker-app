@@ -21,10 +21,12 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   @override
   DataModelType get type => throw UnimplementedError();
 
+  // Function to perform global search for households
   houseHoldGlobalSearch(GlobalSearchParameters params) async {
     dynamic selectQuery;
     late int? count = params.totalCount == 0 ? 0 : params.totalCount;
 
+    // Check if the filter contains status for registered or not registered
     if (params.filter!.contains(Status.registered.name) ||
         params.filter!.contains(Status.notRegistered.name)) {
       var proximitySelectQuery =
@@ -35,6 +37,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
 
       var filterSelectQuery = nameSelectQuery;
 
+      // Apply filters if present
       if (params.filter != null && params.filter!.isNotEmpty) {
         for (var filter in params.filter!) {
           filterSelectQuery =
@@ -44,9 +47,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         filterSelectQuery = nameSelectQuery;
       }
 
+      // Return empty list if no results found
       if (filterSelectQuery == null) {
         return [];
       } else {
+        // Get total count if offset is zero and filters are applied
         if (params.offset == 0 &&
             params.filter != null &&
             params.filter!.isNotEmpty) {
@@ -69,6 +74,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
 
       var filterSelectQuery = nameSelectQuery;
 
+      // Apply filters if present
       if (params.filter != null && params.filter!.isNotEmpty) {
         for (var filter in params.filter!) {
           filterSelectQuery =
@@ -78,6 +84,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         filterSelectQuery = nameSelectQuery;
       }
 
+      // Return empty list if no results found
       if (filterSelectQuery == null) {
         return [];
       } else {
@@ -137,9 +144,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       var nameSelectQuery =
           await nameSearch(proximitySelectQuery, params, super.sql);
 
+      // Return empty list if no results found
       if (nameSelectQuery == null) {
         return [];
       } else {
+        // Get total count if offset is zero and filters are applied
         if (params.offset == 0 &&
             params.filter != null &&
             params.filter!.isNotEmpty) {
@@ -155,6 +164,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     }
   }
 
+  // Function to perform proximity search based on provided parameters
   proximitySearch(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     if (!params.isProximityEnabled) {
@@ -199,6 +209,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     }
   }
 
+  // Function to perform name search based on provided parameters
   nameSearch(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) async {
     if (params.nameSearch == null || params.nameSearch!.isEmpty) {
@@ -239,6 +250,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     return selectQuery;
   }
 
+  // Function to search by name based on provided parameters
   searchByName(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
     return selectQuery.where(sql.name.givenName.contains(
@@ -441,22 +453,9 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     return {'total_count': totalCount, 'data': data};
   }
 
+  // Executing custom select query on top of filterSelectQuery to get count
   _getTotalCount(filterSelectQuery, GlobalSearchParameters params,
       LocalSqlDataStore sql) async {
-    final statusMap = {
-      Status.delivered.name: Status.delivered,
-      Status.notDelivered.name: Status.notDelivered,
-      Status.visited.name: Status.visited,
-      Status.notVisited.name: Status.notVisited,
-      Status.beneficiaryRefused.name: Status.beneficiaryRefused,
-      Status.beneficiaryReferred.name: Status.beneficiaryReferred,
-      Status.administeredSuccess.name: Status.administeredSuccess,
-      Status.administeredFailed.name: Status.administeredFailed,
-      Status.inComplete.name: Status.inComplete,
-      Status.toAdminister.name: Status.toAdminister,
-      Status.closeHousehold.name: Status.closeHousehold,
-    };
-
     JoinedSelectStatement selectQuery = filterSelectQuery;
     var query =
         selectQuery.constructQuery().buffer.toString().replaceAll(';', '');
