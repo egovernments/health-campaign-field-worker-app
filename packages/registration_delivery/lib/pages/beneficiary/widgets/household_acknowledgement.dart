@@ -34,6 +34,8 @@ class HouseholdAcknowledgementPageState
           builder: (context, householdState) {
             return DigitAcknowledgement.success(
               action: () {
+                context
+                    .read<SearchHouseholdsBloc>().add(const SearchHouseholdsEvent.clear());
                 final parent = context.router.parent() as StackRouter;
                 // Pop twice to navigate back to the previous screen
                 parent.popUntilRoot();

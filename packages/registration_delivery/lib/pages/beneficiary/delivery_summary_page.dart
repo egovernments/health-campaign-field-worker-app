@@ -315,13 +315,16 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 LabelValuePair(
                                   label: localizations.translate(deliverState
                                               .oldTask?.status ==
-                                          Status.administeredFailed.toValue()
+                                          Status.administeredFailed.toValue() || deliverState
+                                      .oldTask?.status ==
+                                      Status.beneficiaryRefused.toValue()
                                       ? i18.deliverIntervention
                                           .reasonForRefusalLabel
                                       : i18.deliverIntervention
                                           .typeOfInsecticideUsed),
                                   value: deliverState.oldTask?.status ==
-                                          Status.administeredFailed.toValue()
+                                          Status.administeredFailed.toValue() || deliverState.oldTask?.status ==
+                                      Status.beneficiaryRefused.toValue()
                                       ? getLocalizedMessage(
                                       deliverState.oldTask?.additionalFields?.fields
                                           .where(
