@@ -106,7 +106,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
 
                           // Determine the status based on the reason of refusal
                           String status;
-                          if (reasonOfRefusal =='REFUSED') {
+                          if (reasonOfRefusal ==Status.beneficiaryRefused.toValue()) {
                             status = Status.beneficiaryRefused.toValue();
                           } else {
                             status = Status.administeredFailed.toValue();
@@ -258,7 +258,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                       },
                                       valueMapper: (value) {
                                         return localizations
-                                            .translate(value.toString());
+                                            .translate('REASON_${value.toString()}');
                                       },
                                       errorMessage: form
                                                   .control(_reasonOfRefusal)
