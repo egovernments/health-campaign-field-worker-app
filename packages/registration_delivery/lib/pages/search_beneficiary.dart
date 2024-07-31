@@ -333,10 +333,11 @@ class _SearchBeneficiaryPageState
                                   const DigitScannerEvent.handleScanner(),
                                 );
 
-                                if (i.tasks != null &&
-                                    i.tasks!.last.status ==
-                                        Status.closeHousehold.name &&
-                                    i.tasks!.isNotEmpty) {
+                                if ((i.tasks != null &&
+                                        i.tasks?.last.status ==
+                                            Status.closeHousehold.toValue() &&
+                                        (i.tasks ?? []).isNotEmpty) ||
+                                    (i.projectBeneficiaries ?? []).isEmpty) {
                                   setState(() {
                                     selectedFilters = [];
                                   });
@@ -349,7 +350,10 @@ class _SearchBeneficiaryPageState
                                         individualModel: i.members!,
                                         registrationDate: DateTime.now(),
                                         projectBeneficiaryModel:
-                                            i.projectBeneficiaries!.last,
+                                            (i.projectBeneficiaries ?? [])
+                                                    .isNotEmpty
+                                                ? i.projectBeneficiaries?.last
+                                                : null,
                                         addressModel:
                                             i.headOfHousehold!.address!.last,
                                       ),

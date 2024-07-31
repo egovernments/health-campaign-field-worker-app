@@ -86,9 +86,12 @@ class _HouseholdOverviewPageState
                                 )
                               : DigitElevatedButton(
                                   onPressed: (state.householdMemberWrapper
-                                                  .projectBeneficiaries ??
-                                              [])
-                                          .isEmpty || deliverInterventionState.tasks?.last.status == Status.closeHousehold.toValue()
+                                                      .projectBeneficiaries ??
+                                                  [])
+                                              .isEmpty ||
+                                          deliverInterventionState
+                                                  .tasks?.last.status ==
+                                              Status.closeHousehold.toValue()
                                       ? null
                                       : () async {
                                           final bloc =
@@ -281,11 +284,12 @@ class _HouseholdOverviewPageState
                                                   .householdOverView
                                                   .householdOverViewHouseholdHeadNameLabel):
                                               state
-                                                  .householdMemberWrapper
-                                                  .headOfHousehold
-                                                  ?.name
-                                                  ?.givenName ?? localizations.translate(
-                                                  i18.common.coreCommonNA),
+                                                      .householdMemberWrapper
+                                                      .headOfHousehold
+                                                      ?.name
+                                                      ?.givenName ??
+                                                  localizations.translate(
+                                                      i18.common.coreCommonNA),
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
@@ -306,72 +310,6 @@ class _HouseholdOverviewPageState
                                           )
                                         },
                                       ),
-                                      if ((state.householdMemberWrapper
-                                                  .projectBeneficiaries ??
-                                              [])
-                                          .isEmpty)
-                                        DigitElevatedButton(
-                                            onPressed: () async {
-                                              HouseholdMemberWrapper wrapper =
-                                                  state.householdMemberWrapper;
-
-                                              final timestamp = wrapper
-                                                  .headOfHousehold
-                                                  ?.clientAuditDetails
-                                                  ?.createdTime;
-                                              final date = DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                timestamp ??
-                                                    DateTime.now()
-                                                        .millisecondsSinceEpoch,
-                                              );
-
-                                              final address =
-                                                  wrapper.household?.address;
-
-                                              if (address == null) return;
-
-                                              final projectBeneficiary = state
-                                                  .householdMemberWrapper
-                                                  .projectBeneficiaries
-                                                  ?.firstWhereOrNull(
-                                                (element) =>
-                                                    element
-                                                        .beneficiaryClientReferenceId ==
-                                                    wrapper.household
-                                                        ?.clientReferenceId,
-                                              );
-
-                                              await context.router.root.push(
-                                                BeneficiaryRegistrationWrapperRoute(
-                                                  initialState:
-                                                      BeneficiaryRegistrationEditHouseholdState(
-                                                    addressModel: address,
-                                                    individualModel: state
-                                                            .householdMemberWrapper
-                                                            .members ??
-                                                        [],
-                                                    householdModel: state
-                                                        .householdMemberWrapper
-                                                        .household!,
-                                                    registrationDate: date,
-                                                    projectBeneficiaryModel:
-                                                        projectBeneficiary,
-                                                  ),
-                                                  children: [
-                                                    HouseholdLocationRoute(),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                            child: Center(
-                                              child: Text(
-                                                localizations.translate(
-                                                  i18.householdOverView
-                                                      .householdOverViewEditIconText,
-                                                ),
-                                              ),
-                                            ))
                                     ],
                                   );
                                 }),
@@ -646,23 +584,23 @@ class _HouseholdOverviewPageState
                                           : false,
                                       name: e.name?.givenName ?? ' - - ',
                                       years: (e.dateOfBirth == null
-                                              ? null
-                                              : DigitDateUtils.calculateAge(
-                                                  DigitDateUtils
-                                                          .getFormattedDateToDateTime(
-                                                        e.dateOfBirth!,
-                                                      ) ??
-                                                      DateTime.now(),
-                                                ).years),
+                                          ? null
+                                          : DigitDateUtils.calculateAge(
+                                              DigitDateUtils
+                                                      .getFormattedDateToDateTime(
+                                                    e.dateOfBirth!,
+                                                  ) ??
+                                                  DateTime.now(),
+                                            ).years),
                                       months: (e.dateOfBirth == null
-                                              ? null
-                                              : DigitDateUtils.calculateAge(
-                                                  DigitDateUtils
-                                                          .getFormattedDateToDateTime(
-                                                        e.dateOfBirth!,
-                                                      ) ??
-                                                      DateTime.now(),
-                                                ).months),
+                                          ? null
+                                          : DigitDateUtils.calculateAge(
+                                              DigitDateUtils
+                                                      .getFormattedDateToDateTime(
+                                                    e.dateOfBirth!,
+                                                  ) ??
+                                                  DateTime.now(),
+                                            ).months),
                                       gender: e.gender?.name,
                                       isBeneficiaryRefused:
                                           isBeneficiaryRefused &&
