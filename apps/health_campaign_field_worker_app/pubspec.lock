@@ -497,9 +497,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: c708c6474b7a67e3cdedcbb82265c201e61390360109344ebedfa2cc1ded0440
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3-dev.2"
   digit_firebase_services:
     dependency: "direct main"
@@ -511,16 +512,18 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: bc172291df5ffe720e3d471fbc5c542086b8efecbdb6e25ee737381cc47c8e05
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3-dev.1"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   dio:
     dependency: "direct main"
@@ -1104,10 +1107,11 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
-    version: "1.0.3-dev.1"
+      name: inventory_management
+      sha256: "2be2d09552432266bef3c11f2cd6d12ce83f39339c925d350aeda764c2acfef9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   io:
     dependency: transitive
     description:
