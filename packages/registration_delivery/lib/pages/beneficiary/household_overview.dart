@@ -75,15 +75,18 @@ class _HouseholdOverviewPageState
                               kPadding, 0, kPadding, 0),
                           child: deliverInterventionState.tasks?.last.status ==
                                   Status.administeredSuccess.toValue()
-                              ? DigitOutLineButton(
-                                  label: localizations.translate(
-                                    i18.memberCard.deliverDetailsUpdateLabel,
+                              ? Padding(
+                                padding: const EdgeInsets.symmetric(vertical: kPadding),
+                                child: DigitOutLineButton(
+                                    label: localizations.translate(
+                                      i18.memberCard.deliverDetailsUpdateLabel,
+                                    ),
+                                    onPressed: () async {
+                                      await context.router
+                                          .push(BeneficiaryChecklistRoute());
+                                    },
                                   ),
-                                  onPressed: () async {
-                                    await context.router
-                                        .push(BeneficiaryChecklistRoute());
-                                  },
-                                )
+                              )
                               : DigitElevatedButton(
                                   onPressed: (state.householdMemberWrapper
                                                       .projectBeneficiaries ??
