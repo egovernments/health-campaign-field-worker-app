@@ -219,7 +219,7 @@ class _SearchBeneficiaryPageState
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            '(${searchHouseholdsState.householdMembers.length})',
+                                                            ' (${searchHouseholdsState.householdMembers.length}-${searchHouseholdsState.totalResults})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),

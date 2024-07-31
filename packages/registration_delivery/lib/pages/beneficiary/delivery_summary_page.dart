@@ -136,7 +136,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
 
                                     Future.delayed(
                                       const Duration(
-                                        milliseconds: 1000,
+                                        milliseconds: 0,
                                       ),
                                       () {
                                         reloadState.add(

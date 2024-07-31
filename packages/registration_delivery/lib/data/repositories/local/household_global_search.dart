@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 
 import '../../../models/entities/household.dart';
@@ -21,10 +22,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   DataModelType get type => throw UnimplementedError();
 
   houseHoldGlobalSearch(GlobalSearchParameters params) async {
+    dynamic selectQuery;
+    late int? count = params.totalCount == 0 ? 0 : params.totalCount;
+
     if (params.filter!.contains(Status.registered.name) ||
         params.filter!.contains(Status.notRegistered.name)) {
-      dynamic selectQuery;
-
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
@@ -45,16 +47,20 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (filterSelectQuery == null) {
         return [];
       } else {
+        if (params.offset == 0 &&
+            params.filter != null &&
+            params.filter!.isNotEmpty) {
+          count = await _getTotalCount(filterSelectQuery, params, super.sql);
+        }
+
         await filterSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
         final results = await filterSelectQuery.get();
 
-        return _returnHouseHoldModel(results);
+        return _returnHouseHoldModel(results, count);
       }
     } else if (params.filter!.isNotEmpty && params.filter != null) {
-      dynamic selectQuery;
-
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
@@ -75,14 +81,18 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (filterSelectQuery == null) {
         return [];
       } else {
+        if (params.offset == 0 &&
+            params.filter != null &&
+            params.filter!.isNotEmpty) {
+          count = await _getTotalCount(filterSelectQuery, params, super.sql);
+        }
         await filterSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
         final results = await filterSelectQuery.get();
-
-        return results
+        var data = results
             .map((e) {
-              final task = e.readTable(sql.task);
+              final task = e.readTableOrNull(sql.task);
               final resources = e.readTableOrNull(sql.taskResource);
 
               return TaskModel(
@@ -117,10 +127,10 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             })
             .where((element) => element.isDeleted != true)
             .toList();
+
+        return {"data": data, "total_count": count};
       }
     } else {
-      dynamic selectQuery;
-
       var proximitySelectQuery =
           await proximitySearch(selectQuery, params, super.sql);
 
@@ -130,12 +140,17 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (nameSelectQuery == null) {
         return [];
       } else {
+        if (params.offset == 0 &&
+            params.filter != null &&
+            params.filter!.isNotEmpty) {
+          count = await _getTotalCount(nameSelectQuery, params, super.sql);
+        }
         await nameSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
 
         final results = await nameSelectQuery.get();
 
-        return _returnHouseHoldModel(results);
+        return _returnHouseHoldModel(results, count);
       }
     }
   }
@@ -147,8 +162,39 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     } else if (params.isProximityEnabled) {
       selectQuery = super.sql.address.select().join([
         joinHouseHoldAddress(sql),
-      ]);
-      performProximitySearch(selectQuery, params, sql);
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.household.clientReferenceId))
+      ])
+        ..where(buildAnd([
+          sql.address.relatedClientReferenceId.isNotNull(),
+          sql.household.clientReferenceId.isNotNull(),
+          CustomExpression<bool>('''
+              (6371393 * acos(
+                  cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
+                  * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
+                  + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
+              )) <= ${params.maxRadius!}
+            '''),
+          sql.address.longitude.isNotNull(),
+          sql.address.latitude.isNotNull(),
+        ]))
+        ..orderBy([
+          if (params.latitude != null &&
+              params.longitude != null &&
+              params.maxRadius != null)
+            OrderingTerm(
+              expression: CustomExpression<double>('''
+                (6371393 * acos(
+                    cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
+                    * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
+                    + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
+                ))
+              '''),
+              mode: OrderingMode.asc,
+            ),
+        ]);
       return selectQuery;
     }
   }
@@ -176,7 +222,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         leftOuterJoin(
             sql.household,
             sql.household.clientReferenceId
-                .equalsExp(sql.householdMember.householdClientReferenceId))
+                .equalsExp(sql.householdMember.householdClientReferenceId)),
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.household.clientReferenceId))
       ]);
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
@@ -189,55 +239,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     return selectQuery;
   }
 
-  performProximitySearch(
-      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
-    return (selectQuery
-          ..where(buildAnd([
-            sql.address.relatedClientReferenceId.isNotNull(),
-            sql.household.clientReferenceId.isNotNull(),
-            if (params.latitude != null &&
-                params.longitude != null &&
-                params.maxRadius != null)
-              CustomExpression<bool>('''
-              (6371393 * acos(
-                  cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
-                  * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
-                  + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
-              )) <= ${params.maxRadius!}
-            '''),
-            if (params.latitude != null &&
-                params.longitude != null &&
-                params.maxRadius != null)
-              sql.address.longitude.isNotNull(),
-            sql.address.latitude.isNotNull(),
-          ])))
-        .orderBy([
-      if (params.latitude != null &&
-          params.longitude != null &&
-          params.maxRadius != null)
-        OrderingTerm(
-          expression: CustomExpression<double>('''
-                (6371393 * acos(
-                    cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
-                    * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
-                    + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
-                ))
-              '''),
-          mode: OrderingMode.asc,
-        ),
-    ]);
-  }
-
   searchByName(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
-    return selectQuery.where(buildAnd([
-      if (params.nameSearch != null)
-        buildOr([
-          sql.name.givenName.contains(
-            params.nameSearch!,
-          ),
-        ]),
-    ]));
+    return selectQuery.where(sql.name.givenName.contains(
+      params.nameSearch!,
+    ));
   }
 
   filterSearch(selectQuery, GlobalSearchParameters params, String filter,
@@ -246,11 +252,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     if (selectQuery == null) {
       if (filter == Status.registered.name ||
           filter == Status.notRegistered.name) {
-        selectQuery = super.sql.household.select().join([
+        selectQuery = sql.household.select().join([
           leftOuterJoin(
               sql.projectBeneficiary,
               sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId))
+                  .equalsExp(sql.household.clientReferenceId))
         ])
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
@@ -266,18 +272,14 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         selectQuery = selectQuery.join([
           leftOuterJoin(
               sql.projectBeneficiary,
-              filter == Status.registered.name
-                  ? sql.projectBeneficiary.beneficiaryClientReferenceId
-                      .equalsExp(super.sql.household.clientReferenceId)
-                  : sql.projectBeneficiary.beneficiaryClientReferenceId
-                      .equalsExp(super.sql.household.clientReferenceId))
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(super.sql.household.clientReferenceId))
         ])
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       } else {
         var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
-
         selectQuery = filterSearchQuery;
       }
     }
@@ -299,11 +301,20 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       Status.closeHousehold.name: Status.closeHousehold,
     };
     var applyFilter = filter;
-    selectQuery = sql.select(sql.task).join([]);
-
-    selectQuery.where(sql.task.status.equals(
-      statusMap[applyFilter]!.toValue(),
-    ));
+    if (selectQuery == null) {
+      selectQuery = sql.select(sql.task).join([])
+        ..where(sql.task.status.equals(
+          statusMap[applyFilter]!.toValue(),
+        ));
+    } else {
+      selectQuery = selectQuery.join([
+        leftOuterJoin(
+            sql.task,
+            sql.task.projectBeneficiaryClientReferenceId
+                .equalsExp(sql.projectBeneficiary.clientReferenceId))
+      ])
+        ..where(sql.task.status.equals(statusMap[filter]!.toValue()));
+    }
 
     return selectQuery;
   }
@@ -344,13 +355,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     );
   }
 
-  joinProjectBeneficiary(LocalSqlDataStore sql) {
-    return leftOuterJoin(sql.projectBeneficiary,
-        sql.projectBeneficiary.clientReferenceId.isNotNull());
-  }
-
-  _returnHouseHoldModel(results) {
-    return results
+  _returnHouseHoldModel(results, totalCount) {
+    var data = results
         .map((e) {
           final household = e.readTable(sql.household);
           final address = e.readTableOrNull(sql.address);
@@ -431,5 +437,44 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         })
         .where((element) => element.isDeleted != true)
         .toList();
+
+    return {'total_count': totalCount, 'data': data};
+  }
+
+  _getTotalCount(filterSelectQuery, GlobalSearchParameters params,
+      LocalSqlDataStore sql) async {
+    final statusMap = {
+      Status.delivered.name: Status.delivered,
+      Status.notDelivered.name: Status.notDelivered,
+      Status.visited.name: Status.visited,
+      Status.notVisited.name: Status.notVisited,
+      Status.beneficiaryRefused.name: Status.beneficiaryRefused,
+      Status.beneficiaryReferred.name: Status.beneficiaryReferred,
+      Status.administeredSuccess.name: Status.administeredSuccess,
+      Status.administeredFailed.name: Status.administeredFailed,
+      Status.inComplete.name: Status.inComplete,
+      Status.toAdminister.name: Status.toAdminister,
+      Status.closeHousehold.name: Status.closeHousehold,
+    };
+
+    JoinedSelectStatement selectQuery = filterSelectQuery;
+    var query =
+        selectQuery.constructQuery().buffer.toString().replaceAll(';', '');
+    var variables = selectQuery.constructQuery().introducedVariables;
+    var indexesLength = selectQuery.constructQuery().variableIndices;
+
+    var totalCount;
+
+    try {
+      totalCount = await sql
+          .customSelect('SELECT COUNT(*) AS total_count FROM ($query)',
+              variables: indexesLength.isNotEmpty
+                  ? variables.map((e) => Variable(e.value)).toList()
+                  : [])
+          .get();
+    } catch (e) {
+      debugPrint('error in total $e');
+    }
+    return totalCount == null ? 0 : totalCount.first.data['total_count'];
   }
 }

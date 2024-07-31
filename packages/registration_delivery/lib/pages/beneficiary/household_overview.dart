@@ -89,12 +89,9 @@ class _HouseholdOverviewPageState
                               )
                               : DigitElevatedButton(
                                   onPressed: (state.householdMemberWrapper
-                                                      .projectBeneficiaries ??
-                                                  [])
-                                              .isEmpty ||
-                                          deliverInterventionState
-                                                  .tasks?.last.status ==
-                                              Status.closeHousehold.toValue()
+                                                  .projectBeneficiaries ??
+                                              [])
+                                          .isEmpty || deliverInterventionState.tasks?.last.status == Status.closeHousehold.toValue()
                                       ? null
                                       : () async {
                                           final bloc =
