@@ -162,6 +162,10 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     } else if (params.isProximityEnabled) {
       selectQuery = super.sql.address.select().join([
         joinHouseHoldAddress(sql),
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.beneficiaryClientReferenceId
+                .equalsExp(sql.household.clientReferenceId))
       ])
         ..where(buildAnd([
           sql.address.relatedClientReferenceId.isNotNull(),
@@ -307,7 +311,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         leftOuterJoin(
             sql.task,
             sql.task.projectBeneficiaryClientReferenceId
-                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId))
+                .equalsExp(sql.projectBeneficiary.clientReferenceId))
       ])
         ..where(sql.task.status.equals(statusMap[filter]!.toValue()));
     }
