@@ -1,19 +1,24 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ui';
 
+import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
+import 'package:drift/drift.dart';
 import 'package:isar/isar.dart';
 
 import '../../../models/localization/localization_model.dart';
+import '../../../utils/utils.dart';
 import '../../local_store/no_sql/schema/localization.dart';
 
 class LocalizationRepository {
   final Dio _client;
-  final Isar _isar;
+  final LocalSqlDataStore _sql;
 
   const LocalizationRepository(
     this._client,
-    this._isar,
+    this._sql,
   );
 
   Future<LocalizationModel> search({
@@ -42,11 +47,25 @@ class LocalizationRepository {
     required String module,
     required String tenantId,
   }) async {
-    final List<LocalizationWrapper> localizationList = await _isar
-        .localizationWrappers
-        .filter()
-        .localeEqualTo(locale)
-        .findAll();
+    List<Localization> localizationList = [];
+
+    final query = _sql.select(_sql.localization).join([])
+      ..where(
+        buildAnd([
+          _sql.localization.locale.equals(locale),
+        ]),
+      );
+
+    final results = await query.get();
+
+    localizationList = results.map((e) {
+      final data = e.readTable(_sql.localization);
+      return Localization()
+        ..code = data.code
+        ..locale = data.locale
+        ..module = data.module
+        ..message = data.message;
+    }).toList();
 
     if (localizationList.isEmpty) {
       final result = await search(
@@ -57,22 +76,17 @@ class LocalizationRepository {
           "tenantId": tenantId,
         },
       );
-
-      final List<Localization> newLocalizationList = result.messages
-          .map((e) => Localization()
-            ..message = e.message
-            ..code = e.code
-            ..locale = e.locale
-            ..module = e.module)
-          .toList();
-
-      final localizationWrapper = LocalizationWrapper()
-        ..locale = locale
-        ..localization = newLocalizationList;
-
-      await _isar.writeTxn(() async {
-        await _isar.localizationWrappers.put(localizationWrapper);
-        // insert & update
+      await _sql.batch((batch) {
+        batch.insertAll(
+            _sql.localization,
+            result.messages
+                .map((e) => LocalizationCompanion(
+                      code: Value(e.code),
+                      locale: Value(e.locale),
+                      message: Value(e.message),
+                      module: Value(e.module),
+                    ))
+                .toList());
       });
     }
   }

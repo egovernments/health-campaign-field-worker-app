@@ -1,6 +1,7 @@
 // Importing necessary packages and files.
 import 'dart:io';
 
+import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -98,6 +99,7 @@ part 'sql_store.g.dart';
   TaskResource,
   SideEffect,
   Referral,
+  Localization
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// The constructor for `LocalSqlDataStore`.

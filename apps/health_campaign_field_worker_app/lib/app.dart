@@ -169,35 +169,29 @@ class MainApplicationState extends State<MainApplication>
                           create: (localizationModulesList != null &&
                                   firstLanguage != null)
                               ? (context) => LocalizationBloc(
-                                    const LocalizationState(),
-                                    LocalizationRepository(
-                                      widget.client,
-                                      widget.isar,
-                                    ),
-                                    widget.isar,
-                                  )..add(
-                                      LocalizationEvent.onLoadLocalization(
-                                        module: localizationModulesList
-                                            .interfaces
-                                            .where((element) =>
-                                                element.type ==
-                                                Modules.localizationModule)
-                                            .map((e) => e.name.toString())
-                                            .join(',')
-                                            .toString(),
-                                        tenantId: appConfig.tenantId.toString(),
-                                        locale: firstLanguage,
-                                        path: Constants.localizationApiPath,
-                                      ),
-                                    )
-                              : (context) => LocalizationBloc(
-                                    const LocalizationState(),
-                                    LocalizationRepository(
-                                      widget.client,
-                                      widget.isar,
-                                    ),
-                                    widget.isar,
+                                  const LocalizationState(),
+                                  LocalizationRepository(
+                                      widget.client, widget.sql),
+                                  widget.sql)
+                                ..add(
+                                  LocalizationEvent.onLoadLocalization(
+                                    module: localizationModulesList.interfaces
+                                        .where((element) =>
+                                            element.type ==
+                                            Modules.localizationModule)
+                                        .map((e) => e.name.toString())
+                                        .join(',')
+                                        .toString(),
+                                    tenantId: appConfig.tenantId.toString(),
+                                    locale: firstLanguage,
+                                    path: Constants.localizationApiPath,
                                   ),
+                                )
+                              : (context) => LocalizationBloc(
+                                  const LocalizationState(),
+                                  LocalizationRepository(
+                                      widget.client, widget.sql),
+                                  widget.sql),
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
@@ -365,9 +359,12 @@ class MainApplicationState extends State<MainApplication>
                                   })
                                 : [firstLanguage],
                             localizationsDelegates: getAppLocalizationDelegates(
-                              isar: widget.isar,
+                              sql: widget.sql,
                               appConfig: appConfig,
-                              selectedLocale: selectedLocale,
+                              selectedLocale: Locale(
+                                selectedLocale!.split("_").first,
+                                selectedLocale.split("_").last,
+                              ),
                             ),
                             locale: languages != null
                                 ? Locale(

@@ -13,6 +13,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
+import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -441,4 +442,35 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+FutureOr<List<Localization>> returnLocalizationFromSQL(
+    LocalSqlDataStore sql, LocalizationParams params) async {
+  final selectQuery = sql.select(sql.localization).join([])
+    ..where(buildAnd([
+      if (params.module != null)
+        sql.localization.module.contains(params.module!),
+      sql.localization.locale.equals('${params.locale}'),
+      if (params.code != null) sql.localization.code.equals(params.code!),
+    ]));
+
+  final result = await selectQuery.get();
+
+  return result.map((e) {
+    var data = e.readTableOrNull(sql.localization);
+
+    return Localization()
+      ..code = data!.code
+      ..locale = data.locale
+      ..module = data.module
+      ..message = data.message;
+  }).toList();
+}
+
+class LocalizationParams {
+  final String? code;
+  final String? module;
+  final Locale locale;
+
+  LocalizationParams({this.code, this.module, required this.locale});
 }
