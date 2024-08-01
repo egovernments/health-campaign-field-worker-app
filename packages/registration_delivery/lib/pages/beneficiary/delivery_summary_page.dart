@@ -134,30 +134,20 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                     final reloadState =
                                         context.read<HouseholdOverviewBloc>();
 
-                                    Future.delayed(
-                                      const Duration(
-                                        milliseconds: 0,
+                                    reloadState.add(
+                                      HouseholdOverviewReloadEvent(
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId!,
+                                        projectBeneficiaryType:
+                                            RegistrationDeliverySingleton()
+                                                .beneficiaryType!,
                                       ),
-                                      () {
-                                        reloadState.add(
-                                          HouseholdOverviewReloadEvent(
-                                            projectId:
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!,
-                                            projectBeneficiaryType:
-                                                RegistrationDeliverySingleton()
-                                                    .beneficiaryType!,
-                                          ),
-                                        );
-                                      },
-                                    ).then(
-                                      (value) {
-                                        context.router.popAndPush(
-                                          HouseholdAcknowledgementRoute(
-                                            enableViewHousehold: true,
-                                          ),
-                                        );
-                                      },
+                                    );
+                                    context.router.popAndPush(
+                                      HouseholdAcknowledgementRoute(
+                                        enableViewHousehold: true,
+                                      ),
                                     );
                                   }
                                 }
@@ -313,34 +303,44 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                               withDivider: true,
                               items: [
                                 LabelValuePair(
-                                  label: localizations.translate(deliverState
-                                              .oldTask?.status ==
-                                          Status.administeredFailed.toValue() || deliverState
-                                      .oldTask?.status ==
-                                      Status.beneficiaryRefused.toValue()
-                                      ? i18.deliverIntervention
-                                          .reasonForRefusalLabel
-                                      : i18.deliverIntervention
-                                          .typeOfInsecticideUsed),
+                                  label: localizations.translate(
+                                      deliverState.oldTask?.status ==
+                                                  Status.administeredFailed
+                                                      .toValue() ||
+                                              deliverState.oldTask?.status ==
+                                                  Status.beneficiaryRefused
+                                                      .toValue()
+                                          ? i18.deliverIntervention
+                                              .reasonForRefusalLabel
+                                          : i18.deliverIntervention
+                                              .typeOfInsecticideUsed),
                                   value: deliverState.oldTask?.status ==
-                                          Status.administeredFailed.toValue() || deliverState.oldTask?.status ==
-                                      Status.beneficiaryRefused.toValue()
-                                      ? getLocalizedMessage(
-                                      deliverState.oldTask?.additionalFields?.fields
-                                          .where(
-                                            (d) => d.key == AdditionalFieldsType.reasonOfRefusal.toValue(),
-                                      )
-                                          .firstOrNull
-                                          ?.value ?? i18.common.coreCommonNA)
+                                              Status.administeredFailed
+                                                  .toValue() ||
+                                          deliverState.oldTask?.status ==
+                                              Status.beneficiaryRefused
+                                                  .toValue()
+                                      ? getLocalizedMessage(deliverState
+                                              .oldTask?.additionalFields?.fields
+                                              .where(
+                                                (d) =>
+                                                    d.key ==
+                                                    AdditionalFieldsType
+                                                        .reasonOfRefusal
+                                                        .toValue(),
+                                              )
+                                              .firstOrNull
+                                              ?.value ??
+                                          i18.common.coreCommonNA)
                                       : variants
-                                              ?.map((e) =>
-                                                  localizations.translate(e.sku ??
+                                              ?.map((e) => localizations
+                                                  .translate(e.sku ??
                                                       e.variation.toString()))
                                               .toList()
                                               .join(', ')
                                               .toString() ??
-                                          localizations
-                                              .translate(i18.common.coreCommonNA),
+                                          localizations.translate(
+                                              i18.common.coreCommonNA),
                                 ),
                               ]),
                         );
