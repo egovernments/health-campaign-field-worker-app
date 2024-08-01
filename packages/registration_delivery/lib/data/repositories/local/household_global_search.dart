@@ -265,10 +265,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (filter == Status.registered.name ||
           filter == Status.notRegistered.name) {
         selectQuery = sql.household.select().join([
-          leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(sql.household.clientReferenceId))
+          if (params.nameSearch == null || !params.isProximityEnabled)
+            leftOuterJoin(
+                sql.projectBeneficiary,
+                sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(sql.household.clientReferenceId))
         ])
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
@@ -282,10 +283,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
       if (filter == Status.registered.name ||
           filter == Status.notRegistered.name) {
         selectQuery = selectQuery.join([
-          leftOuterJoin(
-              sql.projectBeneficiary,
-              sql.projectBeneficiary.beneficiaryClientReferenceId
-                  .equalsExp(super.sql.household.clientReferenceId))
+          if (params.nameSearch == null && !params.isProximityEnabled)
+            leftOuterJoin(
+                sql.projectBeneficiary,
+                sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .equalsExp(sql.household.clientReferenceId))
         ])
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
