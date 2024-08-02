@@ -25,8 +25,7 @@ class AppLocalizations {
   Future<bool> load() async {
     _localizedStrings.clear();
 
-    final listOfLocalizations = await returnLocalizationFromSQL(
-        sql, LocalizationParams(locale: locale));
+    final listOfLocalizations = await returnLocalizationFromSQL(sql);
 
     _localizedStrings.addAll(listOfLocalizations);
 

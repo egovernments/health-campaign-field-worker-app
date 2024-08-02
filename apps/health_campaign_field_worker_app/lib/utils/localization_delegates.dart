@@ -29,34 +29,28 @@ getAppLocalizationDelegates({
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
     referral_reconciliation_localization.ReferralReconLocalization.getDelegate(
-      returnLocalizationFromSQL(sql, LocalizationParams(locale: selectedLocale))
-          as Future,
+      returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     inventory_localization.InventoryLocalization.getDelegate(
-      returnLocalizationFromSQL(sql, LocalizationParams(locale: selectedLocale))
-          as Future,
+      returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     attendance_localization.AttendanceLocalization.getDelegate(
-      returnLocalizationFromSQL(sql, LocalizationParams(locale: selectedLocale))
-          as Future,
+      returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     scanner_localization.ScannerLocalization.getDelegate(
-      returnLocalizationFromSQL(sql, LocalizationParams(locale: selectedLocale))
-          as Future,
+      returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     registration_delivery_localization.RegistrationDeliveryLocalization
         .getDelegate(
-      returnLocalizationFromSQL(sql, LocalizationParams(locale: selectedLocale))
-          as Future,
+      returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     closed_household_localization.ClosedHouseholdLocalization.getDelegate(
-      returnLocalizationFromSQL(sql, LocalizationParams(locale: selectedLocale))
-          as Future,
+      returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
   ];

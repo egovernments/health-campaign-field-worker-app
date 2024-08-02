@@ -6,6 +6,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:isar/isar.dart';
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/repositories/remote/localization.dart';
+import '../../utils/utils.dart';
 import 'app_localization.dart';
 
 part 'localization.freezed.dart';
@@ -59,6 +60,7 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
   }
 
   FutureOr<void> _loadLocale(List codes) async {
+    LocalizationParams().setLocale(Locale(codes.first, codes.last));
     await AppLocalizations(Locale(codes.first, codes.last), sql).load();
   }
 }

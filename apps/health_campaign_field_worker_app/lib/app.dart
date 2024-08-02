@@ -58,6 +58,7 @@ class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
   @override
   void initState() {
+    LocalizationParams().setModule(['hcm-common', 'hcm-login']);
     super.initState();
     requestDisableBatteryOptimization();
   }

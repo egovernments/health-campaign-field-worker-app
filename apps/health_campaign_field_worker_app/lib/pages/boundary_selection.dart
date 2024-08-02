@@ -12,8 +12,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -45,6 +47,8 @@ class _BoundarySelectionPageState
 
   @override
   void initState() {
+    loadLocalization();
+    LocalizationParams().setModule(['common']);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
@@ -62,6 +66,7 @@ class _BoundarySelectionPageState
 
   @override
   void dispose() {
+    LocalizationParams().clear();
     clickedStatus.dispose();
     super.dispose();
   }
@@ -130,6 +135,12 @@ class _BoundarySelectionPageState
                                     return false;
                                   }).toList();
 
+                                  if (filteredItems.isNotEmpty) {
+                                    LocalizationParams().setCode(filteredItems
+                                        .map((e) => e.code!)
+                                        .toList());
+                                  }
+
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kPadding * 2,
@@ -142,9 +153,7 @@ class _BoundarySelectionPageState
                                       formControlName: label,
                                       valueMapper: (value) {
                                         return localizations.translate(
-                                            value.name ??
-                                                value.code ??
-                                                'No Value');
+                                            value.code ?? 'No Value');
                                       },
                                       onFieldTap: (value) {
                                         setState(() {
@@ -153,7 +162,11 @@ class _BoundarySelectionPageState
                                       },
                                       onSelected: (value) {
                                         if (value == null) return;
-
+                                        loadLocalization();
+                                        LocalizationParams().setCode(state
+                                            .boundaryList
+                                            .map((e) => e.code!)
+                                            .toList());
                                         context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
                                                 boundaryNum:
@@ -568,6 +581,7 @@ class _BoundarySelectionPageState
                                                       }
                                                       clickedStatus.value =
                                                           true;
+                                                      loadLocalization();
                                                     }
                                                   }
                                                 },
@@ -635,5 +649,13 @@ class _BoundarySelectionPageState
 
     // Return false if none of the form controls have a null value
     return false;
+  }
+
+  void loadLocalization() async {
+    var selectedLocale = AppSharedPreferences().getSelectedLocale;
+
+    context.read<LocalizationBloc>().add(
+        LocalizationEvent.onUpdateLocalizationIndex(
+            index: 0, code: selectedLocale!));
   }
 }

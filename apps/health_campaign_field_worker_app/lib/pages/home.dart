@@ -56,6 +56,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   @override
   initState() {
+
     super.initState();
 
     subscription = Connectivity()
@@ -94,7 +95,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       return e.code;
     });
 
-    //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
         roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;

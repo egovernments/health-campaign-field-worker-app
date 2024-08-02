@@ -1,15 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ui';
-
-import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
-import 'package:isar/isar.dart';
 
 import '../../../models/localization/localization_model.dart';
-import '../../../utils/utils.dart';
 import '../../local_store/no_sql/schema/localization.dart';
 
 class LocalizationRepository {
@@ -59,9 +54,9 @@ class LocalizationRepository {
     final results = await query.get();
 
     localizationList = results.map((e) {
-      final data = e.readTable(_sql.localization);
+      final data = e.readTableOrNull(_sql.localization);
       return Localization()
-        ..code = data.code
+        ..code = data!.code
         ..locale = data.locale
         ..module = data.module
         ..message = data.message;

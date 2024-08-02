@@ -8,6 +8,7 @@ import '../blocs/auth/auth.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 import '../widgets/localized.dart';
 
 @RoutePage()
@@ -25,6 +26,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   var passwordVisible = false;
   static const _userId = 'userId';
   static const _password = 'password';
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

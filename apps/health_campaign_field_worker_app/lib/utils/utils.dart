@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
@@ -445,14 +446,33 @@ int getSyncCount(List<OpLog> oplogs) {
 }
 
 FutureOr<List<Localization>> returnLocalizationFromSQL(
-    LocalSqlDataStore sql, LocalizationParams params) async {
+    LocalSqlDataStore sql) async {
+  final includeModules = LocalizationParams().module != null &&
+          LocalizationParams().module!.isNotEmpty
+      ? sql.localization.module
+          .isIn(LocalizationParams().module!.whereType<String>().toList())
+      : const Constant(
+          false); // if no modules to include, don't add this filter
+
+  final allModules = LocalizationParams().module == null ||
+          LocalizationParams().module!.isEmpty
+      ? sql.localization.locale.equals('${{
+          LocalizationParams().locale!.languageCode
+        }}_${{LocalizationParams().locale!.countryCode}}')
+      : const Constant(false);
+
+  final includeCodes = LocalizationParams().code != null &&
+          LocalizationParams().code!.isNotEmpty &&
+          LocalizationParams().queryType == QueryEnums.absoluteMatch
+      ? sql.localization.code
+          .isIn(LocalizationParams().code!.whereType<String>().toList())
+      : const Constant(false); // if no codes to include, don't add this filter
+
+  // Combine filters using buildOr and buildAnd
+  final combinedFilter = buildOr([includeCodes, includeModules, allModules]);
+
   final selectQuery = sql.select(sql.localization).join([])
-    ..where(buildAnd([
-      if (params.module != null)
-        sql.localization.module.contains(params.module!),
-      sql.localization.locale.equals('${params.locale}'),
-      if (params.code != null) sql.localization.code.equals(params.code!),
-    ]));
+    ..where(combinedFilter);
 
   final result = await selectQuery.get();
 
@@ -468,9 +488,53 @@ FutureOr<List<Localization>> returnLocalizationFromSQL(
 }
 
 class LocalizationParams {
-  final String? code;
-  final String? module;
-  final Locale locale;
+  static final LocalizationParams _singleton = LocalizationParams._internal();
 
-  LocalizationParams({this.code, this.module, required this.locale});
+  factory LocalizationParams() {
+    return _singleton;
+  }
+
+  LocalizationParams._internal();
+
+  QueryEnums? _queryType = QueryEnums.absoluteMatch;
+  List<String>? _code;
+  List<String>? _module;
+  Locale? _locale;
+
+  setQueryType(QueryEnums queryType) {
+    _queryType = queryType;
+  }
+
+  setCode(List<String>? code) {
+    print('code: $code');
+    _code = code;
+  }
+
+  setModule(List<String>? module) {
+    _module = module;
+  }
+
+  setLocale(Locale locale) {
+    _locale = locale;
+  }
+
+  void clear() {
+    _code = null;
+    _module = null;
+  }
+
+  QueryEnums? get queryType => _queryType;
+
+  List<String>? get code => _code;
+
+  List<String>? get module => _module;
+
+  Locale? get locale => _locale;
+}
+
+enum QueryEnums {
+  @MappableValue("absolute-match")
+  absoluteMatch,
+  @MappableValue("relative-match")
+  relativeMatch,
 }
