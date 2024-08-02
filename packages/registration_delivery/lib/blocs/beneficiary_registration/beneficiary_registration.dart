@@ -431,7 +431,10 @@ class BeneficiaryRegistrationBloc
           );
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId: [event.household.clientReferenceId],
+              beneficiaryClientReferenceId:
+                  beneficiaryType == BeneficiaryType.individual
+                      ? [value.individualModel.first.clientReferenceId]
+                      : [event.household.clientReferenceId],
             ),
           );
 
@@ -453,36 +456,38 @@ class BeneficiaryRegistrationBloc
               }
             }
           } else {
-            await projectBeneficiaryRepository.create(ProjectBeneficiaryModel(
-                rowVersion: 1,
-                clientReferenceId: IdGen.i.identifier,
-                dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
-                projectId: RegistrationDeliverySingleton().projectId,
-                tenantId: RegistrationDeliverySingleton().tenantId,
-                beneficiaryClientReferenceId:
-                    beneficiaryType == BeneficiaryType.individual
-                        ? value.individualModel.first.clientReferenceId
-                        : value.householdModel.clientReferenceId,
-                clientAuditDetails: ClientAuditDetails(
-                  createdBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                  createdTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                ),
-                auditDetails: AuditDetails(
-                  createdBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                  createdTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                )));
+            await projectBeneficiaryRepository.create(
+              ProjectBeneficiaryModel(
+                  rowVersion: 1,
+                  clientReferenceId: IdGen.i.identifier,
+                  dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+                  projectId: RegistrationDeliverySingleton().projectId,
+                  tenantId: RegistrationDeliverySingleton().tenantId,
+                  beneficiaryClientReferenceId:
+                      beneficiaryType == BeneficiaryType.individual
+                          ? value.individualModel.first.clientReferenceId
+                          : value.householdModel.clientReferenceId,
+                  clientAuditDetails: ClientAuditDetails(
+                    createdBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                    createdTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                  ),
+                  auditDetails: AuditDetails(
+                    createdBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                    createdTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                  )),
+            );
           }
 
           for (var element in value.individualModel) {
@@ -549,7 +554,7 @@ class BeneficiaryRegistrationBloc
             }
             var task = await taskDataRepository.search(TaskSearchModel(
               projectBeneficiaryClientReferenceId:
-              projectBeneficiary.map((e) => e.clientReferenceId).toList(),
+                  projectBeneficiary.map((e) => e.clientReferenceId).toList(),
             ));
 
             if (task.isNotEmpty) {

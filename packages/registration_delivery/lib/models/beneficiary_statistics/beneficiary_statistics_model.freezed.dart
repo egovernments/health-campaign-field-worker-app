@@ -31,6 +31,7 @@ abstract class $BeneficiaryStatisticsWrapperModelCopyWith<$Res> {
           $Res Function(BeneficiaryStatisticsWrapperModel) then) =
       _$BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res,
           BeneficiaryStatisticsWrapperModel>;
+
   @useResult
   $Res call({List<BeneficiaryStatisticsModel> beneficiaryStatisticsList});
 }
@@ -43,6 +44,7 @@ class _$BeneficiaryStatisticsWrapperModelCopyWithImpl<$Res,
 
   // ignore: unused_field
   final $Val _value;
+
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -67,6 +69,7 @@ abstract class _$$BeneficiaryStatisticsWrapperModelImplCopyWith<$Res>
           _$BeneficiaryStatisticsWrapperModelImpl value,
           $Res Function(_$BeneficiaryStatisticsWrapperModelImpl) then) =
       __$$BeneficiaryStatisticsWrapperModelImplCopyWithImpl<$Res>;
+
   @override
   @useResult
   $Res call({List<BeneficiaryStatisticsModel> beneficiaryStatisticsList});
@@ -106,6 +109,7 @@ class _$BeneficiaryStatisticsWrapperModelImpl
       : _beneficiaryStatisticsList = beneficiaryStatisticsList;
 
   final List<BeneficiaryStatisticsModel> _beneficiaryStatisticsList;
+
   @override
   List<BeneficiaryStatisticsModel> get beneficiaryStatisticsList {
     if (_beneficiaryStatisticsList is EqualUnmodifiableListView)
@@ -149,6 +153,7 @@ abstract class _BeneficiaryStatisticsWrapperModel
 
   @override
   List<BeneficiaryStatisticsModel> get beneficiaryStatisticsList;
+
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryStatisticsWrapperModelImplCopyWith<
@@ -159,6 +164,7 @@ abstract class _BeneficiaryStatisticsWrapperModel
 /// @nodoc
 mixin _$BeneficiaryStatisticsModel {
   String get title => throw _privateConstructorUsedError;
+
   String get content => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -172,6 +178,7 @@ abstract class $BeneficiaryStatisticsModelCopyWith<$Res> {
           $Res Function(BeneficiaryStatisticsModel) then) =
       _$BeneficiaryStatisticsModelCopyWithImpl<$Res,
           BeneficiaryStatisticsModel>;
+
   @useResult
   $Res call({String title, String content});
 }
@@ -184,6 +191,7 @@ class _$BeneficiaryStatisticsModelCopyWithImpl<$Res,
 
   // ignore: unused_field
   final $Val _value;
+
   // ignore: unused_field
   final $Res Function($Val) _then;
 
@@ -213,6 +221,7 @@ abstract class _$$BeneficiaryStatisticsModelImplCopyWith<$Res>
           _$BeneficiaryStatisticsModelImpl value,
           $Res Function(_$BeneficiaryStatisticsModelImpl) then) =
       __$$BeneficiaryStatisticsModelImplCopyWithImpl<$Res>;
+
   @override
   @useResult
   $Res call({String title, String content});
@@ -291,8 +300,10 @@ abstract class _BeneficiaryStatisticsModel
 
   @override
   String get title;
+
   @override
   String get content;
+
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryStatisticsModelImplCopyWith<_$BeneficiaryStatisticsModelImpl>

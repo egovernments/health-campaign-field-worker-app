@@ -57,7 +57,11 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
           beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
           taskDataRepository: task,
           sideEffectDataRepository: sideEffect,
-          referralDataRepository: referral),
+          referralDataRepository: referral)
+        ..add(HouseholdOverviewReloadEvent(
+            projectId: RegistrationDeliverySingleton().selectedProject!.id,
+            projectBeneficiaryType:
+                RegistrationDeliverySingleton().beneficiaryType!)),
       child: BlocProvider(
         create: (context) => BeneficiaryRegistrationBloc(
           initialState,
