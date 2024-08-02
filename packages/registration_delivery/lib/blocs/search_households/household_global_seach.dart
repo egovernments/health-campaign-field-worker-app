@@ -49,18 +49,19 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
-        isProximityEnabled: event.globalSearchParams.isProximityEnabled,
-        latitude: event.globalSearchParams.latitude,
-        longitude: event.globalSearchParams.longitude,
-        maxRadius: event.globalSearchParams.maxRadius,
-        nameSearch: event.globalSearchParams.nameSearch,
-        filter: event.globalSearchParams.filter,
-        offset: event.globalSearchParams.offset,
-        limit: event.globalSearchParams.limit,
-      ),
+          isProximityEnabled: event.globalSearchParams.isProximityEnabled,
+          latitude: event.globalSearchParams.latitude,
+          longitude: event.globalSearchParams.longitude,
+          maxRadius: event.globalSearchParams.maxRadius,
+          nameSearch: event.globalSearchParams.nameSearch,
+          filter: event.globalSearchParams.filter,
+          offset: event.globalSearchParams.offset,
+          limit: event.globalSearchParams.limit,
+          totalCount: state.totalResults),
     );
 
-    var finalResults = results.map((e) => e).toList();
+    var totalCount = results['total_count'];
+    var finalResults = results['data'].map((e) => e).toList();
 
     if (event.globalSearchParams.filter!.contains(Status.registered.name) ||
         event.globalSearchParams.filter!.contains(Status.notRegistered.name)) {
@@ -119,6 +120,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         offset:
             event.globalSearchParams.offset! + event.globalSearchParams.limit!,
         limit: event.globalSearchParams.limit!,
+        totalResults: totalCount,
       ));
     } else if (event.globalSearchParams.filter!.isNotEmpty &&
         event.globalSearchParams.filter != null) {
@@ -192,6 +194,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         offset:
             event.globalSearchParams.offset! + event.globalSearchParams.limit!,
         limit: event.globalSearchParams.limit!,
+        totalResults: totalCount,
       ));
     } else {
       late List<String> houseHoldClientReferenceIds = [];
@@ -243,13 +246,13 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
       );
 
       emit(state.copyWith(
-        householdMembers: containers,
-        loading: false,
-        searchQuery: event.globalSearchParams.nameSearch,
-        offset:
-            event.globalSearchParams.offset! + event.globalSearchParams.limit!,
-        limit: event.globalSearchParams.limit!,
-      ));
+          householdMembers: containers,
+          loading: false,
+          searchQuery: event.globalSearchParams.nameSearch,
+          offset: event.globalSearchParams.offset! +
+              event.globalSearchParams.limit!,
+          limit: event.globalSearchParams.limit!,
+          totalResults: totalCount));
     }
   }
 
