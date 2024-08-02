@@ -454,7 +454,11 @@ class BeneficiaryRegistrationBloc
                 await taskDataRepository.update(
                     task.last.copyWith(status: Status.notDelivered.toValue()));
               }
+              final tasks = await taskDataRepository.search(TaskSearchModel(
+                projectId: task.last.projectId,
+              ));
             }
+
           } else {
             await projectBeneficiaryRepository.create(
               ProjectBeneficiaryModel(

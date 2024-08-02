@@ -77,7 +77,7 @@ class DeliverInterventionPageState
               task: _getTaskModel(
                 context,
                 form: form,
-                oldTask: null,
+                oldTask: RegistrationDeliverySingleton().beneficiaryType == BeneficiaryType.household ? deliverInterventionState.tasks?.last : null,
                 projectBeneficiaryClientReferenceId:
                     projectBeneficiary.clientReferenceId,
                 dose: deliverInterventionState.dose,

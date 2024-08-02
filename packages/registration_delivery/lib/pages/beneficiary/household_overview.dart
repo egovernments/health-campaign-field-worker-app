@@ -701,19 +701,19 @@ class _HouseholdOverviewPageState
     var icon = Icons.info_rounded;
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
-      textLabel = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(deliverInterventionState.tasks ?? []).toValue()
+      textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
+          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()
           : Status.registered.toValue();
 
-      color = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.last.status ==
+      color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
+          ? (state.householdMemberWrapper.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
-      icon = deliverInterventionState.tasks?.isNotEmpty ?? false
-          ? (deliverInterventionState.tasks?.last.status ==
+      icon = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
+          ? (state.householdMemberWrapper.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)
