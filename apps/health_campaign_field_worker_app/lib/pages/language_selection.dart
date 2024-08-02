@@ -7,7 +7,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
-import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
@@ -31,14 +30,8 @@ class LanguageSelectionPage extends StatelessWidget {
                 if (state is! AppInitialized) return const Offstage();
                 final appConfig = state.appConfiguration;
                 final languages = state.appConfiguration.languages;
-                final dashboardInterface = Interfaces();
-                dashboardInterface.type = "LOCALIZATION_MODULE";
-                dashboardInterface.name = "hcm-dashboard";
-//[TODO: To be added to MDMS Backend Interfaces
-                final localizationModulesList = [
-                  ...?state.appConfiguration.backendInterface?.interfaces,
-                  dashboardInterface,
-                ];
+                final localizationModulesList =
+                    state.appConfiguration.backendInterface?.interfaces;
                 if (languages == null) {
                   return const Offstage();
                 }

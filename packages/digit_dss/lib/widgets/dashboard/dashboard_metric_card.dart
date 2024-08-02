@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/dashboard.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 
 class DashboardMetricCard extends LocalizedStatefulWidget {
@@ -47,7 +48,7 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
                 ),
                 child: Text(
                   localizations.translate(
-                    'Dashboard',
+                    i18.dashboard.dashboardLabel,
                   ),
                   style: theme.textTheme.displayMedium,
                 ),
@@ -75,7 +76,8 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
                     } else {
                       DigitToast.show(context,
                           options: DigitToastOptions(
-                              'Please connect to the internet to refresh the dashboard',
+                              localizations
+                                  .translate(i18.dashboard.networkFailureError),
                               true,
                               DigitTheme.instance.mobileTheme));
                     }
@@ -149,6 +151,7 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
                   }),
             ),
           ),
+          //[TODO: Chart yet to be configured
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
