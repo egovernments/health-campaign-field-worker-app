@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
-import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
@@ -10,6 +10,7 @@ import 'package:registration_delivery/blocs/household_overview/household_overvie
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
@@ -289,9 +290,19 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                           fetched: (productVariants) {
                             final resourcesDelivered = deliverState
                                 .oldTask?.resources
-                                ?.map((e) => productVariants
-                                    .where((p) => p.id == e.productVariantId)
-                                    .first)
+                                ?.map((e) => TaskResourceInfo(
+                                    productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.sku ??
+                                        productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.variation ??
+                                        i18.common.coreCommonNA,
+                                    e.quantity ?? '0'))
                                 .toList();
                             return resourcesDelivered;
                           },
@@ -299,7 +310,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                         return DigitCard(
                           child: LabelValueList(
                               heading: localizations.translate(
-                                  '${RegistrationDeliverySingleton().selectedProject?.name}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                  '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                               withDivider: true,
                               items: [
                                 LabelValuePair(
@@ -333,12 +344,10 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               ?.value ??
                                           i18.common.coreCommonNA)
                                       : variants
-                                              ?.map((e) => localizations
-                                                  .translate(e.sku ??
-                                                      e.variation.toString()))
+                                              ?.map((e) =>
+                                                  '${getLocalizedMessage(e.productName)} : ${e.quantityDelivered}')
                                               .toList()
-                                              .join(', ')
-                                              .toString() ??
+                                              .join('\n') ??
                                           localizations.translate(
                                               i18.common.coreCommonNA),
                                 ),
