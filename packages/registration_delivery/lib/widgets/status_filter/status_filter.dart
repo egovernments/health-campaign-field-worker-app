@@ -71,16 +71,16 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
               ),
               Expanded(
                 child: DigitElevatedButton(
+                    onPressed: selectedButtons.isEmpty ? null : () {
+                      var selected =
+                          selectedButtons.map((e) => e.name).toList();
+                      Navigator.pop(context, selected);
+                    },
                     child: Text(
                       localizations.translate(
                         i18.searchBeneficiary.applyFilter,
                       ),
-                    ),
-                    onPressed: () {
-                      var selected =
-                          selectedButtons.map((e) => e.name).toList();
-                      Navigator.pop(context, selected);
-                    }),
+                    )),
               ),
             ],
           )

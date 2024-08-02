@@ -516,7 +516,7 @@ class DeliverInterventionPageState
                                                 Text(
                                                   localizations.translate(
                                                     i18.deliverIntervention
-                                                        .deliveryCommentLabel,
+                                                        .deliveryCommentHeading,
                                                   ),
                                                   style: theme
                                                       .textTheme.headlineLarge,

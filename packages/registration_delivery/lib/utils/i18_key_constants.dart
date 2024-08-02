@@ -522,6 +522,8 @@ class DeliverIntervention {
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+  String get deliveryCommentHeading =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_HEADING';
 
   String get deliveryDetailsLabel =>
       'DELIVER_INTERVENTION_DELIVERY_DETAILS_LABEL';
