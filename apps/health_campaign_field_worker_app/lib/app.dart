@@ -284,7 +284,6 @@ class MainApplicationState extends State<MainApplication>
                         BlocProvider(
                             create: (ctx) => DashboardBloc(
                                   const DashboardState.fetched(),
-                                  context: context,
                                   isar: widget.isar,
                                   dashboardRemoteRepo:
                                       DashboardRemoteRepository(widget.client),

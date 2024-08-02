@@ -40,39 +40,6 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
 
   @override
   Widget build(BuildContext context) {
-    TotalDetails totalDetails = TotalDetails();
-
-    //
-    // for (int i = 0; i < chartData.length; i++) {
-    //   totalDetails.noOfHousesVisited +=
-    //       int.parse(chartData[i]['noOfHousesVisited'].toString());
-    //   totalDetails.noOfHousesSprayed +=
-    //       int.parse(chartData[i]['noOfHousesSprayed'].toString());
-    //   totalDetails.noOfHousesNotSprayed +=
-    //       (int.parse(chartData[i]['noOfHousesVisited'].toString()) -
-    //           int.parse(chartData[i]['noOfHousesSprayed'].toString()));
-    //   totalDetails.bottlesUsed +=
-    //       int.parse(chartData[i]['bottlesUsed'].toString());
-    //   totalDetails.noOfRemainingBottles +=
-    //       (int.parse(chartData[i]['totalBottles'].toString()) -
-    //           int.parse(chartData[i]['bottlesUsed'].toString()));
-    // }
-    //
-    // tableData.add(TableDataRow([
-    //   TableData('Total'),
-    //   TableData(
-    //     totalDetails.noOfHousesVisited.toString(),
-    //     style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium?.apply(
-    //       color: const DigitColors().darkSpringGreen,
-    //     ),
-    //   ),
-    //   TableData(totalDetails.noOfHousesSprayed.toString()),
-    //   TableData(totalDetails.noOfHousesNotSprayed.toString()),
-    //   TableData(totalDetails.bottlesUsed.toString()),
-    //   TableData(totalDetails.noOfRemainingBottles.toString()),
-    //   TableData(''),
-    // ]));
-
     return BlocConsumer<DashboardBloc, DashboardState>(
         listener: (context, dashboardState) {
       dashboardState.maybeWhen(

@@ -6,7 +6,8 @@ import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_response.dart
 import 'package:dio/dio.dart'; // Import the dio package for HTTP client functionality
 import 'package:isar/isar.dart'; // Import the isar package for database management
 
-import '../../models/entities/dashboard_response_model.dart'; // Import the dashboard_response_model.dart file from the models/entities directory
+import '../../models/entities/dashboard_response_model.dart';
+import '../../models/entities/dss_enums.dart'; // Import the dashboard_response_model.dart file from the models/entities directory
 
 // DashboardRemoteRepository class handles remote API requests and database transactions
 class DashboardRemoteRepository {
@@ -30,7 +31,7 @@ class DashboardRemoteRepository {
 
       // Map the response data to the DashboardResponseModel
       final dashboardResponse = DashboardResponseModelMapper.fromMap(
-        json.decode(response.data)['responseData'],
+        json.decode(response.data)[DSSEnums.responseData.toValue()],
       );
 
       if (dashboardResponse != null) {

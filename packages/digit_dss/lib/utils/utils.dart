@@ -8,21 +8,9 @@ import 'package:digit_dss/models/entities/dashboard_request.dart';
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 
-class TotalDetails {
-  num noOfHousesVisited;
-  num noOfHousesSprayed;
-  num noOfHousesNotSprayed;
-  num bottlesUsed;
-  num noOfRemainingBottles;
-  TotalDetails({
-    this.noOfHousesVisited = 0,
-    this.noOfHousesSprayed = 0,
-    this.noOfHousesNotSprayed = 0,
-    this.bottlesUsed = 0,
-    this.noOfRemainingBottles = 0,
-  });
-}
+import '../models/entities/dss_enums.dart';
 
+const dashboardAPIPath = '/dashboard-analytics/dashboard/getChartV2';
 Future<bool> getIsConnected() async {
   try {
     final result = await InternetAddress.lookup('example.com');
@@ -100,8 +88,8 @@ DashboardRequestModel getRequestModel({
         requestDate: RequestDate(
           startDate: startDate,
           endDate: endDate,
-          interval: "day",
-          title: "home",
+          interval: DSSEnums.day.toValue(),
+          title: DSSEnums.home.toValue(),
         )),
     headers: DSSHeaders(
       tenantId: DashboardSingleton().tenantId,
@@ -138,8 +126,8 @@ Future<void> processDashboardConfig(
                 requestDate: RequestDate(
                   startDate: startDate,
                   endDate: endDate,
-                  interval: "day",
-                  title: "home",
+                  interval: DSSEnums.day.toValue(),
+                  title: DSSEnums.home.toValue(),
                 )),
             headers: DSSHeaders(
               tenantId: tenantId,
@@ -184,7 +172,7 @@ class DashboardSingleton {
     _tenantId = tenantId;
     _actionPath = actionPath.trim().isNotEmpty
         ? actionPath
-        : '/dashboard-analytics/dashboard/getChartV2'; //[TODO: To be added to MDMS Service registry
+        : dashboardAPIPath; //[TODO: To be added to MDMS Service registry
     _appVersion = appVersion;
     _selectedProject = selectedProject;
   }
@@ -194,6 +182,6 @@ class DashboardSingleton {
   String get appVersion => _appVersion ?? '';
   String get actionPath =>
       _actionPath ??
-      'dashboard-analytics/dashboard/getChartV2'; //[TODO: To be added to MDMS Service registry
+      dashboardAPIPath; //[TODO: To be added to MDMS Service registry
   ProjectModel? get selectedProject => _selectedProject;
 }

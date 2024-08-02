@@ -5,7 +5,6 @@ import 'package:digit_components/models/digit_table_model.dart'; // Import the d
 import 'package:digit_components/theme/colors.dart'; // Import the colors.dart file from the digit_components package
 import 'package:digit_components/theme/digit_theme.dart'; // Import the digit_theme.dart file from the digit_components package
 import 'package:digit_dss/digit_dss.dart'; // Import the digit_dss.dart file from the digit_dss package
-import 'package:flutter/cupertino.dart'; // Import the cupertino.dart file from the flutter package
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import the flutter_bloc package for state management
 import 'package:freezed_annotation/freezed_annotation.dart'; // Import the freezed_annotation package for code generation
 import 'package:isar/isar.dart'; // Import the isar package for database management
@@ -17,13 +16,11 @@ typedef DashboardEmitter = Emitter<
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final Isar isar; // Isar database instance
-  BuildContext context; // BuildContext for accessing UI elements
   final DashboardRemoteRepository
       dashboardRemoteRepo; // Remote repository for dashboard data
 
   DashboardBloc(
     super.initialState, {
-    required this.context,
     required this.isar,
     required this.dashboardRemoteRepo,
   }) {
@@ -99,7 +96,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final metricCharts = await isar.dashboardResponses
           .where()
           .filter()
-          .chartTypeEqualTo('metric')
+          .chartTypeEqualTo(DSSEnums.metric.toValue())
           .findAll(); // Query metric charts from Isar database
       Map<String, MetricWrapper> metrics = {}; // Initialize metrics map
       List<TableWrapper> tableWrapperList = []; // Initialize table wrapper list
@@ -119,16 +116,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       final tableCharts = await isar.dashboardResponses
           .where()
           .filter()
-          .chartTypeEqualTo('xtable')
+          .chartTypeEqualTo(DSSEnums.table.toValue())
           .findAll(); // Query table charts from Isar database
       for (DashboardResponse chart in tableCharts) {
         if ((chart.data ?? []).isNotEmpty) {
           // Create table headers
           final List<TableHeader> tableHeaderList = chart.data?.first.plots
                   ?.where((p) =>
-                      p.name != "S.N." &&
-                      p.name != "startDate" &&
-                      p.name != "endDate" &&
+                      p.name != DSSEnums.serialNumber.toValue() &&
+                      p.name != DSSEnums.startDate.toValue() &&
+                      p.name != DSSEnums.endDate.toValue() &&
                       p.name != null)
                   .map((e) {
                 final headerData = transformToLocaleCode(e.name ?? '');
@@ -143,12 +140,13 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           final tableDetails = chart.data?.map((e) {
             final rowTableData = e.plots
                 ?.where((p) =>
-                    p.name != "S.N." &&
-                    p.name != "startDate" &&
-                    p.name != "endDate")
+                    p.name != DSSEnums.serialNumber.toValue() &&
+                    p.name != DSSEnums.startDate.toValue() &&
+                    p.name != DSSEnums.endDate.toValue())
                 .mapIndexed(
                   (i, plot) => TableData(
-                    plot.symbol == "number" || plot.symbol == "percentage"
+                    plot.symbol == DSSEnums.number.toValue() ||
+                            plot.symbol == DSSEnums.percentage.toValue()
                         ? double.parse(plot.value.toString()) ==
                                 double.parse(plot.value.toString()).toInt()
                             ? double.parse(plot.value.toString())
