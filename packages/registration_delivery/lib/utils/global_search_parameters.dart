@@ -7,6 +7,7 @@ class GlobalSearchParameters {
   final int? offset;
   final int? limit;
   final List<String>? filter;
+  final int? totalCount;
 
   GlobalSearchParameters({
     required this.isProximityEnabled,
@@ -17,5 +18,6 @@ class GlobalSearchParameters {
     required this.offset,
     required this.limit,
     required this.filter,
+    this.totalCount,
   });
 }

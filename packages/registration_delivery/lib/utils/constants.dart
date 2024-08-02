@@ -9,7 +9,7 @@ class Constants {
   final String deliveryTeam = 'Delivery Team';
   final String notAvailable = 'N/A';
   final String dateTimeExtFormat = 'dd-MM-yyyy';
-  final String dateMonthYearFormat = 'dd MMMM yyyy';
+  final String dateMonthYearFormat = 'dd MMM yyyy';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
 }
 
@@ -30,4 +30,14 @@ class StatusKeys {
   bool isStatusReset;
   StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
       this.isBeneficiaryReferred, this.isStatusReset);
+}
+
+class TaskResourceInfo {
+  String productName;
+  String quantityDelivered;
+
+  TaskResourceInfo(
+    this.productName,
+    this.quantityDelivered,
+  );
 }
