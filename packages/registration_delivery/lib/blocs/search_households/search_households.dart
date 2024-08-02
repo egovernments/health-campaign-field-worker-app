@@ -285,6 +285,7 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
     String? searchQuery,
     String? tag,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
+    @Default(0) int totalResults,
   }) = _SearchHouseholdsState;
 
   bool get resultsNotFound {

@@ -67,7 +67,7 @@ class _DigitReactiveSearchDropdownState<T>
             displayItemFn: (dynamic str) => Text(
               str != null ? widget.valueMapper(str) : '',
               style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   color: !widget.enabled
                       ? const DigitColors().hintGrey
                       : const DigitColors().woodsmokeBlack),

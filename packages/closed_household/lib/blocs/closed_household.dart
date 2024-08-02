@@ -84,7 +84,7 @@ class ClosedHouseholdBloc
       var household = HouseholdModel(
         clientReferenceId: IdGen.i.identifier,
         address: address,
-        memberCount: 0,
+        memberCount: 1,
         rowVersion: 1,
         tenantId: ClosedHouseholdSingleton().tenantId.toString(),
         longitude: event.longitude,

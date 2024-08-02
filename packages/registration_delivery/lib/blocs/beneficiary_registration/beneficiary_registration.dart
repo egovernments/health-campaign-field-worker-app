@@ -547,6 +547,17 @@ class BeneficiaryRegistrationBloc
               await projectBeneficiaryRepository
                   .update(projectBeneficiary.first.copyWith(tag: event.tag));
             }
+            var task = await taskDataRepository.search(TaskSearchModel(
+              projectBeneficiaryClientReferenceId:
+              projectBeneficiary.map((e) => e.clientReferenceId).toList(),
+            ));
+
+            if (task.isNotEmpty) {
+              if (task.last.status == Status.closeHousehold.toValue()) {
+                await taskDataRepository.update(
+                    task.last.copyWith(status: Status.notDelivered.toValue()));
+              }
+            }
           }
         } catch (error) {
           rethrow;
