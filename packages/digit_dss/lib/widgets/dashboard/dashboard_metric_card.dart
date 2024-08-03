@@ -115,52 +115,71 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
               spacing: 2.0, // Space between items
               runSpacing: 2.0, // Space between lines
               alignment: WrapAlignment.start,
-              children: dashboardState.maybeWhen(
-                  orElse: () => [],
-                  fetched: (metricData, tableData, selectedDate) {
-                    return metricData != null
-                        ? metricData.entries.mapIndexed((
-                            i,
-                            entry,
-                          ) {
-                            return SizedBox(
-                              height: MediaQuery.of(context).size.width / 3.8,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  buildMetric(
-                                    context,
-                                    entry.key,
-                                    entry.value.value,
-                                    i,
-                                    localizations,
-                                  ),
-                                  if (entry.key != metricData.entries.last.key)
-                                    VerticalDivider(
-                                      width: kPadding,
-                                      color: DigitTheme.instance.mobileTheme
-                                          .colorScheme.outline,
-                                      thickness: 2,
+              children: [
+                ...dashboardState.maybeWhen(
+                    orElse: () => [],
+                    fetched: (metricData, tableData, selectedDate) {
+                      return metricData != null
+                          ? metricData.entries
+                              .where((m) => m.value.isHorizontal == true)
+                              .mapIndexed((
+                              i,
+                              entry,
+                            ) {
+                              return SizedBox(
+                                height: MediaQuery.of(context).size.width / 3.8,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    buildMetric(
+                                      context,
+                                      entry.key,
+                                      entry.value.value,
+                                      i,
+                                      localizations,
                                     ),
-                                ],
-                              ),
-                            );
-                          }).toList()
-                        : [];
-                  }),
-            ),
-          ),
-          //[TODO: Chart yet to be configured
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: kPadding),
-              child: Text(
-                '5 Spray operators synced atleast once',
-                textAlign: TextAlign.start,
-                style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium,
-              ),
+                                    if (entry.key !=
+                                        metricData.entries.last.key)
+                                      VerticalDivider(
+                                        width: kPadding,
+                                        color: DigitTheme.instance.mobileTheme
+                                            .colorScheme.outline,
+                                        thickness: 2,
+                                      ),
+                                  ],
+                                ),
+                              );
+                            }).toList()
+                          : [];
+                    }),
+                ...dashboardState.maybeWhen(
+                    orElse: () => [],
+                    fetched: (metricData, tableData, selectedDate) {
+                      return metricData != null
+                          ? metricData.entries
+                              .where((m) => m.value.isHorizontal == false)
+                              .mapIndexed((
+                              i,
+                              entry,
+                            ) {
+                              return Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: kPadding),
+                                  child: Text(
+                                    '${entry.value.value} ${localizations.translate(entry.value.header)}',
+                                    textAlign: TextAlign.start,
+                                    style: DigitTheme.instance.mobileTheme
+                                        .textTheme.bodyMedium,
+                                  ),
+                                ),
+                              );
+                            }).toList()
+                          : [];
+                    }),
+              ],
             ),
           ),
         ],
