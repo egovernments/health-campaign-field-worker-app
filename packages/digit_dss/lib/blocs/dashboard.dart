@@ -5,6 +5,7 @@ import 'package:digit_components/models/digit_table_model.dart'; // Import the d
 import 'package:digit_components/theme/colors.dart'; // Import the colors.dart file from the digit_components package
 import 'package:digit_components/theme/digit_theme.dart'; // Import the digit_theme.dart file from the digit_components package
 import 'package:digit_dss/digit_dss.dart'; // Import the digit_dss.dart file from the digit_dss package
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import the flutter_bloc package for state management
 import 'package:freezed_annotation/freezed_annotation.dart'; // Import the freezed_annotation package for code generation
 import 'package:isar/isar.dart'; // Import the isar package for database management
@@ -73,7 +74,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           add(DashboardEvent.handleSearch(
               selectedDate: event.selectedDate)); // Trigger search event
         } catch (e) {
-          print(e); // Print error
+          debugPrint(e.toString()); // Print error
           emit(const DashboardErrorState()); // Emit error state
         }
       } else if (!isConnected && event.syncFromServer) {
