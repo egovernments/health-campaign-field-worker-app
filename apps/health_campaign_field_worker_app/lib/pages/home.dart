@@ -1,3 +1,15 @@
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -321,6 +333,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+        child: HomeItemCard(
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
+          onPressed: () {
+            context.router.push(const UserDashboardRoute());
+          },
+        ),
+      ),
+
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
@@ -465,7 +487,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       ),
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
-          icon: Icons.table_chart,
+          icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
           onPressed: () {
             context.router.push(const UserDashboardRoute());
@@ -476,6 +498,18 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
       i18.home.manageStockLabel:
@@ -618,6 +652,19 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (AppConfiguration appConfiguration,
           List<ServiceRegistry> serviceRegistry) {
         // INFO : Need to add singleton of package Here
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: appConfiguration.dashboardConfig,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
+
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
@@ -714,6 +761,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
+            dashboardConfig: appConfiguration.dashboardConfig,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(

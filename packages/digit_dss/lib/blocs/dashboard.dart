@@ -39,12 +39,10 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
             ?.additionalDetails
             ?.enableDashboard ??
         false; // Check if dashboard is enabled
-    Map<String, List<String>> dashboardConfig = DashboardSingleton()
-            .selectedProject
-            ?.additionalDetails
-            ?.dashboardConfig ??
-        {}; // Get dashboard configuration
-    if (!enableDashboard || dashboardConfig.keys.isEmpty) {
+    Map<String, List<DashboardChartConfigSchema>>? dashboardConfig =
+        DashboardSingleton().dashboardConfig?.dashboardConfig as Map<String,
+            List<DashboardChartConfigSchema>>?; // Get dashboard configuration
+    if (!enableDashboard || (dashboardConfig?.keys ?? []).isEmpty) {
       emit(
           const DashboardErrorState()); // Emit error state if dashboard is not enabled or config is empty
     } else {
@@ -61,7 +59,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
         try {
           await processDashboardConfig(
-            dashboardConfig,
+            dashboardConfig!,
             startDate,
             endDate,
             isar,
@@ -100,6 +98,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           .findAll(); // Query metric charts from Isar database
       Map<String, MetricWrapper> metrics = {}; // Initialize metrics map
       List<TableWrapper> tableWrapperList = []; // Initialize table wrapper list
+      DashboardChartListSchema? dashboardConfig =
+          DashboardSingleton().dashboardConfig?.dashboardConfig;
       for (DashboardResponse chart in metricCharts) {
         if ((chart.data ?? []).isNotEmpty) {
           for (DashboardChartData data in (chart.data ?? [])) {
@@ -108,6 +108,12 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 header: data.headerName ?? '',
                 value: data.headerValue ?? '0',
                 insight: data.insight,
+                isHorizontal: dashboardConfig?.metricCharts
+                        ?.where(
+                            (metric) => metric.name == chart.visualizationCode)
+                        .first
+                        .vizType ==
+                    DSSEnums.row.toValue(),
               ),
             }); // Populate metrics map
           }
@@ -205,6 +211,8 @@ class DashboardEvent with _$DashboardEvent {
 class DashboardState with _$DashboardState {
   const factory DashboardState.loading() =
       DashboardLoadingState; // Define loading state
+  const factory DashboardState.initialState() =
+      DashboardInitialState; // Define initial state
   const factory DashboardState.fetched({
     Map<String, MetricWrapper>? metricData,
     List<TableWrapper>? tableData,
@@ -219,11 +227,12 @@ class MetricWrapper {
   final String header; // Header of the metric
   final String value; // Value of the metric
   final Insight? insight; // Insight related to the metric
-
+  final bool? isHorizontal;
   MetricWrapper({
     required this.header,
     required this.value,
     this.insight,
+    this.isHorizontal = true,
   });
 }
 

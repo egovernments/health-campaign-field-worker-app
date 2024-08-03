@@ -81,6 +81,6 @@ getAppLocalizationDelegates({
         selectedLocale,
       ),
       appConfig.languages!,
-    )
+    ),
   ];
 }

@@ -25,4 +25,6 @@ enum DSSEnums {
   day,
   @MappableValue("home")
   home,
+  @MappableValue("row")
+  row,
 }

@@ -15,6 +15,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   reactive_forms: ^14.1.0
   intl: ^0.18.0
+  freezed_annotation: ^2.1.0
   flutter_svg: ^2.0.8
   dart_mappable: ^4.2.0
   auto_route: ^7.8.4
@@ -32,6 +33,7 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^2.0.0
   dart_code_metrics: ^5.7.6
+  freezed: ^2.1.0+1
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   build_runner: ^2.4.7

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/blocs/app_localization.dart';
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/data/remote/dashboard.dart';
 import 'package:digit_dss/models/entities/dashboard_request.dart';
 import 'package:flutter/material.dart';
@@ -98,7 +99,7 @@ DashboardRequestModel getRequestModel({
 }
 
 Future<void> processDashboardConfig(
-  Map<String, List<String>> dashboardConfig,
+  Map<String, List<DashboardChartConfigSchema>> dashboardConfig,
   int startDate,
   int endDate,
   Isar isar,
@@ -110,7 +111,10 @@ Future<void> processDashboardConfig(
 ) async {
   for (var entry in dashboardConfig.entries) {
     String visualizationType = entry.key;
-    List<String> visualizationCodes = entry.value;
+    List<String> visualizationCodes = entry.value
+        .where((c) => c.name != null)
+        .map((chart) => chart.name ?? '')
+        .toList();
 
     for (String visualizationCode in visualizationCodes) {
       await dashboardRemoteRepo.searchAndWriteToDB(
@@ -160,6 +164,7 @@ class DashboardSingleton {
   String? _actionPath;
   String? _appVersion;
   ProjectModel? _selectedProject;
+  DashboardConfigSchema? _dashboardConfig;
 
   void setInitialData({
     required String projectId,
@@ -167,6 +172,7 @@ class DashboardSingleton {
     required String actionPath,
     required String appVersion,
     required ProjectModel selectedProject,
+    DashboardConfigSchema? dashboardConfig,
   }) {
     _projectId = projectId;
     _tenantId = tenantId;
@@ -175,6 +181,7 @@ class DashboardSingleton {
         : dashboardAPIPath; //[TODO: To be added to MDMS Service registry
     _appVersion = appVersion;
     _selectedProject = selectedProject;
+    _dashboardConfig = dashboardConfig;
   }
 
   String get tenantId => _tenantId ?? '';
@@ -184,4 +191,5 @@ class DashboardSingleton {
       _actionPath ??
       dashboardAPIPath; //[TODO: To be added to MDMS Service registry
   ProjectModel? get selectedProject => _selectedProject;
+  DashboardConfigSchema? get dashboardConfig => _dashboardConfig;
 }

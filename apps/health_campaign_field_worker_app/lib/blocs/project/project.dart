@@ -448,15 +448,22 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+        final dashboardConfig = await isar.appConfigurations
+            .where()
+            .filter()
+            .dashboardConfigIsNotNull()
+            .findAll();
         final dashboardActionPath = Constants.getEndPoint(
             serviceRegistry: serviceRegistry,
             service: DashboardResponseModel.schemaName.toUpperCase(),
             action: ApiOperation.search.toValue(),
             entityName: DashboardResponseModel.schemaName);
-        if (event.model.additionalDetails?.enableDashboard == true &&
-            event.model.additionalDetails?.dashboardConfig != null) {
+        if (dashboardConfig.isNotEmpty &&
+            dashboardConfig.first.dashboardConfig?.enableDashboard == true &&
+            dashboardConfig.first.dashboardConfig?.dashboardConfig != null) {
           await processDashboardConfig(
-            event.model.additionalDetails!.dashboardConfig!,
+            dashboardConfig.first.dashboardConfig?.dashboardConfig
+                as Map<String, List<DashboardChartConfigSchema>>,
             startDate,
             endDate,
             isar,

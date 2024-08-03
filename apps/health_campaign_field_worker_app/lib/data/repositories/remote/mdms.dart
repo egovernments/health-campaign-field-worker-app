@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 
@@ -19,9 +20,9 @@ class MdmsRepository {
   const MdmsRepository(this._client);
 
   Future<ServiceRegistryPrimaryWrapperModel> searchServiceRegistry(
-      String apiEndPoint,
-      Map<String, dynamic> body,
-      ) async {
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
@@ -34,9 +35,9 @@ class MdmsRepository {
   }
 
   FutureOr<void> writeToRegistryDB(
-      ServiceRegistryPrimaryWrapperModel result,
-      Isar isar,
-      ) async {
+    ServiceRegistryPrimaryWrapperModel result,
+    Isar isar,
+  ) async {
     final List<ServiceRegistry> newServiceRegistryList = [];
     final data = result.serviceRegistry?.serviceRegistryList;
     if (data != null && data.isNotEmpty) {
@@ -68,9 +69,9 @@ class MdmsRepository {
   }
 
   Future<app_configuration.AppConfigPrimaryWrapperModel> searchAppConfig(
-      String apiEndPoint,
-      Map body,
-      ) async {
+    String apiEndPoint,
+    Map body,
+  ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
@@ -90,9 +91,9 @@ class MdmsRepository {
   }
 
   Future<PGRServiceDefinitions> searchPGRServiceDefinitions(
-      String apiEndPoint,
-      Map<String, dynamic> body,
-      ) async {
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
     try {
       final response = await _client.post(apiEndPoint, data: body);
 
@@ -110,10 +111,10 @@ class MdmsRepository {
   }
 
   FutureOr<void> writeToAppConfigDB(
-      app_configuration.AppConfigPrimaryWrapperModel result,
-      PGRServiceDefinitions pgrServiceDefinitions,
-      Isar isar,
-      ) async {
+    app_configuration.AppConfigPrimaryWrapperModel result,
+    PGRServiceDefinitions pgrServiceDefinitions,
+    Isar isar,
+  ) async {
     final appConfiguration = AppConfiguration();
 
     final data = result.rowVersions?.rowVersionslist;
@@ -141,6 +142,29 @@ class MdmsRepository {
       ..enableAnalytics = element?.firebaseConfig?.first.enableAnalytics
       ..enableCrashlytics = element?.firebaseConfig?.first.enableCrashlytics;
 
+    final dashboardChartList = DashboardChartListSchema()
+      ..metricCharts = element
+          ?.dashboardConfigWrapper?.first.dashboardConfig?.metricCharts
+          ?.map((metric) {
+        final metricChart = DashboardChartConfigSchema()
+          ..name = metric.name
+          ..active = metric.active
+          ..vizType = metric.vizType;
+        return metricChart;
+      }).toList()
+      ..tableCharts = element
+          ?.dashboardConfigWrapper?.first.dashboardConfig?.tableCharts
+          ?.map((table) {
+        final tableChart = DashboardChartConfigSchema()
+          ..name = table.name
+          ..active = table.active
+          ..vizType = table.vizType;
+        return tableChart;
+      }).toList();
+    final dashboardConfig = DashboardConfigSchema()
+      ..enableDashboard = element?.dashboardConfigWrapper?.first.enableDashboard
+      ..dashboardConfig = dashboardChartList;
+
     appConfiguration
       ..networkDetection = appConfig?.networkDetection
       ..persistenceMode = appConfig?.persistenceMode
@@ -152,7 +176,7 @@ class MdmsRepository {
       ..firebaseConfig = firebaseConfig;
 
     final List<Languages>? languageList =
-    commonMasters?.stateInfo.first.languages.map((element) {
+        commonMasters?.stateInfo.first.languages.map((element) {
       final languages = Languages()
         ..label = element.label
         ..value = element.value;
@@ -161,7 +185,7 @@ class MdmsRepository {
     }).toList();
 
     final List<BandwidthBatchSize>? bandwidthBatchSize =
-    element?.bandWidthBatchSize.map((e) {
+        element?.bandWidthBatchSize.map((e) {
       final bandwidthBatchSizeElement = BandwidthBatchSize()
         ..batchSize = e.batchSize
         ..maxRange = e.maxRange
@@ -171,7 +195,7 @@ class MdmsRepository {
     }).toList();
 
     final List<BandwidthBatchSize>? downSyncBandWidthBatchSize =
-    element?.downSyncBandWidthBatchSize.map((e) {
+        element?.downSyncBandWidthBatchSize.map((e) {
       final bandwidthBatchSizeElement = BandwidthBatchSize()
         ..batchSize = e.batchSize
         ..maxRange = e.maxRange
@@ -180,7 +204,7 @@ class MdmsRepository {
       return bandwidthBatchSizeElement;
     }).toList();
     final List<CallSupportList>? callSupportList =
-    element?.callSupportOptions!.map((element) {
+        element?.callSupportOptions!.map((element) {
       final callNumber = CallSupportList()
         ..name = element.name
         ..code = element.code;
@@ -189,7 +213,7 @@ class MdmsRepository {
     }).toList();
 
     final List<HouseholdDeletionReasonOptions>? householdDeletionReasonOptions =
-    element?.householdDeletionReasonOptions.map((element) {
+        element?.householdDeletionReasonOptions.map((element) {
       final deletionReasonOption = HouseholdDeletionReasonOptions()
         ..name = element.value
         ..code = element.code;
@@ -198,8 +222,8 @@ class MdmsRepository {
     }).toList();
 
     final List<HouseholdMemberDeletionReasonOptions>?
-    householdMemberDeletionReasonOptions =
-    element?.householdMemberDeletionReasonOptions.map((element) {
+        householdMemberDeletionReasonOptions =
+        element?.householdMemberDeletionReasonOptions.map((element) {
       final deletionReasonOption = HouseholdMemberDeletionReasonOptions()
         ..name = element.value
         ..code = element.code;
@@ -208,7 +232,7 @@ class MdmsRepository {
     }).toList();
 
     final List<GenderOptions>? genderOptions =
-    commonMasters?.genderType.map((element) {
+        commonMasters?.genderType.map((element) {
       final genderOption = GenderOptions()
         ..name = element.name ?? ''
         ..code = element.code;
@@ -217,7 +241,7 @@ class MdmsRepository {
     }).toList();
 
     final List<IdTypeOptions>? idTypeOptions =
-    element?.idTypeOptions.map((element) {
+        element?.idTypeOptions.map((element) {
       final idOption = IdTypeOptions()
         ..name = element.name
         ..code = element.code;
@@ -226,7 +250,7 @@ class MdmsRepository {
     }).toList();
 
     final List<ChecklistTypes>? checklistTypes =
-    element?.checklistTypes.map((e) {
+        element?.checklistTypes.map((e) {
       final checklist = ChecklistTypes()
         ..name = e.name
         ..code = e.code;
@@ -235,7 +259,7 @@ class MdmsRepository {
     }).toList();
 
     final List<TransportTypes>? transportTypes =
-    element?.transportTypes.map((e) {
+        element?.transportTypes.map((e) {
       final transportTypes = TransportTypes()
         ..name = e.name
         ..code = e.code;
@@ -244,7 +268,7 @@ class MdmsRepository {
     }).toList();
 
     final List<DeliveryCommentOptions>? deliveryCommentOptions =
-    element?.deliveryCommentOptions.map((element) {
+        element?.deliveryCommentOptions.map((element) {
       final deliveryCommentOption = DeliveryCommentOptions()
         ..name = element.name
         ..code = element.code;
@@ -253,7 +277,7 @@ class MdmsRepository {
     }).toList();
 
     final List<Interfaces>? interfaceList =
-    element?.backendInterface.first.interface.map((e) {
+        element?.backendInterface.first.interface.map((e) {
       final config = Config()..localStoreTTL = e.config.localStoreTTL;
 
       final interfaces = Interfaces()
@@ -265,7 +289,7 @@ class MdmsRepository {
     }).toList();
 
     final List<ComplaintTypes>? complaintTypesList =
-    pgrServiceDefinitions.serviceDefinitionWrapper?.definition.map((e) {
+        pgrServiceDefinitions.serviceDefinitionWrapper?.definition.map((e) {
       final types = ComplaintTypes()
         ..name = e.name
         ..code = e.serviceCode;
@@ -290,7 +314,9 @@ class MdmsRepository {
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
-    appConfiguration.searchHouseHoldFilters = result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
+    appConfiguration.dashboardConfig = dashboardConfig;
+    appConfiguration.searchHouseHoldFilters =
+        result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
       final searchFilters = SearchHouseHoldFilters()
         ..name = e.name
         ..code = e.code
@@ -300,42 +326,42 @@ class MdmsRepository {
 
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {
-          final symptomTypes = SymptomsTypes()
-            ..name = e.name
-            ..code = e.code
-            ..active = e.active;
+      final symptomTypes = SymptomsTypes()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
 
-          return symptomTypes;
-        }).toList();
+      return symptomTypes;
+    }).toList();
 
     appConfiguration.referralReasons =
         result.hcmWrapperModel?.referralReasonList?.map((e) {
-          final reasonTypes = ReferralReasons()
-            ..name = e.name
-            ..code = e.code
-            ..active = e.active;
+      final reasonTypes = ReferralReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
 
-          return reasonTypes;
-        }).toList();
+      return reasonTypes;
+    }).toList();
     appConfiguration.houseStructureTypes =
         result.hcmWrapperModel?.houseStructureTypes?.map((e) {
-          final structureTypes = HouseStructureTypes()
-            ..name = e.name.toString()
-            ..code = e.code
-            ..active = e.active;
+      final structureTypes = HouseStructureTypes()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
 
-          return structureTypes;
-        }).toList();
+      return structureTypes;
+    }).toList();
 
     appConfiguration.refusalReasons =
         result.hcmWrapperModel?.refusalReasons?.map((e) {
-          final reasonTypes = RefusalReasons()
-            ..name = e.name.toString()
-            ..code = e.code
-            ..active = e.active;
+      final reasonTypes = RefusalReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
 
-          return reasonTypes;
-        }).toList();
+      return reasonTypes;
+    }).toList();
 
     await isar.writeTxn(() async {
       await isar.appConfigurations.put(appConfiguration);
@@ -344,9 +370,9 @@ class MdmsRepository {
   }
 
   Future<RoleActionsWrapperModel> searchRoleActions(
-      String apiEndPoint,
-      Map<String, dynamic> body,
-      ) async {
+    String apiEndPoint,
+    Map<String, dynamic> body,
+  ) async {
     try {
       final Response response = await _client.post(apiEndPoint, data: body);
 

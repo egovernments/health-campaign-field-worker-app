@@ -1,3 +1,4 @@
+import 'package:digit_dss/digit_dss.dart';
 import 'package:isar/isar.dart';
 
 part 'app_configuration.g.dart';
@@ -78,6 +79,8 @@ class AppConfiguration {
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
+
+  late DashboardConfigSchema? dashboardConfig;
 }
 
 @embedded

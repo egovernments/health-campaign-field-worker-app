@@ -3,8 +3,7 @@ import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_dss/blocs/dashboard.dart';
-import 'package:digit_dss/data/remote/dashboard.dart';
+import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -283,7 +282,7 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                             create: (ctx) => DashboardBloc(
-                                  const DashboardState.fetched(),
+                                  const DashboardState.initialState(),
                                   isar: widget.isar,
                                   dashboardRemoteRepo:
                                       DashboardRemoteRepository(widget.client),

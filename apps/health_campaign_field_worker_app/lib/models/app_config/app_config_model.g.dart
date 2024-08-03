@@ -153,6 +153,10 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       firebaseConfig: (json['FIREBASE_CONFIG'] as List<dynamic>?)
           ?.map((e) => FirebaseConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
+      dashboardConfigWrapper: (json['dashboardConfig'] as List<dynamic>?)
+          ?.map(
+              (e) => DashboardConfigWrapper.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -178,6 +182,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
+      'dashboardConfig': instance.dashboardConfigWrapper,
     };
 
 _$AppConfigSecondaryWrapperModelImpl

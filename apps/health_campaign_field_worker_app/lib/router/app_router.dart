@@ -91,6 +91,7 @@ class AppRouter extends _$AppRouter {
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
+        // DSS Dashboard Routes
         AutoRoute(
           page: UserDashboardRoute.page,
           path: 'dashboard',

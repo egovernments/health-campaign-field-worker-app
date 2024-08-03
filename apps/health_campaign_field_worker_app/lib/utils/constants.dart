@@ -3,7 +3,7 @@ import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_response.dart';
+import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
 import 'package:dio/dio.dart';

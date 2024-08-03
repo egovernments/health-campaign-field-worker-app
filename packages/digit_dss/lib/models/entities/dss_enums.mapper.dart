@@ -45,6 +45,8 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return DSSEnums.day;
       case "home":
         return DSSEnums.home;
+      case "row":
+        return DSSEnums.row;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -73,6 +75,8 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return "day";
       case DSSEnums.home:
         return "home";
+      case DSSEnums.row:
+        return "row";
     }
   }
 }
