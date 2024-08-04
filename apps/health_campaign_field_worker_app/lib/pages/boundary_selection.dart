@@ -47,8 +47,8 @@ class _BoundarySelectionPageState
 
   @override
   void initState() {
+    LocalizationParams().setModule('boundary', false);
     loadLocalization();
-    LocalizationParams().setModule(['common']);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
@@ -66,7 +66,6 @@ class _BoundarySelectionPageState
 
   @override
   void dispose() {
-    LocalizationParams().clear();
     clickedStatus.dispose();
     super.dispose();
   }
@@ -135,12 +134,6 @@ class _BoundarySelectionPageState
                                     return false;
                                   }).toList();
 
-                                  if (filteredItems.isNotEmpty) {
-                                    LocalizationParams().setCode(filteredItems
-                                        .map((e) => e.code!)
-                                        .toList());
-                                  }
-
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: kPadding * 2,
@@ -163,10 +156,17 @@ class _BoundarySelectionPageState
                                       onSelected: (value) {
                                         if (value == null) return;
                                         loadLocalization();
-                                        LocalizationParams().setCode(state
-                                            .boundaryList
-                                            .map((e) => e.code!)
-                                            .toList());
+                                        if (filteredItems.isNotEmpty) {
+                                          List<BoundaryModel> combinedCodes =
+                                              [];
+                                          combinedCodes
+                                              .addAll(state.boundaryList);
+                                          combinedCodes.addAll(filteredItems);
+                                          LocalizationParams().setCode(
+                                              combinedCodes
+                                                  .map((e) => e.code!)
+                                                  .toList());
+                                        }
                                         context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
                                                 boundaryNum:
@@ -582,6 +582,9 @@ class _BoundarySelectionPageState
                                                       clickedStatus.value =
                                                           true;
                                                       loadLocalization();
+                                                      LocalizationParams()
+                                                          .setModule('boundary',
+                                                              false);
                                                     }
                                                   }
                                                 },
@@ -653,7 +656,6 @@ class _BoundarySelectionPageState
 
   void loadLocalization() async {
     var selectedLocale = AppSharedPreferences().getSelectedLocale;
-
     context.read<LocalizationBloc>().add(
         LocalizationEvent.onUpdateLocalizationIndex(
             index: 0, code: selectedLocale!));

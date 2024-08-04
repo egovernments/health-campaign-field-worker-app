@@ -16,6 +16,7 @@ import 'package:registration_delivery/blocs/app_localization.dart'
 
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/repositories/local/localization.dart';
 import 'utils.dart';
 
 getAppLocalizationDelegates({
@@ -29,28 +30,28 @@ getAppLocalizationDelegates({
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
     referral_reconciliation_localization.ReferralReconLocalization.getDelegate(
-      returnLocalizationFromSQL(sql) as Future,
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     inventory_localization.InventoryLocalization.getDelegate(
-      returnLocalizationFromSQL(sql) as Future,
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     attendance_localization.AttendanceLocalization.getDelegate(
-      returnLocalizationFromSQL(sql) as Future,
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     scanner_localization.ScannerLocalization.getDelegate(
-      returnLocalizationFromSQL(sql) as Future,
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     registration_delivery_localization.RegistrationDeliveryLocalization
         .getDelegate(
-      returnLocalizationFromSQL(sql) as Future,
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
     closed_household_localization.ClosedHouseholdLocalization.getDelegate(
-      returnLocalizationFromSQL(sql) as Future,
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
   ];

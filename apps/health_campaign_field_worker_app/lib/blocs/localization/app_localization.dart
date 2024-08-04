@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/localization.dart';
+import '../../data/repositories/local/localization.dart';
 import '../../utils/utils.dart';
 import 'app_localizations_delegate.dart';
 
@@ -25,8 +26,9 @@ class AppLocalizations {
   Future<bool> load() async {
     _localizedStrings.clear();
 
-    final listOfLocalizations = await returnLocalizationFromSQL(sql);
+    final listOfLocalizations = await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
 
+    print('listOfLocalizations: ${listOfLocalizations.length}');
     _localizedStrings.addAll(listOfLocalizations);
 
     return true;

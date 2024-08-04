@@ -58,7 +58,7 @@ class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
   @override
   void initState() {
-    LocalizationParams().setModule(['hcm-common', 'hcm-login']);
+    LocalizationParams().setModule('boundary', true);
     super.initState();
     requestDisableBatteryOptimization();
   }
@@ -162,6 +162,10 @@ class MainApplicationState extends State<MainApplication>
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
                     firstLanguage = appConfig.languages?.lastOrNull?.value;
+                    final selectedLocale =
+                        AppSharedPreferences().getSelectedLocale ??
+                            firstLanguage;
+                    LocalizationParams().setLocale(Locale(selectedLocale));
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(

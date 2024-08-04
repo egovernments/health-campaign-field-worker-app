@@ -28,6 +28,7 @@ import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -238,6 +239,9 @@ void showDownloadDialog(
   StreamController<double>? downloadProgressController,
 }) {
   if (isPop) {
+    context.read<LocalizationBloc>().add(
+        LocalizationEvent.onUpdateLocalizationIndex(
+            index: 0, code: AppSharedPreferences().getSelectedLocale!));
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -253,6 +257,10 @@ void showDownloadDialog(
           action: (ctx) {
             if (dialogType == DigitProgressDialogType.failed ||
                 dialogType == DigitProgressDialogType.checkFailed) {
+              context.read<LocalizationBloc>().add(
+                  LocalizationEvent.onUpdateLocalizationIndex(
+                      index: 0,
+                      code: AppSharedPreferences().getSelectedLocale!));
               Navigator.of(context, rootNavigator: true).pop();
               context.read<BeneficiaryDownSyncBloc>().add(
                     DownSyncGetBatchSizeEvent(
@@ -264,16 +272,23 @@ void showDownloadDialog(
                     ),
                   );
             } else {
+              context.read<LocalizationBloc>().add(
+                  LocalizationEvent.onUpdateLocalizationIndex(
+                      index: 0,
+                      code: AppSharedPreferences().getSelectedLocale!));
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.pop();
+              context.router.maybePop();
             }
           },
         ),
         secondaryAction: DigitDialogActions(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
+            context.read<LocalizationBloc>().add(
+                LocalizationEvent.onUpdateLocalizationIndex(
+                    index: 0, code: AppSharedPreferences().getSelectedLocale!));
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.maybePop();
           },
         ),
       );
@@ -297,6 +312,10 @@ void showDownloadDialog(
             label: model.primaryButtonLabel ?? '',
             action: (ctx) {
               if (dialogType == DigitProgressDialogType.pendingSync) {
+                context.read<LocalizationBloc>().add(
+                    LocalizationEvent.onUpdateLocalizationIndex(
+                        index: 0,
+                        code: AppSharedPreferences().getSelectedLocale!));
                 Navigator.of(context, rootNavigator: true).pop();
                 context.router.popUntilRouteWithName(HomeRoute.name);
               } else {
@@ -312,6 +331,10 @@ void showDownloadDialog(
                         ),
                       );
                 } else {
+                  context.read<LocalizationBloc>().add(
+                      LocalizationEvent.onUpdateLocalizationIndex(
+                          index: 0,
+                          code: AppSharedPreferences().getSelectedLocale!));
                   Navigator.of(context, rootNavigator: true).pop();
                   context.read<BeneficiaryDownSyncBloc>().add(
                         const DownSyncResetStateEvent(),
@@ -324,6 +347,10 @@ void showDownloadDialog(
               ? DigitDialogActions(
                   label: model.secondaryButtonLabel ?? '',
                   action: (ctx) {
+                    context.read<LocalizationBloc>().add(
+                        LocalizationEvent.onUpdateLocalizationIndex(
+                            index: 0,
+                            code: AppSharedPreferences().getSelectedLocale!));
                     Navigator.of(context, rootNavigator: true).pop();
                     context.router.popUntilRouteWithName(HomeRoute.name);
                   },
@@ -342,8 +369,7 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                        '',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -445,48 +471,6 @@ int getSyncCount(List<OpLog> oplogs) {
   return count;
 }
 
-FutureOr<List<Localization>> returnLocalizationFromSQL(
-    LocalSqlDataStore sql) async {
-  final includeModules = LocalizationParams().module != null &&
-          LocalizationParams().module!.isNotEmpty
-      ? sql.localization.module
-          .isIn(LocalizationParams().module!.whereType<String>().toList())
-      : const Constant(
-          false); // if no modules to include, don't add this filter
-
-  final allModules = LocalizationParams().module == null ||
-          LocalizationParams().module!.isEmpty
-      ? sql.localization.locale.equals('${{
-          LocalizationParams().locale!.languageCode
-        }}_${{LocalizationParams().locale!.countryCode}}')
-      : const Constant(false);
-
-  final includeCodes = LocalizationParams().code != null &&
-          LocalizationParams().code!.isNotEmpty &&
-          LocalizationParams().queryType == QueryEnums.absoluteMatch
-      ? sql.localization.code
-          .isIn(LocalizationParams().code!.whereType<String>().toList())
-      : const Constant(false); // if no codes to include, don't add this filter
-
-  // Combine filters using buildOr and buildAnd
-  final combinedFilter = buildOr([includeCodes, includeModules, allModules]);
-
-  final selectQuery = sql.select(sql.localization).join([])
-    ..where(combinedFilter);
-
-  final result = await selectQuery.get();
-
-  return result.map((e) {
-    var data = e.readTableOrNull(sql.localization);
-
-    return Localization()
-      ..code = data!.code
-      ..locale = data.locale
-      ..module = data.module
-      ..message = data.message;
-  }).toList();
-}
-
 class LocalizationParams {
   static final LocalizationParams _singleton = LocalizationParams._internal();
 
@@ -496,25 +480,21 @@ class LocalizationParams {
 
   LocalizationParams._internal();
 
-  QueryEnums? _queryType = QueryEnums.absoluteMatch;
   List<String>? _code;
-  List<String>? _module;
+  String? _module;
   Locale? _locale;
+  bool? _exclude = true;
 
-  setQueryType(QueryEnums queryType) {
-    _queryType = queryType;
-  }
-
-  setCode(List<String>? code) {
-    print('code: $code');
+  void setCode(List<String>? code) {
     _code = code;
   }
 
-  setModule(List<String>? module) {
+  void setModule(String? module, bool? exclude) {
     _module = module;
+    _exclude = exclude;
   }
 
-  setLocale(Locale locale) {
+  void setLocale(Locale locale) {
     _locale = locale;
   }
 
@@ -523,18 +503,11 @@ class LocalizationParams {
     _module = null;
   }
 
-  QueryEnums? get queryType => _queryType;
-
   List<String>? get code => _code;
 
-  List<String>? get module => _module;
+  String? get module => _module;
 
   Locale? get locale => _locale;
-}
 
-enum QueryEnums {
-  @MappableValue("absolute-match")
-  absoluteMatch,
-  @MappableValue("relative-match")
-  relativeMatch,
+  bool? get exclude => _exclude;
 }

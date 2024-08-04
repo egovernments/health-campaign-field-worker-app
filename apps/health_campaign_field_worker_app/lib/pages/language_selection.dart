@@ -17,8 +17,6 @@ class LanguageSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    LocalizationParams().setModule(['common']);
-
     final theme = Theme.of(context);
 
     return Scaffold(

@@ -23,7 +23,9 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/sync/sync.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
@@ -56,7 +58,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   @override
   initState() {
-
+    loadLocalization();
     super.initState();
 
     subscription = Connectivity()
@@ -74,6 +76,13 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
+  }
+
+  void loadLocalization() async {
+    var selectedLocale = AppSharedPreferences().getSelectedLocale;
+    context.read<LocalizationBloc>().add(
+        LocalizationEvent.onUpdateLocalizationIndex(
+            index: 0, code: selectedLocale!));
   }
 
   //  Be sure to cancel subscription after you are done
@@ -519,12 +528,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db )
+            element == i18.home.db)
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) =>
-            f != i18.home.db )
+        .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
