@@ -28,7 +28,6 @@ class AppLocalizations {
 
     final listOfLocalizations = await LocalizationLocalRepository().returnLocalizationFromSQL(sql);
 
-    print('listOfLocalizations: ${listOfLocalizations.length}');
     _localizedStrings.addAll(listOfLocalizations);
 
     return true;

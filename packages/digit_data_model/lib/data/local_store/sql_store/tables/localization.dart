@@ -1,8 +1,5 @@
 import 'package:drift/drift.dart';
 
-@TableIndex(name: 'localization_locale', columns: {
-  #locale,
-})
 @TableIndex(name: 'localization_module', columns: {
   #module,
 })

@@ -47,8 +47,7 @@ class _BoundarySelectionPageState
 
   @override
   void initState() {
-    LocalizationParams().setModule('boundary', false);
-    loadLocalization();
+    LocalizationParams().setModule('common', false);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
@@ -152,18 +151,18 @@ class _BoundarySelectionPageState
                                         setState(() {
                                           resetChildDropdowns(label, state);
                                         });
+                                        if (state.boundaryList.isNotEmpty) {
+                                          LocalizationParams().setCode(
+                                              state.boundaryList
+                                                  .map((e) => e.code!)
+                                                  .toList());
+                                        }
                                       },
                                       onSelected: (value) {
                                         if (value == null) return;
-                                        loadLocalization();
-                                        if (filteredItems.isNotEmpty) {
-                                          List<BoundaryModel> combinedCodes =
-                                              [];
-                                          combinedCodes
-                                              .addAll(state.boundaryList);
-                                          combinedCodes.addAll(filteredItems);
+                                        if (state.boundaryList.isNotEmpty) {
                                           LocalizationParams().setCode(
-                                              combinedCodes
+                                              state.boundaryList
                                                   .map((e) => e.code!)
                                                   .toList());
                                         }
@@ -581,10 +580,9 @@ class _BoundarySelectionPageState
                                                       }
                                                       clickedStatus.value =
                                                           true;
-                                                      loadLocalization();
                                                       LocalizationParams()
-                                                          .setModule('boundary',
-                                                              false);
+                                                          .setModule(
+                                                              'boundary', true);
                                                     }
                                                   }
                                                 },
@@ -615,7 +613,12 @@ class _BoundarySelectionPageState
   void resetChildDropdowns(String parentLabel, BoundaryState state) {
     final labelList = state.selectedBoundaryMap.keys.toList();
     final parentIndex = labelList.indexOf(parentLabel);
-
+    if (state.boundaryList.isNotEmpty) {
+      LocalizationParams().setCode(
+          state.boundaryList
+              .map((e) => e.code!)
+              .toList());
+    }
     for (int i = parentIndex + 1; i < labelList.length; i++) {
       final label = labelList[i];
       formControls[label]?.updateValue(null);
@@ -625,7 +628,12 @@ class _BoundarySelectionPageState
   FormGroup buildForm(BoundaryState state) {
     formControls = {};
     final labelList = state.selectedBoundaryMap.keys.toList();
-
+    if (state.boundaryList.isNotEmpty) {
+      LocalizationParams().setCode(
+          state.boundaryList
+              .map((e) => e.code!)
+              .toList());
+    }
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
         value: state.selectedBoundaryMap[label],
@@ -652,12 +660,5 @@ class _BoundarySelectionPageState
 
     // Return false if none of the form controls have a null value
     return false;
-  }
-
-  void loadLocalization() async {
-    var selectedLocale = AppSharedPreferences().getSelectedLocale;
-    context.read<LocalizationBloc>().add(
-        LocalizationEvent.onUpdateLocalizationIndex(
-            index: 0, code: selectedLocale!));
   }
 }
