@@ -202,6 +202,17 @@ class _BoundarySelectionPageState
                             BlocListener<BeneficiaryDownSyncBloc,
                                 BeneficiaryDownSyncState>(
                               listener: (context, downSyncState) {
+                                LocalizationParams()
+                                    .setModule('boundary', true);
+                                context.read<LocalizationBloc>().add(
+                                    LocalizationEvent.onUpdateLocalizationIndex(
+                                        index: appConfiguration.languages!
+                                            .indexWhere((element) =>
+                                                element.value ==
+                                                AppSharedPreferences()
+                                                    .getSelectedLocale),
+                                        code: AppSharedPreferences()
+                                            .getSelectedLocale!));
                                 downSyncState.maybeWhen(
                                   orElse: () => false,
                                   loading: (isPop) => {
@@ -583,9 +594,6 @@ class _BoundarySelectionPageState
                                                       }
                                                       clickedStatus.value =
                                                           true;
-                                                      LocalizationParams()
-                                                          .setModule(
-                                                              'boundary', true);
                                                     }
                                                   }
                                                 },
@@ -630,7 +638,6 @@ class _BoundarySelectionPageState
     formControls = {};
     final labelList = state.selectedBoundaryMap.keys.toList();
     if (state.boundaryList.isNotEmpty) {
-      print('buildForm');
       LocalizationParams()
           .setCode(state.boundaryList.map((e) => e.code!).toList());
     }

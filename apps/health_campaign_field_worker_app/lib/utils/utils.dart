@@ -6,7 +6,6 @@ import 'dart:io';
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
@@ -14,7 +13,6 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
-import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +26,6 @@ import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/localization.dart';
@@ -239,9 +236,6 @@ void showDownloadDialog(
   StreamController<double>? downloadProgressController,
 }) {
   if (isPop) {
-    context.read<LocalizationBloc>().add(
-        LocalizationEvent.onUpdateLocalizationIndex(
-            index: 0, code: AppSharedPreferences().getSelectedLocale!));
     Navigator.of(context, rootNavigator: true).pop();
   }
 
@@ -257,10 +251,6 @@ void showDownloadDialog(
           action: (ctx) {
             if (dialogType == DigitProgressDialogType.failed ||
                 dialogType == DigitProgressDialogType.checkFailed) {
-              context.read<LocalizationBloc>().add(
-                  LocalizationEvent.onUpdateLocalizationIndex(
-                      index: 0,
-                      code: AppSharedPreferences().getSelectedLocale!));
               Navigator.of(context, rootNavigator: true).pop();
               context.read<BeneficiaryDownSyncBloc>().add(
                     DownSyncGetBatchSizeEvent(
@@ -272,10 +262,6 @@ void showDownloadDialog(
                     ),
                   );
             } else {
-              context.read<LocalizationBloc>().add(
-                  LocalizationEvent.onUpdateLocalizationIndex(
-                      index: 0,
-                      code: AppSharedPreferences().getSelectedLocale!));
               Navigator.of(context, rootNavigator: true).pop();
               context.router.maybePop();
             }
@@ -284,9 +270,6 @@ void showDownloadDialog(
         secondaryAction: DigitDialogActions(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
-            context.read<LocalizationBloc>().add(
-                LocalizationEvent.onUpdateLocalizationIndex(
-                    index: 0, code: AppSharedPreferences().getSelectedLocale!));
             Navigator.of(context, rootNavigator: true).pop();
             context.router.maybePop();
           },
@@ -312,10 +295,6 @@ void showDownloadDialog(
             label: model.primaryButtonLabel ?? '',
             action: (ctx) {
               if (dialogType == DigitProgressDialogType.pendingSync) {
-                context.read<LocalizationBloc>().add(
-                    LocalizationEvent.onUpdateLocalizationIndex(
-                        index: 0,
-                        code: AppSharedPreferences().getSelectedLocale!));
                 Navigator.of(context, rootNavigator: true).pop();
                 context.router.popUntilRouteWithName(HomeRoute.name);
               } else {
@@ -331,10 +310,6 @@ void showDownloadDialog(
                         ),
                       );
                 } else {
-                  context.read<LocalizationBloc>().add(
-                      LocalizationEvent.onUpdateLocalizationIndex(
-                          index: 0,
-                          code: AppSharedPreferences().getSelectedLocale!));
                   Navigator.of(context, rootNavigator: true).pop();
                   context.read<BeneficiaryDownSyncBloc>().add(
                         const DownSyncResetStateEvent(),
@@ -347,10 +322,6 @@ void showDownloadDialog(
               ? DigitDialogActions(
                   label: model.secondaryButtonLabel ?? '',
                   action: (ctx) {
-                    context.read<LocalizationBloc>().add(
-                        LocalizationEvent.onUpdateLocalizationIndex(
-                            index: 0,
-                            code: AppSharedPreferences().getSelectedLocale!));
                     Navigator.of(context, rootNavigator: true).pop();
                     context.router.popUntilRouteWithName(HomeRoute.name);
                   },
