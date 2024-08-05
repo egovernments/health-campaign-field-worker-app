@@ -170,13 +170,13 @@ void onStart(ServiceInstance service) async {
                 appConfiguration,
               );
               final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-                'userId': userRequestModel!.uuid,
+                'userId': userRequestModel?.uuid,
                 'batchSize': configuredBatchSize,
               });
               flutterLocalNotificationsPlugin.show(
                 888,
                 'Auto Sync',
-                'Speed : ${double.tryParse(speedArray.firstOrNull.toString())?.toStringAsFixed(1)}Mb/ps - BatchSize : $configuredBatchSize',
+                'Speed : ${speedArray.first != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(2) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
                 const NotificationDetails(
                   android: AndroidNotificationDetails(
                     "my_foreground",
