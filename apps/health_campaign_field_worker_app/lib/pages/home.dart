@@ -28,7 +28,9 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/sync/sync.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
@@ -99,7 +101,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       return e.code;
     });
 
-    //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
         roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
@@ -649,11 +650,9 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (
-        AppConfiguration appConfiguration,
-        List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,
-      ) {
+      initialized: (AppConfiguration appConfiguration, List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,) {
+        loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -761,6 +760,15 @@ void setPackagesSingleton(BuildContext context) {
               entityName: DashboardResponseModel.schemaName,
             ));
       });
+}
+
+void loadLocalization(
+    BuildContext context, AppConfiguration appConfiguration) async {
+  context.read<LocalizationBloc>().add(
+      LocalizationEvent.onUpdateLocalizationIndex(
+          index: appConfiguration.languages!.indexWhere((element) =>
+              element.value == AppSharedPreferences().getSelectedLocale),
+          code: AppSharedPreferences().getSelectedLocale!));
 }
 
 class _HomeItemDataModel {

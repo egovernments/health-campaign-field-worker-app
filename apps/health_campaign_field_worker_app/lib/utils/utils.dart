@@ -264,7 +264,7 @@ void showDownloadDialog(
                   );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.pop();
+              context.router.maybePop();
             }
           },
         ),
@@ -272,7 +272,7 @@ void showDownloadDialog(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.maybePop();
           },
         ),
       );
@@ -341,8 +341,7 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                        '',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -445,6 +444,7 @@ int getSyncCount(List<OpLog> oplogs) {
   return count;
 }
 
+
 class TotalDetails {
   num noOfHousesVisited;
   num noOfHousesSprayed;
@@ -458,4 +458,44 @@ class TotalDetails {
     this.bottlesUsed = 0,
     this.noOfRemainingBottles = 0,
   });
+
+class LocalizationParams {
+  static final LocalizationParams _singleton = LocalizationParams._internal();
+
+  factory LocalizationParams() {
+    return _singleton;
+  }
+
+  LocalizationParams._internal();
+
+  List<String>? _code;
+  String? _module;
+  Locale? _locale;
+  bool? _exclude = true;
+
+  void setCode(List<String>? code) {
+    _code = code;
+  }
+
+  void setModule(String? module, bool? exclude) {
+    _module = module;
+    _exclude = exclude;
+  }
+
+  void setLocale(Locale locale) {
+    _locale = locale;
+  }
+
+  void clear() {
+    _code = null;
+    _module = null;
+  }
+
+  List<String>? get code => _code;
+
+  String? get module => _module;
+
+  Locale? get locale => _locale;
+
+  bool? get exclude => _exclude;
 }
