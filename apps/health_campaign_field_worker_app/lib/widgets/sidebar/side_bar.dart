@@ -111,7 +111,7 @@ class SideBar extends StatelessWidget {
                 ),
                 icon: Icons.language,
                 onPressed: () {
-                  // TODO: Complete implementation
+
                 },
                 content: Offstage(
                   offstage: languages == null,

@@ -12,8 +12,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
+import '../data/local_store/app_shared_preferences.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -45,6 +48,7 @@ class _BoundarySelectionPageState
 
   @override
   void initState() {
+    LocalizationParams().setModule('common', false);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
@@ -77,29 +81,45 @@ class _BoundarySelectionPageState
 
     return PopScope(
       canPop: shouldPop,
-      child: BlocBuilder<BoundaryBloc, BoundaryState>(
-        builder: (context, state) {
-          final selectedBoundary = state.selectedBoundaryMap.entries
-              .lastWhereOrNull((element) => element.value != null);
+      child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
+          builder: (context, initState) {
+        return BlocBuilder<BoundaryBloc, BoundaryState>(
+          builder: (context, state) {
+            final selectedBoundary = state.selectedBoundaryMap.entries
+                .lastWhereOrNull((element) => element.value != null);
+            return Scaffold(
+              body: Builder(
+                builder: (context) {
+                  if (state.loading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-          return Scaffold(
-            body: Builder(
-              builder: (context) {
-                if (state.loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+                  final labelList = state.selectedBoundaryMap.keys.toList();
 
-                final labelList = state.selectedBoundaryMap.keys.toList();
-
-                return BlocBuilder<AppInitializationBloc,
-                    AppInitializationState>(
-                  builder: (ctx, initState) {
-                    return initState.maybeWhen(
-                      orElse: () => const Offstage(),
-                      initialized: (appConfiguration, _) => ReactiveFormBuilder(
-                        form: () => buildForm(state),
+                  return initState.maybeWhen(
+                    orElse: () => const Offstage(),
+                    initialized: (appConfiguration, _) =>
+                        BlocListener<BoundaryBloc, BoundaryState>(
+                      listener: (context, state) {
+                        if (state.boundaryList.isNotEmpty) {
+                          final finalCodes =
+                              state.boundaryList.map((e) => e.code!).toList();
+                          LocalizationParams().setCode(finalCodes);
+                          context.read<LocalizationBloc>().add(
+                              LocalizationEvent.onUpdateLocalizationIndex(
+                                  index: appConfiguration.languages!.indexWhere(
+                                      (element) =>
+                                          element.value ==
+                                          AppSharedPreferences()
+                                              .getSelectedLocale),
+                                  code: AppSharedPreferences()
+                                      .getSelectedLocale!));
+                        }
+                      },
+                      child: ReactiveFormBuilder(
+                        form: () => buildForm(state, appConfiguration),
                         builder: (context, form, child) => Column(
                           children: [
                             Expanded(
@@ -111,7 +131,6 @@ class _BoundarySelectionPageState
                                   final filteredItems =
                                       state.boundaryList.where((element) {
                                     if (element.label != label) return false;
-
                                     if (labelIndex == 0) return true;
                                     final parentIndex = labelIndex - 1;
 
@@ -142,9 +161,7 @@ class _BoundarySelectionPageState
                                       formControlName: label,
                                       valueMapper: (value) {
                                         return localizations.translate(
-                                            value.name ??
-                                                value.code ??
-                                                'No Value');
+                                            value.code ?? 'No Value');
                                       },
                                       onFieldTap: (value) {
                                         setState(() {
@@ -153,7 +170,6 @@ class _BoundarySelectionPageState
                                       },
                                       onSelected: (value) {
                                         if (value == null) return;
-
                                         context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
                                                 boundaryNum:
@@ -187,6 +203,17 @@ class _BoundarySelectionPageState
                             BlocListener<BeneficiaryDownSyncBloc,
                                 BeneficiaryDownSyncState>(
                               listener: (context, downSyncState) {
+                                LocalizationParams()
+                                    .setModule('boundary', true);
+                                context.read<LocalizationBloc>().add(
+                                    LocalizationEvent.onUpdateLocalizationIndex(
+                                        index: appConfiguration.languages!
+                                            .indexWhere((element) =>
+                                                element.value ==
+                                                AppSharedPreferences()
+                                                    .getSelectedLocale),
+                                        code: AppSharedPreferences()
+                                            .getSelectedLocale!));
                                 downSyncState.maybeWhen(
                                   orElse: () => false,
                                   loading: (isPop) => {
@@ -568,6 +595,19 @@ class _BoundarySelectionPageState
                                                       }
                                                       clickedStatus.value =
                                                           true;
+                                                      LocalizationParams()
+                                                          .setModule(
+                                                              'boundary', true);
+                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                          index: appConfiguration
+                                                              .languages!
+                                                              .indexWhere((element) =>
+                                                                  element
+                                                                      .value ==
+                                                                  AppSharedPreferences()
+                                                                      .getSelectedLocale),
+                                                          code: AppSharedPreferences()
+                                                              .getSelectedLocale!));
                                                     }
                                                   }
                                                 },
@@ -584,31 +624,42 @@ class _BoundarySelectionPageState
                           ],
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-          );
-        },
-      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 
   void resetChildDropdowns(String parentLabel, BoundaryState state) {
     final labelList = state.selectedBoundaryMap.keys.toList();
     final parentIndex = labelList.indexOf(parentLabel);
-
+    if (state.boundaryList.isNotEmpty) {
+      LocalizationParams()
+          .setCode(state.boundaryList.map((e) => e.code!).toList());
+    }
     for (int i = parentIndex + 1; i < labelList.length; i++) {
       final label = labelList[i];
       formControls[label]?.updateValue(null);
     }
   }
 
-  FormGroup buildForm(BoundaryState state) {
+  FormGroup buildForm(BoundaryState state, AppConfiguration appConfiguration) {
     formControls = {};
     final labelList = state.selectedBoundaryMap.keys.toList();
-
+    if (state.boundaryList.isNotEmpty) {
+      final finalCodes = state.boundaryList.map((e) => e.code!).toList();
+      LocalizationParams().setCode(finalCodes);
+      context.read<LocalizationBloc>().add(
+          LocalizationEvent.onUpdateLocalizationIndex(
+              index: appConfiguration.languages!.indexWhere((element) =>
+                  element.value == AppSharedPreferences().getSelectedLocale),
+              code: AppSharedPreferences().getSelectedLocale!));
+    }
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
         value: state.selectedBoundaryMap[label],
