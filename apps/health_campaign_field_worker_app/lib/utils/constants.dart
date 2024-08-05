@@ -61,6 +61,7 @@ class Constants {
           OpLogSchema,
           ProjectTypeListCycleSchema,
           RowVersionListSchema,
+          DashboardConfigSchemaSchema,
           DashboardResponseSchema,
         ],
         name: 'HCM',

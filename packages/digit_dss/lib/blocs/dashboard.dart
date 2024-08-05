@@ -35,54 +35,68 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     DashboardEmitter emit,
   ) async {
     emit(const DashboardState.loading()); // Emit loading state
-    bool enableDashboard = DashboardSingleton()
-            .selectedProject
-            ?.additionalDetails
-            ?.enableDashboard ??
-        false; // Check if dashboard is enabled
-    Map<String, List<DashboardChartConfigSchema>>? dashboardConfig =
-        DashboardSingleton().dashboardConfig?.dashboardConfig as Map<String,
-            List<DashboardChartConfigSchema>>?; // Get dashboard configuration
-    if (!enableDashboard || (dashboardConfig?.keys ?? []).isEmpty) {
-      emit(
-          const DashboardErrorState()); // Emit error state if dashboard is not enabled or config is empty
-    } else {
-      final isConnected = await getIsConnected(); // Check network connectivity
-      if (isConnected && event.syncFromServer) {
-        final startDate = DateTime(event.selectedDate.year,
-                event.selectedDate.month, event.selectedDate.day)
-            .toLocal()
-            .millisecondsSinceEpoch; // Get start date in milliseconds
-        final endDate = DateTime(event.selectedDate.year,
-                event.selectedDate.month, event.selectedDate.day, 11, 59)
-            .toLocal()
-            .millisecondsSinceEpoch; // Get end date in milliseconds
-
-        try {
-          await processDashboardConfig(
-            dashboardConfig!,
-            startDate,
-            endDate,
-            isar,
-            event.selectedDate,
-            dashboardRemoteRepo,
-            DashboardSingleton().actionPath,
-            DashboardSingleton().tenantId,
-            DashboardSingleton().projectId,
-          ); // Process dashboard configuration
-
-          add(DashboardEvent.handleSearch(
-              selectedDate: event.selectedDate)); // Trigger search event
-        } catch (e) {
-          debugPrint(e.toString()); // Print error
-          emit(const DashboardErrorState()); // Emit error state
-        }
-      } else if (!isConnected && event.syncFromServer) {
+    try {
+      bool enableDashboard =
+          DashboardSingleton().dashboardConfig?.enableDashboard ??
+              false; // Check if dashboard is enabled
+      final dashboardConfig = DashboardSingleton()
+          .dashboardConfig
+          ?.charts; // Get dashboard configuration
+      if (!enableDashboard ||
+          (dashboardConfig?.where((chart) =>
+                      (chart.name ?? '').isNotEmpty &&
+                      (chart.chartType ?? '').isNotEmpty) ??
+                  [])
+              .toList()
+              .isEmpty) {
         emit(
-            const DashboardErrorState()); // Emit error state if not connected and sync is required
+            const DashboardErrorState()); // Emit error state if dashboard is not enabled or config is empty
       } else {
-        add(const DashboardEvent.handleSearch()); // Trigger search event
+        final isConnected =
+            await getIsConnected(); // Check network connectivity
+        if (isConnected && event.syncFromServer) {
+          final startDate = DateTime(event.selectedDate.year,
+                  event.selectedDate.month, event.selectedDate.day)
+              .toLocal()
+              .millisecondsSinceEpoch; // Get start date in milliseconds
+          final endDate = DateTime(event.selectedDate.year,
+                  event.selectedDate.month, event.selectedDate.day, 11, 59)
+              .toLocal()
+              .millisecondsSinceEpoch; // Get end date in milliseconds
+
+          try {
+            await processDashboardConfig(
+              dashboardConfig
+                      ?.where((chart) =>
+                          (chart.name ?? '').isNotEmpty &&
+                          (chart.chartType ?? '').isNotEmpty)
+                      .toList() ??
+                  [],
+              startDate,
+              endDate,
+              isar,
+              event.selectedDate,
+              dashboardRemoteRepo,
+              DashboardSingleton().actionPath,
+              DashboardSingleton().tenantId,
+              DashboardSingleton().projectId,
+            ); // Process dashboard configuration
+
+            add(DashboardEvent.handleSearch(
+                selectedDate: event.selectedDate)); // Trigger search event
+          } catch (e) {
+            debugPrint(e.toString()); // Print error
+            add(const DashboardEvent.handleSearch());
+          }
+        } else if (!isConnected && event.syncFromServer) {
+          emit(
+              const DashboardErrorState()); // Emit error state if not connected and sync is required
+        } else {
+          add(const DashboardEvent.handleSearch()); // Trigger search event
+        }
       }
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -99,8 +113,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           .findAll(); // Query metric charts from Isar database
       Map<String, MetricWrapper> metrics = {}; // Initialize metrics map
       List<TableWrapper> tableWrapperList = []; // Initialize table wrapper list
-      DashboardChartListSchema? dashboardConfig =
-          DashboardSingleton().dashboardConfig?.dashboardConfig;
+      DashboardConfigSchema? dashboardConfig =
+          DashboardSingleton().dashboardConfig;
       for (DashboardResponse chart in metricCharts) {
         if ((chart.data ?? []).isNotEmpty) {
           for (DashboardChartData data in (chart.data ?? [])) {
@@ -109,9 +123,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 header: data.headerName ?? '',
                 value: data.headerValue ?? '0',
                 insight: data.insight,
-                isHorizontal: dashboardConfig?.metricCharts
-                        ?.where(
-                            (metric) => metric.name == chart.visualizationCode)
+                isHorizontal: dashboardConfig?.charts
+                        ?.where((metric) =>
+                            metric.name == chart.visualizationCode &&
+                            metric.chartType ==
+                                DSSEnums.metric.name.toUpperCase())
                         .first
                         .vizType ==
                     DSSEnums.row.toValue(),

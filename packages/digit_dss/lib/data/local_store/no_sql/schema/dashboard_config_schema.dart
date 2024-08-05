@@ -2,22 +2,15 @@ import 'package:isar/isar.dart';
 
 part 'dashboard_config_schema.g.dart';
 
-@embedded
+@Collection()
 class DashboardConfigSchema {
+  Id id = Isar.autoIncrement;
+
   @Name("enableDashboard")
   late bool? enableDashboard;
 
-  @Name("dashboardConfig")
-  late DashboardChartListSchema? dashboardConfig;
-}
-
-@embedded
-class DashboardChartListSchema {
-  @Name("METRIC")
-  late List<DashboardChartConfigSchema>? metricCharts;
-
-  @Name("TABLE")
-  late List<DashboardChartConfigSchema>? tableCharts;
+  @Name("charts")
+  late List<DashboardChartConfigSchema>? charts;
 }
 
 @embedded
@@ -30,4 +23,7 @@ class DashboardChartConfigSchema {
 
   @Name("active")
   late bool? active;
+
+  @Name("chartType")
+  late String? chartType;
 }

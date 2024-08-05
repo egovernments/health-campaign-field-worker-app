@@ -6,39 +6,36 @@ part of 'dashboard_config.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_$DashboardConfigPrimaryWrapperImpl
+    _$$DashboardConfigPrimaryWrapperImplFromJson(Map<String, dynamic> json) =>
+        _$DashboardConfigPrimaryWrapperImpl(
+          dashboardConfigWrapper: (json['dashboardConfig'] as List<dynamic>?)
+                  ?.map((e) => DashboardConfigWrapper.fromJson(
+                      e as Map<String, dynamic>))
+                  .toList() ??
+              const [],
+        );
+
+Map<String, dynamic> _$$DashboardConfigPrimaryWrapperImplToJson(
+        _$DashboardConfigPrimaryWrapperImpl instance) =>
+    <String, dynamic>{
+      'dashboardConfig': instance.dashboardConfigWrapper,
+    };
+
 _$DashboardConfigWrapperImpl _$$DashboardConfigWrapperImplFromJson(
         Map<String, dynamic> json) =>
     _$DashboardConfigWrapperImpl(
       enableDashboard: json['enableDashboard'] as bool,
-      dashboardConfig: json['dashboardConfig'] == null
-          ? null
-          : DashboardConfig.fromJson(
-              json['dashboardConfig'] as Map<String, dynamic>),
+      charts: (json['charts'] as List<dynamic>?)
+          ?.map((e) => ChartConfigModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$DashboardConfigWrapperImplToJson(
         _$DashboardConfigWrapperImpl instance) =>
     <String, dynamic>{
       'enableDashboard': instance.enableDashboard,
-      'dashboardConfig': instance.dashboardConfig,
-    };
-
-_$DashboardConfigImpl _$$DashboardConfigImplFromJson(
-        Map<String, dynamic> json) =>
-    _$DashboardConfigImpl(
-      metricCharts: (json['METRIC'] as List<dynamic>?)
-          ?.map((e) => ChartConfigModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      tableCharts: (json['TABLE'] as List<dynamic>?)
-          ?.map((e) => ChartConfigModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$$DashboardConfigImplToJson(
-        _$DashboardConfigImpl instance) =>
-    <String, dynamic>{
-      'METRIC': instance.metricCharts,
-      'TABLE': instance.tableCharts,
+      'charts': instance.charts,
     };
 
 _$ChartConfigModelImpl _$$ChartConfigModelImplFromJson(
@@ -47,6 +44,7 @@ _$ChartConfigModelImpl _$$ChartConfigModelImplFromJson(
       active: json['active'] as bool,
       name: json['name'] as String,
       vizType: json['vizType'] as String?,
+      chartType: json['chartType'] as String,
     );
 
 Map<String, dynamic> _$$ChartConfigModelImplToJson(
@@ -55,4 +53,5 @@ Map<String, dynamic> _$$ChartConfigModelImplToJson(
       'active': instance.active,
       'name': instance.name,
       'vizType': instance.vizType,
+      'chartType': instance.chartType,
     };

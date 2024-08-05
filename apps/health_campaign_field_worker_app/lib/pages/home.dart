@@ -1,15 +1,3 @@
-import 'package:digit_dss/router/dashboard_router.gm.dart';
-
-import 'package:digit_dss/router/dashboard_router.gm.dart';
-
-import 'package:digit_dss/router/dashboard_router.gm.dart';
-
-import 'package:digit_dss/router/dashboard_router.gm.dart';
-
-import 'package:digit_dss/router/dashboard_router.gm.dart';
-
-import 'package:digit_dss/router/dashboard_router.gm.dart';
-
 import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
@@ -21,6 +9,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
@@ -373,7 +362,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
                     context.router.push(ManageStocksRoute());
                   },
                 );
@@ -444,7 +437,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
                     context.router.push(SearchReferralReconciliationsRoute());
                   },
                 );
@@ -510,6 +507,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
       i18.home.manageStockLabel:
@@ -553,7 +552,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.dashboard)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -649,22 +649,12 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (AppConfiguration appConfiguration,
-          List<ServiceRegistry> serviceRegistry) {
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,
+      ) {
         // INFO : Need to add singleton of package Here
-        DashboardSingleton().setInitialData(
-            projectId: context.projectId,
-            tenantId: envConfig.variables.tenantId,
-            dashboardConfig: appConfiguration.dashboardConfig,
-            appVersion: Constants().version,
-            selectedProject: context.selectedProject,
-            actionPath: Constants.getEndPoint(
-              serviceRegistry: serviceRegistry,
-              service: DashboardResponseModel.schemaName.toUpperCase(),
-              action: ApiOperation.search.toValue(),
-              entityName: DashboardResponseModel.schemaName,
-            ));
-
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
@@ -761,7 +751,7 @@ void setPackagesSingleton(BuildContext context) {
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,
-            dashboardConfig: appConfiguration.dashboardConfig,
+            dashboardConfig: dashboardConfigSchema,
             appVersion: Constants().version,
             selectedProject: context.selectedProject,
             actionPath: Constants.getEndPoint(

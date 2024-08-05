@@ -967,9 +967,6 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig =>
       throw _privateConstructorUsedError;
-  @JsonKey(name: 'dashboardConfig')
-  List<DashboardConfigWrapper>? get dashboardConfigWrapper =>
-      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1012,9 +1009,7 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'dashboardConfig')
-      List<DashboardConfigWrapper>? dashboardConfigWrapper});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
 }
 
 /// @nodoc
@@ -1048,7 +1043,6 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
-    Object? dashboardConfigWrapper = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: null == appConfig
@@ -1124,10 +1118,6 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
-      dashboardConfigWrapper: freezed == dashboardConfigWrapper
-          ? _value.dashboardConfigWrapper
-          : dashboardConfigWrapper // ignore: cast_nullable_to_non_nullable
-              as List<DashboardConfigWrapper>?,
     ) as $Val);
   }
 }
@@ -1169,9 +1159,7 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'dashboardConfig')
-      List<DashboardConfigWrapper>? dashboardConfigWrapper});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
 }
 
 /// @nodoc
@@ -1203,7 +1191,6 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
-    Object? dashboardConfigWrapper = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
       appConfig: null == appConfig
@@ -1279,10 +1266,6 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
-      dashboardConfigWrapper: freezed == dashboardConfigWrapper
-          ? _value._dashboardConfigWrapper
-          : dashboardConfigWrapper // ignore: cast_nullable_to_non_nullable
-              as List<DashboardConfigWrapper>?,
     ));
   }
 }
@@ -1326,9 +1309,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'dashboardConfig')
-      required final List<DashboardConfigWrapper>? dashboardConfigWrapper})
+      required final List<FirebaseConfig>? firebaseConfig})
       : _appConfig = appConfig,
         _bandWidthBatchSize = bandWidthBatchSize,
         _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
@@ -1347,8 +1328,7 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _referralReasonList = referralReasonList,
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
-        _firebaseConfig = firebaseConfig,
-        _dashboardConfigWrapper = dashboardConfigWrapper;
+        _firebaseConfig = firebaseConfig;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HCMWrapperModelImplFromJson(json);
@@ -1543,21 +1523,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
-  final List<DashboardConfigWrapper>? _dashboardConfigWrapper;
-  @override
-  @JsonKey(name: 'dashboardConfig')
-  List<DashboardConfigWrapper>? get dashboardConfigWrapper {
-    final value = _dashboardConfigWrapper;
-    if (value == null) return null;
-    if (_dashboardConfigWrapper is EqualUnmodifiableListView)
-      return _dashboardConfigWrapper;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, dashboardConfigWrapper: $dashboardConfigWrapper)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
   }
 
   @override
@@ -1603,36 +1571,32 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._refusalReasons, _refusalReasons) &&
             const DeepCollectionEquality()
-                .equals(other._firebaseConfig, _firebaseConfig) &&
-            const DeepCollectionEquality().equals(
-                other._dashboardConfigWrapper, _dashboardConfigWrapper));
+                .equals(other._firebaseConfig, _firebaseConfig));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hashAll([
-        runtimeType,
-        const DeepCollectionEquality().hash(_appConfig),
-        const DeepCollectionEquality().hash(_bandWidthBatchSize),
-        const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
-        const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-        const DeepCollectionEquality()
-            .hash(_householdMemberDeletionReasonOptions),
-        const DeepCollectionEquality().hash(_backgroundServiceConfig),
-        const DeepCollectionEquality().hash(_checklistTypes),
-        const DeepCollectionEquality().hash(_idTypeOptions),
-        const DeepCollectionEquality().hash(_deliveryCommentOptions),
-        const DeepCollectionEquality().hash(_backendInterface),
-        const DeepCollectionEquality().hash(_callSupportOptions),
-        const DeepCollectionEquality().hash(_transportTypes),
-        const DeepCollectionEquality().hash(_symptomsTypeList),
-        const DeepCollectionEquality().hash(_searchHouseHoldFilters),
-        const DeepCollectionEquality().hash(_referralReasonList),
-        const DeepCollectionEquality().hash(_houseStructureTypes),
-        const DeepCollectionEquality().hash(_refusalReasons),
-        const DeepCollectionEquality().hash(_firebaseConfig),
-        const DeepCollectionEquality().hash(_dashboardConfigWrapper)
-      ]);
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(_appConfig),
+      const DeepCollectionEquality().hash(_bandWidthBatchSize),
+      const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
+      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
+      const DeepCollectionEquality()
+          .hash(_householdMemberDeletionReasonOptions),
+      const DeepCollectionEquality().hash(_backgroundServiceConfig),
+      const DeepCollectionEquality().hash(_checklistTypes),
+      const DeepCollectionEquality().hash(_idTypeOptions),
+      const DeepCollectionEquality().hash(_deliveryCommentOptions),
+      const DeepCollectionEquality().hash(_backendInterface),
+      const DeepCollectionEquality().hash(_callSupportOptions),
+      const DeepCollectionEquality().hash(_transportTypes),
+      const DeepCollectionEquality().hash(_symptomsTypeList),
+      const DeepCollectionEquality().hash(_searchHouseHoldFilters),
+      const DeepCollectionEquality().hash(_referralReasonList),
+      const DeepCollectionEquality().hash(_houseStructureTypes),
+      const DeepCollectionEquality().hash(_refusalReasons),
+      const DeepCollectionEquality().hash(_firebaseConfig));
 
   @JsonKey(ignore: true)
   @override
@@ -1686,10 +1650,8 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'dashboardConfig')
-      required final List<DashboardConfigWrapper>?
-          dashboardConfigWrapper}) = _$HCMWrapperModelImpl;
+      required final List<FirebaseConfig>?
+          firebaseConfig}) = _$HCMWrapperModelImpl;
 
   factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
       _$HCMWrapperModelImpl.fromJson;
@@ -1748,9 +1710,6 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig;
-  @override
-  @JsonKey(name: 'dashboardConfig')
-  List<DashboardConfigWrapper>? get dashboardConfigWrapper;
   @override
   @JsonKey(ignore: true)
   _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>

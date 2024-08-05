@@ -98,7 +98,12 @@ class _BoundarySelectionPageState
                   builder: (ctx, initState) {
                     return initState.maybeWhen(
                       orElse: () => const Offstage(),
-                      initialized: (appConfiguration, _) => ReactiveFormBuilder(
+                      initialized: (
+                        appConfiguration,
+                        _,
+                        __,
+                      ) =>
+                          ReactiveFormBuilder(
                         form: () => buildForm(state),
                         builder: (context, form, child) => Column(
                           children: [

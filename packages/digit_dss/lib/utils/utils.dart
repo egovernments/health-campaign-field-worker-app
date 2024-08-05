@@ -99,7 +99,7 @@ DashboardRequestModel getRequestModel({
 }
 
 Future<void> processDashboardConfig(
-  Map<String, List<DashboardChartConfigSchema>> dashboardConfig,
+  List<DashboardChartConfigSchema> dashboardConfig,
   int startDate,
   int endDate,
   Isar isar,
@@ -109,14 +109,10 @@ Future<void> processDashboardConfig(
   String tenantId,
   String projectId,
 ) async {
-  for (var entry in dashboardConfig.entries) {
-    String visualizationType = entry.key;
-    List<String> visualizationCodes = entry.value
-        .where((c) => c.name != null)
-        .map((chart) => chart.name ?? '')
-        .toList();
-
-    for (String visualizationCode in visualizationCodes) {
+  if(dashboardConfig.isNotEmpty) {
+    for (var entry in dashboardConfig) {
+      String visualizationType = entry.chartType ?? '';
+      String visualizationCode = entry.name ?? '';
       await dashboardRemoteRepo.searchAndWriteToDB(
         apiEndPoint: actionPath,
         lastSelectedDate: lastSelectedDate,

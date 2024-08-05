@@ -14,6 +14,177 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
+DashboardConfigPrimaryWrapper _$DashboardConfigPrimaryWrapperFromJson(
+    Map<String, dynamic> json) {
+  return _DashboardConfigPrimaryWrapper.fromJson(json);
+}
+
+/// @nodoc
+mixin _$DashboardConfigPrimaryWrapper {
+  @JsonKey(name: 'dashboardConfig')
+  List<DashboardConfigWrapper> get dashboardConfigWrapper =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $DashboardConfigPrimaryWrapperCopyWith<DashboardConfigPrimaryWrapper>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $DashboardConfigPrimaryWrapperCopyWith<$Res> {
+  factory $DashboardConfigPrimaryWrapperCopyWith(
+          DashboardConfigPrimaryWrapper value,
+          $Res Function(DashboardConfigPrimaryWrapper) then) =
+      _$DashboardConfigPrimaryWrapperCopyWithImpl<$Res,
+          DashboardConfigPrimaryWrapper>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'dashboardConfig')
+      List<DashboardConfigWrapper> dashboardConfigWrapper});
+}
+
+/// @nodoc
+class _$DashboardConfigPrimaryWrapperCopyWithImpl<$Res,
+        $Val extends DashboardConfigPrimaryWrapper>
+    implements $DashboardConfigPrimaryWrapperCopyWith<$Res> {
+  _$DashboardConfigPrimaryWrapperCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? dashboardConfigWrapper = null,
+  }) {
+    return _then(_value.copyWith(
+      dashboardConfigWrapper: null == dashboardConfigWrapper
+          ? _value.dashboardConfigWrapper
+          : dashboardConfigWrapper // ignore: cast_nullable_to_non_nullable
+              as List<DashboardConfigWrapper>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$DashboardConfigPrimaryWrapperImplCopyWith<$Res>
+    implements $DashboardConfigPrimaryWrapperCopyWith<$Res> {
+  factory _$$DashboardConfigPrimaryWrapperImplCopyWith(
+          _$DashboardConfigPrimaryWrapperImpl value,
+          $Res Function(_$DashboardConfigPrimaryWrapperImpl) then) =
+      __$$DashboardConfigPrimaryWrapperImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'dashboardConfig')
+      List<DashboardConfigWrapper> dashboardConfigWrapper});
+}
+
+/// @nodoc
+class __$$DashboardConfigPrimaryWrapperImplCopyWithImpl<$Res>
+    extends _$DashboardConfigPrimaryWrapperCopyWithImpl<$Res,
+        _$DashboardConfigPrimaryWrapperImpl>
+    implements _$$DashboardConfigPrimaryWrapperImplCopyWith<$Res> {
+  __$$DashboardConfigPrimaryWrapperImplCopyWithImpl(
+      _$DashboardConfigPrimaryWrapperImpl _value,
+      $Res Function(_$DashboardConfigPrimaryWrapperImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? dashboardConfigWrapper = null,
+  }) {
+    return _then(_$DashboardConfigPrimaryWrapperImpl(
+      dashboardConfigWrapper: null == dashboardConfigWrapper
+          ? _value._dashboardConfigWrapper
+          : dashboardConfigWrapper // ignore: cast_nullable_to_non_nullable
+              as List<DashboardConfigWrapper>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$DashboardConfigPrimaryWrapperImpl
+    implements _DashboardConfigPrimaryWrapper {
+  const _$DashboardConfigPrimaryWrapperImpl(
+      {@JsonKey(name: 'dashboardConfig')
+      final List<DashboardConfigWrapper> dashboardConfigWrapper = const []})
+      : _dashboardConfigWrapper = dashboardConfigWrapper;
+
+  factory _$DashboardConfigPrimaryWrapperImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$DashboardConfigPrimaryWrapperImplFromJson(json);
+
+  final List<DashboardConfigWrapper> _dashboardConfigWrapper;
+  @override
+  @JsonKey(name: 'dashboardConfig')
+  List<DashboardConfigWrapper> get dashboardConfigWrapper {
+    if (_dashboardConfigWrapper is EqualUnmodifiableListView)
+      return _dashboardConfigWrapper;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_dashboardConfigWrapper);
+  }
+
+  @override
+  String toString() {
+    return 'DashboardConfigPrimaryWrapper(dashboardConfigWrapper: $dashboardConfigWrapper)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$DashboardConfigPrimaryWrapperImpl &&
+            const DeepCollectionEquality().equals(
+                other._dashboardConfigWrapper, _dashboardConfigWrapper));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_dashboardConfigWrapper));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$DashboardConfigPrimaryWrapperImplCopyWith<
+          _$DashboardConfigPrimaryWrapperImpl>
+      get copyWith => __$$DashboardConfigPrimaryWrapperImplCopyWithImpl<
+          _$DashboardConfigPrimaryWrapperImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$DashboardConfigPrimaryWrapperImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _DashboardConfigPrimaryWrapper
+    implements DashboardConfigPrimaryWrapper {
+  const factory _DashboardConfigPrimaryWrapper(
+          {@JsonKey(name: 'dashboardConfig')
+          final List<DashboardConfigWrapper> dashboardConfigWrapper}) =
+      _$DashboardConfigPrimaryWrapperImpl;
+
+  factory _DashboardConfigPrimaryWrapper.fromJson(Map<String, dynamic> json) =
+      _$DashboardConfigPrimaryWrapperImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'dashboardConfig')
+  List<DashboardConfigWrapper> get dashboardConfigWrapper;
+  @override
+  @JsonKey(ignore: true)
+  _$$DashboardConfigPrimaryWrapperImplCopyWith<
+          _$DashboardConfigPrimaryWrapperImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 DashboardConfigWrapper _$DashboardConfigWrapperFromJson(
     Map<String, dynamic> json) {
   return _DashboardConfigWrapper.fromJson(json);
@@ -23,8 +194,8 @@ DashboardConfigWrapper _$DashboardConfigWrapperFromJson(
 mixin _$DashboardConfigWrapper {
   @JsonKey(name: 'enableDashboard')
   bool get enableDashboard => throw _privateConstructorUsedError;
-  @JsonKey(name: 'dashboardConfig')
-  DashboardConfig? get dashboardConfig => throw _privateConstructorUsedError;
+  @JsonKey(name: 'charts')
+  List<ChartConfigModel>? get charts => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -40,9 +211,7 @@ abstract class $DashboardConfigWrapperCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'enableDashboard') bool enableDashboard,
-      @JsonKey(name: 'dashboardConfig') DashboardConfig? dashboardConfig});
-
-  $DashboardConfigCopyWith<$Res>? get dashboardConfig;
+      @JsonKey(name: 'charts') List<ChartConfigModel>? charts});
 }
 
 /// @nodoc
@@ -60,30 +229,18 @@ class _$DashboardConfigWrapperCopyWithImpl<$Res,
   @override
   $Res call({
     Object? enableDashboard = null,
-    Object? dashboardConfig = freezed,
+    Object? charts = freezed,
   }) {
     return _then(_value.copyWith(
       enableDashboard: null == enableDashboard
           ? _value.enableDashboard
           : enableDashboard // ignore: cast_nullable_to_non_nullable
               as bool,
-      dashboardConfig: freezed == dashboardConfig
-          ? _value.dashboardConfig
-          : dashboardConfig // ignore: cast_nullable_to_non_nullable
-              as DashboardConfig?,
+      charts: freezed == charts
+          ? _value.charts
+          : charts // ignore: cast_nullable_to_non_nullable
+              as List<ChartConfigModel>?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $DashboardConfigCopyWith<$Res>? get dashboardConfig {
-    if (_value.dashboardConfig == null) {
-      return null;
-    }
-
-    return $DashboardConfigCopyWith<$Res>(_value.dashboardConfig!, (value) {
-      return _then(_value.copyWith(dashboardConfig: value) as $Val);
-    });
   }
 }
 
@@ -98,10 +255,7 @@ abstract class _$$DashboardConfigWrapperImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'enableDashboard') bool enableDashboard,
-      @JsonKey(name: 'dashboardConfig') DashboardConfig? dashboardConfig});
-
-  @override
-  $DashboardConfigCopyWith<$Res>? get dashboardConfig;
+      @JsonKey(name: 'charts') List<ChartConfigModel>? charts});
 }
 
 /// @nodoc
@@ -118,17 +272,17 @@ class __$$DashboardConfigWrapperImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? enableDashboard = null,
-    Object? dashboardConfig = freezed,
+    Object? charts = freezed,
   }) {
     return _then(_$DashboardConfigWrapperImpl(
       enableDashboard: null == enableDashboard
           ? _value.enableDashboard
           : enableDashboard // ignore: cast_nullable_to_non_nullable
               as bool,
-      dashboardConfig: freezed == dashboardConfig
-          ? _value.dashboardConfig
-          : dashboardConfig // ignore: cast_nullable_to_non_nullable
-              as DashboardConfig?,
+      charts: freezed == charts
+          ? _value._charts
+          : charts // ignore: cast_nullable_to_non_nullable
+              as List<ChartConfigModel>?,
     ));
   }
 }
@@ -138,7 +292,8 @@ class __$$DashboardConfigWrapperImplCopyWithImpl<$Res>
 class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
   const _$DashboardConfigWrapperImpl(
       {@JsonKey(name: 'enableDashboard') required this.enableDashboard,
-      @JsonKey(name: 'dashboardConfig') this.dashboardConfig});
+      @JsonKey(name: 'charts') final List<ChartConfigModel>? charts})
+      : _charts = charts;
 
   factory _$DashboardConfigWrapperImpl.fromJson(Map<String, dynamic> json) =>
       _$$DashboardConfigWrapperImplFromJson(json);
@@ -146,13 +301,20 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
   @override
   @JsonKey(name: 'enableDashboard')
   final bool enableDashboard;
+  final List<ChartConfigModel>? _charts;
   @override
-  @JsonKey(name: 'dashboardConfig')
-  final DashboardConfig? dashboardConfig;
+  @JsonKey(name: 'charts')
+  List<ChartConfigModel>? get charts {
+    final value = _charts;
+    if (value == null) return null;
+    if (_charts is EqualUnmodifiableListView) return _charts;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'DashboardConfigWrapper(enableDashboard: $enableDashboard, dashboardConfig: $dashboardConfig)';
+    return 'DashboardConfigWrapper(enableDashboard: $enableDashboard, charts: $charts)';
   }
 
   @override
@@ -162,14 +324,13 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
             other is _$DashboardConfigWrapperImpl &&
             (identical(other.enableDashboard, enableDashboard) ||
                 other.enableDashboard == enableDashboard) &&
-            (identical(other.dashboardConfig, dashboardConfig) ||
-                other.dashboardConfig == dashboardConfig));
+            const DeepCollectionEquality().equals(other._charts, _charts));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, enableDashboard, dashboardConfig);
+  int get hashCode => Object.hash(runtimeType, enableDashboard,
+      const DeepCollectionEquality().hash(_charts));
 
   @JsonKey(ignore: true)
   @override
@@ -189,8 +350,8 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
 abstract class _DashboardConfigWrapper implements DashboardConfigWrapper {
   const factory _DashboardConfigWrapper(
       {@JsonKey(name: 'enableDashboard') required final bool enableDashboard,
-      @JsonKey(name: 'dashboardConfig')
-      final DashboardConfig? dashboardConfig}) = _$DashboardConfigWrapperImpl;
+      @JsonKey(name: 'charts')
+      final List<ChartConfigModel>? charts}) = _$DashboardConfigWrapperImpl;
 
   factory _DashboardConfigWrapper.fromJson(Map<String, dynamic> json) =
       _$DashboardConfigWrapperImpl.fromJson;
@@ -199,203 +360,12 @@ abstract class _DashboardConfigWrapper implements DashboardConfigWrapper {
   @JsonKey(name: 'enableDashboard')
   bool get enableDashboard;
   @override
-  @JsonKey(name: 'dashboardConfig')
-  DashboardConfig? get dashboardConfig;
+  @JsonKey(name: 'charts')
+  List<ChartConfigModel>? get charts;
   @override
   @JsonKey(ignore: true)
   _$$DashboardConfigWrapperImplCopyWith<_$DashboardConfigWrapperImpl>
       get copyWith => throw _privateConstructorUsedError;
-}
-
-DashboardConfig _$DashboardConfigFromJson(Map<String, dynamic> json) {
-  return _DashboardConfig.fromJson(json);
-}
-
-/// @nodoc
-mixin _$DashboardConfig {
-  @JsonKey(name: 'METRIC')
-  List<ChartConfigModel>? get metricCharts =>
-      throw _privateConstructorUsedError;
-  @JsonKey(name: 'TABLE')
-  List<ChartConfigModel>? get tableCharts => throw _privateConstructorUsedError;
-
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
-  $DashboardConfigCopyWith<DashboardConfig> get copyWith =>
-      throw _privateConstructorUsedError;
-}
-
-/// @nodoc
-abstract class $DashboardConfigCopyWith<$Res> {
-  factory $DashboardConfigCopyWith(
-          DashboardConfig value, $Res Function(DashboardConfig) then) =
-      _$DashboardConfigCopyWithImpl<$Res, DashboardConfig>;
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'METRIC') List<ChartConfigModel>? metricCharts,
-      @JsonKey(name: 'TABLE') List<ChartConfigModel>? tableCharts});
-}
-
-/// @nodoc
-class _$DashboardConfigCopyWithImpl<$Res, $Val extends DashboardConfig>
-    implements $DashboardConfigCopyWith<$Res> {
-  _$DashboardConfigCopyWithImpl(this._value, this._then);
-
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? metricCharts = freezed,
-    Object? tableCharts = freezed,
-  }) {
-    return _then(_value.copyWith(
-      metricCharts: freezed == metricCharts
-          ? _value.metricCharts
-          : metricCharts // ignore: cast_nullable_to_non_nullable
-              as List<ChartConfigModel>?,
-      tableCharts: freezed == tableCharts
-          ? _value.tableCharts
-          : tableCharts // ignore: cast_nullable_to_non_nullable
-              as List<ChartConfigModel>?,
-    ) as $Val);
-  }
-}
-
-/// @nodoc
-abstract class _$$DashboardConfigImplCopyWith<$Res>
-    implements $DashboardConfigCopyWith<$Res> {
-  factory _$$DashboardConfigImplCopyWith(_$DashboardConfigImpl value,
-          $Res Function(_$DashboardConfigImpl) then) =
-      __$$DashboardConfigImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call(
-      {@JsonKey(name: 'METRIC') List<ChartConfigModel>? metricCharts,
-      @JsonKey(name: 'TABLE') List<ChartConfigModel>? tableCharts});
-}
-
-/// @nodoc
-class __$$DashboardConfigImplCopyWithImpl<$Res>
-    extends _$DashboardConfigCopyWithImpl<$Res, _$DashboardConfigImpl>
-    implements _$$DashboardConfigImplCopyWith<$Res> {
-  __$$DashboardConfigImplCopyWithImpl(
-      _$DashboardConfigImpl _value, $Res Function(_$DashboardConfigImpl) _then)
-      : super(_value, _then);
-
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? metricCharts = freezed,
-    Object? tableCharts = freezed,
-  }) {
-    return _then(_$DashboardConfigImpl(
-      metricCharts: freezed == metricCharts
-          ? _value._metricCharts
-          : metricCharts // ignore: cast_nullable_to_non_nullable
-              as List<ChartConfigModel>?,
-      tableCharts: freezed == tableCharts
-          ? _value._tableCharts
-          : tableCharts // ignore: cast_nullable_to_non_nullable
-              as List<ChartConfigModel>?,
-    ));
-  }
-}
-
-/// @nodoc
-@JsonSerializable()
-class _$DashboardConfigImpl implements _DashboardConfig {
-  const _$DashboardConfigImpl(
-      {@JsonKey(name: 'METRIC') final List<ChartConfigModel>? metricCharts,
-      @JsonKey(name: 'TABLE') final List<ChartConfigModel>? tableCharts})
-      : _metricCharts = metricCharts,
-        _tableCharts = tableCharts;
-
-  factory _$DashboardConfigImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DashboardConfigImplFromJson(json);
-
-  final List<ChartConfigModel>? _metricCharts;
-  @override
-  @JsonKey(name: 'METRIC')
-  List<ChartConfigModel>? get metricCharts {
-    final value = _metricCharts;
-    if (value == null) return null;
-    if (_metricCharts is EqualUnmodifiableListView) return _metricCharts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  final List<ChartConfigModel>? _tableCharts;
-  @override
-  @JsonKey(name: 'TABLE')
-  List<ChartConfigModel>? get tableCharts {
-    final value = _tableCharts;
-    if (value == null) return null;
-    if (_tableCharts is EqualUnmodifiableListView) return _tableCharts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(value);
-  }
-
-  @override
-  String toString() {
-    return 'DashboardConfig(metricCharts: $metricCharts, tableCharts: $tableCharts)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$DashboardConfigImpl &&
-            const DeepCollectionEquality()
-                .equals(other._metricCharts, _metricCharts) &&
-            const DeepCollectionEquality()
-                .equals(other._tableCharts, _tableCharts));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_metricCharts),
-      const DeepCollectionEquality().hash(_tableCharts));
-
-  @JsonKey(ignore: true)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$DashboardConfigImplCopyWith<_$DashboardConfigImpl> get copyWith =>
-      __$$DashboardConfigImplCopyWithImpl<_$DashboardConfigImpl>(
-          this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$DashboardConfigImplToJson(
-      this,
-    );
-  }
-}
-
-abstract class _DashboardConfig implements DashboardConfig {
-  const factory _DashboardConfig(
-          {@JsonKey(name: 'METRIC') final List<ChartConfigModel>? metricCharts,
-          @JsonKey(name: 'TABLE') final List<ChartConfigModel>? tableCharts}) =
-      _$DashboardConfigImpl;
-
-  factory _DashboardConfig.fromJson(Map<String, dynamic> json) =
-      _$DashboardConfigImpl.fromJson;
-
-  @override
-  @JsonKey(name: 'METRIC')
-  List<ChartConfigModel>? get metricCharts;
-  @override
-  @JsonKey(name: 'TABLE')
-  List<ChartConfigModel>? get tableCharts;
-  @override
-  @JsonKey(ignore: true)
-  _$$DashboardConfigImplCopyWith<_$DashboardConfigImpl> get copyWith =>
-      throw _privateConstructorUsedError;
 }
 
 ChartConfigModel _$ChartConfigModelFromJson(Map<String, dynamic> json) {
@@ -410,6 +380,8 @@ mixin _$ChartConfigModel {
   String get name => throw _privateConstructorUsedError;
   @JsonKey(name: 'vizType')
   String? get vizType => throw _privateConstructorUsedError;
+  @JsonKey(name: 'chartType')
+  String get chartType => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -426,7 +398,8 @@ abstract class $ChartConfigModelCopyWith<$Res> {
   $Res call(
       {@JsonKey(name: 'active') bool active,
       @JsonKey(name: 'name') String name,
-      @JsonKey(name: 'vizType') String? vizType});
+      @JsonKey(name: 'vizType') String? vizType,
+      @JsonKey(name: 'chartType') String chartType});
 }
 
 /// @nodoc
@@ -445,6 +418,7 @@ class _$ChartConfigModelCopyWithImpl<$Res, $Val extends ChartConfigModel>
     Object? active = null,
     Object? name = null,
     Object? vizType = freezed,
+    Object? chartType = null,
   }) {
     return _then(_value.copyWith(
       active: null == active
@@ -459,6 +433,10 @@ class _$ChartConfigModelCopyWithImpl<$Res, $Val extends ChartConfigModel>
           ? _value.vizType
           : vizType // ignore: cast_nullable_to_non_nullable
               as String?,
+      chartType: null == chartType
+          ? _value.chartType
+          : chartType // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -474,7 +452,8 @@ abstract class _$$ChartConfigModelImplCopyWith<$Res>
   $Res call(
       {@JsonKey(name: 'active') bool active,
       @JsonKey(name: 'name') String name,
-      @JsonKey(name: 'vizType') String? vizType});
+      @JsonKey(name: 'vizType') String? vizType,
+      @JsonKey(name: 'chartType') String chartType});
 }
 
 /// @nodoc
@@ -491,6 +470,7 @@ class __$$ChartConfigModelImplCopyWithImpl<$Res>
     Object? active = null,
     Object? name = null,
     Object? vizType = freezed,
+    Object? chartType = null,
   }) {
     return _then(_$ChartConfigModelImpl(
       active: null == active
@@ -505,6 +485,10 @@ class __$$ChartConfigModelImplCopyWithImpl<$Res>
           ? _value.vizType
           : vizType // ignore: cast_nullable_to_non_nullable
               as String?,
+      chartType: null == chartType
+          ? _value.chartType
+          : chartType // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -515,7 +499,8 @@ class _$ChartConfigModelImpl implements _ChartConfigModel {
   const _$ChartConfigModelImpl(
       {@JsonKey(name: 'active') required this.active,
       @JsonKey(name: 'name') required this.name,
-      @JsonKey(name: 'vizType') this.vizType});
+      @JsonKey(name: 'vizType') this.vizType,
+      @JsonKey(name: 'chartType') required this.chartType});
 
   factory _$ChartConfigModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChartConfigModelImplFromJson(json);
@@ -529,10 +514,13 @@ class _$ChartConfigModelImpl implements _ChartConfigModel {
   @override
   @JsonKey(name: 'vizType')
   final String? vizType;
+  @override
+  @JsonKey(name: 'chartType')
+  final String chartType;
 
   @override
   String toString() {
-    return 'ChartConfigModel(active: $active, name: $name, vizType: $vizType)';
+    return 'ChartConfigModel(active: $active, name: $name, vizType: $vizType, chartType: $chartType)';
   }
 
   @override
@@ -542,12 +530,15 @@ class _$ChartConfigModelImpl implements _ChartConfigModel {
             other is _$ChartConfigModelImpl &&
             (identical(other.active, active) || other.active == active) &&
             (identical(other.name, name) || other.name == name) &&
-            (identical(other.vizType, vizType) || other.vizType == vizType));
+            (identical(other.vizType, vizType) || other.vizType == vizType) &&
+            (identical(other.chartType, chartType) ||
+                other.chartType == chartType));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, active, name, vizType);
+  int get hashCode =>
+      Object.hash(runtimeType, active, name, vizType, chartType);
 
   @JsonKey(ignore: true)
   @override
@@ -568,7 +559,8 @@ abstract class _ChartConfigModel implements ChartConfigModel {
   const factory _ChartConfigModel(
           {@JsonKey(name: 'active') required final bool active,
           @JsonKey(name: 'name') required final String name,
-          @JsonKey(name: 'vizType') final String? vizType}) =
+          @JsonKey(name: 'vizType') final String? vizType,
+          @JsonKey(name: 'chartType') required final String chartType}) =
       _$ChartConfigModelImpl;
 
   factory _ChartConfigModel.fromJson(Map<String, dynamic> json) =
@@ -583,6 +575,9 @@ abstract class _ChartConfigModel implements ChartConfigModel {
   @override
   @JsonKey(name: 'vizType')
   String? get vizType;
+  @override
+  @JsonKey(name: 'chartType')
+  String get chartType;
   @override
   @JsonKey(ignore: true)
   _$$ChartConfigModelImplCopyWith<_$ChartConfigModelImpl> get copyWith =>

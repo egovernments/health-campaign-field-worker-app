@@ -97,8 +97,6 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
-    @JsonKey(name: 'dashboardConfig')
-    required List<DashboardConfigWrapper>? dashboardConfigWrapper,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(

@@ -138,17 +138,19 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                                   ),
                                 ))
                             .toList(),
+                        if ((tableData ?? []).isNotEmpty)
+                          Align(
+                            alignment: Alignment.center,
+                            child: DigitInfoCard(
+                              title: localizations
+                                  .translate(i18.dashboard.noteHeader),
+                              description: localizations
+                                  .translate(i18.dashboard.noteDescription),
+                            ),
+                          )
                       ],
                     );
                   }),
-              Align(
-                alignment: Alignment.center,
-                child: DigitInfoCard(
-                  title: localizations.translate(i18.dashboard.noteHeader),
-                  description:
-                      localizations.translate(i18.dashboard.noteDescription),
-                ),
-              )
             ],
           ),
         ),

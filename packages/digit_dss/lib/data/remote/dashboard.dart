@@ -7,8 +7,10 @@ import 'package:dio/dio.dart'; // Import the dio package for HTTP client functio
 import 'package:flutter/material.dart';
 import 'package:isar/isar.dart'; // Import the isar package for database management
 
+import '../../models/entities/dashboard_config.dart';
 import '../../models/entities/dashboard_response_model.dart';
-import '../../models/entities/dss_enums.dart'; // Import the dashboard_response_model.dart file from the models/entities directory
+import '../../models/entities/dss_enums.dart';
+import '../local_store/no_sql/schema/dashboard_config_schema.dart'; // Import the dashboard_response_model.dart file from the models/entities directory
 
 // DashboardRemoteRepository class handles remote API requests and database transactions
 class DashboardRemoteRepository {
@@ -106,5 +108,45 @@ class DashboardRemoteRepository {
       );
       rethrow; // Rethrow the exception
     }
+  }
+
+  Future<String> searchDashboardConfig(
+    String apiEndPoint,
+    Map body,
+  ) async {
+    try {
+      final response = await _client.post(apiEndPoint, data: body);
+
+      final appCon = jsonEncode(response.data);
+
+      return appCon;
+    } on DioException catch (e) {
+      AppLogger.instance.error(
+        title: 'MDMS Repository',
+        message: '$e',
+        stackTrace: e.stackTrace,
+      );
+      rethrow;
+    }
+  }
+
+  FutureOr<void> writeToDashboardConfigDB(
+    DashboardConfigWrapper dashboardConfigWrapper,
+    Isar isar,
+  ) async {
+    final dashboardConfig = DashboardConfigSchema()
+      ..enableDashboard = dashboardConfigWrapper.enableDashboard
+      ..charts = dashboardConfigWrapper.charts?.map((chart) {
+        final dssChart = DashboardChartConfigSchema()
+          ..name = chart.name
+          ..active = chart.active
+          ..chartType = chart.chartType
+          ..vizType = chart.vizType;
+        return dssChart;
+      }).toList();
+
+    await isar.writeTxn(() async {
+      await isar.dashboardConfigSchemas.put(dashboardConfig);
+    });
   }
 }

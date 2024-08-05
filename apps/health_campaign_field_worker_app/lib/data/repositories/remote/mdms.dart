@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:dio/dio.dart';
 import 'package:isar/isar.dart';
 
@@ -141,29 +140,6 @@ class MdmsRepository {
     final firebaseConfig = FirebaseConfig()
       ..enableAnalytics = element?.firebaseConfig?.first.enableAnalytics
       ..enableCrashlytics = element?.firebaseConfig?.first.enableCrashlytics;
-
-    final dashboardChartList = DashboardChartListSchema()
-      ..metricCharts = element
-          ?.dashboardConfigWrapper?.first.dashboardConfig?.metricCharts
-          ?.map((metric) {
-        final metricChart = DashboardChartConfigSchema()
-          ..name = metric.name
-          ..active = metric.active
-          ..vizType = metric.vizType;
-        return metricChart;
-      }).toList()
-      ..tableCharts = element
-          ?.dashboardConfigWrapper?.first.dashboardConfig?.tableCharts
-          ?.map((table) {
-        final tableChart = DashboardChartConfigSchema()
-          ..name = table.name
-          ..active = table.active
-          ..vizType = table.vizType;
-        return tableChart;
-      }).toList();
-    final dashboardConfig = DashboardConfigSchema()
-      ..enableDashboard = element?.dashboardConfigWrapper?.first.enableDashboard
-      ..dashboardConfig = dashboardChartList;
 
     appConfiguration
       ..networkDetection = appConfig?.networkDetection
@@ -314,7 +290,6 @@ class MdmsRepository {
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
-    appConfiguration.dashboardConfig = dashboardConfig;
     appConfiguration.searchHouseHoldFilters =
         result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
       final searchFilters = SearchHouseHoldFilters()

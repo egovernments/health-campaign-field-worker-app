@@ -85,6 +85,7 @@ class MainApplicationState extends State<MainApplication>
         create: (context) => AppInitializationBloc(
           isar: widget.isar,
           mdmsRepository: MdmsRepository(widget.client),
+          dashboardRemoteRepository: DashboardRemoteRepository(widget.client),
         )..add(const AppInitializationSetupEvent()),
         child: NetworkManagerProviderWrapper(
           isar: widget.isar,

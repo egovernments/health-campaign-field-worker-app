@@ -143,32 +143,26 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
-    r'dashboardConfig': PropertySchema(
-      id: 22,
-      name: r'dashboardConfig',
-      type: IsarType.object,
-      target: r'DashboardConfigSchema',
-    ),
     r'houseStructureTypes': PropertySchema(
-      id: 23,
+      id: 22,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'referralReasons': PropertySchema(
-      id: 24,
+      id: 23,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 25,
+      id: 24,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 26,
+      id: 25,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -203,9 +197,7 @@ const AppConfigurationSchema = CollectionSchema(
     r'SearchHouseHoldFilters': SearchHouseHoldFiltersSchema,
     r'ReferralReasons': ReferralReasonsSchema,
     r'HouseStructureTypes': HouseStructureTypesSchema,
-    r'RefusalReasons': RefusalReasonsSchema,
-    r'DashboardConfigSchema': DashboardConfigSchemaSchema,
-    r'DashboardChartConfigSchema': DashboardChartConfigSchemaSchema
+    r'RefusalReasons': RefusalReasonsSchema
   },
   getId: _appConfigurationGetId,
   getLinks: _appConfigurationGetLinks,
@@ -456,14 +448,6 @@ int _appConfigurationEstimateSize(
     }
   }
   {
-    final value = object.dashboardConfig;
-    if (value != null) {
-      bytesCount += 3 +
-          DashboardConfigSchemaSchema.estimateSize(
-              value, allOffsets[DashboardConfigSchema]!, allOffsets);
-    }
-  }
-  {
     final list = object.houseStructureTypes;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -630,32 +614,26 @@ void _appConfigurationSerialize(
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
-  writer.writeObject<DashboardConfigSchema>(
-    offsets[22],
-    allOffsets,
-    DashboardConfigSchemaSchema.serialize,
-    object.dashboardConfig,
-  );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[22],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[24],
+    offsets[23],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[25],
+    offsets[24],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[26],
+    offsets[25],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -771,32 +749,27 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     TransportTypes(),
   );
-  object.dashboardConfig = reader.readObjectOrNull<DashboardConfigSchema>(
-    offsets[22],
-    DashboardConfigSchemaSchema.deserialize,
-    allOffsets,
-  );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[22],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[24],
+    offsets[23],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[25],
+    offsets[24],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[26],
+    offsets[25],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -933,33 +906,27 @@ P _appConfigurationDeserializeProp<P>(
         TransportTypes(),
       )) as P;
     case 22:
-      return (reader.readObjectOrNull<DashboardConfigSchema>(
-        offset,
-        DashboardConfigSchemaSchema.deserialize,
-        allOffsets,
-      )) as P;
-    case 23:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 24:
+    case 23:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 25:
+    case 24:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 26:
+    case 25:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3365,24 +3332,6 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
-      dashboardConfigIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'dashboardConfig',
-      ));
-    });
-  }
-
-  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
-      dashboardConfigIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'dashboardConfig',
-      ));
-    });
-  }
-
-  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       houseStructureTypesIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -3984,13 +3933,6 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
-      dashboardConfig(FilterQuery<DashboardConfigSchema> q) {
-    return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'dashboardConfig');
-    });
-  }
-
-  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       houseStructureTypesElement(FilterQuery<HouseStructureTypes> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'houseStructureTypes');
@@ -4414,13 +4356,6 @@ extension AppConfigurationQueryProperty
       transportTypesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'TRANSPORT_TYPES');
-    });
-  }
-
-  QueryBuilder<AppConfiguration, DashboardConfigSchema?, QQueryOperations>
-      dashboardConfigProperty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addPropertyName(r'dashboardConfig');
     });
   }
 
