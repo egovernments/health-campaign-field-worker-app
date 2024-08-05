@@ -148,38 +148,42 @@ class AppInitializationBloc
           pgrServiceDefinitions,
           isar,
         );
-        final dashboardConfigWrapper =
-            await dashboardRemoteRepository.searchDashboardConfig(
-          envConfig.variables.mdmsApiPath,
-          MdmsRequestModel(
-            mdmsCriteria: MdmsCriteriaModel(
-              tenantId: envConfig.variables.tenantId,
-              moduleDetails: [
-                MdmsModuleDetailModel(
-                  moduleName: ModuleEnums.hcm.toValue(),
-                  masterDetails: [
-                    MdmsMasterDetailModel(
-                      MasterEnums.dashboardConfig.toValue(),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ).toJson(),
-        );
-        final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
-                jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                    [ModuleEnums.hcm.toValue()])
-            .dashboardConfigWrapper;
+        try {
+          final dashboardConfigWrapper =
+              await dashboardRemoteRepository.searchDashboardConfig(
+            envConfig.variables.mdmsApiPath,
+            MdmsRequestModel(
+              mdmsCriteria: MdmsCriteriaModel(
+                tenantId: envConfig.variables.tenantId,
+                moduleDetails: [
+                  MdmsModuleDetailModel(
+                    moduleName: ModuleEnums.hcm.toValue(),
+                    masterDetails: [
+                      MdmsMasterDetailModel(
+                        MasterEnums.dashboardConfig.toValue(),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ).toJson(),
+          );
+          final dashboardConfigs = DashboardConfigPrimaryWrapper.fromJson(
+                  jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                      [ModuleEnums.hcm.toValue()])
+              .dashboardConfigWrapper;
 
-        if (dashboardConfigs.isNotEmpty) {
-          await dashboardRemoteRepository.writeToDashboardConfigDB(
-              DashboardConfigPrimaryWrapper.fromJson(
-                      jsonDecode(dashboardConfigWrapper)['MdmsRes']
-                          [ModuleEnums.hcm.toValue()])
-                  .dashboardConfigWrapper
-                  .first,
-              isar);
+          if (dashboardConfigs.isNotEmpty) {
+            await dashboardRemoteRepository.writeToDashboardConfigDB(
+                DashboardConfigPrimaryWrapper.fromJson(
+                        jsonDecode(dashboardConfigWrapper)['MdmsRes']
+                            [ModuleEnums.hcm.toValue()])
+                    .dashboardConfigWrapper
+                    .first,
+                isar);
+          }
+        } catch (e) {
+          debugPrint(e.toString());
         }
 
         add(
