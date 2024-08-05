@@ -178,12 +178,9 @@ class ProjectAdditionalFields extends AdditionalFields
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ProjectAdditionalDetails with ProjectAdditionalDetailsMappable {
   final ProjectTypeModel? projectType;
-  final bool? enableDashboard;
-  final Map<String, List<String>>? dashboardConfig;
+
 
   ProjectAdditionalDetails({
     this.projectType,
-    this.enableDashboard = false,
-    this.dashboardConfig,
   }) : super();
 }

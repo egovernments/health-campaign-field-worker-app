@@ -31,7 +31,7 @@
 
 
 ## 1.0.3-dev.3
-* Added dashboard config to project additional details model
+* Added localization table to digit_data_model
 
 
 

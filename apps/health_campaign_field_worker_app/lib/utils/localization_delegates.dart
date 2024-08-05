@@ -1,15 +1,10 @@
-
 import 'dart:ui';
-import 'package:closed_household/blocs/app_localization.dart'
-    as closed_household_localization;
-import 'package:closed_household/blocs/app_localization.dart'
-    as digit_dss_localization
-import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
 import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
+import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_dss/blocs/app_localization.dart'
     as digit_dss_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
@@ -17,7 +12,6 @@ import 'package:digit_scanner/blocs/app_localization.dart'
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
-import 'package:isar/isar.dart';
 import 'package:referral_reconciliation/blocs/app_localization.dart'
     as referral_reconciliation_localization;
 import 'package:registration_delivery/blocs/app_localization.dart'
@@ -26,7 +20,6 @@ import 'package:registration_delivery/blocs/app_localization.dart'
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/repositories/local/localization.dart';
-import 'utils.dart';
 
 getAppLocalizationDelegates({
   required LocalSqlDataStore sql,
@@ -64,11 +57,8 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     digit_dss_localization.DashboardLocalization.getDelegate(
-      getLocalizationString(
-        isar,
-        selectedLocale,
-      ),
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
-    ),
+    )
   ];
 }
