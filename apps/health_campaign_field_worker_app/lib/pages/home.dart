@@ -58,7 +58,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
   @override
   initState() {
-    loadLocalization();
     super.initState();
 
     subscription = Connectivity()
@@ -76,13 +75,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
     //// Function to set initial Data required for the packages to run
     setPackagesSingleton(context);
-  }
-
-  void loadLocalization() async {
-    var selectedLocale = AppSharedPreferences().getSelectedLocale;
-    context.read<LocalizationBloc>().add(
-        LocalizationEvent.onUpdateLocalizationIndex(
-            index: 0, code: selectedLocale!));
   }
 
   //  Be sure to cancel subscription after you are done
@@ -625,6 +617,7 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
+        loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -720,6 +713,15 @@ void setPackagesSingleton(BuildContext context) {
               .toList(),
         );
       });
+}
+
+void loadLocalization(
+    BuildContext context, AppConfiguration appConfiguration) async {
+  context.read<LocalizationBloc>().add(
+      LocalizationEvent.onUpdateLocalizationIndex(
+          index: appConfiguration.languages!.indexWhere((element) =>
+              element.value == AppSharedPreferences().getSelectedLocale),
+          code: AppSharedPreferences().getSelectedLocale!));
 }
 
 class _HomeItemDataModel {

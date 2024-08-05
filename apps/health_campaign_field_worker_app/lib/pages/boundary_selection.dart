@@ -16,6 +16,7 @@ import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/app_shared_preferences.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -118,7 +119,7 @@ class _BoundarySelectionPageState
                         }
                       },
                       child: ReactiveFormBuilder(
-                        form: () => buildForm(state),
+                        form: () => buildForm(state, appConfiguration),
                         builder: (context, form, child) => Column(
                           children: [
                             Expanded(
@@ -594,6 +595,19 @@ class _BoundarySelectionPageState
                                                       }
                                                       clickedStatus.value =
                                                           true;
+                                                      LocalizationParams()
+                                                          .setModule(
+                                                              'boundary', true);
+                                                      context.read<LocalizationBloc>().add(LocalizationEvent.onUpdateLocalizationIndex(
+                                                          index: appConfiguration
+                                                              .languages!
+                                                              .indexWhere((element) =>
+                                                                  element
+                                                                      .value ==
+                                                                  AppSharedPreferences()
+                                                                      .getSelectedLocale),
+                                                          code: AppSharedPreferences()
+                                                              .getSelectedLocale!));
                                                     }
                                                   }
                                                 },
@@ -634,12 +648,17 @@ class _BoundarySelectionPageState
     }
   }
 
-  FormGroup buildForm(BoundaryState state) {
+  FormGroup buildForm(BoundaryState state, AppConfiguration appConfiguration) {
     formControls = {};
     final labelList = state.selectedBoundaryMap.keys.toList();
     if (state.boundaryList.isNotEmpty) {
-      LocalizationParams()
-          .setCode(state.boundaryList.map((e) => e.code!).toList());
+      final finalCodes = state.boundaryList.map((e) => e.code!).toList();
+      LocalizationParams().setCode(finalCodes);
+      context.read<LocalizationBloc>().add(
+          LocalizationEvent.onUpdateLocalizationIndex(
+              index: appConfiguration.languages!.indexWhere((element) =>
+                  element.value == AppSharedPreferences().getSelectedLocale),
+              code: AppSharedPreferences().getSelectedLocale!));
     }
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
