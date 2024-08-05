@@ -9,14 +9,15 @@ class GlobalSearchParameters {
   final List<String>? filter;
   final int? totalCount;
 
-  GlobalSearchParameters(
-      {required this.isProximityEnabled,
-      required this.latitude,
-      required this.longitude,
-      required this.maxRadius,
-      required this.nameSearch,
-      required this.offset,
-      required this.limit,
-      required this.filter,
-      this.totalCount});
+  GlobalSearchParameters({
+    required this.isProximityEnabled,
+    required this.latitude,
+    required this.longitude,
+    required this.maxRadius,
+    required this.nameSearch,
+    required this.offset,
+    required this.limit,
+    required this.filter,
+    this.totalCount,
+  });
 }

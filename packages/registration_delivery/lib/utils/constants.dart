@@ -31,3 +31,13 @@ class StatusKeys {
   StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
       this.isBeneficiaryReferred, this.isStatusReset);
 }
+
+class TaskResourceInfo {
+  String productName;
+  String quantityDelivered;
+
+  TaskResourceInfo(
+    this.productName,
+    this.quantityDelivered,
+  );
+}
