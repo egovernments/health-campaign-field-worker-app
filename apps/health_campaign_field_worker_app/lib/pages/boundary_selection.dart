@@ -80,28 +80,44 @@ class _BoundarySelectionPageState
 
     return PopScope(
       canPop: shouldPop,
-      child: BlocBuilder<BoundaryBloc, BoundaryState>(
-        builder: (context, state) {
-          final selectedBoundary = state.selectedBoundaryMap.entries
-              .lastWhereOrNull((element) => element.value != null);
+      child: BlocBuilder<AppInitializationBloc, AppInitializationState>(
+          builder: (context, initState) {
+        return BlocBuilder<BoundaryBloc, BoundaryState>(
+          builder: (context, state) {
+            final selectedBoundary = state.selectedBoundaryMap.entries
+                .lastWhereOrNull((element) => element.value != null);
+            return Scaffold(
+              body: Builder(
+                builder: (context) {
+                  if (state.loading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-          return Scaffold(
-            body: Builder(
-              builder: (context) {
-                if (state.loading) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
+                  final labelList = state.selectedBoundaryMap.keys.toList();
 
-                final labelList = state.selectedBoundaryMap.keys.toList();
-
-                return BlocBuilder<AppInitializationBloc,
-                    AppInitializationState>(
-                  builder: (ctx, initState) {
-                    return initState.maybeWhen(
-                      orElse: () => const Offstage(),
-                      initialized: (appConfiguration, _) => ReactiveFormBuilder(
+                  return initState.maybeWhen(
+                    orElse: () => const Offstage(),
+                    initialized: (appConfiguration, _) =>
+                        BlocListener<BoundaryBloc, BoundaryState>(
+                      listener: (context, state) {
+                        if (state.boundaryList.isNotEmpty) {
+                          final finalCodes =
+                              state.boundaryList.map((e) => e.code!).toList();
+                          LocalizationParams().setCode(finalCodes);
+                          context.read<LocalizationBloc>().add(
+                              LocalizationEvent.onUpdateLocalizationIndex(
+                                  index: appConfiguration.languages!.indexWhere(
+                                      (element) =>
+                                          element.value ==
+                                          AppSharedPreferences()
+                                              .getSelectedLocale),
+                                  code: AppSharedPreferences()
+                                      .getSelectedLocale!));
+                        }
+                      },
+                      child: ReactiveFormBuilder(
                         form: () => buildForm(state),
                         builder: (context, form, child) => Column(
                           children: [
@@ -114,7 +130,6 @@ class _BoundarySelectionPageState
                                   final filteredItems =
                                       state.boundaryList.where((element) {
                                     if (element.label != label) return false;
-
                                     if (labelIndex == 0) return true;
                                     final parentIndex = labelIndex - 1;
 
@@ -151,21 +166,9 @@ class _BoundarySelectionPageState
                                         setState(() {
                                           resetChildDropdowns(label, state);
                                         });
-                                        if (state.boundaryList.isNotEmpty) {
-                                          LocalizationParams().setCode(
-                                              state.boundaryList
-                                                  .map((e) => e.code!)
-                                                  .toList());
-                                        }
                                       },
                                       onSelected: (value) {
                                         if (value == null) return;
-                                        if (state.boundaryList.isNotEmpty) {
-                                          LocalizationParams().setCode(
-                                              state.boundaryList
-                                                  .map((e) => e.code!)
-                                                  .toList());
-                                        }
                                         context.read<BoundaryBloc>().add(
                                               BoundarySearchEvent(
                                                 boundaryNum:
@@ -599,14 +602,14 @@ class _BoundarySelectionPageState
                           ],
                         ),
                       ),
-                    );
-                  },
-                );
-              },
-            ),
-          );
-        },
-      ),
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        );
+      }),
     );
   }
 
@@ -614,10 +617,8 @@ class _BoundarySelectionPageState
     final labelList = state.selectedBoundaryMap.keys.toList();
     final parentIndex = labelList.indexOf(parentLabel);
     if (state.boundaryList.isNotEmpty) {
-      LocalizationParams().setCode(
-          state.boundaryList
-              .map((e) => e.code!)
-              .toList());
+      LocalizationParams()
+          .setCode(state.boundaryList.map((e) => e.code!).toList());
     }
     for (int i = parentIndex + 1; i < labelList.length; i++) {
       final label = labelList[i];
@@ -629,10 +630,9 @@ class _BoundarySelectionPageState
     formControls = {};
     final labelList = state.selectedBoundaryMap.keys.toList();
     if (state.boundaryList.isNotEmpty) {
-      LocalizationParams().setCode(
-          state.boundaryList
-              .map((e) => e.code!)
-              .toList());
+      print('buildForm');
+      LocalizationParams()
+          .setCode(state.boundaryList.map((e) => e.code!).toList());
     }
     for (final label in labelList) {
       formControls[label] = FormControl<BoundaryModel>(
