@@ -1,0 +1,3 @@
+dependency_overrides:
+  dart_mappable_builder:
+    path: ../../packages/dart_mappable_builder

@@ -1,0 +1,5 @@
+dependency_overrides:
+  digit_firebase_services:
+    path: ../../packages/digit_firebase_services
+  dart_mappable_builder:
+    path: ../../packages/dart_mappable_builder
