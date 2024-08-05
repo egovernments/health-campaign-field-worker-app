@@ -77,7 +77,7 @@ class DeliverInterventionPageState
               task: _getTaskModel(
                 context,
                 form: form,
-                oldTask: RegistrationDeliverySingleton().beneficiaryType == BeneficiaryType.household ? deliverInterventionState.tasks?.last : null,
+                oldTask: RegistrationDeliverySingleton().beneficiaryType == BeneficiaryType.household ? deliverInterventionState.householdMemberWrapper?.tasks?.last : null,
                 projectBeneficiaryClientReferenceId:
                     projectBeneficiary.clientReferenceId,
                 dose: deliverInterventionState.dose,
@@ -87,7 +87,7 @@ class DeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
               ),
-              isEditing: false,
+              isEditing: (deliverInterventionState.householdMemberWrapper?.tasks ?? []).isNotEmpty ? true : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
