@@ -23,7 +23,9 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/sync/sync.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
@@ -94,7 +96,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       return e.code;
     });
 
-    //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
         roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
@@ -519,12 +520,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db )
+            element == i18.home.db)
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) =>
-            f != i18.home.db )
+        .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -617,6 +617,7 @@ void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
+        loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -712,6 +713,15 @@ void setPackagesSingleton(BuildContext context) {
               .toList(),
         );
       });
+}
+
+void loadLocalization(
+    BuildContext context, AppConfiguration appConfiguration) async {
+  context.read<LocalizationBloc>().add(
+      LocalizationEvent.onUpdateLocalizationIndex(
+          index: appConfiguration.languages!.indexWhere((element) =>
+              element.value == AppSharedPreferences().getSelectedLocale),
+          code: AppSharedPreferences().getSelectedLocale!));
 }
 
 class _HomeItemDataModel {

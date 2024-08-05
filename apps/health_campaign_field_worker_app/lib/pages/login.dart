@@ -27,6 +27,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   static const _password = 'password';
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
