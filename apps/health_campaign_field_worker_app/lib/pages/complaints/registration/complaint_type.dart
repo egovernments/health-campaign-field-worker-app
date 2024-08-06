@@ -128,8 +128,11 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           builder: (context, state) {
                             return state.maybeWhen(
                               orElse: () => const Offstage(),
-                              initialized:
-                                  (appConfiguration, serviceRegistryList) {
+                              initialized: (
+                                appConfiguration,
+                                serviceRegistryList,
+                                _,
+                              ) {
                                 var complaintTypes = appConfiguration
                                     .complaintTypes
                                     ?.map((e) => e.code)

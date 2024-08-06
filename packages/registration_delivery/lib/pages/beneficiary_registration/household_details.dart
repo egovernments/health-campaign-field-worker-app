@@ -306,18 +306,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                             );
                             final overviewBloc =
                                 context.read<HouseholdOverviewBloc>();
-
-                            overviewBloc.add(
-                              HouseholdOverviewReloadEvent(
-                                projectId: RegistrationDeliverySingleton()
-                                    .projectId
-                                    .toString(),
-                                projectBeneficiaryType:
-                                    RegistrationDeliverySingleton()
-                                            .beneficiaryType ??
-                                        BeneficiaryType.household,
-                              ),
-                            );
                             HouseholdMemberWrapper memberWrapper =
                                 overviewBloc.state.householdMemberWrapper;
                             final route = router.parent() as StackRouter;

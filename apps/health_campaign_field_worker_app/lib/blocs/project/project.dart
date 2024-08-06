@@ -6,6 +6,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/digit_dss.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -16,6 +17,7 @@ import 'package:recase/recase.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
+import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
@@ -96,6 +98,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       productVariantRemoteRepository;
   final LocalRepository<ProductVariantModel, ProductVariantSearchModel>
       productVariantLocalRepository;
+  final DashboardRemoteRepository dashboardRemoteRepository;
   BuildContext context;
 
   ProjectBloc({
@@ -126,6 +129,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.individualRemoteRepository,
     required this.attendanceLogLocalRepository,
     required this.attendanceLogRemoteRepository,
+    required this.dashboardRemoteRepository,
     required this.context,
   })  : localSecureStore = localSecureStore ?? LocalSecureStore.instance,
         super(const ProjectState()) {
@@ -434,6 +438,47 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     List<BoundaryModel> boundaries;
     try {
+      try {
+        final startDate = DateTime(
+                DateTime.now().year, DateTime.now().month, DateTime.now().day)
+            .toLocal()
+            .millisecondsSinceEpoch;
+        final endDate = DateTime(DateTime.now().year, DateTime.now().month,
+                DateTime.now().day, 11, 59)
+            .toLocal()
+            .millisecondsSinceEpoch;
+        final serviceRegistry = await isar.serviceRegistrys.where().findAll();
+        final dashboardConfig = await isar.dashboardConfigSchemas
+            .where()
+            .filter()
+            .chartsIsNotNull()
+            .chartsIsNotEmpty()
+            .findAll();
+        final dashboardActionPath = Constants.getEndPoint(
+            serviceRegistry: serviceRegistry,
+            service: DashboardResponseModel.schemaName.toUpperCase(),
+            action: ApiOperation.search.toValue(),
+            entityName: DashboardResponseModel.schemaName);
+        if (dashboardConfig.isNotEmpty &&
+            dashboardConfig.first.enableDashboard == true &&
+            dashboardConfig.first.charts != null) {
+          await processDashboardConfig(
+            dashboardConfig.first.charts ?? [],
+            startDate,
+            endDate,
+            isar,
+            DateTime.now(),
+            dashboardRemoteRepository,
+            dashboardActionPath.trim().isNotEmpty
+                ? dashboardActionPath
+                : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
+            envConfig.variables.tenantId,
+            event.model.id,
+          );
+        }
+      } catch (e) {
+        print(e);
+      }
       final configResult = await mdmsRepository.searchAppConfig(
         envConfig.variables.mdmsApiPath,
         MdmsRequestModel(

@@ -39084,8 +39084,6 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final Index referralProjectbeneficiaryclientref = Index(
       'referral_projectbeneficiaryclientref',
       'CREATE INDEX referral_projectbeneficiaryclientref ON referral (project_beneficiary_client_reference_id)');
-  late final Index localizationLocale = Index('localization_locale',
-      'CREATE INDEX localization_locale ON localization (locale)');
   late final Index localizationModule = Index('localization_module',
       'CREATE INDEX localization_module ON localization (module)');
   @override
@@ -39163,7 +39161,6 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         referralClinetref,
         referralProjectid,
         referralProjectbeneficiaryclientref,
-        localizationLocale,
         localizationModule
       ];
 }

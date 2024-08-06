@@ -234,8 +234,10 @@ mixin _$AppInitializationState {
     required TResult Function() uninitialized,
     required TResult Function() loading,
     required TResult Function() failed,
-    required TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)
+    required TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) =>
       throw _privateConstructorUsedError;
@@ -244,8 +246,10 @@ mixin _$AppInitializationState {
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
     TResult? Function()? failed,
-    TResult? Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult? Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) =>
       throw _privateConstructorUsedError;
@@ -254,8 +258,10 @@ mixin _$AppInitializationState {
     TResult Function()? uninitialized,
     TResult Function()? loading,
     TResult Function()? failed,
-    TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) =>
@@ -342,8 +348,10 @@ class _$AppUninitializedImpl extends AppUninitialized {
     required TResult Function() uninitialized,
     required TResult Function() loading,
     required TResult Function() failed,
-    required TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)
+    required TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
     return uninitialized();
@@ -355,8 +363,10 @@ class _$AppUninitializedImpl extends AppUninitialized {
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
     TResult? Function()? failed,
-    TResult? Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult? Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
     return uninitialized?.call();
@@ -368,8 +378,10 @@ class _$AppUninitializedImpl extends AppUninitialized {
     TResult Function()? uninitialized,
     TResult Function()? loading,
     TResult Function()? failed,
-    TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
@@ -458,8 +470,10 @@ class _$AppInitializingImpl extends AppInitializing {
     required TResult Function() uninitialized,
     required TResult Function() loading,
     required TResult Function() failed,
-    required TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)
+    required TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
     return loading();
@@ -471,8 +485,10 @@ class _$AppInitializingImpl extends AppInitializing {
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
     TResult? Function()? failed,
-    TResult? Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult? Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
     return loading?.call();
@@ -484,8 +500,10 @@ class _$AppInitializingImpl extends AppInitializing {
     TResult Function()? uninitialized,
     TResult Function()? loading,
     TResult Function()? failed,
-    TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
@@ -578,8 +596,10 @@ class _$AppInitializationFailedImpl extends AppInitializationFailed {
     required TResult Function() uninitialized,
     required TResult Function() loading,
     required TResult Function() failed,
-    required TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)
+    required TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
     return failed();
@@ -591,8 +611,10 @@ class _$AppInitializationFailedImpl extends AppInitializationFailed {
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
     TResult? Function()? failed,
-    TResult? Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult? Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
     return failed?.call();
@@ -604,8 +626,10 @@ class _$AppInitializationFailedImpl extends AppInitializationFailed {
     TResult Function()? uninitialized,
     TResult Function()? loading,
     TResult Function()? failed,
-    TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
@@ -666,7 +690,8 @@ abstract class _$$AppInitializedImplCopyWith<$Res> {
   @useResult
   $Res call(
       {AppConfiguration appConfiguration,
-      List<ServiceRegistry> serviceRegistryList});
+      List<ServiceRegistry> serviceRegistryList,
+      DashboardConfigSchema? dashboardConfigSchema});
 }
 
 /// @nodoc
@@ -682,6 +707,7 @@ class __$$AppInitializedImplCopyWithImpl<$Res>
   $Res call({
     Object? appConfiguration = null,
     Object? serviceRegistryList = null,
+    Object? dashboardConfigSchema = freezed,
   }) {
     return _then(_$AppInitializedImpl(
       appConfiguration: null == appConfiguration
@@ -692,6 +718,10 @@ class __$$AppInitializedImplCopyWithImpl<$Res>
           ? _value._serviceRegistryList
           : serviceRegistryList // ignore: cast_nullable_to_non_nullable
               as List<ServiceRegistry>,
+      dashboardConfigSchema: freezed == dashboardConfigSchema
+          ? _value.dashboardConfigSchema
+          : dashboardConfigSchema // ignore: cast_nullable_to_non_nullable
+              as DashboardConfigSchema?,
     ));
   }
 }
@@ -701,7 +731,8 @@ class __$$AppInitializedImplCopyWithImpl<$Res>
 class _$AppInitializedImpl extends AppInitialized {
   const _$AppInitializedImpl(
       {required this.appConfiguration,
-      final List<ServiceRegistry> serviceRegistryList = const []})
+      final List<ServiceRegistry> serviceRegistryList = const [],
+      this.dashboardConfigSchema})
       : _serviceRegistryList = serviceRegistryList,
         super._();
 
@@ -718,6 +749,9 @@ class _$AppInitializedImpl extends AppInitialized {
   }
 
   @override
+  final DashboardConfigSchema? dashboardConfigSchema;
+
+  @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
@@ -725,12 +759,17 @@ class _$AppInitializedImpl extends AppInitialized {
             (identical(other.appConfiguration, appConfiguration) ||
                 other.appConfiguration == appConfiguration) &&
             const DeepCollectionEquality()
-                .equals(other._serviceRegistryList, _serviceRegistryList));
+                .equals(other._serviceRegistryList, _serviceRegistryList) &&
+            (identical(other.dashboardConfigSchema, dashboardConfigSchema) ||
+                other.dashboardConfigSchema == dashboardConfigSchema));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, appConfiguration,
-      const DeepCollectionEquality().hash(_serviceRegistryList));
+  int get hashCode => Object.hash(
+      runtimeType,
+      appConfiguration,
+      const DeepCollectionEquality().hash(_serviceRegistryList),
+      dashboardConfigSchema);
 
   @JsonKey(ignore: true)
   @override
@@ -745,11 +784,14 @@ class _$AppInitializedImpl extends AppInitialized {
     required TResult Function() uninitialized,
     required TResult Function() loading,
     required TResult Function() failed,
-    required TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)
+    required TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)
         initialized,
   }) {
-    return initialized(appConfiguration, serviceRegistryList);
+    return initialized(
+        appConfiguration, serviceRegistryList, dashboardConfigSchema);
   }
 
   @override
@@ -758,11 +800,14 @@ class _$AppInitializedImpl extends AppInitialized {
     TResult? Function()? uninitialized,
     TResult? Function()? loading,
     TResult? Function()? failed,
-    TResult? Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult? Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
   }) {
-    return initialized?.call(appConfiguration, serviceRegistryList);
+    return initialized?.call(
+        appConfiguration, serviceRegistryList, dashboardConfigSchema);
   }
 
   @override
@@ -771,13 +816,16 @@ class _$AppInitializedImpl extends AppInitialized {
     TResult Function()? uninitialized,
     TResult Function()? loading,
     TResult Function()? failed,
-    TResult Function(AppConfiguration appConfiguration,
-            List<ServiceRegistry> serviceRegistryList)?
+    TResult Function(
+            AppConfiguration appConfiguration,
+            List<ServiceRegistry> serviceRegistryList,
+            DashboardConfigSchema? dashboardConfigSchema)?
         initialized,
     required TResult orElse(),
   }) {
     if (initialized != null) {
-      return initialized(appConfiguration, serviceRegistryList);
+      return initialized(
+          appConfiguration, serviceRegistryList, dashboardConfigSchema);
     }
     return orElse();
   }
@@ -822,12 +870,15 @@ class _$AppInitializedImpl extends AppInitialized {
 
 abstract class AppInitialized extends AppInitializationState {
   const factory AppInitialized(
-      {required final AppConfiguration appConfiguration,
-      final List<ServiceRegistry> serviceRegistryList}) = _$AppInitializedImpl;
+          {required final AppConfiguration appConfiguration,
+          final List<ServiceRegistry> serviceRegistryList,
+          final DashboardConfigSchema? dashboardConfigSchema}) =
+      _$AppInitializedImpl;
   const AppInitialized._() : super._();
 
   AppConfiguration get appConfiguration;
   List<ServiceRegistry> get serviceRegistryList;
+  DashboardConfigSchema? get dashboardConfigSchema;
   @JsonKey(ignore: true)
   _$$AppInitializedImplCopyWith<_$AppInitializedImpl> get copyWith =>
       throw _privateConstructorUsedError;
