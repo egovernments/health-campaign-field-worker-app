@@ -77,7 +77,10 @@ class DeliverInterventionPageState
               task: _getTaskModel(
                 context,
                 form: form,
-                oldTask: null,
+                oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                        BeneficiaryType.household
+                    ? deliverInterventionState.tasks?.last
+                    : null,
                 projectBeneficiaryClientReferenceId:
                     projectBeneficiary.clientReferenceId,
                 dose: deliverInterventionState.dose,
@@ -87,7 +90,12 @@ class DeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
               ),
-              isEditing: false,
+              isEditing:
+                  ( deliverInterventionState.tasks ?? [])
+                          .isNotEmpty && RegistrationDeliverySingleton().beneficiaryType ==
+                      BeneficiaryType.household
+                      ? true
+                      : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
@@ -516,7 +524,7 @@ class DeliverInterventionPageState
                                                 Text(
                                                   localizations.translate(
                                                     i18.deliverIntervention
-                                                        .deliveryCommentLabel,
+                                                        .deliveryCommentHeading,
                                                   ),
                                                   style: theme
                                                       .textTheme.headlineLarge,
@@ -662,6 +670,10 @@ class DeliverInterventionPageState
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
+          AdditionalField(
+            RegistrationDeliveryEnums.name.toValue(),
+            RegistrationDeliverySingleton().loggedInUser?.name,
+          ),
           AdditionalField(
             AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),

@@ -212,6 +212,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                             registrationDate,
                             projectBeneficiaryModel,
                             loading,
+                            headOfHousehold,
                           ) {
                             var addressModel = address.copyWith(
                               addressLine1: addressLine1 != null &&

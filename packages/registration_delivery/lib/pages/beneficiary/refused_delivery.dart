@@ -111,57 +111,15 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                           } else {
                             status = Status.administeredFailed.toValue();
                           }
+                           final oldTask = RegistrationDeliverySingleton().beneficiaryType !=
+                               BeneficiaryType.individual ? registrationState.householdMemberWrapper.tasks?.last : null;
 
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(
                                   navigateToSummary: true,
                                   householdMemberWrapper:
                                       registrationState.householdMemberWrapper,
-                                  task: TaskModel(
-                                    projectBeneficiaryClientReferenceId:
-                                        projectBeneficiary?.first
-                                            ?.clientReferenceId, //TODO: need to check for individual based campaign
-                                    clientReferenceId: IdGen.i.identifier,
-                                    tenantId: RegistrationDeliverySingleton()
-                                        .tenantId,
-                                    rowVersion: 1,
-                                    auditDetails: AuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    projectId: RegistrationDeliverySingleton()
-                                        .projectId,
-                                    status: status,
-                                    clientAuditDetails: ClientAuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                      lastModifiedBy:
-                                          RegistrationDeliverySingleton()
-                                              .loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    additionalFields: TaskAdditionalFields(
-                                      version: 1,
-                                      fields: [
-                                        AdditionalField(
-                                          AdditionalFieldsType.reasonOfRefusal
-                                              .toValue(),
-                                          reasonOfRefusal,
-                                        ),
-                                        if (refusalComment != null)
-                                          AdditionalField(
-                                          AdditionalFieldsType.deliveryComment
-                                              .toValue(),
-                                          refusalComment,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  task: _getTaskModel(oldTask, projectBeneficiary?.first?.clientReferenceId, status, reasonOfRefusal, refusalComment),
                                   isEditing: false,
                                   boundaryModel:
                                       RegistrationDeliverySingleton().boundary!,
@@ -290,8 +248,64 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                 },
               )),
     );
+
+
   }
 
+   _getTaskModel(TaskModel? oldTask, String? projectBeneficiaryClientReferenceId, String status, String? reasonOfRefusal, String? refusalComment) {
+    var task = oldTask;
+    var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
+     task ??=TaskModel(
+       projectBeneficiaryClientReferenceId:projectBeneficiaryClientReferenceId,
+       clientReferenceId: clientReferenceId,
+       tenantId: RegistrationDeliverySingleton()
+           .tenantId,
+       rowVersion: 1,
+       auditDetails: AuditDetails(
+         createdBy: RegistrationDeliverySingleton()
+             .loggedInUserUuid!,
+         createdTime:
+         context.millisecondsSinceEpoch(),
+       ),
+       projectId: RegistrationDeliverySingleton()
+           .projectId,
+       clientAuditDetails: ClientAuditDetails(
+         createdBy: RegistrationDeliverySingleton()
+             .loggedInUserUuid!,
+         createdTime:
+         context.millisecondsSinceEpoch(),
+         lastModifiedBy:
+         RegistrationDeliverySingleton()
+             .loggedInUserUuid,
+         lastModifiedTime:
+         context.millisecondsSinceEpoch(),
+       ),
+     );
+
+     task = task.copyWith(
+       status: status,
+       additionalFields: TaskAdditionalFields(
+         version: 1,
+         fields: [
+           AdditionalField(
+             AdditionalFieldsType.reasonOfRefusal
+                 .toValue(),
+             reasonOfRefusal,
+           ),
+           if (refusalComment != null)
+             AdditionalField(
+               AdditionalFieldsType.deliveryComment
+                   .toValue(),
+               refusalComment,
+             ),
+         ],
+       ),
+     );
+
+
+     return task;
+
+   }
   FormGroup buildForm() {
     return fb.group(<String, Object>{
       _dataOfRefusalKey:

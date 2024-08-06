@@ -38,6 +38,7 @@ export 'models/entities/household.dart';
 export 'models/entities/household_member.dart';
 export 'models/entities/project_beneficiary.dart';
 export 'models/entities/referral.dart';
+export 'models/entities/registration_delivery_enums.dart';
 export 'models/entities/side_effect.dart';
 export 'models/entities/task.dart';
 export 'models/entities/task_resource.dart';

@@ -147,6 +147,21 @@ extension ContextUtilityExtensions on BuildContext {
     return individualUUID;
   }
 
+  UserModel? get loggedInUserModel {
+    final userRequestModel = loggedInUser;
+    final userModel = UserModel(
+      userName: userRequestModel.userName,
+      name: userRequestModel.name,
+      uuid: userRequestModel.uuid,
+      mobileNumber: userRequestModel.mobileNumber,
+      gender: userRequestModel.gender,
+      active: userRequestModel.active,
+      tenantId: userRequestModel.tenantId,
+    );
+
+    return userModel;
+  }
+
   String get loggedInUserUuid => loggedInUser.uuid;
 
   UserRequestModel get loggedInUser {

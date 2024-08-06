@@ -289,7 +289,7 @@ class RegistrationDeliverySingleton {
 
   String? _tenantId;
   String? _loggedInUserUuid;
-
+  UserModel? _loggedInUser;
   double? _maxRadius;
   String? _projectId;
   BeneficiaryType? _beneficiaryType;
@@ -335,6 +335,7 @@ class RegistrationDeliverySingleton {
     required List<String>? referralReasons,
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
+    required UserModel? loggedInUser,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -353,6 +354,7 @@ class RegistrationDeliverySingleton {
     _referralReasons = referralReasons;
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
+    _loggedInUser = loggedInUser;
   }
 
   void setTenantId(String tenantId) {
@@ -381,6 +383,7 @@ class RegistrationDeliverySingleton {
   List<String>? get referralReasons => _referralReasons;
   List<String>? get houseStructureTypes => _houseStructureTypes;
   List<String>? get refusalReasons => _refusalReasons;
+  UserModel? get loggedInUser => _loggedInUser;
 }
 
 bool allDosesDelivered(

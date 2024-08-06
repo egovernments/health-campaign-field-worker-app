@@ -10,10 +10,11 @@ import 'models/entities/household_member.dart' as p3;
 import 'models/entities/project_beneficiary.dart' as p4;
 import 'models/entities/referral.dart' as p5;
 import 'models/entities/reg_form_validations_type.dart' as p6;
-import 'models/entities/side_effect.dart' as p7;
-import 'models/entities/status.dart' as p8;
-import 'models/entities/task.dart' as p9;
-import 'models/entities/task_resource.dart' as p10;
+import 'models/entities/registration_delivery_enums.dart' as p7;
+import 'models/entities/side_effect.dart' as p8;
+import 'models/entities/status.dart' as p9;
+import 'models/entities/task.dart' as p10;
+import 'models/entities/task_resource.dart' as p11;
 
 void initializeMappers() {
   p0.AdditionalFieldsTypeMapper.ensureInitialized();
@@ -31,14 +32,15 @@ void initializeMappers() {
   p5.ReferralModelMapper.ensureInitialized();
   p5.ReferralAdditionalFieldsMapper.ensureInitialized();
   p6.RegFormValidationsMapper.ensureInitialized();
-  p7.SideEffectSearchModelMapper.ensureInitialized();
-  p7.SideEffectModelMapper.ensureInitialized();
-  p7.SideEffectAdditionalFieldsMapper.ensureInitialized();
-  p8.StatusMapper.ensureInitialized();
-  p9.TaskSearchModelMapper.ensureInitialized();
-  p9.TaskModelMapper.ensureInitialized();
-  p9.TaskAdditionalFieldsMapper.ensureInitialized();
-  p10.TaskResourceSearchModelMapper.ensureInitialized();
-  p10.TaskResourceModelMapper.ensureInitialized();
-  p10.TaskResourceAdditionalFieldsMapper.ensureInitialized();
+  p7.RegistrationDeliveryEnumsMapper.ensureInitialized();
+  p8.SideEffectSearchModelMapper.ensureInitialized();
+  p8.SideEffectModelMapper.ensureInitialized();
+  p8.SideEffectAdditionalFieldsMapper.ensureInitialized();
+  p9.StatusMapper.ensureInitialized();
+  p10.TaskSearchModelMapper.ensureInitialized();
+  p10.TaskModelMapper.ensureInitialized();
+  p10.TaskAdditionalFieldsMapper.ensureInitialized();
+  p11.TaskResourceSearchModelMapper.ensureInitialized();
+  p11.TaskResourceModelMapper.ensureInitialized();
+  p11.TaskResourceAdditionalFieldsMapper.ensureInitialized();
 }

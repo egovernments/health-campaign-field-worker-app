@@ -108,7 +108,11 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           task: deliverState.oldTask!,
-                                          isEditing: false,
+                                          isEditing: ( deliverState.tasks ?? [])
+                                              .isNotEmpty && RegistrationDeliverySingleton().beneficiaryType ==
+                                              BeneficiaryType.household
+                                              ? true
+                                              : false,
                                           boundaryModel:
                                               RegistrationDeliverySingleton()
                                                   .boundary!,

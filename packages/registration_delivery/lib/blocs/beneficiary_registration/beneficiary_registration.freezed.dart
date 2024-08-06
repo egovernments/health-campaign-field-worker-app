@@ -3277,7 +3277,8 @@ mixin _$BeneficiaryRegistrationState {
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            IndividualModel? headOfHousehold)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -3297,6 +3298,7 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)
         persisted,
     required TResult Function(
@@ -3329,7 +3331,8 @@ mixin _$BeneficiaryRegistrationState {
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -3349,6 +3352,7 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult? Function(
@@ -3381,7 +3385,8 @@ mixin _$BeneficiaryRegistrationState {
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -3401,6 +3406,7 @@ mixin _$BeneficiaryRegistrationState {
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult Function(
@@ -3688,7 +3694,8 @@ class _$BeneficiaryRegistrationCreateStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            IndividualModel? headOfHousehold)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -3708,6 +3715,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)
         persisted,
     required TResult Function(
@@ -3751,7 +3759,8 @@ class _$BeneficiaryRegistrationCreateStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -3771,6 +3780,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult? Function(
@@ -3814,7 +3824,8 @@ class _$BeneficiaryRegistrationCreateStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -3834,6 +3845,7 @@ class _$BeneficiaryRegistrationCreateStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult Function(
@@ -3960,7 +3972,8 @@ abstract class _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<$Res>
       List<IndividualModel> individualModel,
       DateTime registrationDate,
       ProjectBeneficiaryModel? projectBeneficiaryModel,
-      bool loading});
+      bool loading,
+      IndividualModel? headOfHousehold});
 }
 
 /// @nodoc
@@ -3982,6 +3995,7 @@ class __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>
     Object? registrationDate = null,
     Object? projectBeneficiaryModel = freezed,
     Object? loading = null,
+    Object? headOfHousehold = freezed,
   }) {
     return _then(_$BeneficiaryRegistrationEditHouseholdStateImpl(
       addressModel: null == addressModel
@@ -4008,6 +4022,10 @@ class __$$BeneficiaryRegistrationEditHouseholdStateImplCopyWithImpl<$Res>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
+      headOfHousehold: freezed == headOfHousehold
+          ? _value.headOfHousehold
+          : headOfHousehold // ignore: cast_nullable_to_non_nullable
+              as IndividualModel?,
     ));
   }
 }
@@ -4022,7 +4040,8 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
       required final List<IndividualModel> individualModel,
       required this.registrationDate,
       this.projectBeneficiaryModel,
-      this.loading = false})
+      this.loading = false,
+      this.headOfHousehold})
       : _individualModel = individualModel;
 
   @override
@@ -4044,10 +4063,12 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
   @override
   @JsonKey()
   final bool loading;
+  @override
+  final IndividualModel? headOfHousehold;
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.editHousehold(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, registrationDate: $registrationDate, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading)';
+    return 'BeneficiaryRegistrationState.editHousehold(addressModel: $addressModel, householdModel: $householdModel, individualModel: $individualModel, registrationDate: $registrationDate, projectBeneficiaryModel: $projectBeneficiaryModel, loading: $loading, headOfHousehold: $headOfHousehold)';
   }
 
   @override
@@ -4066,7 +4087,9 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             (identical(
                     other.projectBeneficiaryModel, projectBeneficiaryModel) ||
                 other.projectBeneficiaryModel == projectBeneficiaryModel) &&
-            (identical(other.loading, loading) || other.loading == loading));
+            (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.headOfHousehold, headOfHousehold) ||
+                other.headOfHousehold == headOfHousehold));
   }
 
   @override
@@ -4077,7 +4100,8 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
       const DeepCollectionEquality().hash(_individualModel),
       registrationDate,
       projectBeneficiaryModel,
-      loading);
+      loading,
+      headOfHousehold);
 
   @JsonKey(ignore: true)
   @override
@@ -4108,7 +4132,8 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            IndividualModel? headOfHousehold)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -4128,6 +4153,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)
         persisted,
     required TResult Function(
@@ -4142,7 +4168,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         summary,
   }) {
     return editHousehold(addressModel, householdModel, individualModel,
-        registrationDate, projectBeneficiaryModel, loading);
+        registrationDate, projectBeneficiaryModel, loading, headOfHousehold);
   }
 
   @override
@@ -4164,7 +4190,8 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -4184,6 +4211,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult? Function(
@@ -4198,7 +4226,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
         summary,
   }) {
     return editHousehold?.call(addressModel, householdModel, individualModel,
-        registrationDate, projectBeneficiaryModel, loading);
+        registrationDate, projectBeneficiaryModel, loading, headOfHousehold);
   }
 
   @override
@@ -4220,7 +4248,8 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -4240,6 +4269,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult Function(
@@ -4256,7 +4286,7 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
   }) {
     if (editHousehold != null) {
       return editHousehold(addressModel, householdModel, individualModel,
-          registrationDate, projectBeneficiaryModel, loading);
+          registrationDate, projectBeneficiaryModel, loading, headOfHousehold);
     }
     return orElse();
   }
@@ -4317,12 +4347,14 @@ class _$BeneficiaryRegistrationEditHouseholdStateImpl
 abstract class BeneficiaryRegistrationEditHouseholdState
     implements BeneficiaryRegistrationState {
   const factory BeneficiaryRegistrationEditHouseholdState(
-      {required final AddressModel addressModel,
-      required final HouseholdModel householdModel,
-      required final List<IndividualModel> individualModel,
-      required final DateTime registrationDate,
-      final ProjectBeneficiaryModel? projectBeneficiaryModel,
-      final bool loading}) = _$BeneficiaryRegistrationEditHouseholdStateImpl;
+          {required final AddressModel addressModel,
+          required final HouseholdModel householdModel,
+          required final List<IndividualModel> individualModel,
+          required final DateTime registrationDate,
+          final ProjectBeneficiaryModel? projectBeneficiaryModel,
+          final bool loading,
+          final IndividualModel? headOfHousehold}) =
+      _$BeneficiaryRegistrationEditHouseholdStateImpl;
 
   @override
   AddressModel get addressModel;
@@ -4333,6 +4365,7 @@ abstract class BeneficiaryRegistrationEditHouseholdState
   ProjectBeneficiaryModel? get projectBeneficiaryModel;
   @override
   bool get loading;
+  IndividualModel? get headOfHousehold;
   @override
   @JsonKey(ignore: true)
   _$$BeneficiaryRegistrationEditHouseholdStateImplCopyWith<
@@ -4480,7 +4513,8 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            IndividualModel? headOfHousehold)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -4500,6 +4534,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)
         persisted,
     required TResult Function(
@@ -4536,7 +4571,8 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -4556,6 +4592,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult? Function(
@@ -4592,7 +4629,8 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -4612,6 +4650,7 @@ class _$BeneficiaryRegistrationEditIndividualStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult Function(
@@ -4822,7 +4861,8 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            IndividualModel? headOfHousehold)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -4842,6 +4882,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)
         persisted,
     required TResult Function(
@@ -4877,7 +4918,8 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -4897,6 +4939,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult? Function(
@@ -4932,7 +4975,8 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -4952,6 +4996,7 @@ class _$BeneficiaryRegistrationAddMemberStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult Function(
@@ -5062,6 +5107,7 @@ abstract class _$$BeneficiaryRegistrationPersistedStateImplCopyWith<$Res>
       DateTime? registrationDate,
       AddressModel? addressModel,
       bool loading,
+      bool isEdit,
       bool isHeadOfHousehold});
 }
 
@@ -5085,6 +5131,7 @@ class __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>
     Object? registrationDate = freezed,
     Object? addressModel = freezed,
     Object? loading = null,
+    Object? isEdit = null,
     Object? isHeadOfHousehold = null,
   }) {
     return _then(_$BeneficiaryRegistrationPersistedStateImpl(
@@ -5116,6 +5163,10 @@ class __$$BeneficiaryRegistrationPersistedStateImplCopyWithImpl<$Res>
           ? _value.loading
           : loading // ignore: cast_nullable_to_non_nullable
               as bool,
+      isEdit: null == isEdit
+          ? _value.isEdit
+          : isEdit // ignore: cast_nullable_to_non_nullable
+              as bool,
       isHeadOfHousehold: null == isHeadOfHousehold
           ? _value.isHeadOfHousehold
           : isHeadOfHousehold // ignore: cast_nullable_to_non_nullable
@@ -5136,6 +5187,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
       this.registrationDate,
       this.addressModel,
       this.loading = false,
+      this.isEdit = false,
       this.isHeadOfHousehold = false});
 
   @override
@@ -5156,11 +5208,14 @@ class _$BeneficiaryRegistrationPersistedStateImpl
   final bool loading;
   @override
   @JsonKey()
+  final bool isEdit;
+  @override
+  @JsonKey()
   final bool isHeadOfHousehold;
 
   @override
   String toString() {
-    return 'BeneficiaryRegistrationState.persisted(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isHeadOfHousehold: $isHeadOfHousehold)';
+    return 'BeneficiaryRegistrationState.persisted(navigateToRoot: $navigateToRoot, householdModel: $householdModel, individualModel: $individualModel, projectBeneficiaryModel: $projectBeneficiaryModel, registrationDate: $registrationDate, addressModel: $addressModel, loading: $loading, isEdit: $isEdit, isHeadOfHousehold: $isHeadOfHousehold)';
   }
 
   @override
@@ -5182,6 +5237,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             (identical(other.addressModel, addressModel) ||
                 other.addressModel == addressModel) &&
             (identical(other.loading, loading) || other.loading == loading) &&
+            (identical(other.isEdit, isEdit) || other.isEdit == isEdit) &&
             (identical(other.isHeadOfHousehold, isHeadOfHousehold) ||
                 other.isHeadOfHousehold == isHeadOfHousehold));
   }
@@ -5196,6 +5252,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
       registrationDate,
       addressModel,
       loading,
+      isEdit,
       isHeadOfHousehold);
 
   @JsonKey(ignore: true)
@@ -5225,7 +5282,8 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            IndividualModel? headOfHousehold)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -5245,6 +5303,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)
         persisted,
     required TResult Function(
@@ -5266,6 +5325,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         registrationDate,
         addressModel,
         loading,
+        isEdit,
         isHeadOfHousehold);
   }
 
@@ -5288,7 +5348,8 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -5308,6 +5369,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult? Function(
@@ -5329,6 +5391,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
         registrationDate,
         addressModel,
         loading,
+        isEdit,
         isHeadOfHousehold);
   }
 
@@ -5351,7 +5414,8 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -5371,6 +5435,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult Function(
@@ -5394,6 +5459,7 @@ class _$BeneficiaryRegistrationPersistedStateImpl
           registrationDate,
           addressModel,
           loading,
+          isEdit,
           isHeadOfHousehold);
     }
     return orElse();
@@ -5462,6 +5528,7 @@ abstract class BeneficiaryRegistrationPersistedState
           final DateTime? registrationDate,
           final AddressModel? addressModel,
           final bool loading,
+          final bool isEdit,
           final bool isHeadOfHousehold}) =
       _$BeneficiaryRegistrationPersistedStateImpl;
 
@@ -5475,6 +5542,7 @@ abstract class BeneficiaryRegistrationPersistedState
   AddressModel? get addressModel;
   @override
   bool get loading;
+  bool get isEdit;
   bool get isHeadOfHousehold;
   @override
   @JsonKey(ignore: true)
@@ -5663,7 +5731,8 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)
+            bool loading,
+            IndividualModel? headOfHousehold)
         editHousehold,
     required TResult Function(
             HouseholdModel householdModel,
@@ -5683,6 +5752,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)
         persisted,
     required TResult Function(
@@ -5726,7 +5796,8 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult? Function(
             HouseholdModel householdModel,
@@ -5746,6 +5817,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult? Function(
@@ -5789,7 +5861,8 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             List<IndividualModel> individualModel,
             DateTime registrationDate,
             ProjectBeneficiaryModel? projectBeneficiaryModel,
-            bool loading)?
+            bool loading,
+            IndividualModel? headOfHousehold)?
         editHousehold,
     TResult Function(
             HouseholdModel householdModel,
@@ -5809,6 +5882,7 @@ class _$BeneficiaryRegistrationSummaryStateImpl
             DateTime? registrationDate,
             AddressModel? addressModel,
             bool loading,
+            bool isEdit,
             bool isHeadOfHousehold)?
         persisted,
     TResult Function(

@@ -49,6 +49,26 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
     }
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (widget.equalWidthOptions) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _calculateMaxOptionWidth();
+      });
+    }
+  }
+  @override
+  void didUpdateWidget(covariant SelectionBox<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialSelection != oldWidget.initialSelection) {
+      setState(() {
+        _selectedOptions.clear();
+        _selectedOptions.addAll(widget.initialSelection ?? []);
+      });
+    }
+  }
+
   void _calculateMaxOptionWidth() {
     double maxWidth = 0;
     final textTheme = Theme.of(context).textTheme;
