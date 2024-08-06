@@ -123,7 +123,8 @@ Future<void> processDashboardConfig(
                 visualizationType: visualizationType,
                 visualizationCode: visualizationCode,
                 filters: {
-                  DSSEnums.uuids.toValue(): userList,
+                  DSSEnums.uuid.toValue(): userList,
+                  DSSEnums.projectId.toValue(): projectId
                 },
                 moduleLevel: "",
                 queryType: "",
