@@ -161,7 +161,7 @@ class DigitTable extends StatelessWidget {
   }
 
   Widget _generateFirstColumnRow(BuildContext context, int index) {
-    var data = tableData[index].tableRow.first;
+    var data = tableData[index].tableRow.isNotEmpty ? tableData[index].tableRow.first : TableData('');
     final tableCellBorder = DigitTheme.instance.tableCellBorder;
     final tableCellStrongBorder = DigitTheme.instance.tableCellStrongBorder;
     return InkWell(

@@ -497,10 +497,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: c708c6474b7a67e3cdedcbb82265c201e61390360109344ebedfa2cc1ded0440
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.0.3-dev.2"
   digit_firebase_services:
     dependency: "direct main"
