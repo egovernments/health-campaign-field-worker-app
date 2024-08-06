@@ -362,49 +362,51 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     TaskModel entity, {
     bool createOpLog = true,
   }) async {
-    final taskCompanion = entity.companion;
+    return retryLocalCallOperation(() async {
+      final taskCompanion = entity.companion;
 
-    final addressCompanion = entity.address
-        ?.copyWith(
-          relatedClientReferenceId: entity.clientReferenceId,
-          auditDetails: entity.auditDetails,
-          clientAuditDetails: entity.clientAuditDetails,
-        )
-        .companion;
+      final addressCompanion = entity.address
+          ?.copyWith(
+            relatedClientReferenceId: entity.clientReferenceId,
+            auditDetails: entity.auditDetails,
+            clientAuditDetails: entity.clientAuditDetails,
+          )
+          .companion;
 
-    final resourcesCompanions = entity.resources?.map((e) {
-          return e
-              .copyWith(
-                clientReferenceId: e.clientReferenceId,
-                taskclientReferenceId: entity.clientReferenceId,
-              )
-              .companion;
-        }).toList() ??
-        [];
+      final resourcesCompanions = entity.resources?.map((e) {
+            return e
+                .copyWith(
+                  clientReferenceId: e.clientReferenceId,
+                  taskclientReferenceId: entity.clientReferenceId,
+                )
+                .companion;
+          }).toList() ??
+          [];
 
-    await sql.batch((batch) {
-      batch.update(
-        sql.task,
-        taskCompanion,
-        where: (table) => table.clientReferenceId.equals(
-          entity.clientReferenceId,
-        ),
-      );
-
-      if (addressCompanion != null) {
+      await sql.batch((batch) {
         batch.update(
-          sql.address,
-          addressCompanion,
-          where: (table) => table.relatedClientReferenceId.equals(
-            addressCompanion.relatedClientReferenceId.value!,
+          sql.task,
+          taskCompanion,
+          where: (table) => table.clientReferenceId.equals(
+            entity.clientReferenceId,
           ),
         );
-      }
 
-      batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
+        if (addressCompanion != null) {
+          batch.update(
+            sql.address,
+            addressCompanion,
+            where: (table) => table.relatedClientReferenceId.equals(
+              addressCompanion.relatedClientReferenceId.value!,
+            ),
+          );
+        }
+
+        batch.insertAllOnConflictUpdate(sql.taskResource, resourcesCompanions);
+      });
+
+      await super.update(entity, createOpLog: createOpLog);
     });
-
-    await super.update(entity, createOpLog: createOpLog);
   }
 
   @override
