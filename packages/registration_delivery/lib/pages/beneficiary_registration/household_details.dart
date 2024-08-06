@@ -51,8 +51,33 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
           int pregnantWomen = form.control(_pregnantWomenCountKey).value;
           int children = form.control(_childrenCountKey).value;
           int memberCount = form.control(_memberCountKey).value;
-          return BlocBuilder<BeneficiaryRegistrationBloc,
+          return BlocConsumer<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
+            listener: (context, state) {
+              if (state is BeneficiaryRegistrationPersistedState) {
+                final overviewBloc =
+                context.read<HouseholdOverviewBloc>();
+
+                overviewBloc.add(
+                  HouseholdOverviewReloadEvent(
+                    projectId: RegistrationDeliverySingleton()
+                        .projectId
+                        .toString(),
+                    projectBeneficiaryType:
+                    RegistrationDeliverySingleton()
+                        .beneficiaryType ??
+                        BeneficiaryType.household,
+                  ),
+                );
+                HouseholdMemberWrapper memberWrapper =
+                    overviewBloc.state.householdMemberWrapper;
+                final route = router.parent() as StackRouter;
+                route.popUntilRouteWithName(
+                    SearchBeneficiaryRoute.name);
+                route.push(BeneficiaryWrapperRoute(
+                    wrapper: memberWrapper));
+              }
+            },
             builder: (context, registrationState) {
               return ScrollableContent(
                 header: const Column(children: [
@@ -305,27 +330,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                                 ),
                               ),
                             );
-                            final overviewBloc =
-                                context.read<HouseholdOverviewBloc>();
 
-                            overviewBloc.add(
-                              HouseholdOverviewReloadEvent(
-                                projectId: RegistrationDeliverySingleton()
-                                    .projectId
-                                    .toString(),
-                                projectBeneficiaryType:
-                                    RegistrationDeliverySingleton()
-                                            .beneficiaryType ??
-                                        BeneficiaryType.household,
-                              ),
-                            );
-                            HouseholdMemberWrapper memberWrapper =
-                                overviewBloc.state.householdMemberWrapper;
-                            final route = router.parent() as StackRouter;
-                            route.popUntilRouteWithName(
-                                SearchBeneficiaryRoute.name);
-                            route.push(BeneficiaryWrapperRoute(
-                                wrapper: memberWrapper));
                           },
                         );
                       }
