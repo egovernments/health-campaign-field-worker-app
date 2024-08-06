@@ -77,7 +77,11 @@ class DeliverInterventionPageState
               task: _getTaskModel(
                 context,
                 form: form,
-                oldTask: RegistrationDeliverySingleton().beneficiaryType == BeneficiaryType.household ? deliverInterventionState.householdMemberWrapper?.tasks?.last : null,
+                oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                        BeneficiaryType.household
+                    ? deliverInterventionState
+                        .householdMemberWrapper?.tasks?.last
+                    : null,
                 projectBeneficiaryClientReferenceId:
                     projectBeneficiary.clientReferenceId,
                 dose: deliverInterventionState.dose,
@@ -87,7 +91,11 @@ class DeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
               ),
-              isEditing: (deliverInterventionState.householdMemberWrapper?.tasks ?? []).isNotEmpty ? true : false,
+              isEditing:
+                  (deliverInterventionState.householdMemberWrapper?.tasks ?? [])
+                          .isNotEmpty
+                      ? true
+                      : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
@@ -662,6 +670,10 @@ class DeliverInterventionPageState
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
+          AdditionalField(
+            RegistrationDeliveryEnums.name.toValue(),
+            RegistrationDeliverySingleton().loggedInUser?.name,
+          ),
           AdditionalField(
             AdditionalFieldsType.dateOfDelivery.toValue(),
             DateTime.now().millisecondsSinceEpoch.toString(),

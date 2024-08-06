@@ -8,19 +8,15 @@ import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
-import '../../models/entities/inventory_transport_type.dart';
-import '../../models/entities/stock.dart';
-import '../../models/entities/transaction_reason.dart';
-import '../../models/entities/transaction_type.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
@@ -457,6 +453,14 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                 ? StockAdditionalFields(
                                                     version: 1,
                                                     fields: [
+                                                      AdditionalField(
+                                                        InventoryManagementEnums
+                                                            .name
+                                                            .toValue(),
+                                                        InventorySingleton()
+                                                            .loggedInUser
+                                                            ?.name,
+                                                      ),
                                                       if (waybillQuantity !=
                                                               null &&
                                                           waybillQuantity
@@ -655,7 +659,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   await context.router.push(
                                                           InventoryFacilitySelectionRoute(
                                                               facilities:
-                                                                  facilities))
+                                                                  allFacilities))
                                                       as FacilityModel?;
 
                                               if (facility == null) return;
@@ -711,7 +715,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   final facility =
                                                       await context.router.push(
                                                     InventoryFacilitySelectionRoute(
-                                                      facilities: facilities,
+                                                      facilities: allFacilities,
                                                     ),
                                                   ) as FacilityModel?;
 

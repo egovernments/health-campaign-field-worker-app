@@ -91,7 +91,7 @@ class _HouseholdOverviewPageState
                                   onPressed: (state.householdMemberWrapper
                                                   .projectBeneficiaries ??
                                               [])
-                                          .isEmpty || deliverInterventionState.tasks?.last.status == Status.closeHousehold.toValue()
+                                          .isEmpty || state.householdMemberWrapper.tasks?.last.status == Status.closeHousehold.toValue()
                                       ? null
                                       : () async {
                                           final bloc =

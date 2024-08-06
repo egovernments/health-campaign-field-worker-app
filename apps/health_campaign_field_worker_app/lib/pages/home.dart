@@ -619,6 +619,7 @@ void setPackagesSingleton(BuildContext context) {
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
           projectId: context.projectId,
@@ -703,6 +704,7 @@ void setPackagesSingleton(BuildContext context) {
               )
               .toList()
               .isNotEmpty,
+          loggedInUser: context.loggedInUserModel,
           projectId: context.projectId,
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
