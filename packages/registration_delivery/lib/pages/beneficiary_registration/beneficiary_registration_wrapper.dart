@@ -42,32 +42,38 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
         context.repository<ReferralModel, ReferralSearchModel>(context);
 
     return BlocProvider(
-      create: (_) => HouseholdOverviewBloc(
-          HouseholdOverviewState(
-            householdMemberWrapper: HouseholdMemberWrapper(
-                household: initialState.householdModel,
-                headOfHousehold: null,
-                members: [],
-                projectBeneficiaries: []),
-          ),
-          individualRepository: individual,
-          householdRepository: household,
-          householdMemberRepository: householdMember,
-          projectBeneficiaryRepository: projectBeneficiary,
-          beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
-          taskDataRepository: task,
-          sideEffectDataRepository: sideEffect,
-          referralDataRepository: referral),
+      create: (context) => BeneficiaryRegistrationBloc(
+        initialState,
+        individualRepository: individual,
+        householdRepository: household,
+        householdMemberRepository: householdMember,
+        projectBeneficiaryRepository: projectBeneficiary,
+        taskDataRepository: task,
+        beneficiaryType: beneficiaryType!,
+      ),
       child: BlocProvider(
-        create: (context) => BeneficiaryRegistrationBloc(
-          initialState,
-          individualRepository: individual,
-          householdRepository: household,
-          householdMemberRepository: householdMember,
-          projectBeneficiaryRepository: projectBeneficiary,
-          taskDataRepository: task,
-          beneficiaryType: beneficiaryType!,
-        ),
+        create: (_) => HouseholdOverviewBloc(
+            HouseholdOverviewState(
+              householdMemberWrapper: HouseholdMemberWrapper(
+                  household: initialState.householdModel,
+                  headOfHousehold: null,
+                  members: [],
+                  projectBeneficiaries: []),
+            ),
+            individualRepository: individual,
+            householdRepository: household,
+            householdMemberRepository: householdMember,
+            projectBeneficiaryRepository: projectBeneficiary,
+            beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
+            taskDataRepository: task,
+            sideEffectDataRepository: sideEffect,
+            referralDataRepository: referral)
+          ..add(
+            HouseholdOverviewReloadEvent(
+                projectId: RegistrationDeliverySingleton().selectedProject!.id,
+                projectBeneficiaryType:
+                    RegistrationDeliverySingleton().beneficiaryType!),
+          ),
         child: this,
       ),
     );

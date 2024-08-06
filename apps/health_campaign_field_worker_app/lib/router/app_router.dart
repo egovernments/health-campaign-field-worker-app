@@ -4,6 +4,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/router/dashboard_router.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
@@ -56,6 +58,7 @@ part 'app_router.gr.dart';
     DigitScannerPackageRoute,
     RegistrationDeliveryRoute,
     ClosedHouseholdPackageRoute,
+    DashboardRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -88,7 +91,11 @@ class AppRouter extends _$AppRouter {
           page: BeneficiariesReportRoute.page,
           path: 'beneficiary-downsync-report',
         ),
-
+        // DSS Dashboard Routes
+        AutoRoute(
+          page: UserDashboardRoute.page,
+          path: 'dashboard',
+        ),
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,
             path: 'registration-delivery-wrapper',
@@ -236,7 +243,6 @@ class AppRouter extends _$AppRouter {
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
         ),
-
         AutoRoute(
           page: FacilitySelectionRoute.page,
           path: 'select-facilities',

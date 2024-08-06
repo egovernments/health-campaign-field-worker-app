@@ -490,17 +490,26 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_components"
-      relative: true
-    source: path
-    version: "1.0.0+8"
+      name: digit_components
+      sha256: "90e12017934343a197a0c25bec00e5fc28e19cfbf11e522798cc39719609612c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+9"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
+      name: digit_data_model
+      sha256: "5559c3e652a24f3d24f324d275399f6e864ca5671285386516b94fdf9fe8724c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3-dev.3"
+  digit_dss:
+    dependency: "direct main"
+    description:
+      path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "1.0.3-dev.2"
+    version: "0.0.1-dev.1"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -1530,10 +1539,11 @@ packages:
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
-    version: "1.0.3-dev.4"
+      name: registration_delivery
+      sha256: c4bc83d994d8006a3f1a3c5a90cd6d4f07873b01c14a16fdc06e83d99946face
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3-dev.5"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
