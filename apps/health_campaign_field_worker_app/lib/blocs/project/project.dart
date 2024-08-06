@@ -462,6 +462,26 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         if (dashboardConfig.isNotEmpty &&
             dashboardConfig.first.enableDashboard == true &&
             dashboardConfig.first.charts != null) {
+          final loggedInIndividualId = await localSecureStore.userIndividualId;
+          final registers = await attendanceLocalRepository.search(
+            AttendanceRegisterSearchModel(
+              staffId: loggedInIndividualId,
+              referenceId: event.model.id,
+            ),
+          );
+          List<String> attendeesIndividualIds = [];
+          registers.map((r) =>
+              r.attendees?.where((a) => a.individualId != null).map((att) {
+                attendeesIndividualIds.add(att.individualId.toString());
+              }));
+          final individuals =
+              await individualLocalRepository.search(IndividualSearchModel(
+            id: attendeesIndividualIds,
+          ));
+          final userUUIDList = individuals
+              .where((ind) => ind.userUuid != null)
+              .map((i) => i.userUuid.toString())
+              .toList();
           await processDashboardConfig(
             dashboardConfig.first.charts ?? [],
             startDate,
@@ -474,10 +494,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
                 : '/dashboard-analytics/dashboard/getChartV2', //[TODO: To be added to MDMS Service registry
             envConfig.variables.tenantId,
             event.model.id,
+            userUUIDList,
           );
         }
       } catch (e) {
-        print(e);
+        debugPrint(e.toString());
       }
       final configResult = await mdmsRepository.searchAppConfig(
         envConfig.variables.mdmsApiPath,

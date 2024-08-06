@@ -27,4 +27,8 @@ enum DSSEnums {
   home,
   @MappableValue("row")
   row,
+  @MappableValue("uuid")
+  uuid,
+  @MappableValue("projectId")
+  projectId,
 }
