@@ -1,3 +1,7 @@
+## 1.0.3-dev.5
+
+* Added count for filter search 
+* Bug fixes
 
 ## 1.0.3-dev.4
 

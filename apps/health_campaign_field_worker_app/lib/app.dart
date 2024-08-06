@@ -3,6 +3,7 @@ import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,6 @@ import 'router/app_navigator_observer.dart';
 import 'router/app_router.dart';
 import 'utils/environment_config.dart';
 import 'utils/localization_delegates.dart';
-import 'utils/typedefs.dart';
 import 'utils/utils.dart';
 import 'widgets/network_manager_provider_wrapper.dart';
 
@@ -86,6 +86,7 @@ class MainApplicationState extends State<MainApplication>
         create: (context) => AppInitializationBloc(
           isar: widget.isar,
           mdmsRepository: MdmsRepository(widget.client),
+          dashboardRemoteRepository: DashboardRemoteRepository(widget.client),
         )..add(const AppInitializationSetupEvent()),
         child: NetworkManagerProviderWrapper(
           isar: widget.isar,
@@ -201,6 +202,8 @@ class MainApplicationState extends State<MainApplication>
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
                             mdmsRepository: MdmsRepository(widget.client),
+                            dashboardRemoteRepository:
+                                DashboardRemoteRepository(widget.client),
                             facilityLocalRepository: ctx.read<
                                 LocalRepository<FacilityModel,
                                     FacilitySearchModel>>(),
@@ -277,6 +280,18 @@ class MainApplicationState extends State<MainApplication>
                             context: context,
                           ),
                         ),
+                        BlocProvider(
+                            create: (ctx) => DashboardBloc(
+                                  const DashboardState.initialState(),
+                                  isar: widget.isar,
+                                  dashboardRemoteRepo:
+                                      DashboardRemoteRepository(widget.client),
+                                  attendanceDataRepository: context.repository<
+                                      AttendanceRegisterModel,
+                                      AttendanceRegisterSearchModel>(),
+                                  individualDataRepository: context.repository<
+                                      IndividualModel, IndividualSearchModel>(),
+                                )),
                         BlocProvider(
                           create: (context) => FacilityBloc(
                             facilityDataRepository: context.repository<

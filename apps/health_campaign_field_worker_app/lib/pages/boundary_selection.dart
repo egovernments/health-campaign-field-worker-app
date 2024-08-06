@@ -100,7 +100,7 @@ class _BoundarySelectionPageState
 
                   return initState.maybeWhen(
                     orElse: () => const Offstage(),
-                    initialized: (appConfiguration, _) =>
+                    initialized: (appConfiguration, _, __) =>
                         BlocListener<BoundaryBloc, BoundaryState>(
                       listener: (context, state) {
                         if (state.boundaryList.isNotEmpty) {
