@@ -45,10 +45,42 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
       create: (_) => HouseholdOverviewBloc(
           HouseholdOverviewState(
             householdMemberWrapper: HouseholdMemberWrapper(
-                household: initialState.householdModel,
-                headOfHousehold: null,
-                members: [],
-                projectBeneficiaries: []),
+              household: initialState.householdModel,
+              headOfHousehold: initialState.maybeWhen(
+                  orElse: () => null,
+                  editHousehold: (addressModel,
+                          householdModel,
+                          individualModel,
+                          registrationDate,
+                          projectBeneficiaryModel,
+                          loading,
+                          headOfHousehold) =>
+                      headOfHousehold),
+              members: initialState.maybeWhen(
+                orElse: () => null,
+                editHousehold: (addressModel,
+                        householdModel,
+                        individualModel,
+                        registrationDate,
+                        projectBeneficiaryModel,
+                        loading,
+                        headOfHousehold) =>
+                    individualModel,
+              ),
+              projectBeneficiaries: initialState.maybeWhen(
+                orElse: () => null,
+                editHousehold: (addressModel,
+                        householdModel,
+                        individualModel,
+                        registrationDate,
+                        projectBeneficiaryModel,
+                        loading,
+                        headOfHousehold) =>
+                    projectBeneficiaryModel != null
+                        ? [projectBeneficiaryModel]
+                        : [],
+              ),
+            ),
           ),
           individualRepository: individual,
           householdRepository: household,
