@@ -54,7 +54,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
           return BlocConsumer<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
             listener: (context, state) {
-              if (state is BeneficiaryRegistrationPersistedState) {
+              if (state is BeneficiaryRegistrationPersistedState && state.isEdit) {
                 final overviewBloc =
                 context.read<HouseholdOverviewBloc>();
 

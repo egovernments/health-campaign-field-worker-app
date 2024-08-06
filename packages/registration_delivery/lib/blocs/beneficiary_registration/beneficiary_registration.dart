@@ -507,6 +507,8 @@ class BeneficiaryRegistrationBloc
           emit(
             BeneficiaryRegistrationPersistedState(
               householdModel: value.householdModel,
+              isEdit : true,
+
             ),
           );
         } catch (error) {
@@ -779,6 +781,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     DateTime? registrationDate,
     AddressModel? addressModel,
     @Default(false) bool loading,
+    @Default(false) bool isEdit,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationPersistedState;
 
