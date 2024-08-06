@@ -79,7 +79,7 @@ class DeliverInterventionPageState
                 form: form,
                 oldTask: RegistrationDeliverySingleton().beneficiaryType ==
                         BeneficiaryType.household
-                    ? deliverInterventionState.tasks?.last ?? deliverInterventionState
+                    ? deliverInterventionState
                         .householdMemberWrapper?.tasks?.last
                     : null,
                 projectBeneficiaryClientReferenceId:
@@ -92,8 +92,9 @@ class DeliverInterventionPageState
                 longitude: long,
               ),
               isEditing:
-                  ( deliverInterventionState.tasks ?? deliverInterventionState.householdMemberWrapper?.tasks ?? [])
-                          .isNotEmpty
+                  ( deliverInterventionState.householdMemberWrapper?.tasks ?? [])
+                          .isNotEmpty && RegistrationDeliverySingleton().beneficiaryType ==
+                      BeneficiaryType.household
                       ? true
                       : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
