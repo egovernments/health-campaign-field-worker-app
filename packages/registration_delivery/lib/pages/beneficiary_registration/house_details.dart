@@ -68,7 +68,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       child: DigitElevatedButton(
                         onPressed: () {
                           form.markAllAsTouched();
-                          if (form.control(_householdStructureKey).value == null) {
+                          if (form.control(_householdStructureKey).value ==
+                              null) {
                             setState(() {
                               form
                                   .control(_householdStructureKey)
@@ -77,128 +78,128 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                           }
 
                           if (!form.valid) return;
-                          selectedHouseStructureTypes = form.control(_householdStructureKey).value;
+                          selectedHouseStructureTypes =
+                              form.control(_householdStructureKey).value;
 
-                            final noOfRooms =
-                                form.control(_noOfRoomsKey).value as int;
-                            registrationState.maybeWhen(
-                              orElse: () {
-                                return;
-                              },
-                              create: (
-                                address,
-                                householdModel,
-                                individualModel,
-                                projectBeneficiaryModel,
-                                registrationDate,
-                                searchQuery,
-                                loading,
-                                isHeadOfHousehold,
-                              ) {
-                                var houseModel = HouseholdModel(
-                                    clientReferenceId: IdGen.i.identifier,
-                                    tenantId: RegistrationDeliverySingleton()
-                                        .tenantId,
-                                    rowVersion: 1,
-                                    auditDetails: AuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    memberCount: householdModel?.memberCount,
-                                    clientAuditDetails: ClientAuditDetails(
-                                      createdBy: RegistrationDeliverySingleton()
-                                          .loggedInUserUuid!,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
-                                      lastModifiedBy:
-                                          RegistrationDeliverySingleton()
-                                              .loggedInUserUuid,
-                                      lastModifiedTime:
-                                          context.millisecondsSinceEpoch(),
-                                    ),
-                                    additionalFields: HouseholdAdditionalFields(
-                                        version: 1,
-                                        fields: [
-                                          ...?householdModel
-                                              ?.additionalFields?.fields
-                                              .where((e) =>
-                                                  e.key !=
-                                                      AdditionalFieldsType
-                                                          .houseStructureTypes
-                                                          .toValue() &&
-                                                  e.key !=
-                                                      AdditionalFieldsType
-                                                          .noOfRooms
-                                                          .toValue()),
-                                          AdditionalField(
-                                            AdditionalFieldsType
-                                                .houseStructureTypes
-                                                .toValue(),
-                                            selectedHouseStructureTypes
-                                                ?.join("|")
-                                                .toString(),
-                                          ),
-                                          AdditionalField(
-                                            AdditionalFieldsType.noOfRooms
-                                                .toValue(),
-                                            noOfRooms,
-                                          )
-                                        ]));
-
-                                bloc.add(
-                                  BeneficiaryRegistrationSaveHouseDetailsEvent(
-                                    model: houseModel,
+                          final noOfRooms =
+                              form.control(_noOfRoomsKey).value as int;
+                          registrationState.maybeWhen(
+                            orElse: () {
+                              return;
+                            },
+                            create: (
+                              address,
+                              householdModel,
+                              individualModel,
+                              projectBeneficiaryModel,
+                              registrationDate,
+                              searchQuery,
+                              loading,
+                              isHeadOfHousehold,
+                            ) {
+                              var houseModel = HouseholdModel(
+                                  clientReferenceId: IdGen.i.identifier,
+                                  tenantId:
+                                      RegistrationDeliverySingleton().tenantId,
+                                  rowVersion: 1,
+                                  auditDetails: AuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        context.millisecondsSinceEpoch(),
                                   ),
-                                );
-                                router.push(HouseHoldDetailsRoute());
-                              },
-                              editHousehold: (
-                                address,
-                                householdModel,
-                                individuals,
-                                registrationDate,
-                                projectBeneficiaryModel,
-                                loading,
-                              ) {
-                                var houseModel = householdModel.copyWith(
-                                    additionalFields: HouseholdAdditionalFields(
-                                        version: 1,
-                                        fields: [
-                                      ...?householdModel
-                                          .additionalFields?.fields
-                                          .where((e) =>
-                                              e.key !=
-                                                  AdditionalFieldsType
-                                                      .houseStructureTypes
-                                                      .toValue() &&
-                                              e.key !=
-                                                  AdditionalFieldsType.noOfRooms
-                                                      .toValue()),
-                                      AdditionalField(
-                                        AdditionalFieldsType.houseStructureTypes
-                                            .toValue(),
-                                        selectedHouseStructureTypes
-                                            ?.join("|")
-                                            .toString(),
-                                      ),
-                                      AdditionalField(
-                                        AdditionalFieldsType.noOfRooms
-                                            .toValue(),
-                                        noOfRooms,
-                                      )
-                                    ]));
-                                // TODO [Linking of Voucher for Household based project  need to be handled]
-
-                                bloc.add(
-                                  BeneficiaryRegistrationSaveHouseDetailsEvent(
-                                    model: houseModel,
+                                  memberCount: householdModel?.memberCount,
+                                  clientAuditDetails: ClientAuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        context.millisecondsSinceEpoch(),
+                                    lastModifiedBy:
+                                        RegistrationDeliverySingleton()
+                                            .loggedInUserUuid,
+                                    lastModifiedTime:
+                                        context.millisecondsSinceEpoch(),
                                   ),
-                                );
-                                router.push(HouseHoldDetailsRoute());
-                              },
-                            );
+                                  additionalFields: HouseholdAdditionalFields(
+                                      version: 1,
+                                      fields: [
+                                        ...?householdModel
+                                            ?.additionalFields?.fields
+                                            .where((e) =>
+                                                e.key !=
+                                                    AdditionalFieldsType
+                                                        .houseStructureTypes
+                                                        .toValue() &&
+                                                e.key !=
+                                                    AdditionalFieldsType
+                                                        .noOfRooms
+                                                        .toValue()),
+                                        AdditionalField(
+                                          AdditionalFieldsType
+                                              .houseStructureTypes
+                                              .toValue(),
+                                          selectedHouseStructureTypes
+                                              ?.join("|")
+                                              .toString(),
+                                        ),
+                                        AdditionalField(
+                                          AdditionalFieldsType.noOfRooms
+                                              .toValue(),
+                                          noOfRooms,
+                                        )
+                                      ]));
+
+                              bloc.add(
+                                BeneficiaryRegistrationSaveHouseDetailsEvent(
+                                  model: houseModel,
+                                ),
+                              );
+                              router.push(HouseHoldDetailsRoute());
+                            },
+                            editHousehold: (
+                              address,
+                              householdModel,
+                              individuals,
+                              registrationDate,
+                              projectBeneficiaryModel,
+                              loading,
+                              headOfHousehold,
+                            ) {
+                              var houseModel = householdModel.copyWith(
+                                  additionalFields: HouseholdAdditionalFields(
+                                      version: 1,
+                                      fields: [
+                                    ...?householdModel.additionalFields?.fields
+                                        .where((e) =>
+                                            e.key !=
+                                                AdditionalFieldsType
+                                                    .houseStructureTypes
+                                                    .toValue() &&
+                                            e.key !=
+                                                AdditionalFieldsType.noOfRooms
+                                                    .toValue()),
+                                    AdditionalField(
+                                      AdditionalFieldsType.houseStructureTypes
+                                          .toValue(),
+                                      selectedHouseStructureTypes
+                                          ?.join("|")
+                                          .toString(),
+                                    ),
+                                    AdditionalField(
+                                      AdditionalFieldsType.noOfRooms.toValue(),
+                                      noOfRooms,
+                                    )
+                                  ]));
+                              // TODO [Linking of Voucher for Household based project  need to be handled]
+
+                              bloc.add(
+                                BeneficiaryRegistrationSaveHouseDetailsEvent(
+                                  model: houseModel,
+                                ),
+                              );
+                              router.push(HouseHoldDetailsRoute());
+                            },
+                          );
                         },
                         child: Center(
                           child: Text(
@@ -254,7 +255,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                       form
                                           .control(_householdStructureKey)
                                           .markAsTouched();
-                                      if(values.isEmpty){
+                                      if (values.isEmpty) {
                                         form
                                             .control(_householdStructureKey)
                                             .value = null;
@@ -263,9 +264,11 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                               .control(_householdStructureKey)
                                               .setErrors({'': true});
                                         });
-                                      }else{
+                                      } else {
                                         setState(() {
-                                          form.control(_householdStructureKey).value = values;
+                                          form
+                                              .control(_householdStructureKey)
+                                              .value = values;
                                         });
                                       }
                                     },
@@ -274,13 +277,14 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                           .translate(value.toString());
                                     },
                                     errorMessage: form
-                                        .control(_householdStructureKey)
-                                        .hasErrors &&
-                                        form
-                                            .control(_householdStructureKey)
-                                            .touched
-                                        ? localizations.translate(i18.householdDetails
-                                        .selectStructureTypeError)
+                                                .control(_householdStructureKey)
+                                                .hasErrors &&
+                                            form
+                                                .control(_householdStructureKey)
+                                                .touched
+                                        ? localizations.translate(i18
+                                            .householdDetails
+                                            .selectStructureTypeError)
                                         : null,
                                   ),
                                 ),
@@ -326,10 +330,9 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                   '1')
               : 1),
       _householdStructureKey: FormControl<List<String>>(
-        value: state
-            .householdModel?.additionalFields?.fields
+        value: state.householdModel?.additionalFields?.fields
             .where((e) =>
-        e.key == AdditionalFieldsType.houseStructureTypes.toValue())
+                e.key == AdditionalFieldsType.houseStructureTypes.toValue())
             .first
             .value
             .toString()

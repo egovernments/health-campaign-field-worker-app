@@ -79,7 +79,8 @@ class _SearchBeneficiaryPageState
           onNotification: (scrollNotification) {
             if (scrollNotification is ScrollUpdateNotification) {
               final metrics = scrollNotification.metrics;
-              if (metrics.atEdge && metrics.pixels != 0) {triggerGlobalSearchEvent(isPagination: true);
+              if (metrics.atEdge && metrics.pixels != 0) {
+                triggerGlobalSearchEvent(isPagination: true);
               }
             }
             return true;
@@ -162,7 +163,8 @@ class _SearchBeneficiaryPageState
                                 ),
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
-                                  if(value.isEmpty || value.trim().length > 2){
+                                  if (value.isEmpty ||
+                                      value.trim().length > 2) {
                                     triggerGlobalSearchEvent();
                                   }
                                 },
@@ -346,17 +348,19 @@ class _SearchBeneficiaryPageState
                                     BeneficiaryRegistrationWrapperRoute(
                                       initialState: BeneficiaryRegistrationState
                                           .editHousehold(
-                                        householdModel: i.household!,
-                                        individualModel: i.members!,
-                                        registrationDate: DateTime.now(),
-                                        projectBeneficiaryModel:
-                                            (i.projectBeneficiaries ?? [])
-                                                    .isNotEmpty
-                                                ? i.projectBeneficiaries?.last
-                                                : null,
-                                        addressModel:
-                                            i.headOfHousehold!.address!.last,
-                                      ),
+                                              householdModel: i.household!,
+                                              individualModel: i.members!,
+                                              registrationDate: DateTime.now(),
+                                              projectBeneficiaryModel:
+                                                  (i.projectBeneficiaries ?? [])
+                                                          .isNotEmpty
+                                                      ? i.projectBeneficiaries
+                                                          ?.last
+                                                      : null,
+                                              addressModel: i.headOfHousehold!
+                                                  .address!.last,
+                                              headOfHousehold:
+                                                  i.headOfHousehold),
                                     ),
                                   );
                                 } else {
@@ -491,15 +495,15 @@ class _SearchBeneficiaryPageState
     }
   }
 
-  void triggerGlobalSearchEvent( {bool isPagination = false}) {
-    if(!isPagination){
+  void triggerGlobalSearchEvent({bool isPagination = false}) {
+    if (!isPagination) {
       blocWrapper.clearEvent();
     }
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty ) {
+          searchController.text.isNotEmpty) {
         blocWrapper.individualGlobalSearchBloc
             .add(SearchHouseholdsEvent.individualGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
@@ -507,16 +511,22 @@ class _SearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2 ? searchController.text.trim() : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
-                  offset: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.offset: offset,
-                  limit: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.limit: limit,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
         )));
       }
     } else {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty ) {
+          searchController.text.isNotEmpty) {
         blocWrapper.houseHoldGlobalSearchBloc
             .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
@@ -524,10 +534,16 @@ class _SearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2 ? searchController.text.trim() : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
-          offset: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.offset: offset,
-          limit: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.limit: limit,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
         )));
       }
     }
