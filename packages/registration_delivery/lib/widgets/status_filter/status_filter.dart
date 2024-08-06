@@ -3,6 +3,7 @@ import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import '../../utils/i18_key_constants.dart' as i18;
 
 import '../../models/entities/status.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -21,6 +22,7 @@ class StatusFilter extends LocalizedStatefulWidget {
 
 class StatusFilterState extends LocalizedState<StatusFilter> {
   List<Status> selectedButtons = [];
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -30,63 +32,79 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SelectionBox<Status>(
-            options: getFilters() ?? [],
-            allowMultipleSelection: false,
-            equalWidthOptions: true,
-            initialSelection: [...selectedButtons],
-            onSelectionChanged: (selected) {
-              setState(() {
-                selectedButtons = selected;
-              });
-            },
-            valueMapper: (value) {
-              return localizations.translate(value.toValue().toString());
-            },
-          ),
-          const SizedBox(
-            height: kPadding,
-          ),
-          Row(
-            mainAxisAlignment:
-                MainAxisAlignment.spaceEvenly, // Adjust button spacing
-            children: [
-              Expanded(
-                child: DigitOutLineButton(
-                    label: localizations.translate(
-                      i18.searchBeneficiary.clearFilter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: isLoading
+                  ?  [ Center(
+                child: SizedBox(height: 50, child: Text(localizations.translate(i18.common.coreCommonLoadingText), style: theme.textTheme.bodyLarge,)),
+              )] : [
+                SelectionBox<Status>(
+                  options: getFilters() ?? [],
+                  allowMultipleSelection: false,
+                  equalWidthOptions: true,
+                  initialSelection: [...selectedButtons],
+                  onSelectionChanged: (selected) {
+                    setState(() {
+                      selectedButtons = selected;
+                    });
+                  },
+                  valueMapper: (value) {
+                    return localizations.translate(value.toValue().toString());
+                  },
+                ),
+                const SizedBox(
+                  height: kPadding,
+                ),
+                Row(
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceEvenly, // Adjust button spacing
+                  children: [
+                    Expanded(
+                      child: DigitOutLineButton(
+                          label: localizations.translate(
+                            i18.searchBeneficiary.clearFilter,
+                          ),
+                          onPressed: selectedButtons.isEmpty
+                              ? null
+                              : () {
+                                  setState(() {
+                                    selectedButtons.clear();
+                                  });
+                                }),
                     ),
-                    onPressed: selectedButtons.isEmpty ? null : () {
-                      setState(() {
-                        selectedButtons.clear();
-                      });
-                    }),
-              ),
-              const SizedBox(
-                width: kPadding / 2,
-              ),
-              Expanded(
-                child: DigitElevatedButton(
-                    onPressed: selectedButtons.isEmpty ? null : () {
-                      var selected =
-                          selectedButtons.map((e) => e.name).toList();
-                      Navigator.pop(context, selected);
-                    },
-                    child: Text(
-                      localizations.translate(
-                        i18.searchBeneficiary.applyFilter,
-                      ),
-                    )),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
+                    const SizedBox(
+                      width: kPadding / 2,
+                    ),
+                    Expanded(
+                      child: DigitElevatedButton(
+                          onPressed: selectedButtons.isEmpty
+                              ? null
+                              : () {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+                                  var selected = selectedButtons
+                                      .map((e) => e.name)
+                                      .toList();
+
+                                    Future.delayed(const Duration(seconds: 1), () {
+                                      Navigator.pop(context, selected);
+                                    });
+
+                                },
+                          child: Text(
+                            localizations.translate(
+                              i18.searchBeneficiary.applyFilter,
+                            ),
+                          )),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
   }
 
   void selectButton(Status button) {
