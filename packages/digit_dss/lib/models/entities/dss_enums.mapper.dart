@@ -47,6 +47,10 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return DSSEnums.home;
       case "row":
         return DSSEnums.row;
+      case "uuid":
+        return DSSEnums.uuid;
+      case "projectId":
+        return DSSEnums.projectId;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -77,6 +81,10 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return "home";
       case DSSEnums.row:
         return "row";
+      case DSSEnums.uuid:
+        return "uuid";
+      case DSSEnums.projectId:
+        return "projectId";
     }
   }
 }

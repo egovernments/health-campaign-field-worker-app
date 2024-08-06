@@ -12,6 +12,7 @@ import 'package:isar/isar.dart';
 import '../models/entities/dss_enums.dart';
 
 const dashboardAPIPath = '/dashboard-analytics/dashboard/getChartV2';
+
 Future<bool> getIsConnected() async {
   try {
     final result = await InternetAddress.lookup('example.com');
@@ -108,8 +109,9 @@ Future<void> processDashboardConfig(
   String actionPath,
   String tenantId,
   String projectId,
+  List<String> userList,
 ) async {
-  if(dashboardConfig.isNotEmpty) {
+  if (dashboardConfig.isNotEmpty) {
     for (var entry in dashboardConfig) {
       String visualizationType = entry.chartType ?? '';
       String visualizationCode = entry.name ?? '';
@@ -120,7 +122,10 @@ Future<void> processDashboardConfig(
             aggregationRequestDto: AggregationRequestDto(
                 visualizationType: visualizationType,
                 visualizationCode: visualizationCode,
-                filters: {},
+                filters: {
+                  DSSEnums.uuid.toValue(): userList,
+                  DSSEnums.projectId.toValue(): projectId
+                },
                 moduleLevel: "",
                 queryType: "",
                 requestDate: RequestDate(
@@ -181,11 +186,15 @@ class DashboardSingleton {
   }
 
   String get tenantId => _tenantId ?? '';
+
   String get projectId => _projectId ?? '';
+
   String get appVersion => _appVersion ?? '';
+
   String get actionPath =>
       _actionPath ??
       dashboardAPIPath; //[TODO: To be added to MDMS Service registry
   ProjectModel? get selectedProject => _selectedProject;
+
   DashboardConfigSchema? get dashboardConfig => _dashboardConfig;
 }

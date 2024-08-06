@@ -1,9 +1,12 @@
 import 'dart:async'; // Import the dart:async library for asynchronous operations
 
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/utils/typedefs.dart';
 import 'package:collection/collection.dart'; // Import the collection package for collection utilities
 import 'package:digit_components/models/digit_table_model.dart'; // Import the digit_table_model.dart file from the digit_components package
 import 'package:digit_components/theme/colors.dart'; // Import the colors.dart file from the digit_components package
 import 'package:digit_components/theme/digit_theme.dart'; // Import the digit_theme.dart file from the digit_components package
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart'; // Import the digit_dss.dart file from the digit_dss package
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import the flutter_bloc package for state management
@@ -19,11 +22,15 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   final Isar isar; // Isar database instance
   final DashboardRemoteRepository
       dashboardRemoteRepo; // Remote repository for dashboard data
+  final AttendanceDataRepository attendanceDataRepository;
+  final IndividualDataRepository individualDataRepository;
 
   DashboardBloc(
     super.initialState, {
     required this.isar,
     required this.dashboardRemoteRepo,
+    required this.attendanceDataRepository,
+    required this.individualDataRepository,
   }) {
     on(_handleSearch); // Register the _handleSearch event handler
     on(_handleRefresh); // Register the _handleRefresh event handler
@@ -65,6 +72,25 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               .millisecondsSinceEpoch; // Get end date in milliseconds
 
           try {
+            final registers = await attendanceDataRepository.search(
+              AttendanceRegisterSearchModel(
+                staffId: AttendanceSingleton().loggedInIndividualId,
+                referenceId: AttendanceSingleton().projectId,
+              ),
+            );
+            List<String> attendeesIndividualIds = [];
+            registers.map((r) =>
+                r.attendees?.where((a) => a.individualId != null).map((att) {
+                  attendeesIndividualIds.add(att.individualId.toString());
+                }));
+            final individuals =
+                await individualDataRepository.search(IndividualSearchModel(
+              id: attendeesIndividualIds,
+            ));
+            final userUUIDList = individuals
+                .where((ind) => ind.userUuid != null)
+                .map((i) => i.userUuid.toString())
+                .toList();
             await processDashboardConfig(
               dashboardConfig
                       ?.where((chart) =>
@@ -80,6 +106,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               DashboardSingleton().actionPath,
               DashboardSingleton().tenantId,
               DashboardSingleton().projectId,
+              userUUIDList,
             ); // Process dashboard configuration
 
             add(DashboardEvent.handleSearch(

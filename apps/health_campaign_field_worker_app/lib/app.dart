@@ -286,6 +286,11 @@ class MainApplicationState extends State<MainApplication>
                                   isar: widget.isar,
                                   dashboardRemoteRepo:
                                       DashboardRemoteRepository(widget.client),
+                                  attendanceDataRepository: context.repository<
+                                      AttendanceRegisterModel,
+                                      AttendanceRegisterSearchModel>(),
+                                  individualDataRepository: context.repository<
+                                      IndividualModel, IndividualSearchModel>(),
                                 )),
                         BlocProvider(
                           create: (context) => FacilityBloc(
