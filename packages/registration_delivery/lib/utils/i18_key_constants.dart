@@ -119,6 +119,7 @@ class Common {
   String get coreCommonSummaryDetails => 'CORE_COMMON_SUMMARY_DETAILS';
 
   String get metersNear => 'METERS_NEAR';
+  String get coreCommonLoadingText => 'CORE_COMMON_LOADING_TEXT';
 }
 
 class SearchBeneficiary {
