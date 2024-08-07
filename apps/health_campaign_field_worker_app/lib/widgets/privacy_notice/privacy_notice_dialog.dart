@@ -105,7 +105,7 @@ class _FullPageDialogState extends LocalizedState<FullPageDialog> {
                         widget.onAccept();
                         Navigator.of(context).pop();
                       },
-                      child: Text(localizations.translate(i18.privacyPolicy.declineText)),
+                      child: Text(localizations.translate(i18.privacyPolicy.acceptText)),
                     ),
                     DigitOutLineButton(
                       onPressed: () {
