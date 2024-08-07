@@ -44,7 +44,7 @@ class RecordPastDeliveryDetailsPageState
     final router = context.router;
 
     final futureTaskList = widget.tasks
-        ?.where((task) => task.status == Status.delivered.toValue())
+        ?.where((task) => task.taskStatus == Status.delivered.toValue())
         .toList();
 
     return Scaffold(
@@ -119,8 +119,8 @@ class RecordPastDeliveryDetailsPageState
                                   : Status.administeredFailed.toValue();
 
                               // Create a new task with the updated status
-                              final result =
-                                  futureTaskList![i].copyWith(status: status);
+                              final result = futureTaskList![i]
+                                  .copyWith(taskStatus: status);
 
                               // Add the updated task to the event
                               event.add(DeliverInterventionSubmitEvent(
@@ -193,8 +193,8 @@ class RecordPastDeliveryDetailsPageState
                                   : Status.administeredFailed.toValue();
 
                               // Create a new task with the updated status
-                              final result =
-                                  futureTaskList![i].copyWith(status: status);
+                              final result = futureTaskList![i]
+                                  .copyWith(taskStatus: status);
 
                               // Add the updated task to the event
                               event.add(DeliverInterventionSubmitEvent(
@@ -319,7 +319,7 @@ class RecordPastDeliveryDetailsPageState
     final bloc = context.read<DeliverInterventionBloc>().state;
 
     final futureTaskList = widget.tasks
-        ?.where((task) => task.status == Status.delivered.toValue())
+        ?.where((task) => task.taskStatus == Status.delivered.toValue())
         .toList();
 
     // Create a form group with a FormArray of KeyValue form controls

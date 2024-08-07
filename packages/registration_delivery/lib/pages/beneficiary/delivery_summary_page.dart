@@ -108,9 +108,11 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           task: deliverState.oldTask!,
-                                          isEditing: ( deliverState.tasks ?? [])
-                                              .isNotEmpty && RegistrationDeliverySingleton().beneficiaryType ==
-                                              BeneficiaryType.household
+                                          isEditing: (deliverState.tasks ?? [])
+                                                      .isNotEmpty &&
+                                                  RegistrationDeliverySingleton()
+                                                          .beneficiaryType ==
+                                                      BeneficiaryType.household
                                               ? true
                                               : false,
                                           boundaryModel:
@@ -314,25 +316,25 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                         return DigitCard(
                           child: LabelValueList(
                               heading: localizations.translate(
-                                  '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                  '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.taskStatus}'),
                               withDivider: true,
                               items: [
                                 LabelValuePair(
-                                  label: localizations.translate(
-                                      deliverState.oldTask?.status ==
-                                                  Status.administeredFailed
-                                                      .toValue() ||
-                                              deliverState.oldTask?.status ==
-                                                  Status.beneficiaryRefused
-                                                      .toValue()
-                                          ? i18.deliverIntervention
-                                              .reasonForRefusalLabel
-                                          : i18.deliverIntervention
-                                              .typeOfInsecticideUsed),
-                                  value: deliverState.oldTask?.status ==
+                                  label: localizations.translate(deliverState
+                                                  .oldTask?.taskStatus ==
                                               Status.administeredFailed
                                                   .toValue() ||
-                                          deliverState.oldTask?.status ==
+                                          deliverState.oldTask?.taskStatus ==
+                                              Status.beneficiaryRefused
+                                                  .toValue()
+                                      ? i18.deliverIntervention
+                                          .reasonForRefusalLabel
+                                      : i18.deliverIntervention
+                                          .typeOfInsecticideUsed),
+                                  value: deliverState.oldTask?.taskStatus ==
+                                              Status.administeredFailed
+                                                  .toValue() ||
+                                          deliverState.oldTask?.taskStatus ==
                                               Status.beneficiaryRefused
                                                   .toValue()
                                       ? getLocalizedMessage(deliverState

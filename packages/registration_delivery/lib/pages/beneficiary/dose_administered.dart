@@ -144,7 +144,8 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                   clientReferenceId,
                                               id: null,
                                             ),
-                                            status: Status.delivered.toValue(),
+                                            taskStatus:
+                                                Status.delivered.toValue(),
                                             clientReferenceId:
                                                 clientReferenceId,
                                             projectBeneficiaryClientReferenceId:

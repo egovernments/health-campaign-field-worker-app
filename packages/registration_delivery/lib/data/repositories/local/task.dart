@@ -52,7 +52,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                 projectId: task.projectId,
                 projectBeneficiaryId: task.projectBeneficiaryId,
                 createdDate: task.createdDate,
-                status: task.status,
+                taskStatus: task.status,
                 resources: resources == null
                     ? null
                     : [
@@ -210,7 +210,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
                           )
                         : null,
                   ),
-            status: task.status,
+            taskStatus: task.status,
             auditDetails:
                 (task.auditCreatedBy != null && task.auditCreatedTime != null)
                     ? AuditDetails(

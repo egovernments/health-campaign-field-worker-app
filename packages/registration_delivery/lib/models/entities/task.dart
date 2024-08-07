@@ -13,7 +13,7 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
   final List<String>? projectBeneficiaryId;
   final List<String>? projectBeneficiaryClientReferenceId;
   final String? createdBy;
-  final String? status;
+  final String? taskStatus;
   final int? offset;
   final int? limit;
   final List<String>? clientReferenceId;
@@ -29,7 +29,7 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
     this.projectBeneficiaryId,
     this.projectBeneficiaryClientReferenceId,
     this.createdBy,
-    this.status,
+    this.taskStatus,
     this.offset,
     this.limit,
     this.clientReferenceId,
@@ -61,7 +61,7 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
     this.projectBeneficiaryId,
     this.projectBeneficiaryClientReferenceId,
     this.createdBy,
-    this.status,
+    this.taskStatus,
     this.offset,
     this.limit,
     this.clientReferenceId,
@@ -103,7 +103,7 @@ class TaskModel extends EntityModel with TaskModelMappable {
   final String? projectBeneficiaryId;
   final String? projectBeneficiaryClientReferenceId;
   final String? createdBy;
-  final String? status;
+  final String? taskStatus;
   final bool? nonRecoverableError;
   final String clientReferenceId;
   final String? tenantId;
@@ -124,7 +124,7 @@ class TaskModel extends EntityModel with TaskModelMappable {
     this.projectBeneficiaryId,
     this.projectBeneficiaryClientReferenceId,
     this.createdBy,
-    this.status,
+    this.taskStatus,
     this.nonRecoverableError = false,
     required this.clientReferenceId,
     this.tenantId,
@@ -184,7 +184,7 @@ class TaskModel extends EntityModel with TaskModelMappable {
       projectBeneficiaryClientReferenceId:
           Value(projectBeneficiaryClientReferenceId),
       createdBy: Value(createdBy),
-      status: Value(status),
+      status: Value(taskStatus),
       nonRecoverableError: Value(nonRecoverableError),
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),

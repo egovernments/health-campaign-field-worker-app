@@ -336,7 +336,7 @@ class _SearchBeneficiaryPageState
                                 );
 
                                 if ((i.tasks != null &&
-                                        i.tasks?.last.status ==
+                                        i.tasks?.last.taskStatus ==
                                             Status.closeHousehold.toValue() &&
                                         (i.tasks ?? []).isNotEmpty) ||
                                     (i.projectBeneficiaries ?? []).isEmpty) {

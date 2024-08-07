@@ -6,11 +6,11 @@ import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:registration_delivery/models/entities/status.dart'
-    as reg_status;
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/status.dart'
+    as reg_status;
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/typedefs.dart';
 
@@ -246,7 +246,7 @@ class ClosedHouseholdBloc
         projectId: ClosedHouseholdSingleton().projectId,
         rowVersion: 1,
         address: address,
-        status: reg_status.Status.closeHousehold.toValue(),
+        taskStatus: reg_status.Status.closeHousehold.toValue(),
         auditDetails: AuditDetails(
           createdBy: ClosedHouseholdSingleton().loggedInUserUuid!,
           createdTime: DateTime.now().millisecondsSinceEpoch,

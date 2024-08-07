@@ -90,12 +90,11 @@ class DeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
               ),
-              isEditing:
-                  ( deliverInterventionState.tasks ?? [])
-                          .isNotEmpty && RegistrationDeliverySingleton().beneficiaryType ==
-                      BeneficiaryType.household
-                      ? true
-                      : false,
+              isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.household
+                  ? true
+                  : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
@@ -666,7 +665,7 @@ class DeliverInterventionPageState
         relatedClientReferenceId: clientReferenceId,
         id: null,
       ),
-      status: Status.administeredSuccess.toValue(),
+      taskStatus: Status.administeredSuccess.toValue(),
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [

@@ -162,9 +162,9 @@ class MemberCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    years!=null && months != null ?
-                    " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
-                    : "|   --" ,
+                    years != null && months != null
+                        ? " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
+                        : "|   --",
                     style: theme.textTheme.bodyMedium,
                   ),
                 ),
@@ -256,7 +256,7 @@ class MemberCard extends StatelessWidget {
 
                                       final futureTaskList = tasks
                                           ?.where((task) =>
-                                              task.status ==
+                                              task.taskStatus ==
                                               Status.delivered.toValue())
                                           .toList();
 
@@ -385,7 +385,7 @@ class MemberCard extends StatelessWidget {
                                                       projectId:
                                                           RegistrationDeliverySingleton()
                                                               .projectId,
-                                                      status: Status
+                                                      taskStatus: Status
                                                           .beneficiaryRefused
                                                           .toValue(),
                                                       clientAuditDetails:
