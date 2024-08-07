@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -303,7 +304,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   filterTasks(selectQuery, String filter, LocalSqlDataStore sql) {
     final statusMap = {
       Status.delivered.name: Status.delivered,
-      Status.notDelivered.name: Status.notDelivered,
+      Status.notAdministered.name: Status.notAdministered,
       Status.visited.name: Status.visited,
       Status.notVisited.name: Status.notVisited,
       Status.beneficiaryRefused.name: Status.beneficiaryRefused,

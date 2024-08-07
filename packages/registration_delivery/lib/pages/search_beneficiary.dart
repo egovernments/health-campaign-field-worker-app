@@ -552,7 +552,7 @@ class _SearchBeneficiaryPageState
   String getStatus(String selectedFilter) {
     final statusMap = {
       Status.delivered.toValue(): Status.delivered,
-      Status.notDelivered.toValue(): Status.notDelivered,
+      Status.notAdministered.toValue(): Status.notAdministered,
       Status.visited.toValue(): Status.visited,
       Status.notVisited.toValue(): Status.notVisited,
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
