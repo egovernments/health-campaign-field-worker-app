@@ -432,7 +432,7 @@ class BeneficiaryRegistrationBloc
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
               beneficiaryClientReferenceId:
-                  beneficiaryType == BeneficiaryType.individual
+                  beneficiaryType == BeneficiaryType.individual //[TODO: need to check with individual downsync data. Current implementation works only for household. Parking this for IRS]
                       ? [value.individualModel.first.clientReferenceId]
                       : [event.household.clientReferenceId],
             ),

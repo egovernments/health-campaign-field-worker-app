@@ -450,7 +450,7 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
   if (tasks.isEmpty) {
     return Status.registered.toValue();
   } else {
-    final mappedStatus = statusMap[tasks.last.status];
+    final mappedStatus = statusMap[tasks.last.status ?? Status.registered];
     if (mappedStatus != null) {
       return mappedStatus;
     }

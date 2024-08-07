@@ -12,6 +12,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/household.dart';
+import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/status.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -67,60 +68,107 @@ class _HouseholdOverviewPageState
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual,
-                      child: BlocBuilder<DeliverInterventionBloc,
-                          DeliverInterventionState>(
-                        builder: (ctx, deliverInterventionState) => DigitCard(
-                          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                          padding: const EdgeInsets.fromLTRB(
-                              kPadding, 0, kPadding, 0),
-                          child: deliverInterventionState.tasks?.last.status ==
-                                  Status.administeredSuccess.toValue()
-                              ? Padding(
-                                padding: const EdgeInsets.symmetric(vertical: kPadding),
-                                child: DigitOutLineButton(
-                                    label: localizations.translate(
-                                      i18.memberCard.deliverDetailsUpdateLabel,
+                      child: BlocBuilder<ServiceDefinitionBloc,
+                          ServiceDefinitionState>(
+                        builder: (context, serviceDefinitionState) =>
+                            BlocBuilder<DeliverInterventionBloc,
+                                DeliverInterventionState>(
+                          builder: (ctx, deliverInterventionState) => DigitCard(
+                            margin:
+                                const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: deliverInterventionState
+                                        .tasks?.last.status ==
+                                    Status.administeredSuccess.toValue()
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: kPadding),
+                                    child: DigitOutLineButton(
+                                      label: localizations.translate(
+                                        i18.memberCard
+                                            .deliverDetailsUpdateLabel,
+                                      ),
+                                      onPressed: () {
+                                        serviceDefinitionState.when(
+                                            empty: () {},
+                                            isloading: () {},
+                                            serviceDefinitionFetch:
+                                                (value, model) {
+                                              if (value
+                                                  .where((element) => element
+                                                      .code
+                                                      .toString()
+                                                      .contains(
+                                                          '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                  .toList()
+                                                  .isEmpty) {
+                                                context.router.push(
+                                                  DeliverInterventionRoute(),
+                                                );
+                                              } else {
+                                                navigateToChecklist(ctx);
+                                              }
+                                            });
+                                      },
                                     ),
-                                    onPressed: () async {
-                                      await context.router
-                                          .push(BeneficiaryChecklistRoute());
-                                    },
-                                  ),
-                              )
-                              : DigitElevatedButton(
-                                  onPressed: (state.householdMemberWrapper
-                                                  .projectBeneficiaries ??
-                                              [])
-                                          .isEmpty || state.householdMemberWrapper.tasks?.last.status == Status.closeHousehold.toValue()
-                                      ? null
-                                      : () async {
-                                          final bloc =
-                                              ctx.read<HouseholdOverviewBloc>();
+                                  )
+                                : DigitElevatedButton(
+                                    onPressed: (state.householdMemberWrapper
+                                                        .projectBeneficiaries ??
+                                                    [])
+                                                .isEmpty ||
+                                            state.householdMemberWrapper.tasks
+                                                    ?.last.status ==
+                                                Status.closeHousehold.toValue()
+                                        ? null
+                                        : () async {
+                                            final bloc = ctx
+                                                .read<HouseholdOverviewBloc>();
 
-                                          final projectId =
-                                              RegistrationDeliverySingleton()
-                                                  .projectId!;
+                                            final projectId =
+                                                RegistrationDeliverySingleton()
+                                                    .projectId!;
 
-                                          bloc.add(
-                                            HouseholdOverviewReloadEvent(
-                                              projectId: projectId,
-                                              projectBeneficiaryType:
-                                                  beneficiaryType,
-                                            ),
-                                          );
+                                            bloc.add(
+                                              HouseholdOverviewReloadEvent(
+                                                projectId: projectId,
+                                                projectBeneficiaryType:
+                                                    beneficiaryType,
+                                              ),
+                                            );
 
-                                          await context.router.push(
-                                              BeneficiaryChecklistRoute());
-                                        },
-                                  child: Center(
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.householdOverView
-                                            .householdOverViewActionText,
+                                            serviceDefinitionState.when(
+                                                empty: () {},
+                                                isloading: () {},
+                                                serviceDefinitionFetch:
+                                                    (value, model) {
+                                                  if (value
+                                                      .where((element) => element
+                                                          .code
+                                                          .toString()
+                                                          .contains(
+                                                              '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                      .toList()
+                                                      .isEmpty) {
+                                                    context.router.push(
+                                                      DeliverInterventionRoute(),
+                                                    );
+                                                  } else {
+                                                    navigateToChecklist(ctx);
+                                                  }
+                                                });
+                                          },
+                                    child: Center(
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.householdOverView
+                                              .householdOverViewActionText,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
+                          ),
                         ),
                       ),
                     ),
@@ -725,5 +773,9 @@ class _HouseholdOverviewPageState
     }
 
     return {'textLabel': textLabel, 'color': color, 'icon': icon};
+  }
+
+  void navigateToChecklist(BuildContext ctx) async {
+    await context.router.push(BeneficiaryChecklistRoute());
   }
 }
