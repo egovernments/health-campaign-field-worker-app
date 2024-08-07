@@ -122,12 +122,11 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         obscureText: !passwordVisible,
                         suffix: buildPasswordVisibility(),
                       ),
-                      const PrivacyComponent(
+                       PrivacyComponent(
                         formControlName: _privacyCheck,
-                        text: 'By clicking, I accept the ',
-                        linkText: 'Privacy Policy',
-                        validationMessage:
-                        'You must accept the privacy policy to proceed.',
+                        text: localizations.translate(i18.privacyPolicy.privacyNoticeText),
+                        linkText: localizations.translate(i18.privacyPolicy.privacyPolicyLinkText),
+                        validationMessage: localizations.translate(i18.privacyPolicy.privacyPolicyValidationText),
                       ),
                       const SizedBox(height: 16),
                       DigitElevatedButton(

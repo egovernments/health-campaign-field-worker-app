@@ -2,10 +2,11 @@ import 'package:digit_components/digit_components.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import '../../models/privacy_notice/privacy_notice_model.dart';
+import '../localized.dart';
 import 'privacy_notice_dialog.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-class PrivacyComponent extends StatefulWidget {
+class PrivacyComponent extends LocalizedStatefulWidget {
   final String formControlName;
   final String text;
   final String linkText;
@@ -14,6 +15,7 @@ class PrivacyComponent extends StatefulWidget {
 
   const PrivacyComponent({
     super.key,
+    super.appLocalizations,
     required this.formControlName,
     required this.text,
     required this.linkText,
@@ -25,7 +27,7 @@ class PrivacyComponent extends StatefulWidget {
   State<PrivacyComponent> createState() => _PrivacyComponentState();
 }
 
-class _PrivacyComponentState extends State<PrivacyComponent> {
+class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
   late ValueNotifier<bool> checkboxStateNotifier;
 
   @override

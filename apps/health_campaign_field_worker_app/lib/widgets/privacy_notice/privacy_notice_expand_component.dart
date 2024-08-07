@@ -2,13 +2,14 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:flutter/material.dart';
 import '../../models/privacy_notice/privacy_notice_model.dart';
+import '../localized.dart';
 
-
-class ExpandableSection extends StatefulWidget {
+class ExpandableSection extends LocalizedStatefulWidget {
   final Content content;
 
   const ExpandableSection({
     super.key,
+    super.appLocalizations,
     required this.content,
   });
 
@@ -16,7 +17,7 @@ class ExpandableSection extends StatefulWidget {
   _ExpandableSectionState createState() => _ExpandableSectionState();
 }
 
-class _ExpandableSectionState extends State<ExpandableSection> {
+class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
   bool _isExpanded = false;
 
   @override
@@ -40,13 +41,17 @@ class _ExpandableSectionState extends State<ExpandableSection> {
               padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    widget.content.header,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [ 
+                  Flexible(
+                    child: Text(
+                      localizations.translate(widget.content.header),
+                      maxLines: 3,
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                    ),
                   ),
                   Icon(
-                    _isExpanded ? Icons.expand_less : Icons.chevron_right,
+                    _isExpanded ? Icons.expand_less : Icons.chevron_right, size: 24,
                   ),
                 ],
               ),
@@ -74,22 +79,28 @@ class _ExpandableSectionState extends State<ExpandableSection> {
   }
 }
 
-class DescriptionWidget extends StatelessWidget {
+class DescriptionWidget extends LocalizedStatefulWidget {
   final dynamic description; // Use dynamic or a base class for both Description and SubDescription
   final int? stepNumber;
 
   const DescriptionWidget({
     super.key,
+    super.appLocalizations,
     required this.description,
     this.stepNumber,
   });
 
   @override
+  _DescriptionWidgetState createState() => _DescriptionWidgetState();
+}
+
+class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
+  @override
   Widget build(BuildContext context) {
-    final descriptionText = description.text;
-    final descriptionType = description.type;
-    final isBold = description.isBold;
-    final hasSubDescriptions = description is Description && description.subDescriptions != null;
+    final descriptionText = widget.description.text;
+    final descriptionType = widget.description.type;
+    final isBold = widget.description.isBold;
+    final hasSubDescriptions = widget.description is Description && widget.description.subDescriptions != null;
 
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
@@ -98,7 +109,7 @@ class DescriptionWidget extends StatelessWidget {
         children: [
           if (descriptionType == 'step')
             Text(
-              '$stepNumber. $descriptionText',
+              '${widget.stepNumber}. ${localizations.translate(descriptionText)}',
               style: TextStyle(
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
@@ -110,7 +121,7 @@ class DescriptionWidget extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    descriptionText,
+                    localizations.translate(descriptionText),
                     style: TextStyle(
                       fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                     ),
@@ -120,7 +131,7 @@ class DescriptionWidget extends StatelessWidget {
             )
           else
             Text(
-              descriptionText,
+              localizations.translate(descriptionText),
               style: TextStyle(
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
@@ -130,7 +141,7 @@ class DescriptionWidget extends StatelessWidget {
               padding: const EdgeInsets.only(left: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: (description as Description).subDescriptions!.mapIndexed((subIndex, subDesc) {
+                children: (widget.description as Description).subDescriptions!.mapIndexed((subIndex, subDesc) {
                   int subStepNumber = subIndex + 1;
                   return DescriptionWidget(
                     description: subDesc,
@@ -144,4 +155,3 @@ class DescriptionWidget extends StatelessWidget {
     );
   }
 }
-

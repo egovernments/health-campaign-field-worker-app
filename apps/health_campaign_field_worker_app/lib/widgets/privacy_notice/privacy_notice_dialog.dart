@@ -3,23 +3,30 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:flutter/material.dart';
+import '../localized.dart';
 import 'privacy_notice_expand_component.dart';
-
+import '../../utils/i18_key_constants.dart' as i18;
 import '../../models/privacy_notice/privacy_notice_model.dart';
 import '../showcase/showcase_wrappers.dart';
 
-class FullPageDialog extends StatelessWidget {
+class FullPageDialog extends LocalizedStatefulWidget {
   final PrivacyPolicy privacyPolicy;
   final VoidCallback onAccept;
   final VoidCallback onDecline;
 
   const FullPageDialog({
     super.key,
+    super.appLocalizations,
     required this.privacyPolicy,
     required this.onAccept,
     required this.onDecline,
   });
 
+  @override
+  _FullPageDialogState createState() => _FullPageDialogState();
+}
+
+class _FullPageDialogState extends LocalizedState<FullPageDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog.fullscreen(
@@ -41,7 +48,8 @@ class FullPageDialog extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(top: 24.0, left: 0),
                             child: Text(
-                              privacyPolicy.header,
+                              localizations.translate(widget.privacyPolicy.header),
+                              maxLines: 3,
                               style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                 color: const DigitColors().woodsmokeBlack,
                               ),
@@ -64,7 +72,7 @@ class FullPageDialog extends StatelessWidget {
                       ),
                       const SizedBox(height: 16.0),
                       Column(
-                        children: privacyPolicy.contents.map((section) {
+                        children: widget.privacyPolicy.contents.map((section) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: ExpandableSection(content: section),
@@ -94,17 +102,17 @@ class FullPageDialog extends StatelessWidget {
                   children: [
                     DigitElevatedButton(
                       onPressed: () {
-                        onAccept();
+                        widget.onAccept();
                         Navigator.of(context).pop();
                       },
-                      child: const Text('I Accept'),
+                      child: Text(localizations.translate(i18.privacyPolicy.declineText)),
                     ),
                     DigitOutLineButton(
                       onPressed: () {
-                        onDecline();
+                        widget.onDecline();
                         Navigator.of(context).pop();
                       },
-                      label: 'I Do Not Accept',
+                      label: localizations.translate(i18.privacyPolicy.declineText),
                       buttonStyle: OutlinedButton.styleFrom(
                         backgroundColor: Colors.white,
                         side: BorderSide(
