@@ -37,7 +37,7 @@ class DashboardRemoteRepository {
         json.decode(response.data)[DSSEnums.responseData.toValue()],
       );
 
-      if (dashboardResponse != null) {
+      if (dashboardResponse.data != null) {
         // Write transaction to delete existing data and insert new data
         await isar.writeTxn(() async {
           await isar.dashboardResponses

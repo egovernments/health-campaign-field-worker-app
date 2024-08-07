@@ -1,3 +1,7 @@
+## 1.0.3-dev.2
+
+* Added name of logged user to additional fields during entry
+
 ## 1.0.3-dev.1
 
 * Added missing DeliveryTeam Facility in record stock screen
