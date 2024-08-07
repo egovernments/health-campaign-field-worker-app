@@ -9,11 +9,16 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:digit_dss/models/entities/dashboard_response_model.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+import 'package:digit_dss/utils/utils.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -318,6 +323,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+        child: HomeItemCard(
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
+          onPressed: () {
+            context.router.push(const UserDashboardRoute());
+          },
+        ),
+      ),
+
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
@@ -348,7 +363,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
                     context.router.push(ManageStocksRoute());
                   },
                 );
@@ -419,7 +438,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
                     context.router.push(SearchReferralReconciliationsRoute());
                   },
                 );
@@ -460,18 +483,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.db: homeShowcaseData.db.buildWith(
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
-          icon: Icons.table_chart,
-          label: i18.home.db,
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
+            context.router.push(const UserDashboardRoute());
           },
         ),
       ),
@@ -479,6 +496,20 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
       i18.home.manageStockLabel:
@@ -497,6 +528,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.db: homeShowcaseData.db.showcaseKey,
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
@@ -512,6 +544,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.db,
+      i18.home.dashboard,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -520,7 +553,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.dashboard)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -616,10 +650,12 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (AppConfiguration appConfiguration, _) {
+      initialized: (AppConfiguration appConfiguration, List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
           projectId: context.projectId,
@@ -704,6 +740,7 @@ void setPackagesSingleton(BuildContext context) {
               )
               .toList()
               .isNotEmpty,
+          loggedInUser: context.loggedInUserModel,
           projectId: context.projectId,
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
@@ -712,6 +749,18 @@ void setPackagesSingleton(BuildContext context) {
                 ..code = e.code)
               .toList(),
         );
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: dashboardConfigSchema,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
       });
 }
 

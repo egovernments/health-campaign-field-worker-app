@@ -8,8 +8,8 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../router/app_router.dart';
-import '../utils/utils.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
 
 @RoutePage()
 class LanguageSelectionPage extends StatelessWidget {

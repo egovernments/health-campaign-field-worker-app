@@ -239,9 +239,6 @@ class InventoryReportDetailsPageState
                                                       selectedFacilityId =
                                                           facility.id;
                                                     });
-                                                    form
-                                                        .control(_facilityKey)
-                                                        .value = facility;
                                                     stockReconciliationBloc.add(
                                                       StockReconciliationSelectFacilityEvent(
                                                         facility,

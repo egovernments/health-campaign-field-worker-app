@@ -38,20 +38,28 @@ class DeliverInterventionBloc
     emit(state.copyWith(loading: true));
     try {
       if (event.isEditing) {
+
+        if (!event.navigateToSummary) {
+          await taskRepository.update(event.task.copyWith(
+            clientAuditDetails:
+            (event.task.clientAuditDetails?.createdBy != null &&
+                event.task.clientAuditDetails?.createdTime != null)
+                ? ClientAuditDetails(
+              createdBy: event.task.clientAuditDetails!.createdBy,
+              createdTime: event.task.clientAuditDetails!.createdTime,
+              lastModifiedBy: event.task.auditDetails?.lastModifiedBy ??
+                  event.task.clientAuditDetails!.createdBy,
+              lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+            )
+                : null,
+          ));
+        }
+
+        emit(state.copyWith(
+            oldTask: event.task,
+            householdMemberWrapper: event.householdMemberWrapper));
         // Update an existing task
-        await taskRepository.update(event.task.copyWith(
-          clientAuditDetails:
-              (event.task.clientAuditDetails?.createdBy != null &&
-                      event.task.clientAuditDetails?.createdTime != null)
-                  ? ClientAuditDetails(
-                      createdBy: event.task.clientAuditDetails!.createdBy,
-                      createdTime: event.task.clientAuditDetails!.createdTime,
-                      lastModifiedBy: event.task.auditDetails?.lastModifiedBy ??
-                          event.task.clientAuditDetails!.createdBy,
-                      lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                    )
-                  : null,
-        ));
+
       } else {
         // Create a new task
         final code = event.boundaryModel.code;
