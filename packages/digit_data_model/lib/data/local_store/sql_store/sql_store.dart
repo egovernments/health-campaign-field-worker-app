@@ -1,6 +1,7 @@
 // Importing necessary packages and files.
 import 'dart:io';
 
+import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
@@ -35,7 +36,6 @@ import 'tables/package_tables/stock.dart';
 import 'tables/package_tables/stock_reconciliation.dart';
 import 'tables/package_tables/task.dart';
 import 'tables/package_tables/task_resource.dart';
-import 'tables/package_tables/user_action.dart';
 import 'tables/pgr_service.dart';
 import 'tables/product.dart';
 import 'tables/product_variant.dart';
@@ -99,7 +99,7 @@ part 'sql_store.g.dart';
   TaskResource,
   SideEffect,
   Referral,
-  UserAction,
+  Localization
 ])
 class LocalSqlDataStore extends _$LocalSqlDataStore {
   /// The constructor for `LocalSqlDataStore`.

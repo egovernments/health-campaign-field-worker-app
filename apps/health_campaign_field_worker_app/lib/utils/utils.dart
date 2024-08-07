@@ -5,8 +5,6 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
-import 'package:closed_household/closed_household.dart'
-    as closed_household_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -265,7 +263,7 @@ void showDownloadDialog(
                   );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.pop();
+              context.router.maybePop();
             }
           },
         ),
@@ -273,7 +271,7 @@ void showDownloadDialog(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.maybePop();
           },
         ),
       );
@@ -342,8 +340,7 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                        '',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -397,7 +394,6 @@ initializeAllMappers() async {
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
-    Future(() => closed_household_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -417,7 +413,6 @@ int getSyncCount(List<OpLog> oplogs) {
         case DataModelType.referral:
         case DataModelType.hFReferral:
         case DataModelType.attendance:
-        case DataModelType.userAction:
           return true;
         default:
           return false;
@@ -437,7 +432,6 @@ int getSyncCount(List<OpLog> oplogs) {
         case DataModelType.referral:
         case DataModelType.hFReferral:
         case DataModelType.attendance:
-        case DataModelType.userAction:
           return true;
         default:
           return false;
@@ -446,4 +440,45 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+class LocalizationParams {
+  static final LocalizationParams _singleton = LocalizationParams._internal();
+
+  factory LocalizationParams() {
+    return _singleton;
+  }
+
+  LocalizationParams._internal();
+
+  List<String>? _code;
+  String? _module;
+  Locale? _locale;
+  bool? _exclude = true;
+
+  void setCode(List<String>? code) {
+    _code = code;
+  }
+
+  void setModule(String? module, bool? exclude) {
+    _module = module;
+    _exclude = exclude;
+  }
+
+  void setLocale(Locale locale) {
+    _locale = locale;
+  }
+
+  void clear() {
+    _code = null;
+    _module = null;
+  }
+
+  List<String>? get code => _code;
+
+  String? get module => _module;
+
+  Locale? get locale => _locale;
+
+  bool? get exclude => _exclude;
 }

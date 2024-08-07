@@ -1,7 +1,4 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:closed_household/data/repositories/local/user_action.dart';
-import 'package:closed_household/data/repositories/oplog/oplog.dart';
-import 'package:closed_household/data/repositories/remote/user_action.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -12,7 +9,6 @@ import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:referral_reconciliation/utils/utils.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
@@ -125,7 +121,6 @@ class Constants {
         ),
       ),
       TaskLocalRepository(sql, TaskOpLogManager(isar)),
-      ClosedHouseholdLocalRepository(sql, ClosedHouseholdOpLogManager(isar)),
       SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
       ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
       StockLocalRepository(sql, StockOpLogManager(isar)),
@@ -145,7 +140,6 @@ class Constants {
         sql,
         HFReferralOpLogManager(isar),
       ),
-      ClosedHouseholdLocalRepository(sql, ClosedHouseholdOpLogManager(isar)),
     ];
   }
 
@@ -231,8 +225,6 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.userAction)
-          UserActionRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

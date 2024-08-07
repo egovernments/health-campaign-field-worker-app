@@ -1,7 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
-import 'package:closed_household/models/entities/user_action.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
@@ -157,7 +156,6 @@ class SearchHouseholdsBloc
     emit(state.copyWith(
       searchQuery: null,
       householdMembers: [],
-      closedHouseholds: [],
       tag: null,
     ));
   }
@@ -287,7 +285,7 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
     String? searchQuery,
     String? tag,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
-    @Default([]) List<UserActionModel> closedHouseholds,
+    @Default(0) int totalResults,
   }) = _SearchHouseholdsState;
 
   bool get resultsNotFound {

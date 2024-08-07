@@ -104,6 +104,14 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                       )
                                       .toList();
 
+                          // Determine the status based on the reason of refusal
+                          String status;
+                          if (reasonOfRefusal ==Status.beneficiaryRefused.toValue()) {
+                            status = Status.beneficiaryRefused.toValue();
+                          } else {
+                            status = Status.administeredFailed.toValue();
+                          }
+
                           context.read<DeliverInterventionBloc>().add(
                                 DeliverInterventionSubmitEvent(
                                   navigateToSummary: true,
@@ -125,7 +133,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                     ),
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId,
-                                    status: Status.administeredFailed.toValue(),
+                                    status: status,
                                     clientAuditDetails: ClientAuditDetails(
                                       createdBy: RegistrationDeliverySingleton()
                                           .loggedInUserUuid!,
@@ -222,7 +230,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                     ),
                                     isRequired: true,
                                     child: SelectionBox<String>(
-                                      width: 122,
+                                      width: MediaQuery.of(context).size.width*.36,
                                       allowMultipleSelection: false,
                                       options: RegistrationDeliverySingleton()
                                               .refusalReasons ??
@@ -250,7 +258,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                       },
                                       valueMapper: (value) {
                                         return localizations
-                                            .translate(value.toString());
+                                            .translate('REASON_${value.toString()}');
                                       },
                                       errorMessage: form
                                                   .control(_reasonOfRefusal)

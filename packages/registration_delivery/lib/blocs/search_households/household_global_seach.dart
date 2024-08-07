@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:closed_household/closed_household.dart' hide Status;
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -38,7 +36,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     SearchHouseholdsEmitter emit,
   ) async {
     final containers = <HouseholdMemberWrapper>[...state.householdMembers];
-    final List<UserActionModel> closedHouseholds = [...state.closedHouseholds];
 
     List<HouseholdModel> householdList = [];
     List<IndividualModel> individualsList = [];
@@ -52,35 +49,25 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
-        isProximityEnabled: event.globalSearchParams.isProximityEnabled,
-        latitude: event.globalSearchParams.latitude,
-        longitude: event.globalSearchParams.longitude,
-        maxRadius: event.globalSearchParams.maxRadius,
-        nameSearch: event.globalSearchParams.nameSearch,
-        filter: event.globalSearchParams.filter,
-        offset: event.globalSearchParams.offset,
-        limit: event.globalSearchParams.limit,
-      ),
+          isProximityEnabled: event.globalSearchParams.isProximityEnabled,
+          latitude: event.globalSearchParams.latitude,
+          longitude: event.globalSearchParams.longitude,
+          maxRadius: event.globalSearchParams.maxRadius,
+          nameSearch: event.globalSearchParams.nameSearch,
+          filter: event.globalSearchParams.filter,
+          offset: event.globalSearchParams.offset,
+          limit: event.globalSearchParams.limit,
+          totalCount: state.totalResults),
     );
 
-    var list = results.map((e) => e).toList();
+    var totalCount = results['total_count'];
+    var finalResults = results['data'].map((e) => e).toList();
 
-    if (event.globalSearchParams.filter!.contains(Status.closeHousehold.name)) {
-      list.forEach((e) {
-        closedHouseholds.add(e);
-      });
-
-      emit(state.copyWith(
-        loading: false,
-        offset:
-            event.globalSearchParams.offset! + event.globalSearchParams.limit!,
-        limit: event.globalSearchParams.limit!,
-        closedHouseholds: closedHouseholds,
-      ));
-    } else {
+    if (event.globalSearchParams.filter!.contains(Status.registered.name) ||
+        event.globalSearchParams.filter!.contains(Status.notRegistered.name)) {
       late List<String> houseHoldClientReferenceIds = [];
 
-      list.forEach((e) {
+      finalResults.forEach((e) {
         houseHoldClientReferenceIds.add(e.clientReferenceId);
       });
 
@@ -107,79 +94,24 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
 
-      if (projectBeneficiariesList.isNotEmpty) {
-        taskList =
-            await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
-        sideEffectsList =
-            await sideEffectDataRepository.search(SideEffectSearchModel(
-          taskClientReferenceId:
-              taskList.map((e) => e.clientReferenceId).toList(),
-        ));
-        referralsList = await referralDataRepository.search(ReferralSearchModel(
-          projectBeneficiaryClientReferenceId:
-              projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
-        ));
-      }
+      List<dynamic> tasksRelated = await _processTasksAndRelatedData(
+          projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
-      final groupedHouseholdsMembers = householdMembersList
-          .groupListsBy((element) => element.householdClientReferenceId);
+      taskList = tasksRelated[0];
+      sideEffectsList = tasksRelated[1];
+      referralsList = tasksRelated[2];
 
-      for (final entry in groupedHouseholdsMembers.entries) {
-        HouseholdModel filteredHousehold;
-        List<IndividualModel> filteredIndividuals;
-        List<TaskModel> filteredTasks = [];
-        final householdId = entry.key;
-        if (householdId == null) continue;
-
-        // Filter household based on household ID
-        filteredHousehold =
-            householdList.firstWhere((e) => e.clientReferenceId == householdId);
-
-        // Extract individual client reference IDs from household members
-        final List<String?> membersIds =
-            entry.value.map((e) => e.individualClientReferenceId).toList();
-
-        // Filter individuals based on individual client reference IDs
-        filteredIndividuals = individualsList
-            .where((element) => membersIds.contains(element.clientReferenceId))
-            .toList();
-
-        // Filter tasks based on project beneficiary client reference IDs
-        for (var beneficiary in projectBeneficiariesList) {
-          var tasksForBeneficiary = taskList.where((element) =>
-              beneficiary.clientReferenceId ==
-              element.projectBeneficiaryClientReferenceId);
-
-          filteredTasks.addAll(tasksForBeneficiary);
-        }
-
-        // Find the head of the household
-        final head = filteredIndividuals.firstWhereOrNull(
-          (element) =>
-              element.clientReferenceId ==
-              entry.value
-                  .firstWhereOrNull(
-                    (element) => element.isHeadOfHousehold,
-                  )
-                  ?.individualClientReferenceId,
-        );
-
-        // Skip if no head of household or no filtered beneficiaries
-        if (head == null) continue;
-
-        // Add household member wrapper to containers
-        containers.add(
-          HouseholdMemberWrapper(
-            household: filteredHousehold,
-            headOfHousehold: head,
-            members: filteredIndividuals,
-            projectBeneficiaries: projectBeneficiariesList,
-            tasks: filteredTasks.isEmpty ? null : filteredTasks,
-            sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
-            referrals: referralsList.isEmpty ? null : referralsList,
-          ),
-        );
-      }
+      // Process household entries and add to containers
+      await _processHouseholdEntries(
+        householdMembersList,
+        householdList,
+        individualsList,
+        projectBeneficiariesList,
+        taskList,
+        sideEffectsList,
+        referralsList,
+        containers,
+      );
 
       emit(state.copyWith(
         householdMembers: containers,
@@ -188,7 +120,246 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         offset:
             event.globalSearchParams.offset! + event.globalSearchParams.limit!,
         limit: event.globalSearchParams.limit!,
+        totalResults: totalCount,
+      ));
+    } else if (event.globalSearchParams.filter!.isNotEmpty &&
+        event.globalSearchParams.filter != null) {
+      late List<String> listOfBeneficiaries = [];
+      for (var e in finalResults) {
+        !listOfBeneficiaries.contains(e.projectBeneficiaryClientReferenceId)
+            ? listOfBeneficiaries.add(e.projectBeneficiaryClientReferenceId!)
+            : null;
+      }
+
+      projectBeneficiariesList = await projectBeneficiary.search(
+          ProjectBeneficiarySearchModel(
+              clientReferenceId: listOfBeneficiaries));
+
+      late List<String> listOfMembers = [];
+
+      listOfMembers = projectBeneficiariesList
+          .map((e) => e.beneficiaryClientReferenceId.toString())
+          .toList();
+
+      householdMembersList = await fetchHouseholdMembersBulk(
+        null,
+        listOfMembers,
+      );
+
+      final List<String> individualClientReferenceIds = householdMembersList
+          .map((e) => e.individualClientReferenceId.toString())
+          .toList();
+
+      individualsList = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
+      );
+
+      late List<String> houseHoldClientReferenceIds = [];
+
+      houseHoldClientReferenceIds = householdMembersList
+          .map((e) => e.householdClientReferenceId.toString())
+          .toList();
+
+      householdList = await household.search(HouseholdSearchModel(
+        clientReferenceId: houseHoldClientReferenceIds,
+      ));
+
+      finalResults.forEach((element) {
+        taskList.add(element);
+      });
+
+      List<dynamic> tasksRelated = await _processTasksAndRelatedData(
+          projectBeneficiariesList, taskList, sideEffectsList, referralsList);
+
+      taskList = tasksRelated[0];
+      sideEffectsList = tasksRelated[1];
+      referralsList = tasksRelated[2];
+
+      // Process household entries and add to containers
+      await _processHouseholdEntries(
+        householdMembersList,
+        householdList,
+        individualsList,
+        projectBeneficiariesList,
+        taskList,
+        sideEffectsList,
+        referralsList,
+        containers,
+      );
+
+      emit(state.copyWith(
+        householdMembers: containers,
+        loading: false,
+        searchQuery: event.globalSearchParams.nameSearch,
+        offset:
+            event.globalSearchParams.offset! + event.globalSearchParams.limit!,
+        limit: event.globalSearchParams.limit!,
+        totalResults: totalCount,
+      ));
+    } else {
+      late List<String> houseHoldClientReferenceIds = [];
+
+      finalResults.forEach((e) {
+        houseHoldClientReferenceIds.add(e.clientReferenceId);
+      });
+
+      householdList = await household.search(HouseholdSearchModel(
+          clientReferenceId:
+              houseHoldClientReferenceIds.map((e) => e.toString()).toList()));
+
+      // Search for individual results using the extracted IDs and search text.
+      householdMembersList = await fetchHouseholdMembersBulk(
+        null,
+        houseHoldClientReferenceIds,
+      );
+
+      final List<String> individualClientReferenceIds = householdMembersList
+          .map((e) => e.individualClientReferenceId.toString())
+          .toList();
+
+      individualsList = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
+      );
+
+      projectBeneficiariesList = await projectBeneficiary.search(
+          ProjectBeneficiarySearchModel(
+              beneficiaryClientReferenceId:
+                  houseHoldClientReferenceIds.map((e) => e).toList()));
+
+      List<dynamic> tasksRelated = await _processTasksAndRelatedData(
+          projectBeneficiariesList, taskList, sideEffectsList, referralsList);
+
+      taskList = tasksRelated[0];
+      sideEffectsList = tasksRelated[1];
+      referralsList = tasksRelated[2];
+
+      // Process household entries and add to containers
+      await _processHouseholdEntries(
+        householdMembersList,
+        householdList,
+        individualsList,
+        projectBeneficiariesList,
+        taskList,
+        sideEffectsList,
+        referralsList,
+        containers,
+      );
+
+      emit(state.copyWith(
+          householdMembers: containers,
+          loading: false,
+          searchQuery: event.globalSearchParams.nameSearch,
+          offset: event.globalSearchParams.offset! +
+              event.globalSearchParams.limit!,
+          limit: event.globalSearchParams.limit!,
+          totalResults: totalCount));
+    }
+  }
+
+  Future<void> _processHouseholdEntries(
+    List<HouseholdMemberModel> householdMembersList,
+    List<HouseholdModel> householdList,
+    List<IndividualModel> individualsList,
+    List<ProjectBeneficiaryModel> projectBeneficiariesList,
+    List<TaskModel> taskList,
+    List<SideEffectModel> sideEffectsList,
+    List<ReferralModel> referralsList,
+    List<HouseholdMemberWrapper> containers,
+  ) async {
+    final groupedHouseholdsMembers = householdMembersList
+        .groupListsBy((element) => element.householdClientReferenceId);
+
+    for (final entry in groupedHouseholdsMembers.entries) {
+      HouseholdModel filteredHousehold;
+      List<IndividualModel> filteredIndividuals;
+      List<TaskModel> filteredTasks = [];
+      List<ProjectBeneficiaryModel> filteredBeneficiaries = [];
+      final householdId = entry.key;
+      if (householdId == null) continue;
+
+      // Filter household based on household ID
+      filteredHousehold =
+          householdList.firstWhere((e) => e.clientReferenceId == householdId);
+
+      // Extract individual client reference IDs from household members
+      final List<String?> membersIds =
+          entry.value.map((e) => e.individualClientReferenceId).toList();
+
+      // Filter individuals based on individual client reference IDs
+      filteredIndividuals = individualsList
+          .where((element) => membersIds.contains(element.clientReferenceId))
+          .toList();
+
+      // Filter beneficiaries based on filtered household client reference IDs
+      filteredBeneficiaries = projectBeneficiariesList
+          .where((element) =>
+              element.beneficiaryClientReferenceId ==
+              filteredHousehold.clientReferenceId)
+          .toList();
+
+      // Filter tasks based on project beneficiary client reference IDs
+      for (var beneficiary in filteredBeneficiaries) {
+        var tasksForBeneficiary = taskList.where((element) =>
+            beneficiary.clientReferenceId ==
+            element.projectBeneficiaryClientReferenceId);
+
+        filteredTasks.addAll(tasksForBeneficiary);
+      }
+
+      // Find the head of the household
+      final head = filteredIndividuals.firstWhereOrNull(
+        (element) =>
+            element.clientReferenceId ==
+            entry.value
+                .firstWhereOrNull(
+                  (element) => element.isHeadOfHousehold,
+                )
+                ?.individualClientReferenceId,
+      );
+
+      // Skip if no head of household or no filtered beneficiaries
+      if (head == null) continue;
+
+      // Add household member wrapper to containers
+      containers.add(
+        HouseholdMemberWrapper(
+          household: filteredHousehold,
+          headOfHousehold: head,
+          members: filteredIndividuals,
+          projectBeneficiaries: filteredBeneficiaries,
+          tasks: filteredTasks.isEmpty ? null : filteredTasks,
+          sideEffects: sideEffectsList.isEmpty ? null : sideEffectsList,
+          referrals: referralsList.isEmpty ? null : referralsList,
+        ),
+      );
+    }
+  }
+
+  Future<List<dynamic>> _processTasksAndRelatedData(
+    List<ProjectBeneficiaryModel> projectBeneficiariesList,
+    List<TaskModel> taskList,
+    List<SideEffectModel> sideEffectsList,
+    List<ReferralModel> referralsList,
+  ) async {
+    if (projectBeneficiariesList.isNotEmpty) {
+      if (taskList.isEmpty) {
+        taskList =
+            await fetchTaskbyProjectBeneficiary(projectBeneficiariesList);
+      }
+      sideEffectsList =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId:
+            taskList.map((e) => e.clientReferenceId).toList(),
+      ));
+      referralsList = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
       ));
     }
+    return [
+      taskList,
+      sideEffectsList,
+      referralsList,
+    ];
   }
 }

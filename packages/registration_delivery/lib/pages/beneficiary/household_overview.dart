@@ -63,14 +63,7 @@ class _HouseholdOverviewPageState
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
                 : ScrollableContent(
-                    header: BackNavigationHelpHeaderWidget(
-                      handleBack: () {
-                        context
-                            .read<SearchBlocWrapper>()
-                            .searchHouseholdsBloc
-                            .add(const SearchHouseholdsClearEvent());
-                      },
-                    ),
+                    header: const BackNavigationHelpHeaderWidget(),
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual,
@@ -82,20 +75,23 @@ class _HouseholdOverviewPageState
                               kPadding, 0, kPadding, 0),
                           child: deliverInterventionState.tasks?.last.status ==
                                   Status.administeredSuccess.toValue()
-                              ? DigitOutLineButton(
-                                  label: localizations.translate(
-                                    i18.memberCard.deliverDetailsUpdateLabel,
+                              ? Padding(
+                                padding: const EdgeInsets.symmetric(vertical: kPadding),
+                                child: DigitOutLineButton(
+                                    label: localizations.translate(
+                                      i18.memberCard.deliverDetailsUpdateLabel,
+                                    ),
+                                    onPressed: () async {
+                                      await context.router
+                                          .push(BeneficiaryChecklistRoute());
+                                    },
                                   ),
-                                  onPressed: () async {
-                                    await context.router
-                                        .push(BeneficiaryChecklistRoute());
-                                  },
-                                )
+                              )
                               : DigitElevatedButton(
                                   onPressed: (state.householdMemberWrapper
                                                   .projectBeneficiaries ??
                                               [])
-                                          .isEmpty
+                                          .isEmpty || deliverInterventionState.tasks?.last.status == Status.closeHousehold.toValue()
                                       ? null
                                       : () async {
                                           final bloc =
@@ -288,10 +284,12 @@ class _HouseholdOverviewPageState
                                                   .householdOverView
                                                   .householdOverViewHouseholdHeadNameLabel):
                                               state
-                                                  .householdMemberWrapper
-                                                  .headOfHousehold
-                                                  ?.name
-                                                  ?.givenName,
+                                                      .householdMemberWrapper
+                                                      .headOfHousehold
+                                                      ?.name
+                                                      ?.givenName ??
+                                                  localizations.translate(
+                                                      i18.common.coreCommonNA),
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
@@ -312,72 +310,6 @@ class _HouseholdOverviewPageState
                                           )
                                         },
                                       ),
-                                      if ((state.householdMemberWrapper
-                                                  .projectBeneficiaries ??
-                                              [])
-                                          .isEmpty)
-                                        DigitElevatedButton(
-                                            onPressed: () async {
-                                              HouseholdMemberWrapper wrapper =
-                                                  state.householdMemberWrapper;
-
-                                              final timestamp = wrapper
-                                                  .headOfHousehold
-                                                  ?.clientAuditDetails
-                                                  ?.createdTime;
-                                              final date = DateTime
-                                                  .fromMillisecondsSinceEpoch(
-                                                timestamp ??
-                                                    DateTime.now()
-                                                        .millisecondsSinceEpoch,
-                                              );
-
-                                              final address =
-                                                  wrapper.household?.address;
-
-                                              if (address == null) return;
-
-                                              final projectBeneficiary = state
-                                                  .householdMemberWrapper
-                                                  .projectBeneficiaries
-                                                  ?.firstWhereOrNull(
-                                                (element) =>
-                                                    element
-                                                        .beneficiaryClientReferenceId ==
-                                                    wrapper.household
-                                                        ?.clientReferenceId,
-                                              );
-
-                                              await context.router.root.push(
-                                                BeneficiaryRegistrationWrapperRoute(
-                                                  initialState:
-                                                      BeneficiaryRegistrationEditHouseholdState(
-                                                    addressModel: address,
-                                                    individualModel: state
-                                                            .householdMemberWrapper
-                                                            .members ??
-                                                        [],
-                                                    householdModel: state
-                                                        .householdMemberWrapper
-                                                        .household!,
-                                                    registrationDate: date,
-                                                    projectBeneficiaryModel:
-                                                        projectBeneficiary,
-                                                  ),
-                                                  children: [
-                                                    HouseholdLocationRoute(),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                            child: Center(
-                                              child: Text(
-                                                localizations.translate(
-                                                  i18.householdOverView
-                                                      .householdOverViewEditIconText,
-                                                ),
-                                              ),
-                                            ))
                                     ],
                                   );
                                 }),
@@ -448,20 +380,24 @@ class _HouseholdOverviewPageState
                                                 taskData.last.clientReferenceId)
                                             .toList()
                                         : null;
-                                    final ageInYears =
-                                        DigitDateUtils.calculateAge(
-                                      DigitDateUtils.getFormattedDateToDateTime(
-                                            e.dateOfBirth!,
-                                          ) ??
-                                          DateTime.now(),
-                                    ).years;
-                                    final ageInMonths =
-                                        DigitDateUtils.calculateAge(
-                                      DigitDateUtils.getFormattedDateToDateTime(
-                                            e.dateOfBirth!,
-                                          ) ??
-                                          DateTime.now(),
-                                    ).months;
+                                    final ageInYears = e.dateOfBirth != null
+                                        ? DigitDateUtils.calculateAge(
+                                            DigitDateUtils
+                                                    .getFormattedDateToDateTime(
+                                                  e.dateOfBirth!,
+                                                ) ??
+                                                DateTime.now(),
+                                          ).years
+                                        : 0;
+                                    final ageInMonths = e.dateOfBirth != null
+                                        ? DigitDateUtils.calculateAge(
+                                            DigitDateUtils
+                                                    .getFormattedDateToDateTime(
+                                                  e.dateOfBirth!,
+                                                ) ??
+                                                DateTime.now(),
+                                          ).months
+                                        : 0;
                                     final currentCycle =
                                         RegistrationDeliverySingleton()
                                             .projectType
@@ -608,11 +544,6 @@ class _HouseholdOverviewPageState
                                                         individualModel: e,
                                                       ),
                                                     );
-
-                                                context.router
-                                                    .popUntilRouteWithName(
-                                                  SearchBeneficiaryRoute.name,
-                                                );
                                                 context.router.push(
                                                   ReasonForDeletionRoute(
                                                     isHousholdDelete: false,
@@ -651,27 +582,25 @@ class _HouseholdOverviewPageState
                                               sideEffectData,
                                             )
                                           : false,
-                                      name: e.name?.givenName ?? ' - ',
+                                      name: e.name?.givenName ?? ' - - ',
                                       years: (e.dateOfBirth == null
-                                              ? null
-                                              : DigitDateUtils.calculateAge(
-                                                  DigitDateUtils
-                                                          .getFormattedDateToDateTime(
-                                                        e.dateOfBirth!,
-                                                      ) ??
-                                                      DateTime.now(),
-                                                ).years) ??
-                                          0,
+                                          ? null
+                                          : DigitDateUtils.calculateAge(
+                                              DigitDateUtils
+                                                      .getFormattedDateToDateTime(
+                                                    e.dateOfBirth!,
+                                                  ) ??
+                                                  DateTime.now(),
+                                            ).years),
                                       months: (e.dateOfBirth == null
-                                              ? null
-                                              : DigitDateUtils.calculateAge(
-                                                  DigitDateUtils
-                                                          .getFormattedDateToDateTime(
-                                                        e.dateOfBirth!,
-                                                      ) ??
-                                                      DateTime.now(),
-                                                ).months) ??
-                                          0,
+                                          ? null
+                                          : DigitDateUtils.calculateAge(
+                                              DigitDateUtils
+                                                      .getFormattedDateToDateTime(
+                                                    e.dateOfBirth!,
+                                                  ) ??
+                                                  DateTime.now(),
+                                            ).months),
                                       gender: e.gender?.name,
                                       isBeneficiaryRefused:
                                           isBeneficiaryRefused &&

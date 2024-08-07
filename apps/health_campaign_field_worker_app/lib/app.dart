@@ -13,6 +13,10 @@ import 'package:location/location.dart';
 import 'package:registration_delivery/data/repositories/local/household_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/oplog/oplog.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
+import 'package:registration_delivery/models/entities/project_beneficiary.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -54,6 +58,7 @@ class MainApplicationState extends State<MainApplication>
     with WidgetsBindingObserver {
   @override
   void initState() {
+    LocalizationParams().setModule('boundary', true);
     super.initState();
     requestDisableBatteryOptimization();
   }
@@ -157,6 +162,10 @@ class MainApplicationState extends State<MainApplication>
                     final localizationModulesList = appConfig.backendInterface;
                     var firstLanguage;
                     firstLanguage = appConfig.languages?.lastOrNull?.value;
+                    final selectedLocale =
+                        AppSharedPreferences().getSelectedLocale ??
+                            firstLanguage;
+                    LocalizationParams().setLocale(Locale(selectedLocale));
                     final languages = appConfig.languages;
 
                     return MultiBlocProvider(
@@ -165,35 +174,29 @@ class MainApplicationState extends State<MainApplication>
                           create: (localizationModulesList != null &&
                                   firstLanguage != null)
                               ? (context) => LocalizationBloc(
-                                    const LocalizationState(),
-                                    LocalizationRepository(
-                                      widget.client,
-                                      widget.isar,
-                                    ),
-                                    widget.isar,
-                                  )..add(
-                                      LocalizationEvent.onLoadLocalization(
-                                        module: localizationModulesList
-                                            .interfaces
-                                            .where((element) =>
-                                                element.type ==
-                                                Modules.localizationModule)
-                                            .map((e) => e.name.toString())
-                                            .join(',')
-                                            .toString(),
-                                        tenantId: appConfig.tenantId.toString(),
-                                        locale: firstLanguage,
-                                        path: Constants.localizationApiPath,
-                                      ),
-                                    )
-                              : (context) => LocalizationBloc(
-                                    const LocalizationState(),
-                                    LocalizationRepository(
-                                      widget.client,
-                                      widget.isar,
-                                    ),
-                                    widget.isar,
+                                  const LocalizationState(),
+                                  LocalizationRepository(
+                                      widget.client, widget.sql),
+                                  widget.sql)
+                                ..add(
+                                  LocalizationEvent.onLoadLocalization(
+                                    module: localizationModulesList.interfaces
+                                        .where((element) =>
+                                            element.type ==
+                                            Modules.localizationModule)
+                                        .map((e) => e.name.toString())
+                                        .join(',')
+                                        .toString(),
+                                    tenantId: appConfig.tenantId.toString(),
+                                    locale: firstLanguage,
+                                    path: Constants.localizationApiPath,
                                   ),
+                                )
+                              : (context) => LocalizationBloc(
+                                  const LocalizationState(),
+                                  LocalizationRepository(
+                                      widget.client, widget.sql),
+                                  widget.sql),
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
@@ -304,8 +307,18 @@ class MainApplicationState extends State<MainApplication>
                           create: (_) {
                             return ClosedHouseholdBloc(
                               const ClosedHouseholdState(),
-                              closedHouseholdRepository: context
-                                  .repository<UserActionModel, UserActionSearchModel>(),
+                              householdMemberRepository: context.repository<
+                                  HouseholdMemberModel,
+                                  HouseholdMemberSearchModel>(),
+                              householdRepository: context.repository<
+                                  HouseholdModel, HouseholdSearchModel>(),
+                              individualRepository: context.repository<
+                                  IndividualModel, IndividualSearchModel>(),
+                              projectBeneficiaryRepository: context.repository<
+                                  ProjectBeneficiaryModel,
+                                  ProjectBeneficiarySearchModel>(),
+                              taskRepository: context
+                                  .repository<TaskModel, TaskSearchModel>(),
                             );
                           },
                           lazy: false,
@@ -351,9 +364,12 @@ class MainApplicationState extends State<MainApplication>
                                   })
                                 : [firstLanguage],
                             localizationsDelegates: getAppLocalizationDelegates(
-                              isar: widget.isar,
+                              sql: widget.sql,
                               appConfig: appConfig,
-                              selectedLocale: selectedLocale,
+                              selectedLocale: Locale(
+                                selectedLocale!.split("_").first,
+                                selectedLocale.split("_").last,
+                              ),
                             ),
                             locale: languages != null
                                 ? Locale(
