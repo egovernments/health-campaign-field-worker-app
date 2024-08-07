@@ -1,3 +1,7 @@
+## 1.0.3-dev.7
+
+* Updated status to taskStatus in Task model
+
 ## 1.0.3-dev.6
 
 * Updated delivery status enums

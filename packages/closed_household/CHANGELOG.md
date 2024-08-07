@@ -1,3 +1,7 @@
+## 0.0.0-dev.3
+
+* Updated registration_delivery package
+
 ## 0.0.0-dev.2
 
 * Closed Household flow change using registration_delivery models to register a closed household
