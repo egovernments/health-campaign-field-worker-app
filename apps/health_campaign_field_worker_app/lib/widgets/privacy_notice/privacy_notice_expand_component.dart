@@ -42,10 +42,11 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [ 
+                children: [
+                  if(widget.content.header != null)
                   Flexible(
                     child: Text(
-                      localizations.translate(widget.content.header),
+                      localizations.translate(widget.content.header!),
                       maxLines: 3,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                     ),
@@ -57,12 +58,12 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
               ),
             ),
           ),
-          if (_isExpanded)
+          if (_isExpanded && widget.content.descriptions != null)
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.content.descriptions.asMap().entries.map((entry) {
+                children: widget.content.descriptions!.asMap().entries.map((entry) {
                   int index = entry.key;
                   DescriptionModel desc = entry.value;
                   int? stepNumber = desc.type == 'step' ? index + 1 : null;

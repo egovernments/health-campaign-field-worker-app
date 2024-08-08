@@ -8,7 +8,7 @@ class PrivacyPolicyModel with _$PrivacyPolicyModel {
   const factory PrivacyPolicyModel({
     required String header,
     required String module,
-    required List<ContentModel> contents,
+    List<ContentModel>? contents,
   }) = _PrivacyPolicyModel;
 
   factory PrivacyPolicyModel.fromJson(Map<String, dynamic> json) => _$PrivacyPolicyModelFromJson(json);
@@ -17,8 +17,8 @@ class PrivacyPolicyModel with _$PrivacyPolicyModel {
 @freezed
 class ContentModel with _$ContentModel {
   const factory ContentModel({
-    required String header,
-    required List<DescriptionModel> descriptions,
+     String? header,
+     List<DescriptionModel>? descriptions,
   }) = _ContentModel;
 
   factory ContentModel.fromJson(Map<String, dynamic> json) => _$ContentModelFromJson(json);
@@ -27,9 +27,9 @@ class ContentModel with _$ContentModel {
 @freezed
 class DescriptionModel with _$DescriptionModel {
   const factory DescriptionModel({
-    required String text,
+    String? text,
     String? type,
-    required bool isBold,
+    bool? isBold,
     List<SubDescriptionModel>? subDescriptions,
   }) = _DescriptionModel;
 
@@ -39,10 +39,10 @@ class DescriptionModel with _$DescriptionModel {
 @freezed
 class SubDescriptionModel with _$SubDescriptionModel {
   const factory SubDescriptionModel({
-    required String text,
+    String? text,
     String? type,
-    required bool isBold,
-    required bool isSpaceRequired,
+    bool? isBold,
+    bool? isSpaceRequired,
   }) = _SubDescriptionModel;
 
   factory SubDescriptionModel.fromJson(Map<String, dynamic> json) => _$SubDescriptionModelFromJson(json);

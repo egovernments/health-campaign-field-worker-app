@@ -222,25 +222,24 @@ class MdmsRepository {
     final privacyPolicy = PrivacyPolicy()
       ..header = privacyPolicyConfig?.first.header ?? ''
       ..module = privacyPolicyConfig?.first.module ?? ''
-      ..contents = (privacyPolicyConfig?.first.contents ?? <Map<String, dynamic>>[]).map((cont) {
+      ..contents = (privacyPolicyConfig?.first.contents ?? []).map((cont) {
         final content = Content()
-          ..header = ''
-        ..descriptions = <Description>[];
-          // ..descriptions = (cont['descriptions'] as List<dynamic>).map((d) {
-          //   final description = Description()
-          //     ..text = d['text'] ?? ''
-          //     ..type = d['type'] ?? ''
-          //     ..isBold = d['isBold'] ?? false
-          //     ..subDescriptions = (d['subDescriptions'] as List<dynamic>).map((sd) {
-          //       final subDescription = SubDescription()
-          //         ..text = sd['text'] ?? ''
-          //         ..type = sd['type'] ?? ''
-          //         ..isBold = sd['isBold'] ?? false
-          //         ..isSpaceRequired = sd['isSpaceRequired'] ?? false;
-          //       return subDescription;
-          //     }).toList();
-          //   return description;
-          // }).toList();
+          ..header = cont.header
+          ..descriptions = (cont.descriptions ?? []).map((d) {
+            final description = Description()
+              ..text = d.text
+              ..type = d.type
+              ..isBold = d.isBold
+              ..subDescriptions = (d.subDescriptions ?? []).map((sd) {
+                final subDescription = SubDescription()
+                  ..text = sd.text
+                  ..type = sd.type
+                  ..isBold = sd.isBold
+                  ..isSpaceRequired = sd.isSpaceRequired;
+                return subDescription;
+              }).toList();
+            return description;
+          }).toList();
         return content;
       }).toList();
 

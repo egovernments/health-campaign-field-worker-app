@@ -11,8 +11,8 @@ _$PrivacyPolicyModelImpl _$$PrivacyPolicyModelImplFromJson(
     _$PrivacyPolicyModelImpl(
       header: json['header'] as String,
       module: json['module'] as String,
-      contents: (json['contents'] as List<dynamic>)
-          .map((e) => ContentModel.fromJson(e as Map<String, dynamic>))
+      contents: (json['contents'] as List<dynamic>?)
+          ?.map((e) => ContentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -26,9 +26,9 @@ Map<String, dynamic> _$$PrivacyPolicyModelImplToJson(
 
 _$ContentModelImpl _$$ContentModelImplFromJson(Map<String, dynamic> json) =>
     _$ContentModelImpl(
-      header: json['header'] as String,
-      descriptions: (json['descriptions'] as List<dynamic>)
-          .map((e) => DescriptionModel.fromJson(e as Map<String, dynamic>))
+      header: json['header'] as String?,
+      descriptions: (json['descriptions'] as List<dynamic>?)
+          ?.map((e) => DescriptionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
@@ -41,9 +41,9 @@ Map<String, dynamic> _$$ContentModelImplToJson(_$ContentModelImpl instance) =>
 _$DescriptionModelImpl _$$DescriptionModelImplFromJson(
         Map<String, dynamic> json) =>
     _$DescriptionModelImpl(
-      text: json['text'] as String,
+      text: json['text'] as String?,
       type: json['type'] as String?,
-      isBold: json['isBold'] as bool,
+      isBold: json['isBold'] as bool?,
       subDescriptions: (json['subDescriptions'] as List<dynamic>?)
           ?.map((e) => SubDescriptionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -61,10 +61,10 @@ Map<String, dynamic> _$$DescriptionModelImplToJson(
 _$SubDescriptionModelImpl _$$SubDescriptionModelImplFromJson(
         Map<String, dynamic> json) =>
     _$SubDescriptionModelImpl(
-      text: json['text'] as String,
+      text: json['text'] as String?,
       type: json['type'] as String?,
-      isBold: json['isBold'] as bool,
-      isSpaceRequired: json['isSpaceRequired'] as bool,
+      isBold: json['isBold'] as bool?,
+      isSpaceRequired: json['isSpaceRequired'] as bool?,
     );
 
 Map<String, dynamic> _$$SubDescriptionModelImplToJson(

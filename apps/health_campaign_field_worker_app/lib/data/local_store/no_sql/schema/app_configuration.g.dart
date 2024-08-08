@@ -11275,12 +11275,17 @@ int _privacyPolicyEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.contents.length * 3;
   {
-    final offsets = allOffsets[Content]!;
-    for (var i = 0; i < object.contents.length; i++) {
-      final value = object.contents[i];
-      bytesCount += ContentSchema.estimateSize(value, offsets, allOffsets);
+    final list = object.contents;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[Content]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += ContentSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
     }
   }
   bytesCount += 3 + object.header.length * 3;
@@ -11312,12 +11317,11 @@ PrivacyPolicy _privacyPolicyDeserialize(
 ) {
   final object = PrivacyPolicy();
   object.contents = reader.readObjectList<Content>(
-        offsets[0],
-        ContentSchema.deserialize,
-        allOffsets,
-        Content(),
-      ) ??
-      [];
+    offsets[0],
+    ContentSchema.deserialize,
+    allOffsets,
+    Content(),
+  );
   object.header = reader.readString(offsets[1]);
   object.module = reader.readString(offsets[2]);
   return object;
@@ -11332,12 +11336,11 @@ P _privacyPolicyDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readObjectList<Content>(
-            offset,
-            ContentSchema.deserialize,
-            allOffsets,
-            Content(),
-          ) ??
-          []) as P;
+        offset,
+        ContentSchema.deserialize,
+        allOffsets,
+        Content(),
+      )) as P;
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
@@ -11349,6 +11352,24 @@ P _privacyPolicyDeserializeProp<P>(
 
 extension PrivacyPolicyQueryFilter
     on QueryBuilder<PrivacyPolicy, PrivacyPolicy, QFilterCondition> {
+  QueryBuilder<PrivacyPolicy, PrivacyPolicy, QAfterFilterCondition>
+      contentsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'contents',
+      ));
+    });
+  }
+
+  QueryBuilder<PrivacyPolicy, PrivacyPolicy, QAfterFilterCondition>
+      contentsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'contents',
+      ));
+    });
+  }
+
   QueryBuilder<PrivacyPolicy, PrivacyPolicy, QAfterFilterCondition>
       contentsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
@@ -11752,15 +11773,26 @@ int _contentEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.descriptions.length * 3;
   {
-    final offsets = allOffsets[Description]!;
-    for (var i = 0; i < object.descriptions.length; i++) {
-      final value = object.descriptions[i];
-      bytesCount += DescriptionSchema.estimateSize(value, offsets, allOffsets);
+    final list = object.descriptions;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[Description]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              DescriptionSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
     }
   }
-  bytesCount += 3 + object.header.length * 3;
+  {
+    final value = object.header;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -11787,13 +11819,12 @@ Content _contentDeserialize(
 ) {
   final object = Content();
   object.descriptions = reader.readObjectList<Description>(
-        offsets[0],
-        DescriptionSchema.deserialize,
-        allOffsets,
-        Description(),
-      ) ??
-      [];
-  object.header = reader.readString(offsets[1]);
+    offsets[0],
+    DescriptionSchema.deserialize,
+    allOffsets,
+    Description(),
+  );
+  object.header = reader.readStringOrNull(offsets[1]);
   return object;
 }
 
@@ -11806,14 +11837,13 @@ P _contentDeserializeProp<P>(
   switch (propertyId) {
     case 0:
       return (reader.readObjectList<Description>(
-            offset,
-            DescriptionSchema.deserialize,
-            allOffsets,
-            Description(),
-          ) ??
-          []) as P;
+        offset,
+        DescriptionSchema.deserialize,
+        allOffsets,
+        Description(),
+      )) as P;
     case 1:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -11821,6 +11851,23 @@ P _contentDeserializeProp<P>(
 
 extension ContentQueryFilter
     on QueryBuilder<Content, Content, QFilterCondition> {
+  QueryBuilder<Content, Content, QAfterFilterCondition> descriptionsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'descriptions',
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition>
+      descriptionsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'descriptions',
+      ));
+    });
+  }
+
   QueryBuilder<Content, Content, QAfterFilterCondition>
       descriptionsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
@@ -11909,8 +11956,24 @@ extension ContentQueryFilter
     });
   }
 
+  QueryBuilder<Content, Content, QAfterFilterCondition> headerIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'header',
+      ));
+    });
+  }
+
+  QueryBuilder<Content, Content, QAfterFilterCondition> headerIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'header',
+      ));
+    });
+  }
+
   QueryBuilder<Content, Content, QAfterFilterCondition> headerEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -11923,7 +11986,7 @@ extension ContentQueryFilter
   }
 
   QueryBuilder<Content, Content, QAfterFilterCondition> headerGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -11938,7 +12001,7 @@ extension ContentQueryFilter
   }
 
   QueryBuilder<Content, Content, QAfterFilterCondition> headerLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -11953,8 +12016,8 @@ extension ContentQueryFilter
   }
 
   QueryBuilder<Content, Content, QAfterFilterCondition> headerBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -12091,17 +12154,32 @@ int _descriptionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.subDescriptions.length * 3;
   {
-    final offsets = allOffsets[SubDescription]!;
-    for (var i = 0; i < object.subDescriptions.length; i++) {
-      final value = object.subDescriptions[i];
-      bytesCount +=
-          SubDescriptionSchema.estimateSize(value, offsets, allOffsets);
+    final list = object.subDescriptions;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[SubDescription]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              SubDescriptionSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
     }
   }
-  bytesCount += 3 + object.text.length * 3;
-  bytesCount += 3 + object.type.length * 3;
+  {
+    final value = object.text;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.type;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -12129,16 +12207,15 @@ Description _descriptionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Description();
-  object.isBold = reader.readBool(offsets[0]);
+  object.isBold = reader.readBoolOrNull(offsets[0]);
   object.subDescriptions = reader.readObjectList<SubDescription>(
-        offsets[1],
-        SubDescriptionSchema.deserialize,
-        allOffsets,
-        SubDescription(),
-      ) ??
-      [];
-  object.text = reader.readString(offsets[2]);
-  object.type = reader.readString(offsets[3]);
+    offsets[1],
+    SubDescriptionSchema.deserialize,
+    allOffsets,
+    SubDescription(),
+  );
+  object.text = reader.readStringOrNull(offsets[2]);
+  object.type = reader.readStringOrNull(offsets[3]);
   return object;
 }
 
@@ -12150,19 +12227,18 @@ P _descriptionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 1:
       return (reader.readObjectList<SubDescription>(
-            offset,
-            SubDescriptionSchema.deserialize,
-            allOffsets,
-            SubDescription(),
-          ) ??
-          []) as P;
+        offset,
+        SubDescriptionSchema.deserialize,
+        allOffsets,
+        SubDescription(),
+      )) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -12170,12 +12246,47 @@ P _descriptionDeserializeProp<P>(
 
 extension DescriptionQueryFilter
     on QueryBuilder<Description, Description, QFilterCondition> {
+  QueryBuilder<Description, Description, QAfterFilterCondition> isBoldIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isBold',
+      ));
+    });
+  }
+
+  QueryBuilder<Description, Description, QAfterFilterCondition>
+      isBoldIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isBold',
+      ));
+    });
+  }
+
   QueryBuilder<Description, Description, QAfterFilterCondition> isBoldEqualTo(
-      bool value) {
+      bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isBold',
         value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Description, Description, QAfterFilterCondition>
+      subDescriptionsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'subDescriptions',
+      ));
+    });
+  }
+
+  QueryBuilder<Description, Description, QAfterFilterCondition>
+      subDescriptionsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'subDescriptions',
       ));
     });
   }
@@ -12269,8 +12380,25 @@ extension DescriptionQueryFilter
     });
   }
 
+  QueryBuilder<Description, Description, QAfterFilterCondition> textIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'text',
+      ));
+    });
+  }
+
+  QueryBuilder<Description, Description, QAfterFilterCondition>
+      textIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'text',
+      ));
+    });
+  }
+
   QueryBuilder<Description, Description, QAfterFilterCondition> textEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -12283,7 +12411,7 @@ extension DescriptionQueryFilter
   }
 
   QueryBuilder<Description, Description, QAfterFilterCondition> textGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12298,7 +12426,7 @@ extension DescriptionQueryFilter
   }
 
   QueryBuilder<Description, Description, QAfterFilterCondition> textLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12313,8 +12441,8 @@ extension DescriptionQueryFilter
   }
 
   QueryBuilder<Description, Description, QAfterFilterCondition> textBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -12400,8 +12528,25 @@ extension DescriptionQueryFilter
     });
   }
 
+  QueryBuilder<Description, Description, QAfterFilterCondition> typeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'type',
+      ));
+    });
+  }
+
+  QueryBuilder<Description, Description, QAfterFilterCondition>
+      typeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'type',
+      ));
+    });
+  }
+
   QueryBuilder<Description, Description, QAfterFilterCondition> typeEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -12414,7 +12559,7 @@ extension DescriptionQueryFilter
   }
 
   QueryBuilder<Description, Description, QAfterFilterCondition> typeGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12429,7 +12574,7 @@ extension DescriptionQueryFilter
   }
 
   QueryBuilder<Description, Description, QAfterFilterCondition> typeLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12444,8 +12589,8 @@ extension DescriptionQueryFilter
   }
 
   QueryBuilder<Description, Description, QAfterFilterCondition> typeBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -12582,8 +12727,18 @@ int _subDescriptionEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.text.length * 3;
-  bytesCount += 3 + object.type.length * 3;
+  {
+    final value = object.text;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
+    final value = object.type;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -12606,10 +12761,10 @@ SubDescription _subDescriptionDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = SubDescription();
-  object.isBold = reader.readBool(offsets[0]);
-  object.isSpaceRequired = reader.readBool(offsets[1]);
-  object.text = reader.readString(offsets[2]);
-  object.type = reader.readString(offsets[3]);
+  object.isBold = reader.readBoolOrNull(offsets[0]);
+  object.isSpaceRequired = reader.readBoolOrNull(offsets[1]);
+  object.text = reader.readStringOrNull(offsets[2]);
+  object.type = reader.readStringOrNull(offsets[3]);
   return object;
 }
 
@@ -12621,13 +12776,13 @@ P _subDescriptionDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 1:
-      return (reader.readBool(offset)) as P;
+      return (reader.readBoolOrNull(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -12636,7 +12791,25 @@ P _subDescriptionDeserializeProp<P>(
 extension SubDescriptionQueryFilter
     on QueryBuilder<SubDescription, SubDescription, QFilterCondition> {
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
-      isBoldEqualTo(bool value) {
+      isBoldIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isBold',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      isBoldIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isBold',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      isBoldEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isBold',
@@ -12646,7 +12819,25 @@ extension SubDescriptionQueryFilter
   }
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
-      isSpaceRequiredEqualTo(bool value) {
+      isSpaceRequiredIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'isSpaceRequired',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      isSpaceRequiredIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'isSpaceRequired',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      isSpaceRequiredEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isSpaceRequired',
@@ -12656,8 +12847,26 @@ extension SubDescriptionQueryFilter
   }
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      textIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'text',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      textIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'text',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       textEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -12671,7 +12880,7 @@ extension SubDescriptionQueryFilter
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       textGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12687,7 +12896,7 @@ extension SubDescriptionQueryFilter
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       textLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12703,8 +12912,8 @@ extension SubDescriptionQueryFilter
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       textBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -12792,8 +13001,26 @@ extension SubDescriptionQueryFilter
   }
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      typeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'type',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
+      typeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'type',
+      ));
+    });
+  }
+
+  QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       typeEqualTo(
-    String value, {
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -12807,7 +13034,7 @@ extension SubDescriptionQueryFilter
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       typeGreaterThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12823,7 +13050,7 @@ extension SubDescriptionQueryFilter
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       typeLessThan(
-    String value, {
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -12839,8 +13066,8 @@ extension SubDescriptionQueryFilter
 
   QueryBuilder<SubDescription, SubDescription, QAfterFilterCondition>
       typeBetween(
-    String lower,
-    String upper, {
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,

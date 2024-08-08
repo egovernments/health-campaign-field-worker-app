@@ -231,28 +231,28 @@ class RefusalReasons {
 class PrivacyPolicy {
   late String header;
   late String module;
-  late List<Content> contents;
+  late List<Content>? contents;
 }
 
 @embedded
 class Content {
-  late String header;
-  late List<Description> descriptions;
+  late String? header;
+  late List<Description>? descriptions;
 }
 
 @embedded
 class Description {
-  late String text;
-  late String type;
-  late bool isBold;
-  late List<SubDescription> subDescriptions;
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late List<SubDescription>? subDescriptions;
 }
 
 @embedded
 class SubDescription {
-  late String text;
-  late String type;
-  late bool isBold;
-  late bool isSpaceRequired;
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late bool? isSpaceRequired;
 }
 

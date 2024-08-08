@@ -71,8 +71,9 @@ class _FullPageDialogState extends LocalizedState<FullPageDialog> {
                         ],
                       ),
                       const SizedBox(height: 16.0),
+                      if(widget.privacyPolicy.contents != null)
                       Column(
-                        children: widget.privacyPolicy.contents.map((section) {
+                        children: widget.privacyPolicy.contents!.map((section) {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 16.0),
                             child: ExpandableSection(content: section),
