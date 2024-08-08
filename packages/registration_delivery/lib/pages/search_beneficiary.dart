@@ -188,7 +188,7 @@ class _SearchBeneficiaryPageState
                                       child: SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.05,
+                                                0.06,
                                         child: ListView.builder(
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
@@ -221,7 +221,7 @@ class _SearchBeneficiaryPageState
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            ' (${searchHouseholdsState.householdMembers.length}-${searchHouseholdsState.totalResults})',
+                                                            ' (${searchHouseholdsState.totalResults})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
