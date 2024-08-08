@@ -431,10 +431,11 @@ class BeneficiaryRegistrationBloc
           );
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId:
-                  beneficiaryType == BeneficiaryType.individual //[TODO: need to check with individual downsync data. Current implementation works only for household. Parking this for IRS]
-                      ? [value.individualModel.first.clientReferenceId]
-                      : [event.household.clientReferenceId],
+              beneficiaryClientReferenceId: beneficiaryType ==
+                      BeneficiaryType
+                          .individual //[TODO: need to check with individual downsync data. Current implementation works only for household. Parking this for IRS]
+                  ? [value.individualModel.first.clientReferenceId]
+                  : [event.household.clientReferenceId],
             ),
           );
 
@@ -451,8 +452,8 @@ class BeneficiaryRegistrationBloc
 
             if (task.isNotEmpty) {
               if (task.last.status == Status.closeHousehold.toValue()) {
-                await taskDataRepository.update(
-                    task.last.copyWith(status: Status.notDelivered.toValue()));
+                await taskDataRepository.update(task.last
+                    .copyWith(status: Status.notAdministered.toValue()));
               }
             }
           } else {
@@ -507,8 +508,7 @@ class BeneficiaryRegistrationBloc
           emit(
             BeneficiaryRegistrationPersistedState(
               householdModel: value.householdModel,
-              isEdit : true,
-
+              isEdit: true,
             ),
           );
         } catch (error) {
@@ -559,8 +559,8 @@ class BeneficiaryRegistrationBloc
 
             if (task.isNotEmpty) {
               if (task.last.status == Status.closeHousehold.toValue()) {
-                await taskDataRepository.update(
-                    task.last.copyWith(status: Status.notDelivered.toValue()));
+                await taskDataRepository.update(task.last
+                    .copyWith(status: Status.notAdministered.toValue()));
               }
             }
           }

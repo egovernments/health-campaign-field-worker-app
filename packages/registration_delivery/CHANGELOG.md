@@ -1,3 +1,19 @@
+## 1.0.3-dev.9
+
+* Updated localization key for delivery resource
+
+## 1.0.3-dev.8
+
+* Reverted 1.0.3-dev.7
+
+## 1.0.3-dev.7
+
+* Updated status to taskStatus in Task model
+
+## 1.0.3-dev.6
+
+* Updated delivery status enums
+
 ## 1.0.3-dev.5
 
 * Added count for filter search 

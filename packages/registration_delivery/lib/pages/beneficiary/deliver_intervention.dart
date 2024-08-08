@@ -90,12 +90,11 @@ class DeliverInterventionPageState
                 latitude: lat,
                 longitude: long,
               ),
-              isEditing:
-                  ( deliverInterventionState.tasks ?? [])
-                          .isNotEmpty && RegistrationDeliverySingleton().beneficiaryType ==
-                      BeneficiaryType.household
-                      ? true
-                      : false,
+              isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.household
+                  ? true
+                  : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
               navigateToSummary: true,
               householdMemberWrapper: householdMember),
