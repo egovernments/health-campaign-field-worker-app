@@ -1,6 +1,7 @@
 class GlobalSearchParameters {
   final bool isProximityEnabled;
   final double? latitude;
+  final String? projectId;
   final double? longitude;
   final double? maxRadius;
   final String? nameSearch;
@@ -19,5 +20,6 @@ class GlobalSearchParameters {
     required this.limit,
     required this.filter,
     this.totalCount,
+    this.projectId
   });
 }

@@ -50,6 +50,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
     final results =
         await individualGlobalSearchRepository.individualGlobalSearch(
       GlobalSearchParameters(
+        projectId: event.globalSearchParams.projectId,
         isProximityEnabled: event.globalSearchParams.isProximityEnabled,
         latitude: event.globalSearchParams.latitude,
         longitude: event.globalSearchParams.longitude,

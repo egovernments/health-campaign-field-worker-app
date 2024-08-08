@@ -175,6 +175,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.individual.clientReferenceId))
       ])
         ..where(buildAnd([
+          if (params.filter!.contains(Status.registered))
+            sql.projectBeneficiary.projectId.equals(params.projectId!),
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.individual.clientReferenceId.isNotNull(),
           if (params.latitude != null &&
@@ -241,7 +243,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.household.clientReferenceId))
-      ]);
+      ]).where(sql.projectBeneficiary.projectId.equals(params.projectId!));
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
@@ -278,11 +280,17 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 sql.projectBeneficiary.beneficiaryClientReferenceId
                     .equalsExp(sql.individual.clientReferenceId))
         ])
+      
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+        if (!(params.filter!.contains(Status.notRegistered.name))) {
+          selectQuery.where(
+              sql.projectBeneficiary.projectId.equals(params.projectId!));
+        }
       } else {
-        var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
+        var filterSearchQuery =
+            await filterTasks(selectQuery, filter, sql, params);
 
         selectQuery = filterSearchQuery;
       }
@@ -300,14 +308,16 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       } else {
-        var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
+        var filterSearchQuery =
+            await filterTasks(selectQuery, filter, sql, params);
         selectQuery = filterSearchQuery;
       }
     }
     return selectQuery;
   }
 
-  filterTasks(selectQuery, String filter, LocalSqlDataStore sql) {
+  filterTasks(selectQuery, String filter, LocalSqlDataStore sql,
+      GlobalSearchParameters params) {
     final statusMap = {
       Status.delivered.name: Status.delivered,
       Status.notAdministered.name: Status.notAdministered,
@@ -332,6 +342,12 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         ..where(sql.task.status.equals(
           statusMap[applyFilter]!.toValue(),
         ));
+      if (!(params.filter!.contains(Status.notRegistered.name))) {
+        selectQuery
+            .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
+      }
+      //   ..where( (params.filter!.contains(Status.notRegistered.name ))?
+      // sql.projectBeneficiary.projectId.equals(params.projectId!): const Constant(false));
     } else {
       selectQuery = selectQuery.join([
         leftOuterJoin(

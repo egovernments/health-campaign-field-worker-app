@@ -510,6 +510,7 @@ class _SearchBeneficiaryPageState
                 globalSearchParams: GlobalSearchParameters(
           isProximityEnabled: isProximityEnabled,
           latitude: lat,
+          projectId: RegistrationDeliverySingleton().projectId!,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
           nameSearch: searchController.text.trim().length > 2
@@ -534,6 +535,7 @@ class _SearchBeneficiaryPageState
           isProximityEnabled: isProximityEnabled,
           latitude: lat,
           longitude: long,
+          projectId: RegistrationDeliverySingleton().projectId!,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
           nameSearch: searchController.text.trim().length > 2
               ? searchController.text.trim()

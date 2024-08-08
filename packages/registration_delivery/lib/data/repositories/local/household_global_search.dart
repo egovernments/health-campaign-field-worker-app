@@ -178,6 +178,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.household.clientReferenceId))
       ])
+        ..where(sql.projectBeneficiary.projectId.equals(params.projectId!))
         ..where(buildAnd([
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.household.clientReferenceId.isNotNull(),
@@ -245,7 +246,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.household.clientReferenceId))
-      ]);
+      ]).where(sql.projectBeneficiary.projectId.equals(params.projectId!));
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
@@ -287,7 +288,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       } else {
-        var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
+        var filterSearchQuery =
+            await filterTasks(selectQuery, filter, sql, params);
 
         selectQuery = filterSearchQuery;
       }
@@ -305,14 +307,16 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       } else {
-        var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
+        var filterSearchQuery =
+            await filterTasks(selectQuery, filter, sql, params);
         selectQuery = filterSearchQuery;
       }
     }
     return selectQuery;
   }
 
-  filterTasks(selectQuery, String filter, LocalSqlDataStore sql) {
+  filterTasks(selectQuery, String filter, LocalSqlDataStore sql,
+      GlobalSearchParameters params) {
     final statusMap = {
       Status.delivered.name: Status.delivered,
       Status.notAdministered.name: Status.notAdministered,
@@ -341,6 +345,10 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         ..where(sql.task.status.equals(
           statusMap[applyFilter]!.toValue(),
         ));
+      if (!(params.filter!.contains(Status.notRegistered.name))) {
+        selectQuery
+            .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
+      }
     } else {
       selectQuery = selectQuery.join([
         leftOuterJoin(
@@ -349,6 +357,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.projectBeneficiary.clientReferenceId))
       ])
         ..where(sql.task.status.equals(statusMap[filter]!.toValue()));
+
+      if (!(params.filter!.contains(Status.notRegistered.name))) {
+        selectQuery
+            .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
+      }
     }
 
     return selectQuery;

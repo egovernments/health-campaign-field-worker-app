@@ -49,6 +49,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
+        projectId:  event.globalSearchParams.projectId,
           isProximityEnabled: event.globalSearchParams.isProximityEnabled,
           latitude: event.globalSearchParams.latitude,
           longitude: event.globalSearchParams.longitude,
@@ -93,9 +94,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           ProjectBeneficiarySearchModel(
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
+;
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
-          projectBeneficiariesList, taskList, sideEffectsList, referralsList);
+                            projectBeneficiariesList.where((element) => element.projectId ==event.globalSearchParams.projectId).toList() , taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
       sideEffectsList = tasksRelated[1];
