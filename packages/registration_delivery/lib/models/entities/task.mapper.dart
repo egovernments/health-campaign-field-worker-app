@@ -41,9 +41,9 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
   static String? _$createdBy(TaskSearchModel v) => v.createdBy;
   static const Field<TaskSearchModel, String> _f$createdBy =
       Field('createdBy', _$createdBy, opt: true);
-  static String? _$taskStatus(TaskSearchModel v) => v.taskStatus;
-  static const Field<TaskSearchModel, String> _f$taskStatus =
-      Field('taskStatus', _$taskStatus, opt: true);
+  static String? _$status(TaskSearchModel v) => v.status;
+  static const Field<TaskSearchModel, String> _f$status =
+      Field('status', _$status, opt: true);
   static int? _$offset(TaskSearchModel v) => v.offset;
   static const Field<TaskSearchModel, int> _f$offset =
       Field('offset', _$offset, opt: true);
@@ -106,7 +106,7 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
     #projectBeneficiaryClientReferenceId:
         _f$projectBeneficiaryClientReferenceId,
     #createdBy: _f$createdBy,
-    #taskStatus: _f$taskStatus,
+    #status: _f$status,
     #offset: _f$offset,
     #limit: _f$limit,
     #clientReferenceId: _f$clientReferenceId,
@@ -142,7 +142,7 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
         projectBeneficiaryClientReferenceId:
             data.dec(_f$projectBeneficiaryClientReferenceId),
         createdBy: data.dec(_f$createdBy),
-        taskStatus: data.dec(_f$taskStatus),
+        status: data.dec(_f$status),
         offset: data.dec(_f$offset),
         limit: data.dec(_f$limit),
         clientReferenceId: data.dec(_f$clientReferenceId),
@@ -223,7 +223,7 @@ abstract class TaskSearchModelCopyWith<$R, $In extends TaskSearchModel, $Out>
       List<String>? projectBeneficiaryId,
       List<String>? projectBeneficiaryClientReferenceId,
       String? createdBy,
-      String? taskStatus,
+      String? status,
       int? offset,
       int? limit,
       List<String>? clientReferenceId,
@@ -283,7 +283,7 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
           Object? projectBeneficiaryId = $none,
           Object? projectBeneficiaryClientReferenceId = $none,
           Object? createdBy = $none,
-          Object? taskStatus = $none,
+          Object? status = $none,
           Object? offset = $none,
           Object? limit = $none,
           Object? clientReferenceId = $none,
@@ -302,7 +302,7 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
           #projectBeneficiaryClientReferenceId:
               projectBeneficiaryClientReferenceId,
         if (createdBy != $none) #createdBy: createdBy,
-        if (taskStatus != $none) #taskStatus: taskStatus,
+        if (status != $none) #status: status,
         if (offset != $none) #offset: offset,
         if (limit != $none) #limit: limit,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
@@ -323,7 +323,7 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
           #projectBeneficiaryClientReferenceId,
           or: $value.projectBeneficiaryClientReferenceId),
       createdBy: data.get(#createdBy, or: $value.createdBy),
-      taskStatus: data.get(#taskStatus, or: $value.taskStatus),
+      status: data.get(#status, or: $value.status),
       offset: data.get(#offset, or: $value.offset),
       limit: data.get(#limit, or: $value.limit),
       clientReferenceId:
@@ -377,9 +377,9 @@ class TaskModelMapper extends SubClassMapperBase<TaskModel> {
   static String? _$createdBy(TaskModel v) => v.createdBy;
   static const Field<TaskModel, String> _f$createdBy =
       Field('createdBy', _$createdBy, opt: true);
-  static String? _$taskStatus(TaskModel v) => v.taskStatus;
-  static const Field<TaskModel, String> _f$taskStatus =
-      Field('taskStatus', _$taskStatus, opt: true);
+  static String? _$status(TaskModel v) => v.status;
+  static const Field<TaskModel, String> _f$status =
+      Field('status', _$status, opt: true);
   static bool? _$nonRecoverableError(TaskModel v) => v.nonRecoverableError;
   static const Field<TaskModel, bool> _f$nonRecoverableError = Field(
       'nonRecoverableError', _$nonRecoverableError,
@@ -452,7 +452,7 @@ class TaskModelMapper extends SubClassMapperBase<TaskModel> {
     #projectBeneficiaryClientReferenceId:
         _f$projectBeneficiaryClientReferenceId,
     #createdBy: _f$createdBy,
-    #taskStatus: _f$taskStatus,
+    #status: _f$status,
     #nonRecoverableError: _f$nonRecoverableError,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
@@ -493,7 +493,7 @@ class TaskModelMapper extends SubClassMapperBase<TaskModel> {
         projectBeneficiaryClientReferenceId:
             data.dec(_f$projectBeneficiaryClientReferenceId),
         createdBy: data.dec(_f$createdBy),
-        taskStatus: data.dec(_f$taskStatus),
+        status: data.dec(_f$status),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
@@ -581,7 +581,7 @@ abstract class TaskModelCopyWith<$R, $In extends TaskModel, $Out>
       String? projectBeneficiaryId,
       String? projectBeneficiaryClientReferenceId,
       String? createdBy,
-      String? taskStatus,
+      String? status,
       bool? nonRecoverableError,
       String? clientReferenceId,
       String? tenantId,
@@ -636,7 +636,7 @@ class _TaskModelCopyWithImpl<$R, $Out>
           Object? projectBeneficiaryId = $none,
           Object? projectBeneficiaryClientReferenceId = $none,
           Object? createdBy = $none,
-          Object? taskStatus = $none,
+          Object? status = $none,
           Object? nonRecoverableError = $none,
           String? clientReferenceId,
           Object? tenantId = $none,
@@ -661,7 +661,7 @@ class _TaskModelCopyWithImpl<$R, $Out>
           #projectBeneficiaryClientReferenceId:
               projectBeneficiaryClientReferenceId,
         if (createdBy != $none) #createdBy: createdBy,
-        if (taskStatus != $none) #taskStatus: taskStatus,
+        if (status != $none) #status: status,
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (clientReferenceId != null) #clientReferenceId: clientReferenceId,
@@ -691,7 +691,7 @@ class _TaskModelCopyWithImpl<$R, $Out>
           #projectBeneficiaryClientReferenceId,
           or: $value.projectBeneficiaryClientReferenceId),
       createdBy: data.get(#createdBy, or: $value.createdBy),
-      taskStatus: data.get(#taskStatus, or: $value.taskStatus),
+      status: data.get(#status, or: $value.status),
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       clientReferenceId:

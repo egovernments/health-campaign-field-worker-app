@@ -252,13 +252,13 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       localizations.translate(
                         index == selectedIndex
                             ? Status.toAdminister.toValue()
-                            : tasks?.taskStatus ?? Status.inComplete.toValue(),
+                            : tasks?.status ?? Status.inComplete.toValue(),
                       ),
                       cellKey: 'status',
                       style: TextStyle(
                         color: index == selectedIndex
                             ? null
-                            : tasks?.taskStatus ==
+                            : tasks?.status ==
                                     Status.administeredSuccess.toValue()
                                 ? DigitTheme
                                     .instance.colorScheme.onSurfaceVariant
@@ -268,8 +268,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
                       ),
                     ),
                     TableData(
-                      tasks?.taskStatus ==
-                                  Status.administeredFailed.toValue() ||
+                      tasks?.status == Status.administeredFailed.toValue() ||
                               (tasks?.additionalFields?.fields
                                       .where((e) =>
                                           e.key ==

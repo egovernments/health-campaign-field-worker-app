@@ -79,7 +79,7 @@ class _HouseholdOverviewPageState
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
                             child: deliverInterventionState
-                                        .tasks?.last.taskStatus ==
+                                        .tasks?.last.status ==
                                     Status.administeredSuccess.toValue()
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -119,7 +119,7 @@ class _HouseholdOverviewPageState
                                                     [])
                                                 .isEmpty ||
                                             state.householdMemberWrapper.tasks
-                                                    ?.last.taskStatus ==
+                                                    ?.last.status ==
                                                 Status.closeHousehold.toValue()
                                         ? null
                                         : () async {
@@ -754,14 +754,14 @@ class _HouseholdOverviewPageState
           : Status.registered.toValue();
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.last.taskStatus ==
+          ? (state.householdMemberWrapper.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
       icon = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.last.taskStatus ==
+          ? (state.householdMemberWrapper.tasks?.last.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)

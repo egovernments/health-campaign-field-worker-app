@@ -246,7 +246,7 @@ class ClosedHouseholdBloc
         projectId: ClosedHouseholdSingleton().projectId,
         rowVersion: 1,
         address: address,
-        taskStatus: reg_status.Status.closeHousehold.toValue(),
+        status: reg_status.Status.closeHousehold.toValue(),
         auditDetails: AuditDetails(
           createdBy: ClosedHouseholdSingleton().loggedInUserUuid!,
           createdTime: DateTime.now().millisecondsSinceEpoch,

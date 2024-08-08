@@ -285,7 +285,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
     );
 
     task = task.copyWith(
-      taskStatus: status,
+      status: status,
       additionalFields: TaskAdditionalFields(
         version: 1,
         fields: [

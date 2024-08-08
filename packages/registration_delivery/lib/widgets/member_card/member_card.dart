@@ -256,7 +256,7 @@ class MemberCard extends StatelessWidget {
 
                                       final futureTaskList = tasks
                                           ?.where((task) =>
-                                              task.taskStatus ==
+                                              task.status ==
                                               Status.delivered.toValue())
                                           .toList();
 
@@ -385,7 +385,7 @@ class MemberCard extends StatelessWidget {
                                                       projectId:
                                                           RegistrationDeliverySingleton()
                                                               .projectId,
-                                                      taskStatus: Status
+                                                      status: Status
                                                           .beneficiaryRefused
                                                           .toValue(),
                                                       clientAuditDetails:

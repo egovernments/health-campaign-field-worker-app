@@ -451,9 +451,9 @@ class BeneficiaryRegistrationBloc
             ));
 
             if (task.isNotEmpty) {
-              if (task.last.taskStatus == Status.closeHousehold.toValue()) {
+              if (task.last.status == Status.closeHousehold.toValue()) {
                 await taskDataRepository.update(task.last
-                    .copyWith(taskStatus: Status.notAdministered.toValue()));
+                    .copyWith(status: Status.notAdministered.toValue()));
               }
             }
           } else {
@@ -558,9 +558,9 @@ class BeneficiaryRegistrationBloc
             ));
 
             if (task.isNotEmpty) {
-              if (task.last.taskStatus == Status.closeHousehold.toValue()) {
+              if (task.last.status == Status.closeHousehold.toValue()) {
                 await taskDataRepository.update(task.last
-                    .copyWith(taskStatus: Status.notAdministered.toValue()));
+                    .copyWith(status: Status.notAdministered.toValue()));
               }
             }
           }
