@@ -11,6 +11,7 @@ import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/global_search_parameters.dart';
+import '../../utils/utils.dart';
 
 class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
   HouseHoldGlobalSearchBloc({
@@ -89,10 +90,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
       );
 
-      projectBeneficiariesList = await projectBeneficiary.search(
-          ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId:
-                  houseHoldClientReferenceIds.map((e) => e).toList()));
+      projectBeneficiariesList = await fetchProjectBeneficiary(
+        RegistrationDeliverySingleton().projectId!,
+        houseHoldClientReferenceIds.map((e) => e.toString()).toList(),
+      );
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -112,7 +113,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         referralsList,
         containers,
       );
-
     } else if (event.globalSearchParams.filter!.isNotEmpty &&
         event.globalSearchParams.filter != null) {
       late List<String> listOfBeneficiaries = [];
@@ -122,9 +122,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
             : null;
       }
 
-      projectBeneficiariesList = await projectBeneficiary.search(
-          ProjectBeneficiarySearchModel(
-              clientReferenceId: listOfBeneficiaries));
+      projectBeneficiariesList = await fetchProjectBeneficiary(
+        RegistrationDeliverySingleton().projectId!,
+        listOfBeneficiaries,
+      );
 
       late List<String> listOfMembers = [];
 
@@ -177,7 +178,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         referralsList,
         containers,
       );
-
     } else {
       late List<String> houseHoldClientReferenceIds = [];
 
@@ -203,10 +203,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
       );
 
-      projectBeneficiariesList = await projectBeneficiary.search(
-          ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId:
-                  houseHoldClientReferenceIds.map((e) => e).toList()));
+      projectBeneficiariesList = await fetchProjectBeneficiary(
+        RegistrationDeliverySingleton().projectId!,
+        houseHoldClientReferenceIds.map((e) => e.toString()).toList(),
+      );
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -226,14 +226,13 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         referralsList,
         containers,
       );
-
     }
     emit(state.copyWith(
       householdMembers: containers,
       loading: false,
       searchQuery: event.globalSearchParams.nameSearch,
       offset:
-      event.globalSearchParams.offset! + event.globalSearchParams.limit!,
+          event.globalSearchParams.offset! + event.globalSearchParams.limit!,
       limit: event.globalSearchParams.limit!,
       totalResults: containers.isEmpty ? 0 : totalCount,
     ));

@@ -131,7 +131,6 @@ class HouseholdOverviewBloc
                 ? individualIds
                 : [resultHousehold.clientReferenceId],
         projectId: [event.projectId],
-        // [TODO] Need to pass as a  based on Beneficiary Type
       ),
     );
 

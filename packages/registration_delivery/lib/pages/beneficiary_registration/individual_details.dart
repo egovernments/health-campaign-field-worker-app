@@ -85,7 +85,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                       overviewBloc.state.householdMemberWrapper;
                   final route = router.parent() as StackRouter;
                   route.popUntilRouteWithName(SearchBeneficiaryRoute.name);
-                  route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
+                  if (value.registrationCompleted) {
+                    route.push(BeneficiaryAcknowledgementRoute());
+                  } else {
+                    route.push(BeneficiaryWrapperRoute(wrapper: memberWrapper));
+                  }
                 }
               },
             );

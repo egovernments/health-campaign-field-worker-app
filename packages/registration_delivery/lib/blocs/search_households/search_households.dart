@@ -86,6 +86,7 @@ class SearchHouseholdsBloc
       );
 
       final projectBeneficiaries = await fetchProjectBeneficiary(
+        projectId,
         beneficiaryType == BeneficiaryType.individual
             ? individuals.map((e) => e.clientReferenceId).toList()
             : [event.householdModel.clientReferenceId],
@@ -200,6 +201,7 @@ class SearchHouseholdsBloc
 
   // Fetch the project Beneficiary
   Future<List<ProjectBeneficiaryModel>> fetchProjectBeneficiary(
+    String projectId,
     List<String> projectBeneficiariesIds,
   ) async {
     return await projectBeneficiary.search(

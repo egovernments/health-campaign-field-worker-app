@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -93,6 +94,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       );
 
       projectBeneficiariesList = await fetchProjectBeneficiary(
+        RegistrationDeliverySingleton().projectId!,
         householdMembers
             .map((e) => e.individualClientReferenceId.toString())
             .toList(),

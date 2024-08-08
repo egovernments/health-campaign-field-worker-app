@@ -30,7 +30,7 @@ class LocalizationRepository {
       return LocalizationModel.fromJson(
         json.decode(response.toString()),
       );
-    } on DioError catch (_) {
+    } on DioException catch (_) {
       // Assuming there will be an errorMessage property in the JSON object
       rethrow;
     }
@@ -63,26 +63,53 @@ class LocalizationRepository {
     }).toList();
 
     if (localizationList.isEmpty) {
-      final result = await search(
+      final boundaryModuleCheck = module.contains('rainmaker-boundary-admin');
+      final allModules = module.split(',');
+      var boundaryModule;
+
+      if (boundaryModuleCheck) {
+        final boundaryModuleIndex =
+            allModules.indexOf('rainmaker-boundary-admin');
+        boundaryModule = allModules[boundaryModuleIndex];
+        allModules.removeAt(boundaryModuleIndex);
+      }
+
+      final otherModulesResult = await search(
         url: path,
         queryParameters: {
-          "module": module,
+          "module": allModules.join(','),
           "locale": locale,
           "tenantId": tenantId,
         },
       );
-      await _sql.batch((batch) {
-        batch.insertAll(
-            _sql.localization,
-            result.messages
-                .map((e) => LocalizationCompanion(
-                      code: Value(e.code),
-                      locale: Value(e.locale),
-                      message: Value(e.message),
-                      module: Value(e.module),
-                    ))
-                .toList());
-      });
+
+      await _storeLocalization(otherModulesResult.messages);
+
+      final boundaryResult = await search(
+        url: path,
+        queryParameters: {
+          "module": boundaryModule,
+          "locale": locale,
+          "tenantId": tenantId,
+        },
+      );
+
+      await _storeLocalization(boundaryResult.messages);
     }
+  }
+
+  _storeLocalization(List<LocalizationMessageModel> result) async {
+    return _sql.batch((batch) {
+      batch.insertAll(
+          _sql.localization,
+          result
+              .map((e) => LocalizationCompanion(
+                    code: Value(e.code),
+                    locale: Value(e.locale),
+                    message: Value(e.message),
+                    module: Value(e.module),
+                  ))
+              .toList());
+    });
   }
 }

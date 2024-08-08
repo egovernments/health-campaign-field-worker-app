@@ -527,6 +527,8 @@ class BeneficiaryRegistrationBloc
         throw const InvalidRegistrationStateException();
       },
       editIndividual: (value) async {
+        var isBeneficiaryEmpty = false;
+
         emit(value.copyWith(loading: true));
         try {
           final individual = event.model.copyWith(
@@ -537,7 +539,43 @@ class BeneficiaryRegistrationBloc
             ],
           );
 
-          final projectBeneficiary = await projectBeneficiaryRepository.search(
+          var projectBeneficiary = await projectBeneficiaryRepository.search(
+            ProjectBeneficiarySearchModel(
+              beneficiaryClientReferenceId: [
+                beneficiaryType == BeneficiaryType.individual
+                    ? event.model.clientReferenceId
+                    : event.householdModel.clientReferenceId,
+              ],
+            ),
+          );
+          if (projectBeneficiary.isEmpty) {
+            isBeneficiaryEmpty = true;
+            await projectBeneficiaryRepository.create(ProjectBeneficiaryModel(
+                rowVersion: 1,
+                clientReferenceId: IdGen.i.identifier,
+                dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+                projectId: RegistrationDeliverySingleton().projectId,
+                tenantId: RegistrationDeliverySingleton().tenantId,
+                beneficiaryClientReferenceId: event.model.clientReferenceId,
+                clientAuditDetails: ClientAuditDetails(
+                  createdBy: RegistrationDeliverySingleton()
+                      .loggedInUserUuid
+                      .toString(),
+                  createdTime: DateTime.now().millisecondsSinceEpoch,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                  lastModifiedBy: RegistrationDeliverySingleton()
+                      .loggedInUserUuid
+                      .toString(),
+                ),
+                auditDetails: AuditDetails(
+                  createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                  createdTime: DateTime.now().millisecondsSinceEpoch,
+                  lastModifiedBy:
+                      RegistrationDeliverySingleton().loggedInUserUuid!,
+                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                )));
+          }
+          projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
               beneficiaryClientReferenceId: [
                 beneficiaryType == BeneficiaryType.individual
@@ -570,6 +608,7 @@ class BeneficiaryRegistrationBloc
           emit(value.copyWith(loading: false));
           emit(BeneficiaryRegistrationPersistedState(
             householdModel: value.householdModel,
+            registrationCompleted: isBeneficiaryEmpty,
           ));
         }
       },
@@ -787,6 +826,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     AddressModel? addressModel,
     @Default(false) bool loading,
     @Default(false) bool isEdit,
+    @Default(false) bool registrationCompleted,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationPersistedState;
 
