@@ -135,6 +135,10 @@ void _addDataModelConstantsToConstantsFile(
   var constantsFile = File(constantsFilePath);
   var constantsFileContent = constantsFile.readAsStringSync();
 
+// // Read the constants.dart file
+//   var constantsFile = File(constantsFilePath);
+//   var constantsFileContent = constantsFile.readAsStringSync();
+
   // Normalize the whitespace in the file content and the DataModel configuration
   var normalizedFileContent =
       constantsFileContent.replaceAll(RegExp(r'\s'), '');
