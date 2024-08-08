@@ -1,3 +1,7 @@
+## 1.0.3-dev.8
+
+* Reverted 1.0.3-dev.7
+
 ## 1.0.3-dev.7
 
 * Updated status to taskStatus in Task model
