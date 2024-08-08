@@ -1,3 +1,7 @@
+## 1.0.3-dev.9
+
+* Updated localization key for delivery resource
+
 ## 1.0.3-dev.8
 
 * Reverted 1.0.3-dev.7
