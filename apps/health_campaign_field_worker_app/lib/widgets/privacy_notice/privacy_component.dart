@@ -1,6 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../blocs/app_initialization/app_initialization.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../models/privacy_notice/privacy_notice_model.dart';
 import '../localized.dart';
@@ -11,6 +13,7 @@ class PrivacyComponent extends LocalizedStatefulWidget {
   final String formControlName;
   final String text;
   final String linkText;
+  final PrivacyPolicy? privacyPolicy;
   final String? trailingText;
   final String validationMessage;
 
@@ -21,6 +24,7 @@ class PrivacyComponent extends LocalizedStatefulWidget {
     required this.text,
     required this.linkText,
     this.trailingText,
+    this.privacyPolicy,
     required this.validationMessage,
   });
 
@@ -60,41 +64,42 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        checkboxStateNotifier.value = !checkboxStateNotifier.value;
+                        checkboxStateNotifier.value =
+                            !checkboxStateNotifier.value;
                         field.didChange(checkboxStateNotifier.value);
                       },
                       child: value
                           ? Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const DigitColors().burningOrange,
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.zero,
-                        ),
-                        child: Center(
-                          child: Icon(
-                            Icons.check,
-                            size: 16,
-                            color: const DigitColors().burningOrange,
-                          ),
-                        ),
-                      )
+                              width: kPadding*3,
+                              height: kPadding*3,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const DigitColors().burningOrange,
+                                  width: 2,
+                                ),
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.check,
+                                  size: kPadding*2,
+                                  color: const DigitColors().burningOrange,
+                                ),
+                              ),
+                            )
                           : Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: const DigitColors().woodsmokeBlack,
-                            width: 1,
-                          ),
-                          borderRadius: BorderRadius.zero,
-                        ),
-                      ),
+                              width: kPadding*3,
+                              height: kPadding*3,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: const DigitColors().woodsmokeBlack,
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.zero,
+                              ),
+                            ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: kPadding),
                     Expanded(
                       child: Text.rich(
                         TextSpan(
@@ -108,25 +113,26 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
                               style: theme.textTheme.bodyLarge?.copyWith(
                                 color: const DigitColors().burningOrange,
                                 decoration: TextDecoration.underline,
-                                decorationColor: const DigitColors().burningOrange,
+                                decorationColor:
+                                    const DigitColors().burningOrange,
                               ),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () {
                                   showDialog(
                                     context: context,
                                     builder: (context) {
-                                      final privacyPolicyJson = AppConfiguration().privacyPolicyConfig;
-                                      return FullPageDialog(
-                                       privacyPolicy: privacyPolicyJson,
-                                        onAccept: () {
-                                          checkboxStateNotifier.value = true;
-                                          field.didChange(true);
-                                        },
-                                        onDecline: () {
-                                          checkboxStateNotifier.value = false;
-                                          field.didChange(false);
-                                        },
-                                      );
+
+                                        return FullPageDialog(
+                                          privacyPolicy: widget.privacyPolicy ?? PrivacyPolicy(),
+                                          onAccept: () {
+                                            checkboxStateNotifier.value = true;
+                                            field.didChange(true);
+                                          },
+                                          onDecline: () {
+                                            checkboxStateNotifier.value = false;
+                                            field.didChange(false);
+                                          },
+                                        );
                                     },
                                   );
                                 },
@@ -145,7 +151,7 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
                   ],
                 ),
                 if (field.errorText != null) ...[
-                  const SizedBox(height: 4),
+                  const SizedBox(height: kPadding/2),
                   Text(
                     widget.validationMessage,
                     style: theme.textTheme.bodyMedium?.copyWith(
@@ -164,5 +170,3 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
     );
   }
 }
-
-

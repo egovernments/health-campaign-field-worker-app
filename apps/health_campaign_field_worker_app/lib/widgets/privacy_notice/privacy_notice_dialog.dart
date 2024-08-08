@@ -3,6 +3,7 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:flutter/material.dart';
+import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../localized.dart';
 import 'privacy_notice_expand_component.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -10,7 +11,7 @@ import '../../models/privacy_notice/privacy_notice_model.dart';
 import '../showcase/showcase_wrappers.dart';
 
 class FullPageDialog extends LocalizedStatefulWidget {
-  final PrivacyPolicyModel privacyPolicy;
+  final PrivacyPolicy privacyPolicy;
   final VoidCallback onAccept;
   final VoidCallback onDecline;
 
@@ -38,7 +39,7 @@ class _FullPageDialogState extends LocalizedState<FullPageDialog> {
             Expanded(
               child: SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: kPadding*2),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -46,7 +47,7 @@ class _FullPageDialogState extends LocalizedState<FullPageDialog> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top: 24.0, left: 0),
+                            padding: const EdgeInsets.only(top: kPadding*3, left: 0),
                             child: Text(
                               localizations.translate(widget.privacyPolicy.header),
                               maxLines: 3,
@@ -56,26 +57,26 @@ class _FullPageDialogState extends LocalizedState<FullPageDialog> {
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.all(0.0),
+                            padding: EdgeInsets.zero,
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).pop();
                               },
                               child: Icon(
                                 Icons.close,
-                                size: 32,
+                                size: kPadding*4,
                                 color: const DigitColors().woodsmokeBlack,
                               ),
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 16.0),
+                      const SizedBox(height: kPadding*2),
                       if(widget.privacyPolicy.contents != null)
                       Column(
                         children: widget.privacyPolicy.contents!.map((section) {
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
+                            padding: const EdgeInsets.only(bottom: kPadding*2),
                             child: ExpandableSection(content: section),
                           );
                         }).toList(),
