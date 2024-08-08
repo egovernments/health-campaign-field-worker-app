@@ -10,6 +10,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 
 class StatusFilter extends LocalizedStatefulWidget {
   final List<String>? selectedFilters;
+
   const StatusFilter({
     super.key,
     super.appLocalizations,
@@ -34,12 +35,25 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: isLoading
-                  ?  [ Center(
-                child: SizedBox(height: 50, child: Text(localizations.translate(i18.common.coreCommonLoadingText), style: theme.textTheme.bodyLarge,)),
-              )] : [
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: isLoading
+            ? [
+                Icon(
+                  Icons.autorenew,
+                  color: const DigitColors().burningOrange,
+                  size: kPadding * 4,
+                ),
+                const SizedBox(height: kPadding * 2),
+                Center(
+                  child: Text(
+                    localizations.translate(i18.common.coreCommonLoadingText),
+                    style: theme.textTheme.headlineSmall
+                        ?.copyWith(color: const DigitColors().burningOrange),
+                  ),
+                )
+              ]
+            : [
                 SelectionBox<Status>(
                   options: getFilters() ?? [],
                   allowMultipleSelection: false,
@@ -89,10 +103,10 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                                       .map((e) => e.name)
                                       .toList();
 
-                                    Future.delayed(const Duration(seconds: 1), () {
-                                      Navigator.pop(context, selected);
-                                    });
-
+                                  Future.delayed(const Duration(seconds: 1),
+                                      () {
+                                    Navigator.pop(context, selected);
+                                  });
                                 },
                           child: Text(
                             localizations.translate(
@@ -103,8 +117,8 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                   ],
                 )
               ],
-            ),
-          );
+      ),
+    );
   }
 
   void selectButton(Status button) {
