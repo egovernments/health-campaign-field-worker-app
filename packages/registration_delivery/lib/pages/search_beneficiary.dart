@@ -188,7 +188,7 @@ class _SearchBeneficiaryPageState
                                       child: SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.05,
+                                                0.06,
                                         child: ListView.builder(
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
@@ -221,7 +221,7 @@ class _SearchBeneficiaryPageState
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            ' (${searchHouseholdsState.householdMembers.length}-${searchHouseholdsState.totalResults})',
+                                                            ' (${searchHouseholdsState.totalResults})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -470,12 +470,13 @@ class _SearchBeneficiaryPageState
   showFilterDialog() async {
     var filters = await DigitDialog.show(context,
         options: DigitDialogOptions(
-          isCloseIcon: true,
+          titlePadding: EdgeInsets.zero,
+          dialogPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          titleIcon: Icon(getFilterIconNLabel()['icon'],
+          content: StatusFilter(selectedFilters: selectedFilters, titleIcon: Icon(getFilterIconNLabel()['icon'],
               color: const DigitColors().burningOrange),
-          titleText: getFilterIconNLabel()['label'],
-          content: StatusFilter(selectedFilters: selectedFilters),
+            titleText: getFilterIconNLabel()['label'],  isCloseIcon: true,),
         ));
 
     if (filters != null && filters.isNotEmpty) {
