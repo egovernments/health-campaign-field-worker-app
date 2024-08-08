@@ -113,15 +113,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         containers,
       );
 
-      emit(state.copyWith(
-        householdMembers: containers,
-        loading: false,
-        searchQuery: event.globalSearchParams.nameSearch,
-        offset:
-            event.globalSearchParams.offset! + event.globalSearchParams.limit!,
-        limit: event.globalSearchParams.limit!,
-        totalResults: totalCount,
-      ));
     } else if (event.globalSearchParams.filter!.isNotEmpty &&
         event.globalSearchParams.filter != null) {
       late List<String> listOfBeneficiaries = [];
@@ -187,15 +178,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         containers,
       );
 
-      emit(state.copyWith(
-        householdMembers: containers,
-        loading: false,
-        searchQuery: event.globalSearchParams.nameSearch,
-        offset:
-            event.globalSearchParams.offset! + event.globalSearchParams.limit!,
-        limit: event.globalSearchParams.limit!,
-        totalResults: totalCount,
-      ));
     } else {
       late List<String> houseHoldClientReferenceIds = [];
 
@@ -245,15 +227,16 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         containers,
       );
 
-      emit(state.copyWith(
-          householdMembers: containers,
-          loading: false,
-          searchQuery: event.globalSearchParams.nameSearch,
-          offset: event.globalSearchParams.offset! +
-              event.globalSearchParams.limit!,
-          limit: event.globalSearchParams.limit!,
-          totalResults: totalCount));
     }
+    emit(state.copyWith(
+      householdMembers: containers,
+      loading: false,
+      searchQuery: event.globalSearchParams.nameSearch,
+      offset:
+      event.globalSearchParams.offset! + event.globalSearchParams.limit!,
+      limit: event.globalSearchParams.limit!,
+      totalResults: containers.isEmpty ? 0 : totalCount,
+    ));
   }
 
   Future<void> _processHouseholdEntries(

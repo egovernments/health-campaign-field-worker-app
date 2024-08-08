@@ -64,7 +64,11 @@ class _HouseholdOverviewPageState
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
                 : ScrollableContent(
-                    header: const BackNavigationHelpHeaderWidget(),
+                    header:  BackNavigationHelpHeaderWidget(
+                      handleBack: (){
+                        context.read<SearchHouseholdsBloc>().add(const SearchHouseholdsEvent.clear());
+                      },
+                    ),
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual,
@@ -89,7 +93,7 @@ class _HouseholdOverviewPageState
                                         i18.memberCard
                                             .deliverDetailsUpdateLabel,
                                       ),
-                                      onPressed: () {
+                                      onPressed: state.householdMemberWrapper.tasks?.last.status == Status.administeredSuccess.toValue() ? null :() {
                                         serviceDefinitionState.when(
                                             empty: () {},
                                             isloading: () {},
