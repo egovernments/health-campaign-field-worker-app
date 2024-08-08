@@ -181,14 +181,20 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         ..where(buildAnd([
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.household.clientReferenceId.isNotNull(),
-          CustomExpression<bool>('''
+          if (params.latitude != null &&
+              params.longitude != null &&
+              params.maxRadius != null)
+            CustomExpression<bool>('''
               (6371393 * acos(
                   cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
                   * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
                   + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
               )) <= ${params.maxRadius!}
             '''),
-          sql.address.longitude.isNotNull(),
+          if (params.latitude != null &&
+              params.longitude != null &&
+              params.maxRadius != null)
+            sql.address.longitude.isNotNull(),
           sql.address.latitude.isNotNull(),
         ]))
         ..orderBy([
@@ -254,9 +260,14 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   // Function to search by name based on provided parameters
   searchByName(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
-    return selectQuery.where(sql.name.givenName.contains(
-      params.nameSearch!,
-    ));
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.name.givenName.contains(
+            params.nameSearch!,
+          ),
+        ]),
+    ]));
   }
 
   filterSearch(selectQuery, GlobalSearchParameters params, String filter,
@@ -317,7 +328,16 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     };
     var applyFilter = filter;
     if (selectQuery == null) {
-      selectQuery = sql.select(sql.task).join([])
+      selectQuery = sql.select(sql.task).join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.clientReferenceId
+                .equalsExp(sql.task.projectBeneficiaryClientReferenceId)),
+        leftOuterJoin(
+            sql.household,
+            sql.household.clientReferenceId
+                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId))
+      ])
         ..where(sql.task.status.equals(
           statusMap[applyFilter]!.toValue(),
         ));

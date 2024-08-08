@@ -433,8 +433,8 @@ class BeneficiaryRegistrationBloc
             ProjectBeneficiarySearchModel(
               beneficiaryClientReferenceId: beneficiaryType ==
                       BeneficiaryType
-                          .individual //[TODO: need to check with individual downsync data. Current implementation works only for household. Parking this for IRS]
-                  ? [value.individualModel.first.clientReferenceId]
+                          .individual ? getIndividualBeneficiaryClientReferenceId(
+                  value.individualModel)
                   : [event.household.clientReferenceId],
             ),
           );
@@ -669,6 +669,11 @@ class BeneficiaryRegistrationBloc
         }
       },
     );
+  }
+
+  getIndividualBeneficiaryClientReferenceId(
+      List<IndividualModel> individualModel) {
+    return individualModel.map((e) => e.clientReferenceId).toList();
   }
 }
 

@@ -517,10 +517,10 @@ class _SearchBeneficiaryPageState
               : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
           offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              ? blocWrapper.individualGlobalSearchBloc.state.offset
               : offset,
           limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              ? blocWrapper.individualGlobalSearchBloc.state.limit
               : limit,
         )));
       }
