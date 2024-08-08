@@ -115,7 +115,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
                 projectBeneficiaryClientReferenceId:
                     task.projectBeneficiaryClientReferenceId,
                 createdDate: task.createdDate,
-                status: task.status,
+                status: task.taskStatus,
                 resources: resources == null
                     ? null
                     : [

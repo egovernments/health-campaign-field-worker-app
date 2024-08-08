@@ -1,6 +1,10 @@
+## 1.0.3-dev.10
+
+* Resolved taskStatus key from task table entity
+
 ## 1.0.3-dev.9
 
-* Updated localization key for delivery resource
+* Updated localization key
 
 ## 1.0.3-dev.8
 

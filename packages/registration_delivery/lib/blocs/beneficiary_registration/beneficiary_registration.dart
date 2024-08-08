@@ -214,8 +214,6 @@ class BeneficiaryRegistrationBloc
           final household = value.householdModel;
           final address = value.householdModel?.address;
 
-          final dateOfRegistration =
-              value.projectBeneficiaryModel?.dateOfRegistration;
           if (individual == null) {
             throw const InvalidRegistrationStateException(
               'Individual cannot be null',
