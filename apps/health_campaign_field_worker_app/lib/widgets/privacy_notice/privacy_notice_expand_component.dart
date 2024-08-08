@@ -5,7 +5,7 @@ import '../../models/privacy_notice/privacy_notice_model.dart';
 import '../localized.dart';
 
 class ExpandableSection extends LocalizedStatefulWidget {
-  final Content content;
+  final ContentModel content;
 
   const ExpandableSection({
     super.key,
@@ -64,7 +64,7 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: widget.content.descriptions.asMap().entries.map((entry) {
                   int index = entry.key;
-                  Description desc = entry.value;
+                  DescriptionModel desc = entry.value;
                   int? stepNumber = desc.type == 'step' ? index + 1 : null;
                   return DescriptionWidget(
                     description: desc,
@@ -100,7 +100,7 @@ class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
     final descriptionText = widget.description.text;
     final descriptionType = widget.description.type;
     final isBold = widget.description.isBold;
-    final hasSubDescriptions = widget.description is Description && widget.description.subDescriptions != null;
+    final hasSubDescriptions = widget.description is DescriptionModel && widget.description.subDescriptions != null;
 
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, top: 8.0, bottom: 8.0),
@@ -141,7 +141,7 @@ class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
               padding: const EdgeInsets.only(left: 16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: (widget.description as Description).subDescriptions!.mapIndexed((subIndex, subDesc) {
+                children: (widget.description as DescriptionModel).subDescriptions!.mapIndexed((subIndex, subDesc) {
                   int subStepNumber = subIndex + 1;
                   return DescriptionWidget(
                     description: subDesc,

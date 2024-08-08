@@ -508,7 +508,7 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
                                           }
                                         ]
                                       };
-                                      final privacyPolicy = PrivacyPolicy.fromJson(privacyPolicyJson);
+                                      final privacyPolicy = PrivacyPolicyModel.fromJson(privacyPolicyJson);
                                       return FullPageDialog(
                                        privacyPolicy: privacyPolicy,
                                         onAccept: () {

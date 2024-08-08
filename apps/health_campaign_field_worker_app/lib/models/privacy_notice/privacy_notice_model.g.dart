@@ -6,47 +6,51 @@ part of 'privacy_notice_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PrivacyPolicyImpl _$$PrivacyPolicyImplFromJson(Map<String, dynamic> json) =>
-    _$PrivacyPolicyImpl(
+_$PrivacyPolicyModelImpl _$$PrivacyPolicyModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$PrivacyPolicyModelImpl(
       header: json['header'] as String,
       module: json['module'] as String,
       contents: (json['contents'] as List<dynamic>)
-          .map((e) => Content.fromJson(e as Map<String, dynamic>))
+          .map((e) => ContentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$PrivacyPolicyImplToJson(_$PrivacyPolicyImpl instance) =>
+Map<String, dynamic> _$$PrivacyPolicyModelImplToJson(
+        _$PrivacyPolicyModelImpl instance) =>
     <String, dynamic>{
       'header': instance.header,
       'module': instance.module,
       'contents': instance.contents,
     };
 
-_$ContentImpl _$$ContentImplFromJson(Map<String, dynamic> json) =>
-    _$ContentImpl(
+_$ContentModelImpl _$$ContentModelImplFromJson(Map<String, dynamic> json) =>
+    _$ContentModelImpl(
       header: json['header'] as String,
       descriptions: (json['descriptions'] as List<dynamic>)
-          .map((e) => Description.fromJson(e as Map<String, dynamic>))
+          .map((e) => DescriptionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$ContentImplToJson(_$ContentImpl instance) =>
+Map<String, dynamic> _$$ContentModelImplToJson(_$ContentModelImpl instance) =>
     <String, dynamic>{
       'header': instance.header,
       'descriptions': instance.descriptions,
     };
 
-_$DescriptionImpl _$$DescriptionImplFromJson(Map<String, dynamic> json) =>
-    _$DescriptionImpl(
+_$DescriptionModelImpl _$$DescriptionModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$DescriptionModelImpl(
       text: json['text'] as String,
       type: json['type'] as String?,
       isBold: json['isBold'] as bool,
       subDescriptions: (json['subDescriptions'] as List<dynamic>?)
-          ?.map((e) => SubDescription.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => SubDescriptionModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$$DescriptionImplToJson(_$DescriptionImpl instance) =>
+Map<String, dynamic> _$$DescriptionModelImplToJson(
+        _$DescriptionModelImpl instance) =>
     <String, dynamic>{
       'text': instance.text,
       'type': instance.type,
@@ -54,16 +58,17 @@ Map<String, dynamic> _$$DescriptionImplToJson(_$DescriptionImpl instance) =>
       'subDescriptions': instance.subDescriptions,
     };
 
-_$SubDescriptionImpl _$$SubDescriptionImplFromJson(Map<String, dynamic> json) =>
-    _$SubDescriptionImpl(
+_$SubDescriptionModelImpl _$$SubDescriptionModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$SubDescriptionModelImpl(
       text: json['text'] as String,
       type: json['type'] as String?,
       isBold: json['isBold'] as bool,
       isSpaceRequired: json['isSpaceRequired'] as bool,
     );
 
-Map<String, dynamic> _$$SubDescriptionImplToJson(
-        _$SubDescriptionImpl instance) =>
+Map<String, dynamic> _$$SubDescriptionModelImplToJson(
+        _$SubDescriptionModelImpl instance) =>
     <String, dynamic>{
       'text': instance.text,
       'type': instance.type,

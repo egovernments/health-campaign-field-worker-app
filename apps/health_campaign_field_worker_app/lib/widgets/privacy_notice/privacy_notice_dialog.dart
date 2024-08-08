@@ -10,7 +10,7 @@ import '../../models/privacy_notice/privacy_notice_model.dart';
 import '../showcase/showcase_wrappers.dart';
 
 class FullPageDialog extends LocalizedStatefulWidget {
-  final PrivacyPolicy privacyPolicy;
+  final PrivacyPolicyModel privacyPolicy;
   final VoidCallback onAccept;
   final VoidCallback onDecline;
 

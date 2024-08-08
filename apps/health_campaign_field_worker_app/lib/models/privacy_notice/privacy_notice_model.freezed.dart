@@ -14,35 +14,35 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-PrivacyPolicy _$PrivacyPolicyFromJson(Map<String, dynamic> json) {
-  return _PrivacyPolicy.fromJson(json);
+PrivacyPolicyModel _$PrivacyPolicyModelFromJson(Map<String, dynamic> json) {
+  return _PrivacyPolicyModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$PrivacyPolicy {
+mixin _$PrivacyPolicyModel {
   String get header => throw _privateConstructorUsedError;
   String get module => throw _privateConstructorUsedError;
-  List<Content> get contents => throw _privateConstructorUsedError;
+  List<ContentModel> get contents => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $PrivacyPolicyCopyWith<PrivacyPolicy> get copyWith =>
+  $PrivacyPolicyModelCopyWith<PrivacyPolicyModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $PrivacyPolicyCopyWith<$Res> {
-  factory $PrivacyPolicyCopyWith(
-          PrivacyPolicy value, $Res Function(PrivacyPolicy) then) =
-      _$PrivacyPolicyCopyWithImpl<$Res, PrivacyPolicy>;
+abstract class $PrivacyPolicyModelCopyWith<$Res> {
+  factory $PrivacyPolicyModelCopyWith(
+          PrivacyPolicyModel value, $Res Function(PrivacyPolicyModel) then) =
+      _$PrivacyPolicyModelCopyWithImpl<$Res, PrivacyPolicyModel>;
   @useResult
-  $Res call({String header, String module, List<Content> contents});
+  $Res call({String header, String module, List<ContentModel> contents});
 }
 
 /// @nodoc
-class _$PrivacyPolicyCopyWithImpl<$Res, $Val extends PrivacyPolicy>
-    implements $PrivacyPolicyCopyWith<$Res> {
-  _$PrivacyPolicyCopyWithImpl(this._value, this._then);
+class _$PrivacyPolicyModelCopyWithImpl<$Res, $Val extends PrivacyPolicyModel>
+    implements $PrivacyPolicyModelCopyWith<$Res> {
+  _$PrivacyPolicyModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -68,28 +68,28 @@ class _$PrivacyPolicyCopyWithImpl<$Res, $Val extends PrivacyPolicy>
       contents: null == contents
           ? _value.contents
           : contents // ignore: cast_nullable_to_non_nullable
-              as List<Content>,
+              as List<ContentModel>,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$PrivacyPolicyImplCopyWith<$Res>
-    implements $PrivacyPolicyCopyWith<$Res> {
-  factory _$$PrivacyPolicyImplCopyWith(
-          _$PrivacyPolicyImpl value, $Res Function(_$PrivacyPolicyImpl) then) =
-      __$$PrivacyPolicyImplCopyWithImpl<$Res>;
+abstract class _$$PrivacyPolicyModelImplCopyWith<$Res>
+    implements $PrivacyPolicyModelCopyWith<$Res> {
+  factory _$$PrivacyPolicyModelImplCopyWith(_$PrivacyPolicyModelImpl value,
+          $Res Function(_$PrivacyPolicyModelImpl) then) =
+      __$$PrivacyPolicyModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String header, String module, List<Content> contents});
+  $Res call({String header, String module, List<ContentModel> contents});
 }
 
 /// @nodoc
-class __$$PrivacyPolicyImplCopyWithImpl<$Res>
-    extends _$PrivacyPolicyCopyWithImpl<$Res, _$PrivacyPolicyImpl>
-    implements _$$PrivacyPolicyImplCopyWith<$Res> {
-  __$$PrivacyPolicyImplCopyWithImpl(
-      _$PrivacyPolicyImpl _value, $Res Function(_$PrivacyPolicyImpl) _then)
+class __$$PrivacyPolicyModelImplCopyWithImpl<$Res>
+    extends _$PrivacyPolicyModelCopyWithImpl<$Res, _$PrivacyPolicyModelImpl>
+    implements _$$PrivacyPolicyModelImplCopyWith<$Res> {
+  __$$PrivacyPolicyModelImplCopyWithImpl(_$PrivacyPolicyModelImpl _value,
+      $Res Function(_$PrivacyPolicyModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -99,7 +99,7 @@ class __$$PrivacyPolicyImplCopyWithImpl<$Res>
     Object? module = null,
     Object? contents = null,
   }) {
-    return _then(_$PrivacyPolicyImpl(
+    return _then(_$PrivacyPolicyModelImpl(
       header: null == header
           ? _value.header
           : header // ignore: cast_nullable_to_non_nullable
@@ -111,30 +111,30 @@ class __$$PrivacyPolicyImplCopyWithImpl<$Res>
       contents: null == contents
           ? _value._contents
           : contents // ignore: cast_nullable_to_non_nullable
-              as List<Content>,
+              as List<ContentModel>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$PrivacyPolicyImpl implements _PrivacyPolicy {
-  const _$PrivacyPolicyImpl(
+class _$PrivacyPolicyModelImpl implements _PrivacyPolicyModel {
+  const _$PrivacyPolicyModelImpl(
       {required this.header,
       required this.module,
-      required final List<Content> contents})
+      required final List<ContentModel> contents})
       : _contents = contents;
 
-  factory _$PrivacyPolicyImpl.fromJson(Map<String, dynamic> json) =>
-      _$$PrivacyPolicyImplFromJson(json);
+  factory _$PrivacyPolicyModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PrivacyPolicyModelImplFromJson(json);
 
   @override
   final String header;
   @override
   final String module;
-  final List<Content> _contents;
+  final List<ContentModel> _contents;
   @override
-  List<Content> get contents {
+  List<ContentModel> get contents {
     if (_contents is EqualUnmodifiableListView) return _contents;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_contents);
@@ -142,14 +142,14 @@ class _$PrivacyPolicyImpl implements _PrivacyPolicy {
 
   @override
   String toString() {
-    return 'PrivacyPolicy(header: $header, module: $module, contents: $contents)';
+    return 'PrivacyPolicyModel(header: $header, module: $module, contents: $contents)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$PrivacyPolicyImpl &&
+            other is _$PrivacyPolicyModelImpl &&
             (identical(other.header, header) || other.header == header) &&
             (identical(other.module, module) || other.module == module) &&
             const DeepCollectionEquality().equals(other._contents, _contents));
@@ -163,64 +163,67 @@ class _$PrivacyPolicyImpl implements _PrivacyPolicy {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$PrivacyPolicyImplCopyWith<_$PrivacyPolicyImpl> get copyWith =>
-      __$$PrivacyPolicyImplCopyWithImpl<_$PrivacyPolicyImpl>(this, _$identity);
+  _$$PrivacyPolicyModelImplCopyWith<_$PrivacyPolicyModelImpl> get copyWith =>
+      __$$PrivacyPolicyModelImplCopyWithImpl<_$PrivacyPolicyModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$PrivacyPolicyImplToJson(
+    return _$$PrivacyPolicyModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _PrivacyPolicy implements PrivacyPolicy {
-  const factory _PrivacyPolicy(
+abstract class _PrivacyPolicyModel implements PrivacyPolicyModel {
+  const factory _PrivacyPolicyModel(
       {required final String header,
       required final String module,
-      required final List<Content> contents}) = _$PrivacyPolicyImpl;
+      required final List<ContentModel> contents}) = _$PrivacyPolicyModelImpl;
 
-  factory _PrivacyPolicy.fromJson(Map<String, dynamic> json) =
-      _$PrivacyPolicyImpl.fromJson;
+  factory _PrivacyPolicyModel.fromJson(Map<String, dynamic> json) =
+      _$PrivacyPolicyModelImpl.fromJson;
 
   @override
   String get header;
   @override
   String get module;
   @override
-  List<Content> get contents;
+  List<ContentModel> get contents;
   @override
   @JsonKey(ignore: true)
-  _$$PrivacyPolicyImplCopyWith<_$PrivacyPolicyImpl> get copyWith =>
+  _$$PrivacyPolicyModelImplCopyWith<_$PrivacyPolicyModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-Content _$ContentFromJson(Map<String, dynamic> json) {
-  return _Content.fromJson(json);
+ContentModel _$ContentModelFromJson(Map<String, dynamic> json) {
+  return _ContentModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Content {
+mixin _$ContentModel {
   String get header => throw _privateConstructorUsedError;
-  List<Description> get descriptions => throw _privateConstructorUsedError;
+  List<DescriptionModel> get descriptions => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $ContentCopyWith<Content> get copyWith => throw _privateConstructorUsedError;
+  $ContentModelCopyWith<ContentModel> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $ContentCopyWith<$Res> {
-  factory $ContentCopyWith(Content value, $Res Function(Content) then) =
-      _$ContentCopyWithImpl<$Res, Content>;
+abstract class $ContentModelCopyWith<$Res> {
+  factory $ContentModelCopyWith(
+          ContentModel value, $Res Function(ContentModel) then) =
+      _$ContentModelCopyWithImpl<$Res, ContentModel>;
   @useResult
-  $Res call({String header, List<Description> descriptions});
+  $Res call({String header, List<DescriptionModel> descriptions});
 }
 
 /// @nodoc
-class _$ContentCopyWithImpl<$Res, $Val extends Content>
-    implements $ContentCopyWith<$Res> {
-  _$ContentCopyWithImpl(this._value, this._then);
+class _$ContentModelCopyWithImpl<$Res, $Val extends ContentModel>
+    implements $ContentModelCopyWith<$Res> {
+  _$ContentModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -241,27 +244,28 @@ class _$ContentCopyWithImpl<$Res, $Val extends Content>
       descriptions: null == descriptions
           ? _value.descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
-              as List<Description>,
+              as List<DescriptionModel>,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$ContentImplCopyWith<$Res> implements $ContentCopyWith<$Res> {
-  factory _$$ContentImplCopyWith(
-          _$ContentImpl value, $Res Function(_$ContentImpl) then) =
-      __$$ContentImplCopyWithImpl<$Res>;
+abstract class _$$ContentModelImplCopyWith<$Res>
+    implements $ContentModelCopyWith<$Res> {
+  factory _$$ContentModelImplCopyWith(
+          _$ContentModelImpl value, $Res Function(_$ContentModelImpl) then) =
+      __$$ContentModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String header, List<Description> descriptions});
+  $Res call({String header, List<DescriptionModel> descriptions});
 }
 
 /// @nodoc
-class __$$ContentImplCopyWithImpl<$Res>
-    extends _$ContentCopyWithImpl<$Res, _$ContentImpl>
-    implements _$$ContentImplCopyWith<$Res> {
-  __$$ContentImplCopyWithImpl(
-      _$ContentImpl _value, $Res Function(_$ContentImpl) _then)
+class __$$ContentModelImplCopyWithImpl<$Res>
+    extends _$ContentModelCopyWithImpl<$Res, _$ContentModelImpl>
+    implements _$$ContentModelImplCopyWith<$Res> {
+  __$$ContentModelImplCopyWithImpl(
+      _$ContentModelImpl _value, $Res Function(_$ContentModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -270,7 +274,7 @@ class __$$ContentImplCopyWithImpl<$Res>
     Object? header = null,
     Object? descriptions = null,
   }) {
-    return _then(_$ContentImpl(
+    return _then(_$ContentModelImpl(
       header: null == header
           ? _value.header
           : header // ignore: cast_nullable_to_non_nullable
@@ -278,26 +282,27 @@ class __$$ContentImplCopyWithImpl<$Res>
       descriptions: null == descriptions
           ? _value._descriptions
           : descriptions // ignore: cast_nullable_to_non_nullable
-              as List<Description>,
+              as List<DescriptionModel>,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$ContentImpl implements _Content {
-  const _$ContentImpl(
-      {required this.header, required final List<Description> descriptions})
+class _$ContentModelImpl implements _ContentModel {
+  const _$ContentModelImpl(
+      {required this.header,
+      required final List<DescriptionModel> descriptions})
       : _descriptions = descriptions;
 
-  factory _$ContentImpl.fromJson(Map<String, dynamic> json) =>
-      _$$ContentImplFromJson(json);
+  factory _$ContentModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ContentModelImplFromJson(json);
 
   @override
   final String header;
-  final List<Description> _descriptions;
+  final List<DescriptionModel> _descriptions;
   @override
-  List<Description> get descriptions {
+  List<DescriptionModel> get descriptions {
     if (_descriptions is EqualUnmodifiableListView) return _descriptions;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_descriptions);
@@ -305,14 +310,14 @@ class _$ContentImpl implements _Content {
 
   @override
   String toString() {
-    return 'Content(header: $header, descriptions: $descriptions)';
+    return 'ContentModel(header: $header, descriptions: $descriptions)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$ContentImpl &&
+            other is _$ContentModelImpl &&
             (identical(other.header, header) || other.header == header) &&
             const DeepCollectionEquality()
                 .equals(other._descriptions, _descriptions));
@@ -326,69 +331,70 @@ class _$ContentImpl implements _Content {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$ContentImplCopyWith<_$ContentImpl> get copyWith =>
-      __$$ContentImplCopyWithImpl<_$ContentImpl>(this, _$identity);
+  _$$ContentModelImplCopyWith<_$ContentModelImpl> get copyWith =>
+      __$$ContentModelImplCopyWithImpl<_$ContentModelImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ContentImplToJson(
+    return _$$ContentModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _Content implements Content {
-  const factory _Content(
+abstract class _ContentModel implements ContentModel {
+  const factory _ContentModel(
       {required final String header,
-      required final List<Description> descriptions}) = _$ContentImpl;
+      required final List<DescriptionModel> descriptions}) = _$ContentModelImpl;
 
-  factory _Content.fromJson(Map<String, dynamic> json) = _$ContentImpl.fromJson;
+  factory _ContentModel.fromJson(Map<String, dynamic> json) =
+      _$ContentModelImpl.fromJson;
 
   @override
   String get header;
   @override
-  List<Description> get descriptions;
+  List<DescriptionModel> get descriptions;
   @override
   @JsonKey(ignore: true)
-  _$$ContentImplCopyWith<_$ContentImpl> get copyWith =>
+  _$$ContentModelImplCopyWith<_$ContentModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-Description _$DescriptionFromJson(Map<String, dynamic> json) {
-  return _Description.fromJson(json);
+DescriptionModel _$DescriptionModelFromJson(Map<String, dynamic> json) {
+  return _DescriptionModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$Description {
+mixin _$DescriptionModel {
   String get text => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
   bool get isBold => throw _privateConstructorUsedError;
-  List<SubDescription>? get subDescriptions =>
+  List<SubDescriptionModel>? get subDescriptions =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $DescriptionCopyWith<Description> get copyWith =>
+  $DescriptionModelCopyWith<DescriptionModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $DescriptionCopyWith<$Res> {
-  factory $DescriptionCopyWith(
-          Description value, $Res Function(Description) then) =
-      _$DescriptionCopyWithImpl<$Res, Description>;
+abstract class $DescriptionModelCopyWith<$Res> {
+  factory $DescriptionModelCopyWith(
+          DescriptionModel value, $Res Function(DescriptionModel) then) =
+      _$DescriptionModelCopyWithImpl<$Res, DescriptionModel>;
   @useResult
   $Res call(
       {String text,
       String? type,
       bool isBold,
-      List<SubDescription>? subDescriptions});
+      List<SubDescriptionModel>? subDescriptions});
 }
 
 /// @nodoc
-class _$DescriptionCopyWithImpl<$Res, $Val extends Description>
-    implements $DescriptionCopyWith<$Res> {
-  _$DescriptionCopyWithImpl(this._value, this._then);
+class _$DescriptionModelCopyWithImpl<$Res, $Val extends DescriptionModel>
+    implements $DescriptionModelCopyWith<$Res> {
+  _$DescriptionModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -419,32 +425,32 @@ class _$DescriptionCopyWithImpl<$Res, $Val extends Description>
       subDescriptions: freezed == subDescriptions
           ? _value.subDescriptions
           : subDescriptions // ignore: cast_nullable_to_non_nullable
-              as List<SubDescription>?,
+              as List<SubDescriptionModel>?,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$DescriptionImplCopyWith<$Res>
-    implements $DescriptionCopyWith<$Res> {
-  factory _$$DescriptionImplCopyWith(
-          _$DescriptionImpl value, $Res Function(_$DescriptionImpl) then) =
-      __$$DescriptionImplCopyWithImpl<$Res>;
+abstract class _$$DescriptionModelImplCopyWith<$Res>
+    implements $DescriptionModelCopyWith<$Res> {
+  factory _$$DescriptionModelImplCopyWith(_$DescriptionModelImpl value,
+          $Res Function(_$DescriptionModelImpl) then) =
+      __$$DescriptionModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
       {String text,
       String? type,
       bool isBold,
-      List<SubDescription>? subDescriptions});
+      List<SubDescriptionModel>? subDescriptions});
 }
 
 /// @nodoc
-class __$$DescriptionImplCopyWithImpl<$Res>
-    extends _$DescriptionCopyWithImpl<$Res, _$DescriptionImpl>
-    implements _$$DescriptionImplCopyWith<$Res> {
-  __$$DescriptionImplCopyWithImpl(
-      _$DescriptionImpl _value, $Res Function(_$DescriptionImpl) _then)
+class __$$DescriptionModelImplCopyWithImpl<$Res>
+    extends _$DescriptionModelCopyWithImpl<$Res, _$DescriptionModelImpl>
+    implements _$$DescriptionModelImplCopyWith<$Res> {
+  __$$DescriptionModelImplCopyWithImpl(_$DescriptionModelImpl _value,
+      $Res Function(_$DescriptionModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -455,7 +461,7 @@ class __$$DescriptionImplCopyWithImpl<$Res>
     Object? isBold = null,
     Object? subDescriptions = freezed,
   }) {
-    return _then(_$DescriptionImpl(
+    return _then(_$DescriptionModelImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -471,23 +477,23 @@ class __$$DescriptionImplCopyWithImpl<$Res>
       subDescriptions: freezed == subDescriptions
           ? _value._subDescriptions
           : subDescriptions // ignore: cast_nullable_to_non_nullable
-              as List<SubDescription>?,
+              as List<SubDescriptionModel>?,
     ));
   }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$DescriptionImpl implements _Description {
-  const _$DescriptionImpl(
+class _$DescriptionModelImpl implements _DescriptionModel {
+  const _$DescriptionModelImpl(
       {required this.text,
       this.type,
       required this.isBold,
-      final List<SubDescription>? subDescriptions})
+      final List<SubDescriptionModel>? subDescriptions})
       : _subDescriptions = subDescriptions;
 
-  factory _$DescriptionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$DescriptionImplFromJson(json);
+  factory _$DescriptionModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$DescriptionModelImplFromJson(json);
 
   @override
   final String text;
@@ -495,9 +501,9 @@ class _$DescriptionImpl implements _Description {
   final String? type;
   @override
   final bool isBold;
-  final List<SubDescription>? _subDescriptions;
+  final List<SubDescriptionModel>? _subDescriptions;
   @override
-  List<SubDescription>? get subDescriptions {
+  List<SubDescriptionModel>? get subDescriptions {
     final value = _subDescriptions;
     if (value == null) return null;
     if (_subDescriptions is EqualUnmodifiableListView) return _subDescriptions;
@@ -507,14 +513,14 @@ class _$DescriptionImpl implements _Description {
 
   @override
   String toString() {
-    return 'Description(text: $text, type: $type, isBold: $isBold, subDescriptions: $subDescriptions)';
+    return 'DescriptionModel(text: $text, type: $type, isBold: $isBold, subDescriptions: $subDescriptions)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DescriptionImpl &&
+            other is _$DescriptionModelImpl &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.isBold, isBold) || other.isBold == isBold) &&
@@ -530,26 +536,28 @@ class _$DescriptionImpl implements _Description {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$DescriptionImplCopyWith<_$DescriptionImpl> get copyWith =>
-      __$$DescriptionImplCopyWithImpl<_$DescriptionImpl>(this, _$identity);
+  _$$DescriptionModelImplCopyWith<_$DescriptionModelImpl> get copyWith =>
+      __$$DescriptionModelImplCopyWithImpl<_$DescriptionModelImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DescriptionImplToJson(
+    return _$$DescriptionModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _Description implements Description {
-  const factory _Description(
-      {required final String text,
-      final String? type,
-      required final bool isBold,
-      final List<SubDescription>? subDescriptions}) = _$DescriptionImpl;
+abstract class _DescriptionModel implements DescriptionModel {
+  const factory _DescriptionModel(
+          {required final String text,
+          final String? type,
+          required final bool isBold,
+          final List<SubDescriptionModel>? subDescriptions}) =
+      _$DescriptionModelImpl;
 
-  factory _Description.fromJson(Map<String, dynamic> json) =
-      _$DescriptionImpl.fromJson;
+  factory _DescriptionModel.fromJson(Map<String, dynamic> json) =
+      _$DescriptionModelImpl.fromJson;
 
   @override
   String get text;
@@ -558,19 +566,19 @@ abstract class _Description implements Description {
   @override
   bool get isBold;
   @override
-  List<SubDescription>? get subDescriptions;
+  List<SubDescriptionModel>? get subDescriptions;
   @override
   @JsonKey(ignore: true)
-  _$$DescriptionImplCopyWith<_$DescriptionImpl> get copyWith =>
+  _$$DescriptionModelImplCopyWith<_$DescriptionModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
-SubDescription _$SubDescriptionFromJson(Map<String, dynamic> json) {
-  return _SubDescription.fromJson(json);
+SubDescriptionModel _$SubDescriptionModelFromJson(Map<String, dynamic> json) {
+  return _SubDescriptionModel.fromJson(json);
 }
 
 /// @nodoc
-mixin _$SubDescription {
+mixin _$SubDescriptionModel {
   String get text => throw _privateConstructorUsedError;
   String? get type => throw _privateConstructorUsedError;
   bool get isBold => throw _privateConstructorUsedError;
@@ -578,23 +586,23 @@ mixin _$SubDescription {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $SubDescriptionCopyWith<SubDescription> get copyWith =>
+  $SubDescriptionModelCopyWith<SubDescriptionModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SubDescriptionCopyWith<$Res> {
-  factory $SubDescriptionCopyWith(
-          SubDescription value, $Res Function(SubDescription) then) =
-      _$SubDescriptionCopyWithImpl<$Res, SubDescription>;
+abstract class $SubDescriptionModelCopyWith<$Res> {
+  factory $SubDescriptionModelCopyWith(
+          SubDescriptionModel value, $Res Function(SubDescriptionModel) then) =
+      _$SubDescriptionModelCopyWithImpl<$Res, SubDescriptionModel>;
   @useResult
   $Res call({String text, String? type, bool isBold, bool isSpaceRequired});
 }
 
 /// @nodoc
-class _$SubDescriptionCopyWithImpl<$Res, $Val extends SubDescription>
-    implements $SubDescriptionCopyWith<$Res> {
-  _$SubDescriptionCopyWithImpl(this._value, this._then);
+class _$SubDescriptionModelCopyWithImpl<$Res, $Val extends SubDescriptionModel>
+    implements $SubDescriptionModelCopyWith<$Res> {
+  _$SubDescriptionModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -631,22 +639,22 @@ class _$SubDescriptionCopyWithImpl<$Res, $Val extends SubDescription>
 }
 
 /// @nodoc
-abstract class _$$SubDescriptionImplCopyWith<$Res>
-    implements $SubDescriptionCopyWith<$Res> {
-  factory _$$SubDescriptionImplCopyWith(_$SubDescriptionImpl value,
-          $Res Function(_$SubDescriptionImpl) then) =
-      __$$SubDescriptionImplCopyWithImpl<$Res>;
+abstract class _$$SubDescriptionModelImplCopyWith<$Res>
+    implements $SubDescriptionModelCopyWith<$Res> {
+  factory _$$SubDescriptionModelImplCopyWith(_$SubDescriptionModelImpl value,
+          $Res Function(_$SubDescriptionModelImpl) then) =
+      __$$SubDescriptionModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String text, String? type, bool isBold, bool isSpaceRequired});
 }
 
 /// @nodoc
-class __$$SubDescriptionImplCopyWithImpl<$Res>
-    extends _$SubDescriptionCopyWithImpl<$Res, _$SubDescriptionImpl>
-    implements _$$SubDescriptionImplCopyWith<$Res> {
-  __$$SubDescriptionImplCopyWithImpl(
-      _$SubDescriptionImpl _value, $Res Function(_$SubDescriptionImpl) _then)
+class __$$SubDescriptionModelImplCopyWithImpl<$Res>
+    extends _$SubDescriptionModelCopyWithImpl<$Res, _$SubDescriptionModelImpl>
+    implements _$$SubDescriptionModelImplCopyWith<$Res> {
+  __$$SubDescriptionModelImplCopyWithImpl(_$SubDescriptionModelImpl _value,
+      $Res Function(_$SubDescriptionModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -657,7 +665,7 @@ class __$$SubDescriptionImplCopyWithImpl<$Res>
     Object? isBold = null,
     Object? isSpaceRequired = null,
   }) {
-    return _then(_$SubDescriptionImpl(
+    return _then(_$SubDescriptionModelImpl(
       text: null == text
           ? _value.text
           : text // ignore: cast_nullable_to_non_nullable
@@ -680,15 +688,15 @@ class __$$SubDescriptionImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$SubDescriptionImpl implements _SubDescription {
-  const _$SubDescriptionImpl(
+class _$SubDescriptionModelImpl implements _SubDescriptionModel {
+  const _$SubDescriptionModelImpl(
       {required this.text,
       this.type,
       required this.isBold,
       required this.isSpaceRequired});
 
-  factory _$SubDescriptionImpl.fromJson(Map<String, dynamic> json) =>
-      _$$SubDescriptionImplFromJson(json);
+  factory _$SubDescriptionModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SubDescriptionModelImplFromJson(json);
 
   @override
   final String text;
@@ -701,14 +709,14 @@ class _$SubDescriptionImpl implements _SubDescription {
 
   @override
   String toString() {
-    return 'SubDescription(text: $text, type: $type, isBold: $isBold, isSpaceRequired: $isSpaceRequired)';
+    return 'SubDescriptionModel(text: $text, type: $type, isBold: $isBold, isSpaceRequired: $isSpaceRequired)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SubDescriptionImpl &&
+            other is _$SubDescriptionModelImpl &&
             (identical(other.text, text) || other.text == text) &&
             (identical(other.type, type) || other.type == type) &&
             (identical(other.isBold, isBold) || other.isBold == isBold) &&
@@ -724,27 +732,27 @@ class _$SubDescriptionImpl implements _SubDescription {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SubDescriptionImplCopyWith<_$SubDescriptionImpl> get copyWith =>
-      __$$SubDescriptionImplCopyWithImpl<_$SubDescriptionImpl>(
+  _$$SubDescriptionModelImplCopyWith<_$SubDescriptionModelImpl> get copyWith =>
+      __$$SubDescriptionModelImplCopyWithImpl<_$SubDescriptionModelImpl>(
           this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SubDescriptionImplToJson(
+    return _$$SubDescriptionModelImplToJson(
       this,
     );
   }
 }
 
-abstract class _SubDescription implements SubDescription {
-  const factory _SubDescription(
+abstract class _SubDescriptionModel implements SubDescriptionModel {
+  const factory _SubDescriptionModel(
       {required final String text,
       final String? type,
       required final bool isBold,
-      required final bool isSpaceRequired}) = _$SubDescriptionImpl;
+      required final bool isSpaceRequired}) = _$SubDescriptionModelImpl;
 
-  factory _SubDescription.fromJson(Map<String, dynamic> json) =
-      _$SubDescriptionImpl.fromJson;
+  factory _SubDescriptionModel.fromJson(Map<String, dynamic> json) =
+      _$SubDescriptionModelImpl.fromJson;
 
   @override
   String get text;
@@ -756,6 +764,6 @@ abstract class _SubDescription implements SubDescription {
   bool get isSpaceRequired;
   @override
   @JsonKey(ignore: true)
-  _$$SubDescriptionImplCopyWith<_$SubDescriptionImpl> get copyWith =>
+  _$$SubDescriptionModelImplCopyWith<_$SubDescriptionModelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

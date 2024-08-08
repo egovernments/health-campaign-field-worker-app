@@ -4,46 +4,46 @@ part 'privacy_notice_model.freezed.dart';
 part 'privacy_notice_model.g.dart';
 
 @freezed
-class PrivacyPolicy with _$PrivacyPolicy {
-  const factory PrivacyPolicy({
+class PrivacyPolicyModel with _$PrivacyPolicyModel {
+  const factory PrivacyPolicyModel({
     required String header,
     required String module,
-    required List<Content> contents,
-  }) = _PrivacyPolicy;
+    required List<ContentModel> contents,
+  }) = _PrivacyPolicyModel;
 
-  factory PrivacyPolicy.fromJson(Map<String, dynamic> json) => _$PrivacyPolicyFromJson(json);
+  factory PrivacyPolicyModel.fromJson(Map<String, dynamic> json) => _$PrivacyPolicyModelFromJson(json);
 }
 
 @freezed
-class Content with _$Content {
-  const factory Content({
+class ContentModel with _$ContentModel {
+  const factory ContentModel({
     required String header,
-    required List<Description> descriptions,
-  }) = _Content;
+    required List<DescriptionModel> descriptions,
+  }) = _ContentModel;
 
-  factory Content.fromJson(Map<String, dynamic> json) => _$ContentFromJson(json);
+  factory ContentModel.fromJson(Map<String, dynamic> json) => _$ContentModelFromJson(json);
 }
 
 @freezed
-class Description with _$Description {
-  const factory Description({
+class DescriptionModel with _$DescriptionModel {
+  const factory DescriptionModel({
     required String text,
     String? type,
     required bool isBold,
-    List<SubDescription>? subDescriptions,
-  }) = _Description;
+    List<SubDescriptionModel>? subDescriptions,
+  }) = _DescriptionModel;
 
-  factory Description.fromJson(Map<String, dynamic> json) => _$DescriptionFromJson(json);
+  factory DescriptionModel.fromJson(Map<String, dynamic> json) => _$DescriptionModelFromJson(json);
 }
 
 @freezed
-class SubDescription with _$SubDescription {
-  const factory SubDescription({
+class SubDescriptionModel with _$SubDescriptionModel {
+  const factory SubDescriptionModel({
     required String text,
     String? type,
     required bool isBold,
     required bool isSpaceRequired,
-  }) = _SubDescription;
+  }) = _SubDescriptionModel;
 
-  factory SubDescription.fromJson(Map<String, dynamic> json) => _$SubDescriptionFromJson(json);
+  factory SubDescriptionModel.fromJson(Map<String, dynamic> json) => _$SubDescriptionModelFromJson(json);
 }

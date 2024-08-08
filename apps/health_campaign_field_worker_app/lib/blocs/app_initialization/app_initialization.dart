@@ -107,7 +107,8 @@ class AppInitializationBloc
                   moduleName: ModuleEnums.commonMasters.toValue(),
                   masterDetails: getMasterDetailsModel([
                     MasterEnums.stateInfo.toValue(),
-                    MasterEnums.genderType.toValue()
+                    MasterEnums.genderType.toValue(),
+                    MasterEnums.privacyPolicy.toValue(),
                   ]),
                 ),
                 MdmsModuleDetailModel(
