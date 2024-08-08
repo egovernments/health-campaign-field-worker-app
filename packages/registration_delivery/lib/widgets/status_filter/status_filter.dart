@@ -10,10 +10,16 @@ import '../../utils/i18_key_constants.dart' as i18;
 
 class StatusFilter extends LocalizedStatefulWidget {
   final List<String>? selectedFilters;
+  final bool isCloseIcon;
+  final Icon? titleIcon;
+  final String? titleText;
 
   const StatusFilter({
     super.key,
     super.appLocalizations,
+    this.isCloseIcon = false,
+    this.titleIcon,
+    this.titleText,
     this.selectedFilters,
   });
 
@@ -39,10 +45,13 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
         mainAxisSize: MainAxisSize.min,
         children: isLoading
             ? [
-                Icon(
-                  Icons.autorenew,
-                  color: const DigitColors().burningOrange,
-                  size: kPadding * 4,
+                Padding(
+                  padding: const EdgeInsets.only(top: kPadding*2),
+                  child: Icon(
+                    Icons.autorenew,
+                    color: const DigitColors().burningOrange,
+                    size: kPadding * 4,
+                  ),
                 ),
                 const SizedBox(height: kPadding * 2),
                 Center(
@@ -54,67 +63,98 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                 )
               ]
             : [
-                SelectionBox<Status>(
-                  options: getFilters() ?? [],
-                  allowMultipleSelection: false,
-                  equalWidthOptions: true,
-                  initialSelection: [...selectedButtons],
-                  onSelectionChanged: (selected) {
-                    setState(() {
-                      selectedButtons = selected;
-                    });
-                  },
-                  valueMapper: (value) {
-                    return localizations.translate(value.toValue().toString());
-                  },
+                Row(
+                  children: [
+                    if (widget.titleIcon != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: widget.titleIcon!,
+                      ),
+                    ],
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: kPadding),
+                        child: Text(
+                          widget.titleText!,
+                          textAlign: TextAlign.left,
+                          style: DigitTheme.instance.mobileTheme.textTheme.headlineMedium,
+                        ),
+                      ),
+                    ),
+                    if (widget.isCloseIcon)
+                      InkWell(
+                        onTap: () => Navigator.of(context).pop(),
+                        child: const Icon(Icons.close),
+                      ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(kPadding),
+                  child: SelectionBox<Status>(
+                    options: getFilters() ?? [],
+                    allowMultipleSelection: false,
+                    equalWidthOptions: true,
+                    initialSelection: [...selectedButtons],
+                    onSelectionChanged: (selected) {
+                      setState(() {
+                        selectedButtons = selected;
+                      });
+                    },
+                    valueMapper: (value) {
+                      return localizations.translate(value.toValue().toString());
+                    },
+                  ),
                 ),
                 const SizedBox(
                   height: kPadding,
                 ),
-                Row(
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceEvenly, // Adjust button spacing
-                  children: [
-                    Expanded(
-                      child: DigitOutLineButton(
-                          label: localizations.translate(
-                            i18.searchBeneficiary.clearFilter,
-                          ),
-                          onPressed: selectedButtons.isEmpty
-                              ? null
-                              : () {
-                                  setState(() {
-                                    selectedButtons.clear();
-                                  });
-                                }),
-                    ),
-                    const SizedBox(
-                      width: kPadding / 2,
-                    ),
-                    Expanded(
-                      child: DigitElevatedButton(
-                          onPressed: selectedButtons.isEmpty
-                              ? null
-                              : () {
-                                  setState(() {
-                                    isLoading = true;
-                                  });
-                                  var selected = selectedButtons
-                                      .map((e) => e.name)
-                                      .toList();
-
-                                  Future.delayed(const Duration(seconds: 1),
-                                      () {
-                                    Navigator.pop(context, selected);
-                                  });
-                                },
-                          child: Text(
-                            localizations.translate(
-                              i18.searchBeneficiary.applyFilter,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: kPadding),
+                  child: Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly, // Adjust button spacing
+                    children: [
+                      Expanded(
+                        child: DigitOutLineButton(
+                            label: localizations.translate(
+                              i18.searchBeneficiary.clearFilter,
                             ),
-                          )),
-                    ),
-                  ],
+                            onPressed: selectedButtons.isEmpty
+                                ? null
+                                : () {
+                                    setState(() {
+                                      selectedButtons.clear();
+                                    });
+                                  }),
+                      ),
+                      const SizedBox(
+                        width: kPadding,
+                      ),
+                      Expanded(
+                        child: DigitElevatedButton(
+                            onPressed: selectedButtons.isEmpty
+                                ? null
+                                : () {
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    var selected = selectedButtons
+                                        .map((e) => e.name)
+                                        .toList();
+
+                                    Future.delayed(const Duration(seconds: 1),
+                                        () {
+                                      Navigator.pop(context, selected);
+                                    });
+                                  },
+                            child: Text(
+                              localizations.translate(
+                                i18.searchBeneficiary.applyFilter,
+                              ),
+                            )),
+                      ),
+                    ],
+                  ),
                 )
               ],
       ),

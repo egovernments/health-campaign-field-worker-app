@@ -93,7 +93,7 @@ class _HouseholdOverviewPageState
                                         i18.memberCard
                                             .deliverDetailsUpdateLabel,
                                       ),
-                                      onPressed: state.householdMemberWrapper.tasks?.last.status == Status.administeredSuccess.toValue() ? null :() {
+                                      onPressed: state.householdMemberWrapper.tasks?.last.taskStatus == Status.administeredSuccess.toValue() ? null :() {
                                         serviceDefinitionState.when(
                                             empty: () {},
                                             isloading: () {},
