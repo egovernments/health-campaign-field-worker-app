@@ -1,14 +1,7 @@
-## 1.0.3-dev.11
-
-* Resolved taskStatus in household global search
-
-## 1.0.3-dev.10
-
-* Resolved taskStatus key from task table entity
-
 ## 1.0.3-dev.9
 
-* Updated localization key
+* Updated localization key 
+* Resolved taskStatus key from task table entity
 
 ## 1.0.3-dev.8
 
