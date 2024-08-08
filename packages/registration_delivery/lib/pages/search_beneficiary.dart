@@ -470,12 +470,13 @@ class _SearchBeneficiaryPageState
   showFilterDialog() async {
     var filters = await DigitDialog.show(context,
         options: DigitDialogOptions(
-          isCloseIcon: true,
+          titlePadding: EdgeInsets.zero,
+          dialogPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          titleIcon: Icon(getFilterIconNLabel()['icon'],
+          content: StatusFilter(selectedFilters: selectedFilters, titleIcon: Icon(getFilterIconNLabel()['icon'],
               color: const DigitColors().burningOrange),
-          titleText: getFilterIconNLabel()['label'],
-          content: StatusFilter(selectedFilters: selectedFilters),
+            titleText: getFilterIconNLabel()['label'],  isCloseIcon: true,),
         ));
 
     if (filters != null && filters.isNotEmpty) {
