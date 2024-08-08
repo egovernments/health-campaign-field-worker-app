@@ -1,3 +1,4 @@
+import 'package:digit_dss/digit_dss.dart';
 import 'package:isar/isar.dart';
 
 import '../../../../models/privacy_notice/privacy_notice_model.dart';

@@ -119,6 +119,7 @@ class Common {
   String get coreCommonSummaryDetails => 'CORE_COMMON_SUMMARY_DETAILS';
 
   String get metersNear => 'METERS_NEAR';
+  String get coreCommonLoadingText => 'CORE_COMMON_LOADING_TEXT';
 }
 
 class SearchBeneficiary {
@@ -522,6 +523,8 @@ class DeliverIntervention {
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+  String get deliveryCommentHeading =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_HEADING';
 
   String get deliveryDetailsLabel =>
       'DELIVER_INTERVENTION_DELIVERY_DETAILS_LABEL';

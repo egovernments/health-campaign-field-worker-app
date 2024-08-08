@@ -431,7 +431,10 @@ class BeneficiaryRegistrationBloc
           );
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId: [event.household.clientReferenceId],
+              beneficiaryClientReferenceId:
+                  beneficiaryType == BeneficiaryType.individual //[TODO: need to check with individual downsync data. Current implementation works only for household. Parking this for IRS]
+                      ? [value.individualModel.first.clientReferenceId]
+                      : [event.household.clientReferenceId],
             ),
           );
 
@@ -504,6 +507,8 @@ class BeneficiaryRegistrationBloc
           emit(
             BeneficiaryRegistrationPersistedState(
               householdModel: value.householdModel,
+              isEdit : true,
+
             ),
           );
         } catch (error) {
@@ -549,7 +554,7 @@ class BeneficiaryRegistrationBloc
             }
             var task = await taskDataRepository.search(TaskSearchModel(
               projectBeneficiaryClientReferenceId:
-              projectBeneficiary.map((e) => e.clientReferenceId).toList(),
+                  projectBeneficiary.map((e) => e.clientReferenceId).toList(),
             ));
 
             if (task.isNotEmpty) {
@@ -751,6 +756,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     required DateTime registrationDate,
     ProjectBeneficiaryModel? projectBeneficiaryModel,
     @Default(false) bool loading,
+    IndividualModel? headOfHousehold,
   }) = BeneficiaryRegistrationEditHouseholdState;
 
   const factory BeneficiaryRegistrationState.editIndividual({
@@ -775,6 +781,7 @@ class BeneficiaryRegistrationState with _$BeneficiaryRegistrationState {
     DateTime? registrationDate,
     AddressModel? addressModel,
     @Default(false) bool loading,
+    @Default(false) bool isEdit,
     @Default(false) bool isHeadOfHousehold,
   }) = BeneficiaryRegistrationPersistedState;
 

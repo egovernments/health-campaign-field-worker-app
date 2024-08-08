@@ -12,6 +12,7 @@ const complaints = Complaints();
 const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
+const dashBoard = Dashboard();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -593,6 +594,7 @@ class Home {
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
+  String get dashboard => 'HOME_DASHBOARD_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 
@@ -1051,4 +1053,10 @@ class PrivacyPolicy {
   String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
   String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
 
+}
+
+class Dashboard {
+  const Dashboard();
+
+  String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
 }

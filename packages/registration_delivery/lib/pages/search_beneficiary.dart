@@ -79,7 +79,8 @@ class _SearchBeneficiaryPageState
           onNotification: (scrollNotification) {
             if (scrollNotification is ScrollUpdateNotification) {
               final metrics = scrollNotification.metrics;
-              if (metrics.atEdge && metrics.pixels != 0) {triggerGlobalSearchEvent(isPagination: true);
+              if (metrics.atEdge && metrics.pixels != 0) {
+                triggerGlobalSearchEvent(isPagination: true);
               }
             }
             return true;
@@ -162,7 +163,8 @@ class _SearchBeneficiaryPageState
                                 ),
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
-                                  if(value.isEmpty || value.trim().length > 2){
+                                  if (value.isEmpty ||
+                                      value.trim().length > 2) {
                                     triggerGlobalSearchEvent();
                                   }
                                 },
@@ -186,7 +188,7 @@ class _SearchBeneficiaryPageState
                                       child: SizedBox(
                                         height:
                                             MediaQuery.of(context).size.height *
-                                                0.05,
+                                                0.06,
                                         child: ListView.builder(
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
@@ -219,7 +221,7 @@ class _SearchBeneficiaryPageState
                                                                 color: const DigitColors()
                                                                     .davyGray)),
                                                         Text(
-                                                            ' (${searchHouseholdsState.householdMembers.length}-${searchHouseholdsState.totalResults})',
+                                                            ' (${searchHouseholdsState.totalResults})',
                                                             style: TextStyle(
                                                                 color: const DigitColors()
                                                                     .davyGray)),
@@ -346,17 +348,19 @@ class _SearchBeneficiaryPageState
                                     BeneficiaryRegistrationWrapperRoute(
                                       initialState: BeneficiaryRegistrationState
                                           .editHousehold(
-                                        householdModel: i.household!,
-                                        individualModel: i.members!,
-                                        registrationDate: DateTime.now(),
-                                        projectBeneficiaryModel:
-                                            (i.projectBeneficiaries ?? [])
-                                                    .isNotEmpty
-                                                ? i.projectBeneficiaries?.last
-                                                : null,
-                                        addressModel:
-                                            i.headOfHousehold!.address!.last,
-                                      ),
+                                              householdModel: i.household!,
+                                              individualModel: i.members!,
+                                              registrationDate: DateTime.now(),
+                                              projectBeneficiaryModel:
+                                                  (i.projectBeneficiaries ?? [])
+                                                          .isNotEmpty
+                                                      ? i.projectBeneficiaries
+                                                          ?.last
+                                                      : null,
+                                              addressModel: i.headOfHousehold!
+                                                  .address!.last,
+                                              headOfHousehold:
+                                                  i.headOfHousehold),
                                     ),
                                   );
                                 } else {
@@ -466,12 +470,13 @@ class _SearchBeneficiaryPageState
   showFilterDialog() async {
     var filters = await DigitDialog.show(context,
         options: DigitDialogOptions(
-          isCloseIcon: true,
+          titlePadding: EdgeInsets.zero,
+          dialogPadding: EdgeInsets.zero,
+          contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          titleIcon: Icon(getFilterIconNLabel()['icon'],
+          content: StatusFilter(selectedFilters: selectedFilters, titleIcon: Icon(getFilterIconNLabel()['icon'],
               color: const DigitColors().burningOrange),
-          titleText: getFilterIconNLabel()['label'],
-          content: StatusFilter(selectedFilters: selectedFilters),
+            titleText: getFilterIconNLabel()['label'],  isCloseIcon: true,),
         ));
 
     if (filters != null && filters.isNotEmpty) {
@@ -491,15 +496,15 @@ class _SearchBeneficiaryPageState
     }
   }
 
-  void triggerGlobalSearchEvent( {bool isPagination = false}) {
-    if(!isPagination){
+  void triggerGlobalSearchEvent({bool isPagination = false}) {
+    if (!isPagination) {
       blocWrapper.clearEvent();
     }
     if (RegistrationDeliverySingleton().beneficiaryType ==
         BeneficiaryType.individual) {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty ) {
+          searchController.text.isNotEmpty) {
         blocWrapper.individualGlobalSearchBloc
             .add(SearchHouseholdsEvent.individualGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
@@ -507,16 +512,22 @@ class _SearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2 ? searchController.text.trim() : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
-                  offset: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.offset: offset,
-                  limit: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.limit: limit,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
         )));
       }
     } else {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
-          searchController.text.isNotEmpty ) {
+          searchController.text.isNotEmpty) {
         blocWrapper.houseHoldGlobalSearchBloc
             .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
@@ -524,10 +535,16 @@ class _SearchBeneficiaryPageState
           latitude: lat,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2 ? searchController.text.trim() : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
-          offset: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.offset: offset,
-          limit: isPagination ? blocWrapper.houseHoldGlobalSearchBloc.state.limit: limit,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
         )));
       }
     }

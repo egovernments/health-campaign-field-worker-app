@@ -17,9 +17,9 @@ enum Status {
   beneficiaryRefused,
   @MappableValue("BENEFICIARY_REFERRED")
   beneficiaryReferred,
-  @MappableValue("ADMINISTERED_SUCCESS")
+  @MappableValue("ADMINISTRATION_SUCCESS")
   administeredSuccess,
-  @MappableValue("ADMINISTERED_FAILED")
+  @MappableValue("ADMINISTRATION_FAILED")
   administeredFailed,
   @MappableValue("IN_COMPLETE")
   inComplete,
