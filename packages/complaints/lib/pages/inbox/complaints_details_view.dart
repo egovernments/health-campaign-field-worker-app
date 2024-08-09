@@ -1,14 +1,16 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../blocs/localization/app_localization.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
+import '/blocs/localization/app_localization.dart';
+import '/router/complaints_router.dart';
+import '/utils/i18_key_constants.dart' as i18;
+import '/utils/utils.dart';
+import '/widgets/header/back_navigation_help_header.dart';
 
 @RoutePage()
 class ComplaintsDetailsViewPage extends StatelessWidget {
@@ -23,7 +25,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final router = context.router;
     final theme = Theme.of(context);
-    final localizations = AppLocalizations.of(context);
+    final localizations = ComplaintsLocalization.of(context);
 
     return Scaffold(
       body: ScrollableContent(

@@ -1,7 +1,10 @@
+@MappableLib(
+  generateInitializerForScope: InitializerScope.package,
+)
+
 library complaints;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+
+import 'package:dart_mappable/dart_mappable.dart';
+export 'pages/inbox/complaints_inbox_wrapper.dart';
+export 'utils/utils.dart';

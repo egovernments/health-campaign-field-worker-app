@@ -1,17 +1,20 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:recase/recase.dart';
 
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
-import '../../../blocs/localization/app_localization.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
-import '../../../widgets/no_result_card/no_result_card.dart';
+import '/blocs/complaints_inbox/complaints_inbox.dart';
+import '/blocs/localization/app_localization.dart';
+import '/router/complaints_router.dart';
+import '/utils/i18_key_constants.dart' as i18;
+import '/utils/utils.dart';
+import '/widgets/header/back_navigation_help_header.dart';
+import '/widgets/localized.dart';
+import '/widgets/no_result_card/no_result_card.dart';
 
 @RoutePage()
 class ComplaintsInboxPage extends LocalizedStatefulWidget {
@@ -34,7 +37,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
           final inboxItems =
-              state.isFiltered ? state.filteredComplaints : state.complaints;
+          state.isFiltered ? state.filteredComplaints : state.complaints;
 
           // TODO(ajil): Fix this scrollable component
           return Column(
@@ -125,7 +128,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                              (context, index) {
                             final item = inboxItems.elementAt(index);
 
                             return _ComplaintsInboxItem(
@@ -160,35 +163,35 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                   margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                   padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
-                      onPressed: () async {
-                        var loggedInUserUuid = context.loggedInUserUuid;
-                        final bloc = context.read<ComplaintsInboxBloc>();
+                    onPressed: () async {
+                      var loggedInUserUuid = ComplaintsSingleton().loggedInUserUuid;
+                      final bloc = context.read<ComplaintsInboxBloc>();
 
-                        await router.push(
-                          ComplaintsRegistrationWrapperRoute(),
-                        );
+                      // await router.push(
+                      //   ComplaintsRegistrationWrapperRoute(),
+                      // );
 
-                        try {
-                          bloc.add(
-                            ComplaintInboxLoadComplaintsEvent(
-                              createdByUserId: loggedInUserUuid,
-                            ),
-                          );
-                        } catch (error) {
-                          AppLogger.instance.error(
-                            title: 'Error',
-                            message: 'Error while loading complaints',
-                          );
-                        }
-                      },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(
-                            i18.complaints.fileComplaintAction,
+                      try {
+                        bloc.add(
+                          ComplaintInboxLoadComplaintsEvent(
+                            createdByUserId: loggedInUserUuid,
                           ),
+                        );
+                      } catch (error) {
+                        AppLogger.instance.error(
+                          title: 'Error',
+                          message: 'Error while loading complaints',
+                        );
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        localizations.translate(
+                          i18.complaints.fileComplaintAction,
                         ),
                       ),
                     ),
+                  ),
                 ),
               ),
             ],
@@ -200,7 +203,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
 }
 
 class _ComplaintsInboxItem extends StatelessWidget {
-  final AppLocalizations localizations;
+  final ComplaintsLocalization localizations;
   final PgrServiceModel item;
 
   const _ComplaintsInboxItem({
@@ -278,14 +281,14 @@ class _ComplaintsInboxItem extends StatelessWidget {
                     style: theme.textTheme.headlineSmall,
                   ),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    item.auditDetails?.createdTime.toDateTime
-                            .getFormattedDate() ??
-                        "",
-                  ),
-                ),
+                // Expanded(
+                //   flex: 3,
+                //   child: Text(
+                //     item.auditDetails?.createdTime.toDateTime
+                //             .getFormattedDate() ??
+                //         "",
+                //   ),
+                // ),
               ],
             ),
           ),

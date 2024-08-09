@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
-import '../../../utils/utils.dart';
+import 'package:complaints/blocs/complaints_inbox/complaints_inbox.dart';
+import 'package:complaints/utils/utils.dart';
+import '/utils/extensions/extensions.dart';
 
 @RoutePage()
 class ComplaintsInboxWrapperPage extends StatelessWidget {
@@ -18,13 +19,14 @@ class ComplaintsInboxWrapperPage extends StatelessWidget {
       create: (context) => ComplaintsInboxBloc(
         const ComplaintInboxState.complaints(),
         pgrRepository:
-            context.repository<PgrServiceModel, PgrServiceSearchModel>(),
+        context.repository<PgrServiceModel, PgrServiceSearchModel>(context),
       )..add(
-          ComplaintInboxLoadComplaintsEvent(
-            createdByUserId: context.loggedInUserUuid,
-          ),
+        ComplaintInboxLoadComplaintsEvent(
+          createdByUserId: ComplaintsSingleton().loggedInUserUuid,
         ),
+      ),
       child: const AutoRouter(),
     );
+
   }
 }

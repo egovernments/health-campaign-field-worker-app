@@ -1,5 +1,7 @@
 import 'dart:collection';
 
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -9,12 +11,11 @@ import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
-import '../../../blocs/auth/auth.dart';
-import '../../../blocs/complaints_inbox/complaints_inbox.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
-import '../../../widgets/localized.dart';
+import '/blocs/complaints_inbox/complaints_inbox.dart';
+import '/router/complaints_router.dart';
+import '/utils/i18_key_constants.dart' as i18;
+import '/utils/utils.dart';
+import '/widgets/localized.dart';
 
 @RoutePage()
 class ComplaintsInboxFilterPage extends LocalizedStatefulWidget {
@@ -168,7 +169,7 @@ class _ComplaintsInboxFilterPageState
                               if (!formGroup.valid) return;
 
                               final bloc = context.read<ComplaintsInboxBloc>();
-                              final userBloc = context.read<AuthBloc>();
+                              // final userBloc = context.read<AuthBloc>();
 
                               final assignedTo = formGroup
                                   .control(_complaintAssignmentType)
@@ -185,21 +186,22 @@ class _ComplaintsInboxFilterPageState
                               bloc.add(
                                 ComplaintInboxFilterComplaintsEvent(
                                   complaintAssignedTo: assignedTo,
-                                  currentUserName: userBloc.state.whenOrNull(
-                                    authenticated: (
-                                      accessToken,
-                                      refreshToken,
-                                      userModel,
-                                      actions,
-                                      individualId,
-                                    ) {
-                                      return userModel.name;
-                                    },
-                                  ),
+                                  // currentUserName: userBloc.state.whenOrNull(
+                                  //   authenticated: (
+                                  //     accessToken,
+                                  //     refreshToken,
+                                  //     userModel,
+                                  //     actions,
+                                  //     individualId,
+                                  //   ) {
+                                  //     return userModel.name;
+                                  //   },
+                                  // ),
+                                  currentUserName: ComplaintsSingleton().loggedInUserName,
                                   complaintTypeCode: complaintType,
                                   locality: locality,
                                   complaintStatus: statuses.toList(),
-                                  createdByUserId: context.loggedInUserUuid,
+                                  createdByUserId: ComplaintsSingleton().loggedInUserUuid,
                                 ),
                               );
 
