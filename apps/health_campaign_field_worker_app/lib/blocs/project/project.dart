@@ -470,10 +470,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             ),
           );
           List<String> attendeesIndividualIds = [];
-          registers.map((r) =>
-              r.attendees?.where((a) => a.individualId != null).map((att) {
-                attendeesIndividualIds.add(att.individualId.toString());
-              }));
+          registers.forEach((r) {
+            r.attendees?.where((a) => a.individualId != null).forEach((att) {
+              attendeesIndividualIds.add(att.individualId.toString());
+            });
+          });
           final individuals =
               await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,
