@@ -178,7 +178,6 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.household.clientReferenceId))
       ])
-        ..where(sql.projectBeneficiary.projectId.equals(params.projectId!))
         ..where(buildAnd([
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.household.clientReferenceId.isNotNull(),

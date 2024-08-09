@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -94,7 +95,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           ProjectBeneficiarySearchModel(
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
-;
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
                             projectBeneficiariesList.where((element) => element.projectId ==event.globalSearchParams.projectId).toList() , taskList, sideEffectsList, referralsList);
@@ -207,6 +207,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+            projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
 
