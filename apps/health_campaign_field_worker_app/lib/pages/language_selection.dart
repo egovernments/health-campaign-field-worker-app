@@ -49,14 +49,13 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   listener: (context, state) {
                     if (state.loading && !isDialogVisible) {
                       isDialogVisible = true;
-                      DigitComponentsUtils().showLocationCapturingDialog(
+                      DigitComponentsUtils().showLocalizationLoadingDialog(
                         context,
-                        '',
                         DigitSyncDialogType.inProgress,
                       );
                     } else if (!state.loading && isDialogVisible) {
                       isDialogVisible = false;
-                      DigitComponentsUtils().hideLocationDialog(context);
+                      DigitComponentsUtils().hideLocalizationLoadingDialog(context);
                     }
                   },
                   builder: (context, localizationState) {
