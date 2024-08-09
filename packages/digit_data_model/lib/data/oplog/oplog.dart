@@ -163,6 +163,7 @@ class ProjectOpLogManager extends OpLogManager<ProjectModel> {
       entity.nonRecoverableError;
 }
 
+//oplog1
 class ServiceDefinitionOpLogManager
     extends OpLogManager<ServiceDefinitionModel> {
   ServiceDefinitionOpLogManager(super.isar);
@@ -191,6 +192,7 @@ class ServiceDefinitionOpLogManager
       entity.nonRecoverableError;
 }
 
+//oplog2
 class ServiceOpLogManager extends OpLogManager<ServiceModel> {
   ServiceOpLogManager(super.isar);
 
@@ -215,6 +217,8 @@ class ServiceOpLogManager extends OpLogManager<ServiceModel> {
   bool? getNonRecoverableError(ServiceModel entity) =>
       entity.nonRecoverableError;
 }
+
+//till here
 
 class ProjectResourceOpLogManager extends OpLogManager<ProjectResourceModel> {
   ProjectResourceOpLogManager(super.isar);

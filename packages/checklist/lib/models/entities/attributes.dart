@@ -4,68 +4,90 @@ import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
 
-// import '../../data/local_store/sql_store/sql_store.dart';
-// import 'attributes.dart';
-import '../entities/attributes.dart' as att;
-part 'service_definition.mapper.dart';
+import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
+
+part 'attributes.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceDefinitionSearchModel extends EntitySearchModel
-    with ServiceDefinitionSearchModelMappable {
+class AttributesSearchModel extends EntitySearchModel with AttributesSearchModelMappable {
   final String? id;
+  final String? dataType;
+  final String? referenceId;
   final String? tenantId;
-  final List<String>? code;
-  final bool? isActive;
+  final String? code;
+  final String? isActive;
+  final bool? required;
+  final String? regex;
+  final int? order;
 
-  ServiceDefinitionSearchModel({
+  AttributesSearchModel({
     this.id,
+    this.dataType,
+    this.referenceId,
     this.tenantId,
     this.code,
     this.isActive,
+    this.required,
+    this.regex,
+    this.order,
     super.boundaryCode,
     super.isDeleted,
-  }) : super();
+  }):  super();
 
   @MappableConstructor()
-  ServiceDefinitionSearchModel.ignoreDeleted({
+  AttributesSearchModel.ignoreDeleted({
     this.id,
+    this.dataType,
+    this.referenceId,
     this.tenantId,
     this.code,
     this.isActive,
+    this.required,
+    this.regex,
+    this.order,
     super.boundaryCode,
-  }) : super(isDeleted: false);
+  }):  super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceDefinitionModel extends EntityModel
-    with ServiceDefinitionModelMappable {
-  static const schemaName = 'ServiceDefinition';
+class AttributesModel extends EntityModel with AttributesModelMappable {
+
+  static const schemaName = 'Attributes';
 
   final String? id;
+  final String? dataType;
+  final String? referenceId;
   final String? tenantId;
   final String? code;
-  final bool? isActive;
+  final List<String>? values;
+  final String? isActive;
+  final bool? required;
+  final String? regex;
+  final int? order;
   final bool? nonRecoverableError;
   final int? rowVersion;
-  final List<att.AttributesModel>? attributes;
-  final ServiceDefinitionAdditionalFields? additionalFields;
+  final AttributesAdditionalFields? additionalFields;
 
-  ServiceDefinitionModel({
+  AttributesModel({
     this.additionalFields,
     this.id,
+    this.dataType,
+    this.referenceId,
     this.tenantId,
     this.code,
+    this.values,
     this.isActive,
+    this.required,
+    this.regex,
+    this.order,
     this.nonRecoverableError = false,
     this.rowVersion,
-    this.attributes,
-    super.auditDetails,
-    super.clientAuditDetails,
+    super.auditDetails,super.clientAuditDetails,
     super.isDeleted = false,
-  }) : super();
+  }): super();
 
-  ServiceDefinitionCompanion get companion {
-    return ServiceDefinitionCompanion(
+  AttributesCompanion get companion {
+    return AttributesCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),
       auditCreatedTime: Value(auditDetails?.createdTime),
       auditModifiedBy: Value(auditDetails?.lastModifiedBy),
@@ -77,9 +99,15 @@ class ServiceDefinitionModel extends EntityModel
       additionalFields: Value(additionalFields?.toJson()),
       isDeleted: Value(isDeleted),
       id: Value(id),
+      dataType: Value(dataType),
+      referenceId: Value(referenceId),
       tenantId: Value(tenantId),
       code: Value(code),
+      values: Value(values?.toString()),
       isActive: Value(isActive),
+      required: Value(required),
+      regex: Value(regex),
+      order: Value(order),
       nonRecoverableError: Value(nonRecoverableError),
       rowVersion: Value(rowVersion),
     );
@@ -87,11 +115,11 @@ class ServiceDefinitionModel extends EntityModel
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceDefinitionAdditionalFields extends AdditionalFields
-    with ServiceDefinitionAdditionalFieldsMappable {
-  ServiceDefinitionAdditionalFields({
-    super.schema = 'ServiceDefinition',
+class AttributesAdditionalFields extends AdditionalFields with AttributesAdditionalFieldsMappable {
+  AttributesAdditionalFields({
+    super.schema = 'Attributes',
     required super.version,
     super.fields,
   });
 }
+

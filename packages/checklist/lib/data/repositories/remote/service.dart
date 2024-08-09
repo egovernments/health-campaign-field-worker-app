@@ -2,9 +2,8 @@
 
 import 'package:digit_data_model/data_model.dart';
 import '../../../models/entities/service.dart' as service;
-// import 'package:checklist/checklist.dart';
 
-class ServiceRemoteRepository extends RemoteRepository<ServiceModel, ServiceSearchModel> {
+class ServiceRemoteRepository extends RemoteRepository<service.ServiceModel, service.ServiceSearchModel> {
   ServiceRemoteRepository(
       super.dio, {
         required super.actionMap,

@@ -11,6 +11,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
+import 'package:checklist/checklist.dart' as chck;
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
 
@@ -76,9 +77,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
-  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+  final RemoteRepository<chck.ServiceDefinitionModel, chck.ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
-  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+  final LocalRepository<chck.ServiceDefinitionModel, chck.ServiceDefinitionSearchModel>
       serviceDefinitionLocalRepository;
 
   ///Boundary Resource Repositories
@@ -389,7 +390,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     final serviceDefinition = await serviceDefinitionRemoteRepository
-        .search(ServiceDefinitionSearchModel(
+        .search(chck.ServiceDefinitionSearchModel(
       tenantId: envConfig.variables.tenantId,
       code: codes,
     ));

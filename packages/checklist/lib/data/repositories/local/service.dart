@@ -3,15 +3,20 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
-// import 'package:checklist/checklist.dart' as checklist;
+import 'package:checklist/checklist.dart' as service;
+
+// typedef ServiceModel = service.ServiceModel;
+// typedef ServiceSearchModel = service.ServiceSearchModel;
+// typedef ServiceAdditionalFields = service.ServiceAdditionalFields;
+// typedef ServiceAttributesModel = service.ServiceAttributesModel;
 
 class ServiceLocalRepository
-    extends LocalRepository<ServiceModel, ServiceSearchModel> {
+    extends LocalRepository<service.ServiceModel, service.ServiceSearchModel> {
   ServiceLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(
-      ServiceModel entity, {
+      service.ServiceModel entity, {
         bool createOpLog = true,
         DataOperation dataOperation = DataOperation.singleCreate,
       }) async {
@@ -37,7 +42,7 @@ class ServiceLocalRepository
         }
       });
 
-      final newEntity = ServiceModel(
+      final newEntity = service.ServiceModel(
         id: entity.id,
         clientId: entity.clientId,
         serviceDefId: entity.serviceDefId,
@@ -47,7 +52,7 @@ class ServiceLocalRepository
         tenantId: entity.tenantId,
         isDeleted: entity.isDeleted,
         rowVersion: entity.rowVersion,
-        additionalFields: ServiceAdditionalFields(
+        additionalFields: service.ServiceAdditionalFields(
           version: 1,
           fields: [
             AdditionalField(
@@ -91,10 +96,10 @@ class ServiceLocalRepository
   }
 
   @override
-  FutureOr<List<ServiceModel>> search(
-      ServiceSearchModel query,
+  FutureOr<List<service.ServiceModel>> search(
+      service.ServiceSearchModel query,
       ) async {
-    return retryLocalCallOperation<List<ServiceModel>>(() async {
+    return retryLocalCallOperation<List<service.ServiceModel>>(() async {
       final selectQuery = sql.select(sql.service).join([]);
       final results = await (selectQuery
         ..where(buildAnd([
@@ -109,7 +114,7 @@ class ServiceLocalRepository
         ])))
           .get();
 
-      final List<ServiceModel> serviceList = [];
+      final List<service.ServiceModel> serviceList = [];
       for (final e in results) {
         final data = e.readTable(sql.service);
         final selectattributeQuery = sql.select(sql.serviceAttributes).join([]);
@@ -124,7 +129,7 @@ class ServiceLocalRepository
         final res = val.map((e) {
           final attribute = e.readTableOrNull(sql.serviceAttributes);
           if (attribute != null) {
-            return ServiceAttributesModel(
+            return service.ServiceAttributesModel(
               clientReferenceId: attribute.clientReferenceId,
               attributeCode: attribute.attributeCode,
               value: attribute.value,
@@ -138,7 +143,7 @@ class ServiceLocalRepository
           }
         }).toList();
 
-        serviceList.add(ServiceModel(
+        serviceList.add(service.ServiceModel(
           clientId: data.clientId,
           id: data.id,
           tenantId: data.tenantId,

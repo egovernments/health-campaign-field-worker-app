@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:checklist/checklist.dart' as svc;
 
 class ServiceDefinitionLocalRepository extends LocalRepository<
-    ServiceDefinitionModel, ServiceDefinitionSearchModel> {
+    svc.ServiceDefinitionModel, svc.ServiceDefinitionSearchModel> {
   ServiceDefinitionLocalRepository(super.sql, super.opLogManager);
 
   @override
   FutureOr<void> create(
-      ServiceDefinitionModel entity, {
+      svc.ServiceDefinitionModel entity, {
         bool createOpLog = false,
         DataOperation dataOperation = DataOperation.create,
       }) async {
@@ -41,8 +42,8 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
   }
 
   @override
-  FutureOr<List<ServiceDefinitionModel>> search(
-      ServiceDefinitionSearchModel query, {
+  FutureOr<List<svc.ServiceDefinitionModel>> search(
+      svc.ServiceDefinitionSearchModel query, {
         bool createOpLog = false,
       }) async {
     return retryLocalCallOperation(() async {
@@ -62,7 +63,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
         ])))
           .get();
 
-      final List<ServiceDefinitionModel> serviceDefinitionList = [];
+      final List<svc.ServiceDefinitionModel> serviceDefinitionList = [];
       for (final e in results) {
         final data = e.readTable(sql.serviceDefinition);
         final selectattributeQuery = sql.select(sql.attributes).join([]);
@@ -87,7 +88,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
                 : [];
             if (list.isEmpty) list.removeRange(0, list.length);
 
-            return AttributesModel(
+            return svc.AttributesModel(
               id: resull.id,
               code: resull.code,
               dataType: resull.dataType,
@@ -104,7 +105,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
           }
         }).toList();
 
-        serviceDefinitionList.add(ServiceDefinitionModel(
+        serviceDefinitionList.add(svc.ServiceDefinitionModel(
           id: data.id,
           tenantId: data.tenantId,
           rowVersion: data.rowVersion,

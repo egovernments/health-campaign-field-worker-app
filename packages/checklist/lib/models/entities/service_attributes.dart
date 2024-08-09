@@ -6,6 +6,7 @@ import 'package:digit_data_model/data_model.dart';
 
 // import '../../data/local_store/sql_store/sql_store.dart';
 
+import 'package:digit_data_model/models/entities/attributes.dart';
 part 'service_attributes.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
