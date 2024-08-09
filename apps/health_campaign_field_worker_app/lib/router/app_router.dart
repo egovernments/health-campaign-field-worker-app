@@ -11,6 +11,8 @@ import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:checklist/router/checklist_router.dart';
+import 'package:checklist/router/checklist_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -20,11 +22,6 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
-import '../pages/checklist/checklist.dart';
-import '../pages/checklist/checklist_boundary_view.dart';
-import '../pages/checklist/checklist_preview.dart';
-import '../pages/checklist/checklist_view.dart';
-import '../pages/checklist/checklist_wrapper.dart';
 import '../pages/complaints/inbox/complaints_details_view.dart';
 import '../pages/complaints/inbox/complaints_inbox.dart';
 import '../pages/complaints/inbox/complaints_inbox_filter.dart';
@@ -59,6 +56,7 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     ClosedHouseholdPackageRoute,
     DashboardRoute,
+    CheckListRoute
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -190,7 +188,7 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
                   ),
-                  AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
+                  // AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
                   AutoRoute(
                     page: DeliverySummaryRoute.page,
                     path: 'delivery-summary',

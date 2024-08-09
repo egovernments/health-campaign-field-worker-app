@@ -15,7 +15,7 @@ import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/no_result_card/no_result_card.dart';
 
-@RoutePage()
+// @RoutePage()
 class ChecklistPage extends LocalizedStatefulWidget {
   const ChecklistPage({
     Key? key,
@@ -121,9 +121,9 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                                       .checklist
                                                       .checklistCreateActionLabel),
                                                   action: () {
-                                                    context.router.push(
-                                                      ChecklistBoundaryViewRoute(),
-                                                    );
+                                                    // context.router.push(
+                                                    //   ChecklistBoundaryViewRoute(),
+                                                    // );
                                                     Navigator.of(
                                                       context,
                                                       rootNavigator: true,
@@ -146,9 +146,9 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                                                             ),
                                                           ),
                                                         );
-                                                    context.router.push(
-                                                      ChecklistPreviewRoute(),
-                                                    );
+                                                    // context.router.push(
+                                                    //   ChecklistPreviewRoute(),
+                                                    // );
                                                     Navigator.of(
                                                       context,
                                                       rootNavigator: true,

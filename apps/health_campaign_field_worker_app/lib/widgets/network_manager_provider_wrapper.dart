@@ -4,7 +4,6 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import 'package:checklist/checklist.dart' as chck;
 
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
@@ -145,19 +144,19 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<chck.ServiceDefinitionModel,
-              chck.ServiceDefinitionSearchModel>>(
-        create: (_) => chck.ServiceDefinitionLocalRepository(
+          LocalRepository<ServiceDefinitionModel,
+              ServiceDefinitionSearchModel>>(
+        create: (_) => ServiceDefinitionLocalRepository(
           sql,
-          chck.ServiceDefinitionOpLogManager(
+          ServiceDefinitionOpLogManager(
             isar,
           ),
         ),
       ),
-      RepositoryProvider<LocalRepository<chck.ServiceModel, chck.ServiceSearchModel>>(
-        create: (_) => chck.ServiceLocalRepository(
+      RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+        create: (_) => ServiceLocalRepository(
           sql,
-          chck.ServiceOpLogManager(isar),
+          ServiceOpLogManager(isar),
         ),
       ),
       RepositoryProvider<
@@ -356,17 +355,17 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           ),
         if (value == DataModelType.service)
           RepositoryProvider<
-              RemoteRepository<chck.ServiceModel, chck.ServiceSearchModel>>(
-            create: (_) => chck.ServiceRemoteRepository(
+              RemoteRepository<ServiceModel, ServiceSearchModel>>(
+            create: (_) => ServiceRemoteRepository(
               dio,
               actionMap: actions,
             ),
           ),
         if (value == DataModelType.serviceDefinition)
           RepositoryProvider<
-              RemoteRepository<chck.ServiceDefinitionModel,
-                  chck.ServiceDefinitionSearchModel>>(
-            create: (_) => chck.ServiceDefinitionRemoteRepository(
+              RemoteRepository<ServiceDefinitionModel,
+                  ServiceDefinitionSearchModel>>(
+            create: (_) => ServiceDefinitionRemoteRepository(
               dio,
               actionMap: actions,
             ),

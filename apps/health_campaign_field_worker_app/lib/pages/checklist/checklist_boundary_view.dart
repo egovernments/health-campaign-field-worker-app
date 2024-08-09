@@ -8,7 +8,7 @@ import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
-@RoutePage()
+// @RoutePage()
 class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
   const ChecklistBoundaryViewPage({
     Key? key,
@@ -33,7 +33,8 @@ class _ChecklistBoundaryViewPageState
         ]),
         footer: DigitCard(
           child: DigitElevatedButton(
-            onPressed: () => context.router.push(ChecklistViewRoute()),
+            onPressed: () => print("Pressed"),
+            // onPressed: () => context.router.push(ChecklistViewRoute()),
             child: Text(localizations.translate(
               i18.common.coreCommonContinue,
             )),

@@ -17,7 +17,7 @@ import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 
-@RoutePage()
+// @RoutePage()
 class ChecklistViewPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
 
@@ -272,7 +272,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          router.navigate(ChecklistRoute());
+                          // router.navigate(ChecklistRoute());
 
                           router.push(AcknowledgementRoute());
                         }
