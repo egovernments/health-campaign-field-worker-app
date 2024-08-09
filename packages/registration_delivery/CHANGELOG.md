@@ -1,3 +1,7 @@
+## 1.0.3-dev.10
+
+* Removed stepper if number of deliveries is greater than 1 
+
 ## 1.0.3-dev.9
 
 * Updated localization key 

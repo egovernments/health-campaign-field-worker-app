@@ -1,3 +1,6 @@
+## 1.0.2-dev.1
+* Removed captured Location Dialog on attendance submit
+
 ## 0.0.0-dev.1
 
 * Initial release of the package 
