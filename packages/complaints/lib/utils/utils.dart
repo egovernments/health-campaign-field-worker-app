@@ -1,6 +1,8 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+export 'extensions/extensions.dart';
+
 //singleton class for complaints operations
 class ComplaintsSingleton{
   static final ComplaintsSingleton _singleton = ComplaintsSingleton._internal();

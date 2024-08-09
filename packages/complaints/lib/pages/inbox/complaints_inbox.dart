@@ -111,7 +111,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                                 padding: const EdgeInsets.only(right: kPadding*2),
                               ),
                               onPressed: () {
-                                // router.push(ComplaintsInboxSortRoute());
+                                router.push(ComplaintsInboxSortRoute());
                               },
                               child: Row(
                                 children: [
@@ -344,9 +344,9 @@ class _ComplaintsInboxItem extends StatelessWidget {
                   flex: 1,
                   child: OutlinedButton(
                     onPressed: () {
-                      // context.router.push(ComplaintsDetailsViewRoute(
-                      //   complaint: item,
-                      // ));
+                      context.router.push(ComplaintsDetailsViewRoute(
+                        complaint: item,
+                      ));
                     },
                     style: OutlinedButton.styleFrom(
                       side: BorderSide(
@@ -358,9 +358,8 @@ class _ComplaintsInboxItem extends StatelessWidget {
                       ),
                     ),
                     child: Text(
-                      "Hiii",
-                      // localizations.translate(i18.searchBeneficiary.iconLabel),
-                      // style: DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.apply(color: theme.colorScheme.secondary,),
+                      localizations.translate(i18.searchBeneficiary.iconLabel),
+                      style: DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.apply(color: theme.colorScheme.secondary,),
                     ),
                   ),
                 ),

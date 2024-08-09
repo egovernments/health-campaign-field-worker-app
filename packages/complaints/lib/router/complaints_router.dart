@@ -27,14 +27,14 @@ class ComplaintsRoute extends $ComplaintsRoute {
             page: ComplaintsInboxSearchRoute.page,
             path: 'complaints-inbox-search',
           ),
-        //   AutoRoute(
-        //     page: ComplaintsInboxSortRoute.page,
-        //     path: 'complaints-inbox-sort',
-        //   ),
-        //   AutoRoute(
-        //     page: ComplaintsDetailsViewRoute.page,
-        //     path: 'complaints-inbox-view-details',
-        //   ),
+          AutoRoute(
+            page: ComplaintsInboxSortRoute.page,
+            path: 'complaints-inbox-sort',
+          ),
+          AutoRoute(
+            page: ComplaintsDetailsViewRoute.page,
+            path: 'complaints-inbox-view-details',
+          ),
       ],
     ),
 

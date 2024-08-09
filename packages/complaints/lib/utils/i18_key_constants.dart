@@ -5,6 +5,8 @@ const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
 
+const searchBeneficiary = SearchBeneficiary();
+
 const individualDetails = IndividualDetails();
 
 class Common {
@@ -387,4 +389,36 @@ class IndividualDetails {
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
 
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
+}
+
+class SearchBeneficiary {
+  const SearchBeneficiary();
+
+  String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
+
+  String get searchIndividualLabelText =>
+      'BENEFICIARY_STATISTICS_SEARCH_INDIVIDUAL_LABEL';
+
+  String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
+
+  String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+
+  String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
+
+  String get beneficiaryIndividualSearchHintText =>
+      'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
+
+  String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
+
+  String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
+
+  String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
+
+  String get iconLabel => 'ICON_LABEL';
+
+  String get yearsAbbr => 'YEARS_ABBR';
+
+  String get monthsAbbr => 'MONTHS_ABBR';
+
+  String get proximityLabel => 'PROXIMITY_LABEL';
 }
