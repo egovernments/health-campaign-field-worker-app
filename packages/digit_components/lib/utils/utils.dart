@@ -19,4 +19,21 @@ class DigitComponentsUtils {
       label: label,
     );
   }
+
+  void hideLocalizationLoadingDialog(BuildContext context) {
+    Navigator.of(
+      context,
+      rootNavigator: true,
+    ).popUntil(
+          (route) => route is! PopupRoute,
+    );
+  }
+
+  void showLocalizationLoadingDialog(
+      BuildContext context, DigitSyncDialogType dialogType) {
+    DigitSyncDialog.show(
+      context,
+      type: dialogType,
+    );
+  }
 }
