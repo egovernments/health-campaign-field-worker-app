@@ -9,18 +9,24 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../router/app_router.dart';
+import '../utils/constants.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 
 @RoutePage()
-class LanguageSelectionPage extends StatelessWidget {
+class LanguageSelectionPage extends StatefulWidget {
   const LanguageSelectionPage({super.key});
+
+  @override
+  _LanguageSelectionPageState createState() => _LanguageSelectionPageState();
+}
+
+class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
+  bool isDialogVisible = false;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    bool isDialogVisible = false;
 
     return Scaffold(
       body: Container(
@@ -54,7 +60,6 @@ class LanguageSelectionPage extends StatelessWidget {
                     }
                   },
                   builder: (context, localizationState) {
-                    // Handle the first build when state.loading might already be true
                     if (localizationState.loading && !isDialogVisible) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         isDialogVisible = true;
@@ -125,4 +130,3 @@ class LanguageSelectionPage extends StatelessWidget {
     );
   }
 }
-
