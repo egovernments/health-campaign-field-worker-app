@@ -213,19 +213,19 @@ class DeliverInterventionPageState
 
                       final steps = generateSteps(numberOfDoses);
                       if ((productVariants ?? []).isEmpty && context.mounted) {
-                       SchedulerBinding.instance.addPostFrameCallback((_) {
-                        DigitToast.show(
-                          context,
-                          options: DigitToastOptions(
-                            localizations.translate(
-                              i18.deliverIntervention
-                                  .checkForProductVariantsConfig,
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18.deliverIntervention
+                                    .checkForProductVariantsConfig,
+                              ),
+                              true,
+                              theme,
                             ),
-                            true,
-                            theme,
-                          ),
-                        );
-                       });
+                          );
+                        });
                       }
 
                       return BlocBuilder<ProductVariantBloc,
@@ -378,24 +378,25 @@ class DeliverInterventionPageState
                                                             .deliverIntervention
                                                             .currentCycle),
                                                   ),
-                                                DigitStepper(
-                                                  activeStep:
-                                                      deliveryInterventionState
-                                                              .dose -
-                                                          1,
-                                                  stepRadius: 12.5,
-                                                  steps: steps,
-                                                  maxStepReached: 3,
-                                                  lineLength:
-                                                      (MediaQuery.of(context)
-                                                                  .size
-                                                                  .width -
-                                                              12.5 *
-                                                                  2 *
-                                                                  steps.length -
-                                                              50) /
-                                                          (steps.length - 1),
-                                                ),
+                                                if (numberOfDoses > 1)
+                                                  DigitStepper(
+                                                    activeStep:
+                                                        deliveryInterventionState
+                                                                .dose -
+                                                            1,
+                                                    stepRadius: 12.5,
+                                                    steps: steps,
+                                                    maxStepReached: 3,
+                                                    lineLength: (MediaQuery.of(
+                                                                    context)
+                                                                .size
+                                                                .width -
+                                                            12.5 *
+                                                                2 *
+                                                                steps.length -
+                                                            50) /
+                                                        (steps.length - 1),
+                                                  ),
                                                 DigitDateFormPicker(
                                                   isEnabled: false,
                                                   formControlName:
