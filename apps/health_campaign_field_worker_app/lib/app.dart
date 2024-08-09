@@ -18,6 +18,7 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+import 'package:checklist/checklist.dart' as chck;
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -229,12 +230,12 @@ class MainApplicationState extends State<MainApplication>
                                 RemoteRepository<ProjectModel,
                                     ProjectSearchModel>>(),
                             serviceDefinitionRemoteRepository: ctx.read<
-                                RemoteRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
+                                RemoteRepository<chck.ServiceDefinitionModel,
+                                    chck.ServiceDefinitionSearchModel>>(),
                             isar: widget.isar,
                             serviceDefinitionLocalRepository: ctx.read<
-                                LocalRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
+                                LocalRepository<chck.ServiceDefinitionModel,
+                                    chck.ServiceDefinitionSearchModel>>(),
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
                                     BoundarySearchModel>>(),
