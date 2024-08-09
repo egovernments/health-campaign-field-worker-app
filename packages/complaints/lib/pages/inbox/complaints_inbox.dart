@@ -93,7 +93,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                                 padding: EdgeInsets.zero,
                               ),
                               onPressed: () {
-                                // router.push(ComplaintsInboxFilterRoute());
+                                router.push(ComplaintsInboxFilterRoute());
                               },
                               child: Row(
                                 children: [

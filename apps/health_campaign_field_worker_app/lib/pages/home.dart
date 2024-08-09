@@ -767,6 +767,7 @@ void setPackagesSingleton(BuildContext context) {
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
+          loggedInUserName: context.loggedInUser.name,
         );
       });
 }

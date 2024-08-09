@@ -17,6 +17,7 @@ class ComplaintsSingleton{
   String? _tenantId = '';
   String? _loggedInUserUuid ='';
   String? _userMobileNumber = '';
+  String? _loggedInUserName = '';
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
 
@@ -24,10 +25,12 @@ class ComplaintsSingleton{
     String? tenantId,
     String? loggedInUserUuid,
     String? userMobileNumber,
+    String? loggedInUserName,
   }){
     _tenantId = tenantId;
     _loggedInUserUuid = loggedInUserUuid;
     _userMobileNumber = userMobileNumber;
+    _loggedInUserName = loggedInUserName;
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
@@ -41,6 +44,7 @@ class ComplaintsSingleton{
   get tenantId => _tenantId;
   get loggedInUserUuid => _loggedInUserUuid;
   get userMobileNumber => _userMobileNumber;
+  get loggedInUserName => _loggedInUserName;
   get persistenceConfiguration => _persistenceConfiguration;
 
 

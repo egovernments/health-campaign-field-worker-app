@@ -19,10 +19,10 @@ class ComplaintsRoute extends $ComplaintsRoute {
           path: 'complaints-inbox-items',
           initial: true,
         ),
-        //   AutoRoute(
-        //     page: ComplaintsInboxFilterRoute.page,
-        //     path: 'complaints-inbox-filter',
-        //   ),
+          AutoRoute(
+            page: ComplaintsInboxFilterRoute.page,
+            path: 'complaints-inbox-filter',
+          ),
           AutoRoute(
             page: ComplaintsInboxSearchRoute.page,
             path: 'complaints-inbox-search',
