@@ -6,6 +6,7 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/deliver_strategy_type.dart';
@@ -175,17 +176,19 @@ class DeliverInterventionPageState
                                       ?.isNotEmpty ==
                                   true
                               ? (fetchProductVariant(
-                                  RegistrationDeliverySingleton()
-                                          .selectedProject
-                                          ?.additionalDetails
-                                          ?.projectType
-                                          ?.cycles![deliveryInterventionState
-                                                  .cycle -
-                                              1]
-                                          .deliveries?[
-                                      deliveryInterventionState.dose - 1],
-                                  state.selectedIndividual,
-                                )?.productVariants)
+                                      RegistrationDeliverySingleton()
+                                              .selectedProject
+                                              ?.additionalDetails
+                                              ?.projectType
+                                              ?.cycles![
+                                                  deliveryInterventionState
+                                                          .cycle -
+                                                      1]
+                                              .deliveries?[
+                                          deliveryInterventionState.dose - 1],
+                                      state.selectedIndividual,
+                                      state.householdMemberWrapper.household)
+                                  ?.productVariants)
                               : RegistrationDeliverySingleton()
                                   .selectedProject
                                   ?.additionalDetails
@@ -209,7 +212,8 @@ class DeliverInterventionPageState
                           : 0;
 
                       final steps = generateSteps(numberOfDoses);
-                      if ((productVariants ?? []).isEmpty) {
+                      if ((productVariants ?? []).isEmpty && context.mounted) {
+                       SchedulerBinding.instance.addPostFrameCallback((_) {
                         DigitToast.show(
                           context,
                           options: DigitToastOptions(
@@ -221,6 +225,7 @@ class DeliverInterventionPageState
                             theme,
                           ),
                         );
+                       });
                       }
 
                       return BlocBuilder<ProductVariantBloc,
@@ -728,21 +733,35 @@ class DeliverInterventionPageState
     List<ProductVariantModel>? variants,
   ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
+    final overViewbloc = context.read<HouseholdOverviewBloc>().state;
+    _controllers.forEachIndexed((index, element) {
+      _controllers.removeAt(index);
+    });
 
     // Add controllers for each product variant to the _controllers list.
+    if (_controllers.isEmpty) {
+      final int r = RegistrationDeliverySingleton()
+                  .selectedProject
+                  ?.additionalDetails
+                  ?.projectType
+                  ?.cycles ==
+              null
+          ? 1
+          : fetchProductVariant(
+                      RegistrationDeliverySingleton()
+                          .selectedProject
+                          ?.additionalDetails
+                          ?.projectType
+                          ?.cycles![bloc.cycle - 1]
+                          .deliveries?[bloc.dose - 1],
+                      overViewbloc.selectedIndividual,
+                      overViewbloc.householdMemberWrapper.household)!
+                  .productVariants
+                  ?.length ??
+              0;
 
-    if ((bloc.tasks?.last.resources ?? []).isNotEmpty) {
-      _controllers.addAll(bloc.tasks!.last.resources!.mapIndexed((e, i) => i));
-    } else {
-      var groupedVariants = <String, List<ProductVariantModel>>{};
-      variants?.forEach((variant) {
-        if (!groupedVariants.containsKey(variant.productId)) {
-          groupedVariants[variant.productId!] = [];
-        }
-        groupedVariants[variant.productId]!.add(variant);
-      });
-
-      _controllers.addAll(groupedVariants.keys.mapIndexed((e, i) => i));
+      _controllers.addAll(List.generate(r, (index) => index)
+          .mapIndexed((index, element) => index));
     }
 
     return fb.group(<String, Object>{
@@ -776,16 +795,18 @@ class DeliverInterventionPageState
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
-                value: variants != null &&
-                        _controllers.indexOf(e) < variants.length
-                    ? variants.firstWhereOrNull(
-                        (element) =>
-                            element.id ==
-                            productVariants
-                                ?.elementAt(_controllers.indexOf(e))
-                                .productVariantId,
-                      )
-                    : null,
+                value: variants != null && variants.length < _controllers.length
+                    ? variants.last
+                    : (variants != null &&
+                            _controllers.indexOf(e) < variants.length
+                        ? variants.firstWhereOrNull(
+                            (element) =>
+                                element.id ==
+                                productVariants
+                                    ?.elementAt(_controllers.indexOf(e))
+                                    .productVariantId,
+                          )
+                        : null),
               )),
         ],
       ),

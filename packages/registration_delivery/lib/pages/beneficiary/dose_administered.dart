@@ -170,9 +170,12 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                   .millisecondsSinceEpoch(),
                                             ),
                                             resources: fetchProductVariant(
-                                              e,
-                                              overViewBloc.selectedIndividual,
-                                            )
+                                                    e,
+                                                    overViewBloc
+                                                        .selectedIndividual,
+                                                    overViewBloc
+                                                        .householdMemberWrapper
+                                                        .household)
                                                 ?.productVariants
                                                 ?.map((variant) =>
                                                     TaskResourceModel(
@@ -364,9 +367,10 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         deliveryState.dose +
                                         1;
                                     List<String> skus = fetchProductVariant(
-                                      e,
-                                      overViewBloc.selectedIndividual,
-                                    )!
+                                            e,
+                                            overViewBloc.selectedIndividual,
+                                            overViewBloc.householdMemberWrapper
+                                                .household)!
                                         .productVariants!
                                         .map((ele) {
                                       final pv = variant!.firstWhere(
@@ -416,12 +420,16 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           localizations.translate(
                                             i18.beneficiaryDetails
                                                 .beneficiaryAge,
-                                          ): localizations
-                                              .translate(fetchProductVariant(
-                                            deliveryState
-                                                .futureDeliveries?.first,
-                                            overViewBloc.selectedIndividual,
-                                          )!
+                                          ): localizations.translate(
+                                              fetchProductVariant(
+                                                      deliveryState
+                                                          .futureDeliveries
+                                                          ?.first,
+                                                      overViewBloc
+                                                          .selectedIndividual,
+                                                      overViewBloc
+                                                          .householdMemberWrapper
+                                                          .household)!
                                                   .condition!),
                                         },
                                       ),

@@ -243,7 +243,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.household.clientReferenceId))
-      ]).where(sql.projectBeneficiary.projectId.equals(params.projectId!));
+      ]);
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {

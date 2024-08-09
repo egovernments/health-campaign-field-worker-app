@@ -429,6 +429,7 @@ class BeneficiaryRegistrationBloc
           );
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId: beneficiaryType ==
                       BeneficiaryType
                           .individual ? getIndividualBeneficiaryClientReferenceId(

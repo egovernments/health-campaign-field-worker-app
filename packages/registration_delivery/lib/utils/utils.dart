@@ -6,6 +6,8 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/household.dart';
+import 'package:registration_delivery/models/entities/household_member.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
@@ -181,19 +183,34 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(
-  ProjectCycleDelivery? currentDelivery,
-  IndividualModel? individualModel,
-) {
-  if (currentDelivery != null && individualModel != null) {
-    final individualAge = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            individualModel.dateOfBirth!,
-          ) ??
-          DateTime.now(),
-    );
-    final individualAgeInMonths =
-        individualAge.years * 12 + individualAge.months;
+DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel, HouseholdModel? householdModel) {
+  if (currentDelivery != null) {
+    var individualAgeInMonths = 0;
+    var gender;
+    var roomCount;
+    var memberCount;
+
+    if (individualModel != null) {
+      final individualAge = DigitDateUtils.calculateAge(
+        DigitDateUtils.getFormattedDateToDateTime(
+              individualModel.dateOfBirth!,
+            ) ??
+            DateTime.now(),
+      );
+      individualAgeInMonths = individualAge.years * 12 + individualAge.months;
+
+      gender = individualModel.gender?.index;
+    }
+    if (householdModel != null && householdModel.additionalFields != null) {
+      memberCount = householdModel.memberCount;
+      roomCount = int.tryParse(householdModel.additionalFields?.fields
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+          '1')!;
+    }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
@@ -206,8 +223,9 @@ DeliveryDoseCriteria? fetchProductVariant(
             element,
             {
               'age': individualAgeInMonths,
-              if (individualModel.gender != null)
-                'gender': individualModel.gender?.index,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount
             },
           );
           final error = expression.parse;
