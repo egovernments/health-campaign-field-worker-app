@@ -15,6 +15,8 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.da
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:complaints/router/complaints_router.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -26,11 +28,9 @@ import '../pages/checklist/checklist_preview.dart';
 import '../pages/checklist/checklist_view.dart';
 import '../pages/checklist/checklist_wrapper.dart';
 import '../pages/complaints/inbox/complaints_details_view.dart';
-import '../pages/complaints/inbox/complaints_inbox.dart';
 import '../pages/complaints/inbox/complaints_inbox_filter.dart';
 import '../pages/complaints/inbox/complaints_inbox_search.dart';
 import '../pages/complaints/inbox/complaints_inbox_sort.dart';
-import '../pages/complaints/inbox/complaints_inbox_wrapper.dart';
 import '../pages/complaints/registration/complaint_type.dart';
 import '../pages/complaints/registration/complaints_details.dart';
 import '../pages/complaints/registration/complaints_location.dart';
@@ -59,6 +59,7 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     ClosedHouseholdPackageRoute,
     DashboardRoute,
+    ComplaintsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {

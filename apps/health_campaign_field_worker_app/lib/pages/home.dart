@@ -25,6 +25,8 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -761,6 +763,11 @@ void setPackagesSingleton(BuildContext context) {
               action: ApiOperation.search.toValue(),
               entityName: DashboardResponseModel.schemaName,
             ));
+
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+        );
       });
 }
 

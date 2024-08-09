@@ -166,17 +166,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ComplaintsInboxRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsInboxRouteArgs>(
-          orElse: () => const ComplaintsInboxRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ComplaintsInboxPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     ComplaintsInboxSearchRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsInboxSearchRouteArgs>(
           orElse: () => const ComplaintsInboxSearchRouteArgs());
@@ -197,12 +186,6 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
-      );
-    },
-    ComplaintsInboxWrapperRoute.name: (routeData) {
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: const ComplaintsInboxWrapperPage(),
       );
     },
     ComplaintsLocationRoute.name: (routeData) {
@@ -312,6 +295,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...RegistrationDeliveryRoute().pagesMap,
     ...ClosedHouseholdPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
+    ...ComplaintsRoute().pagesMap,
   };
 }
 
@@ -845,44 +829,6 @@ class ComplaintsInboxFilterRouteArgs {
 }
 
 /// generated route for
-/// [ComplaintsInboxPage]
-class ComplaintsInboxRoute extends PageRouteInfo<ComplaintsInboxRouteArgs> {
-  ComplaintsInboxRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ComplaintsInboxRoute.name,
-          args: ComplaintsInboxRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintsInboxRoute';
-
-  static const PageInfo<ComplaintsInboxRouteArgs> page =
-      PageInfo<ComplaintsInboxRouteArgs>(name);
-}
-
-class ComplaintsInboxRouteArgs {
-  const ComplaintsInboxRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintsInboxRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
 /// [ComplaintsInboxSearchPage]
 class ComplaintsInboxSearchRoute
     extends PageRouteInfo<ComplaintsInboxSearchRouteArgs> {
@@ -958,20 +904,6 @@ class ComplaintsInboxSortRouteArgs {
   String toString() {
     return 'ComplaintsInboxSortRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
-}
-
-/// generated route for
-/// [ComplaintsInboxWrapperPage]
-class ComplaintsInboxWrapperRoute extends PageRouteInfo<void> {
-  const ComplaintsInboxWrapperRoute({List<PageRouteInfo>? children})
-      : super(
-          ComplaintsInboxWrapperRoute.name,
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintsInboxWrapperRoute';
-
-  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
