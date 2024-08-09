@@ -655,7 +655,7 @@ void setPackagesSingleton(BuildContext context) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
-          loggedInUser: context.loggedInUserModel,
+          // loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
           projectId: context.projectId,
@@ -740,7 +740,7 @@ void setPackagesSingleton(BuildContext context) {
               )
               .toList()
               .isNotEmpty,
-          loggedInUser: context.loggedInUserModel,
+          // loggedInUser: context.loggedInUserModel,
           projectId: context.projectId,
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
