@@ -175,8 +175,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.individual.clientReferenceId))
       ])
         ..where(buildAnd([
-          if (params.filter!.contains(Status.registered))
-            sql.projectBeneficiary.projectId.equals(params.projectId!),
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.individual.clientReferenceId.isNotNull(),
           if (params.latitude != null &&
@@ -280,7 +278,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 sql.projectBeneficiary.beneficiaryClientReferenceId
                     .equalsExp(sql.individual.clientReferenceId))
         ])
-      
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
@@ -337,7 +334,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         leftOuterJoin(
             sql.projectBeneficiary,
             sql.projectBeneficiary.clientReferenceId
-                .equalsExp(sql.task.projectBeneficiaryClientReferenceId))
+                .equalsExp(sql.task.projectBeneficiaryClientReferenceId)),
+        leftOuterJoin(
+            sql.individual,
+            sql.individual.clientReferenceId
+                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId)),
       ])
         ..where(sql.task.status.equals(
           statusMap[applyFilter]!.toValue(),
@@ -346,8 +347,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         selectQuery
             .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
       }
-      //   ..where( (params.filter!.contains(Status.notRegistered.name ))?
-      // sql.projectBeneficiary.projectId.equals(params.projectId!): const Constant(false));
     } else {
       selectQuery = selectQuery.join([
         leftOuterJoin(
@@ -356,6 +355,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.projectBeneficiary.clientReferenceId))
       ])
         ..where(sql.task.status.equals(statusMap[filter]!.toValue()));
+
+      if (!(params.filter!.contains(Status.notRegistered.name))) {
+        selectQuery
+            .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
+      }
     }
 
     return selectQuery;
