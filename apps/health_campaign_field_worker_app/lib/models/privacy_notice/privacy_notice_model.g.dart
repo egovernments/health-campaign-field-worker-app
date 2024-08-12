@@ -11,6 +11,7 @@ _$PrivacyPolicyModelImpl _$$PrivacyPolicyModelImplFromJson(
     _$PrivacyPolicyModelImpl(
       header: json['header'] as String,
       module: json['module'] as String,
+      active: json['active'] as bool?,
       contents: (json['contents'] as List<dynamic>?)
           ?.map((e) => ContentModel.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -21,6 +22,7 @@ Map<String, dynamic> _$$PrivacyPolicyModelImplToJson(
     <String, dynamic>{
       'header': instance.header,
       'module': instance.module,
+      'active': instance.active,
       'contents': instance.contents,
     };
 

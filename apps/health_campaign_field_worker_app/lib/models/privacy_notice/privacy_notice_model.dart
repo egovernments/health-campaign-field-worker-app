@@ -8,6 +8,7 @@ class PrivacyPolicyModel with _$PrivacyPolicyModel {
   const factory PrivacyPolicyModel({
     required String header,
     required String module,
+    bool? active,
     List<ContentModel>? contents,
   }) = _PrivacyPolicyModel;
 

@@ -11246,19 +11246,24 @@ const PrivacyPolicySchema = Schema(
   name: r'PrivacyPolicy',
   id: 4448755274946548969,
   properties: {
-    r'contents': PropertySchema(
+    r'active': PropertySchema(
       id: 0,
+      name: r'active',
+      type: IsarType.bool,
+    ),
+    r'contents': PropertySchema(
+      id: 1,
       name: r'contents',
       type: IsarType.objectList,
       target: r'Content',
     ),
     r'header': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'header',
       type: IsarType.string,
     ),
     r'module': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'module',
       type: IsarType.string,
     )
@@ -11299,14 +11304,15 @@ void _privacyPolicySerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
+  writer.writeBool(offsets[0], object.active);
   writer.writeObjectList<Content>(
-    offsets[0],
+    offsets[1],
     allOffsets,
     ContentSchema.serialize,
     object.contents,
   );
-  writer.writeString(offsets[1], object.header);
-  writer.writeString(offsets[2], object.module);
+  writer.writeString(offsets[2], object.header);
+  writer.writeString(offsets[3], object.module);
 }
 
 PrivacyPolicy _privacyPolicyDeserialize(
@@ -11316,14 +11322,15 @@ PrivacyPolicy _privacyPolicyDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = PrivacyPolicy();
+  object.active = reader.readBoolOrNull(offsets[0]);
   object.contents = reader.readObjectList<Content>(
-    offsets[0],
+    offsets[1],
     ContentSchema.deserialize,
     allOffsets,
     Content(),
   );
-  object.header = reader.readString(offsets[1]);
-  object.module = reader.readString(offsets[2]);
+  object.header = reader.readString(offsets[2]);
+  object.module = reader.readString(offsets[3]);
   return object;
 }
 
@@ -11335,15 +11342,17 @@ P _privacyPolicyDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
+      return (reader.readBoolOrNull(offset)) as P;
+    case 1:
       return (reader.readObjectList<Content>(
         offset,
         ContentSchema.deserialize,
         allOffsets,
         Content(),
       )) as P;
-    case 1:
-      return (reader.readString(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -11352,6 +11361,34 @@ P _privacyPolicyDeserializeProp<P>(
 
 extension PrivacyPolicyQueryFilter
     on QueryBuilder<PrivacyPolicy, PrivacyPolicy, QFilterCondition> {
+  QueryBuilder<PrivacyPolicy, PrivacyPolicy, QAfterFilterCondition>
+      activeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'active',
+      ));
+    });
+  }
+
+  QueryBuilder<PrivacyPolicy, PrivacyPolicy, QAfterFilterCondition>
+      activeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'active',
+      ));
+    });
+  }
+
+  QueryBuilder<PrivacyPolicy, PrivacyPolicy, QAfterFilterCondition>
+      activeEqualTo(bool? value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'active',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<PrivacyPolicy, PrivacyPolicy, QAfterFilterCondition>
       contentsIsNull() {
     return QueryBuilder.apply(this, (query) {

@@ -22,6 +22,7 @@ PrivacyPolicyModel _$PrivacyPolicyModelFromJson(Map<String, dynamic> json) {
 mixin _$PrivacyPolicyModel {
   String get header => throw _privateConstructorUsedError;
   String get module => throw _privateConstructorUsedError;
+  bool? get active => throw _privateConstructorUsedError;
   List<ContentModel>? get contents => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -36,7 +37,11 @@ abstract class $PrivacyPolicyModelCopyWith<$Res> {
           PrivacyPolicyModel value, $Res Function(PrivacyPolicyModel) then) =
       _$PrivacyPolicyModelCopyWithImpl<$Res, PrivacyPolicyModel>;
   @useResult
-  $Res call({String header, String module, List<ContentModel>? contents});
+  $Res call(
+      {String header,
+      String module,
+      bool? active,
+      List<ContentModel>? contents});
 }
 
 /// @nodoc
@@ -54,6 +59,7 @@ class _$PrivacyPolicyModelCopyWithImpl<$Res, $Val extends PrivacyPolicyModel>
   $Res call({
     Object? header = null,
     Object? module = null,
+    Object? active = freezed,
     Object? contents = freezed,
   }) {
     return _then(_value.copyWith(
@@ -65,6 +71,10 @@ class _$PrivacyPolicyModelCopyWithImpl<$Res, $Val extends PrivacyPolicyModel>
           ? _value.module
           : module // ignore: cast_nullable_to_non_nullable
               as String,
+      active: freezed == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool?,
       contents: freezed == contents
           ? _value.contents
           : contents // ignore: cast_nullable_to_non_nullable
@@ -81,7 +91,11 @@ abstract class _$$PrivacyPolicyModelImplCopyWith<$Res>
       __$$PrivacyPolicyModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String header, String module, List<ContentModel>? contents});
+  $Res call(
+      {String header,
+      String module,
+      bool? active,
+      List<ContentModel>? contents});
 }
 
 /// @nodoc
@@ -97,6 +111,7 @@ class __$$PrivacyPolicyModelImplCopyWithImpl<$Res>
   $Res call({
     Object? header = null,
     Object? module = null,
+    Object? active = freezed,
     Object? contents = freezed,
   }) {
     return _then(_$PrivacyPolicyModelImpl(
@@ -108,6 +123,10 @@ class __$$PrivacyPolicyModelImplCopyWithImpl<$Res>
           ? _value.module
           : module // ignore: cast_nullable_to_non_nullable
               as String,
+      active: freezed == active
+          ? _value.active
+          : active // ignore: cast_nullable_to_non_nullable
+              as bool?,
       contents: freezed == contents
           ? _value._contents
           : contents // ignore: cast_nullable_to_non_nullable
@@ -122,6 +141,7 @@ class _$PrivacyPolicyModelImpl implements _PrivacyPolicyModel {
   const _$PrivacyPolicyModelImpl(
       {required this.header,
       required this.module,
+      this.active,
       final List<ContentModel>? contents})
       : _contents = contents;
 
@@ -132,6 +152,8 @@ class _$PrivacyPolicyModelImpl implements _PrivacyPolicyModel {
   final String header;
   @override
   final String module;
+  @override
+  final bool? active;
   final List<ContentModel>? _contents;
   @override
   List<ContentModel>? get contents {
@@ -144,7 +166,7 @@ class _$PrivacyPolicyModelImpl implements _PrivacyPolicyModel {
 
   @override
   String toString() {
-    return 'PrivacyPolicyModel(header: $header, module: $module, contents: $contents)';
+    return 'PrivacyPolicyModel(header: $header, module: $module, active: $active, contents: $contents)';
   }
 
   @override
@@ -154,12 +176,13 @@ class _$PrivacyPolicyModelImpl implements _PrivacyPolicyModel {
             other is _$PrivacyPolicyModelImpl &&
             (identical(other.header, header) || other.header == header) &&
             (identical(other.module, module) || other.module == module) &&
+            (identical(other.active, active) || other.active == active) &&
             const DeepCollectionEquality().equals(other._contents, _contents));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, header, module,
+  int get hashCode => Object.hash(runtimeType, header, module, active,
       const DeepCollectionEquality().hash(_contents));
 
   @JsonKey(ignore: true)
@@ -181,6 +204,7 @@ abstract class _PrivacyPolicyModel implements PrivacyPolicyModel {
   const factory _PrivacyPolicyModel(
       {required final String header,
       required final String module,
+      final bool? active,
       final List<ContentModel>? contents}) = _$PrivacyPolicyModelImpl;
 
   factory _PrivacyPolicyModel.fromJson(Map<String, dynamic> json) =
@@ -190,6 +214,8 @@ abstract class _PrivacyPolicyModel implements PrivacyPolicyModel {
   String get header;
   @override
   String get module;
+  @override
+  bool? get active;
   @override
   List<ContentModel>? get contents;
   @override

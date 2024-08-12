@@ -232,6 +232,7 @@ class RefusalReasons {
 class PrivacyPolicy {
   late String header;
   late String module;
+  late bool? active;
   late List<Content>? contents;
 }
 

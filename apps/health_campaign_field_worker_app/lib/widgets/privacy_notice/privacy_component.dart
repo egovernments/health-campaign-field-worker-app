@@ -154,7 +154,7 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
                   const SizedBox(height: kPadding/2),
                   Text(
                     widget.validationMessage,
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: theme.textTheme.bodySmall?.copyWith(
                       color: const DigitColors().lavaRed,
                     ),
                   ),

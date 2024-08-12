@@ -222,6 +222,7 @@ class MdmsRepository {
     final privacyPolicy = PrivacyPolicy()
       ..header = privacyPolicyConfig?.first.header ?? ''
       ..module = privacyPolicyConfig?.first.module ?? ''
+      ..active = privacyPolicyConfig?.first.active
       ..contents = (privacyPolicyConfig?.first.contents ?? []).map((cont) {
         final content = Content()
           ..header = cont.header

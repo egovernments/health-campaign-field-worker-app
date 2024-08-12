@@ -132,6 +132,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                 (AppConfiguration appConfiguration, _, __) =>
                                     appConfiguration.privacyPolicyConfig,
                             orElse: () => null);
+                        if(privacyPolicyJson?.active==false){
+                          return const SizedBox.shrink();
+                        }
                         return PrivacyComponent(
                           privacyPolicy: privacyPolicyJson,
                           formControlName: _privacyCheck,
