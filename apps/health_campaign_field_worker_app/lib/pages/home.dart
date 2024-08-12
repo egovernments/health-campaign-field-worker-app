@@ -496,20 +496,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
-      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
       i18.home.manageStockLabel:
@@ -553,8 +539,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db ||
-            element == i18.home.dashboard)
+            element == i18.home.db)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -650,8 +635,11 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (AppConfiguration appConfiguration, List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,) {
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,
+      ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
