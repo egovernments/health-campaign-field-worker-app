@@ -1,3 +1,6 @@
+
+import 'package:auto_route/annotations.dart';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
@@ -7,12 +10,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../blocs/complaints_registration/complaints_registration.dart';
-// import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
+
+import '/blocs/complaints_registration/complaints_registration.dart';
+import '/router/complaints_router.dart';
+import '/utils/i18_key_constants.dart' as i18;
+import '/utils/utils.dart';
+import '/widgets/header/back_navigation_help_header.dart';
+import '/widgets/localized.dart';
+
 
 @RoutePage()
 class ComplaintsLocationPage extends LocalizedStatefulWidget {
@@ -236,7 +241,9 @@ class _ComplaintsLocationPageState
         value: addressModel?.buildingName,
         disabled: shouldDisableForm,
         validators: [
-          // CustomValidator.requiredMin,
+
+          CustomValidator.requiredMin,
+
           Validators.maxLength(maxLength),
         ],
       ),
@@ -244,7 +251,9 @@ class _ComplaintsLocationPageState
         value: addressModel?.street,
         disabled: shouldDisableForm,
         validators: [
-          // CustomValidator.requiredMin,
+
+          CustomValidator.requiredMin,
+
           Validators.maxLength(maxLength),
         ],
       ),
@@ -252,7 +261,9 @@ class _ComplaintsLocationPageState
         value: addressModel?.landmark,
         disabled: shouldDisableForm,
         validators: [
-          // CustomValidator.requiredMin,
+
+          CustomValidator.requiredMin,
+
           Validators.maxLength(maxLength),
         ],
       ),
@@ -260,14 +271,18 @@ class _ComplaintsLocationPageState
         value: addressModel?.pincode,
         disabled: shouldDisableForm,
         validators: [
-          // CustomValidator.requiredMin,
+
+          CustomValidator.requiredMin,
+
           Validators.maxLength(6),
         ],
       ),
       _latKey: FormControl<double>(
         value: addressModel?.geoLocation?.latitude,
         validators: [
-          // CustomValidator.requiredMin,
+
+          CustomValidator.requiredMin,
+
         ],
       ),
       _lngKey: FormControl<double>(

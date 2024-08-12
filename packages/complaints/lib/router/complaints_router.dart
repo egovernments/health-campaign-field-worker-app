@@ -56,11 +56,15 @@ class ComplaintsRoute extends $ComplaintsRoute {
           page: ComplaintsDetailsRoute.page,
           path: 'complaints-details',
         ),
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
+
       ],
     ),
+
+    /// Complaints Acknowledgement
+    AutoRoute(
+      page: ComplaintsAcknowledgementRoute.page,
+      path: 'complaints-acknowledgement',
+    ),
+
   ];
 }

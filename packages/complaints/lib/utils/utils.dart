@@ -84,7 +84,9 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-// import '/models/entities/complaint_types.dart';
+
+import '/models/entities/complaint_types.dart';
+
 
 export 'extensions/extensions.dart';
 
@@ -105,8 +107,10 @@ class ComplaintsSingleton {
   String? _loggedInUserUuid = '';
   String? _userMobileNumber = '';
   String? _loggedInUserName = '';
-  String? _boundary = '';
+
   List<String>? _complaintTypes;
+  BoundaryModel? _boundaryModel;
+  String? _userName ='';
 
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
@@ -116,16 +120,19 @@ class ComplaintsSingleton {
     String? loggedInUserUuid,
     String? userMobileNumber,
     String? loggedInUserName,
-    String? boundary = '',
+
     List<String>? complaintTypes,
-    String? loggedInUserMobileNumber,
-  }) {
+    String? userName,
+  }){
+
     _tenantId = tenantId;
     _loggedInUserUuid = loggedInUserUuid;
     _userMobileNumber = userMobileNumber;
     _loggedInUserName = loggedInUserName;
-    _boundary = boundary;
+
     _complaintTypes = complaintTypes;
+    _userName = userName;
+
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
@@ -136,17 +143,34 @@ class ComplaintsSingleton {
     _tenantId = tenantId;
   }
 
+  void setBoundary({required BoundaryModel boundary}) {
+    _boundaryModel = boundary;
+  }
+
   get tenantId => _tenantId;
   get loggedInUserUuid => _loggedInUserUuid;
   get userMobileNumber => _userMobileNumber;
   get loggedInUserName => _loggedInUserName;
   get complaintTypes => _complaintTypes;
   get persistenceConfiguration => _persistenceConfiguration;
-  get boundary => _boundary;
+
+  get boundary => _boundaryModel;
+  get userName => _userName;
+
+
 }
 
 class CustomValidator {
   /// Validates that control's value must be `true`
+  static Map<String, dynamic>? requiredMin(
+      AbstractControl<dynamic> control,
+      ) {
+    return control.value == null ||
+        control.value.toString().length >= 2 ||
+        control.value.toString().trim().isEmpty
+        ? null
+        : {'required': true};
+  }
 
   static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,

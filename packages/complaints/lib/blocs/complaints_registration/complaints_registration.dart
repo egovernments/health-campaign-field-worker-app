@@ -1,13 +1,12 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
-import 'package:complaints/complaints.dart';
-import 'package:complaints/models/complaints.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '/models/complaints.dart';
+import '/models/entities/additional_fields_type.dart';
 import '/utils/typedefs.dart';
 import '/utils/utils.dart';
 
@@ -33,7 +32,7 @@ class ComplaintsRegistrationBloc
     ComplaintsRegistrationSaveComplaintTypeEvent event,
     ComplaintsRegistrationEmitter emit,
   ) async {
-    print("save complaint type");
+
     state.maybeMap(
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),
       create: (value) {
@@ -85,11 +84,11 @@ class ComplaintsRegistrationBloc
     ComplaintsRegistrationSubmitComplaintEvent event,
     ComplaintsRegistrationEmitter emit,
   ) async {
-    print("YASHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH");
+
     await state.maybeMap(
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),
       create: (value) async {
-        print("inside registration Bloc - Loading");
+
         emit(value.copyWith(loading: true));
 
         final serviceCode = value.complaintType;
@@ -97,25 +96,26 @@ class ComplaintsRegistrationBloc
             value.otherComplaintTypeDescription;
         final complaintDetailsModel = value.complaintsDetailsModel;
         final address = value.addressModel;
-        print("1111111111111111111");
         if (serviceCode == null) {
           throw (const InvalidComplaintsRegistrationStateException(
             'Complaint type is not provided',
           ));
         }
-        print("22222222222222222");
+
+
+
         if (complaintDetailsModel == null) {
           throw (const InvalidComplaintsRegistrationStateException(
             'Complaint details are not provided',
           ));
         }
-        print("33333333333333333333333");
+
         if (address == null) {
           throw (const InvalidComplaintsRegistrationStateException(
             'Address is not provided',
           ));
         }
-        print("44444444444444");
+
         final description = complaintDetailsModel.complaintDescription;
 
         var referenceId = IdGen.i.identifier;
@@ -132,7 +132,9 @@ class ComplaintsRegistrationBloc
             tenantId: ComplaintsSingleton().tenantId,
             serviceCode: serviceCode,
             description: description,
-            // source: AdditionalFieldsType.mobile.toValue(),
+
+            source: AdditionalFieldsType.mobile.toValue(),
+
             applicationStatus: PgrServiceApplicationStatus.created,
             user: PgrComplainantModel(
               tenantId: ComplaintsSingleton().tenantId,
@@ -149,7 +151,7 @@ class ComplaintsRegistrationBloc
               ),
               uuid: event.userId,
               userName: complaintDetailsModel.complainantContactNumber,
-              // type: AdditionalFieldsType.employee.toValue(),
+              type: AdditionalFieldsType.employee.toValue(),
             ),
             address: address.copyWith(
               relatedClientReferenceId: referenceId,

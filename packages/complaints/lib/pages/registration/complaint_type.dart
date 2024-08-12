@@ -11,9 +11,11 @@ import 'package:recase/recase.dart';
 
 import '/blocs/complaints_registration/complaints_registration.dart';
 import '/router/complaints_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
+
+import '/utils/i18_key_constants.dart' as i18;
+import '/widgets/header/back_navigation_help_header.dart';
+import '/widgets/localized.dart';
+
 
 @RoutePage()
 class ComplaintTypePage extends LocalizedStatefulWidget {
@@ -83,12 +85,14 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
 
                     state.whenOrNull(
                       create: (
-                        loading,
-                        complaintType,
-                        _,
-                        addressModel,
-                        complaintsDetailsModel,
-                      ) {
+
+                          loading,
+                          complaintType,
+                          _,
+                          addressModel,
+                          complaintsDetailsModel,
+                          ) {
+
                         bloc.add(
                           ComplaintsRegistrationEvent.saveComplaintType(
                             complaintType: form.control(_complaintType).value,
@@ -127,18 +131,24 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           i18.complaints.complaintsTypeLabel,
                         ),
                         child: RadioGroup<String>.builder(
-                          groupValue: form.control(_complaintType).value ?? "",
+
+                          groupValue:
+                            form.control(_complaintType).value ?? "",
+
                           onChanged: (changedValue) {
                             if (form.control(_complaintType).disabled) return;
 
                             setState(() {
-                              form.control(_complaintType).value = changedValue;
+
+                              form.control(_complaintType).value =
+                              changedValue;
                             });
-                          },
+                            },
                           textStyle: TextStyle(
                             color: form.control(_complaintType).disabled
-                                ? theme.colorScheme.shadow
-                                : theme.colorScheme.onBackground,
+                                  ? theme.colorScheme.shadow
+                                  : theme.colorScheme.onBackground,
+
                           ),
                           items: ComplaintsSingleton().complaintTypes ?? [],
                           itemBuilder: (item) => RadioButtonBuilder(
@@ -155,8 +165,10 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           maxLength: 100,
                           validationMessages: {
                             'required': (object) => localizations.translate(
-                                  i18.complaints.validationRequiredError,
-                                ),
+
+                              i18.complaints.validationRequiredError,
+                            ),
+
                           },
                         ),
                       ],

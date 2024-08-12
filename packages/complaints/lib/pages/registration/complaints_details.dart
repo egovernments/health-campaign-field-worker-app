@@ -1,5 +1,7 @@
+
+import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:complaints/models/complaints.dart';
+
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -9,10 +11,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-// import '../../../blocs/auth/auth.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
-// import '../../../models/complaints/complaints.dart';
-// import '../../../router/app_router.dart';
+import '../../../models/complaints.dart';
+import '../../../router/complaints_router.dart';
+
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
@@ -56,18 +58,21 @@ class _ComplaintsDetailsPageState
         form: () => bloc.state.map(
           create: (value) => buildForm(value),
           persisted: (value) =>
-              throw const InvalidComplaintsRegistrationStateException(),
+
+          throw const InvalidComplaintsRegistrationStateException(),
           view: (value) => buildForm(value),
         ),
         builder: (_, form, __) => BlocListener<BoundaryBloc, BoundaryState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            context.navigateTo(ComplaintsInboxWrapperRoute());
+          },
+
           child: BlocConsumer<ComplaintsRegistrationBloc,
               ComplaintsRegistrationState>(
             listener: (context, complaintState) {
               complaintState.mapOrNull(
                 persisted: (value) {
-                  // router.push(ComplaintsInboxWrapperRoute());
-                  // print("Submitttttttiiiing 2");
+
                   router.replace(ComplaintsAcknowledgementRoute());
                 },
               );
@@ -75,12 +80,7 @@ class _ComplaintsDetailsPageState
             builder: (context, state) {
               final isRaisedForSelf = form.control(_complaintRaisedFor).value ==
                   i18.complaints.raisedForMyself;
-              if (isRaisedForSelf) {
-                form.control(_complainantName).value =
-                    ComplaintsSingleton().loggedInUserName;
-                form.control(_complainantContactNumber).value =
-                    ComplaintsSingleton().userMobileNumber;
-              }
+
 
               return ScrollableContent(
                 enableFixedButton: true,
@@ -93,85 +93,93 @@ class _ComplaintsDetailsPageState
                   child: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                     padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+
+                    const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: DigitElevatedButton(
                       onPressed: () async {
-                        print("Submit pressed");
                         setState(() {
                           form.markAllAsTouched();
                         });
-                        print("Submit pressed 1");
+
                         if (form.control(_complaintDetailsForm).disabled) {
                           router.parent()?.maybePop();
                         }
-                        print("Submit pressed 2");
-                        // if (!form.valid) return;
 
-                        print("Submit pressed 3 valid form ${form.toString()}");
+                        if (!form.valid){
+                          print("hereee");
+                          form.controls.forEach((key, control) {
+                            if (control.invalid) {
+                              print("Invalid field: $key");
+                            }
+                          });
+                          return;
+                        }
+
                         FocusManager.instance.primaryFocus?.unfocus();
 
                         final dateOfComplaint =
-                            form.control(_dateOfComplaint).value as DateTime;
-                        print("valid date");
+                        form.control(_dateOfComplaint).value as DateTime;
+
                         final complaintRaisedFor =
-                            form.control(_complaintRaisedFor).value as String;
-                        print("valid raised for");
+                        form.control(_complaintRaisedFor).value as String;
+
                         final administrativeArea =
-                            form.control(_administrativeArea).value as String;
-                        print("valid area");
-                        final complainantName = form
-                            .control(_complainantName)
-                            .value as String?; //no ?
-                        print("valid name");
+                        form.control(_administrativeArea).value as String;
+
+                        final complainantName =
+                        form.control(_complainantName).value as String;
+
                         final complainantContactNumber = form
                             .control(_complainantContactNumber)
                             .value as String;
-                        print("valid contact");
+
                         final supervisorName =
-                            form.control(_supervisorName).value as String?;
+                        form.control(_supervisorName).value as String?;
+
 
                         final supervisorContactNumber = form
                             .control(_supervisorContactNumber)
                             .value as String?;
 
                         final complaintDescription =
-                            form.control(_complaintDescription).value as String;
-                        print("Submit pressed 4");
+
+                        form.control(_complaintDescription).value as String;
+
 
                         state.whenOrNull(
                           create: (
-                            loading,
-                            complaintType,
-                            _,
-                            addressModel,
-                            complaintsDetailsModel,
-                          ) {
+                              loading,
+                              complaintType,
+                              _,
+                              addressModel,
+                              complaintsDetailsModel,
+                              ) {
                             bloc.add(
                               ComplaintsRegistrationEvent.saveComplaintDetails(
-                                boundaryModel:
-                                    BoundaryModel(), //context.boundary
+                                boundaryModel: ComplaintsSingleton().boundary,
                                 complaintsDetailsModel: ComplaintsDetailsModel(
-                                  administrativeArea: ComplaintsSingleton()
-                                      .boundary
-                                      // .code
-                                      .toString(),
+                                  administrativeArea:
+                                  ComplaintsSingleton().boundary.code.toString(),
                                   dateOfComplaint: dateOfComplaint,
                                   complaintRaisedFor: complaintRaisedFor,
-                                  complainantName: complainantName!,
+                                  complainantName: complainantName,
                                   complainantContactNumber:
-                                      complainantContactNumber,
+                                  complainantContactNumber,
                                   supervisorName: supervisorName,
                                   supervisorContactNumber:
-                                      supervisorContactNumber,
+                                  supervisorContactNumber,
+         
                                   complaintDescription: complaintDescription,
                                 ),
                               ),
                             );
                           },
                         );
-                        print("Submit pressed 5");
+
+
                         final userId = ComplaintsSingleton().loggedInUserUuid;
-                        // // print("Submitttttttiiiing hi");
+
+
                         final submit = await DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
@@ -186,14 +194,7 @@ class _ComplaintsDetailsPageState
                                 i18.common.coreCommonSubmit,
                               ),
                               action: (context) {
-                                print("Submitttttttiiiing SUbmit");
-                                bloc.add(
-                                  ComplaintsRegistrationSubmitComplaintEvent(
-                                    userId: userId,
-                                  ),
-                                );
-                                router
-                                    .replace(ComplaintsAcknowledgementRoute());
+
                                 Navigator.of(
                                   context,
                                   rootNavigator: true,
@@ -205,7 +206,7 @@ class _ComplaintsDetailsPageState
                                 i18.common.coreCommonCancel,
                               ),
                               action: (context) {
-                                print("Submitttttttiiiing Cancel");
+
                                 Navigator.of(
                                   context,
                                   rootNavigator: true,
@@ -216,21 +217,24 @@ class _ComplaintsDetailsPageState
                         );
 
                         if (submit != true) return;
-                        // router.push(ComplaintsInboxWrapperRoute());
-                        // router.replace(ComplaintsAcknowledgementRoute());
-                        // bloc.add(
-                        //   ComplaintsRegistrationSubmitComplaintEvent(
-                        //     userId: userId,
-                        //   ),
-                        // );
+
+
+                        bloc.add(
+                          ComplaintsRegistrationSubmitComplaintEvent(
+                            userId: userId,
+                          ),
+                        );
+
                       },
                       child: Center(
                         child: Text(
                           form.control(_complaintDetailsForm).disabled
                               ? localizations
-                                  .translate(i18.complaints.backToInbox)
+
+                              .translate(i18.complaints.backToInbox)
                               : localizations
-                                  .translate(i18.common.coreCommonSubmit),
+                              .translate(i18.common.coreCommonSubmit),
+
                         ),
                       ),
                     ),
@@ -280,8 +284,10 @@ class _ComplaintsDetailsPageState
                               children: [
                                 RadioGroup<String>.builder(
                                   groupValue:
-                                      form.control(_complaintRaisedFor).value ??
-                                          "",
+
+                                  form.control(_complaintRaisedFor).value ??
+                                      "",
+
                                   onChanged: (changedValue) {
                                     if (form
                                         .control(_complaintRaisedFor)
@@ -294,6 +300,15 @@ class _ComplaintsDetailsPageState
                                           .control(_complainantContactNumber)
                                           .value = "";
                                     }
+
+                                    else{
+                                        form.control(_complainantName).value =
+                                            ComplaintsSingleton().userName;
+                                        form.control(_complainantContactNumber).value =
+                                            ComplaintsSingleton().userMobileNumber;
+
+                                    }
+
                                     setState(() {
                                       form.control(_complaintRaisedFor).value =
                                           changedValue;
@@ -301,8 +316,10 @@ class _ComplaintsDetailsPageState
                                   },
                                   textStyle: TextStyle(
                                     color: form
-                                            .control(_complaintRaisedFor)
-                                            .disabled
+
+                                        .control(_complaintRaisedFor)
+                                        .disabled
+
                                         ? theme.colorScheme.shadow
                                         : theme.colorScheme.onBackground,
                                   ),
@@ -336,72 +353,57 @@ class _ComplaintsDetailsPageState
                               ],
                             ),
                           ),
-                          // BlocBuilder<AuthBloc, AuthState>(
-                          //   builder: (context, state) {
-                          //     state?.mapOrNull(
-                          //       authenticated: (value) {
-                          //         var user = value.userModel;
 
-                          // if (isRaisedForSelf) {
-                          //   form.control(_complainantName).value =
-                          //       user.name;
-                          //   form
-                          //       .control(_complainantContactNumber)
-                          //       .value = user.mobileNumber;
-                          // }
-                          //       },
-                          //     );
-                          if (isRaisedForSelf) ...[
-                            Column(
-                              children: [
-                                DigitTextFormField(
-                                  formControlName: _complainantName,
-                                  label: localizations.translate(
-                                    i18.complaints.complainantName,
+                          Column(
+                                children: [
+                                  DigitTextFormField(
+                                    formControlName: _complainantName,
+                                    label: localizations.translate(
+                                      i18.complaints.complainantName,
+                                    ),
+                                    readOnly: isRaisedForSelf,
+                                    isRequired: true,
+                                    validationMessages: {
+                                      'required': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                          i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '64'),
+                                    },
                                   ),
-                                  readOnly: isRaisedForSelf,
-                                  isRequired: true,
-                                  validationMessages: {
-                                    'required': (object) =>
-                                        localizations.translate(i18.complaints
-                                            .validationRequiredError),
-                                    'maxLength': (object) => localizations
-                                        .translate(i18.common.maxCharsRequired)
-                                        .replaceAll('{}', '64'),
-                                  },
-                                ),
-                                DigitTextFormField(
-                                  formControlName: _complainantContactNumber,
-                                  label: localizations.translate(
-                                    i18.complaints.complainantContactNumber,
+                                  DigitTextFormField(
+                                    formControlName: _complainantContactNumber,
+                                    label: localizations.translate(
+                                      i18.complaints.complainantContactNumber,
+                                    ),
+                                    readOnly: isRaisedForSelf,
+                                    isRequired: true,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly,
+                                    ],
+                                    validationMessages: {
+                                      'mobileNumber': (object) =>
+                                          localizations.translate(i18
+                                              .individualDetails
+                                              .mobileNumberInvalidFormatValidationMessage),
+                                      'required': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationRequiredError),
+                                      'minLength': (object) =>
+                                          localizations.translate(i18.complaints
+                                              .validationMinLengthError),
+                                      'maxLength': (object) => localizations
+                                          .translate(
+                                          i18.common.maxCharsRequired)
+                                          .replaceAll('{}', '10'),
+                                    },
                                   ),
-                                  readOnly: isRaisedForSelf,
-                                  isRequired: true,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  validationMessages: {
-                                    'mobileNumber': (object) =>
-                                        localizations.translate(i18
-                                            .individualDetails
-                                            .mobileNumberInvalidFormatValidationMessage),
-                                    'required': (object) =>
-                                        localizations.translate(i18.complaints
-                                            .validationRequiredError),
-                                    'minLength': (object) =>
-                                        localizations.translate(i18.complaints
-                                            .validationMinLengthError),
-                                    'maxLength': (object) => localizations
-                                        .translate(i18.common.maxCharsRequired)
-                                        .replaceAll('{}', '10'),
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                          // },
-                          // ),
+                                ],
+                              ),
+
                           DigitTextFormField(
                             formControlName: _supervisorName,
                             label: localizations.translate(
@@ -445,8 +447,10 @@ class _ComplaintsDetailsPageState
                             isRequired: true,
                             validationMessages: {
                               'required': (object) => localizations.translate(
-                                    i18.complaints.validationRequiredError,
-                                  ),
+
+                                i18.complaints.validationRequiredError,
+                              ),
+
                               'maxLength': (object) => localizations
                                   .translate(i18.common.maxCharsRequired)
                                   .replaceAll('{}', '1000'),
@@ -479,9 +483,11 @@ class _ComplaintsDetailsPageState
         validators: [],
       ),
       _administrativeArea: FormControl<String>(
-        value: localizations.translate((complaintDetails?.administrativeArea ??
-                ComplaintsSingleton().boundary) //context.boundary.name
-            .toString()),
+
+        value: localizations.translate(
+            (complaintDetails?.administrativeArea ?? ComplaintsSingleton().boundary.name)
+                .toString()),
+
         disabled: shouldDisableForm,
         validators: [Validators.required],
       ),

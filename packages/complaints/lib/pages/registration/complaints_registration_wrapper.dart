@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:complaints/models/complaints.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../blocs/complaints_registration/complaints_registration.dart';
-// import '../../../models/complaints/complaints.dart';
-import '../../../utils/utils.dart';
-// import '../../../widgets/boundary_selection_wrapper.dart';
+
+import '/blocs/complaints_registration/complaints_registration.dart';
+import '/models/complaints.dart';
+import '/utils/utils.dart';
+import '/widgets/boundary_selection_wrapper.dart';
+
 
 @RoutePage()
 class ComplaintsRegistrationWrapperPage extends StatelessWidget
@@ -23,10 +25,9 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    // return const BoundarySelectionWrapper(
-    //   child: AutoRouter(),
-    // );
-    return Container(
+
+    return const BoundarySelectionWrapper(
+
       child: AutoRouter(),
     );
   }
@@ -53,10 +54,11 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget
               complainantName: pgrItem.user.name ?? '',
               complaintDescription: pgrItem.description,
               complaintRaisedFor:
-                  // context.loggedInUser.mobileNumber != pgrItem.user.mobileNumber
-                  //     ? 'Another user'
-                  //     :
-                  'Myself',
+
+                  ComplaintsSingleton().userMobileNumber != pgrItem.user.mobileNumber
+                      ? 'Another user'
+                      : 'Myself',
+
               dateOfComplaint: pgrItem.auditDetails?.createdTime.toDateTime ??
                   DateTime.now(),
               supervisorContactNumber:
@@ -70,8 +72,10 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget
 
         return ComplaintsRegistrationBloc(
           initialState,
-          pgrServiceRepository: context
-              .repository<PgrServiceModel, PgrServiceSearchModel>(context),
+
+          pgrServiceRepository:
+              context.repository<PgrServiceModel, PgrServiceSearchModel>(context),
+
         );
       },
       child: this,

@@ -770,10 +770,12 @@ void setPackagesSingleton(BuildContext context) {
         ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
-          loggedInUserName: context.loggedInUser.name,
           userMobileNumber: context.loggedInUser.mobileNumber,
-          complaintTypes:
-              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          loggedInUserName: context.loggedInUser.name,
+
+          complaintTypes: appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+
         );
       });
 }

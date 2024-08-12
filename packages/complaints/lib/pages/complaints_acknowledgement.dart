@@ -1,8 +1,12 @@
+
+import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-// import '../router/app_router.dart';
+import '/router/complaints_router.dart';
+
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -25,7 +29,10 @@ class _ComplaintsAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
-          context.router.maybePop();
+
+          // context.router.maybePop();
+          context.router.popUntilRouteWithName('ComplaintsInboxWrapperRoute');
+
         },
         actionLabel:
             localizations.translate(i18.complaints.acknowledgementAction),
