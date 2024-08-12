@@ -8,7 +8,7 @@ class ComplaintsRoute extends $ComplaintsRoute {
   RouteType get defaultRouteType => const RouteType.material();
 
   @override
-  List<AutoRoute> routes =[
+  List<AutoRoute> routes = [
     /// Complaints Inbox
     AutoRoute(
       page: ComplaintsInboxWrapperRoute.page,
@@ -19,22 +19,22 @@ class ComplaintsRoute extends $ComplaintsRoute {
           path: 'complaints-inbox-items',
           initial: true,
         ),
-          AutoRoute(
-            page: ComplaintsInboxFilterRoute.page,
-            path: 'complaints-inbox-filter',
-          ),
-          AutoRoute(
-            page: ComplaintsInboxSearchRoute.page,
-            path: 'complaints-inbox-search',
-          ),
-          AutoRoute(
-            page: ComplaintsInboxSortRoute.page,
-            path: 'complaints-inbox-sort',
-          ),
-          AutoRoute(
-            page: ComplaintsDetailsViewRoute.page,
-            path: 'complaints-inbox-view-details',
-          ),
+        AutoRoute(
+          page: ComplaintsInboxFilterRoute.page,
+          path: 'complaints-inbox-filter',
+        ),
+        AutoRoute(
+          page: ComplaintsInboxSearchRoute.page,
+          path: 'complaints-inbox-search',
+        ),
+        AutoRoute(
+          page: ComplaintsInboxSortRoute.page,
+          path: 'complaints-inbox-sort',
+        ),
+        AutoRoute(
+          page: ComplaintsDetailsViewRoute.page,
+          path: 'complaints-inbox-view-details',
+        ),
       ],
     ),
 
@@ -56,6 +56,7 @@ class ComplaintsRoute extends $ComplaintsRoute {
           page: ComplaintsDetailsRoute.page,
           path: 'complaints-details',
         ),
+
       ],
     ),
 
@@ -64,6 +65,6 @@ class ComplaintsRoute extends $ComplaintsRoute {
       page: ComplaintsAcknowledgementRoute.page,
       path: 'complaints-acknowledgement',
     ),
-  ];
 
+  ];
 }

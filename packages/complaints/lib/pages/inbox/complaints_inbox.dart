@@ -37,7 +37,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
       body: BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
         builder: (context, state) {
           final inboxItems =
-          state.isFiltered ? state.filteredComplaints : state.complaints;
+              state.isFiltered ? state.filteredComplaints : state.complaints;
 
           // TODO(ajil): Fix this scrollable component
           return Column(
@@ -53,7 +53,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                     SliverToBoxAdapter(
                       child: Padding(
                         padding: const EdgeInsets.only(
-                          left: kPadding*2,
+                          left: kPadding * 2,
                           bottom: kPadding,
                         ),
                         child: Text(
@@ -72,7 +72,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                             TextButton(
                               style: TextButton.styleFrom(
                                 foregroundColor: theme.colorScheme.secondary,
-                                padding: const EdgeInsets.only(left: kPadding*2),
+                                padding:
+                                    const EdgeInsets.only(left: kPadding * 2),
                               ),
                               onPressed: () {
                                 router.push(ComplaintsInboxSearchRoute());
@@ -80,7 +81,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.search),
-                                  const SizedBox(width: 5,),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(localizations.translate(
                                     i18.complaints.searchCTA,
                                   )),
@@ -98,7 +101,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.filter_list_alt),
-                                  const SizedBox(width: 5,),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(localizations.translate(
                                     i18.complaints.filterCTA,
                                   )),
@@ -108,7 +113,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                             TextButton(
                               style: TextButton.styleFrom(
                                 foregroundColor: theme.colorScheme.secondary,
-                                padding: const EdgeInsets.only(right: kPadding*2),
+                                padding:
+                                    const EdgeInsets.only(right: kPadding * 2),
                               ),
                               onPressed: () {
                                 router.push(ComplaintsInboxSortRoute());
@@ -116,7 +122,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               child: Row(
                                 children: [
                                   const Icon(Icons.segment),
-                                  const SizedBox(width: 5,),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
                                   Text(localizations.translate(
                                     i18.complaints.sortCTA,
                                   )),
@@ -128,7 +136,7 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                       ),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
-                              (context, index) {
+                          (context, index) {
                             final item = inboxItems.elementAt(index);
 
                             return _ComplaintsInboxItem(
@@ -164,7 +172,8 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                   padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                   child: DigitElevatedButton(
                     onPressed: () async {
-                      var loggedInUserUuid = ComplaintsSingleton().loggedInUserUuid;
+                      var loggedInUserUuid =
+                          ComplaintsSingleton().loggedInUserUuid;
                       final bloc = context.read<ComplaintsInboxBloc>();
 
                       await router.push(
@@ -337,7 +346,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: kPadding*2),
+            padding: const EdgeInsets.only(top: kPadding * 2),
             child: Row(
               children: [
                 Expanded(
@@ -359,7 +368,11 @@ class _ComplaintsInboxItem extends StatelessWidget {
                     ),
                     child: Text(
                       localizations.translate(i18.searchBeneficiary.iconLabel),
-                      style: DigitTheme.instance.mobileTheme.textTheme.headlineSmall?.apply(color: theme.colorScheme.secondary,),
+                      style: DigitTheme
+                          .instance.mobileTheme.textTheme.headlineSmall
+                          ?.apply(
+                        color: theme.colorScheme.secondary,
+                      ),
                     ),
                   ),
                 ),

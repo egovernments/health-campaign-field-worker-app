@@ -32,6 +32,7 @@ class ComplaintsRegistrationBloc
     ComplaintsRegistrationSaveComplaintTypeEvent event,
     ComplaintsRegistrationEmitter emit,
   ) async {
+
     state.maybeMap(
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),
       create: (value) {
@@ -83,9 +84,11 @@ class ComplaintsRegistrationBloc
     ComplaintsRegistrationSubmitComplaintEvent event,
     ComplaintsRegistrationEmitter emit,
   ) async {
+
     await state.maybeMap(
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),
       create: (value) async {
+
         emit(value.copyWith(loading: true));
 
         final serviceCode = value.complaintType;
@@ -93,12 +96,13 @@ class ComplaintsRegistrationBloc
             value.otherComplaintTypeDescription;
         final complaintDetailsModel = value.complaintsDetailsModel;
         final address = value.addressModel;
-
         if (serviceCode == null) {
           throw (const InvalidComplaintsRegistrationStateException(
             'Complaint type is not provided',
           ));
         }
+
+
 
         if (complaintDetailsModel == null) {
           throw (const InvalidComplaintsRegistrationStateException(
@@ -128,7 +132,9 @@ class ComplaintsRegistrationBloc
             tenantId: ComplaintsSingleton().tenantId,
             serviceCode: serviceCode,
             description: description,
+
             source: AdditionalFieldsType.mobile.toValue(),
+
             applicationStatus: PgrServiceApplicationStatus.created,
             user: PgrComplainantModel(
               tenantId: ComplaintsSingleton().tenantId,

@@ -1,5 +1,7 @@
+
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -12,6 +14,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../../../blocs/complaints_registration/complaints_registration.dart';
 import '../../../models/complaints.dart';
 import '../../../router/complaints_router.dart';
+
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
@@ -55,6 +58,7 @@ class _ComplaintsDetailsPageState
         form: () => bloc.state.map(
           create: (value) => buildForm(value),
           persisted: (value) =>
+
           throw const InvalidComplaintsRegistrationStateException(),
           view: (value) => buildForm(value),
         ),
@@ -62,11 +66,13 @@ class _ComplaintsDetailsPageState
           listener: (context, state) {
             context.navigateTo(ComplaintsInboxWrapperRoute());
           },
+
           child: BlocConsumer<ComplaintsRegistrationBloc,
               ComplaintsRegistrationState>(
             listener: (context, complaintState) {
               complaintState.mapOrNull(
                 persisted: (value) {
+
                   router.replace(ComplaintsAcknowledgementRoute());
                 },
               );
@@ -74,7 +80,6 @@ class _ComplaintsDetailsPageState
             builder: (context, state) {
               final isRaisedForSelf = form.control(_complaintRaisedFor).value ==
                   i18.complaints.raisedForMyself;
-
 
 
               return ScrollableContent(
@@ -88,6 +93,7 @@ class _ComplaintsDetailsPageState
                   child: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                     padding:
+
                     const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: DigitElevatedButton(
                       onPressed: () async {
@@ -130,11 +136,13 @@ class _ComplaintsDetailsPageState
                         final supervisorName =
                         form.control(_supervisorName).value as String?;
 
+
                         final supervisorContactNumber = form
                             .control(_supervisorContactNumber)
                             .value as String?;
 
                         final complaintDescription =
+
                         form.control(_complaintDescription).value as String;
 
 
@@ -160,6 +168,7 @@ class _ComplaintsDetailsPageState
                                   supervisorName: supervisorName,
                                   supervisorContactNumber:
                                   supervisorContactNumber,
+         
                                   complaintDescription: complaintDescription,
                                 ),
                               ),
@@ -167,7 +176,9 @@ class _ComplaintsDetailsPageState
                           },
                         );
 
+
                         final userId = ComplaintsSingleton().loggedInUserUuid;
+
 
                         final submit = await DigitDialog.show<bool>(
                           context,
@@ -183,6 +194,7 @@ class _ComplaintsDetailsPageState
                                 i18.common.coreCommonSubmit,
                               ),
                               action: (context) {
+
                                 Navigator.of(
                                   context,
                                   rootNavigator: true,
@@ -194,6 +206,7 @@ class _ComplaintsDetailsPageState
                                 i18.common.coreCommonCancel,
                               ),
                               action: (context) {
+
                                 Navigator.of(
                                   context,
                                   rootNavigator: true,
@@ -205,19 +218,23 @@ class _ComplaintsDetailsPageState
 
                         if (submit != true) return;
 
+
                         bloc.add(
                           ComplaintsRegistrationSubmitComplaintEvent(
                             userId: userId,
                           ),
                         );
+
                       },
                       child: Center(
                         child: Text(
                           form.control(_complaintDetailsForm).disabled
                               ? localizations
+
                               .translate(i18.complaints.backToInbox)
                               : localizations
                               .translate(i18.common.coreCommonSubmit),
+
                         ),
                       ),
                     ),
@@ -267,8 +284,10 @@ class _ComplaintsDetailsPageState
                               children: [
                                 RadioGroup<String>.builder(
                                   groupValue:
+
                                   form.control(_complaintRaisedFor).value ??
                                       "",
+
                                   onChanged: (changedValue) {
                                     if (form
                                         .control(_complaintRaisedFor)
@@ -281,6 +300,7 @@ class _ComplaintsDetailsPageState
                                           .control(_complainantContactNumber)
                                           .value = "";
                                     }
+
                                     else{
                                         form.control(_complainantName).value =
                                             ComplaintsSingleton().userName;
@@ -288,6 +308,7 @@ class _ComplaintsDetailsPageState
                                             ComplaintsSingleton().userMobileNumber;
 
                                     }
+
                                     setState(() {
                                       form.control(_complaintRaisedFor).value =
                                           changedValue;
@@ -295,8 +316,10 @@ class _ComplaintsDetailsPageState
                                   },
                                   textStyle: TextStyle(
                                     color: form
+
                                         .control(_complaintRaisedFor)
                                         .disabled
+
                                         ? theme.colorScheme.shadow
                                         : theme.colorScheme.onBackground,
                                   ),
@@ -330,6 +353,7 @@ class _ComplaintsDetailsPageState
                               ],
                             ),
                           ),
+
                           Column(
                                 children: [
                                   DigitTextFormField(
@@ -379,6 +403,7 @@ class _ComplaintsDetailsPageState
                                   ),
                                 ],
                               ),
+
                           DigitTextFormField(
                             formControlName: _supervisorName,
                             label: localizations.translate(
@@ -422,8 +447,10 @@ class _ComplaintsDetailsPageState
                             isRequired: true,
                             validationMessages: {
                               'required': (object) => localizations.translate(
+
                                 i18.complaints.validationRequiredError,
                               ),
+
                               'maxLength': (object) => localizations
                                   .translate(i18.common.maxCharsRequired)
                                   .replaceAll('{}', '1000'),
@@ -456,9 +483,11 @@ class _ComplaintsDetailsPageState
         validators: [],
       ),
       _administrativeArea: FormControl<String>(
+
         value: localizations.translate(
             (complaintDetails?.administrativeArea ?? ComplaintsSingleton().boundary.name)
                 .toString()),
+
         disabled: shouldDisableForm,
         validators: [Validators.required],
       ),
