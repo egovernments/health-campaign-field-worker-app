@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:checklist/checklist.dart';
 
 @RoutePage()
 class ChecklistViewPage extends StatelessWidget {
@@ -8,7 +9,7 @@ class ChecklistViewPage extends StatelessWidget {
   Widget build(BuildContext context) {
     print("Pressed");
     return Container(
-      width: 1000,
+        width: 1000,
         color: Colors.amber,
         child: Text("CheckListView" ,style: TextStyle(fontSize: 300,color: Colors.black),));
   }
@@ -16,24 +17,34 @@ class ChecklistViewPage extends StatelessWidget {
 
 // import 'dart:math';
 //
-// import 'package:digit_components/digit_components.dart';
-// import 'package:digit_components/utils/date_utils.dart';
-// import 'package:digit_components/widgets/atoms/selection_card.dart';
+// import 'package:auto_route/annotations.dart';
+// import 'package:auto_route/auto_route.dart';
+// import 'package:checklist/checklist.dart';
+// import 'package:checklist/utils/extensions/extensions.dart';
+// import 'package:digit_components/theme/colors.dart';
+// import 'package:digit_components/theme/digit_theme.dart';
+// import 'package:digit_components/widgets/digit_card.dart';
+// import 'package:digit_components/widgets/digit_checkbox_tile.dart';
+// import 'package:digit_components/widgets/digit_dialog.dart';
+// import 'package:digit_components/widgets/digit_elevated_button.dart';
+// import 'package:digit_components/widgets/digit_text_field.dart';
+// import 'package:digit_components/widgets/scrollable_content.dart';
+// import 'package:digit_data_model/blocs/service/service.dart';
+// import 'package:digit_data_model/blocs/service_definition/service_definition.dart';
 // import 'package:digit_data_model/data_model.dart';
+// import 'package:digit_data_model/utils/utils.dart';
+// import 'package:flutter/cupertino.dart';
 // import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 //
+// import '../models/entities/attributes.dart';
+// import '../models/entities/service_attributes.dart';
+// import '../models/entities/service_definition.dart';
+// import '../utils/constants.dart';
+// import '../widgets/back_navigation_help_header.dart';
 // import '../widgets/localized.dart';
-// // import 'package:group_radio_button/group_radio_button.dart';
-//
-// // import '../../models/data_model.dart';
-// // import '../../models/entities/roles_type.dart';
-// // import '../../router/app_router.dart';
-// // import '../../utils/i18_key_constants.dart' as i18;
-// // import '../../utils/utils.dart';
-// // import '../../widgets/header/back_navigation_help_header.dart';
-// // import '../../widgets/localized.dart';
+// import '../utils/i18_key_constants.dart' as i18;
 //
 // @RoutePage()
 // class ChecklistViewPage extends LocalizedStatefulWidget {
@@ -75,7 +86,7 @@ class ChecklistViewPage extends StatelessWidget {
 //   Widget build(BuildContext context) {
 //     final theme = Theme.of(context);
 //
-//     bool isHealthFacilityWorker = context.loggedInUserRoles
+//     bool isHealthFacilityWorker = ChecklistSingleton().loggedInUserRoles
 //         .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
 //         .toList()
 //         .isNotEmpty;
@@ -248,24 +259,24 @@ class ChecklistViewPage extends StatelessWidget {
 //                                               .selectedServiceDefinition?.id,
 //                                           attributes: attributes,
 //                                           rowVersion: 1,
-//                                           accountId: context.projectId,
+//                                           accountId: ChecklistSingleton().projectId,
 //                                           auditDetails: AuditDetails(
-//                                             createdBy: context.loggedInUserUuid,
+//                                             createdBy: ChecklistSingleton().loggedInUserUuid,
 //                                             createdTime: DateTime.now()
 //                                                 .millisecondsSinceEpoch,
 //                                           ),
 //                                           clientAuditDetails:
 //                                               ClientAuditDetails(
-//                                             createdBy: context.loggedInUserUuid,
+//                                             createdBy: ChecklistSingleton().loggedInUserUuid,
 //                                             createdTime: context
 //                                                 .millisecondsSinceEpoch(),
 //                                             lastModifiedBy:
-//                                                 context.loggedInUserUuid,
+//                                                 ChecklistSingleton().loggedInUserUuid,
 //                                             lastModifiedTime: context
 //                                                 .millisecondsSinceEpoch(),
 //                                           ),
 //                                           additionalDetails:
-//                                               context.boundary.code,
+//                                               ChecklistSingleton().boundary?.code,
 //                                         ),
 //                                       ),
 //                                     );
@@ -544,7 +555,7 @@ class ChecklistViewPage extends StatelessWidget {
 //     ServiceDefinitionModel? selectedServiceDefinition,
 //     BuildContext context,
 //   ) {
-//     bool isHealthFacilityWorker = context.loggedInUserRoles
+//     bool isHealthFacilityWorker = ChecklistSingleton().loggedInUserRoles
 //         .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
 //         .toList()
 //         .isNotEmpty;
