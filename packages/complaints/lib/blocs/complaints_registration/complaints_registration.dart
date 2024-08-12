@@ -5,10 +5,10 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../models/complaints/complaints.dart';
-import '../../models/entities/additional_fields_type.dart';
-import '../../utils/environment_config.dart';
-import '../../utils/typedefs.dart';
+import '/models/complaints.dart';
+import '/models/entities/additional_fields_type.dart';
+import '/utils/typedefs.dart';
+import '/utils/utils.dart';
 
 part 'complaints_registration.freezed.dart';
 
@@ -125,13 +125,13 @@ class ComplaintsRegistrationBloc
 
         final pgrServiceModel = PgrServiceModel(
             clientReferenceId: referenceId,
-            tenantId: envConfig.variables.tenantId,
+            tenantId: ComplaintsSingleton().tenantId,
             serviceCode: serviceCode,
             description: description,
             source: AdditionalFieldsType.mobile.toValue(),
             applicationStatus: PgrServiceApplicationStatus.created,
             user: PgrComplainantModel(
-              tenantId: envConfig.variables.tenantId,
+              tenantId: ComplaintsSingleton().tenantId,
               clientReferenceId: IdGen.i.identifier,
               complaintClientReferenceId: referenceId,
               name: complaintDetailsModel.complainantName,

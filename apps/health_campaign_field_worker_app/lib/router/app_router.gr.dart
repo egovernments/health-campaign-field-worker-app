@@ -112,17 +112,6 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
-    ComplaintTypeRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintTypeRouteArgs>(
-          orElse: () => const ComplaintTypeRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ComplaintTypePage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     ComplaintsAcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<ComplaintsAcknowledgementRouteArgs>(
           orElse: () => const ComplaintsAcknowledgementRouteArgs());
@@ -143,29 +132,6 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
-      );
-    },
-    ComplaintsLocationRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsLocationRouteArgs>(
-          orElse: () => const ComplaintsLocationRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ComplaintsLocationPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsRegistrationWrapperRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsRegistrationWrapperRouteArgs>(
-          orElse: () => const ComplaintsRegistrationWrapperRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: WrappedRoute(
-            child: ComplaintsRegistrationWrapperPage(
-          key: args.key,
-          pgrServiceModel: args.pgrServiceModel,
-        )),
       );
     },
     HomeRoute.name: (routeData) {
@@ -593,44 +559,6 @@ class ChecklistWrapperRouteArgs {
 }
 
 /// generated route for
-/// [ComplaintTypePage]
-class ComplaintTypeRoute extends PageRouteInfo<ComplaintTypeRouteArgs> {
-  ComplaintTypeRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ComplaintTypeRoute.name,
-          args: ComplaintTypeRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintTypeRoute';
-
-  static const PageInfo<ComplaintTypeRouteArgs> page =
-      PageInfo<ComplaintTypeRouteArgs>(name);
-}
-
-class ComplaintTypeRouteArgs {
-  const ComplaintTypeRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintTypeRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
 /// [ComplaintsAcknowledgementPage]
 class ComplaintsAcknowledgementRoute
     extends PageRouteInfo<ComplaintsAcknowledgementRouteArgs> {
@@ -704,84 +632,6 @@ class ComplaintsDetailsRouteArgs {
   @override
   String toString() {
     return 'ComplaintsDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsLocationPage]
-class ComplaintsLocationRoute
-    extends PageRouteInfo<ComplaintsLocationRouteArgs> {
-  ComplaintsLocationRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ComplaintsLocationRoute.name,
-          args: ComplaintsLocationRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintsLocationRoute';
-
-  static const PageInfo<ComplaintsLocationRouteArgs> page =
-      PageInfo<ComplaintsLocationRouteArgs>(name);
-}
-
-class ComplaintsLocationRouteArgs {
-  const ComplaintsLocationRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintsLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsRegistrationWrapperPage]
-class ComplaintsRegistrationWrapperRoute
-    extends PageRouteInfo<ComplaintsRegistrationWrapperRouteArgs> {
-  ComplaintsRegistrationWrapperRoute({
-    Key? key,
-    PgrServiceModel? pgrServiceModel,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ComplaintsRegistrationWrapperRoute.name,
-          args: ComplaintsRegistrationWrapperRouteArgs(
-            key: key,
-            pgrServiceModel: pgrServiceModel,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintsRegistrationWrapperRoute';
-
-  static const PageInfo<ComplaintsRegistrationWrapperRouteArgs> page =
-      PageInfo<ComplaintsRegistrationWrapperRouteArgs>(name);
-}
-
-class ComplaintsRegistrationWrapperRouteArgs {
-  const ComplaintsRegistrationWrapperRouteArgs({
-    this.key,
-    this.pgrServiceModel,
-  });
-
-  final Key? key;
-
-  final PgrServiceModel? pgrServiceModel;
-
-  @override
-  String toString() {
-    return 'ComplaintsRegistrationWrapperRouteArgs{key: $key, pgrServiceModel: $pgrServiceModel}';
   }
 }
 

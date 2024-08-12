@@ -1,3 +1,6 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -5,12 +8,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:digit_data_model/data_model.dart';
 
-import '../../../blocs/complaints_registration/complaints_registration.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
+import '/blocs/complaints_registration/complaints_registration.dart';
+import '/router/complaints_router.dart';
+import '/utils/i18_key_constants.dart' as i18;
+import '/utils/utils.dart';
+import '/widgets/header/back_navigation_help_header.dart';
+import '/widgets/localized.dart';
 
 @RoutePage()
 class ComplaintsLocationPage extends LocalizedStatefulWidget {

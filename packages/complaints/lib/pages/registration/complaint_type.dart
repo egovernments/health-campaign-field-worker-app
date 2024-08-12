@@ -1,3 +1,7 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -5,12 +9,11 @@ import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
-import '../../../blocs/app_initialization/app_initialization.dart';
-import '../../../blocs/complaints_registration/complaints_registration.dart';
-import '../../../router/app_router.dart';
-import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
+import '/blocs/complaints_registration/complaints_registration.dart';
+import '/router/complaints_router.dart';
+import '/utils/i18_key_constants.dart' as i18;
+import '/widgets/header/back_navigation_help_header.dart';
+import '/widgets/localized.dart';
 
 @RoutePage()
 class ComplaintTypePage extends LocalizedStatefulWidget {
@@ -80,12 +83,12 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
 
                     state.whenOrNull(
                       create: (
-                        loading,
-                        complaintType,
-                        _,
-                        addressModel,
-                        complaintsDetailsModel,
-                      ) {
+                          loading,
+                          complaintType,
+                          _,
+                          addressModel,
+                          complaintsDetailsModel,
+                          ) {
                         bloc.add(
                           ComplaintsRegistrationEvent.saveComplaintType(
                             complaintType: form.control(_complaintType).value,
@@ -123,50 +126,28 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         label: localizations.translate(
                           i18.complaints.complaintsTypeLabel,
                         ),
-                        child: BlocBuilder<AppInitializationBloc,
-                            AppInitializationState>(
-                          builder: (context, state) {
-                            return state.maybeWhen(
-                              orElse: () => const Offstage(),
-                              initialized: (
-                                appConfiguration,
-                                serviceRegistryList,
-                                _,
-                              ) {
-                                var complaintTypes = appConfiguration
-                                    .complaintTypes
-                                    ?.map((e) => e.code)
-                                    .toList();
+                        child: RadioGroup<String>.builder(
+                          groupValue:
+                            form.control(_complaintType).value ?? "",
+                          onChanged: (changedValue) {
+                            if (form.control(_complaintType).disabled) return;
 
-                                final isDisabled =
-                                    form.control(_complaintType).disabled;
-
-                                return RadioGroup<String>.builder(
-                                  groupValue:
-                                      form.control(_complaintType).value ?? "",
-                                  onChanged: (changedValue) {
-                                    if (isDisabled) return;
-
-                                    setState(() {
-                                      form.control(_complaintType).value =
-                                          changedValue;
-                                    });
-                                  },
-                                  textStyle: TextStyle(
-                                    color: isDisabled
-                                        ? theme.colorScheme.shadow
-                                        : theme.colorScheme.onBackground,
-                                  ),
-                                  items: complaintTypes ?? [],
-                                  itemBuilder: (item) => RadioButtonBuilder(
-                                    localizations.translate(
-                                      item.snakeCase.toUpperCase().trim(),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
+                            setState(() {
+                              form.control(_complaintType).value =
+                              changedValue;
+                            });
+                            },
+                          textStyle: TextStyle(
+                            color: form.control(_complaintType).disabled
+                                  ? theme.colorScheme.shadow
+                                  : theme.colorScheme.onBackground,
+                          ),
+                          items: ComplaintsSingleton().complaintTypes ?? [],
+                          itemBuilder: (item) => RadioButtonBuilder(
+                            localizations.translate(
+                              item.snakeCase.toUpperCase().trim(),
+                            ),
+                          ),
                         ),
                       ),
                       if (form.control(_complaintType).value == "Other") ...[
@@ -176,8 +157,8 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           maxLength: 100,
                           validationMessages: {
                             'required': (object) => localizations.translate(
-                                  i18.complaints.validationRequiredError,
-                                ),
+                              i18.complaints.validationRequiredError,
+                            ),
                           },
                         ),
                       ],

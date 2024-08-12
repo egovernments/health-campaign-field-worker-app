@@ -167,9 +167,9 @@ class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                       var loggedInUserUuid = ComplaintsSingleton().loggedInUserUuid;
                       final bloc = context.read<ComplaintsInboxBloc>();
 
-                      // await router.push(
-                      //   ComplaintsRegistrationWrapperRoute(),
-                      // );
+                      await router.push(
+                        ComplaintsRegistrationWrapperRoute(),
+                      );
 
                       try {
                         bloc.add(
