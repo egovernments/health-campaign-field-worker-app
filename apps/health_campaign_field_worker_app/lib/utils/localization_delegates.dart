@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
+import 'package:checklist/blocs/app_localization.dart' as checklist_localization;
 import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
@@ -40,6 +41,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     attendance_localization.AttendanceLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    checklist_localization.ChecklistLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
