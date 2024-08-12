@@ -69,7 +69,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
                       ActionCard(items: [
                         ActionCardModel(
                           icon: Icons.edit_calendar,
-                          label: "Team Formation",
+                          label: "Create Checklist",
                           // label: localizations.translate(i18
                           //     .checklist
                           //     .checklistCreateActionLabel),
@@ -85,7 +85,7 @@ class _ChecklistPageState extends State<ChecklistPage> {
                         ),
                         ActionCardModel(
                           icon: Icons.visibility,
-                          label: "IEC",
+                          label: "View Submitted Checklist",
                           // label: localizations.translate(i18
                           //     .checklist
                           //     .checklistViewActionLabel),

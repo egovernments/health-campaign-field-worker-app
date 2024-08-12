@@ -15,6 +15,7 @@ class ChecklistSingleton {
   String _loggedInUserUuid = '';
   String _appVersion = '';
   String _tenantId = '';
+  Object _roles=[];
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
 
@@ -23,11 +24,14 @@ class ChecklistSingleton {
       {required String projectId,
         required String loggedInIndividualId,
         required String loggedInUserUuid,
-        required String appVersion}) {
+        required String appVersion, required Object roles}) {
+    print("Printed ->>>>>>>>$roles");
+
     _projectId = projectId;
     _loggedInIndividualId = loggedInIndividualId;
     _loggedInUserUuid = loggedInUserUuid;
     _appVersion = appVersion;
+    _roles=roles;
   }
 
   get projectId => _projectId;
@@ -36,6 +40,7 @@ class ChecklistSingleton {
   get appVersion => _appVersion;
   get tenantId => _tenantId;
   get persistenceConfiguration => _persistenceConfiguration;
+  get roles => _roles;
 
   void setTenantId(String tenantId) {
     _tenantId = tenantId;

@@ -5,6 +5,7 @@ const checklist = Checklist();
 const selectChecklistShowcase = SelectChecklistShowcase();
 const checklistDataShowcase = ChecklistDataShowcase();
 const checklistListShowcase = ChecklistListShowcase();
+const searchBeneficiary = SearchBeneficiary();
 
 class Common {
   const Common();
@@ -169,4 +170,36 @@ class Checklist {
       'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
 
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+}
+
+class SearchBeneficiary {
+  const SearchBeneficiary();
+
+  String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
+
+  String get searchIndividualLabelText =>
+      'BENEFICIARY_STATISTICS_SEARCH_INDIVIDUAL_LABEL';
+
+  String get noOfHouseholdsRegistered => 'NO_OF_HOUSEHOLDS_REGISTERED';
+
+  String get noOfResourcesDelivered => 'NO_OF_RESOURCES_DELIVERED';
+
+  String get beneficiarySearchHintText => 'BENEFICIARY_SEARCH_HINT_TEXT';
+
+  String get beneficiaryIndividualSearchHintText =>
+      'BENEFICIARY_INDIVIDUAL_SEARCH_HINT_TEXT';
+
+  String get beneficiaryInfoDescription => 'BENEFICIARY_INFO_DESCRIPTION';
+
+  String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
+
+  String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
+
+  String get iconLabel => 'ICON_LABEL';
+
+  String get yearsAbbr => 'YEARS_ABBR';
+
+  String get monthsAbbr => 'MONTHS_ABBR';
+
+  String get proximityLabel => 'PROXIMITY_LABEL';
 }

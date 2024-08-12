@@ -15,15 +15,21 @@ import 'package:checklist/pages/checklist_boundary_view.dart' as _i1;
 import 'package:checklist/pages/checklist_preview.dart' as _i3;
 import 'package:checklist/pages/checklist_view.dart' as _i4;
 import 'package:checklist/pages/checklist_wrapper.dart' as _i5;
+import 'package:flutter/cupertino.dart' as _i9;
 import 'package:flutter/material.dart' as _i7;
 
 abstract class $CheckListRoute extends _i6.AutoRouterModule {
   @override
   final Map<String, _i6.PageFactory> pagesMap = {
     ChecklistBoundaryViewRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistBoundaryViewRouteArgs>(
+          orElse: () => const ChecklistBoundaryViewRouteArgs());
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i1.ChecklistBoundaryViewPage(),
+        child: _i1.ChecklistBoundaryViewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
       );
     },
     ChecklistRoute.name: (routeData) {
@@ -38,9 +44,14 @@ abstract class $CheckListRoute extends _i6.AutoRouterModule {
       );
     },
     ChecklistPreviewRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistPreviewRouteArgs>(
+          orElse: () => const ChecklistPreviewRouteArgs());
       return _i6.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i3.ChecklistPreviewPage(),
+        child: _i3.ChecklistPreviewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
       );
     },
     ChecklistViewRoute.name: (routeData) {
@@ -65,16 +76,41 @@ abstract class $CheckListRoute extends _i6.AutoRouterModule {
 
 /// generated route for
 /// [_i1.ChecklistBoundaryViewPage]
-class ChecklistBoundaryViewRoute extends _i6.PageRouteInfo<void> {
-  const ChecklistBoundaryViewRoute({List<_i6.PageRouteInfo>? children})
-      : super(
+class ChecklistBoundaryViewRoute
+    extends _i6.PageRouteInfo<ChecklistBoundaryViewRouteArgs> {
+  ChecklistBoundaryViewRoute({
+    _i7.Key? key,
+    _i8.ChecklistLocalization? appLocalizations,
+    List<_i6.PageRouteInfo>? children,
+  }) : super(
           ChecklistBoundaryViewRoute.name,
+          args: ChecklistBoundaryViewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ChecklistBoundaryViewRoute';
 
-  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
+  static const _i6.PageInfo<ChecklistBoundaryViewRouteArgs> page =
+      _i6.PageInfo<ChecklistBoundaryViewRouteArgs>(name);
+}
+
+class ChecklistBoundaryViewRouteArgs {
+  const ChecklistBoundaryViewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final _i7.Key? key;
+
+  final _i8.ChecklistLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ChecklistBoundaryViewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for
@@ -117,16 +153,41 @@ class ChecklistRouteArgs {
 
 /// generated route for
 /// [_i3.ChecklistPreviewPage]
-class ChecklistPreviewRoute extends _i6.PageRouteInfo<void> {
-  const ChecklistPreviewRoute({List<_i6.PageRouteInfo>? children})
-      : super(
+class ChecklistPreviewRoute
+    extends _i6.PageRouteInfo<ChecklistPreviewRouteArgs> {
+  ChecklistPreviewRoute({
+    _i9.Key? key,
+    _i8.ChecklistLocalization? appLocalizations,
+    List<_i6.PageRouteInfo>? children,
+  }) : super(
           ChecklistPreviewRoute.name,
+          args: ChecklistPreviewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'ChecklistPreviewRoute';
 
-  static const _i6.PageInfo<void> page = _i6.PageInfo<void>(name);
+  static const _i6.PageInfo<ChecklistPreviewRouteArgs> page =
+      _i6.PageInfo<ChecklistPreviewRouteArgs>(name);
+}
+
+class ChecklistPreviewRouteArgs {
+  const ChecklistPreviewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final _i9.Key? key;
+
+  final _i8.ChecklistLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'ChecklistPreviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
 }
 
 /// generated route for
