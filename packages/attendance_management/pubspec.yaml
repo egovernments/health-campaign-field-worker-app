@@ -33,6 +33,11 @@ dependencies:
   location: ^5.0.0
   dio: ^5.1.2
 
+
+dependency_overrides:
+  dart_mappable_builder:
+    path: ../../packages/dart_mappable_builder
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

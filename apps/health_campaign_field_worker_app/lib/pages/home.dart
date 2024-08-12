@@ -413,10 +413,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
+                print(snapshot);
                 if (snapshot.data?['enablesManualSync'] == true) {
+                  print("snapshotData _________________");
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
+                  print('dialog show__________________');
                   if (context.mounted) {
+                    print('dialog showed-------');
                     DigitToast.show(
                       context,
                       options: DigitToastOptions(
