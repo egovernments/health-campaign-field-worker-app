@@ -79,10 +79,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               ),
             );
             List<String> attendeesIndividualIds = [];
-            registers.map((r) =>
-                r.attendees?.where((a) => a.individualId != null).map((att) {
-                  attendeesIndividualIds.add(att.individualId.toString());
-                }));
+            registers.forEach((r) {
+              r.attendees?.where((a) => a.individualId != null).forEach((att) {
+                attendeesIndividualIds.add(att.individualId.toString());
+              });
+            });
             final individuals =
                 await individualDataRepository.search(IndividualSearchModel(
               id: attendeesIndividualIds,
@@ -137,6 +138,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           .where()
           .filter()
           .chartTypeEqualTo(DSSEnums.metric.toValue())
+          .projectIdEqualTo(DashboardSingleton().projectId)
           .findAll(); // Query metric charts from Isar database
       Map<String, MetricWrapper> metrics = {}; // Initialize metrics map
       List<TableWrapper> tableWrapperList = []; // Initialize table wrapper list
@@ -167,6 +169,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           .where()
           .filter()
           .chartTypeEqualTo(DSSEnums.table.toValue())
+          .projectIdEqualTo(DashboardSingleton().projectId)
           .findAll(); // Query table charts from Isar database
       for (DashboardResponse chart in tableCharts) {
         if ((chart.data ?? []).isNotEmpty) {
