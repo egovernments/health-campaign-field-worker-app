@@ -710,6 +710,7 @@ void setPackagesSingleton(BuildContext context) {
 
         ChecklistSingleton().setInitialData(
           projectId: context.projectId,
+          projectName: context.selectedProject.name,
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,

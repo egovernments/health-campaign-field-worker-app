@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:checklist/checklist.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_text_field.dart';
@@ -10,6 +11,7 @@ import '../router/checklist_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../utils/i18_key_constants.dart' as i18;
+import '../blocs/app_localization.dart';
 
 @RoutePage()
 class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
@@ -27,6 +29,7 @@ class _ChecklistBoundaryViewPageState
     extends State<ChecklistBoundaryViewPage> {
   @override
   Widget build(BuildContext context) {
+    final localizations = ChecklistLocalization.of(context);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -37,10 +40,9 @@ class _ChecklistBoundaryViewPageState
         footer: DigitCard(
           child: DigitElevatedButton(
             onPressed: () => context.router.push(ChecklistViewRoute()),
-            // child: Text(localizations.translate(
-            //   i18.common.coreCommonContinue,
-            // )),
-            child: Text("Submit"),
+            child: Text(localizations.translate(
+              i18.common.coreCommonContinue,
+            )),
           ),
         ),
         children: [
@@ -50,18 +52,16 @@ class _ChecklistBoundaryViewPageState
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  // localizations.translate(
-                  //   i18.checklist.checklistDetailLabel,
-                  // ),
-                  "Checklist Detail",
+                  localizations.translate(
+                    i18.checklist.checklistDetailLabel,
+                  ),
                   style: theme.textTheme.displayMedium,
                 ),
                 DigitTextField(
                   readOnly: true,
-                  // label: localizations.translate(
-                  //   i18.checklist.checklistdate,
-                  // ),
-                  label:"Checklist Date",
+                  label: localizations.translate(
+                    i18.checklist.checklistdate,
+                  ),
                   suffixIcon: const Padding(
                     padding: EdgeInsets.all(8),
                     child: Icon(
@@ -74,14 +74,12 @@ class _ChecklistBoundaryViewPageState
                 ),
                 DigitTextField(
                   readOnly: true,
-                  label:"Household Location",
-                  // label: localizations.translate(
-                  //   i18.householdLocation.administrationAreaFormLabel,
-                  // ),
+                  label: localizations.translate(
+                    i18.householdLocation.administrationAreaFormLabel,
+                  ),
                   controller: TextEditingController(
-                    text: "Boundary Code"
-                    // text: localizations
-                    //     .translate(context.boundary.code.toString()),
+                    text: localizations
+                        .translate(ChecklistSingleton().boundary!.code.toString()),
                   ),
                 ),
               ],

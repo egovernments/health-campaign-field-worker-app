@@ -44,10 +44,9 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                       },
                       icon: const Icon(Icons.arrow_left_sharp),
                       label: Text(
-                        "Back",
-                        // ChecklistLocalization.of(context).translate(
-                        //   i18.common.coreCommonBack,
-                        // ),
+                        ChecklistLocalization.of(context).translate(
+                          i18.common.coreCommonBack,
+                        ),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

@@ -7,12 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../router/checklist_router.gm.dart';
+import '../utils/constants.dart';
 import '../widgets/action_card.dart';
 import '../blocs/app_localization.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../utils/i18_key_constants.dart' as i18;
-
+import '../utils/utils.dart';
+import '../widgets/no_result_card.dart';
 
 @RoutePage()
 class ChecklistPage extends LocalizedStatefulWidget {
@@ -28,7 +30,7 @@ class ChecklistPage extends LocalizedStatefulWidget {
 class _ChecklistPageState extends State<ChecklistPage> {
   @override
   Widget build(BuildContext context) {
-    // var localizations = ChecklistLocalization.of(context);
+    final localizations = ChecklistLocalization.of(context);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -46,71 +48,93 @@ class _ChecklistPageState extends State<ChecklistPage> {
                 ),
                 serviceDefinitionFetch:
                     (ServiceDefinitionServiceFetchedState value) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(
-                              kPadding,
+                      final values = value.serviceDefinitionList.where(
+                              (item) =>
+                          !ChecklistSingleton().roles
+                              .indexOf(
+                            item.code!.split('.').lastOrNull!,
+                          )
+                              .isNegative &&
+                              !item.code!.contains(Constants
+                                  .healthFacilityChecklistPrefix) &&
+                              (item.code ?? '').contains(
+                                  ChecklistSingleton().projectName));
+                      print('Printed value-----> $values');
+
+                      if (values.isEmpty) {
+                        return Column(
+                          children: [
+                            NoResultCard(
+                              align: Alignment.center,
+                              label: localizations.translate(
+                                i18.common.noResultsFound,
+                              ),
                             ),
-                            child: Text(
-                              " My Checklist",
-                              // localizations.translate(i18.checklist.checklistlabel),
-                              style: theme.textTheme.displayMedium,
-                            ),
-                          ),
-                        ),
-                      ),
-                      ActionCard(items: [
-                        ActionCardModel(
-                          icon: Icons.edit_calendar,
-                          label: "Create Checklist",
-                          // label: localizations.translate(i18
-                          //     .checklist
-                          //     .checklistCreateActionLabel),
-                          action: () {
-                            context.router.push(
-                              ChecklistBoundaryViewRoute(),
-                            );
-                            // Navigator.of(
-                            //   context,
-                            //   rootNavigator: true,
-                            // ).pop();
-                          },
-                        ),
-                        ActionCardModel(
-                          icon: Icons.visibility,
-                          label: "View Submitted Checklist",
-                          // label: localizations.translate(i18
-                          //     .checklist
-                          //     .checklistViewActionLabel),
-                          action: () {
+                          ],
+                        );
+                      }
+                      return Column(
+                        children: values
+                            .map((e) => DigitProjectCell(
+                          projectText: localizations
+                              .translate('${e.code}'),
+                          onTap: () {
                             context
-                                .read<ServiceBloc>()
+                                .read<ServiceDefinitionBloc>()
                                 .add(
-                              ServiceSearchEvent(
-                                serviceSearchModel:
-                                ServiceSearchModel(
-                                  id: "12",
-                                ),
+                              ServiceDefinitionSelectionEvent(
+                                serviceDefinition: e,
                               ),
                             );
-                            context.router.push(
-                              ChecklistPreviewRoute(),
+                            DigitActionDialog.show(
+                              context,
+                              widget: ActionCard(items: [
+                                ActionCardModel(
+                                  icon: Icons.edit_calendar,
+                                  label: localizations.translate(i18
+                                      .checklist
+                                      .checklistCreateActionLabel),
+                                  action: () {
+                                    context.router.push(
+                                      ChecklistBoundaryViewRoute(),
+                                    );
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop();
+                                  },
+                                ),
+                                ActionCardModel(
+                                  icon: Icons.visibility,
+                                  label: localizations.translate(i18
+                                      .checklist
+                                      .checklistViewActionLabel),
+                                  action: () {
+                                    context
+                                        .read<ServiceBloc>()
+                                        .add(
+                                      ServiceSearchEvent(
+                                        serviceSearchModel:
+                                        ServiceSearchModel(
+                                          id: e.id,
+                                        ),
+                                      ),
+                                    );
+                                    context.router.push(
+                                      ChecklistPreviewRoute(),
+                                    );
+                                    Navigator.of(
+                                      context,
+                                      rootNavigator: true,
+                                    ).pop();
+                                  },
+                                ),
+                              ]),
                             );
-                            // Navigator.of(
-                            //   context,
-                            //   rootNavigator: true,
-                            // ).pop();
                           },
-                        ),],)
-                    ],
-                  );
+                        ))
+                            .toList(),
+                      );
                 },
               );
             },
