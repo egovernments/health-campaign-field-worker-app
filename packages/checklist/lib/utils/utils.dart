@@ -1,4 +1,4 @@
-import 'package:digit_data_model/models/entities/boundary.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/utils.dart';
 
 // Singleton class for managing attendance operations
@@ -18,6 +18,8 @@ class ChecklistSingleton {
   String _appVersion = '';
   String _tenantId = '';
   Object _roles=[];
+  String _roleCode = '';
+  bool _isHealthFacilityWorker = false;
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
@@ -31,7 +33,7 @@ class ChecklistSingleton {
         required String projectName,
         required String loggedInIndividualId,
         required String loggedInUserUuid,
-        required String appVersion, required Object roles}) {
+        required String appVersion, required String roleCode, required bool isHealthFacilityWorker, required Object roles}) {
     print("Printed ->>>>>>>>$roles");
 
     _projectId = projectId;
@@ -40,6 +42,8 @@ class ChecklistSingleton {
     _loggedInUserUuid = loggedInUserUuid;
     _appVersion = appVersion;
     _roles=roles;
+    _isHealthFacilityWorker=isHealthFacilityWorker;
+    _roleCode=roleCode;
   }
 
   get projectId => _projectId;
@@ -50,6 +54,8 @@ class ChecklistSingleton {
   get tenantId => _tenantId;
   get persistenceConfiguration => _persistenceConfiguration;
   get roles => _roles;
+  get roleCode => roleCode;
+  get isHealthFacilityWorker => _isHealthFacilityWorker;
   BoundaryModel? get boundary => _boundaryModel;
 
   void setTenantId(String tenantId) {

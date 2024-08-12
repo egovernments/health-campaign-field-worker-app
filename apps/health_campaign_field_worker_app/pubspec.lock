@@ -347,10 +347,11 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      path: "../../packages/closed_household"
-      relative: true
-    source: path
-    version: "0.0.0-dev.2"
+      name: closed_household
+      sha256: "44182f614a1d3d912e56ef0ab7b583495ab3572e75f15612ab12dfdf099222bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.0-dev.4"
   code_builder:
     dependency: transitive
     description:
@@ -434,10 +435,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
-    version: "4.2.0"
+      name: dart_mappable_builder
+      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -497,10 +499,11 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_components"
-      relative: true
-    source: path
-    version: "1.0.0+8"
+      name: digit_components
+      sha256: "90e12017934343a197a0c25bec00e5fc28e19cfbf11e522798cc39719609612c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0+9"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -525,16 +528,18 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: bc172291df5ffe720e3d471fbc5c542086b8efecbdb6e25ee737381cc47c8e05
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3-dev.1"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   dio:
     dependency: "direct main"
@@ -2079,5 +2084,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.0 <3.9.0"
   flutter: ">=3.16.0"

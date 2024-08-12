@@ -30,6 +30,7 @@ dependencies:
   collection: ^1.16.0
   location: ^5.0.0
   dio: ^5.1.2
+  group_radio_button: ^1.3.0
 
 dev_dependencies:
   flutter_test:

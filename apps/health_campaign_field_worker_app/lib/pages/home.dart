@@ -714,6 +714,8 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+          roleCode: RolesType.healthFacilityWorker.toValue(),
+          isHealthFacilityWorker: context.loggedInUserRoles.where((role) => role.code == RolesType.healthFacilityWorker.toValue()).toList().isNotEmpty,
           roles: context.read<AuthBloc>().state.maybeMap(
             orElse: () => const Offstage(),
             authenticated: (res) {
