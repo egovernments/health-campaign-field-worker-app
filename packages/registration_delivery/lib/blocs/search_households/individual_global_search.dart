@@ -12,6 +12,7 @@ import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/global_search_parameters.dart';
+import '../../utils/utils.dart';
 
 class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
   IndividualGlobalSearchBloc(
@@ -93,11 +94,10 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         ),
       );
 
-      projectBeneficiariesList = await fetchProjectBeneficiary(
-        householdMembers
-            .map((e) => e.individualClientReferenceId.toString())
-            .toList(),
-      );
+      projectBeneficiariesList = await projectBeneficiary.search(
+          ProjectBeneficiarySearchModel(
+              beneficiaryClientReferenceId:
+                  individualClientReferenceIds.map((e) => e).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -205,6 +205,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
                   individualClientReferenceIds.map((e) => e).toList()));
 
@@ -285,15 +286,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
 
         filteredTasks.addAll(tasksForBeneficiary);
       }
-
-      final beneficiaryClientReferenceIds = filteredBeneficiaries
-          .map((e) => e.beneficiaryClientReferenceId)
-          .toList();
-
-      final List<IndividualModel> beneficiaryIndividuals = filteredIndividuals
-          .where((element) =>
-              beneficiaryClientReferenceIds.contains(element.clientReferenceId))
-          .toList();
 
       // Find the head of the household
       final head = filteredIndividuals.firstWhereOrNull(

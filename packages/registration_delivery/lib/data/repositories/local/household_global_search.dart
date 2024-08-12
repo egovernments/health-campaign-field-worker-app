@@ -212,8 +212,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               mode: OrderingMode.asc,
             ),
         ]);
-      return selectQuery;
     }
+    return selectQuery;
   }
 
   // Function to perform name search based on provided parameters
