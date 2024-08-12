@@ -125,10 +125,9 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                                       );
                                     }).toList(),
                                     tableData: table.tableData,
-                                    height:
-                                        ((table.tableData.length ?? 0) + 1) *
-                                            65,
-                                    columnWidth: 140,
+                                    height: ((table.tableData.length) + 1) * 65,
+                                    columnWidth:
+                                        MediaQuery.of(context).size.width / 2,
                                     columnRowFixedHeight: 65,
                                     scrollPhysics: (table.tableData.length ??
                                                 0) >
