@@ -652,8 +652,11 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (AppConfiguration appConfiguration, List<ServiceRegistry> serviceRegistry,
-        DashboardConfigSchema? dashboardConfigSchema,) {
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,
+      ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
@@ -768,6 +771,9 @@ void setPackagesSingleton(BuildContext context) {
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
           loggedInUserName: context.loggedInUser.name,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
         );
       });
 }

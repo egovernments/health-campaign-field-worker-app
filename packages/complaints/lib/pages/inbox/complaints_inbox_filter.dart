@@ -197,11 +197,13 @@ class _ComplaintsInboxFilterPageState
                                   //     return userModel.name;
                                   //   },
                                   // ),
-                                  currentUserName: ComplaintsSingleton().loggedInUserName,
+                                  currentUserName:
+                                      ComplaintsSingleton().loggedInUserName,
                                   complaintTypeCode: complaintType,
                                   locality: locality,
                                   complaintStatus: statuses.toList(),
-                                  createdByUserId: ComplaintsSingleton().loggedInUserUuid,
+                                  createdByUserId:
+                                      ComplaintsSingleton().loggedInUserUuid,
                                 ),
                               );
 
