@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
+import 'package:checklist/checklist.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

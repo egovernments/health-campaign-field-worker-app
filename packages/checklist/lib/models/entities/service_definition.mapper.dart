@@ -207,7 +207,7 @@ class ServiceDefinitionModelMapper
       MapperContainer.globals.use(_instance = ServiceDefinitionModelMapper._());
       EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
       ServiceDefinitionAdditionalFieldsMapper.ensureInitialized();
-      att.AttributesModelMapper.ensureInitialized();
+      AttributesModelMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       ClientAuditDetailsMapper.ensureInitialized();
     }
@@ -243,9 +243,9 @@ class ServiceDefinitionModelMapper
   static int? _$rowVersion(ServiceDefinitionModel v) => v.rowVersion;
   static const Field<ServiceDefinitionModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static List<att.AttributesModel>? _$attributes(ServiceDefinitionModel v) =>
+  static List<AttributesModel>? _$attributes(ServiceDefinitionModel v) =>
       v.attributes;
-  static const Field<ServiceDefinitionModel, List<att.AttributesModel>>
+  static const Field<ServiceDefinitionModel, List<AttributesModel>>
       _f$attributes = Field('attributes', _$attributes, opt: true);
   static AuditDetails? _$auditDetails(ServiceDefinitionModel v) =>
       v.auditDetails;
@@ -361,11 +361,9 @@ abstract class ServiceDefinitionModelCopyWith<
       $R,
       ServiceDefinitionAdditionalFields,
       ServiceDefinitionAdditionalFields>? get additionalFields;
-  ListCopyWith<
-      $R,
-      att.AttributesModel,
-      att.AttributesModelCopyWith<$R, att.AttributesModel,
-          att.AttributesModel>>? get attributes;
+  ListCopyWith<$R, AttributesModel,
+          AttributesModelCopyWith<$R, AttributesModel, AttributesModel>>?
+      get attributes;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -380,7 +378,7 @@ abstract class ServiceDefinitionModelCopyWith<
       bool? isActive,
       bool? nonRecoverableError,
       int? rowVersion,
-      List<att.AttributesModel>? attributes,
+      List<AttributesModel>? attributes,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -403,14 +401,12 @@ class _ServiceDefinitionModelCopyWithImpl<$R, $Out>
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
   @override
-  ListCopyWith<
-      $R,
-      att.AttributesModel,
-      att.AttributesModelCopyWith<$R, att.AttributesModel,
-          att.AttributesModel>>? get attributes => $value.attributes != null
-      ? ListCopyWith($value.attributes!, (v, t) => v.copyWith.$chain(t),
-          (v) => call(attributes: v))
-      : null;
+  ListCopyWith<$R, AttributesModel,
+          AttributesModelCopyWith<$R, AttributesModel, AttributesModel>>?
+      get attributes => $value.attributes != null
+          ? ListCopyWith($value.attributes!, (v, t) => v.copyWith.$chain(t),
+              (v) => call(attributes: v))
+          : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));

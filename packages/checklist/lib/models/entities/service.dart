@@ -5,7 +5,7 @@ import 'package:drift/drift.dart';
 import 'package:digit_data_model/data_model.dart';
 
 // import '../../data/local_store/sql_store/sql_store.dart';
-import '../entities/service_attributes.dart' as svc_att;
+import '../entities/service_attributes.dart';
 
 part 'service.mapper.dart';
 
@@ -56,7 +56,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
   final bool? nonRecoverableError;
   final String? tenantId;
   final int? rowVersion;
-  final List<svc_att.ServiceAttributesModel>? attributes;
+  final List<ServiceAttributesModel>? attributes;
   final ServiceAdditionalFields? additionalFields;
 
   ServiceModel({

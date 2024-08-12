@@ -9,6 +9,7 @@ import 'package:digit_data_model/blocs/service/service.dart';
 import 'package:digit_data_model/blocs/service_definition/service_definition.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:checklist/checklist.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 

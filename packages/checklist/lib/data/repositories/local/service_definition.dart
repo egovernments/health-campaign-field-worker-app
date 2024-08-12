@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:checklist/checklist.dart';
 import 'package:drift/drift.dart';
 
 class ServiceDefinitionLocalRepository extends LocalRepository<

@@ -1,4 +1,5 @@
 import 'package:attendance_management/models/entities/attendance_log.dart';
+import 'package:checklist/checklist.dart';
 import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_listener.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/models/entities/stock.dart';
