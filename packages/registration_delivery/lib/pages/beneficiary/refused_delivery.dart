@@ -130,7 +130,9 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                           ?.first?.clientReferenceId,
                                       status,
                                       reasonOfRefusal,
-                                      refusalComment),
+                                      refusalComment,
+                                      registrationState.householdMemberWrapper
+                                          .members?.first.address?.first),
                                   isEditing: false,
                                   boundaryModel:
                                       RegistrationDeliverySingleton().boundary!,
@@ -262,13 +264,22 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
     );
   }
 
-  _getTaskModel(TaskModel? oldTask, String? projectBeneficiaryClientReferenceId,
-      String status, String? reasonOfRefusal, String? refusalComment) {
+  _getTaskModel(
+    TaskModel? oldTask,
+    String? projectBeneficiaryClientReferenceId,
+    String status,
+    String? reasonOfRefusal,
+    String? refusalComment,
+    AddressModel? address,
+  ) {
     var task = oldTask;
     var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
     task ??= TaskModel(
       projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
       clientReferenceId: clientReferenceId,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+      ),
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
@@ -286,6 +297,9 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
 
     task = task.copyWith(
       status: status,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+      ),
       additionalFields: TaskAdditionalFields(
         version: 1,
         fields: [
