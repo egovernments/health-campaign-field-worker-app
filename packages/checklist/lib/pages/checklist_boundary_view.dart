@@ -1,14 +1,17 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:digit_components/widgets/digit_card.dart';
+import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/digit_text_field.dart';
+import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import '../../router/app_router.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import '../router/checklist_router.gm.dart';
+import '../widgets/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
+import '../utils/i18_key_constants.dart' as i18;
 
-// @RoutePage()
+@RoutePage()
 class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
   const ChecklistBoundaryViewPage({
     Key? key,
@@ -21,7 +24,7 @@ class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
 }
 
 class _ChecklistBoundaryViewPageState
-    extends LocalizedState<ChecklistBoundaryViewPage> {
+    extends State<ChecklistBoundaryViewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -33,11 +36,11 @@ class _ChecklistBoundaryViewPageState
         ]),
         footer: DigitCard(
           child: DigitElevatedButton(
-            onPressed: () => print("Pressed"),
-            // onPressed: () => context.router.push(ChecklistViewRoute()),
-            child: Text(localizations.translate(
-              i18.common.coreCommonContinue,
-            )),
+            onPressed: () => context.router.push(ChecklistViewRoute()),
+            // child: Text(localizations.translate(
+            //   i18.common.coreCommonContinue,
+            // )),
+            child: Text("Submit"),
           ),
         ),
         children: [
@@ -47,16 +50,18 @@ class _ChecklistBoundaryViewPageState
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  localizations.translate(
-                    i18.checklist.checklistDetailLabel,
-                  ),
+                  // localizations.translate(
+                  //   i18.checklist.checklistDetailLabel,
+                  // ),
+                  "Checklist Detail",
                   style: theme.textTheme.displayMedium,
                 ),
                 DigitTextField(
                   readOnly: true,
-                  label: localizations.translate(
-                    i18.checklist.checklistdate,
-                  ),
+                  // label: localizations.translate(
+                  //   i18.checklist.checklistdate,
+                  // ),
+                  label:"Checklist Date",
                   suffixIcon: const Padding(
                     padding: EdgeInsets.all(8),
                     child: Icon(
@@ -69,12 +74,14 @@ class _ChecklistBoundaryViewPageState
                 ),
                 DigitTextField(
                   readOnly: true,
-                  label: localizations.translate(
-                    i18.householdLocation.administrationAreaFormLabel,
-                  ),
+                  label:"Household Location",
+                  // label: localizations.translate(
+                  //   i18.householdLocation.administrationAreaFormLabel,
+                  // ),
                   controller: TextEditingController(
-                    text: localizations
-                        .translate(context.boundary.code.toString()),
+                    text: "Boundary Code"
+                    // text: localizations
+                    //     .translate(context.boundary.code.toString()),
                   ),
                 ),
               ],

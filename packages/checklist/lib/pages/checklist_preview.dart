@@ -1,18 +1,24 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:auto_route/annotations.dart';
+import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:digit_components/widgets/digit_card.dart';
+import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/digit_outline_button.dart';
+import 'package:digit_components/widgets/scrollable_content.dart';
+import 'package:digit_data_model/blocs/service/service.dart';
+import 'package:digit_data_model/blocs/service_definition/service_definition.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../widgets/no_result_card/no_result_card.dart';
 import 'package:intl/intl.dart';
 
-import '../../router/app_router.dart';
-import '../../utils/constants.dart';
-import '../../utils/i18_key_constants.dart' as i18;
-import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import '../widgets/back_navigation_help_header.dart';
+import '../widgets/localized.dart';
+import '../utils/i18_key_constants.dart' as i18;
+import '../utils/constants.dart';
+import '../widgets/no_result_card.dart';
 
-// @RoutePage()
+@RoutePage()
 class ChecklistPreviewPage extends LocalizedStatefulWidget {
   const ChecklistPreviewPage({
     Key? key,
@@ -76,11 +82,9 @@ class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
                                               Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
-                                                  DateFormat(Constants
-                                                          .checklistPreviewDateFormat)
+                                                  DateFormat(Constants.checklistPreviewDateFormat)
                                                       .format(
-                                                    DateFormat(Constants
-                                                            .defaultDateFormat)
+                                                    DateFormat(Constants.defaultDateFormat)
                                                         .parse(
                                                       e.createdAt.toString(),
                                                     ),

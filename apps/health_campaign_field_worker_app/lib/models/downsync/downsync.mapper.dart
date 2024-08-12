@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'downsync.dart';
@@ -14,6 +14,7 @@ class DownsyncSearchModelMapper
   static DownsyncSearchModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DownsyncSearchModelMapper._());
+      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -130,10 +131,8 @@ mixin DownsyncSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DownsyncSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as DownsyncSearchModel, other));
+    return DownsyncSearchModelMapper.ensureInitialized()
+        .equalsValue(this as DownsyncSearchModel, other);
   }
 
   @override
@@ -223,6 +222,10 @@ class DownsyncModelMapper extends SubClassMapperBase<DownsyncModel> {
   static DownsyncModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = DownsyncModelMapper._());
+      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
+      DownsyncAdditionalFieldsMapper.ensureInitialized();
+      AuditDetailsMapper.ensureInitialized();
+      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -357,10 +360,8 @@ mixin DownsyncModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DownsyncModelMapper.ensureInitialized()
-                .isValueEqual(this as DownsyncModel, other));
+    return DownsyncModelMapper.ensureInitialized()
+        .equalsValue(this as DownsyncModel, other);
   }
 
   @override
@@ -493,6 +494,8 @@ class DownsyncAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = DownsyncAdditionalFieldsMapper._());
+      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
+      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -569,10 +572,8 @@ mixin DownsyncAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DownsyncAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as DownsyncAdditionalFields, other));
+    return DownsyncAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as DownsyncAdditionalFields, other);
   }
 
   @override
