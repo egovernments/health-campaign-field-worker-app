@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:digit_data_model/data_model.dart';
+// import 'package:digit_data_model/data_model.dart';
+import 'package:checklist/checklist.dart';
 
 import '../../utils/typedefs.dart';
 
@@ -14,9 +15,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   final ServiceDataRepository serviceDataRepository;
 
   ServiceBloc(
-    super.initialState, {
-    required this.serviceDataRepository,
-  }) {
+      super.initialState, {
+        required this.serviceDataRepository,
+      }) {
     on(_handleCreate);
     on(_multichecklistChanged);
     on(_handleSearch);
@@ -25,9 +26,9 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   FutureOr<void> _multichecklistChanged(
-    ServiceChecklistEvent event,
-    ServiceEmitter emit,
-  ) async {
+      ServiceChecklistEvent event,
+      ServiceEmitter emit,
+      ) async {
     emit(ServiceState.multichecklistChanged(
       value: event.value,
       submitTriggered: event.submitTriggered,
@@ -35,16 +36,16 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   FutureOr<void> _handleCreate(
-    ServiceCreateEvent event,
-    ServiceEmitter emit,
-  ) async {
+      ServiceCreateEvent event,
+      ServiceEmitter emit,
+      ) async {
     await serviceDataRepository.create(event.serviceModel);
   }
 
   FutureOr<void> _handlereset(
-    ServiceResetEvent event,
-    ServiceEmitter emit,
-  ) async {
+      ServiceResetEvent event,
+      ServiceEmitter emit,
+      ) async {
     emit(ServiceSearchState(
       selectedService: null,
       serviceList: event.serviceList,
@@ -52,18 +53,18 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
   }
 
   FutureOr<void> _handleSearch(
-    ServiceSearchEvent event,
-    ServiceEmitter emit,
-  ) async {
+      ServiceSearchEvent event,
+      ServiceEmitter emit,
+      ) async {
     final results =
-        await serviceDataRepository.search(event.serviceSearchModel);
+    await serviceDataRepository.search(event.serviceSearchModel);
     emit(ServiceSearchState(serviceList: results));
   }
 
   FutureOr<void> _handleSelect(
-    ServiceSelectionEvent event,
-    ServiceEmitter emit,
-  ) async {
+      ServiceSelectionEvent event,
+      ServiceEmitter emit,
+      ) async {
     state.mapOrNull(
       serviceSearch: (value) => emit(value.copyWith(
         selectedService: event.service,
@@ -75,7 +76,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
 @freezed
 class ServiceEvent with _$ServiceEvent {
   const factory ServiceEvent.create({required ServiceModel serviceModel}) =
-      ServiceCreateEvent;
+  ServiceCreateEvent;
 
   const factory ServiceEvent.search({
     required ServiceSearchModel serviceSearchModel,

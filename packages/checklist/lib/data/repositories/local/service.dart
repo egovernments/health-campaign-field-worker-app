@@ -2,12 +2,10 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:drift/drift.dart';
 
-// typedef ServiceModel = service.ServiceModel;
-// typedef ServiceSearchModel = service.ServiceSearchModel;
-// typedef ServiceAdditionalFields = service.ServiceAdditionalFields;
-// typedef ServiceAttributesModel = service.ServiceAttributesModel;
+import 'package:drift/drift.dart';
+import 'package:checklist/checklist.dart';
+
 
 class ServiceLocalRepository
     extends LocalRepository<ServiceModel, ServiceSearchModel> {

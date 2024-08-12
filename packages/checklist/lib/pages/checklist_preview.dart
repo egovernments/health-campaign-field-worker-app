@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:checklist/checklist.dart';
 
 @RoutePage()
 class ChecklistPreviewPage extends StatelessWidget {

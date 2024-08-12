@@ -9,7 +9,7 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i6;
-import 'package:checklist/blocs/app_localization.dart' as _i8;
+import 'package:checklist/checklist.dart' as _i8;
 import 'package:checklist/pages/checklist.dart' as _i2;
 import 'package:checklist/pages/checklist_boundary_view.dart' as _i1;
 import 'package:checklist/pages/checklist_preview.dart' as _i3;

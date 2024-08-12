@@ -204,7 +204,7 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
       MapperContainer.globals.use(_instance = ServiceModelMapper._());
       EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
       ServiceAdditionalFieldsMapper.ensureInitialized();
-      svc_att.ServiceAttributesModelMapper.ensureInitialized();
+      ServiceAttributesModelMapper.ensureInitialized();
       AuditDetailsMapper.ensureInitialized();
       ClientAuditDetailsMapper.ensureInitialized();
     }
@@ -249,10 +249,10 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
   static int? _$rowVersion(ServiceModel v) => v.rowVersion;
   static const Field<ServiceModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static List<svc_att.ServiceAttributesModel>? _$attributes(ServiceModel v) =>
+  static List<ServiceAttributesModel>? _$attributes(ServiceModel v) =>
       v.attributes;
-  static const Field<ServiceModel, List<svc_att.ServiceAttributesModel>>
-      _f$attributes = Field('attributes', _$attributes, opt: true);
+  static const Field<ServiceModel, List<ServiceAttributesModel>> _f$attributes =
+      Field('attributes', _$attributes, opt: true);
   static AuditDetails? _$auditDetails(ServiceModel v) => v.auditDetails;
   static const Field<ServiceModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -368,9 +368,9 @@ abstract class ServiceModelCopyWith<$R, $In extends ServiceModel, $Out>
       ServiceAdditionalFields>? get additionalFields;
   ListCopyWith<
       $R,
-      svc_att.ServiceAttributesModel,
-      svc_att.ServiceAttributesModelCopyWith<$R, svc_att.ServiceAttributesModel,
-          svc_att.ServiceAttributesModel>>? get attributes;
+      ServiceAttributesModel,
+      ServiceAttributesModelCopyWith<$R, ServiceAttributesModel,
+          ServiceAttributesModel>>? get attributes;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -389,7 +389,7 @@ abstract class ServiceModelCopyWith<$R, $In extends ServiceModel, $Out>
       bool? nonRecoverableError,
       String? tenantId,
       int? rowVersion,
-      List<svc_att.ServiceAttributesModel>? attributes,
+      List<ServiceAttributesModel>? attributes,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -412,13 +412,12 @@ class _ServiceModelCopyWithImpl<$R, $Out>
   @override
   ListCopyWith<
       $R,
-      svc_att.ServiceAttributesModel,
-      svc_att.ServiceAttributesModelCopyWith<$R, svc_att.ServiceAttributesModel,
-          svc_att.ServiceAttributesModel>>? get attributes =>
-      $value.attributes != null
-          ? ListCopyWith($value.attributes!, (v, t) => v.copyWith.$chain(t),
-              (v) => call(attributes: v))
-          : null;
+      ServiceAttributesModel,
+      ServiceAttributesModelCopyWith<$R, ServiceAttributesModel,
+          ServiceAttributesModel>>? get attributes => $value.attributes != null
+      ? ListCopyWith($value.attributes!, (v, t) => v.copyWith.$chain(t),
+          (v) => call(attributes: v))
+      : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
