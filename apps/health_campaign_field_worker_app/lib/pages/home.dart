@@ -413,9 +413,21 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                print(snapshot);
+                print('Snapshot Connection State: ${snapshot.connectionState}');
+                if (snapshot.hasError) {
+                  print('Snapshot Error: ${snapshot.error}');
+                }
+                if (snapshot.connectionState == ConnectionState.active && snapshot.data != null) {
+                  // Handle your data here
+                  print('Stream loaded -------');
+                } else if (snapshot.connectionState == ConnectionState.waiting) {
+                  print('Stream is still loading...');
+                } else {
+                  print('Snapshot data is null or stream has completed.');
+                }
+                print(snapshot.data);
                 if (snapshot.data?['enablesManualSync'] == true) {
-                  print("snapshotData _________________");
+                  print("snapshotData _________________123");
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
                   print('dialog show__________________');
@@ -579,6 +591,7 @@ class _HomePageState extends LocalizedState<HomePage> {
   }
 
   void _attemptSyncUp(BuildContext context) async {
+    print("Reached ..................");
     await LocalSecureStore.instance.setManualSyncTrigger(true);
 
     if (context.mounted) {
