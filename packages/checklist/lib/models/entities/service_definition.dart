@@ -61,6 +61,7 @@ class ServiceDefinitionModel extends EntityModel
     super.isDeleted = false,
   }) : super();
 
+  //Helper object to represents the data you want to insert or update in a table
   ServiceDefinitionCompanion get companion {
     return ServiceDefinitionCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),

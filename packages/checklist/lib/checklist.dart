@@ -5,6 +5,7 @@ library checklist;
 
 import 'package:dart_mappable/dart_mappable.dart';
 
+//exporting all the files from checklist package
 export 'checklist.init.dart';
 export 'models/entities/service.dart';
 export 'models/entities/service_attributes.dart';

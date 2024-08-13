@@ -3,8 +3,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
-
-// import '../../data/local_store/sql_store/sql_store.dart';
 import '../entities/service_attributes.dart';
 
 part 'service.mapper.dart';
@@ -76,6 +74,8 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
     super.isDeleted = false,
   }): super();
 
+
+  //Helper object to represents the data you want to insert or update in a table
   ServiceCompanion get companion {
     return ServiceCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),

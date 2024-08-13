@@ -1,6 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 
-// Singleton class for managing attendance operations
+// Singleton class for managing Checklist operations
 class ChecklistSingleton {
   static final ChecklistSingleton _singleton = ChecklistSingleton._internal();
 
@@ -25,7 +25,7 @@ class ChecklistSingleton {
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
   }
-  // Method to set attendance listeners and other information
+  // Method to set checklist listeners and other information
   void setInitialData(
       {required String projectId,
         required String projectName,

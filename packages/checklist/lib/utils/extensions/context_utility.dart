@@ -5,6 +5,7 @@ extension ContextUtilityExtensions on BuildContext {
     return (dateTime ?? DateTime.now()).millisecondsSinceEpoch;
   }
 
+  // Provides Checklist repository based on the persistence configuration
   DataRepository<D, R>
   repository<D extends EntityModel, R extends EntitySearchModel>(
       BuildContext context,

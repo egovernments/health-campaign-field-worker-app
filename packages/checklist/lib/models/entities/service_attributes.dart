@@ -60,6 +60,7 @@ class ServiceAttributesModel extends EntityModel with ServiceAttributesModelMapp
     super.isDeleted = false,
   }): super();
 
+  //Helper object to represents the data you want to insert or update in a table
   ServiceAttributesCompanion get companion {
     return ServiceAttributesCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),

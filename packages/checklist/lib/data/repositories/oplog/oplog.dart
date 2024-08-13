@@ -2,7 +2,7 @@ import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
 import 'package:checklist/checklist.dart';
 
 
-//oplog1
+//Oplog for managing Service definition
 class ServiceDefinitionOpLogManager
     extends OpLogManager<ServiceDefinitionModel> {
   ServiceDefinitionOpLogManager(super.isar);
@@ -31,7 +31,7 @@ class ServiceDefinitionOpLogManager
       entity.nonRecoverableError;
 }
 
-//oplog2
+//Oplog for managing Service
 class ServiceOpLogManager extends OpLogManager<ServiceModel> {
   ServiceOpLogManager(super.isar);
 

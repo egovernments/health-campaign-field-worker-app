@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-// import 'package:digit_data_model/data_model.dart';
 import 'package:checklist/checklist.dart';
 
 import '../../utils/typedefs.dart';
@@ -22,6 +21,7 @@ class ServiceDefinitionBloc
     on(_handleSelect);
   }
 
+  //this function is called to fetch all the service definitions from the table for the selected project
   FutureOr<void> _handleFetch(
       ServiceDefinitionFetchEvent event,
       ServiceDefinitionEmitter emit,
@@ -31,13 +31,12 @@ class ServiceDefinitionBloc
         tenantId: ChecklistSingleton().tenantId,
       ),
     );
-    print('results fetched-------------- $results');
-    print('this is the result');
     emit(ServiceDefinitionServiceFetchedState(
       serviceDefinitionList: results,
     ));
   }
 
+  // Called when we select a service definition from the displayed list of service definition
   FutureOr<void> _handleSelect(
       ServiceDefinitionSelectionEvent event,
       ServiceDefinitionEmitter emit,

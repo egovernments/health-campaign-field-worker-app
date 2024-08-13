@@ -2,6 +2,9 @@ import 'package:auto_route/auto_route.dart';
 
 import 'checklist_router.gm.dart';
 
+
+//Used auto_route package to navigate to different pages in checklist package
+
 @AutoRouterConfig.module()
 class CheckListRoute extends $CheckListRoute {
   @override

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-// import 'package:digit_data_model/data_model.dart';
 import 'package:checklist/checklist.dart';
 
 import '../../utils/typedefs.dart';
@@ -52,6 +51,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     ));
   }
 
+  //Handles the search service calls (from checklist preview page)
   FutureOr<void> _handleSearch(
       ServiceSearchEvent event,
       ServiceEmitter emit,
