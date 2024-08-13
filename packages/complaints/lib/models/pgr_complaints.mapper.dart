@@ -1,71 +1,10 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'pgr_complaints.dart';
-
-class PgrServiceApplicationStatusMapper
-    extends EnumMapper<PgrServiceApplicationStatus> {
-  PgrServiceApplicationStatusMapper._();
-
-  static PgrServiceApplicationStatusMapper? _instance;
-  static PgrServiceApplicationStatusMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = PgrServiceApplicationStatusMapper._());
-    }
-    return _instance!;
-  }
-
-  static PgrServiceApplicationStatus fromValue(dynamic value) {
-    ensureInitialized();
-    return MapperContainer.globals.fromValue(value);
-  }
-
-  @override
-  PgrServiceApplicationStatus decode(dynamic value) {
-    switch (value) {
-      case 'CREATED':
-        return PgrServiceApplicationStatus.created;
-      case 'PENDING_ASSIGNMENT':
-        return PgrServiceApplicationStatus.pendingAssignment;
-      case 'RESOLVED':
-        return PgrServiceApplicationStatus.resolved;
-      case 'REJECTED':
-        return PgrServiceApplicationStatus.rejected;
-      case 'CANCELLED':
-        return PgrServiceApplicationStatus.cancelled;
-      default:
-        throw MapperException.unknownEnumValue(value);
-    }
-  }
-
-  @override
-  dynamic encode(PgrServiceApplicationStatus self) {
-    switch (self) {
-      case PgrServiceApplicationStatus.created:
-        return 'CREATED';
-      case PgrServiceApplicationStatus.pendingAssignment:
-        return 'PENDING_ASSIGNMENT';
-      case PgrServiceApplicationStatus.resolved:
-        return 'RESOLVED';
-      case PgrServiceApplicationStatus.rejected:
-        return 'REJECTED';
-      case PgrServiceApplicationStatus.cancelled:
-        return 'CANCELLED';
-    }
-  }
-}
-
-extension PgrServiceApplicationStatusMapperExtension
-    on PgrServiceApplicationStatus {
-  dynamic toValue() {
-    PgrServiceApplicationStatusMapper.ensureInitialized();
-    return MapperContainer.globals.toValue<PgrServiceApplicationStatus>(this);
-  }
-}
 
 class PgrComplaintModelMapper extends ClassMapperBase<PgrComplaintModel> {
   PgrComplaintModelMapper._();
@@ -75,6 +14,9 @@ class PgrComplaintModelMapper extends ClassMapperBase<PgrComplaintModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrComplaintModelMapper._());
       EntityModelMapper.ensureInitialized();
+      PgrServiceModelMapper.ensureInitialized();
+      PgrWorkflowModelMapper.ensureInitialized();
+      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -154,10 +96,8 @@ mixin PgrComplaintModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrComplaintModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrComplaintModel, other));
+    return PgrComplaintModelMapper.ensureInitialized()
+        .equalsValue(this as PgrComplaintModel, other);
   }
 
   @override
@@ -242,6 +182,11 @@ class PgrServiceModelMapper extends ClassMapperBase<PgrServiceModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrServiceModelMapper._());
       EntityModelMapper.ensureInitialized();
+      PgrServiceApplicationStatusMapper.ensureInitialized();
+      PgrComplainantModelMapper.ensureInitialized();
+      PgrAddressModelMapper.ensureInitialized();
+      AuditDetailsMapper.ensureInitialized();
+      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -382,10 +327,8 @@ mixin PgrServiceModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrServiceModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrServiceModel, other));
+    return PgrServiceModelMapper.ensureInitialized()
+        .equalsValue(this as PgrServiceModel, other);
   }
 
   @override
@@ -532,6 +475,9 @@ class PgrComplainantModelMapper extends ClassMapperBase<PgrComplainantModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrComplainantModelMapper._());
       EntityModelMapper.ensureInitialized();
+      PgrRolesModelMapper.ensureInitialized();
+      AuditDetailsMapper.ensureInitialized();
+      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -670,10 +616,8 @@ mixin PgrComplainantModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrComplainantModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrComplainantModel, other));
+    return PgrComplainantModelMapper.ensureInitialized()
+        .equalsValue(this as PgrComplainantModel, other);
   }
 
   @override
@@ -814,6 +758,7 @@ class PgrRolesModelMapper extends ClassMapperBase<PgrRolesModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrRolesModelMapper._());
       EntityModelMapper.ensureInitialized();
+      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -889,10 +834,8 @@ mixin PgrRolesModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrRolesModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrRolesModel, other));
+    return PgrRolesModelMapper.ensureInitialized()
+        .equalsValue(this as PgrRolesModel, other);
   }
 
   @override
@@ -965,6 +908,8 @@ class PgrWorkflowModelMapper extends ClassMapperBase<PgrWorkflowModel> {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrWorkflowModelMapper._());
       EntityModelMapper.ensureInitialized();
+      AuditDetailsMapper.ensureInitialized();
+      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -1050,10 +995,8 @@ mixin PgrWorkflowModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrWorkflowModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrWorkflowModel, other));
+    return PgrWorkflowModelMapper.ensureInitialized()
+        .equalsValue(this as PgrWorkflowModel, other);
   }
 
   @override
@@ -1151,6 +1094,9 @@ class PgrServiceSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrServiceSearchModelMapper._());
       EntitySearchModelMapper.ensureInitialized();
+      PgrServiceApplicationStatusMapper.ensureInitialized();
+      AuditDetailsMapper.ensureInitialized();
+      AdditionalFieldsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -1287,10 +1233,8 @@ mixin PgrServiceSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrServiceSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as PgrServiceSearchModel, other));
+    return PgrServiceSearchModelMapper.ensureInitialized()
+        .equalsValue(this as PgrServiceSearchModel, other);
   }
 
   @override
@@ -1438,6 +1382,7 @@ class PgrFiltersMapper extends ClassMapperBase<PgrFilters> {
   static PgrFiltersMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrFiltersMapper._());
+      PgrServiceApplicationStatusMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -1511,10 +1456,8 @@ mixin PgrFiltersMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrFiltersMapper.ensureInitialized()
-                .isValueEqual(this as PgrFilters, other));
+    return PgrFiltersMapper.ensureInitialized()
+        .equalsValue(this as PgrFilters, other);
   }
 
   @override
@@ -1662,10 +1605,8 @@ mixin PgrSearchKeysMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrSearchKeysMapper.ensureInitialized()
-                .isValueEqual(this as PgrSearchKeys, other));
+    return PgrSearchKeysMapper.ensureInitialized()
+        .equalsValue(this as PgrSearchKeys, other);
   }
 
   @override
@@ -1795,10 +1736,8 @@ mixin PgrAdditionalDetailsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            PgrAdditionalDetailsMapper.ensureInitialized()
-                .isValueEqual(this as PgrAdditionalDetails, other));
+    return PgrAdditionalDetailsMapper.ensureInitialized()
+        .equalsValue(this as PgrAdditionalDetails, other);
   }
 
   @override

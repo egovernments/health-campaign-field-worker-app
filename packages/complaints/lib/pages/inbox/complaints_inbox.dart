@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:recase/recase.dart';
 
+import '../../models/pgr_complaints.dart';
 import '/blocs/complaints_inbox/complaints_inbox.dart';
 import '/blocs/localization/app_localization.dart';
 import '/router/complaints_router.dart';

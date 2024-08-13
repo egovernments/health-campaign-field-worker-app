@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
+import '../../../models/pgr_address.dart';
+import '../../../models/pgr_complaints.dart';
+
 class PgrServiceLocalRepository
     extends LocalRepository<PgrServiceModel, PgrServiceSearchModel> {
   PgrServiceLocalRepository(super.sql, super.opLogManager);

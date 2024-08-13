@@ -333,10 +333,10 @@ class __$$ComplaintsRegistrationSaveAddressEventImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? addressModel = null,
+    Object? addressModel = freezed,
   }) {
     return _then(_$ComplaintsRegistrationSaveAddressEventImpl(
-      addressModel: null == addressModel
+      addressModel: freezed == addressModel
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
               as PgrAddressModel,
@@ -364,12 +364,13 @@ class _$ComplaintsRegistrationSaveAddressEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ComplaintsRegistrationSaveAddressEventImpl &&
-            (identical(other.addressModel, addressModel) ||
-                other.addressModel == addressModel));
+            const DeepCollectionEquality()
+                .equals(other.addressModel, addressModel));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, addressModel);
+  int get hashCode => Object.hash(
+      runtimeType, const DeepCollectionEquality().hash(addressModel));
 
   @JsonKey(ignore: true)
   @override
@@ -1094,15 +1095,20 @@ class _$ComplaintsRegistrationCreateStateImpl
                     otherComplaintTypeDescription) ||
                 other.otherComplaintTypeDescription ==
                     otherComplaintTypeDescription) &&
-            (identical(other.addressModel, addressModel) ||
-                other.addressModel == addressModel) &&
+            const DeepCollectionEquality()
+                .equals(other.addressModel, addressModel) &&
             (identical(other.complaintsDetailsModel, complaintsDetailsModel) ||
                 other.complaintsDetailsModel == complaintsDetailsModel));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, loading, complaintType,
-      otherComplaintTypeDescription, addressModel, complaintsDetailsModel);
+  int get hashCode => Object.hash(
+      runtimeType,
+      loading,
+      complaintType,
+      otherComplaintTypeDescription,
+      const DeepCollectionEquality().hash(addressModel),
+      complaintsDetailsModel);
 
   @JsonKey(ignore: true)
   @override
@@ -1261,7 +1267,7 @@ class __$$ComplaintsRegistrationViewStateImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? complaintType = null,
-    Object? addressModel = null,
+    Object? addressModel = freezed,
     Object? complaintsDetailsModel = null,
   }) {
     return _then(_$ComplaintsRegistrationViewStateImpl(
@@ -1269,7 +1275,7 @@ class __$$ComplaintsRegistrationViewStateImplCopyWithImpl<$Res>
           ? _value.complaintType
           : complaintType // ignore: cast_nullable_to_non_nullable
               as String,
-      addressModel: null == addressModel
+      addressModel: freezed == addressModel
           ? _value.addressModel
           : addressModel // ignore: cast_nullable_to_non_nullable
               as PgrAddressModel,
@@ -1318,15 +1324,18 @@ class _$ComplaintsRegistrationViewStateImpl
             other is _$ComplaintsRegistrationViewStateImpl &&
             (identical(other.complaintType, complaintType) ||
                 other.complaintType == complaintType) &&
-            (identical(other.addressModel, addressModel) ||
-                other.addressModel == addressModel) &&
+            const DeepCollectionEquality()
+                .equals(other.addressModel, addressModel) &&
             (identical(other.complaintsDetailsModel, complaintsDetailsModel) ||
                 other.complaintsDetailsModel == complaintsDetailsModel));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, complaintType, addressModel, complaintsDetailsModel);
+      runtimeType,
+      complaintType,
+      const DeepCollectionEquality().hash(addressModel),
+      complaintsDetailsModel);
 
   @JsonKey(ignore: true)
   @override

@@ -13,6 +13,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:complaints/complaints.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/entity_mapper.dart';

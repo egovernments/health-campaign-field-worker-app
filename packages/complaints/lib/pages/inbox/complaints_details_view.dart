@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 import 'package:digit_data_model/data_model.dart';
 
+import '../../models/pgr_complaints.dart';
 import '/blocs/localization/app_localization.dart';
 import '/router/complaints_router.dart';
 import '/utils/i18_key_constants.dart' as i18;
