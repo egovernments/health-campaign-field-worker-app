@@ -6,7 +6,8 @@ import 'package:isar/isar.dart';
 import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/oplog/oplog_entry.dart';
-import 'package:digit_data_model/models/pgr_complaints/pgr_complaints.dart';
+
+import '../../../models/pgr_complaints.dart';
 
 class PgrServiceOpLogManager extends OpLogManager<PgrServiceModel> {
   PgrServiceOpLogManager(super.isar);
