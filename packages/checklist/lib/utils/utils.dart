@@ -1,5 +1,4 @@
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/utils/utils.dart';
 
 // Singleton class for managing attendance operations
 class ChecklistSingleton {
@@ -18,7 +17,6 @@ class ChecklistSingleton {
   String _appVersion = '';
   String _tenantId = '';
   Object _roles=[];
-  String _roleCode = '';
   bool _isHealthFacilityWorker = false;
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
@@ -33,8 +31,7 @@ class ChecklistSingleton {
         required String projectName,
         required String loggedInIndividualId,
         required String loggedInUserUuid,
-        required String appVersion, required String roleCode, required bool isHealthFacilityWorker, required Object roles}) {
-    print("Printed ->>>>>>>>$roles");
+        required String appVersion, required bool isHealthFacilityWorker, required Object roles}) {
 
     _projectId = projectId;
     _projectName=projectName;
@@ -43,7 +40,6 @@ class ChecklistSingleton {
     _appVersion = appVersion;
     _roles=roles;
     _isHealthFacilityWorker=isHealthFacilityWorker;
-    _roleCode=roleCode;
   }
 
   get projectId => _projectId;
@@ -54,7 +50,6 @@ class ChecklistSingleton {
   get tenantId => _tenantId;
   get persistenceConfiguration => _persistenceConfiguration;
   get roles => _roles;
-  get roleCode => roleCode;
   get isHealthFacilityWorker => _isHealthFacilityWorker;
   BoundaryModel? get boundary => _boundaryModel;
 

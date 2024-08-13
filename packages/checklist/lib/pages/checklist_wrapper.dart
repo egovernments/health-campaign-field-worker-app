@@ -15,7 +15,6 @@ class ChecklistWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("This page");
     final serviceDefinition = context
         .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>(context);
 
@@ -37,7 +36,7 @@ class ChecklistWrapperPage extends StatelessWidget {
           ),
         ),
       ],
-      child: AutoRouter(),
+      child: const AutoRouter(),
     );
   }
 }
