@@ -89,10 +89,10 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
       //   return complaintTypeShowcaseData.showcaseData.map(
       //     (e) => e.showcaseKey,
       //   );
-      case ComplaintsDetailsRoute.name:
-        return complaintsDetailsShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
+      // case ComplaintsDetailsRoute.name:
+      //   return complaintsDetailsShowcaseData.showcaseData.map(
+      //     (e) => e.showcaseKey,
+      //   );
       // case ComplaintsInboxRoute.name:
       //   return complaintsInboxShowcaseData.showcaseData.map(
       //     (e) => e.showcaseKey,

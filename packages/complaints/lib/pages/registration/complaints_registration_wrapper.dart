@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:digit_data_model/data_model.dart';
 
 
+import '../../models/pgr_complaints.dart';
 import '/blocs/complaints_registration/complaints_registration.dart';
 import '/models/complaints.dart';
 import '/utils/utils.dart';

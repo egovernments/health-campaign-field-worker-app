@@ -270,9 +270,9 @@ class _$ComplaintInboxStateImpl implements _ComplaintInboxState {
                 .equals(other._complaints, _complaints) &&
             const DeepCollectionEquality()
                 .equals(other._filteredComplaints, _filteredComplaints) &&
-            (identical(other.filters, filters) || other.filters == filters) &&
-            (identical(other.searchKeys, searchKeys) ||
-                other.searchKeys == searchKeys));
+            const DeepCollectionEquality().equals(other.filters, filters) &&
+            const DeepCollectionEquality()
+                .equals(other.searchKeys, searchKeys));
   }
 
   @override
@@ -282,8 +282,8 @@ class _$ComplaintInboxStateImpl implements _ComplaintInboxState {
       isFiltered,
       const DeepCollectionEquality().hash(_complaints),
       const DeepCollectionEquality().hash(_filteredComplaints),
-      filters,
-      searchKeys);
+      const DeepCollectionEquality().hash(filters),
+      const DeepCollectionEquality().hash(searchKeys));
 
   @JsonKey(ignore: true)
   @override

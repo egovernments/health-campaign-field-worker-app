@@ -227,10 +227,7 @@ class AppRouter extends _$AppRouter {
           path: 'beneficiary-acknowledgement',
         ),
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
+
         AutoRoute(
           page: ProjectFacilitySelectionRoute.page,
           path: 'select-project-facilities',
@@ -301,6 +298,12 @@ class AppRouter extends _$AppRouter {
               path: 'complaints-details',
             ),
           ],
+        ),
+
+        /// Complaints Acknowledgemnet
+        AutoRoute(
+          page: ComplaintsAcknowledgementRoute.page,
+          path: 'complaints-acknowledgement',
         ),
 
         // Attendance Route

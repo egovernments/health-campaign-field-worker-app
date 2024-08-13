@@ -6,6 +6,7 @@ import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+import 'package:complaints/complaints.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
 import '../../../utils/environment_config.dart';

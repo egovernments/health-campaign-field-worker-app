@@ -10,6 +10,7 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i12;
 import 'package:complaints/blocs/localization/app_localization.dart' as _i14;
+import 'package:complaints/models/pgr_complaints.dart' as _i15;
 import 'package:complaints/pages/complaints_acknowledgement.dart' as _i2;
 import 'package:complaints/pages/inbox/complaints_details_view.dart' as _i4;
 import 'package:complaints/pages/inbox/complaints_inbox.dart' as _i6;
@@ -22,7 +23,6 @@ import 'package:complaints/pages/registration/complaints_details.dart' as _i3;
 import 'package:complaints/pages/registration/complaints_location.dart' as _i10;
 import 'package:complaints/pages/registration/complaints_registration_wrapper.dart'
     as _i11;
-import 'package:digit_data_model/data_model.dart' as _i15;
 import 'package:flutter/material.dart' as _i13;
 
 abstract class $ComplaintsRoute extends _i12.AutoRouterModule {
