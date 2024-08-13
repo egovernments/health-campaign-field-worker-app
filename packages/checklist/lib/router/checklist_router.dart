@@ -23,5 +23,6 @@ class CheckListRoute extends $CheckListRoute {
         page: ChecklistBoundaryViewRoute.page, path: 'view-boundary'),
     AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
     AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+    AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
   ];
 }

@@ -43,6 +43,11 @@ dependencies:
   registration_delivery: ^1.0.3-dev.3
 
 
+dependency_overrides:
+  dart_mappable_builder:
+    path: ../../packages/dart_mappable_builder
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

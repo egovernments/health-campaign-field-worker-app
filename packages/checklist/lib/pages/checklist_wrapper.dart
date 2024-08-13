@@ -28,6 +28,7 @@ class ChecklistWrapperPage extends StatelessWidget {
             const ServiceDefinitionEmptyState(),
             serviceDefinitionDataRepository: serviceDefinition,
           )..add(const ServiceDefinitionFetchEvent()),
+          lazy: false,
         ),
         BlocProvider(
           create: (_) => ServiceBloc(

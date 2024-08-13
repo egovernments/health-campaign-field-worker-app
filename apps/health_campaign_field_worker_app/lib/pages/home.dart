@@ -413,10 +413,14 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
+                print(snapshot);
                 if (snapshot.data?['enablesManualSync'] == true) {
+                  print("snapshotData _________________");
                   if (context.mounted) _attemptSyncUp(context);
                 } else {
+                  print('dialog show__________________');
                   if (context.mounted) {
+                    print('dialog showed-------');
                     DigitToast.show(
                       context,
                       options: DigitToastOptions(
@@ -714,6 +718,8 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+          roleCode: RolesType.healthFacilityWorker.toValue(),
+          isHealthFacilityWorker: context.loggedInUserRoles.where((role) => role.code == RolesType.healthFacilityWorker.toValue()).toList().isNotEmpty,
           roles: context.read<AuthBloc>().state.maybeMap(
             orElse: () => const Offstage(),
             authenticated: (res) {
