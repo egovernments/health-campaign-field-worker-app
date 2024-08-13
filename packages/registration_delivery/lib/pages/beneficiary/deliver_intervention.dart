@@ -625,6 +625,9 @@ class DeliverInterventionPageState
     task ??= TaskModel(
       projectBeneficiaryClientReferenceId: projectBeneficiaryClientReferenceId,
       clientReferenceId: clientReferenceId,
+      address: address?.copyWith(
+        relatedClientReferenceId: clientReferenceId,
+      ),
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
       auditDetails: AuditDetails(
