@@ -112,28 +112,6 @@ abstract class _$AppRouter extends RootStackRouter {
         )),
       );
     },
-    ComplaintsAcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsAcknowledgementRouteArgs>(
-          orElse: () => const ComplaintsAcknowledgementRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ComplaintsAcknowledgementPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
-    ComplaintsDetailsRoute.name: (routeData) {
-      final args = routeData.argsAs<ComplaintsDetailsRouteArgs>(
-          orElse: () => const ComplaintsDetailsRouteArgs());
-      return AutoRoutePage<dynamic>(
-        routeData: routeData,
-        child: ComplaintsDetailsPage(
-          key: args.key,
-          appLocalizations: args.appLocalizations,
-        ),
-      );
-    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -555,83 +533,6 @@ class ChecklistWrapperRouteArgs {
   @override
   String toString() {
     return 'ChecklistWrapperRouteArgs{key: $key, isEditing: $isEditing}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsAcknowledgementPage]
-class ComplaintsAcknowledgementRoute
-    extends PageRouteInfo<ComplaintsAcknowledgementRouteArgs> {
-  ComplaintsAcknowledgementRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ComplaintsAcknowledgementRoute.name,
-          args: ComplaintsAcknowledgementRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintsAcknowledgementRoute';
-
-  static const PageInfo<ComplaintsAcknowledgementRouteArgs> page =
-      PageInfo<ComplaintsAcknowledgementRouteArgs>(name);
-}
-
-class ComplaintsAcknowledgementRouteArgs {
-  const ComplaintsAcknowledgementRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintsAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations}';
-  }
-}
-
-/// generated route for
-/// [ComplaintsDetailsPage]
-class ComplaintsDetailsRoute extends PageRouteInfo<ComplaintsDetailsRouteArgs> {
-  ComplaintsDetailsRoute({
-    Key? key,
-    AppLocalizations? appLocalizations,
-    List<PageRouteInfo>? children,
-  }) : super(
-          ComplaintsDetailsRoute.name,
-          args: ComplaintsDetailsRouteArgs(
-            key: key,
-            appLocalizations: appLocalizations,
-          ),
-          initialChildren: children,
-        );
-
-  static const String name = 'ComplaintsDetailsRoute';
-
-  static const PageInfo<ComplaintsDetailsRouteArgs> page =
-      PageInfo<ComplaintsDetailsRouteArgs>(name);
-}
-
-class ComplaintsDetailsRouteArgs {
-  const ComplaintsDetailsRouteArgs({
-    this.key,
-    this.appLocalizations,
-  });
-
-  final Key? key;
-
-  final AppLocalizations? appLocalizations;
-
-  @override
-  String toString() {
-    return 'ComplaintsDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
