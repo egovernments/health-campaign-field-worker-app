@@ -849,8 +849,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                 initialSelection: const [false],
                 options: const [true, false],
                 onSelectionChanged: (valuec) {
-                  print(submitTriggered);
-                  print(controller[index].text.split('.').contains(e));
                   context.read<ServiceBloc>().add(
                         ServiceChecklistEvent(
                           value: valuec.toString(),

@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
-// import 'package:digit_data_model/data_model.dart';
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:checklist/checklist.dart';
@@ -10,11 +8,9 @@ import 'package:checklist/checklist.dart';
 import '../router/checklist_router.gm.dart';
 import '../utils/constants.dart';
 import '../widgets/action_card.dart';
-import '../blocs/app_localization.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../utils/i18_key_constants.dart' as i18;
-import '../utils/utils.dart';
 import '../widgets/no_result_card.dart';
 
 @RoutePage()
@@ -32,7 +28,6 @@ class _ChecklistPageState extends State<ChecklistPage> {
   @override
   Widget build(BuildContext context) {
     final localizations = ChecklistLocalization.of(context);
-    final theme = Theme.of(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -60,7 +55,6 @@ class _ChecklistPageState extends State<ChecklistPage> {
                                   .healthFacilityChecklistPrefix) &&
                               (item.code ?? '').contains(
                                   ChecklistSingleton().projectName));
-                      print('Printed value-----> $values');
 
                       if (values.isEmpty) {
                         return Column(
