@@ -26,11 +26,8 @@ dependencies:
   dio: ^5.1.2
   mocktail: ^1.0.2
   collection: ^1.16.0
+  checklist: ^0.0.1
 
-
-dependency_overrides:
-  dart_mappable_builder:
-    path: ../../packages/dart_mappable_builder
 
 dev_dependencies:
   flutter_test:

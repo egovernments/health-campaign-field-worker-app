@@ -1,4 +1,4 @@
-# Attendance Management Package
+# Checklist Package
 
 The `checklist` package is a comprehensive solution for creating checklist.
 

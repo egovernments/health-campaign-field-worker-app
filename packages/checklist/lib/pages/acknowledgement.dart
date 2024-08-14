@@ -68,30 +68,6 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                     context.router.popUntilRoot();
                   },
                 ),
-                const SizedBox(
-                  height: 12,
-                ),
-                DigitOutLineButton(
-                  onPressed: () {
-                    // context.router.popAndPush(BoundarySelectionRoute());
-                  },
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.downloadmoredata),
-                  buttonStyle: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                    side: BorderSide(
-                      width: 1.0,
-                      color: theme.colorScheme.secondary,
-                    ),
-                    minimumSize: Size(
-                      MediaQuery.of(context).size.width,
-                      50,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
