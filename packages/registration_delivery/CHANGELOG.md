@@ -1,3 +1,7 @@
+## 1.0.3-dev.11
+
+* Updated search to include project id for individual and household
+
 ## 1.0.3-dev.10
 
 * Removed stepper if number of deliveries is greater than 1 
