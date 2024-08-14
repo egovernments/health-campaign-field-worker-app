@@ -68,10 +68,11 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
-    version: "1.0.1+1"
+      name: attendance_management
+      sha256: "9ef39f9cf6bc3d44d1d84f2c43915a791583d42517b38bc5ec8f4bf9128d7c06"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2-dev.2"
   audioplayers:
     dependency: "direct main"
     description:
@@ -339,9 +340,10 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      path: "../../packages/closed_household"
-      relative: true
-    source: path
+      name: closed_household
+      sha256: "44182f614a1d3d912e56ef0ab7b583495ab3572e75f15612ab12dfdf099222bd"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.0-dev.4"
   code_builder:
     dependency: transitive
@@ -496,17 +498,18 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.3-dev.3"
+      name: digit_data_model
+      sha256: "671c79189c328394bf126f441d9afadc969d28c9bab95a6961e544179e3e817d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3-dev.4"
   digit_dss:
     dependency: "direct main"
     description:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "0.0.1-dev.2"
+    version: "0.0.1-dev.3"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -517,16 +520,18 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: bc172291df5ffe720e3d471fbc5c542086b8efecbdb6e25ee737381cc47c8e05
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3-dev.1"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   dio:
     dependency: "direct main"
@@ -1525,17 +1530,19 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      path: "../../packages/referral_reconciliation"
-      relative: true
-    source: path
+      name: referral_reconciliation
+      sha256: "27f03bb51743cb9b25419fc1089507ee95693270a43233b92194298b1f87779c"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.2"
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
-    version: "1.0.3-dev.9"
+      name: registration_delivery
+      sha256: "8ecdab7ee4767bd9fe802fd5adaf5b0ce8b9a9861381c567c867f9d4aec5a933"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3-dev.11"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -2070,5 +2077,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.0 <3.9.0"
   flutter: ">=3.16.0"
