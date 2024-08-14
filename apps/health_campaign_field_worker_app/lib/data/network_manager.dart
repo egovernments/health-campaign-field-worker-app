@@ -19,9 +19,9 @@ class NetworkManager {
   const NetworkManager({required this.configuration});
 
   DataRepository<D, R>
-      repository<D extends EntityModel, R extends EntitySearchModel>(
-    BuildContext context,
-  ) {
+  repository<D extends EntityModel, R extends EntitySearchModel>(
+      BuildContext context,
+      ) {
     switch (configuration.persistenceConfig) {
       case PersistenceConfiguration.offlineFirst:
         return context.read<LocalRepository<D, R>>();
@@ -107,9 +107,9 @@ class NetworkManager {
 
   //
   FutureOr<void> writeToEntityDB(
-    Map<String, dynamic> response,
-    List<LocalRepository> localRepositories,
-  ) async {
+      Map<String, dynamic> response,
+      List<LocalRepository> localRepositories,
+      ) async {
     try {
       for (int i = 0; i <= response.keys.length - 1; i++) {
         if (response.keys.elementAt(i) != 'DownsyncCriteria') {
@@ -121,7 +121,7 @@ class NetworkManager {
               response[response.keys.elementAt(i)] ?? [];
 
           final entityList =
-              entityResponse.whereType<Map<String, dynamic>>().toList();
+          entityResponse.whereType<Map<String, dynamic>>().toList();
 
           switch (response.keys.elementAt(i)) {
             case "Individuals":
@@ -138,15 +138,15 @@ class NetworkManager {
               final entity = entityList
                   .map(
                     (e) => HouseholdMemberModelMapper.fromJson(
-                      jsonEncode(e),
-                    ),
-                  )
+                  jsonEncode(e),
+                ),
+              )
                   .toList();
               await local.bulkCreate(entity);
             case "ProjectBeneficiaries":
               final entity = entityList
                   .map((e) =>
-                      ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
+                  ProjectBeneficiaryModelMapper.fromJson(jsonEncode(e)))
                   .toList();
               await local.bulkCreate(entity);
             case "Tasks":
@@ -178,9 +178,9 @@ class NetworkManager {
   }
 
   FutureOr<int> getPendingSyncRecordsCount(
-    List<LocalRepository> localRepositories,
-    String userId,
-  ) async =>
+      List<LocalRepository> localRepositories,
+      String userId,
+      ) async =>
       (await Future.wait(localRepositories.map((e) {
         return e.getItemsToBeSyncedUp(userId);
       })))
@@ -189,9 +189,9 @@ class NetworkManager {
 }
 
 FutureOr<List<EntityModel>> filterEntitybyBandwidth(
-  int batchSize,
-  List<EntityModel> entities,
-) async {
+    int batchSize,
+    List<EntityModel> entities,
+    ) async {
   final List<EntityModel> items = [];
   final int size = batchSize < entities.length ? batchSize : entities.length;
 
@@ -203,9 +203,9 @@ FutureOr<List<EntityModel>> filterEntitybyBandwidth(
 }
 
 Future<List<OpLogEntry<EntityModel>>> filterOpLogByBandwidth(
-  int batchSize,
-  List<OpLogEntry<EntityModel>> entities,
-) async {
+    int batchSize,
+    List<OpLogEntry<EntityModel>> entities,
+    ) async {
   final List<OpLogEntry<EntityModel>> items = [];
   final int size = batchSize < entities.length ? batchSize : entities.length;
 

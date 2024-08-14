@@ -772,10 +772,9 @@ void setPackagesSingleton(BuildContext context) {
           loggedInUserUuid: context.loggedInUserUuid,
           userMobileNumber: context.loggedInUser.mobileNumber,
           loggedInUserName: context.loggedInUser.name,
-
-          complaintTypes: appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
           userName: context.loggedInUser.name ?? '',
-
         );
       });
 }

@@ -46,20 +46,20 @@ Future<void> initializeService(dio, isar) async {
     importance: Importance.high, // importance must be at low or higher level
   );
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  FlutterLocalNotificationsPlugin();
 
   if (Platform.isAndroid) {
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.requestExactAlarmsPermission();
     flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.requestNotificationsPermission();
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
   requestDisableBatteryOptimization();
@@ -72,7 +72,7 @@ Future<void> initializeService(dio, isar) async {
       autoStart: false,
       isForegroundMode: true,
       initialNotificationContent:
-          'BackGround Service Started at ${DateTime.now()}',
+      'BackGround Service Started at ${DateTime.now()}',
       initialNotificationTitle: 'Background service',
       notificationChannelId: notificationChannelId,
       foregroundServiceNotificationId: notificationId,
@@ -126,7 +126,7 @@ void onStart(ServiceInstance service) async {
     int i = 0;
     makePeriodicTimer(
       Duration(seconds: interval),
-      (timer) async {
+          (timer) async {
         var battery = Battery();
         final int batteryPercent = await battery.batteryLevel;
         if (batteryPercent <=
@@ -135,11 +135,11 @@ void onStart(ServiceInstance service) async {
           service.stopSelf();
         } else {
           final FlutterLocalNotificationsPlugin
-              flutterLocalNotificationsPlugin =
-              FlutterLocalNotificationsPlugin();
+          flutterLocalNotificationsPlugin =
+          FlutterLocalNotificationsPlugin();
           if (frequencyCount != null) {
             final serviceRegistryList =
-                await _isar.serviceRegistrys.where().findAll();
+            await _isar.serviceRegistrys.where().findAll();
             if (serviceRegistryList.isNotEmpty) {
               final bandwidthPath = serviceRegistryList
                   .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
@@ -205,7 +205,7 @@ void onStart(ServiceInstance service) async {
 
               i++;
               final isAppInActive =
-                  await LocalSecureStore.instance.isAppInActive;
+              await LocalSecureStore.instance.isAppInActive;
 
               if (isSyncCompleted && i >= 2 && isAppInActive) {
                 service.stopSelf();
@@ -222,30 +222,30 @@ void onStart(ServiceInstance service) async {
 getActionMap(List<ServiceRegistry> serviceRegistryList) {
   return serviceRegistryList
       .map((e) => e.actions.map((e) {
-            ApiOperation? operation;
-            DataModelType? type;
+    ApiOperation? operation;
+    DataModelType? type;
 
-            operation = ApiOperation.values.firstWhereOrNull((element) {
-              return e.action.camelCase == element.name;
-            });
+    operation = ApiOperation.values.firstWhereOrNull((element) {
+      return e.action.camelCase == element.name;
+    });
 
-            type = DataModelType.values.firstWhereOrNull((element) {
-              return e.entityName.camelCase == element.name;
-            });
+    type = DataModelType.values.firstWhereOrNull((element) {
+      return e.entityName.camelCase == element.name;
+    });
 
-            if (operation == null || type == null) return null;
+    if (operation == null || type == null) return null;
 
-            return ActionPathModel(
-              operation: operation,
-              type: type,
-              path: e.path,
-            );
-          }))
+    return ActionPathModel(
+      operation: operation,
+      type: type,
+      path: e.path,
+    );
+  }))
       .expand((element) => element)
       .whereNotNull()
       .fold(
     <DataModelType, Map<ApiOperation, String>>{},
-    (Map<DataModelType, Map<ApiOperation, String>> o, element) {
+        (Map<DataModelType, Map<ApiOperation, String>> o, element) {
       if (o.containsKey(element.type)) {
         o[element.type]?.addEntries(
           [MapEntry(element.operation, element.path)],
@@ -262,10 +262,10 @@ getActionMap(List<ServiceRegistry> serviceRegistryList) {
 }
 
 int getBatchSizeToBandwidth(
-  double speed,
-  List<AppConfiguration> appConfiguration, {
-  bool isDownSync = false,
-}) {
+    double speed,
+    List<AppConfiguration> appConfiguration, {
+      bool isDownSync = false,
+    }) {
   int batchSize = 1;
   final bandwidthBatchSizeConfig = isDownSync
       ? appConfiguration.first.downSyncBandwidthBatchSize
@@ -274,7 +274,7 @@ int getBatchSizeToBandwidth(
   final batchResult = bandwidthBatchSizeConfig
       ?.where(
         (element) => speed >= element.minRange && speed <= element.maxRange,
-      )
+  )
       .toList();
   if (batchResult != null) {
     if (batchResult.isNotEmpty) {

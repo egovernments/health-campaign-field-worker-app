@@ -1,39 +1,50 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Complaints package helps people to file complaints , they can provide Complaint type , location and details about the Complaint.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- **Complaints Pages**: The package includes several pages like `complaints_type.dart`, `complaints_location.dart`, `complaints_details.dart` that provide the user interface for Filing Complaint.
+
+<img src="" width="280" height="480">
+<img src="" width="280" height="480">
+<img src="" width="280" height="480">
+<img src="" width="280" height="480">
+
+
+- **Complaints Blocs**: It provides various BLoCs Like `ComplaintsInboxBloc`,`ComplaintsRegistrationBloc` for state management using the BLoC pattern. These BLoCs handle the business logic for Filing Complaints.
+- **Complaints Models**: It defines various data models like `PgrAddressModel`, `PgrComplaintModel`, `PgrServiceModel` etc. used in the attendance management process.
+- **Complaints Repositories**: The package provides abstract classes for data repositories, `PgrServiceLocalRepository`, `PgrServiceRemoteRepository`, which can be extended to create repositories for different complaint models.
+
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this package, add the following dependency to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  complaints: ^0.0.0-dev.1
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+
+To Navigate to any screens of the package:
+
+First add complaint_router to your main app router
+
+Navigate to the required screen using the below code:
 
 ```dart
-const like = 'sample';
+context.router.push(ComplaintsInboxWrapperRoute()),
 ```
 
-## Additional information
+Complaints package requires below data to be passed from main app:
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+    String? tenantId;
+    String? loggedInUserUuid;
+    String? userMobileNumber;
+    String? loggedInUserName;
+    List<String>? complaintTypes;
+    String? userName;
+```
+

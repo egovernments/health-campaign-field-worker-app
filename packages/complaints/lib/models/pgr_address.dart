@@ -49,9 +49,7 @@ class PgrAddressModel extends EntityModel with PgrAddressModelMappable {
     this.isDeleted,
     this.rowVersion,
     super.auditDetails,
-    
   }) : super(isDeleted: false);
-
 
   AddressCompanion get companion {
     return AddressCompanion(
