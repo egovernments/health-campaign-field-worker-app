@@ -19,7 +19,7 @@ class ComplaintsSingleton {
   //Private constructor for the singleton pattern
   ComplaintsSingleton._internal();
 
-  //various properties related to the inventory
+  //various properties related to the Complaints
   String? _tenantId = '';
   String? _loggedInUserUuid = '';
   String? _userMobileNumber = '';

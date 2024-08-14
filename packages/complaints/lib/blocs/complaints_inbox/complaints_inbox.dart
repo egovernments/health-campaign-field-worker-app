@@ -17,6 +17,7 @@ part 'complaints_inbox.freezed.dart';
 
 typedef ComplaintsInboxEmitter = Emitter<ComplaintInboxState>;
 
+/// Complaint inbox Bloc for Loading Complaints, Filtering Complaints, Sorting Complaints and Searching Complaints
 class ComplaintsInboxBloc
     extends Bloc<ComplaintInboxEvent, ComplaintInboxState> {
   final PgrServiceDataRepository pgrRepository;

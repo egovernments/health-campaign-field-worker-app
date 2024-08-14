@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import '../../../models/pgr_complaints.dart';
 import '../../../models/pgr_complaints_response.dart';
 
+// This will create , update and search data from remote Repository
 class PgrServiceRemoteRepository
     extends RemoteRepository<PgrServiceModel, PgrServiceSearchModel> {
   PgrServiceRemoteRepository(

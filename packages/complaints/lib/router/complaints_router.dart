@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 
 import 'complaints_router.gm.dart';
 
+/// Complaint Inbox and registration Router
 @AutoRouterConfig.module()
 class ComplaintsRoute extends $ComplaintsRoute {
   @override

@@ -17,6 +17,7 @@ part 'complaints_registration.freezed.dart';
 
 typedef ComplaintsRegistrationEmitter = Emitter<ComplaintsRegistrationState>;
 
+/// Complaints Registration Bloc for managing Complaint state (i.e. complaint type, complaint location and complaint details)
 class ComplaintsRegistrationBloc
     extends Bloc<ComplaintsRegistrationEvent, ComplaintsRegistrationState> {
   final PgrServiceDataRepository pgrServiceRepository;
@@ -137,7 +138,7 @@ class ComplaintsRegistrationBloc
             description: description,
 
             source: AdditionalFieldsType.mobile.toValue(),
-
+            /// created Enum for application status in Digit Data model entities and using it here
             applicationStatus: PgrServiceApplicationStatus.created,
             user: PgrComplainantModel(
               tenantId: ComplaintsSingleton().tenantId,
