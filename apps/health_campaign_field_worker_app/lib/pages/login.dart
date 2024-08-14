@@ -26,6 +26,7 @@ class LoginPage extends LocalizedStatefulWidget {
 
 class _LoginPageState extends LocalizedState<LoginPage> {
   var passwordVisible = false;
+  bool isPrivacyEnabled =false;
   static const _userId = 'userId';
   static const _password = 'password';
   static const _privacyCheck = 'privacyCheck';
@@ -132,9 +133,12 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                 (AppConfiguration appConfiguration, _, __) =>
                                     appConfiguration.privacyPolicyConfig,
                             orElse: () => null);
-                        if(privacyPolicyJson?.active==false){
+                        if(privacyPolicyJson?.active==true){
                           return const SizedBox.shrink();
                         }
+                        setState(() {
+                          isPrivacyEnabled = true;
+                        });
                         return PrivacyComponent(
                           privacyPolicy: privacyPolicyJson,
                           formControlName: _privacyCheck,
@@ -230,7 +234,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         ),
         _privacyCheck: FormControl<bool>(
           validators: [Validators.requiredTrue],
-          value: false,
+          value: isPrivacyEnabled ? false : true,
         )
       });
 }
