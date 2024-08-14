@@ -81,7 +81,7 @@ class _BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
     //   (element) => element.beneficiaryType == beneficiaryType,
     // );
 
-    final target = 75;
+    final target = 100;
 
     return DigitCard(
       child: ProgressIndicatorContainer(

@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 import '../../../../models/entities/address_type.dart';
 
+@TableIndex(name: 'addressclientref', columns: {#relatedClientReferenceId})
 class Address extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get relatedClientReferenceId => text().nullable()();

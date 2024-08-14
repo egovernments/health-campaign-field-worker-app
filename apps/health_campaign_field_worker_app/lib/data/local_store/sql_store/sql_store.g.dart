@@ -38843,6 +38843,29 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $DownsyncCriteriaTable downsyncCriteria =
       $DownsyncCriteriaTable(this);
   late final $HFReferralTable hFReferral = $HFReferralTable(this);
+  late final Index addressclientref = Index('addressclientref',
+      'CREATE INDEX addressclientref ON address (related_client_reference_id)');
+  late final Index givennameclientref = Index('givennameclientref',
+      'CREATE INDEX givennameclientref ON name (given_name)');
+  late final Index familynameclientref = Index('familynameclientref',
+      'CREATE INDEX familynameclientref ON name (family_name)');
+  late final Index householdclientref = Index('householdclientref',
+      'CREATE INDEX householdclientref ON household (client_reference_id)');
+  late final Index memberclientref = Index('memberclientref',
+      'CREATE INDEX memberclientref ON household_member (household_client_reference_id, individual_client_reference_id, client_reference_id)');
+  late final Index individualclientref = Index('individualclientref',
+      'CREATE INDEX individualclientref ON individual (client_reference_id)');
+  late final Index projectclientref = Index('projectclientref',
+      'CREATE INDEX projectclientref ON project_beneficiary (project_id, beneficiary_client_reference_id)');
+  late final Index projecttag = Index('projecttag',
+      'CREATE INDEX projecttag ON project_beneficiary (tag, project_id)');
+  late final Index taskprojectbeneficiaryclientref = Index(
+      'taskprojectbeneficiaryclientref',
+      'CREATE INDEX taskprojectbeneficiaryclientref ON task (project_beneficiary_client_reference_id)');
+  late final Index taskclientref = Index('taskclientref',
+      'CREATE INDEX taskclientref ON task (client_reference_id)');
+  late final Index taskresourceclientref = Index('taskresourceclientref',
+      'CREATE INDEX taskresourceclientref ON task_resource (taskclient_reference_id)');
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -38887,6 +38910,17 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         user,
         downsync,
         downsyncCriteria,
-        hFReferral
+        hFReferral,
+        addressclientref,
+        givennameclientref,
+        familynameclientref,
+        householdclientref,
+        memberclientref,
+        individualclientref,
+        projectclientref,
+        projecttag,
+        taskprojectbeneficiaryclientref,
+        taskclientref,
+        taskresourceclientref
       ];
 }

@@ -2,7 +2,10 @@
 
 import 'package:drift/drift.dart';
 
-
+@TableIndex(
+    name: 'taskprojectbeneficiaryclientref',
+    columns: {#projectBeneficiaryClientReferenceId})
+@TableIndex(name: 'taskclientref', columns: {#clientReferenceId})
 class Task extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get projectId => text().nullable()();
@@ -11,7 +14,8 @@ class Task extends Table {
   TextColumn get createdBy => text().nullable()();
   TextColumn get status => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
-  BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get nonRecoverableError =>
+      boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();
@@ -21,16 +25,20 @@ class Task extends Table {
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get isDeleted =>
+      boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
   IntColumn get plannedStartDate => integer().nullable()();
   IntColumn get plannedEndDate => integer().nullable()();
   IntColumn get actualStartDate => integer().nullable()();
   IntColumn get actualEndDate => integer().nullable()();
   IntColumn get createdDate => integer().nullable()();
-  
+
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => {
+        auditCreatedBy,
+        clientReferenceId,
+      };
 }
