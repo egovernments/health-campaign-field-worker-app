@@ -1,3 +1,7 @@
+## 0.0.1-dev.4
+* Added error toast for network failure 
+* No result card added if no charts available
+
 ## 0.0.1-dev.3
 * Fixed user uuid search for dss charts
 

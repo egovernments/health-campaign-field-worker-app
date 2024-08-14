@@ -19,7 +19,8 @@ mixin _$DashboardEvent {
   DateTime? get selectedDate => throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DateTime? selectedDate) handleSearch,
+    required TResult Function(DateTime? selectedDate, bool? isNetworkError)
+        handleSearch,
     required TResult Function(
             DateTime selectedDate, String projectId, bool syncFromServer)
         handleRefresh,
@@ -27,7 +28,8 @@ mixin _$DashboardEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DateTime? selectedDate)? handleSearch,
+    TResult? Function(DateTime? selectedDate, bool? isNetworkError)?
+        handleSearch,
     TResult? Function(
             DateTime selectedDate, String projectId, bool syncFromServer)?
         handleRefresh,
@@ -35,7 +37,8 @@ mixin _$DashboardEvent {
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DateTime? selectedDate)? handleSearch,
+    TResult Function(DateTime? selectedDate, bool? isNetworkError)?
+        handleSearch,
     TResult Function(
             DateTime selectedDate, String projectId, bool syncFromServer)?
         handleRefresh,
@@ -108,7 +111,7 @@ abstract class _$$DashboardSearchEventImplCopyWith<$Res>
       __$$DashboardSearchEventImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime? selectedDate});
+  $Res call({DateTime? selectedDate, bool? isNetworkError});
 }
 
 /// @nodoc
@@ -123,12 +126,17 @@ class __$$DashboardSearchEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? selectedDate = freezed,
+    Object? isNetworkError = freezed,
   }) {
     return _then(_$DashboardSearchEventImpl(
       selectedDate: freezed == selectedDate
           ? _value.selectedDate
           : selectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isNetworkError: freezed == isNetworkError
+          ? _value.isNetworkError
+          : isNetworkError // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -136,14 +144,18 @@ class __$$DashboardSearchEventImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$DashboardSearchEventImpl implements DashboardSearchEvent {
-  const _$DashboardSearchEventImpl({this.selectedDate});
+  const _$DashboardSearchEventImpl(
+      {this.selectedDate, this.isNetworkError = false});
 
   @override
   final DateTime? selectedDate;
+  @override
+  @JsonKey()
+  final bool? isNetworkError;
 
   @override
   String toString() {
-    return 'DashboardEvent.handleSearch(selectedDate: $selectedDate)';
+    return 'DashboardEvent.handleSearch(selectedDate: $selectedDate, isNetworkError: $isNetworkError)';
   }
 
   @override
@@ -152,11 +164,13 @@ class _$DashboardSearchEventImpl implements DashboardSearchEvent {
         (other.runtimeType == runtimeType &&
             other is _$DashboardSearchEventImpl &&
             (identical(other.selectedDate, selectedDate) ||
-                other.selectedDate == selectedDate));
+                other.selectedDate == selectedDate) &&
+            (identical(other.isNetworkError, isNetworkError) ||
+                other.isNetworkError == isNetworkError));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, selectedDate);
+  int get hashCode => Object.hash(runtimeType, selectedDate, isNetworkError);
 
   @JsonKey(ignore: true)
   @override
@@ -169,36 +183,39 @@ class _$DashboardSearchEventImpl implements DashboardSearchEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DateTime? selectedDate) handleSearch,
+    required TResult Function(DateTime? selectedDate, bool? isNetworkError)
+        handleSearch,
     required TResult Function(
             DateTime selectedDate, String projectId, bool syncFromServer)
         handleRefresh,
   }) {
-    return handleSearch(selectedDate);
+    return handleSearch(selectedDate, isNetworkError);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DateTime? selectedDate)? handleSearch,
+    TResult? Function(DateTime? selectedDate, bool? isNetworkError)?
+        handleSearch,
     TResult? Function(
             DateTime selectedDate, String projectId, bool syncFromServer)?
         handleRefresh,
   }) {
-    return handleSearch?.call(selectedDate);
+    return handleSearch?.call(selectedDate, isNetworkError);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DateTime? selectedDate)? handleSearch,
+    TResult Function(DateTime? selectedDate, bool? isNetworkError)?
+        handleSearch,
     TResult Function(
             DateTime selectedDate, String projectId, bool syncFromServer)?
         handleRefresh,
     required TResult orElse(),
   }) {
     if (handleSearch != null) {
-      return handleSearch(selectedDate);
+      return handleSearch(selectedDate, isNetworkError);
     }
     return orElse();
   }
@@ -236,11 +253,13 @@ class _$DashboardSearchEventImpl implements DashboardSearchEvent {
 }
 
 abstract class DashboardSearchEvent implements DashboardEvent {
-  const factory DashboardSearchEvent({final DateTime? selectedDate}) =
-      _$DashboardSearchEventImpl;
+  const factory DashboardSearchEvent(
+      {final DateTime? selectedDate,
+      final bool? isNetworkError}) = _$DashboardSearchEventImpl;
 
   @override
   DateTime? get selectedDate;
+  bool? get isNetworkError;
   @override
   @JsonKey(ignore: true)
   _$$DashboardSearchEventImplCopyWith<_$DashboardSearchEventImpl>
@@ -339,7 +358,8 @@ class _$DashboardRefreshEventImpl implements DashboardRefreshEvent {
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(DateTime? selectedDate) handleSearch,
+    required TResult Function(DateTime? selectedDate, bool? isNetworkError)
+        handleSearch,
     required TResult Function(
             DateTime selectedDate, String projectId, bool syncFromServer)
         handleRefresh,
@@ -350,7 +370,8 @@ class _$DashboardRefreshEventImpl implements DashboardRefreshEvent {
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(DateTime? selectedDate)? handleSearch,
+    TResult? Function(DateTime? selectedDate, bool? isNetworkError)?
+        handleSearch,
     TResult? Function(
             DateTime selectedDate, String projectId, bool syncFromServer)?
         handleRefresh,
@@ -361,7 +382,8 @@ class _$DashboardRefreshEventImpl implements DashboardRefreshEvent {
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(DateTime? selectedDate)? handleSearch,
+    TResult Function(DateTime? selectedDate, bool? isNetworkError)?
+        handleSearch,
     TResult Function(
             DateTime selectedDate, String projectId, bool syncFromServer)?
         handleRefresh,
@@ -427,8 +449,11 @@ mixin _$DashboardState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() initialState,
-    required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)
+    required TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)
         fetched,
     required TResult Function() error,
   }) =>
@@ -437,8 +462,11 @@ mixin _$DashboardState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? initialState,
-    TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult? Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult? Function()? error,
   }) =>
@@ -447,8 +475,11 @@ mixin _$DashboardState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? initialState,
-    TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),
@@ -541,8 +572,11 @@ class _$DashboardLoadingStateImpl implements DashboardLoadingState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() initialState,
-    required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)
+    required TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)
         fetched,
     required TResult Function() error,
   }) {
@@ -554,8 +588,11 @@ class _$DashboardLoadingStateImpl implements DashboardLoadingState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? initialState,
-    TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult? Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult? Function()? error,
   }) {
@@ -567,8 +604,11 @@ class _$DashboardLoadingStateImpl implements DashboardLoadingState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? initialState,
-    TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),
@@ -663,8 +703,11 @@ class _$DashboardInitialStateImpl implements DashboardInitialState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() initialState,
-    required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)
+    required TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)
         fetched,
     required TResult Function() error,
   }) {
@@ -676,8 +719,11 @@ class _$DashboardInitialStateImpl implements DashboardInitialState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? initialState,
-    TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult? Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult? Function()? error,
   }) {
@@ -689,8 +735,11 @@ class _$DashboardInitialStateImpl implements DashboardInitialState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? initialState,
-    TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),
@@ -753,7 +802,8 @@ abstract class _$$DashboardFetchedStateImplCopyWith<$Res> {
   $Res call(
       {Map<String, MetricWrapper>? metricData,
       List<TableWrapper>? tableData,
-      DateTime? selectedDate});
+      DateTime? selectedDate,
+      bool? isNetworkError});
 }
 
 /// @nodoc
@@ -770,6 +820,7 @@ class __$$DashboardFetchedStateImplCopyWithImpl<$Res>
     Object? metricData = freezed,
     Object? tableData = freezed,
     Object? selectedDate = freezed,
+    Object? isNetworkError = freezed,
   }) {
     return _then(_$DashboardFetchedStateImpl(
       metricData: freezed == metricData
@@ -784,6 +835,10 @@ class __$$DashboardFetchedStateImplCopyWithImpl<$Res>
           ? _value.selectedDate
           : selectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      isNetworkError: freezed == isNetworkError
+          ? _value.isNetworkError
+          : isNetworkError // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -794,7 +849,8 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   const _$DashboardFetchedStateImpl(
       {final Map<String, MetricWrapper>? metricData,
       final List<TableWrapper>? tableData,
-      this.selectedDate})
+      this.selectedDate,
+      this.isNetworkError = false})
       : _metricData = metricData,
         _tableData = tableData;
 
@@ -820,10 +876,13 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
 
   @override
   final DateTime? selectedDate;
+  @override
+  @JsonKey()
+  final bool? isNetworkError;
 
   @override
   String toString() {
-    return 'DashboardState.fetched(metricData: $metricData, tableData: $tableData, selectedDate: $selectedDate)';
+    return 'DashboardState.fetched(metricData: $metricData, tableData: $tableData, selectedDate: $selectedDate, isNetworkError: $isNetworkError)';
   }
 
   @override
@@ -836,7 +895,9 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
             const DeepCollectionEquality()
                 .equals(other._tableData, _tableData) &&
             (identical(other.selectedDate, selectedDate) ||
-                other.selectedDate == selectedDate));
+                other.selectedDate == selectedDate) &&
+            (identical(other.isNetworkError, isNetworkError) ||
+                other.isNetworkError == isNetworkError));
   }
 
   @override
@@ -844,7 +905,8 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
       runtimeType,
       const DeepCollectionEquality().hash(_metricData),
       const DeepCollectionEquality().hash(_tableData),
-      selectedDate);
+      selectedDate,
+      isNetworkError);
 
   @JsonKey(ignore: true)
   @override
@@ -858,12 +920,15 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() initialState,
-    required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)
+    required TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)
         fetched,
     required TResult Function() error,
   }) {
-    return fetched(metricData, tableData, selectedDate);
+    return fetched(metricData, tableData, selectedDate, isNetworkError);
   }
 
   @override
@@ -871,12 +936,15 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? initialState,
-    TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult? Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult? Function()? error,
   }) {
-    return fetched?.call(metricData, tableData, selectedDate);
+    return fetched?.call(metricData, tableData, selectedDate, isNetworkError);
   }
 
   @override
@@ -884,14 +952,17 @@ class _$DashboardFetchedStateImpl implements DashboardFetchedState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? initialState,
-    TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),
   }) {
     if (fetched != null) {
-      return fetched(metricData, tableData, selectedDate);
+      return fetched(metricData, tableData, selectedDate, isNetworkError);
     }
     return orElse();
   }
@@ -938,11 +1009,13 @@ abstract class DashboardFetchedState implements DashboardState {
   const factory DashboardFetchedState(
       {final Map<String, MetricWrapper>? metricData,
       final List<TableWrapper>? tableData,
-      final DateTime? selectedDate}) = _$DashboardFetchedStateImpl;
+      final DateTime? selectedDate,
+      final bool? isNetworkError}) = _$DashboardFetchedStateImpl;
 
   Map<String, MetricWrapper>? get metricData;
   List<TableWrapper>? get tableData;
   DateTime? get selectedDate;
+  bool? get isNetworkError;
   @JsonKey(ignore: true)
   _$$DashboardFetchedStateImplCopyWith<_$DashboardFetchedStateImpl>
       get copyWith => throw _privateConstructorUsedError;
@@ -989,8 +1062,11 @@ class _$DashboardErrorStateImpl implements DashboardErrorState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() initialState,
-    required TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)
+    required TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)
         fetched,
     required TResult Function() error,
   }) {
@@ -1002,8 +1078,11 @@ class _$DashboardErrorStateImpl implements DashboardErrorState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? initialState,
-    TResult? Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult? Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult? Function()? error,
   }) {
@@ -1015,8 +1094,11 @@ class _$DashboardErrorStateImpl implements DashboardErrorState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? initialState,
-    TResult Function(Map<String, MetricWrapper>? metricData,
-            List<TableWrapper>? tableData, DateTime? selectedDate)?
+    TResult Function(
+            Map<String, MetricWrapper>? metricData,
+            List<TableWrapper>? tableData,
+            DateTime? selectedDate,
+            bool? isNetworkError)?
         fetched,
     TResult Function()? error,
     required TResult orElse(),

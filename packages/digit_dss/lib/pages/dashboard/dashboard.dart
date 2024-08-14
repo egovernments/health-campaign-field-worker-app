@@ -11,6 +11,7 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/dashboard/dashboard_metric_card.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/no_result_card.dart';
 
 @RoutePage()
 class UserDashboardPage extends LocalizedStatefulWidget {
@@ -52,8 +53,22 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
               Loaders.showLoadingDialog(context);
             }
           },
-          fetched: (metricData, tableData, selectedDate) {
+          fetched: (
+            metricData,
+            tableData,
+            selectedDate,
+            isNetworkError,
+          ) {
             Navigator.of(context, rootNavigator: true).pop();
+            if (isNetworkError == true) {
+              DigitToast.show(context,
+                  options: DigitToastOptions(
+                    localizations.translate(i18.dashboard.someErrorOccured),
+                    true,
+                    DigitTheme.instance.mobileTheme,
+                  ));
+            }
+
             setState(() {
               isLoading = false;
             });
@@ -74,7 +89,8 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
         onRefresh: () {
           dashboardState.maybeWhen(
               orElse: () => false,
-              fetched: (metricData, tableData, selectedDate) async {
+              fetched:
+                  (metricData, tableData, selectedDate, isNetworkError) async {
                 bool isConnected = await getIsConnected();
                 if (isConnected) {
                   context.read<DashboardBloc>().add(DashboardRefreshEvent(
@@ -108,12 +124,21 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
             children: [
               dashboardState.maybeWhen(
                   orElse: () => const SizedBox.shrink(),
-                  fetched: (metricData, tableData, selectedDate) {
+                  fetched:
+                      (metricData, tableData, selectedDate, isNetworkError) {
                     return Column(
                       children: [
                         DashboardMetricCard(
                           selectedDate: selectedDate ?? DateTime.now(),
                         ),
+                        if ((metricData ?? {}).isEmpty &&
+                            (tableData ?? []).isEmpty)
+                          NoResultCard(
+                            align: Alignment.center,
+                            label: localizations.translate(
+                              i18.common.noResultsFound,
+                            ),
+                          ),
                         ...(tableData ?? [])
                             .map((table) => Padding(
                                   padding: const EdgeInsets.all(kPadding),

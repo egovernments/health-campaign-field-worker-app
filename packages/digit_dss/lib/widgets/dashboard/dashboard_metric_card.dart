@@ -91,8 +91,8 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
                           Text(
                             dashboardState.maybeWhen(
                                 orElse: () => '',
-                                fetched: (metricData, tableData,
-                                        selectedDate) =>
+                                fetched: (metricData, tableData, selectedDate,
+                                        isNetworkError) =>
                                     '${DigitDateUtils.getMonth(selectedDate?.toLocal() ?? DateTime.now())} - ${(selectedDate?.toLocal() ?? DateTime.now()).day}, ${(selectedDate?.toLocal() ?? DateTime.now()).year}'),
                             style: theme.textTheme.bodyMedium
                                 ?.apply(color: theme.colorScheme.secondary),
@@ -118,7 +118,8 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
               children: [
                 ...dashboardState.maybeWhen(
                     orElse: () => [],
-                    fetched: (metricData, tableData, selectedDate) {
+                    fetched:
+                        (metricData, tableData, selectedDate, isNetworkError) {
                       return metricData != null
                           ? metricData.entries
                               .where((m) => m.value.isHorizontal == true)
@@ -155,7 +156,8 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
                     }),
                 ...dashboardState.maybeWhen(
                     orElse: () => [],
-                    fetched: (metricData, tableData, selectedDate) {
+                    fetched:
+                        (metricData, tableData, selectedDate, isNetworkError) {
                       return metricData != null
                           ? metricData.entries
                               .where((m) => m.value.isHorizontal == false)
