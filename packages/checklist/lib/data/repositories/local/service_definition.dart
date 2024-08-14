@@ -51,6 +51,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
 
       final results = await (selectQuery
         ..where(buildAnd([
+          // To fetch service definition with the id
           if (query.id != null)
             sql.serviceDefinition.id.equals(
               query.id!,

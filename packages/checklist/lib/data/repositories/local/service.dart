@@ -93,7 +93,7 @@ class ServiceLocalRepository
     });
   }
 
-  //function to search a Service entity from local database
+  //function to search Service entities corresponding to selected service definition from local database
   @override
   FutureOr<List<ServiceModel>> search(
       ServiceSearchModel query,

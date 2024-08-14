@@ -277,8 +277,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          // router.navigate(ChecklistRoute());
-
                           router.push(AcknowledgementRoute());
                         }
                       },

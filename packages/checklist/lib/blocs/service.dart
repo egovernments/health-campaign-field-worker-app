@@ -51,7 +51,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     ));
   }
 
-  //Handles the search service calls (from checklist preview page)
+  //Handles the service search calls from local DB
   FutureOr<void> _handleSearch(
       ServiceSearchEvent event,
       ServiceEmitter emit,
@@ -61,6 +61,7 @@ class ServiceBloc extends Bloc<ServiceEvent, ServiceState> {
     emit(ServiceSearchState(serviceList: results));
   }
 
+  //
   FutureOr<void> _handleSelect(
       ServiceSelectionEvent event,
       ServiceEmitter emit,
