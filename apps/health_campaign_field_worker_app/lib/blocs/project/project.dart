@@ -221,39 +221,41 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-          final attendanceRegisters = await attendanceRemoteRepository.search(
-            AttendanceRegisterSearchModel(
-              staffId: individual.first.id,
-              referenceId: projectStaff.projectId,
-            ),
-          );
-          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+          if (individual.isNotEmpty) {
+            final attendanceRegisters = await attendanceRemoteRepository.search(
+              AttendanceRegisterSearchModel(
+                staffId: individual.first.id,
+                referenceId: projectStaff.projectId,
+              ),
+            );
+            await attendanceLocalRepository.bulkCreate(attendanceRegisters);
 
-          for (final register in attendanceRegisters) {
-            if (register.attendees != null &&
-                (register.attendees ?? []).isNotEmpty) {
-              try {
-                final individuals = await individualRemoteRepository.search(
-                  IndividualSearchModel(
-                    id: register.attendees!
-                        .map((e) => e.individualId!)
-                        .toList(),
-                  ),
-                );
-                await individualLocalRepository.bulkCreate(individuals);
-                final logs = await attendanceLogRemoteRepository.search(
-                  AttendanceLogSearchModel(
-                    registerId: register.id,
-                  ),
-                );
-                await attendanceLogLocalRepository.bulkCreate(logs);
-              } catch (_) {
-                emit(state.copyWith(
-                  loading: false,
-                  syncError: ProjectSyncErrorType.project,
-                ));
+            for (final register in attendanceRegisters) {
+              if (register.attendees != null &&
+                  (register.attendees ?? []).isNotEmpty) {
+                try {
+                  final individuals = await individualRemoteRepository.search(
+                    IndividualSearchModel(
+                      id: register.attendees!
+                          .map((e) => e.individualId!)
+                          .toList(),
+                    ),
+                  );
+                  await individualLocalRepository.bulkCreate(individuals);
+                  final logs = await attendanceLogRemoteRepository.search(
+                    AttendanceLogSearchModel(
+                      registerId: register.id,
+                    ),
+                  );
+                  await attendanceLogLocalRepository.bulkCreate(logs);
+                } catch (_) {
+                  emit(state.copyWith(
+                    loading: false,
+                    syncError: ProjectSyncErrorType.project,
+                  ));
 
-                return;
+                  return;
+                }
               }
             }
           }

@@ -114,7 +114,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 selectedDate: event.selectedDate)); // Trigger search event
           } catch (e) {
             debugPrint(e.toString()); // Print error
-            add(const DashboardEvent.handleSearch());
+            add(const DashboardEvent.handleSearch(
+              isNetworkError: true,
+            ));
           }
         } else if (!isConnected && event.syncFromServer) {
           emit(
@@ -233,6 +235,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         selectedDate: metricCharts.firstOrNull?.lastSelectedDate ??
             event.selectedDate ??
             DateTime.now(),
+        isNetworkError: event.isNetworkError,
       )); // Emit fetched state with metric and table data
     } catch (error) {
       rethrow; // Rethrow any caught errors
@@ -245,6 +248,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 class DashboardEvent with _$DashboardEvent {
   const factory DashboardEvent.handleSearch({
     DateTime? selectedDate,
+    @Default(false) bool? isNetworkError,
   }) = DashboardSearchEvent; // Define handleSearch event
   const factory DashboardEvent.handleRefresh({
     required DateTime selectedDate,
@@ -264,6 +268,7 @@ class DashboardState with _$DashboardState {
     Map<String, MetricWrapper>? metricData,
     List<TableWrapper>? tableData,
     DateTime? selectedDate,
+    @Default(false) bool? isNetworkError,
   }) = DashboardFetchedState; // Define fetched state
   const factory DashboardState.error() =
       DashboardErrorState; // Define error state

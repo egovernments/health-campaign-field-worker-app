@@ -25,7 +25,7 @@ class DigitComponentsUtils {
       context,
       rootNavigator: true,
     ).popUntil(
-          (route) => route is! PopupRoute,
+      (route) => route is! PopupRoute,
     );
   }
 
@@ -36,4 +36,6 @@ class DigitComponentsUtils {
       type: dialogType,
     );
   }
+
+  static const String noResultSvg = 'assets/images/no_result.svg';
 }
