@@ -1,3 +1,7 @@
+## 1.0.2
+* Capturing location on attendance submit
+* Pagination issue fix to fetch all attendees
+
 ## 0.0.0-dev.1
 
 * Initial release of the package 
