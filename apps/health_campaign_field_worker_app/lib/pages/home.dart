@@ -1,97 +1,334 @@
-// Import the required Dart I/O package
-import 'dart:io';
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 
-String createCaseCondition(String key, String value) {
-  return 'case "$key":\n    $value';
+import 'dart:async';
+
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/closed_household.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:digit_dss/models/entities/dashboard_response_model.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+import 'package:digit_dss/utils/utils.dart';
+import 'package:drift_db_viewer/drift_db_viewer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+// import 'package:complaints/complaints.dart';
+// import 'package:complaints/router/complaints_router.gm.dart';
+
+import '../blocs/app_initialization/app_initialization.dart';
+import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
+import '../blocs/sync/sync.dart';
+import '../data/local_store/app_shared_preferences.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/secure_store/secure_store.dart';
+import '../models/entities/roles_type.dart';
+import '../router/app_router.dart';
+import '../utils/debound.dart';
+import '../utils/environment_config.dart';
+import '../utils/i18_key_constants.dart' as i18;
+import '../utils/utils.dart';
+import '../widgets/header/back_navigation_help_header.dart';
+import '../widgets/home/home_item_card.dart';
+import '../widgets/localized.dart';
+import '../widgets/showcase/config/showcase_constants.dart';
+import '../widgets/showcase/showcase_button.dart';
+
+@RoutePage()
+class HomePage extends LocalizedStatefulWidget {
+  const HomePage({
+    super.key,
+    super.appLocalizations,
+  });
+
+  @override
+  State<HomePage> createState() => _HomePageState();
 }
 
-void insertCaseCondition(List<String> lines, String caseCondition) {
-  final defaultIndex = lines.indexWhere((line) => line.contains('default:'));
-  if (defaultIndex != -1 &&
-      !lines.any((line) => line.contains(caseCondition.split('\n')[0]))) {
-    lines.insert(defaultIndex, caseCondition);
+class _HomePageState extends LocalizedState<HomePage> {
+  bool skipProgressBar = false;
+  final storage = const FlutterSecureStorage();
+  late StreamSubscription<ConnectivityResult> subscription;
+
+  @override
+  initState() {
+    super.initState();
+
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult resSyncBlocult) async {
+      var connectivityResult = await (Connectivity().checkConnectivity());
+
+      if (connectivityResult != ConnectivityResult.none) {
+        if (context.mounted) {
+          context
+              .read<SyncBloc>()
+              .add(SyncRefreshEvent(context.loggedInUserUuid));
+        }
+      }
+    });
+    //// Function to set initial Data required for the packages to run
+    setPackagesSingleton(context);
   }
-}
 
-// Define the main function
-void main() {
-  // Get the current directory path
-  var appDir = Directory.current.path;
-
-  // Define the paths for the application root and the files to be modified
-  var appRoot = appDir + '/apps/health_campaign_field_worker_app/lib';
-  var localizationDelegatesFilePath =
-      appRoot + '/utils/localization_delegates.dart';
-  var networkManagerProviderWrapperFilePath =
-      appRoot + '/widgets/network_manager_provider_wrapper.dart';
-  var constantsFilePath = appRoot + '/utils/constants.dart';
-  var utilsFilePath = appRoot + '/utils/utils.dart';
-  var routerFilePath = appRoot + '/router/app_router.dart';
-  var entityMapperFilePath =
-      appRoot + '/data/local_store/no_sql/schema/entity_mapper.dart';
-  var syncUpFilePath = appRoot + '/data/repositories/sync/sync_up.dart';
-  var homeFilePath = appRoot + '/pages/home.dart';
-  var extensionsFilePath = appRoot + '/utils/extensions/extensions.dart';
-  var contextUtilityFilePath =
-      appRoot + '/utils/extensions/context_utility.dart';
-
-  // Set boundary in the context utility file
-  _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
-
-
-  // Add attendance to home file
-  _updateHome(homeFilePath);
-
-  // Update the sync_down.dart file
-  _updateSyncUpFile(syncUpFilePath);
-
-  // Add attendance routes and import to the router file
-  print('Hi $routerFilePath');
-  _addComplaintsRoutesAndImportToRouterFile(routerFilePath);
-
-  // Add new case statements to the entity_mapper.dart file
-
-  _updateEntityMapperFile(entityMapperFilePath);
-
-  _createLocalizationDelegatesFile(localizationDelegatesFilePath);
-
-  _addRepoToNetworkManagerProviderWrapper(
-      networkManagerProviderWrapperFilePath:
-          networkManagerProviderWrapperFilePath);
-
-  _addComplaintsConstantsToConstantsFile(constantsFilePath: constantsFilePath);
-
-  _addAttendanceMapperToUtilsFile(utilsFilePath: utilsFilePath);
-
-  _formatFiles([
-    homeFilePath,
-    syncUpFilePath,
-    entityMapperFilePath,
-    routerFilePath,
-    constantsFilePath,
-    utilsFilePath,
-    networkManagerProviderWrapperFilePath,
-    localizationDelegatesFilePath,
-    extensionsFilePath,
-    contextUtilityFilePath
-  ]);
-}
-
-void _formatFiles(List<String> filePaths) {
-  for (var filePath in filePaths) {
-    Process.runSync('dart', ['format', filePath]);
-    print('Formatted $filePath');
+  //  Be sure to cancel subscription after you are done
+  @override
+  dispose() {
+    subscription.cancel();
+    super.dispose();
   }
-}
 
-void _updateHome(String homeFilePath) {
-  var importStatement = '''
-      import 'package:complaints/complaints.dart';
-      import 'package:complaints/router/complaints_router.gm.dart';
-      ''';
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final state = context.read<AuthBloc>().state;
+    final localSecureStore = LocalSecureStore.instance;
+    if (state is! AuthAuthenticatedState) {
+      return Container();
+    }
+    final roles = state.userModel.roles.map((e) {
+      return e.code;
+    });
 
-  var homeItemsData = '''
-    i18.home.fileComplaint:
+    if (!(roles.contains(RolesType.distributor.toValue()) ||
+        roles.contains(RolesType.registrar.toValue()))) {
+      skipProgressBar = true;
+    }
+
+    final mappedItems = _getItems(context);
+
+    final homeItems = mappedItems?.homeItems ?? [];
+    final showcaseKeys = <GlobalKey>[
+      if (!skipProgressBar) homeShowcaseData.distributorProgressBar.showcaseKey,
+      ...(mappedItems?.showcaseKeys ?? []),
+    ];
+
+    return Scaffold(
+      backgroundColor: DigitTheme.instance.colorScheme.background,
+      body: BlocListener<SyncBloc, SyncState>(
+        listener: (context, state) {
+          state.maybeWhen(
+            orElse: () {},
+            pendingSync: (count) {
+              final debouncer = Debouncer(seconds: 5);
+              debouncer.run(() async {
+                if (count != 0) {
+                  await localSecureStore.setManualSyncTrigger(false);
+                  if (context.mounted) {
+                    await performBackgroundService(
+                      isBackground: false,
+                      stopService: false,
+                      context: context,
+                    );
+                  }
+                } else {
+                  await localSecureStore.setManualSyncTrigger(true);
+                }
+              });
+            },
+          );
+        },
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: ScrollableContent(
+            slivers: [
+              SliverGrid(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return homeItems.elementAt(index);
+                  },
+                  childCount: homeItems.length,
+                ),
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 145,
+                  childAspectRatio: 104 / 128,
+                ),
+              ),
+            ],
+            header: Column(
+              children: [
+                BackNavigationHelpHeaderWidget(
+                  showBackNavigation: false,
+                  showHelp: false,
+                  showcaseButton: ShowcaseButton(
+                    showcaseFor: showcaseKeys.toSet().toList(),
+                  ),
+                ),
+                skipProgressBar
+                    ? const SizedBox.shrink()
+                    : homeShowcaseData.distributorProgressBar.buildWith(
+                        child: BeneficiaryProgressBar(
+                          label: localizations.translate(
+                            i18.home.progressIndicatorTitle,
+                          ),
+                          prefixLabel: localizations.translate(
+                            i18.home.progressIndicatorPrefixLabel,
+                          ),
+                        ),
+                      ),
+              ],
+            ),
+            footer: PoweredByDigit(
+              version: Constants().version,
+            ),
+            children: [
+              const SizedBox(height: kPadding * 2),
+              BlocConsumer<SyncBloc, SyncState>(
+                listener: (context, state) {
+                  state.maybeWhen(
+                    orElse: () => null,
+                    syncInProgress: () async {
+                      await localSecureStore.setManualSyncTrigger(false);
+                      if (context.mounted) {
+                        DigitSyncDialog.show(
+                          context,
+                          type: DigitSyncDialogType.inProgress,
+                          label: localizations.translate(
+                            i18.syncDialog.syncInProgressTitle,
+                          ),
+                          barrierDismissible: false,
+                        );
+                      }
+                    },
+                    completedSync: () async {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        DigitSyncDialog.show(
+                          context,
+                          type: DigitSyncDialogType.complete,
+                          label: localizations.translate(
+                            i18.syncDialog.dataSyncedTitle,
+                          ),
+                          primaryAction: DigitDialogActions(
+                            label: localizations.translate(
+                              i18.syncDialog.closeButtonLabel,
+                            ),
+                            action: (ctx) {
+                              Navigator.pop(ctx);
+                            },
+                          ),
+                        );
+                      }
+                    },
+                    failedSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.syncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                    failedDownSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.downSyncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                    failedUpSync: () async {
+                      await localSecureStore.setManualSyncTrigger(true);
+                      if (context.mounted) {
+                        _showSyncFailedDialog(
+                          context,
+                          message: localizations.translate(
+                            i18.syncDialog.upSyncFailedTitle,
+                          ),
+                        );
+                      }
+                    },
+                  );
+                },
+                builder: (context, state) {
+                  return state.maybeWhen(
+                    orElse: () => const Offstage(),
+                    pendingSync: (count) {
+                      return count == 0
+                          ? const Offstage()
+                          : DigitInfoCard(
+                              icon: Icons.info,
+                              backgroundColor:
+                                  theme.colorScheme.tertiaryContainer,
+                              iconColor: theme.colorScheme.surfaceTint,
+                              description: localizations
+                                  .translate(i18.home.dataSyncInfoContent)
+                                  .replaceAll('{}', count.toString()),
+                              title: localizations.translate(
+                                i18.home.dataSyncInfoLabel,
+                              ),
+                            );
+                    },
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showSyncFailedDialog(
+    BuildContext context, {
+    required String message,
+  }) {
+    Navigator.of(context, rootNavigator: true).pop();
+
+    DigitSyncDialog.show(
+      context,
+      type: DigitSyncDialogType.failed,
+      label: message,
+      primaryAction: DigitDialogActions(
+        label: localizations.translate(
+          i18.syncDialog.retryButtonLabel,
+        ),
+        action: (ctx) {
+          Navigator.pop(ctx);
+          // Sync Failed Manual Sync is Enabled
+          _attemptSyncUp(context);
+        },
+      ),
+      secondaryAction: DigitDialogActions(
+        label: localizations.translate(
+          i18.syncDialog.closeButtonLabel,
+        ),
+        action: (ctx) => Navigator.pop(ctx),
+      ),
+    );
+  }
+
+  _HomeItemDataModel? _getItems(BuildContext context) {
+    final state = context.read<AuthBloc>().state;
+    if (state is! AuthAuthenticatedState) {
+      return null;
+    }
+
+    final Map<String, Widget> homeItemsMap = {
+      // INFO : Need to add home items of package Here
+      i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.buildWith(
         child: HomeItemCard(
           icon: Icons.announcement,
@@ -100,789 +337,492 @@ void _updateHome(String homeFilePath) {
               context.router.push(const ComplaintsInboxWrapperRoute()),
         ),
       ),
-  ''';
 
-  var showCaseData = '''
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+        child: HomeItemCard(
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
+          onPressed: () {
+            context.router.push(const UserDashboardRoute());
+          },
+        ),
+      ),
+
+      i18.home.beneficiaryLabel:
+          homeShowcaseData.distributorBeneficiaries.buildWith(
+        child: HomeItemCard(
+          icon: Icons.all_inbox,
+          label: i18.home.beneficiaryLabel,
+          onPressed: () async {
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
+          },
+        ),
+      ),
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home,
+          enableCustomIcon: true,
+          customIconSize: 48,
+          customIcon: Constants.closedHouseholdSvg,
+          label: i18.home.closedHouseHoldLabel,
+          onPressed: () {
+            context.router.push(const ClosedHouseholdWrapperRoute());
+          },
+        ),
+      ),
+      i18.home.manageStockLabel:
+          homeShowcaseData.warehouseManagerManageStock.buildWith(
+        child: HomeItemCard(
+          icon: Icons.store_mall_directory,
+          label: i18.home.manageStockLabel,
+          onPressed: () {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
+                    context.router.push(ManageStocksRoute());
+                  },
+                );
+          },
+        ),
+      ),
+      i18.home.stockReconciliationLabel:
+          homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
+        child: HomeItemCard(
+          icon: Icons.menu_book,
+          label: i18.home.stockReconciliationLabel,
+          onPressed: () {
+            context.router.push(StockReconciliationRoute());
+          },
+        ),
+      ),
+      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+        child: HomeItemCard(
+          enableCustomIcon: true,
+          customIcon: myChecklistSvg,
+          icon: Icons.checklist,
+          label: i18.home.myCheckList,
+          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+        ),
+      ),
+      // i18.home.fileComplaint:
+      //     homeShowcaseData.distributorFileComplaint.buildWith(
+      //   child: HomeItemCard(
+      //     icon: Icons.announcement,
+      //     label: i18.home.fileComplaint,
+      //     onPressed: () =>
+      //         context.router.push(const ComplaintsInboxWrapperRoute()),
+      //   ),
+      // ),
+      i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
+        child: StreamBuilder<Map<String, dynamic>?>(
+          stream: FlutterBackgroundService().on('serviceRunning'),
+          builder: (context, snapshot) {
+            return HomeItemCard(
+              icon: Icons.sync_alt,
+              label: i18.home.syncDataLabel,
+              onPressed: () async {
+                if (snapshot.data?['enablesManualSync'] == true) {
+                  if (context.mounted) _attemptSyncUp(context);
+                } else {
+                  if (context.mounted) {
+                    DigitToast.show(
+                      context,
+                      options: DigitToastOptions(
+                        localizations
+                            .translate(i18.common.coreCommonSyncInProgress),
+                        false,
+                        Theme.of(context),
+                      ),
+                    );
+                  }
+                }
+              },
+            );
+          },
+        ),
+      ),
+      i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.buildWith(
+        child: HomeItemCard(
+          icon: Icons.supervised_user_circle_rounded,
+          label: i18.home.beneficiaryReferralLabel,
+          onPressed: () async {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
+                    context.router.push(SearchReferralReconciliationsRoute());
+                  },
+                );
+          },
+        ),
+      ),
+      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.viewReportsLabel,
+          onPressed: () {
+            context.router.push(InventoryReportSelectionRoute());
+          },
+        ),
+      ),
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            context.router.push(const ManageAttendanceRoute());
+          },
+        ),
+      ),
+      i18.home.db: homeShowcaseData.db.buildWith(
+        child: HomeItemCard(
+          icon: Icons.table_chart,
+          label: i18.home.db,
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DriftDbViewer(
+                  context.read<LocalSqlDataStore>(),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+        child: HomeItemCard(
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
+          onPressed: () {
+            context.router.push(const UserDashboardRoute());
+          },
+        ),
+      ),
+    };
+
+    final Map<String, GlobalKey> homeItemsShowcaseMap = {
+      // INFO : Need to add showcase keys of package Here
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
-  ''';
 
-  var itemsLabel = '''
-        i18.home.fileComplaint,
-  ''';
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
 
-  // Define the data to be added
-  var singletonData = '''
-    ComplaintsSingleton().setInitialData(
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+
+      i18.home.beneficiaryLabel:
+          homeShowcaseData.distributorBeneficiaries.showcaseKey,
+      i18.home.manageStockLabel:
+          homeShowcaseData.warehouseManagerManageStock.showcaseKey,
+      i18.home.stockReconciliationLabel:
+          homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
+      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      // i18.home.fileComplaint:
+      //     homeShowcaseData.distributorFileComplaint.showcaseKey,
+      i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
+      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+      i18.home.beneficiaryReferralLabel:
+          homeShowcaseData.hfBeneficiaryReferral.showcaseKey,
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.showcaseKey,
+      i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.closedHouseHoldLabel:
+          homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
+    };
+
+    final homeItemsLabel = <String>[
+      // INFO: Need to add items label of package Here
+      i18.home.beneficiaryLabel,
+      i18.home.closedHouseHoldLabel,
+      i18.home.manageStockLabel,
+      i18.home.stockReconciliationLabel,
+      i18.home.myCheckList,
+      i18.home.fileComplaint,
+      i18.home.syncDataLabel,
+      i18.home.viewReportsLabel,
+      i18.home.beneficiaryReferralLabel,
+      i18.home.manageAttendanceLabel,
+      i18.home.db,
+      i18.home.dashboard,
+    ];
+
+    final List<String> filteredLabels = homeItemsLabel
+        .where((element) =>
+            state.actionsWrapper.actions
+                .map((e) => e.displayName)
+                .toList()
+                .contains(element) ||
+            element == i18.home.db ||
+            element == i18.home.dashboard)
+        .toList();
+
+    final showcaseKeys = filteredLabels
+        .where((f) => f != i18.home.db)
+        .map((label) => homeItemsShowcaseMap[label]!)
+        .toList();
+
+    final List<Widget> widgetList =
+        filteredLabels.map((label) => homeItemsMap[label]!).toList();
+
+    return _HomeItemDataModel(
+      widgetList,
+      showcaseKeys,
+    );
+  }
+
+  void _attemptSyncUp(BuildContext context) async {
+    await LocalSecureStore.instance.setManualSyncTrigger(true);
+
+    if (context.mounted) {
+      context.read<SyncBloc>().add(
+            SyncSyncUpEvent(
+              userId: context.loggedInUserUuid,
+              localRepositories: [
+                // INFO : Need to add local repo of package Here
+                context.read<
+                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
+                context.read<
+                    LocalRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+                context.read<
+                    LocalRepository<ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>>(),
+                context.read<
+                    LocalRepository<HouseholdMemberModel,
+                        HouseholdMemberSearchModel>>(),
+                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+                context.read<
+                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+                context.read<
+                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
+                context
+                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    LocalRepository<StockReconciliationModel,
+                        StockReconciliationSearchModel>>(),
+                // context.read<
+                //     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
+                context.read<
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+              ],
+              remoteRepositories: [
+                // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
+                context.read<
+                    RemoteRepository<IndividualModel, IndividualSearchModel>>(),
+                context.read<
+                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+                context.read<
+                    RemoteRepository<ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>>(),
+                context.read<
+                    RemoteRepository<HouseholdMemberModel,
+                        HouseholdMemberSearchModel>>(),
+                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+                context.read<
+                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+                context.read<
+                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+                context
+                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
+                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    RemoteRepository<StockReconciliationModel,
+                        StockReconciliationSearchModel>>(),
+                // context.read<
+                //     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+                context.read<
+                    RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
+                context.read<
+                    RemoteRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+              ],
+            ),
+          );
+    }
+  }
+}
+
+// Function to set initial Data required for the packages to run
+void setPackagesSingleton(BuildContext context) {
+  context.read<AppInitializationBloc>().state.maybeWhen(
+      orElse: () {},
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,
+      ) {
+        loadLocalization(context, appConfiguration);
+        // INFO : Need to add singleton of package Here
+        ComplaintsSingleton().setInitialData(
           tenantId: envConfig.variables.tenantId,
           loggedInUserUuid: context.loggedInUserUuid,
           userMobileNumber: context.loggedInUser.mobileNumber,
           loggedInUserName: context.loggedInUser.name,
           complaintTypes:
               appConfiguration.complaintTypes!.map((e) => e.code).toList(),
-         userName: context.loggedInUser.name ?? '',
+          userName: context.loggedInUser.name ?? '',
         );
-  ''';
 
-  var localRepoData = '''
-    context.read<LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-  ''';
+        RegistrationDeliverySingleton().setInitialData(
+          // loggedInUser: context.loggedInUserModel,
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
+              ? appConfiguration.searchHouseHoldFilters!
+                  .map((e) => e.code)
+                  .toList()
+              : [],
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList(),
+          houseStructureTypes:
+              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+          refusalReasons:
+              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+        );
 
-  var remoteRepoData = '''
-   context.read<RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-  ''';
+        ClosedHouseholdSingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
+        );
 
-  // Check if the home.dart file exists
-  var homeFile = File(homeFilePath);
-  if (!homeFile.existsSync()) {
-    print('Error: Home file does not exist at path: $homeFilePath');
-    return;
-  }
+        AttendanceSingleton().setInitialData(
+          projectId: context.projectId,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+        );
 
-  // Read the home.dart file
-  var homeFileContent = homeFile.readAsStringSync();
+        ReferralReconSingleton().setInitialData(
+          userName: context.loggedInUser.name ?? '',
+          userUUid: context.loggedInUserUuid,
+          projectId: context.selectedProject.id,
+          projectName: context.selectedProject.name,
+          roleCode: RolesType.healthFacilityWorker.toValue(),
+          appVersion: Constants().version,
+          tenantId: envConfig.variables.tenantId,
+          validIndividualAgeForCampaign: ValidIndividualAgeForCampaign(
+            validMinAge: context.selectedProjectType?.validMinAge ?? 3,
+            validMaxAge: context.selectedProjectType?.validMaxAge ?? 64,
+          ),
+          genderOptions:
+              appConfiguration.genderOptions?.map((e) => e.code).toList() ?? [],
+          cycles: context.cycles,
+          referralReasons:
+              appConfiguration.referralReasons?.map((e) => e.code).toList() ??
+                  [],
+          checklistTypes:
+              appConfiguration.checklistTypes?.map((e) => e.code).toList() ??
+                  [],
+        );
 
-  // Check if the import statement already exists and add it if not
-  if (!homeFileContent
-      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    homeFileContent = importStatement + '\n' + homeFileContent;
-    print('The import statement was added.');
-  } else {
-    print('The import statement already exists.');
-  }
+        InventorySingleton().setInitialData(
+          isWareHouseMgr: context.loggedInUserRoles
+              .where(
+                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .toList()
+              .isNotEmpty,
+          isDistributor: context.loggedInUserRoles
+              .where(
+                (role) => role.code == RolesType.distributor.toValue(),
+              )
+              .toList()
+              .isNotEmpty,
+          // loggedInUser: context.loggedInUserModel,
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          transportTypes: appConfiguration.transportTypes
+              ?.map((e) => InventoryTransportTypes()
+                ..name = e.code
+                ..code = e.code)
+              .toList(),
+        );
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: dashboardConfigSchema,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
 
-  // Insert the data to be added
-  homeFileContent = insertData(homeFileContent,
-      '// INFO : Need to add singleton of package Here', singletonData);
-  homeFileContent = insertData(homeFileContent,
-      '// INFO : Need to add local repo of package Here', localRepoData);
-  homeFileContent = insertData(homeFileContent,
-      '// INFO : Need to add repo repo of package Here', remoteRepoData);
-  homeFileContent = insertData(homeFileContent,
-      '// INFO : Need to add home items of package Here', homeItemsData);
-  homeFileContent = insertData(homeFileContent,
-      '// INFO : Need to add showcase keys of package Here', showCaseData);
-  homeFileContent = insertData(homeFileContent,
-      '// INFO: Need to add items label of package Here', itemsLabel);
-
-  // Write the updated content back to the home.dart file
-  homeFile.writeAsStringSync(homeFileContent);
+        // ComplaintsSingleton().setInitialData(
+        //   tenantId: envConfig.variables.tenantId,
+        //   loggedInUserUuid: context.loggedInUserUuid,
+        //   userMobileNumber: context.loggedInUser.mobileNumber,
+        //   loggedInUserName: context.loggedInUser.name,
+        //   complaintTypes:
+        //       appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+        //   userName: context.loggedInUser.name ?? '',
+        // );
+      });
 }
 
-String insertData(String fileContent, String marker, String data) {
-  var markerIndex = fileContent.indexOf(marker);
-  if (markerIndex != -1) {
-    var endOfMarker = markerIndex + marker.length;
-    if (!fileContent.substring(endOfMarker).contains(data.trim())) {
-      fileContent = fileContent.substring(0, endOfMarker) +
-          '\n' +
-          data +
-          fileContent.substring(endOfMarker);
-      print('Data was added after marker: $marker');
-    } else {
-      print('Data already exists after marker: $marker');
-    }
-  } else {
-    print('Error: Could not find the marker: $marker');
-  }
-  return fileContent;
+void loadLocalization(
+    BuildContext context, AppConfiguration appConfiguration) async {
+  context.read<LocalizationBloc>().add(
+      LocalizationEvent.onUpdateLocalizationIndex(
+          index: appConfiguration.languages!.indexWhere((element) =>
+              element.value == AppSharedPreferences().getSelectedLocale),
+          code: AppSharedPreferences().getSelectedLocale!));
 }
 
-//script working
-void _updateSyncUpFile(String syncUpFilePath) {
-  // Define the import statement and the new case statements
-  var importStatement = "import 'package:complaints/complaints.dart';";
-  var newCases = '''
-          case DataModelType.complaints:
-                  for (final entity in entities) {
-                    if (remote is PgrServiceRemoteRepository &&
-                        entity is PgrServiceModel) {
-                      final response = await remote.create(entity);
-                      final responseData = response.data;
-                      if (responseData is! Map<String, dynamic>) {
-                        AppLogger.instance.error(
-                          title: 'NetworkManager : PgrServiceRemoteRepository',
-                          message: responseData,
-                          stackTrace: StackTrace.current,
-                        );
-                        continue;
-                      }
+class _HomeItemDataModel {
+  final List<Widget> homeItems;
+  final List<GlobalKey> showcaseKeys;
 
-                      PgrServiceCreateResponseModel
-                          pgrServiceCreateResponseModel;
-                      PgrComplaintResponseModel pgrComplaintModel;
-                      try {
-                        pgrServiceCreateResponseModel =
-                            PgrServiceCreateResponseModelMapper.fromMap(
-                          responseData,
-                        );
-                        pgrComplaintModel =
-                            pgrServiceCreateResponseModel.serviceWrappers.first;
-                      } catch (e) {
-                        rethrow;
-                      }
-
-                      final service = pgrComplaintModel.service;
-                      final serviceRequestId = service.serviceRequestId;
-
-                      if (serviceRequestId == null ||
-                          serviceRequestId.isEmpty) {
-                        AppLogger.instance.error(
-                          title: 'NetworkManager : PgrServiceRemoteRepository',
-                          message: 'Service Request ID is null',
-                          stackTrace: StackTrace.current,
-                        );
-                        continue;
-                      }
-
-                      await local.markSyncedUp(
-                        entry: sublist.firstWhere((element) =>
-                            element.clientReferenceId ==
-                            entity.clientReferenceId),
-                        clientReferenceId: entity.clientReferenceId,
-                        nonRecoverableError: entity.nonRecoverableError,
-                      );
-
-                      await local.opLogManager.updateServerGeneratedIds(
-                        model: UpdateServerGeneratedIdModel(
-                          clientReferenceId: entity.clientReferenceId,
-                          serverGeneratedId: serviceRequestId,
-                          dataOperation: operationGroupedEntity.key,
-                          rowVersion: entity.rowVersion,
-                        ),
-                      );
-
-                      await local.update(
-                        entity.copyWith(
-                          serviceRequestId: serviceRequestId,
-                          id: service.id,
-                          applicationStatus: service.applicationStatus,
-                          accountId: service.accountId,
-                        ),
-                        createOpLog: false,
-                      );
-                    }
-                  }
-                  break;
-''';
-
-  // Check if the sync_down file exists
-  var syncUpFile = File(syncUpFilePath);
-
-
-
-  if (!syncUpFile.existsSync()) {
-    print('Error: Sync Up file does not exist at path: $syncUpFilePath');
-    return;
-  }
-
-  // Read the sync_down file
-  var syncUpFileContent = syncUpFile.readAsStringSync();
-  print(syncUpFileContent);
-  // Check if the import statement already exists and add it if not
-  if (!syncUpFileContent
-      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    syncUpFileContent = importStatement + '\n' + syncUpFileContent;
-    print('The import statement was added to sync_up.dart.');
-
-  } else {
-    print('The import statement already exists in sync_up.dart.');
-  }
-
-  // Insert the new case statements
-  if (!syncUpFileContent
-      .contains('case DataModelType.complaints:'.replaceAll(RegExp(r'\s'), ''))) {
-    // Find the position to insert the new cases within the switch statement
-    var switchIndex =
-    syncUpFileContent.indexOf('switch (typeGroupedEntity.key) {');
-    if (switchIndex != -1) {
-      var caseInsertionIndex =
-      syncUpFileContent.indexOf('default:', switchIndex);
-      if (caseInsertionIndex != -1) {
-        syncUpFileContent =
-            syncUpFileContent.substring(0, caseInsertionIndex) +
-                newCases +
-                '\n' +
-                syncUpFileContent.substring(caseInsertionIndex);
-        print('The new cases were added to sync_down.dart.');
-
-        // Write the updated content back to the file
-
-        syncUpFile.writeAsStringSync(syncUpFileContent);
-      } else {
-        print(
-            'Error: Could not find the default case in the switch statement in sync_down.dart.');
-        return;
-      }
-    } else {
-      print('Error: Could not find the switch statement in sync_down.dart.');
-      return;
-    }
-  } else {
-    print('The new cases already exist in sync_down.dart.');
-  }
+  const _HomeItemDataModel(this.homeItems, this.showcaseKeys);
 }
-
-void _updateEntityMapperFile(String entityMapperFilePath) {
-  // Define the import statement and new case statements
-  var importStatement =
-      "import 'package:complaints/complaints.dart';";
-  var newCases = '''
-      case "complaints":
-        final entity = PgrServiceModelMapper.fromJson(entityString);
-        return entity;
-''';
-
-  // Check if the entity_mapper file exists
-  var entityMapperFile = File(entityMapperFilePath);
-
-  if (!entityMapperFile.existsSync()) {
-    print(
-        'Error: Entity Mapper file does not exist at path: $entityMapperFilePath');
-    return;
-  }
-
-  // Read the entity_mapper file
-  var entityMapperFileContent = entityMapperFile.readAsStringSync();
-
-  // Check if the import statement already exists and add it if not
-  if (!entityMapperFileContent
-      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    entityMapperFileContent = importStatement + '\n' + entityMapperFileContent;
-    print('The import statement was added.');
-  } else {
-    print('The import statement already exists.');
-  }
-
-  // Check if the new cases already exist in the file
-  if (!entityMapperFileContent
-      .contains('case "complaints":'.replaceAll(RegExp(r'\s'), ''))) {
-    // Find the position to insert the new cases (before the default case)
-    var caseInsertionIndex = entityMapperFileContent.indexOf('default:');
-    if (caseInsertionIndex != -1) {
-      entityMapperFileContent =
-          entityMapperFileContent.substring(0, caseInsertionIndex) +
-              newCases +
-              '\n' +
-              entityMapperFileContent.substring(caseInsertionIndex);
-      print('The new cases were added.');
-
-      // Write the updated content back to the file
-      entityMapperFile.writeAsStringSync(entityMapperFileContent);
-    } else {
-      print('Error: Could not find the insertion point.');
-      return;
-    }
-  } else {
-    print('The new cases already exist.');
-  }
-}
-//script working
-void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
-  // Define the attendance route lines
-  var complaintsRoutes = '''
-        AutoRoute(
-          page: ComplaintsInboxWrapperRoute.page,
-          path: 'complaints-inbox',
-          children: [
-            AutoRoute(
-              page: ComplaintsInboxRoute.page,
-              path: 'complaints-inbox-items',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsInboxFilterRoute.page,
-              path: 'complaints-inbox-filter',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSearchRoute.page,
-              path: 'complaints-inbox-search',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSortRoute.page,
-              path: 'complaints-inbox-sort',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsViewRoute.page,
-              path: 'complaints-inbox-view-details',
-            ),
-          ],
-        ),
-
-        /// Complaints registration
-        AutoRoute(
-          page: ComplaintsRegistrationWrapperRoute.page,
-          path: 'complaints-registration',
-          children: [
-            AutoRoute(
-              page: ComplaintTypeRoute.page,
-              path: 'complaints-type',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsLocationRoute.page,
-              path: 'complaints-location',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsRoute.page,
-              path: 'complaints-details',
-            ),
-          ],
-        ),
-
-        /// Complaints Acknowledgemnet
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
-  ''';
-
-  // Define the import statement
-  var importStatement1 =
-      "import 'package:complaints/router/complaints_router.gm.dart';";
-  // Define the import statement
-  var importStatement2 =
-      "import 'package:complaints/router/complaints_router.dart';";
-
-  // Check if the router file exists
-  var routerFile = File(routerFilePath);
-
-  if (!routerFile.existsSync()) {
-    print('Error: Router file does not exist at path: $routerFilePath');
-    return;
-  }
-
-  // Read the router file
-  var routerFileContent = routerFile.readAsStringSync();
-
-  // Normalize the whitespace in the file content
-  var normalizedFileContent = routerFileContent.replaceAll(RegExp(r'\s'), '');
-
-  // Check if the import statement already exists
-  if (!normalizedFileContent
-      .contains(importStatement1.replaceAll(RegExp(r'\s'), ''))) {
-    // Add the import statement at the beginning of the file
-    routerFileContent = importStatement1 + '\n' + routerFileContent;
-    print('The import statement was added.');
-  } else {
-    print('The import statement already exists.');
-  }
-
-  // Check if the import statement already exists
-  if (!normalizedFileContent
-      .contains(importStatement2.replaceAll(RegExp(r'\s'), ''))) {
-    // Add the import statement at the beginning of the file
-    routerFileContent = importStatement2 + '\n' + routerFileContent;
-    print('The import statement was added.');
-  } else {
-    print('The import statement already exists.');
-  }
-
-  // Check if the attendanceRoute module already exists
-  if (!routerFileContent
-      .contains('ComplaintsRoute'.replaceAll(RegExp(r'\s'), ''))) {
-    // Find the position to insert the module
-    var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
-    if (moduleInsertionIndex != -1) {
-      var endOfModulesIndex =
-          routerFileContent.indexOf(']', moduleInsertionIndex);
-      if (endOfModulesIndex != -1) {
-        var modulesEndIndex =
-            routerFileContent.lastIndexOf(']', endOfModulesIndex);
-        routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
-            ' ComplaintsRoute,' +
-            routerFileContent.substring(modulesEndIndex);
-
-        print('The ComplaintsRoute module was added.');
-
-      } else {
-        print('Error: Could not find the end of the modules list.');
-        return;
-      }
-    } else {
-      print('Error: Could not find @AutoRouterConfig annotation.');
-      return;
-    }
-  } else {
-    print('The ComplaintsRoute module already exists.');
-  }
-
-  // Check if the attendance routes already exist in the file
-  if (!normalizedFileContent
-      .contains(complaintsRoutes.replaceAll(RegExp(r'\s'), ''))) {
-    // Find the position to insert the routes
-    var insertionIndex = routerFileContent
-        .indexOf('// INFO : Need to add Router of package Here');
-    if (insertionIndex != -1) {
-      routerFileContent = routerFileContent.substring(0, insertionIndex) +
-          '// INFO : Need to add Router of package Here\n' +
-          complaintsRoutes +
-          routerFileContent.substring(insertionIndex +
-              '// INFO : Need to add Router of package Here'.length);
-
-
-      print('The complaint routes were added.');
-
-      // Write the updated content back to the file
-      routerFile.writeAsStringSync(routerFileContent);
-    } else {
-      print('Error: Could not find the insertion point.');
-      return;
-    }
-  } else {
-    print('The complaint routes already exist.');
-  }
-}
-
-///not needed ig
-void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
-  // Define the attendance related lines
-  var attendanceImportStatement = [
-    "import 'package:attendance_management/attendance_management.dart' as attendance_mappers;"
-  ];
-  var attendanceInitializationStatement =
-      "Future(() => attendance_mappers.initializeMappers()),";
-
-  // Check if the utils.dart file exists
-  var utilsFile = File(utilsFilePath);
-
-  // Read the utils.dart file
-  var utilsFileContent = utilsFile.readAsStringSync();
-
-  // Normalize the whitespace in the file content
-  var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
-
-  // Check if the import statement and delegate already exist in the file
-  // If not, add them to the file
-  if (!normalizedFileContent
-      .contains(attendanceImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
-    var libraryIndex = utilsFileContent.indexOf('library app_utils;');
-    if (libraryIndex != -1) {
-      var endOfLibrary = libraryIndex +
-          utilsFileContent.substring(libraryIndex).indexOf(';') +
-          1;
-      utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
-          '\n' +
-          attendanceImportStatement[0] +
-          utilsFileContent.substring(endOfLibrary + 1);
-      print('The import statement was added.');
-    }
-  } else {
-    print('The import statement already exists.');
-  }
-
-  if (!utilsFileContent.contains(attendanceInitializationStatement)) {
-    // Add the attendance related initialization statement to the file
-    var initializeAllMappersIndex =
-        utilsFileContent.indexOf('initializeAllMappers() async {');
-    if (initializeAllMappersIndex == -1) {
-      print(
-          'Error: Could not find a place to insert the attendance initialization statement.');
-      return;
-    }
-    var endOfInitializeAllMappers = initializeAllMappersIndex +
-        utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
-        1;
-    utilsFileContent =
-        utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
-            '\n    ' +
-            attendanceInitializationStatement +
-            utilsFileContent.substring(endOfInitializeAllMappers - 1);
-    print('Attendance initialization statement added to utils.dart');
-  } else {
-    print('The attendance initialization statement already exists.');
-  }
-
-  // Write the updated content back to the utils.dart file
-  utilsFile.writeAsStringSync(utilsFileContent);
-}
-
-void _addComplaintsConstantsToConstantsFile(
-    {required String constantsFilePath}) {
-  // Define the import statements
-  var importStatements = [
-    "import 'package:complaints/complaints.dart';",
-  ];
-
-//   // Define the attendance configuration
-//   var attendanceConfiguration = '''
-// AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
-//   ''';
-
-  // Define the local and remote repositories
-  var localRepository = [
-    '''
-  PgrServiceLocalRepository(
-        sql,
-        PgrServiceOpLogManager(isar),
-      ),
-  '''
-  ];
-
-  var remoteRepository = [
-    '''
-if (value == DataModelType.complaints)
-          PgrServiceRemoteRepository(dio, actionMap: actions),
-  '''
-  ];
-
-  // Check if the constants.dart file exists
-  var constantsFile = File(constantsFilePath);
-  if (!constantsFile.existsSync()) {
-    print('Error: The constants.dart file does not exist.');
-    return;
-  }
-
-  // Read the constants.dart file
-  var constantsFileContent = constantsFile.readAsStringSync();
-
-  // Normalize the whitespace in the file content and the attendance configuration
-  var normalizedFileContent =
-      constantsFileContent.replaceAll(RegExp(r'\s'), '');
-  // var normalizedAttendanceConfiguration =
-  //     attendanceConfiguration.replaceAll(RegExp(r'\s'), '');
-
-  // Check if the import statements already exist in the file
-  for (var importStatement in importStatements) {
-    if (!normalizedFileContent
-        .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-      // Add the import statement at the top of the file
-      constantsFileContent = importStatement + '\n' + constantsFileContent;
-      print('The import statement was added: $importStatement');
-    }
-  }
-
-  // Check if the attendance configuration already exists in the file
-  // If not, add it to the file
-  // if (!normalizedFileContent.contains(normalizedAttendanceConfiguration)) {
-  //   // Find the setInitialDataOfPackages method and add the attendance configuration inside it
-  //   var setInitialDataOfPackagesIndex =
-  //       constantsFileContent.indexOf('void setInitialDataOfPackages() {');
-  //   if (setInitialDataOfPackagesIndex != -1) {
-  //     var endOfSetInitialDataOfPackages = setInitialDataOfPackagesIndex +
-  //         constantsFileContent
-  //             .substring(setInitialDataOfPackagesIndex)
-  //             .indexOf('}') +
-  //         1;
-  //     constantsFileContent =
-  //         constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
-  //             '\n  $attendanceConfiguration' +
-  //             constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
-  //     print('The attendance configuration was added.');
-  //   }
-  // }
-
-  // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
-  var getLocalRepositoriesIndex =
-      constantsFileContent.indexOf('getLocalRepositories(');
-  if (getLocalRepositoriesIndex != -1) {
-    var endOfGetLocalRepositories = getLocalRepositoriesIndex +
-        constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
-        1;
-    constantsFileContent =
-        constantsFileContent.substring(0, endOfGetLocalRepositories - 1) +
-            '\n' +
-            localRepository.join('\n') +
-            constantsFileContent.substring(endOfGetLocalRepositories - 1);
-    print('The local repositories were added.');
-  }
-
-  var getRemoteRepositoriesIndex =
-      constantsFileContent.indexOf('getRemoteRepositories(');
-  if (getRemoteRepositoriesIndex != -1) {
-    var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
-        constantsFileContent
-            .substring(getRemoteRepositoriesIndex)
-            .indexOf('addAll(') +
-        'addAll('.length;
-    var endOfAddAll = constantsFileContent
-            .substring(endOfGetRemoteRepositories)
-            .indexOf(']') +
-        endOfGetRemoteRepositories;
-    constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
-        remoteRepository.join('\n') +
-        constantsFileContent.substring(endOfAddAll);
-    print('The remote repositories were added.');
-  }
-
-  // Write the updated content back to the constants.dart file
-  constantsFile.writeAsStringSync(constantsFileContent);
-}
-
-void _addRepoToNetworkManagerProviderWrapper(
-    {required String networkManagerProviderWrapperFilePath}) {
-  // Define the import statements and repository providers
-  var importStatements = [
-    "import  'package:complaints/complaints.dart';",
-  ];
-  var localRepositories = [
-    "RepositoryProvider<\n LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(\n create: (_) => PgrServiceLocalRepository(\n sql,\n  PgrServiceOpLogManager(isar),\n ),\n ),"
-  ];
-
-// Define the remote repositories of attendance
-  var remoteRepositoriesOfRegistrationDelivery = [
-    "if (value == DataModelType.complaints)\n RepositoryProvider<\n    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(\n  create: (_) => PgrServiceRemoteRepository(\n    dio,\n    actionMap: actions,\n  ),\n)"
-  ];
-
-// Read the network_manager_provider_wrapper.dart file
-  var networkManagerProviderWrapperFile =
-      File(networkManagerProviderWrapperFilePath);
-  var networkManagerProviderWrapperFileContent =
-      networkManagerProviderWrapperFile.readAsStringSync();
-
-// Find the last import statement in the file
-  var lastImportIndex = networkManagerProviderWrapperFileContent
-      .lastIndexOf(RegExp(r'import .+;'));
-
-  if (lastImportIndex != -1) {
-    var endOfLastImport = lastImportIndex +
-        networkManagerProviderWrapperFileContent
-            .substring(lastImportIndex)
-            .indexOf(';') +
-        1;
-
-    // Check if the import statements already exist in the file
-    for (var importStatement in importStatements) {
-      if (!networkManagerProviderWrapperFileContent
-          .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-        // Add the import statement after the last import
-        networkManagerProviderWrapperFileContent =
-            networkManagerProviderWrapperFileContent.substring(
-                    0, endOfLastImport) +
-                '\n' +
-                importStatement +
-                networkManagerProviderWrapperFileContent
-                    .substring(endOfLastImport);
-        endOfLastImport += importStatement.length + 1;
-        print('The import statement was added: $importStatement');
-      } else {
-        print('The import statement already exists.');
-      }
-    }
-
-    // Normalize the whitespace in the file content and the remote repository of attendance
-    var normalizedFileContent =
-        networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
-
-// Check if the local repository providers already exist in the file
-    for (var repositoryProvider in localRepositories) {
-      var normalizedLocalRepositoryOfAttendance =
-          repositoryProvider.replaceAll(RegExp(r'\s'), '');
-
-      if (!normalizedFileContent
-          .contains(normalizedLocalRepositoryOfAttendance)) {
-        // Add the local repository provider to the file
-        networkManagerProviderWrapperFileContent =
-            networkManagerProviderWrapperFileContent.replaceFirst(
-                '];', '  $repositoryProvider\n];');
-        print('The local repository provider was added: $repositoryProvider');
-      } else {
-        print('The local repository provider already exists.');
-      }
-    }
-
-// Check if the remote repository of attendance already exists in the file
-    for (var remoteRepositoryOfRegistrationDelivery
-        in remoteRepositoriesOfRegistrationDelivery) {
-      var normalizedRemoteRepositoryOfRegistrationDelivery =
-          remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
-
-      if (!normalizedFileContent
-          .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
-        // Add the remote repository of attendance to the _getRemoteRepositories method
-        var replacementString =
-            networkManagerProviderWrapperFileContent.contains(']);')
-                ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
-                : '  $remoteRepositoryOfRegistrationDelivery\n]);';
-        networkManagerProviderWrapperFileContent =
-            networkManagerProviderWrapperFileContent.replaceFirst(
-                ']);', replacementString);
-        print(
-            'The remote repository of attendance was added: $remoteRepositoryOfRegistrationDelivery');
-      } else {
-        print('The remote repository of attendance already exists.');
-      }
-    }
-
-    // Write the updated content back to the file
-    networkManagerProviderWrapperFile
-        .writeAsStringSync(networkManagerProviderWrapperFileContent);
-  }
-}
-
-void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
-  // Define the import statement and delegate for localization
-  var importStatement =
-      "import 'package:complaints/blocs/localization/app_localization.dart' as complaints_localization;";
-  var delegate =
-      " complaints_localization.ComplaintsLocalization.getDelegate( LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,appConfig.languages!,),";
-
-  // Read the localization delegates file
-  var localizationDelegatesFile = File(localizationDelegatesFilePath);
-  var localizationDelegatesFileContent =
-      localizationDelegatesFile.readAsStringSync();
-
-  var normalizedFileContent =
-      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
-
-  // Check if the import statement and delegate already exist in the file
-  // If not, add them to the file
-  if (!normalizedFileContent
-      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
-    localizationDelegatesFileContent =
-        '$importStatement\n$localizationDelegatesFileContent';
-    print('The import statement was added.');
-  }
-
-  if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
-    var lastDelegateIndex =
-        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
-    if (lastDelegateIndex != -1) {
-      localizationDelegatesFileContent =
-          localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
-              '\n  $delegate' +
-              localizationDelegatesFileContent.substring(lastDelegateIndex + 1);
-      print('The delegate was added.');
-    }
-  }
-
-  // Write the updated content back to the file
-  localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
-}
-
-
-void _setBoundaryInContextUtilityFile(
-    String extensionsFilePath, String contextUtilityFilePath) {
-  // Define the lines to be added
-  var importStatement =
-      "import 'package:complaints/utils/utils.dart';";
-  var boundaryStatement =
-      'ComplaintsSingleton().setBoundary(boundary: selectedBoundary);';
-
-  // Update the extensions.dart file
-  var extensionsFile = File(extensionsFilePath);
-  var extensionsFileContent = extensionsFile.readAsStringSync();
-  if (!extensionsFileContent.contains(importStatement)) {
-    extensionsFileContent = importStatement + '\n' + extensionsFileContent;
-    extensionsFile.writeAsStringSync(extensionsFileContent);
-    print('Updated the extensions.dart file.');
-  }
-  print(extensionsFileContent);
-  print("inside boundary-extension");
-  print(extensionsFileContent);
-  // Update the context_utility.dart file
-  var contextUtilityFile = File(contextUtilityFilePath);
-  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
-
-  // Use the insertData method to insert the boundaryStatement
-  contextUtilityFileContent = insertData(contextUtilityFileContent,
-      '// INFO: Set Boundary for packages', boundaryStatement);
-
-  // Write the updated content back to the context_utility.dart file
-  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
-  print("inside boundary-set boundary");
-  print(contextUtilityFileContent);
-  print('Updated the context_utility.dart file.');
-}
-
-
