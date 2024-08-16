@@ -67,7 +67,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               .toLocal()
               .millisecondsSinceEpoch; // Get start date in milliseconds
           final endDate = DateTime(event.selectedDate.year,
-                  event.selectedDate.month, event.selectedDate.day, 11, 59)
+                  event.selectedDate.month, event.selectedDate.day, 23, 59)
               .toLocal()
               .millisecondsSinceEpoch; // Get end date in milliseconds
 

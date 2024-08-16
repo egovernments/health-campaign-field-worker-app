@@ -446,7 +446,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toLocal()
             .millisecondsSinceEpoch;
         final endDate = DateTime(DateTime.now().year, DateTime.now().month,
-                DateTime.now().day, 11, 59)
+                DateTime.now().day, 23, 59)
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
