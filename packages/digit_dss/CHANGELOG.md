@@ -1,3 +1,6 @@
+## 1.0.0
+* Initial DSS Dashboard Release supporting metric and table charts
+
 ## 0.0.1-dev.4
 * Added error toast for network failure 
 * No result card added if no charts available
