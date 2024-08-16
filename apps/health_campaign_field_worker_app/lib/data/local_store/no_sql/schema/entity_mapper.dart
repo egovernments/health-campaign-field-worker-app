@@ -10,7 +10,7 @@ import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/referral.dart';
 import 'package:registration_delivery/models/entities/side_effect.dart';
 import 'package:registration_delivery/models/entities/task.dart';
-import 'package:complaints/complaints.dart';
+// import 'package:complaints/complaints.dart';
 
 /// The `EntityMapper` class extends `EntityMapperListener` and provides a concrete implementation
 /// for the `getEntityMappers` method. This method is responsible for mapping a given entity type
@@ -77,9 +77,9 @@ class EntityMapper extends EntityMapperListener {
         final entity = AttendanceLogModelMapper.fromJson(entityString);
         return entity;
 
-      case "complaints":
-        final entity = PgrServiceModelMapper.fromJson(entityString);
-        return entity;
+      // case "complaints":
+      //   final entity = PgrServiceModelMapper.fromJson(entityString);
+      //   return entity;
 
       default:
         final entity = EntityModelMapper.fromJson(entityString);

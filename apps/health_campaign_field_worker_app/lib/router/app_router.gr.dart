@@ -196,7 +196,6 @@ abstract class _$AppRouter extends RootStackRouter {
     ...RegistrationDeliveryRoute().pagesMap,
     ...ClosedHouseholdPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
-    ...ComplaintsRoute().pagesMap,
   };
 }
 

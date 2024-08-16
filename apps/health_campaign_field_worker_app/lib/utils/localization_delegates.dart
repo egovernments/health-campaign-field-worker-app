@@ -16,8 +16,8 @@ import 'package:referral_reconciliation/blocs/app_localization.dart'
     as referral_reconciliation_localization;
 import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
-import 'package:complaints/blocs/localization/app_localization.dart'
-    as complaints_localization;
+// import 'package:complaints/blocs/localization/app_localization.dart'
+//     as complaints_localization;
 
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
@@ -62,9 +62,9 @@ getAppLocalizationDelegates({
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
-    complaints_localization.ComplaintsLocalization.getDelegate(
-      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
-      appConfig.languages!,
-    ),
+    // complaints_localization.ComplaintsLocalization.getDelegate(
+    //   LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+    //   appConfig.languages!,
+    // ),
   ];
 }

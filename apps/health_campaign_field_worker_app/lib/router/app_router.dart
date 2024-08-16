@@ -15,8 +15,8 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.da
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:complaints/router/complaints_router.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
+// import 'package:complaints/router/complaints_router.dart';
+// import 'package:complaints/router/complaints_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -50,7 +50,7 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     ClosedHouseholdPackageRoute,
     DashboardRoute,
-    ComplaintsRoute,
+    // ComplaintsRoute, #not in tools ?
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -250,61 +250,61 @@ class AppRouter extends _$AppRouter {
           path: 'select-boundary',
         ),
 
-        /// Complaints Inbox
-        AutoRoute(
-          page: ComplaintsInboxWrapperRoute.page,
-          path: 'complaints-inbox',
-          children: [
-            AutoRoute(
-              page: ComplaintsInboxRoute.page,
-              path: 'complaints-inbox-items',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsInboxFilterRoute.page,
-              path: 'complaints-inbox-filter',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSearchRoute.page,
-              path: 'complaints-inbox-search',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSortRoute.page,
-              path: 'complaints-inbox-sort',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsViewRoute.page,
-              path: 'complaints-inbox-view-details',
-            ),
-          ],
-        ),
-
-        /// Complaints registration
-        AutoRoute(
-          page: ComplaintsRegistrationWrapperRoute.page,
-          path: 'complaints-registration',
-          children: [
-            AutoRoute(
-              page: ComplaintTypeRoute.page,
-              path: 'complaints-type',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsLocationRoute.page,
-              path: 'complaints-location',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsRoute.page,
-              path: 'complaints-details',
-            ),
-          ],
-        ),
-
-        /// Complaints Acknowledgemnet
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
+        // /// Complaints Inbox
+        // AutoRoute(
+        //   page: ComplaintsInboxWrapperRoute.page,
+        //   path: 'complaints-inbox',
+        //   children: [
+        //     AutoRoute(
+        //       page: ComplaintsInboxRoute.page,
+        //       path: 'complaints-inbox-items',
+        //       initial: true,
+        //     ),
+        //     AutoRoute(
+        //       page: ComplaintsInboxFilterRoute.page,
+        //       path: 'complaints-inbox-filter',
+        //     ),
+        //     AutoRoute(
+        //       page: ComplaintsInboxSearchRoute.page,
+        //       path: 'complaints-inbox-search',
+        //     ),
+        //     AutoRoute(
+        //       page: ComplaintsInboxSortRoute.page,
+        //       path: 'complaints-inbox-sort',
+        //     ),
+        //     AutoRoute(
+        //       page: ComplaintsDetailsViewRoute.page,
+        //       path: 'complaints-inbox-view-details',
+        //     ),
+        //   ],
+        // ),
+        //
+        // /// Complaints registration
+        // AutoRoute(
+        //   page: ComplaintsRegistrationWrapperRoute.page,
+        //   path: 'complaints-registration',
+        //   children: [
+        //     AutoRoute(
+        //       page: ComplaintTypeRoute.page,
+        //       path: 'complaints-type',
+        //       initial: true,
+        //     ),
+        //     AutoRoute(
+        //       page: ComplaintsLocationRoute.page,
+        //       path: 'complaints-location',
+        //     ),
+        //     AutoRoute(
+        //       page: ComplaintsDetailsRoute.page,
+        //       path: 'complaints-details',
+        //     ),
+        //   ],
+        // ),
+        //
+        // /// Complaints Acknowledgemnet
+        // AutoRoute(
+        //   page: ComplaintsAcknowledgementRoute.page,
+        //   path: 'complaints-acknowledgement',
+        // ),
 
         // Attendance Route
         AutoRoute(

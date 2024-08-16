@@ -4,7 +4,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-import  'package:complaints/complaints.dart';
+// import  'package:complaints/complaints.dart';
 
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
@@ -180,13 +180,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           BoundaryOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<
-          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
-        create: (_) => PgrServiceLocalRepository(
-          sql,
-          PgrServiceOpLogManager(isar),
-        ),
-      ),
+      // RepositoryProvider<
+      //     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
+      //   create: (_) => PgrServiceLocalRepository(
+      //     sql,
+      //     PgrServiceOpLogManager(isar),
+      //   ),
+      // ),
       RepositoryProvider<
           LocalRepository<HouseholdMemberModel, HouseholdMemberSearchModel>>(
         create: (_) => HouseholdMemberLocalRepository(
@@ -387,14 +387,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.complaints)
-          RepositoryProvider<
-              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
-            create: (_) => PgrServiceRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
+        // if (value == DataModelType.complaints)
+        //   RepositoryProvider<
+        //       RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
+        //     create: (_) => PgrServiceRemoteRepository(
+        //       dio,
+        //       actionMap: actions,
+        //     ),
+        //   ),
         if (value == DataModelType.user)
           RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
             create: (_) => UserRemoteRepository(
