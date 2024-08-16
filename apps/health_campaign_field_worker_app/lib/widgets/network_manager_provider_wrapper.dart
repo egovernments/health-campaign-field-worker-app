@@ -4,7 +4,7 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
-// import  'package:complaints/complaints.dart';
+
 
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/digit_card.dart';
@@ -24,6 +24,7 @@ import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../models/downsync/downsync.dart';
+import 'package:complaints/complaints.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -266,6 +267,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       // INFO Need to add packages here
+
+      RepositoryProvider<
+          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
+        create: (_) => PgrServiceLocalRepository(
+          sql,
+          PgrServiceOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -487,6 +496,15 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                 StockReconciliationRemoteRepository(dio, actionMap: actions),
           ),
         // INFO Need to add packages here
+
+        if (value == DataModelType.complaints)
+          RepositoryProvider<
+              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
+            create: (_) => PgrServiceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
       ]);
     }
 

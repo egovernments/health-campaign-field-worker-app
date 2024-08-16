@@ -49,6 +49,7 @@ void main() {
   _addComplaintsRoutesAndImportToRouterFile(routerFilePath);
 
   // Add new case statements to the entity_mapper.dart file
+
   _updateEntityMapperFile(entityMapperFilePath);
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
@@ -118,15 +119,16 @@ void _updateHome(String homeFilePath) {
           loggedInUserName: context.loggedInUser.name,
           complaintTypes:
               appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+         userName: context.loggedInUser.name ?? '',
         );
   ''';
 
   var localRepoData = '''
-    context.read<LocalRepository<AttendanceLogModel,AttendanceLogSearchModel>>(),
+    context.read<LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
   ''';
 
   var remoteRepoData = '''
-    context.read<LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+   context.read<RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
   ''';
 
   // Check if the home.dart file exists
@@ -185,6 +187,7 @@ String insertData(String fileContent, String marker, String data) {
   return fileContent;
 }
 
+//script working
 void _updateSyncUpFile(String syncUpFilePath) {
   // Define the import statement and the new case statements
   var importStatement = "import 'package:complaints/complaints.dart';";
@@ -265,26 +268,29 @@ void _updateSyncUpFile(String syncUpFilePath) {
   // Check if the sync_down file exists
   var syncUpFile = File(syncUpFilePath);
 
+
+
   if (!syncUpFile.existsSync()) {
-    print('Error: Sync Down file does not exist at path: $syncUpFilePath');
+    print('Error: Sync Up file does not exist at path: $syncUpFilePath');
     return;
   }
 
   // Read the sync_down file
   var syncUpFileContent = syncUpFile.readAsStringSync();
-
+  print(syncUpFileContent);
   // Check if the import statement already exists and add it if not
   if (!syncUpFileContent
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     syncUpFileContent = importStatement + '\n' + syncUpFileContent;
     print('The import statement was added to sync_up.dart.');
+
   } else {
     print('The import statement already exists in sync_up.dart.');
   }
 
   // Insert the new case statements
   if (!syncUpFileContent
-      .contains('DataModelType.complaints'.replaceAll(RegExp(r'\s'), ''))) {
+      .contains('case DataModelType.complaints:'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the new cases within the switch statement
     var switchIndex =
     syncUpFileContent.indexOf('switch (typeGroupedEntity.key) {');
@@ -300,6 +306,7 @@ void _updateSyncUpFile(String syncUpFilePath) {
         print('The new cases were added to sync_down.dart.');
 
         // Write the updated content back to the file
+
         syncUpFile.writeAsStringSync(syncUpFileContent);
       } else {
         print(
@@ -369,11 +376,10 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
     print('The new cases already exist.');
   }
 }
-
+//script working
 void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
   // Define the attendance route lines
   var complaintsRoutes = '''
-    /// Complaints Inbox
         AutoRoute(
           page: ComplaintsInboxWrapperRoute.page,
           path: 'complaints-inbox',
@@ -432,10 +438,10 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
 
   // Define the import statement
   var importStatement1 =
-      "import 'package:complaints/router/complaints_router.dart';";
+      "import 'package:complaints/router/complaints_router.gm.dart';";
   // Define the import statement
   var importStatement2 =
-      "import 'package:complaints/router/complaints_router.gm.dart';";
+      "import 'package:complaints/router/complaints_router.dart';";
 
   // Check if the router file exists
   var routerFile = File(routerFilePath);
@@ -470,6 +476,7 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
   } else {
     print('The import statement already exists.');
   }
+
   // Check if the attendanceRoute module already exists
   if (!routerFileContent
       .contains('ComplaintsRoute'.replaceAll(RegExp(r'\s'), ''))) {
@@ -484,7 +491,9 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
         routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
             ' ComplaintsRoute,' +
             routerFileContent.substring(modulesEndIndex);
+
         print('The ComplaintsRoute module was added.');
+
       } else {
         print('Error: Could not find the end of the modules list.');
         return;
@@ -509,6 +518,8 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
           complaintsRoutes +
           routerFileContent.substring(insertionIndex +
               '// INFO : Need to add Router of package Here'.length);
+
+
       print('The complaint routes were added.');
 
       // Write the updated content back to the file
@@ -709,7 +720,7 @@ void _addRepoToNetworkManagerProviderWrapper(
 
 // Define the remote repositories of attendance
   var remoteRepositoriesOfRegistrationDelivery = [
-    "  if (value == DataModelType.complaints)\n RepositoryProvider<\n    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(\n  create: (_) => PgrServiceRemoteRepository(\n    dio,\n    actionMap: actions,\n  ),\n),"
+    "if (value == DataModelType.complaints)\n RepositoryProvider<\n    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(\n  create: (_) => PgrServiceRemoteRepository(\n    dio,\n    actionMap: actions,\n  ),\n)"
   ];
 
 // Read the network_manager_provider_wrapper.dart file
@@ -855,7 +866,9 @@ void _setBoundaryInContextUtilityFile(
     extensionsFile.writeAsStringSync(extensionsFileContent);
     print('Updated the extensions.dart file.');
   }
-
+  print(extensionsFileContent);
+  print("inside boundary-extension");
+  print(extensionsFileContent);
   // Update the context_utility.dart file
   var contextUtilityFile = File(contextUtilityFilePath);
   var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
@@ -866,6 +879,8 @@ void _setBoundaryInContextUtilityFile(
 
   // Write the updated content back to the context_utility.dart file
   contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+  print("inside boundary-set boundary");
+  print(contextUtilityFileContent);
   print('Updated the context_utility.dart file.');
 }
 

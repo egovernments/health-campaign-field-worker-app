@@ -1,3 +1,5 @@
+import 'package:complaints/blocs/localization/app_localization.dart'
+    as complaints_localization;
 import 'dart:ui';
 
 import 'package:attendance_management/blocs/app_localization.dart'
@@ -66,5 +68,9 @@ getAppLocalizationDelegates({
     //   LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
     //   appConfig.languages!,
     // ),
+    complaints_localization.ComplaintsLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
   ];
 }
