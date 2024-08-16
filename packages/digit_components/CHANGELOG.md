@@ -1,3 +1,6 @@
+## 1.0.1
+* Added new loader dialog
+
 ## 1.0.0+9
 * Added maximum validation for digit_integer_form_picker
 
