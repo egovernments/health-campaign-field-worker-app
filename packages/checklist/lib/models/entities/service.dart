@@ -70,7 +70,8 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
     this.tenantId,
     this.rowVersion,
     this.attributes,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
   }): super();
 

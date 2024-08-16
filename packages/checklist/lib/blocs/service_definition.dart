@@ -67,3 +67,7 @@ class ServiceDefinitionState with _$ServiceDefinitionState {
     ServiceDefinitionModel? selectedServiceDefinition,
   }) = ServiceDefinitionServiceFetchedState;
 }
+
+
+
+
