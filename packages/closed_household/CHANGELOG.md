@@ -1,3 +1,11 @@
+## 1.0.1
+
+* Updated digit_data_model and registration_delivery
+
+## 1.0.0
+
+* Introducing new closed household for IRS campaign
+
 ## 0.0.0-dev.4
 
 * Updated registration_delivery package and digit_data_model package

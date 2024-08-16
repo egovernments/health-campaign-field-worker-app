@@ -63,7 +63,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
     );
 
     var totalCount = results['total_count'];
-      var finalResults = results['data'].map((e) => e).toList();
+    var finalResults = results['data'].map((e) => e).toList();
 
     if (event.globalSearchParams.filter!.contains(Status.registered.name) ||
         event.globalSearchParams.filter!.contains(Status.notRegistered.name)) {
@@ -93,17 +93,12 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
-          projectBeneficiariesList
-              .where((element) =>
-                  element.projectId == event.globalSearchParams.projectId)
-              .toList(),
-          taskList,
-          sideEffectsList,
-          referralsList);
+          projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
       sideEffectsList = tasksRelated[1];

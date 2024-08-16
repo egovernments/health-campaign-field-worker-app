@@ -281,10 +281,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
-        if (!(params.filter!.contains(Status.notRegistered.name))) {
-          selectQuery.where(
-              sql.projectBeneficiary.projectId.equals(params.projectId!));
-        }
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);

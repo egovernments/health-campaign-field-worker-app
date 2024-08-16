@@ -7,7 +7,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';

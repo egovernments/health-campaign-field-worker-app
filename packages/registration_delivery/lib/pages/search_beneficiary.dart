@@ -169,19 +169,27 @@ class _SearchBeneficiaryPageState
                                   }
                                 },
                               ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: kPadding),
-                                  child: DigitIconButton(
-                                    textDirection: TextDirection.rtl,
-                                    iconText: getFilterIconNLabel()['label'],
-                                    icon: getFilterIconNLabel()['icon'],
-                                    onPressed: () => showFilterDialog(),
-                                  ),
-                                ),
-                              ),
+                              RegistrationDeliverySingleton()
+                                              .searchHouseHoldFilter !=
+                                          null &&
+                                      RegistrationDeliverySingleton()
+                                          .searchHouseHoldFilter!
+                                          .isNotEmpty
+                                  ? Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: kPadding),
+                                        child: DigitIconButton(
+                                          textDirection: TextDirection.rtl,
+                                          iconText:
+                                              getFilterIconNLabel()['label'],
+                                          icon: getFilterIconNLabel()['icon'],
+                                          onPressed: () => showFilterDialog(),
+                                        ),
+                                      ),
+                                    )
+                                  : const Offstage(),
                               selectedFilters.isNotEmpty
                                   ? Align(
                                       alignment: Alignment.topLeft,
@@ -474,9 +482,13 @@ class _SearchBeneficiaryPageState
           dialogPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          content: StatusFilter(selectedFilters: selectedFilters, titleIcon: Icon(getFilterIconNLabel()['icon'],
-              color: const DigitColors().burningOrange),
-            titleText: getFilterIconNLabel()['label'],  isCloseIcon: true,),
+          content: StatusFilter(
+            selectedFilters: selectedFilters,
+            titleIcon: Icon(getFilterIconNLabel()['icon'],
+                color: const DigitColors().burningOrange),
+            titleText: getFilterIconNLabel()['label'],
+            isCloseIcon: true,
+          ),
         ));
 
     if (filters != null && filters.isNotEmpty) {

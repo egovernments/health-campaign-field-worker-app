@@ -96,6 +96,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
                   individualClientReferenceIds.map((e) => e).toList()));
 
@@ -126,6 +127,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               clientReferenceId: listOfBeneficiaries));
 
       late List<String> listOfMembers = [];
