@@ -680,6 +680,7 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         RegistrationDeliverySingleton().setInitialData(
+          loggedInUser:context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
           projectId: context.projectId,
