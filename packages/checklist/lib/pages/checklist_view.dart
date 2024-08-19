@@ -38,10 +38,10 @@ class ChecklistViewPage extends LocalizedStatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ChecklistViewPage> createState() => _ChecklistViewPageState();
+  State<ChecklistViewPage> createState() => ChecklistViewPageState();
 }
 
-class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
+class ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   String isStateChanged = '';
   var submitTriggered = false;
   List<TextEditingController> controller = [];

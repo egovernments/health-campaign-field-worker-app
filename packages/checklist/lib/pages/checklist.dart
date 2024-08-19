@@ -21,10 +21,10 @@ class ChecklistPage extends LocalizedStatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ChecklistPage> createState() => _ChecklistPageState();
+  State<ChecklistPage> createState() => ChecklistPageState();
 }
 
-class _ChecklistPageState extends State<ChecklistPage> {
+class ChecklistPageState extends State<ChecklistPage> {
   @override
   Widget build(BuildContext context) {
     final localizations = ChecklistLocalization.of(context);
