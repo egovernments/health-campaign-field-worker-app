@@ -1,7 +1,6 @@
 // Import necessary packages for Flutter testing and mocktail.
 import 'package:complaints/blocs/complaints_registration/complaints_registration.dart';
 import 'package:complaints/utils/typedefs.dart';
-import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:complaints/complaints.dart';
 import 'package:mocktail/mocktail.dart';

@@ -5,10 +5,10 @@ import 'complaints_router.gm.dart';
 /// Complaint Inbox and registration Router
 @AutoRouterConfig.module()
 class ComplaintsRoute extends $ComplaintsRoute {
-  @override
+
   RouteType get defaultRouteType => const RouteType.material();
 
-  @override
+
   List<AutoRoute> routes = [
     /// Complaints Inbox
     AutoRoute(

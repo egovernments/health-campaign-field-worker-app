@@ -60,7 +60,7 @@ void main() {
 
   _addComplaintsConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
-  // _addAttendanceMapperToUtilsFile(utilsFilePath: utilsFilePath);
+  _addComplaintsMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
   _formatFiles([
     homeFilePath,
@@ -534,67 +534,67 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
 }
 
 ///not needed ig
-// void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
-//   // Define the attendance related lines
-//   var attendanceImportStatement = [
-//     "import 'package:attendance_management/attendance_management.dart' as attendance_mappers;"
-//   ];
-//   var attendanceInitializationStatement =
-//       "Future(() => attendance_mappers.initializeMappers()),";
-//
-//   // Check if the utils.dart file exists
-//   var utilsFile = File(utilsFilePath);
-//
-//   // Read the utils.dart file
-//   var utilsFileContent = utilsFile.readAsStringSync();
-//
-//   // Normalize the whitespace in the file content
-//   var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
-//
-//   // Check if the import statement and delegate already exist in the file
-//   // If not, add them to the file
-//   if (!normalizedFileContent
-//       .contains(attendanceImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
-//     var libraryIndex = utilsFileContent.indexOf('library app_utils;');
-//     if (libraryIndex != -1) {
-//       var endOfLibrary = libraryIndex +
-//           utilsFileContent.substring(libraryIndex).indexOf(';') +
-//           1;
-//       utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
-//           '\n' +
-//           attendanceImportStatement[0] +
-//           utilsFileContent.substring(endOfLibrary + 1);
-//       print('The import statement was added.');
-//     }
-//   } else {
-//     print('The import statement already exists.');
-//   }
-//
-//   if (!utilsFileContent.contains(attendanceInitializationStatement)) {
-//     // Add the attendance related initialization statement to the file
-//     var initializeAllMappersIndex =
-//     utilsFileContent.indexOf('initializeAllMappers() async {');
-//     if (initializeAllMappersIndex == -1) {
-//       print(
-//           'Error: Could not find a place to insert the attendance initialization statement.');
-//       return;
-//     }
-//     var endOfInitializeAllMappers = initializeAllMappersIndex +
-//         utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
-//         1;
-//     utilsFileContent =
-//         utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
-//             '\n    ' +
-//             attendanceInitializationStatement +
-//             utilsFileContent.substring(endOfInitializeAllMappers - 1);
-//     print('Attendance initialization statement added to utils.dart');
-//   } else {
-//     print('The attendance initialization statement already exists.');
-//   }
-//
-//   // Write the updated content back to the utils.dart file
-//   utilsFile.writeAsStringSync(utilsFileContent);
-// }
+void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
+  // Define the attendance related lines
+  var complaintsImportStatement = [
+  "import 'package:complaints/complaints.init.dart' as complaints_mappers;"
+  ];
+  var complaintsInitializationStatement =
+      "Future(() => complaints_mappers.initializeMappers()),";
+
+  // Check if the utils.dart file exists
+  var utilsFile = File(utilsFilePath);
+
+  // Read the utils.dart file
+  var utilsFileContent = utilsFile.readAsStringSync();
+
+  // Normalize the whitespace in the file content
+  var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
+
+  // Check if the import statement and delegate already exist in the file
+  // If not, add them to the file
+  if (!normalizedFileContent
+      .contains(complaintsImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
+    var libraryIndex = utilsFileContent.indexOf('library app_utils;');
+    if (libraryIndex != -1) {
+      var endOfLibrary = libraryIndex +
+          utilsFileContent.substring(libraryIndex).indexOf(';') +
+          1;
+      utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
+          '\n' +
+          complaintsImportStatement[0] +
+          utilsFileContent.substring(endOfLibrary + 1);
+      print('The import statement was added.');
+    }
+  } else {
+    print('The import statement already exists.');
+  }
+
+  if (!utilsFileContent.contains(complaintsInitializationStatement)) {
+    // Add the attendance related initialization statement to the file
+    var initializeAllMappersIndex =
+    utilsFileContent.indexOf('initializeAllMappers() async {');
+    if (initializeAllMappersIndex == -1) {
+      print(
+          'Error: Could not find a place to insert the complaint initialization statement.');
+      return;
+    }
+    var endOfInitializeAllMappers = initializeAllMappersIndex +
+        utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
+        1;
+    utilsFileContent =
+        utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
+            '\n    ' +
+            complaintsInitializationStatement +
+            utilsFileContent.substring(endOfInitializeAllMappers - 1);
+    print('complaint initialization statement added to utils.dart');
+  } else {
+    print('The complaint initialization statement already exists.');
+  }
+
+  // Write the updated content back to the utils.dart file
+  utilsFile.writeAsStringSync(utilsFileContent);
+}
 
 void _addComplaintsConstantsToConstantsFile(
     {required String constantsFilePath}) {

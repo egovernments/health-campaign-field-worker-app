@@ -2,8 +2,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 
-import '/models/entities/complaint_types.dart';
-
 
 export 'extensions/extensions.dart';
 

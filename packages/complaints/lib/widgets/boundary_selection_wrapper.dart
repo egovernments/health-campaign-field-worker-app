@@ -5,7 +5,6 @@ import 'package:digit_data_model/blocs/boundary/boundary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '/router/complaints_router.dart';
 
 /// Wraps the [child] widget with a [BlocListener] that listens to
 /// [BoundaryState] changes and navigates to [HomeRoute] when submitted.
@@ -24,7 +23,7 @@ class BoundarySelectionWrapper extends StatelessWidget {
           if (state.hasSubmitted) {
             context.navigateTo(
               // HomeRoute(),
-              ComplaintsInboxWrapperRoute(),
+              const ComplaintsInboxWrapperRoute(),
               onFailure: (failure) {
                 AppLogger.instance.error(
                   title: 'BoundarySelectionWrapper',

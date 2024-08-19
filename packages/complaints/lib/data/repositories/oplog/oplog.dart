@@ -3,9 +3,6 @@ import 'dart:async';
 import 'package:digit_data_model/data_model.dart';
 import 'package:isar/isar.dart';
 
-import 'package:digit_data_model/data/repositories/oplog/oplog.dart';
-import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/oplog/oplog_entry.dart';
 
 import '../../../models/pgr_complaints.dart';
 

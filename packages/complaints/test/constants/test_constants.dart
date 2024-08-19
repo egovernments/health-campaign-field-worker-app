@@ -1,5 +1,4 @@
 import 'package:complaints/complaints.dart';
-import 'package:complaints/models/entities/complaint_types.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 
