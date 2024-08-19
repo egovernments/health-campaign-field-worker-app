@@ -174,13 +174,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
           BoundaryOpLogManager(isar),
         ),
       ),
-      RepositoryProvider<
-          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
-        create: (_) => PgrServiceLocalRepository(
-          sql,
-          PgrServiceOpLogManager(isar),
-        ),
-      ),
+
       // INFO Need to add packages here
     ];
   }
@@ -303,14 +297,7 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
               actionMap: actions,
             ),
           ),
-        if (value == DataModelType.complaints)
-          RepositoryProvider<
-              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
-            create: (_) => PgrServiceRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
+
         if (value == DataModelType.user)
           RepositoryProvider<RemoteRepository<UserModel, UserSearchModel>>(
             create: (_) => UserRemoteRepository(
