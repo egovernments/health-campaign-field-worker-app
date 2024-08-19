@@ -82,8 +82,7 @@ class _HouseholdOverviewPageState
                                 const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                             padding: const EdgeInsets.fromLTRB(
                                 kPadding, 0, kPadding, 0),
-                            child: deliverInterventionState
-                                        .tasks?.last.status ==
+                            child: state.householdMemberWrapper.tasks?.lastOrNull?.status ==
                                     Status.administeredSuccess.toValue()
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -93,7 +92,7 @@ class _HouseholdOverviewPageState
                                         i18.memberCard
                                             .deliverDetailsUpdateLabel,
                                       ),
-                                      onPressed: state.householdMemberWrapper.tasks?.last.status == Status.administeredSuccess.toValue() ? null :() {
+                                      onPressed: state.householdMemberWrapper.tasks?.lastOrNull?.status == Status.administeredSuccess.toValue() ? null :() {
                                         serviceDefinitionState.when(
                                             empty: () {},
                                             isloading: () {},
@@ -123,7 +122,7 @@ class _HouseholdOverviewPageState
                                                     [])
                                                 .isEmpty ||
                                             state.householdMemberWrapper.tasks
-                                                    ?.last.status ==
+                                                    ?.lastOrNull?.status ==
                                                 Status.closeHousehold.toValue()
                                         ? null
                                         : () async {
@@ -429,7 +428,7 @@ class _HouseholdOverviewPageState
                                             .householdMemberWrapper.sideEffects
                                             ?.where((element) =>
                                                 element.taskClientReferenceId ==
-                                                taskData.last.clientReferenceId)
+                                                taskData.lastOrNull?.clientReferenceId)
                                             .toList()
                                         : null;
                                     final ageInYears = e.dateOfBirth != null
@@ -629,7 +628,7 @@ class _HouseholdOverviewPageState
                                               RegistrationDeliverySingleton()
                                                   .projectType,
                                               (taskData ?? []).isNotEmpty
-                                                  ? taskData?.last
+                                                  ? taskData?.lastOrNull
                                                   : null,
                                               sideEffectData,
                                             )
@@ -758,14 +757,14 @@ class _HouseholdOverviewPageState
           : Status.registered.toValue();
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.last.status ==
+          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? DigitTheme.instance.colorScheme.onSurfaceVariant
               : DigitTheme.instance.colorScheme.error)
           : DigitTheme.instance.colorScheme.onSurfaceVariant;
 
       icon = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? (state.householdMemberWrapper.tasks?.last.status ==
+          ? (state.householdMemberWrapper.tasks?.lastOrNull?.status ==
                   Status.administeredSuccess.toValue()
               ? Icons.check_circle
               : Icons.info_rounded)

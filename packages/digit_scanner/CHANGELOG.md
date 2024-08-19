@@ -1,3 +1,6 @@
+## 1.0.3
+* Manual code entry fixes with stable version
+
 ## 1.0.3-dev.1
 * Fix for manual entry result not reflecting
 
