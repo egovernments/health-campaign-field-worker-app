@@ -139,22 +139,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
         ),
       ),
       RepositoryProvider<
-          LocalRepository<ServiceDefinitionModel,
-              ServiceDefinitionSearchModel>>(
-        create: (_) => ServiceDefinitionLocalRepository(
-          sql,
-          ServiceDefinitionOpLogManager(
-            isar,
-          ),
-        ),
-      ),
-      RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
-        create: (_) => ServiceLocalRepository(
-          sql,
-          ServiceOpLogManager(isar),
-        ),
-      ),
-      RepositoryProvider<
           LocalRepository<ProjectResourceModel, ProjectResourceSearchModel>>(
         create: (_) => ProjectResourceLocalRepository(
           sql,
@@ -269,23 +253,6 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
                   ProjectResourceSearchModel>>(
             create: (_) =>
                 ProjectResourceRemoteRepository(dio, actionMap: actions),
-          ),
-        if (value == DataModelType.service)
-          RepositoryProvider<
-              RemoteRepository<ServiceModel, ServiceSearchModel>>(
-            create: (_) => ServiceRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
-          ),
-        if (value == DataModelType.serviceDefinition)
-          RepositoryProvider<
-              RemoteRepository<ServiceDefinitionModel,
-                  ServiceDefinitionSearchModel>>(
-            create: (_) => ServiceDefinitionRemoteRepository(
-              dio,
-              actionMap: actions,
-            ),
           ),
         if (value == DataModelType.boundary)
           RepositoryProvider<

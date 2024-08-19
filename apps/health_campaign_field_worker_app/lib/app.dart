@@ -188,13 +188,13 @@ class MainApplicationState extends State<MainApplication>
                             projectRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectModel,
                                     ProjectSearchModel>>(),
-                            serviceDefinitionRemoteRepository: ctx.read<
-                                RemoteRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
+                            // serviceDefinitionRemoteRepository: ctx.read<
+                            //     RemoteRepository<ServiceDefinitionModel,
+                            //         ServiceDefinitionSearchModel>>(),
                             isar: widget.isar,
-                            serviceDefinitionLocalRepository: ctx.read<
-                                LocalRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
+                            // serviceDefinitionLocalRepository: ctx.read<
+                            //     LocalRepository<ServiceDefinitionModel,
+                            //         ServiceDefinitionSearchModel>>(),
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
                                     BoundarySearchModel>>(),

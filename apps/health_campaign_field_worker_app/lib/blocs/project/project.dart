@@ -61,10 +61,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
 
-  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-      serviceDefinitionRemoteRepository;
-  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-      serviceDefinitionLocalRepository;
+  // final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+  //     serviceDefinitionRemoteRepository;
+  // final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+  //     serviceDefinitionLocalRepository;
 
   ///Boundary Resource Repositories
   final RemoteRepository<BoundaryModel, BoundarySearchModel>
@@ -95,11 +95,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
-    required this.serviceDefinitionRemoteRepository,
+    // required this.serviceDefinitionRemoteRepository,
     required this.boundaryRemoteRepository,
     required this.boundaryLocalRepository,
     required this.isar,
-    required this.serviceDefinitionLocalRepository,
+    // required this.serviceDefinitionLocalRepository,
     required this.projectResourceLocalRepository,
     required this.projectResourceRemoteRepository,
     required this.productVariantLocalRepository,
@@ -333,18 +333,18 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       });
     }
 
-    final serviceDefinition = await serviceDefinitionRemoteRepository
-        .search(ServiceDefinitionSearchModel(
-      tenantId: envConfig.variables.tenantId,
-      code: codes,
-    ));
-
-    for (var element in serviceDefinition) {
-      await serviceDefinitionLocalRepository.create(
-        element,
-        createOpLog: false,
-      );
-    }
+    // final serviceDefinition = await serviceDefinitionRemoteRepository
+    //     .search(ServiceDefinitionSearchModel(
+    //   tenantId: envConfig.variables.tenantId,
+    //   code: codes,
+    // ));
+    //
+    // for (var element in serviceDefinition) {
+    //   await serviceDefinitionLocalRepository.create(
+    //     element,
+    //     createOpLog: false,
+    //   );
+    // }
   }
 
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {

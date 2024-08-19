@@ -79,14 +79,6 @@ class Constants {
       ProjectStaffLocalRepository(sql, ProjectStaffOpLogManager(isar)),
       IndividualLocalRepository(sql, IndividualOpLogManager(isar)),
       ProjectFacilityLocalRepository(sql, ProjectFacilityOpLogManager(isar)),
-      ServiceDefinitionLocalRepository(
-        sql,
-        ServiceDefinitionOpLogManager(isar),
-      ),
-      ServiceLocalRepository(
-        sql,
-        ServiceOpLogManager(isar),
-      ),
       ProjectResourceLocalRepository(
         sql,
         ProjectResourceOpLogManager(isar),
@@ -141,12 +133,8 @@ class Constants {
           ProductVariantRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.boundary)
           BoundaryRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.serviceDefinition)
-          ServiceDefinitionRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectResource)
           ProjectResourceRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.service)
-          ServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectStaff)
           ProjectStaffRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.projectProductVariant)
