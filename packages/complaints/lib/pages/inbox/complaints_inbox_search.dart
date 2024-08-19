@@ -21,10 +21,10 @@ class ComplaintsInboxSearchPage extends LocalizedStatefulWidget {
 
   @override
   State<ComplaintsInboxSearchPage> createState() =>
-      _ComplaintsInboxSearchPageState();
+      ComplaintsInboxSearchPageState();
 }
 
-class _ComplaintsInboxSearchPageState
+class ComplaintsInboxSearchPageState
     extends LocalizedState<ComplaintsInboxSearchPage> {
   static const _complaintNumber = "complaintNumber";
   static const _mobileNumber = "mobileNumber";

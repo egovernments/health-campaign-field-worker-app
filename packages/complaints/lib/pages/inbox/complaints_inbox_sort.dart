@@ -20,10 +20,10 @@ class ComplaintsInboxSortPage extends LocalizedStatefulWidget {
 
   @override
   State<ComplaintsInboxSortPage> createState() =>
-      _ComplaintsInboxSortPageState();
+      ComplaintsInboxSortPageState();
 }
 
-class _ComplaintsInboxSortPageState
+class ComplaintsInboxSortPageState
     extends LocalizedState<ComplaintsInboxSortPage> {
   static const _sortOrder = "sortOrder";
   static var sortOrders = [

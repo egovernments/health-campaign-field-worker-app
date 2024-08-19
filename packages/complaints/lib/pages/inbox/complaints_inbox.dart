@@ -23,10 +23,10 @@ class ComplaintsInboxPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ComplaintsInboxPage> createState() => _ComplaintsInboxPageState();
+  State<ComplaintsInboxPage> createState() => ComplaintsInboxPageState();
 }
 
-class _ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
+class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -289,14 +289,14 @@ class _ComplaintsInboxItem extends StatelessWidget {
                     style: theme.textTheme.headlineSmall,
                   ),
                 ),
-                // Expanded(
-                //   flex: 3,
-                //   child: Text(
-                //     item.auditDetails?.createdTime.toDateTime
-                //             .getFormattedDate() ??
-                //         "",
-                //   ),
-                // ),
+                Expanded(
+                  flex: 3,
+                  child: Text(
+                    item.auditDetails?.createdTime.toDateTime
+                            .getFormattedDate() ??
+                        "",
+                  ),
+                ),
               ],
             ),
           ),

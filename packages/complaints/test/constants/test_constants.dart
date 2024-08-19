@@ -2,7 +2,7 @@ import 'package:complaints/complaints.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 
-class ComplaintsRegistrationConstants{
+class ComplaintsConstants{
   static final ComplaintsDetailsModel complaintsDetailsModel = ComplaintsDetailsModel(
       dateOfComplaint: DateTime(2024),
       administrativeArea: "abcd",

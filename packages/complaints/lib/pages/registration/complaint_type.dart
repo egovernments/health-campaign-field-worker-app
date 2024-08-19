@@ -25,10 +25,10 @@ class ComplaintTypePage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ComplaintTypePage> createState() => _ComplaintTypePageState();
+  State<ComplaintTypePage> createState() => ComplaintTypePageState();
 }
 
-class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
+class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
   static const _complaintType = 'complaintType';
   static const _otherComplaintType = 'otherComplaintType';
 
@@ -111,8 +111,9 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                   ),
                 ),
               ),
-              children: [
-                DigitCard(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: DigitCard(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
@@ -165,7 +166,6 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                           maxLength: 100,
                           validationMessages: {
                             'required': (object) => localizations.translate(
-
                               i18.complaints.validationRequiredError,
                             ),
 
@@ -195,6 +195,7 @@ class _ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                       const SizedBox(height: 16),
                     ],
                   ),
+                ),
                 ),
               ],
             );

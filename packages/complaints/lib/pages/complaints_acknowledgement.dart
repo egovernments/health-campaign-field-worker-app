@@ -17,10 +17,10 @@ class ComplaintsAcknowledgementPage extends LocalizedStatefulWidget {
 
   @override
   State<ComplaintsAcknowledgementPage> createState() =>
-      _ComplaintsAcknowledgementPageState();
+      ComplaintsAcknowledgementPageState();
 }
 
-class _ComplaintsAcknowledgementPageState
+class ComplaintsAcknowledgementPageState
     extends LocalizedState<ComplaintsAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {

@@ -30,7 +30,7 @@ void main() {
     });
 
     setUpAll(() {
-      registerFallbackValue(ComplaintsRegistrationConstants.mockPgrServiceModel);
+      registerFallbackValue(ComplaintsConstants.mockPgrServiceModel);
     });
 
     // Test the initial state of the ComplaintsRegistrationBloc.
@@ -47,12 +47,12 @@ void main() {
         build: () => complaintsRegistrationBloc,
         act: (bloc) {
           bloc.add(const ComplaintsRegistrationSaveComplaintTypeEvent(
-            complaintType: ComplaintsRegistrationConstants.complaintType,
+            complaintType: ComplaintsConstants.complaintType,
           ));
         },
         expect: ()=> [
           const ComplaintsRegistrationState.create(
-            complaintType: ComplaintsRegistrationConstants.complaintType,
+            complaintType: ComplaintsConstants.complaintType,
           ),
         ],
     );
@@ -63,12 +63,12 @@ void main() {
         build: ()=>complaintsRegistrationBloc,
         act: (bloc){
           bloc.add(ComplaintsRegistrationSaveAddressEvent(
-              addressModel: ComplaintsRegistrationConstants.addressModel,
+              addressModel: ComplaintsConstants.addressModel,
           ));
         },
         expect: ()=>[
           ComplaintsRegistrationState.create(
-            addressModel: ComplaintsRegistrationConstants.addressModel,
+            addressModel: ComplaintsConstants.addressModel,
           ),
         ],
     );
@@ -80,14 +80,14 @@ void main() {
         act: (bloc){
           bloc.add(
             ComplaintsRegistrationSaveComplaintDetailsEvent(
-                complaintsDetailsModel: ComplaintsRegistrationConstants.complaintsDetailsModel,
-                boundaryModel: ComplaintsRegistrationConstants.boundaryModel,
+                complaintsDetailsModel: ComplaintsConstants.complaintsDetailsModel,
+                boundaryModel: ComplaintsConstants.boundaryModel,
             )
           );
         },
         expect: ()=>[
           ComplaintsRegistrationState.create(
-            complaintsDetailsModel: ComplaintsRegistrationConstants.complaintsDetailsModel,
+            complaintsDetailsModel: ComplaintsConstants.complaintsDetailsModel,
           ),
         ],
     );
@@ -97,22 +97,22 @@ void main() {
       'emits [ComplaintsRegistrationPersistedState] when _handleSubmitComplaints is called',
       build: () {
         when(()=>pgrServiceDataRepository.create(any()))
-        .thenAnswer((_) async => ComplaintsRegistrationConstants.mockPgrServiceModel);
+        .thenAnswer((_) async => ComplaintsConstants.mockPgrServiceModel);
         return complaintsRegistrationBloc;
       },
 
       act: (bloc){
         bloc.emit(ComplaintsRegistrationState.create(
-          complaintType: ComplaintsRegistrationConstants.complaintType,
-          addressModel: ComplaintsRegistrationConstants.addressModel,
-          complaintsDetailsModel: ComplaintsRegistrationConstants.complaintsDetailsModel,
+          complaintType: ComplaintsConstants.complaintType,
+          addressModel: ComplaintsConstants.addressModel,
+          complaintsDetailsModel: ComplaintsConstants.complaintsDetailsModel,
         ));
       },
       expect: ()=>[
         ComplaintsRegistrationState.create(
-          complaintType: ComplaintsRegistrationConstants.complaintType,
-          addressModel: ComplaintsRegistrationConstants.addressModel,
-          complaintsDetailsModel: ComplaintsRegistrationConstants.complaintsDetailsModel,
+          complaintType: ComplaintsConstants.complaintType,
+          addressModel: ComplaintsConstants.addressModel,
+          complaintsDetailsModel: ComplaintsConstants.complaintsDetailsModel,
           loading: false,
         ),
       ],

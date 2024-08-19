@@ -27,10 +27,10 @@ class ComplaintsInboxFilterPage extends LocalizedStatefulWidget {
 
   @override
   State<ComplaintsInboxFilterPage> createState() =>
-      _ComplaintsInboxFilterPageState();
+      ComplaintsInboxFilterPageState();
 }
 
-class _ComplaintsInboxFilterPageState
+class ComplaintsInboxFilterPageState
     extends LocalizedState<ComplaintsInboxFilterPage> {
   static const _complaintType = "complaintType";
   static const _complaintLocality = "complaintLocality";

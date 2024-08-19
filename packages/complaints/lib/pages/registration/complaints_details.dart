@@ -27,10 +27,10 @@ class ComplaintsDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ComplaintsDetailsPage> createState() => _ComplaintsDetailsPageState();
+  State<ComplaintsDetailsPage> createState() => ComplaintsDetailsPageState();
 }
 
-class _ComplaintsDetailsPageState
+class ComplaintsDetailsPageState
     extends LocalizedState<ComplaintsDetailsPage> {
   static const _dateOfComplaint = 'dateOfComplaint';
   static const _administrativeArea = 'administrativeArea';

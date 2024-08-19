@@ -26,10 +26,10 @@ class ComplaintsLocationPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ComplaintsLocationPage> createState() => _ComplaintsLocationPageState();
+  State<ComplaintsLocationPage> createState() => ComplaintsLocationPageState();
 }
 
-class _ComplaintsLocationPageState
+class ComplaintsLocationPageState
     extends LocalizedState<ComplaintsLocationPage> {
   static const _addressLine1Key = 'addressLine1';
   static const _addressLine2Key = 'addressLine2';
