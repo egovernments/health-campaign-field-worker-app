@@ -287,16 +287,16 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
             resourcesCompanions,
             mode: InsertMode.insertOrReplace,
           );
+        }
 
-          if (addresses != null) {
-            final addressCompanions = addresses.companion;
+        if (addresses != null) {
+          final addressCompanions = addresses.companion;
 
-            batch.insert(
-              sql.address,
-              addressCompanions,
-              mode: InsertMode.insertOrReplace,
-            );
-          }
+          batch.insert(
+            sql.address,
+            addressCompanions,
+            mode: InsertMode.insertOrReplace,
+          );
         }
 
         await super.create(
