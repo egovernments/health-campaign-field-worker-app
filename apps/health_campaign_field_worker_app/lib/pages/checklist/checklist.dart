@@ -74,7 +74,6 @@ class _ChecklistPageState extends LocalizedState<ChecklistPage> {
                               List<String> roles = res.userModel.roles
                                   .map((e) => e.code.snakeCase.toUpperCase())
                                   .toList();
-                              print("Yash $roles");
                               final values = value.serviceDefinitionList.where(
                                   (item) =>
                                       !roles

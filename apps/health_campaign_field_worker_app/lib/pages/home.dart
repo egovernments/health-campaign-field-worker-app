@@ -28,8 +28,7 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-// import 'package:complaints/complaints.dart';
-// import 'package:complaints/router/complaints_router.gm.dart';
+
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -408,15 +407,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
       ),
-      // i18.home.fileComplaint:
-      //     homeShowcaseData.distributorFileComplaint.buildWith(
-      //   child: HomeItemCard(
-      //     icon: Icons.announcement,
-      //     label: i18.home.fileComplaint,
-      //     onPressed: () =>
-      //         context.router.push(const ComplaintsInboxWrapperRoute()),
-      //   ),
-      // ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -535,8 +526,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
-      // i18.home.fileComplaint:
-      //     homeShowcaseData.distributorFileComplaint.showcaseKey,
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
       i18.home.beneficiaryReferralLabel:
@@ -622,8 +612,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<StockReconciliationModel,
                         StockReconciliationSearchModel>>(),
-                // context.read<
-                //     LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
                 context.read<
                     LocalRepository<HFReferralModel, HFReferralSearchModel>>(),
                 context.read<
@@ -656,8 +645,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<StockReconciliationModel,
                         StockReconciliationSearchModel>>(),
-                // context.read<
-                //     RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
                 context.read<
                     RemoteRepository<HFReferralModel, HFReferralSearchModel>>(),
                 context.read<
@@ -799,15 +787,7 @@ void setPackagesSingleton(BuildContext context) {
               entityName: DashboardResponseModel.schemaName,
             ));
 
-        // ComplaintsSingleton().setInitialData(
-        //   tenantId: envConfig.variables.tenantId,
-        //   loggedInUserUuid: context.loggedInUserUuid,
-        //   userMobileNumber: context.loggedInUser.mobileNumber,
-        //   loggedInUserName: context.loggedInUser.name,
-        //   complaintTypes:
-        //       appConfiguration.complaintTypes!.map((e) => e.code).toList(),
-        //   userName: context.loggedInUser.name ?? '',
-        // );
+
       });
 }
 
