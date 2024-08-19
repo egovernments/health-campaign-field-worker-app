@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
+// ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'service_attributes.dart';
@@ -15,7 +15,6 @@ class ServiceAttributesSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ServiceAttributesSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -109,8 +108,10 @@ mixin ServiceAttributesSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return ServiceAttributesSearchModelMapper.ensureInitialized()
-        .equalsValue(this as ServiceAttributesSearchModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ServiceAttributesSearchModelMapper.ensureInitialized()
+                .isValueEqual(this as ServiceAttributesSearchModel, other));
   }
 
   @override
@@ -193,10 +194,6 @@ class ServiceAttributesModelMapper
   static ServiceAttributesModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ServiceAttributesModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      ServiceAttributesAdditionalFieldsMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -333,8 +330,10 @@ mixin ServiceAttributesModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return ServiceAttributesModelMapper.ensureInitialized()
-        .equalsValue(this as ServiceAttributesModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ServiceAttributesModelMapper.ensureInitialized()
+                .isValueEqual(this as ServiceAttributesModel, other));
   }
 
   @override
@@ -472,8 +471,6 @@ class ServiceAttributesAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ServiceAttributesAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -555,8 +552,11 @@ mixin ServiceAttributesAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return ServiceAttributesAdditionalFieldsMapper.ensureInitialized()
-        .equalsValue(this as ServiceAttributesAdditionalFields, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ServiceAttributesAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(
+                    this as ServiceAttributesAdditionalFields, other));
   }
 
   @override

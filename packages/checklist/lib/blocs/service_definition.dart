@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:checklist/checklist.dart';
 
 import '../../utils/typedefs.dart';
 
@@ -14,32 +14,33 @@ class ServiceDefinitionBloc
     extends Bloc<ServiceDefinitionEvent, ServiceDefinitionState> {
   final ServiceDefinitionDataRepository serviceDefinitionDataRepository;
   ServiceDefinitionBloc(
-    super.initialState, {
-    required this.serviceDefinitionDataRepository,
-  }) {
+      super.initialState, {
+        required this.serviceDefinitionDataRepository,
+      }) {
     on(_handleFetch);
     on(_handleSelect);
   }
 
+  //this function is called to fetch all the service definitions from the table for the selected project
   FutureOr<void> _handleFetch(
-    ServiceDefinitionFetchEvent event,
-    ServiceDefinitionEmitter emit,
-  ) async {
+      ServiceDefinitionFetchEvent event,
+      ServiceDefinitionEmitter emit,
+      ) async {
     final results = await serviceDefinitionDataRepository.search(
       ServiceDefinitionSearchModel(
-        tenantId: DigitDataModelSingleton().tenantId,
+        tenantId: ChecklistSingleton().tenantId,
       ),
     );
-
     emit(ServiceDefinitionServiceFetchedState(
       serviceDefinitionList: results,
     ));
   }
 
+  // Called when we select a service definition from the displayed list of service definition
   FutureOr<void> _handleSelect(
-    ServiceDefinitionSelectionEvent event,
-    ServiceDefinitionEmitter emit,
-  ) async {
+      ServiceDefinitionSelectionEvent event,
+      ServiceDefinitionEmitter emit,
+      ) async {
     state.mapOrNull(
       serviceDefinitionFetch: (value) => emit(value.copyWith(
         selectedServiceDefinition: event.serviceDefinition,
@@ -60,9 +61,13 @@ class ServiceDefinitionEvent with _$ServiceDefinitionEvent {
 class ServiceDefinitionState with _$ServiceDefinitionState {
   const factory ServiceDefinitionState.empty() = ServiceDefinitionEmptyState;
   const factory ServiceDefinitionState.isloading() =
-      ServiceDefinitionIsloadingState;
+  ServiceDefinitionIsloadingState;
   const factory ServiceDefinitionState.serviceDefinitionFetch({
     required List<ServiceDefinitionModel> serviceDefinitionList,
     ServiceDefinitionModel? selectedServiceDefinition,
   }) = ServiceDefinitionServiceFetchedState;
 }
+
+
+
+

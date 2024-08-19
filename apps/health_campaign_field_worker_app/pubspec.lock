@@ -68,11 +68,10 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      name: attendance_management
-      sha256: "7a3719dcca80be6f9475bea2b1e5226e67fcc60f3c3c55d849aa4f7216512a43"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
+    version: "1.0.2"
   audioplayers:
     dependency: "direct main"
     description:
@@ -347,11 +346,10 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      name: closed_household
-      sha256: b78799c4edb0181594cb1908ebdb2bbb2583865515a36e06979e19ea246e9ee0
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.0-dev.2"
+      path: "../../packages/closed_household"
+      relative: true
+    source: path
+    version: "1.0.1"
   code_builder:
     dependency: transitive
     description:
@@ -435,11 +433,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -499,26 +496,24 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "90e12017934343a197a0c25bec00e5fc28e19cfbf11e522798cc39719609612c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+9"
+      path: "../../packages/digit_components"
+      relative: true
+    source: path
+    version: "1.0.1"
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "5559c3e652a24f3d24f324d275399f6e864ca5671285386516b94fdf9fe8724c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3-dev.3"
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.3"
   digit_dss:
     dependency: "direct main"
     description:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "0.0.1-dev.2"
+    version: "1.0.0"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -529,18 +524,16 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: bc172291df5ffe720e3d471fbc5c542086b8efecbdb6e25ee737381cc47c8e05
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3-dev.1"
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
+    version: "1.0.3"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
     version: "1.0.0"
   dio:
     dependency: "direct main"
@@ -951,6 +944,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.5"
+  forms_engine:
+    dependency: "direct overridden"
+    description:
+      path: "../../packages/forms_engine"
+      relative: true
+    source: path
+    version: "0.0.1"
   formula_parser:
     dependency: transitive
     description:
@@ -1124,11 +1124,10 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: "2be2d09552432266bef3c11f2cd6d12ce83f39339c925d350aeda764c2acfef9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
+    version: "1.0.3+1"
   io:
     dependency: transitive
     description:
@@ -1540,19 +1539,17 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "27f03bb51743cb9b25419fc1089507ee95693270a43233b92194298b1f87779c"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
     version: "1.0.2"
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: c4bc83d994d8006a3f1a3c5a90cd6d4f07873b01c14a16fdc06e83d99946face
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3-dev.5"
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
+    version: "1.0.3"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -2087,5 +2084,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <3.9.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"

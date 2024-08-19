@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:checklist/checklist.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -76,6 +77,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
+  /// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -221,39 +223,41 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-          final attendanceRegisters = await attendanceRemoteRepository.search(
-            AttendanceRegisterSearchModel(
-              staffId: individual.first.id,
-              referenceId: projectStaff.projectId,
-            ),
-          );
-          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
+          if (individual.isNotEmpty) {
+            final attendanceRegisters = await attendanceRemoteRepository.search(
+              AttendanceRegisterSearchModel(
+                staffId: individual.first.id,
+                referenceId: projectStaff.projectId,
+              ),
+            );
+            await attendanceLocalRepository.bulkCreate(attendanceRegisters);
 
-          for (final register in attendanceRegisters) {
-            if (register.attendees != null &&
-                (register.attendees ?? []).isNotEmpty) {
-              try {
-                final individuals = await individualRemoteRepository.search(
-                  IndividualSearchModel(
-                    id: register.attendees!
-                        .map((e) => e.individualId!)
-                        .toList(),
-                  ),
-                );
-                await individualLocalRepository.bulkCreate(individuals);
-                final logs = await attendanceLogRemoteRepository.search(
-                  AttendanceLogSearchModel(
-                    registerId: register.id,
-                  ),
-                );
-                await attendanceLogLocalRepository.bulkCreate(logs);
-              } catch (_) {
-                emit(state.copyWith(
-                  loading: false,
-                  syncError: ProjectSyncErrorType.project,
-                ));
+            for (final register in attendanceRegisters) {
+              if (register.attendees != null &&
+                  (register.attendees ?? []).isNotEmpty) {
+                try {
+                  final individuals = await individualRemoteRepository.search(
+                    IndividualSearchModel(
+                      id: register.attendees!
+                          .map((e) => e.individualId!)
+                          .toList(),
+                    ),
+                  );
+                  await individualLocalRepository.bulkCreate(individuals);
+                  final logs = await attendanceLogRemoteRepository.search(
+                    AttendanceLogSearchModel(
+                      registerId: register.id,
+                    ),
+                  );
+                  await attendanceLogLocalRepository.bulkCreate(logs);
+                } catch (_) {
+                  emit(state.copyWith(
+                    loading: false,
+                    syncError: ProjectSyncErrorType.project,
+                  ));
 
-                return;
+                  return;
+                }
               }
             }
           }
@@ -444,7 +448,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             .toLocal()
             .millisecondsSinceEpoch;
         final endDate = DateTime(DateTime.now().year, DateTime.now().month,
-                DateTime.now().day, 11, 59)
+                DateTime.now().day, 23, 59)
             .toLocal()
             .millisecondsSinceEpoch;
         final serviceRegistry = await isar.serviceRegistrys.where().findAll();
@@ -470,10 +474,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
             ),
           );
           List<String> attendeesIndividualIds = [];
-          registers.map((r) =>
-              r.attendees?.where((a) => a.individualId != null).map((att) {
-                attendeesIndividualIds.add(att.individualId.toString());
-              }));
+          registers.forEach((r) {
+            r.attendees?.where((a) => a.individualId != null).forEach((att) {
+              attendeesIndividualIds.add(att.individualId.toString());
+            });
+          });
           final individuals =
               await individualLocalRepository.search(IndividualSearchModel(
             id: attendeesIndividualIds,

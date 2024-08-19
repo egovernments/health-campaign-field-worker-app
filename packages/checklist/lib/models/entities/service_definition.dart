@@ -4,9 +4,6 @@ import 'package:drift/drift.dart';
 
 import 'package:digit_data_model/data_model.dart';
 
-// import '../../data/local_store/sql_store/sql_store.dart';
-// import 'attributes.dart';
-import '../entities/attributes.dart' as att;
 part 'service_definition.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
@@ -47,7 +44,7 @@ class ServiceDefinitionModel extends EntityModel
   final bool? isActive;
   final bool? nonRecoverableError;
   final int? rowVersion;
-  final List<att.AttributesModel>? attributes;
+  final List<AttributesModel>? attributes;
   final ServiceDefinitionAdditionalFields? additionalFields;
 
   ServiceDefinitionModel({
@@ -64,6 +61,7 @@ class ServiceDefinitionModel extends EntityModel
     super.isDeleted = false,
   }) : super();
 
+  //Helper object to represents the data you want to insert or update in a table
   ServiceDefinitionCompanion get companion {
     return ServiceDefinitionCompanion(
       auditCreatedBy: Value(auditDetails?.createdBy),

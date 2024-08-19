@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:drift/drift.dart';
 
-// typedef ServiceModel = service.ServiceModel;
-// typedef ServiceSearchModel = service.ServiceSearchModel;
-// typedef ServiceAdditionalFields = service.ServiceAdditionalFields;
-// typedef ServiceAttributesModel = service.ServiceAttributesModel;
+import 'package:drift/drift.dart';
+import 'package:checklist/checklist.dart';
+
 
 class ServiceLocalRepository
     extends LocalRepository<ServiceModel, ServiceSearchModel> {
   ServiceLocalRepository(super.sql, super.opLogManager);
 
+  // function to create a Service entity in the local database
   @override
   FutureOr<void> create(
       ServiceModel entity, {
@@ -94,6 +93,7 @@ class ServiceLocalRepository
     });
   }
 
+  //function to search Service entities corresponding to selected service definition from local database
   @override
   FutureOr<List<ServiceModel>> search(
       ServiceSearchModel query,

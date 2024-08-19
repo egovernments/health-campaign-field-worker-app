@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
+// ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'service_definition.dart';
@@ -15,7 +15,6 @@ class ServiceDefinitionSearchModelMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ServiceDefinitionSearchModelMapper._());
-      EntitySearchModelMapper.ensureInitialized().addSubMapper(_instance!);
     }
     return _instance!;
   }
@@ -117,8 +116,10 @@ mixin ServiceDefinitionSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return ServiceDefinitionSearchModelMapper.ensureInitialized()
-        .equalsValue(this as ServiceDefinitionSearchModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ServiceDefinitionSearchModelMapper.ensureInitialized()
+                .isValueEqual(this as ServiceDefinitionSearchModel, other));
   }
 
   @override
@@ -205,11 +206,6 @@ class ServiceDefinitionModelMapper
   static ServiceDefinitionModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = ServiceDefinitionModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      ServiceDefinitionAdditionalFieldsMapper.ensureInitialized();
-      att.AttributesModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
-      ClientAuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -243,9 +239,9 @@ class ServiceDefinitionModelMapper
   static int? _$rowVersion(ServiceDefinitionModel v) => v.rowVersion;
   static const Field<ServiceDefinitionModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static List<att.AttributesModel>? _$attributes(ServiceDefinitionModel v) =>
+  static List<AttributesModel>? _$attributes(ServiceDefinitionModel v) =>
       v.attributes;
-  static const Field<ServiceDefinitionModel, List<att.AttributesModel>>
+  static const Field<ServiceDefinitionModel, List<AttributesModel>>
       _f$attributes = Field('attributes', _$attributes, opt: true);
   static AuditDetails? _$auditDetails(ServiceDefinitionModel v) =>
       v.auditDetails;
@@ -335,8 +331,10 @@ mixin ServiceDefinitionModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return ServiceDefinitionModelMapper.ensureInitialized()
-        .equalsValue(this as ServiceDefinitionModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ServiceDefinitionModelMapper.ensureInitialized()
+                .isValueEqual(this as ServiceDefinitionModel, other));
   }
 
   @override
@@ -361,11 +359,9 @@ abstract class ServiceDefinitionModelCopyWith<
       $R,
       ServiceDefinitionAdditionalFields,
       ServiceDefinitionAdditionalFields>? get additionalFields;
-  ListCopyWith<
-      $R,
-      att.AttributesModel,
-      att.AttributesModelCopyWith<$R, att.AttributesModel,
-          att.AttributesModel>>? get attributes;
+  ListCopyWith<$R, AttributesModel,
+          AttributesModelCopyWith<$R, AttributesModel, AttributesModel>>?
+      get attributes;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -380,7 +376,7 @@ abstract class ServiceDefinitionModelCopyWith<
       bool? isActive,
       bool? nonRecoverableError,
       int? rowVersion,
-      List<att.AttributesModel>? attributes,
+      List<AttributesModel>? attributes,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -403,14 +399,12 @@ class _ServiceDefinitionModelCopyWithImpl<$R, $Out>
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
   @override
-  ListCopyWith<
-      $R,
-      att.AttributesModel,
-      att.AttributesModelCopyWith<$R, att.AttributesModel,
-          att.AttributesModel>>? get attributes => $value.attributes != null
-      ? ListCopyWith($value.attributes!, (v, t) => v.copyWith.$chain(t),
-          (v) => call(attributes: v))
-      : null;
+  ListCopyWith<$R, AttributesModel,
+          AttributesModelCopyWith<$R, AttributesModel, AttributesModel>>?
+      get attributes => $value.attributes != null
+          ? ListCopyWith($value.attributes!, (v, t) => v.copyWith.$chain(t),
+              (v) => call(attributes: v))
+          : null;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
@@ -478,8 +472,6 @@ class ServiceDefinitionAdditionalFieldsMapper
     if (_instance == null) {
       MapperContainer.globals
           .use(_instance = ServiceDefinitionAdditionalFieldsMapper._());
-      AdditionalFieldsMapper.ensureInitialized().addSubMapper(_instance!);
-      AdditionalFieldMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -561,8 +553,11 @@ mixin ServiceDefinitionAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return ServiceDefinitionAdditionalFieldsMapper.ensureInitialized()
-        .equalsValue(this as ServiceDefinitionAdditionalFields, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            ServiceDefinitionAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(
+                    this as ServiceDefinitionAdditionalFields, other));
   }
 
   @override

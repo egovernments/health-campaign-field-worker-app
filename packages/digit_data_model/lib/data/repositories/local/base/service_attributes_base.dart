@@ -1,5 +1,6 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
+import 'package:checklist/checklist.dart';
 
 abstract class ServiceAttributesLocalBaseRepository
     extends LocalRepository<ServiceAttributesModel, ServiceAttributesSearchModel> {
