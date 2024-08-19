@@ -21,7 +21,7 @@ To use this package, add the following dependency to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  complaints: ^0.0.0-dev.1
+  complaints: ^any
 ```
 
 ## Usage

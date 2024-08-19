@@ -29,10 +29,7 @@ class _ComplaintsAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
-
-          // context.router.maybePop();
-          context.router.popUntilRouteWithName('ComplaintsInboxWrapperRoute');
-
+          context.router.maybePop();
         },
         actionLabel:
             localizations.translate(i18.complaints.acknowledgementAction),

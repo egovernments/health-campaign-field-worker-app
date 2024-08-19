@@ -39,13 +39,13 @@ void main() {
   _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
 
 
-  // Add attendance to home file
+  // Add complaints to home file
   _updateHome(homeFilePath);
 
   // Update the sync_down.dart file
   _updateSyncUpFile(syncUpFilePath);
 
-  // Add attendance routes and import to the router file
+  // Add complaints routes and import to the router file
   _addComplaintsRoutesAndImportToRouterFile(routerFilePath);
 
   // Add new case statements to the entity_mapper.dart file
@@ -60,7 +60,7 @@ void main() {
 
   _addComplaintsConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
-  _addAttendanceMapperToUtilsFile(utilsFilePath: utilsFilePath);
+  // _addAttendanceMapperToUtilsFile(utilsFilePath: utilsFilePath);
 
   _formatFiles([
     homeFilePath,
@@ -378,7 +378,7 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
 }
 //script working
 void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
-  // Define the attendance route lines
+  // Define the complaints route lines
   var complaintsRoutes = '''
         AutoRoute(
           page: ComplaintsInboxWrapperRoute.page,
@@ -477,7 +477,7 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
     print('The import statement already exists.');
   }
 
-  // Check if the attendanceRoute module already exists
+  // Check if the complaintsRoute module already exists
   if (!routerFileContent
       .contains('ComplaintsRoute'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the module
@@ -506,7 +506,7 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
     print('The ComplaintsRoute module already exists.');
   }
 
-  // Check if the attendance routes already exist in the file
+  // Check if the complaints routes already exist in the file
   if (!normalizedFileContent
       .contains(complaintsRoutes.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the routes
@@ -534,67 +534,67 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
 }
 
 ///not needed ig
-void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
-  // Define the attendance related lines
-  var attendanceImportStatement = [
-    "import 'package:attendance_management/attendance_management.dart' as attendance_mappers;"
-  ];
-  var attendanceInitializationStatement =
-      "Future(() => attendance_mappers.initializeMappers()),";
-
-  // Check if the utils.dart file exists
-  var utilsFile = File(utilsFilePath);
-
-  // Read the utils.dart file
-  var utilsFileContent = utilsFile.readAsStringSync();
-
-  // Normalize the whitespace in the file content
-  var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
-
-  // Check if the import statement and delegate already exist in the file
-  // If not, add them to the file
-  if (!normalizedFileContent
-      .contains(attendanceImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
-    var libraryIndex = utilsFileContent.indexOf('library app_utils;');
-    if (libraryIndex != -1) {
-      var endOfLibrary = libraryIndex +
-          utilsFileContent.substring(libraryIndex).indexOf(';') +
-          1;
-      utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
-          '\n' +
-          attendanceImportStatement[0] +
-          utilsFileContent.substring(endOfLibrary + 1);
-      print('The import statement was added.');
-    }
-  } else {
-    print('The import statement already exists.');
-  }
-
-  if (!utilsFileContent.contains(attendanceInitializationStatement)) {
-    // Add the attendance related initialization statement to the file
-    var initializeAllMappersIndex =
-    utilsFileContent.indexOf('initializeAllMappers() async {');
-    if (initializeAllMappersIndex == -1) {
-      print(
-          'Error: Could not find a place to insert the attendance initialization statement.');
-      return;
-    }
-    var endOfInitializeAllMappers = initializeAllMappersIndex +
-        utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
-        1;
-    utilsFileContent =
-        utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
-            '\n    ' +
-            attendanceInitializationStatement +
-            utilsFileContent.substring(endOfInitializeAllMappers - 1);
-    print('Attendance initialization statement added to utils.dart');
-  } else {
-    print('The attendance initialization statement already exists.');
-  }
-
-  // Write the updated content back to the utils.dart file
-  utilsFile.writeAsStringSync(utilsFileContent);
-}
+// void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
+//   // Define the attendance related lines
+//   var attendanceImportStatement = [
+//     "import 'package:attendance_management/attendance_management.dart' as attendance_mappers;"
+//   ];
+//   var attendanceInitializationStatement =
+//       "Future(() => attendance_mappers.initializeMappers()),";
+//
+//   // Check if the utils.dart file exists
+//   var utilsFile = File(utilsFilePath);
+//
+//   // Read the utils.dart file
+//   var utilsFileContent = utilsFile.readAsStringSync();
+//
+//   // Normalize the whitespace in the file content
+//   var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
+//
+//   // Check if the import statement and delegate already exist in the file
+//   // If not, add them to the file
+//   if (!normalizedFileContent
+//       .contains(attendanceImportStatement[0].replaceAll(RegExp(r'\s'), ''))) {
+//     var libraryIndex = utilsFileContent.indexOf('library app_utils;');
+//     if (libraryIndex != -1) {
+//       var endOfLibrary = libraryIndex +
+//           utilsFileContent.substring(libraryIndex).indexOf(';') +
+//           1;
+//       utilsFileContent = utilsFileContent.substring(0, endOfLibrary + 1) +
+//           '\n' +
+//           attendanceImportStatement[0] +
+//           utilsFileContent.substring(endOfLibrary + 1);
+//       print('The import statement was added.');
+//     }
+//   } else {
+//     print('The import statement already exists.');
+//   }
+//
+//   if (!utilsFileContent.contains(attendanceInitializationStatement)) {
+//     // Add the attendance related initialization statement to the file
+//     var initializeAllMappersIndex =
+//     utilsFileContent.indexOf('initializeAllMappers() async {');
+//     if (initializeAllMappersIndex == -1) {
+//       print(
+//           'Error: Could not find a place to insert the attendance initialization statement.');
+//       return;
+//     }
+//     var endOfInitializeAllMappers = initializeAllMappersIndex +
+//         utilsFileContent.substring(initializeAllMappersIndex).indexOf(']') +
+//         1;
+//     utilsFileContent =
+//         utilsFileContent.substring(0, endOfInitializeAllMappers - 1) +
+//             '\n    ' +
+//             attendanceInitializationStatement +
+//             utilsFileContent.substring(endOfInitializeAllMappers - 1);
+//     print('Attendance initialization statement added to utils.dart');
+//   } else {
+//     print('The attendance initialization statement already exists.');
+//   }
+//
+//   // Write the updated content back to the utils.dart file
+//   utilsFile.writeAsStringSync(utilsFileContent);
+// }
 
 void _addComplaintsConstantsToConstantsFile(
     {required String constantsFilePath}) {
@@ -603,10 +603,7 @@ void _addComplaintsConstantsToConstantsFile(
     "import 'package:complaints/complaints.dart';",
   ];
 
-//   // Define the attendance configuration
-//   var attendanceConfiguration = '''
-// AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
-//   ''';
+
 
   // Define the local and remote repositories
   var localRepository = [
@@ -635,11 +632,11 @@ if (value == DataModelType.complaints)
   // Read the constants.dart file
   var constantsFileContent = constantsFile.readAsStringSync();
 
-  // Normalize the whitespace in the file content and the attendance configuration
+  // Normalize the whitespace in the file content and the complaints configuration
   var normalizedFileContent =
   constantsFileContent.replaceAll(RegExp(r'\s'), '');
-  // var normalizedAttendanceConfiguration =
-  //     attendanceConfiguration.replaceAll(RegExp(r'\s'), '');
+  // var normalizedComplaintsConfiguration =
+  //     complaintsConfiguration.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statements already exist in the file
   for (var importStatement in importStatements) {
@@ -651,25 +648,7 @@ if (value == DataModelType.complaints)
     }
   }
 
-  // Check if the attendance configuration already exists in the file
-  // If not, add it to the file
-  // if (!normalizedFileContent.contains(normalizedAttendanceConfiguration)) {
-  //   // Find the setInitialDataOfPackages method and add the attendance configuration inside it
-  //   var setInitialDataOfPackagesIndex =
-  //       constantsFileContent.indexOf('void setInitialDataOfPackages() {');
-  //   if (setInitialDataOfPackagesIndex != -1) {
-  //     var endOfSetInitialDataOfPackages = setInitialDataOfPackagesIndex +
-  //         constantsFileContent
-  //             .substring(setInitialDataOfPackagesIndex)
-  //             .indexOf('}') +
-  //         1;
-  //     constantsFileContent =
-  //         constantsFileContent.substring(0, endOfSetInitialDataOfPackages - 1) +
-  //             '\n  $attendanceConfiguration' +
-  //             constantsFileContent.substring(endOfSetInitialDataOfPackages - 1);
-  //     print('The attendance configuration was added.');
-  //   }
-  // }
+ 
 
   // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
   var getLocalRepositoriesIndex =
@@ -718,7 +697,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     "RepositoryProvider<\n LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(\n create: (_) => PgrServiceLocalRepository(\n sql,\n  PgrServiceOpLogManager(isar),\n ),\n ),"
   ];
 
-// Define the remote repositories of attendance
+// Define the remote repositories of complaints
   var remoteRepositoriesOfRegistrationDelivery = [
     "if (value == DataModelType.complaints)\n RepositoryProvider<\n    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(\n  create: (_) => PgrServiceRemoteRepository(\n    dio,\n    actionMap: actions,\n  ),\n)"
   ];
@@ -759,17 +738,17 @@ void _addRepoToNetworkManagerProviderWrapper(
       }
     }
 
-    // Normalize the whitespace in the file content and the remote repository of attendance
+    // Normalize the whitespace in the file content and the remote repository of complaints
     var normalizedFileContent =
     networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
     for (var repositoryProvider in localRepositories) {
-      var normalizedLocalRepositoryOfAttendance =
+      var normalizedLocalRepositoryOfComplaints =
       repositoryProvider.replaceAll(RegExp(r'\s'), '');
 
       if (!normalizedFileContent
-          .contains(normalizedLocalRepositoryOfAttendance)) {
+          .contains(normalizedLocalRepositoryOfComplaints)) {
         // Add the local repository provider to the file
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.replaceFirst(
@@ -780,7 +759,7 @@ void _addRepoToNetworkManagerProviderWrapper(
       }
     }
 
-// Check if the remote repository of attendance already exists in the file
+// Check if the remote repository of complaints already exists in the file
     for (var remoteRepositoryOfRegistrationDelivery
     in remoteRepositoriesOfRegistrationDelivery) {
       var normalizedRemoteRepositoryOfRegistrationDelivery =
@@ -788,7 +767,7 @@ void _addRepoToNetworkManagerProviderWrapper(
 
       if (!normalizedFileContent
           .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
-        // Add the remote repository of attendance to the _getRemoteRepositories method
+        // Add the remote repository of complaints to the _getRemoteRepositories method
         var replacementString =
         networkManagerProviderWrapperFileContent.contains(']);')
             ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
@@ -797,9 +776,9 @@ void _addRepoToNetworkManagerProviderWrapper(
             networkManagerProviderWrapperFileContent.replaceFirst(
                 ']);', replacementString);
         print(
-            'The remote repository of attendance was added: $remoteRepositoryOfRegistrationDelivery');
+            'The remote repository of complaints was added: $remoteRepositoryOfRegistrationDelivery');
       } else {
-        print('The remote repository of attendance already exists.');
+        print('The remote repository of complaints already exists.');
       }
     }
 
