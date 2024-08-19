@@ -16,7 +16,7 @@ void insertCaseCondition(List<String> lines, String caseCondition) {
 // Define the main function
 void main() {
   // Get the current directory path
-  var appDir = "/home/admin1/Downloads/Flutter/HCM_final/";
+  var appDir = Directory.current.parent.path;
 
   // Define the paths for the application root and the files to be modified
   var appRoot = appDir + '/apps/health_campaign_field_worker_app/lib';

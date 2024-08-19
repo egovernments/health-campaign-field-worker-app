@@ -2,7 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart'; //used for mocking dependencies and repositories in bloc test
 import 'package:checklist/checklist.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:checklist/utils/typedefs.dart';
 
 import '../constants/test_constants.dart';

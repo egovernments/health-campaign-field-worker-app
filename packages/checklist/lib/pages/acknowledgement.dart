@@ -7,11 +7,11 @@ import '../widgets/localized.dart';
 
 @RoutePage()
 class AcknowledgementPage extends LocalizedStatefulWidget {
-  bool isDataRecordSuccess;
-  String? label;
-  String? description;
-  Map<String, dynamic>? descriptionTableData;
-  AcknowledgementPage({
+  final bool isDataRecordSuccess;
+  final String? label;
+  final String? description;
+  final Map<String, dynamic>? descriptionTableData;
+  const AcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
@@ -27,8 +27,6 @@ class AcknowledgementPage extends LocalizedStatefulWidget {
 class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       body: DigitAcknowledgement.success(
         description: widget.description ??

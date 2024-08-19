@@ -7,10 +7,9 @@ import 'checklist_router.gm.dart';
 
 @AutoRouterConfig.module()
 class CheckListRoute extends $CheckListRoute {
-  @override
+
   RouteType get defaultRouteType => const RouteType.material();
 
-  @override
   List<AutoRoute> routes = [
     AutoRoute(
         page: ChecklistWrapperRoute.page,

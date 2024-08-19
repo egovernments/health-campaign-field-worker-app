@@ -38,7 +38,9 @@ class _ChecklistPageState extends State<ChecklistPage> {
           BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
             builder: (context, state) {
               return state.map(
-                empty: (value) => const Text('No Checklist'),
+                empty: (value) => Text(localizations.translate(
+                  i18.checklist.noChecklistFound,
+                ),),
                 isloading: (value) => const Center(
                   child: CircularProgressIndicator(),
                 ),
