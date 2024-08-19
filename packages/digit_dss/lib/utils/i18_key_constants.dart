@@ -53,6 +53,8 @@ class Common {
   String get coreCommonDownload => 'CORE_COMMON_DOWNLOAD';
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
+
+  String get noResultsFound => 'NO_RESULTS_FOUND';
 }
 
 class Dashboard {

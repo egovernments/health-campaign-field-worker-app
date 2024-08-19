@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:checklist/checklist.dart';
 import 'package:checklist/utils/extensions/extensions.dart';
+import 'package:digit_components/blocs/location/location.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
@@ -142,6 +143,16 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           }
                         }
 
+                        // Request location from LocationBloc
+                        context.read<LocationBloc>().add(const LocationEvent.load());
+
+                        // Wait for the location to be obtained
+                        final locationState =
+                            context.read<LocationBloc>().state;
+                        double? latitude = locationState.latitude;
+                        double? longitude = locationState.longitude;
+
+
                         final shouldSubmit = await DigitDialog.show(
                           context,
                           options: DigitDialogOptions(
@@ -208,7 +219,19 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                     .text
                                                     .toString()
                                             : null,
-                                  ));
+                                    additionalFields: ServiceAttributesAdditionalFields(
+                                      version: 1,
+                                      fields: [
+                                        AdditionalField(
+                                          'latitude', latitude,
+                                        ),
+                                        AdditionalField(
+                                          'longitude', longitude,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  );
                                 }
 
                                 context.read<ServiceBloc>().add(

@@ -16,41 +16,55 @@ class AttendanceLocalRepository extends LocalRepository<AttendanceRegisterModel,
     String? userId,
   ]) async {
     return retryLocalCallOperation<List<AttendanceRegisterModel>>(() async {
-      final selectQuery = sql.select(sql.attendanceRegister).join([
+      var attendanceRegisterQuery = sql.select(sql.attendanceRegister).join([]);
+
+      if (query.limit != null && query.offSet != null) {
+        attendanceRegisterQuery.limit(query.limit!, offset: query.offSet);
+      }
+
+      attendanceRegisterQuery = attendanceRegisterQuery
+        ..where(buildAnd([
+          if (query.id != null) sql.attendanceRegister.id.equals(query.id!),
+          if (query.referenceId != null)
+            sql.attendanceRegister.referenceId.equals(query.referenceId!),
+        ]));
+
+      final attendanceRegisterResults = await attendanceRegisterQuery.get();
+      final registerIds = attendanceRegisterResults.map((e) {
+        return e.readTable(sql.attendanceRegister).id!;
+      }).toList();
+
+      var selectQuery = sql.select(sql.attendanceRegister).join([
         leftOuterJoin(
           sql.staff,
-          sql.staff.registerId.equalsExp(
-            sql.attendanceRegister.id,
-          ),
+          sql.staff.registerId.equalsExp(sql.attendanceRegister.id),
         ),
         leftOuterJoin(
           sql.attendee,
-          sql.attendee.registerId.equalsExp(
-            sql.attendanceRegister.id,
-          ),
+          sql.attendee.registerId.equalsExp(sql.attendanceRegister.id),
         ),
       ]);
 
-      if (query.limit != null && query.offSet != null) {
-        selectQuery.limit(query.limit!, offset: query.offSet);
-      }
+      selectQuery = selectQuery
+        ..where(sql.attendanceRegister.id.isIn(registerIds));
 
-      final results = await (selectQuery
-            ..where(buildAnd([
-              if (query.id != null)
-                sql.attendanceRegister.id.equals(
-                  query.id!,
-                ),
-              if (query.staffId != null)
-                sql.staff.userId.equals(
-                  query.staffId!,
-                ),
-              if (query.referenceId != null)
-                sql.attendanceRegister.referenceId.equals(
-                  query.referenceId!,
-                ),
-            ])))
-          .get();
+      selectQuery = selectQuery
+        ..where(buildAnd([
+          if (query.id != null)
+            sql.attendanceRegister.id.equals(
+              query.id!,
+            ),
+          if (query.staffId != null)
+            sql.staff.userId.equals(
+              query.staffId!,
+            ),
+          if (query.referenceId != null)
+            sql.attendanceRegister.referenceId.equals(
+              query.referenceId!,
+            ),
+        ]));
+
+      final results = await selectQuery.get();
 
       final registerMap = <String, AttendanceRegisterModel>{};
 
