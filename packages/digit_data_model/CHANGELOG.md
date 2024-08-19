@@ -1,7 +1,16 @@
+## 1.0.3
+
+* Added localization table
+* Updated individual local search results with user uuid mapping
+
+## 1.0.3-dev.4
+
+* Updated individual local search results with user uuid mapping
+  
 ## 1.0.3-dev.3
 
-* Created localization table
-    - Creation of the localization table.
+* Created localization table 
+  - Creation of the localization table.
 
 ## 1.0.3-dev.2
 

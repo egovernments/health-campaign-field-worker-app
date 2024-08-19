@@ -162,9 +162,9 @@ class MemberCard extends StatelessWidget {
                 ),
                 Expanded(
                   child: Text(
-                    years!=null && months != null ?
-                    " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
-                    : "|   --" ,
+                    years != null && months != null
+                        ? " | $years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} $months ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}"
+                        : "|   --",
                     style: theme.textTheme.bodyMedium,
                   ),
                 ),

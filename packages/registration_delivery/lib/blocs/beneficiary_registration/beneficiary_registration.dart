@@ -214,8 +214,6 @@ class BeneficiaryRegistrationBloc
           final household = value.householdModel;
           final address = value.householdModel?.address;
 
-          final dateOfRegistration =
-              value.projectBeneficiaryModel?.dateOfRegistration;
           if (individual == null) {
             throw const InvalidRegistrationStateException(
               'Individual cannot be null',
@@ -431,10 +429,12 @@ class BeneficiaryRegistrationBloc
           );
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
-              beneficiaryClientReferenceId:
-                  beneficiaryType == BeneficiaryType.individual //[TODO: need to check with individual downsync data. Current implementation works only for household. Parking this for IRS]
-                      ? [value.individualModel.first.clientReferenceId]
-                      : [event.household.clientReferenceId],
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
+              beneficiaryClientReferenceId: beneficiaryType ==
+                      BeneficiaryType
+                          .individual ? getIndividualBeneficiaryClientReferenceId(
+                  value.individualModel)
+                  : [event.household.clientReferenceId],
             ),
           );
 
@@ -451,8 +451,8 @@ class BeneficiaryRegistrationBloc
 
             if (task.isNotEmpty) {
               if (task.last.status == Status.closeHousehold.toValue()) {
-                await taskDataRepository.update(
-                    task.last.copyWith(status: Status.notDelivered.toValue()));
+                await taskDataRepository.update(task.last
+                    .copyWith(status: Status.notAdministered.toValue()));
               }
             }
           } else {
@@ -507,8 +507,7 @@ class BeneficiaryRegistrationBloc
           emit(
             BeneficiaryRegistrationPersistedState(
               householdModel: value.householdModel,
-              isEdit : true,
-
+              isEdit: true,
             ),
           );
         } catch (error) {
@@ -559,8 +558,8 @@ class BeneficiaryRegistrationBloc
 
             if (task.isNotEmpty) {
               if (task.last.status == Status.closeHousehold.toValue()) {
-                await taskDataRepository.update(
-                    task.last.copyWith(status: Status.notDelivered.toValue()));
+                await taskDataRepository.update(task.last
+                    .copyWith(status: Status.notAdministered.toValue()));
               }
             }
           }
@@ -669,6 +668,11 @@ class BeneficiaryRegistrationBloc
         }
       },
     );
+  }
+
+  getIndividualBeneficiaryClientReferenceId(
+      List<IndividualModel> individualModel) {
+    return individualModel.map((e) => e.clientReferenceId).toList();
   }
 }
 

@@ -7,8 +7,8 @@ part 'status.mapper.dart';
 enum Status {
   @MappableValue("DELIVERED")
   delivered,
-  @MappableValue("NOT_DELIVERED")
-  notDelivered,
+  @MappableValue("NOT_ADMINISTERED")
+  notAdministered,
   @MappableValue("VISITED")
   visited,
   @MappableValue("NOT_VISITED")
@@ -31,5 +31,4 @@ enum Status {
   notRegistered,
   @MappableValue("CLOSED_HOUSEHOLD")
   closeHousehold,
-  ;
 }

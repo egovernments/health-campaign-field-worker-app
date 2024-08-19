@@ -1,3 +1,13 @@
+## 1.0.3+1
+
+* Updated scanner package
+
+## 1.0.3
+
+* Added missing DeliveryTeam Facility in record stock screen
+* Added missing scanned resources to additional fields during entry
+* Added name of logged user to additional fields during entry
+
 ## 1.0.3-dev.2
 
 * Added name of logged user to additional fields during entry

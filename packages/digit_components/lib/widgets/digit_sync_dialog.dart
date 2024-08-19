@@ -6,8 +6,7 @@ class DigitSyncDialog {
     BuildContext context, {
     Key? key,
     bool barrierDismissible = false,
-    required DigitSyncDialogType type,
-    required String label,
+    required DigitSyncDialogType type, String? label,
     DigitDialogActions? primaryAction,
     DigitDialogActions? secondaryAction,
   }) async {
@@ -28,7 +27,7 @@ class DigitSyncDialog {
     Key? key,
     bool barrierDismissible = false,
     required DigitSyncDialogType type,
-    required String label,
+    String? label,
     DigitDialogActions? primaryAction,
     DigitDialogActions? secondaryAction,
   }) {
@@ -72,7 +71,7 @@ class DigitSyncDialog {
 }
 
 class DigitSyncDialogContent extends StatelessWidget {
-  final String label;
+  final String? label;
   final DigitSyncDialogType type;
 
   final DigitDialogActions? primaryAction;
@@ -80,7 +79,7 @@ class DigitSyncDialogContent extends StatelessWidget {
 
   const DigitSyncDialogContent({
     super.key,
-    required this.label,
+    this.label,
     required this.type,
     this.primaryAction,
     this.secondaryAction,
@@ -115,8 +114,9 @@ class DigitSyncDialogContent extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 32, color: color),
-        const SizedBox(height: kPadding * 2),
-        Text(label, style: labelStyle?.copyWith(color: color)),
+        if(label != null)
+          ...[ const SizedBox(height: kPadding * 2),
+            Text(label!, style: labelStyle?.copyWith(color: color)),]
       ],
     );
   }

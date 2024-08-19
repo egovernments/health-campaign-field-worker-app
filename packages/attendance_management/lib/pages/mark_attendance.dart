@@ -449,40 +449,64 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         DigitSyncDialogType.inProgress);
     Future.delayed(const Duration(seconds: 2), () async {
       DigitComponentsUtils().hideLocationDialog(context);
-      await DigitSyncDialog.show(context,
-          type: DigitSyncDialogType.complete,
-          label: localizations.translate(i18.common.locationCaptured),
-          primaryAction: DigitDialogActions(
-              label: localizations.translate(i18.common.ctaProceed),
-              action: (ctx) async {
-                state.maybeWhen(
-                    orElse: () {},
-                    loaded: (
-                      attendanceSearchModelList,
-                      attendanceCollectionModel,
-                      offsetData,
-                      currentOffset,
-                      countData,
-                      limitData,
-                      flag,
-                    ) async {
-                      if (((attendanceCollectionModel ?? []).any(
-                                  (a) => a.status == -1 || a.status == null) &&
-                              type != EnumValues.draft.toValue()) ||
-                          ((attendanceCollectionModel ?? []).every(
-                                  (a) => a.status == -1 || a.status == null) &&
-                              type == EnumValues.draft.toValue())) {
-                        DigitToast.show(
-                          context,
-                          options: DigitToastOptions(
-                            localizations.translate(
-                                i18.attendance.pleaseMarkAttForIndividuals),
-                            true,
-                            theme,
-                          ),
-                        );
-                      } else {
-                        if (type == EnumValues.draft.toValue()) {
+      state.maybeWhen(
+          orElse: () {},
+          loaded: (
+            attendanceSearchModelList,
+            attendanceCollectionModel,
+            offsetData,
+            currentOffset,
+            countData,
+            limitData,
+            flag,
+          ) async {
+            if (((attendanceCollectionModel ?? [])
+                        .any((a) => a.status == -1 || a.status == null) &&
+                    type != EnumValues.draft.toValue()) ||
+                ((attendanceCollectionModel ?? [])
+                        .every((a) => a.status == -1 || a.status == null) &&
+                    type == EnumValues.draft.toValue())) {
+              DigitToast.show(
+                context,
+                options: DigitToastOptions(
+                  localizations
+                      .translate(i18.attendance.pleaseMarkAttForIndividuals),
+                  true,
+                  theme,
+                ),
+              );
+            } else {
+              if (type == EnumValues.draft.toValue()) {
+                individualLogBloc?.add(SaveAsDraftEvent(
+                  entryTime: widget.entryTime,
+                  exitTime: widget.exitTime,
+                  selectedDate: widget.dateTime,
+                  isSingleSession: widget.session == null,
+                  createOplog: type != EnumValues.draft.toValue(),
+                  latitude: latitude,
+                  longitude: longitude,
+                ));
+                DigitToast.show(
+                  context,
+                  options: DigitToastOptions(
+                    localizations.translate(i18.attendance.draftSavedMessage),
+                    false,
+                    theme,
+                  ),
+                );
+              } else {
+                DigitDialog.show(context,
+                    options: DigitDialogOptions(
+                      titleText: localizations.translate(
+                        i18.attendance.confirmationLabel,
+                      ),
+                      contentText:
+                          '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+                      primaryAction: DigitDialogActions(
+                        label: localizations.translate(
+                          i18.attendance.proceed,
+                        ),
+                        action: (context) {
                           individualLogBloc?.add(SaveAsDraftEvent(
                             entryTime: widget.entryTime,
                             exitTime: widget.exitTime,
@@ -492,54 +516,21 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             latitude: latitude,
                             longitude: longitude,
                           ));
-                          DigitToast.show(
-                            context,
-                            options: DigitToastOptions(
-                              localizations
-                                  .translate(i18.attendance.draftSavedMessage),
-                              false,
-                              theme,
-                            ),
-                          );
-                        } else {
-                          DigitDialog.show(context,
-                              options: DigitDialogOptions(
-                                titleText: localizations.translate(
-                                  i18.attendance.confirmationLabel,
-                                ),
-                                contentText:
-                                    '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
-                                primaryAction: DigitDialogActions(
-                                  label: localizations.translate(
-                                    i18.attendance.proceed,
-                                  ),
-                                  action: (context) {
-                                    individualLogBloc?.add(SaveAsDraftEvent(
-                                      entryTime: widget.entryTime,
-                                      exitTime: widget.exitTime,
-                                      selectedDate: widget.dateTime,
-                                      isSingleSession: widget.session == null,
-                                      createOplog:
-                                          type != EnumValues.draft.toValue(),
-                                      latitude: latitude,
-                                      longitude: longitude,
-                                    ));
-                                    Navigator.of(context).pop();
-                                    navigateToAcknowledgement(localizations);
-                                  },
-                                ),
-                                secondaryAction: DigitDialogActions(
-                                  label: localizations
-                                      .translate(i18.common.coreCommonGoback),
-                                  action: (context) {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ));
-                        }
-                      }
-                    });
-              }));
+                          Navigator.of(context).pop();
+                          navigateToAcknowledgement(localizations);
+                        },
+                      ),
+                      secondaryAction: DigitDialogActions(
+                        label: localizations
+                            .translate(i18.common.coreCommonGoback),
+                        action: (context) {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ));
+              }
+            }
+          });
     });
   }
 

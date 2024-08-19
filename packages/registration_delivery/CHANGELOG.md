@@ -1,3 +1,38 @@
+## 1.0.3
+
+* IRS Campaign changes
+* New HouseDetails screen to capture structure of the house
+* New Summary page for registration and delivery
+* Introduced Filter search which can be configured through MDMS
+* Constructed a global query executor based on project type - Household and Individual
+* Getting precise location on registry and delivery
+* Updated digit_scanner, data_model package
+
+## 1.0.3-dev.11
+
+* Updated search to include project id for individual and household
+
+## 1.0.3-dev.10
+
+* Removed stepper if number of deliveries is greater than 1 
+
+## 1.0.3-dev.9
+
+* Updated localization key 
+* Resolved taskStatus key from task table entity
+
+## 1.0.3-dev.8
+
+* Reverted 1.0.3-dev.7
+
+## 1.0.3-dev.7
+
+* Updated status to taskStatus in Task model
+
+## 1.0.3-dev.6
+
+* Updated delivery status enums
+
 ## 1.0.3-dev.5
 
 * Added count for filter search 

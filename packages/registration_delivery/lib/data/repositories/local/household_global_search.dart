@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
@@ -180,14 +181,20 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         ..where(buildAnd([
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.household.clientReferenceId.isNotNull(),
-          CustomExpression<bool>('''
+          if (params.latitude != null &&
+              params.longitude != null &&
+              params.maxRadius != null)
+            CustomExpression<bool>('''
               (6371393 * acos(
                   cos(${params.latitude! * math.pi / 180.0}) * cos((address.latitude * ${math.pi / 180.0}))
                   * cos((address.longitude * ${math.pi / 180.0}) - ${params.longitude! * math.pi / 180.0})
                   + sin(${params.latitude! * math.pi / 180.0}) * sin((address.latitude * ${math.pi / 180.0}))
               )) <= ${params.maxRadius!}
             '''),
-          sql.address.longitude.isNotNull(),
+          if (params.latitude != null &&
+              params.longitude != null &&
+              params.maxRadius != null)
+            sql.address.longitude.isNotNull(),
           sql.address.latitude.isNotNull(),
         ]))
         ..orderBy([
@@ -205,8 +212,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               mode: OrderingMode.asc,
             ),
         ]);
-      return selectQuery;
     }
+    return selectQuery;
   }
 
   // Function to perform name search based on provided parameters
@@ -253,9 +260,14 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
   // Function to search by name based on provided parameters
   searchByName(
       selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
-    return selectQuery.where(sql.name.givenName.contains(
-      params.nameSearch!,
-    ));
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.name.givenName.contains(
+            params.nameSearch!,
+          ),
+        ]),
+    ]));
   }
 
   filterSearch(selectQuery, GlobalSearchParameters params, String filter,
@@ -275,7 +287,8 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       } else {
-        var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
+        var filterSearchQuery =
+            await filterTasks(selectQuery, filter, sql, params);
 
         selectQuery = filterSearchQuery;
       }
@@ -293,17 +306,19 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
       } else {
-        var filterSearchQuery = await filterTasks(selectQuery, filter, sql);
+        var filterSearchQuery =
+            await filterTasks(selectQuery, filter, sql, params);
         selectQuery = filterSearchQuery;
       }
     }
     return selectQuery;
   }
 
-  filterTasks(selectQuery, String filter, LocalSqlDataStore sql) {
+  filterTasks(selectQuery, String filter, LocalSqlDataStore sql,
+      GlobalSearchParameters params) {
     final statusMap = {
       Status.delivered.name: Status.delivered,
-      Status.notDelivered.name: Status.notDelivered,
+      Status.notAdministered.name: Status.notAdministered,
       Status.visited.name: Status.visited,
       Status.notVisited.name: Status.notVisited,
       Status.beneficiaryRefused.name: Status.beneficiaryRefused,
@@ -316,10 +331,23 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     };
     var applyFilter = filter;
     if (selectQuery == null) {
-      selectQuery = sql.select(sql.task).join([])
+      selectQuery = sql.select(sql.task).join([
+        leftOuterJoin(
+            sql.projectBeneficiary,
+            sql.projectBeneficiary.clientReferenceId
+                .equalsExp(sql.task.projectBeneficiaryClientReferenceId)),
+        leftOuterJoin(
+            sql.household,
+            sql.household.clientReferenceId
+                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId))
+      ])
         ..where(sql.task.status.equals(
           statusMap[applyFilter]!.toValue(),
         ));
+      if (!(params.filter!.contains(Status.notRegistered.name))) {
+        selectQuery
+            .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
+      }
     } else {
       selectQuery = selectQuery.join([
         leftOuterJoin(
@@ -328,6 +356,11 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.projectBeneficiary.clientReferenceId))
       ])
         ..where(sql.task.status.equals(statusMap[filter]!.toValue()));
+
+      if (!(params.filter!.contains(Status.notRegistered.name))) {
+        selectQuery
+            .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
+      }
     }
 
     return selectQuery;

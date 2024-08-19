@@ -264,7 +264,7 @@ void showDownloadDialog(
                   );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.maybePop();
+              context.router.replaceAll([HomeRoute()]);
             }
           },
         ),
@@ -272,7 +272,7 @@ void showDownloadDialog(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.maybePop();
+            context.router.replaceAll([HomeRoute()]);
           },
         ),
       );
@@ -297,7 +297,7 @@ void showDownloadDialog(
             action: (ctx) {
               if (dialogType == DigitProgressDialogType.pendingSync) {
                 Navigator.of(context, rootNavigator: true).pop();
-                context.router.popUntilRouteWithName(HomeRoute.name);
+                context.router.replaceAll([HomeRoute()]);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -324,7 +324,7 @@ void showDownloadDialog(
                   label: model.secondaryButtonLabel ?? '',
                   action: (ctx) {
                     Navigator.of(context, rootNavigator: true).pop();
-                    context.router.popUntilRouteWithName(HomeRoute.name);
+                    context.router.replaceAll([HomeRoute()]);
                   },
                 )
               : null,

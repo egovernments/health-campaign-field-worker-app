@@ -1,8 +1,6 @@
 // create a singleton class for Closed Household package where set data and get data methods are defined
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_data_model/models/entities/boundary.dart';
-import 'package:digit_data_model/utils/utils.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 /// This class contains custom validators for form controls.

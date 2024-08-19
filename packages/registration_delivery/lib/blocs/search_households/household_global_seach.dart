@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../../models/entities/household.dart';
 import '../../models/entities/household_member.dart';
@@ -49,6 +50,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
     final results = await houseHoldGlobalSearchRepository.houseHoldGlobalSearch(
       GlobalSearchParameters(
+          projectId: event.globalSearchParams.projectId,
           isProximityEnabled: event.globalSearchParams.isProximityEnabled,
           latitude: event.globalSearchParams.latitude,
           longitude: event.globalSearchParams.longitude,
@@ -91,6 +93,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
 
@@ -112,7 +115,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         referralsList,
         containers,
       );
-
     } else if (event.globalSearchParams.filter!.isNotEmpty &&
         event.globalSearchParams.filter != null) {
       late List<String> listOfBeneficiaries = [];
@@ -124,6 +126,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               clientReferenceId: listOfBeneficiaries));
 
       late List<String> listOfMembers = [];
@@ -177,7 +180,6 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         referralsList,
         containers,
       );
-
     } else {
       late List<String> houseHoldClientReferenceIds = [];
 
@@ -205,6 +207,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
               beneficiaryClientReferenceId:
                   houseHoldClientReferenceIds.map((e) => e).toList()));
 
@@ -226,14 +229,13 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
         referralsList,
         containers,
       );
-
     }
     emit(state.copyWith(
       householdMembers: containers,
       loading: false,
       searchQuery: event.globalSearchParams.nameSearch,
       offset:
-      event.globalSearchParams.offset! + event.globalSearchParams.limit!,
+          event.globalSearchParams.offset! + event.globalSearchParams.limit!,
       limit: event.globalSearchParams.limit!,
       totalResults: containers.isEmpty ? 0 : totalCount,
     ));

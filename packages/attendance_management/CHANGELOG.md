@@ -1,3 +1,7 @@
+## 1.0.2
+* Capturing location on attendance submit
+* Pagination issue fix to fetch all attendees
+
 ## 0.0.0-dev.1
 
 * Initial release of the package 
@@ -41,3 +45,9 @@
 
 ## 1.0.1+1
 * Get Precise location on Submitting latitude longitude details
+
+## 1.0.2-dev.1
+* Removed captured Location Dialog on attendance submit
+
+## 1.0.2-dev.2
+* Updated registers search to fetch all attendees to avoid limit on overall query

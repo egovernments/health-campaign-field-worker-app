@@ -108,9 +108,11 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                   context.read<DeliverInterventionBloc>().add(
                                         DeliverInterventionSubmitEvent(
                                           task: deliverState.oldTask!,
-                                          isEditing: ( deliverState.tasks ?? [])
-                                              .isNotEmpty && RegistrationDeliverySingleton().beneficiaryType ==
-                                              BeneficiaryType.household
+                                          isEditing: (deliverState.tasks ?? [])
+                                                      .isNotEmpty &&
+                                                  RegistrationDeliverySingleton()
+                                                          .beneficiaryType ==
+                                                      BeneficiaryType.household
                                               ? true
                                               : false,
                                           boundaryModel:
@@ -318,17 +320,16 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                               withDivider: true,
                               items: [
                                 LabelValuePair(
-                                  label: localizations.translate(
-                                      deliverState.oldTask?.status ==
-                                                  Status.administeredFailed
-                                                      .toValue() ||
-                                              deliverState.oldTask?.status ==
-                                                  Status.beneficiaryRefused
-                                                      .toValue()
-                                          ? i18.deliverIntervention
-                                              .reasonForRefusalLabel
-                                          : i18.deliverIntervention
-                                              .typeOfInsecticideUsed),
+                                  label: localizations.translate(deliverState
+                                                  .oldTask?.status ==
+                                              Status.administeredFailed
+                                                  .toValue() ||
+                                          deliverState.oldTask?.status ==
+                                              Status.beneficiaryRefused
+                                                  .toValue()
+                                      ? i18.deliverIntervention
+                                          .reasonForRefusalLabel
+                                      : '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.typeOfResourceUsed}'),
                                   value: deliverState.oldTask?.status ==
                                               Status.administeredFailed
                                                   .toValue() ||

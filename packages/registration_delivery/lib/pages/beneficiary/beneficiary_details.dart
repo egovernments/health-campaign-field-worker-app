@@ -186,6 +186,7 @@ class BeneficiaryDetailsPageState
                                                     context,
                                                     variant,
                                                     state.selectedIndividual,
+                                                    state.householdMemberWrapper.household
                                                   ),
                                                   barrierDismissible: true,
                                                   primaryAction:

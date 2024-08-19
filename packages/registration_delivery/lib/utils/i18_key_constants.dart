@@ -512,8 +512,7 @@ class DeliverIntervention {
   String get resourceDeliveredLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
 
-  String get typeOfInsecticideUsed =>
-      'DELIVER_INTERVENTION_TYPE_OF_INSECTICIDE_USED';
+  String get typeOfResourceUsed => 'TYPE_OF_RESOURCE_USED';
 
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';

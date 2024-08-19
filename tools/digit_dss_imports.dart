@@ -117,8 +117,7 @@ void _updateHome(String homeFilePath) {
   ''';
 
   var showCaseData = '''
-        i18.home.dashboard:
-          homeShowcaseData.dashBoard.showcaseKey,
+        i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
   ''';
 
   var itemsLabel = '''
