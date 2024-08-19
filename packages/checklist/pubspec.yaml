@@ -1,7 +1,7 @@
 name: checklist
 description: "A new Flutter package project."
 version: 0.0.1
-homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/checklist-tanishi/packages/checklist"
+homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/checklist-package"
 repository: "https://github.com/egovernments/health-campaign-field-worker-app"
 
 environment:
