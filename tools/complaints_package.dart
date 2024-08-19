@@ -866,7 +866,7 @@ void _setBoundaryInContextUtilityFile(
     extensionsFile.writeAsStringSync(extensionsFileContent);
     print('Updated the extensions.dart file.');
   }
-
+ 
   // Update the context_utility.dart file
   var contextUtilityFile = File(contextUtilityFilePath);
   var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
@@ -877,5 +877,10 @@ void _setBoundaryInContextUtilityFile(
 
   // Write the updated content back to the context_utility.dart file
   contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+
+
+}
+
+
 
 }
