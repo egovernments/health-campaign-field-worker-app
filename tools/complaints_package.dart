@@ -56,7 +56,7 @@ void main() {
 
   _addRepoToNetworkManagerProviderWrapper(
       networkManagerProviderWrapperFilePath:
-          networkManagerProviderWrapperFilePath);
+      networkManagerProviderWrapperFilePath);
 
   _addComplaintsConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
@@ -484,10 +484,10 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
     var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
     if (moduleInsertionIndex != -1) {
       var endOfModulesIndex =
-          routerFileContent.indexOf(']', moduleInsertionIndex);
+      routerFileContent.indexOf(']', moduleInsertionIndex);
       if (endOfModulesIndex != -1) {
         var modulesEndIndex =
-            routerFileContent.lastIndexOf(']', endOfModulesIndex);
+        routerFileContent.lastIndexOf(']', endOfModulesIndex);
         routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
             ' ComplaintsRoute,' +
             routerFileContent.substring(modulesEndIndex);
@@ -573,7 +573,7 @@ void _addAttendanceMapperToUtilsFile({required String utilsFilePath}) {
   if (!utilsFileContent.contains(attendanceInitializationStatement)) {
     // Add the attendance related initialization statement to the file
     var initializeAllMappersIndex =
-        utilsFileContent.indexOf('initializeAllMappers() async {');
+    utilsFileContent.indexOf('initializeAllMappers() async {');
     if (initializeAllMappersIndex == -1) {
       print(
           'Error: Could not find a place to insert the attendance initialization statement.');
@@ -637,7 +637,7 @@ if (value == DataModelType.complaints)
 
   // Normalize the whitespace in the file content and the attendance configuration
   var normalizedFileContent =
-      constantsFileContent.replaceAll(RegExp(r'\s'), '');
+  constantsFileContent.replaceAll(RegExp(r'\s'), '');
   // var normalizedAttendanceConfiguration =
   //     attendanceConfiguration.replaceAll(RegExp(r'\s'), '');
 
@@ -673,7 +673,7 @@ if (value == DataModelType.complaints)
 
   // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
   var getLocalRepositoriesIndex =
-      constantsFileContent.indexOf('getLocalRepositories(');
+  constantsFileContent.indexOf('getLocalRepositories(');
   if (getLocalRepositoriesIndex != -1) {
     var endOfGetLocalRepositories = getLocalRepositoriesIndex +
         constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
@@ -687,7 +687,7 @@ if (value == DataModelType.complaints)
   }
 
   var getRemoteRepositoriesIndex =
-      constantsFileContent.indexOf('getRemoteRepositories(');
+  constantsFileContent.indexOf('getRemoteRepositories(');
   if (getRemoteRepositoriesIndex != -1) {
     var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
         constantsFileContent
@@ -695,8 +695,8 @@ if (value == DataModelType.complaints)
             .indexOf('addAll(') +
         'addAll('.length;
     var endOfAddAll = constantsFileContent
-            .substring(endOfGetRemoteRepositories)
-            .indexOf(']') +
+        .substring(endOfGetRemoteRepositories)
+        .indexOf(']') +
         endOfGetRemoteRepositories;
     constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
         remoteRepository.join('\n') +
@@ -725,9 +725,9 @@ void _addRepoToNetworkManagerProviderWrapper(
 
 // Read the network_manager_provider_wrapper.dart file
   var networkManagerProviderWrapperFile =
-      File(networkManagerProviderWrapperFilePath);
+  File(networkManagerProviderWrapperFilePath);
   var networkManagerProviderWrapperFileContent =
-      networkManagerProviderWrapperFile.readAsStringSync();
+  networkManagerProviderWrapperFile.readAsStringSync();
 
 // Find the last import statement in the file
   var lastImportIndex = networkManagerProviderWrapperFileContent
@@ -747,7 +747,7 @@ void _addRepoToNetworkManagerProviderWrapper(
         // Add the import statement after the last import
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.substring(
-                    0, endOfLastImport) +
+                0, endOfLastImport) +
                 '\n' +
                 importStatement +
                 networkManagerProviderWrapperFileContent
@@ -761,12 +761,12 @@ void _addRepoToNetworkManagerProviderWrapper(
 
     // Normalize the whitespace in the file content and the remote repository of attendance
     var normalizedFileContent =
-        networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
+    networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
     for (var repositoryProvider in localRepositories) {
       var normalizedLocalRepositoryOfAttendance =
-          repositoryProvider.replaceAll(RegExp(r'\s'), '');
+      repositoryProvider.replaceAll(RegExp(r'\s'), '');
 
       if (!normalizedFileContent
           .contains(normalizedLocalRepositoryOfAttendance)) {
@@ -782,17 +782,17 @@ void _addRepoToNetworkManagerProviderWrapper(
 
 // Check if the remote repository of attendance already exists in the file
     for (var remoteRepositoryOfRegistrationDelivery
-        in remoteRepositoriesOfRegistrationDelivery) {
+    in remoteRepositoriesOfRegistrationDelivery) {
       var normalizedRemoteRepositoryOfRegistrationDelivery =
-          remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
+      remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
 
       if (!normalizedFileContent
           .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
         // Add the remote repository of attendance to the _getRemoteRepositories method
         var replacementString =
-            networkManagerProviderWrapperFileContent.contains(']);')
-                ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
-                : '  $remoteRepositoryOfRegistrationDelivery\n]);';
+        networkManagerProviderWrapperFileContent.contains(']);')
+            ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
+            : '  $remoteRepositoryOfRegistrationDelivery\n]);';
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.replaceFirst(
                 ']);', replacementString);
@@ -819,23 +819,23 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Read the localization delegates file
   var localizationDelegatesFile = File(localizationDelegatesFilePath);
   var localizationDelegatesFileContent =
-      localizationDelegatesFile.readAsStringSync();
+  localizationDelegatesFile.readAsStringSync();
 
   var normalizedFileContent =
-      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
+  localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     localizationDelegatesFileContent =
-        '$importStatement\n$localizationDelegatesFileContent';
+    '$importStatement\n$localizationDelegatesFileContent';
     print('The import statement was added.');
   }
 
   if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
     var lastDelegateIndex =
-        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+    localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
     if (lastDelegateIndex != -1) {
       localizationDelegatesFileContent =
           localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
@@ -866,9 +866,7 @@ void _setBoundaryInContextUtilityFile(
     extensionsFile.writeAsStringSync(extensionsFileContent);
     print('Updated the extensions.dart file.');
   }
-  print(extensionsFileContent);
-  print("inside boundary-extension");
-  print(extensionsFileContent);
+
   // Update the context_utility.dart file
   var contextUtilityFile = File(contextUtilityFilePath);
   var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
@@ -879,9 +877,5 @@ void _setBoundaryInContextUtilityFile(
 
   // Write the updated content back to the context_utility.dart file
   contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
-  print("inside boundary-set boundary");
-  print(contextUtilityFileContent);
-  print('Updated the context_utility.dart file.');
+
 }
-
-
