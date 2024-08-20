@@ -184,13 +184,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           networkManager: ctx.read(),
                         ),
                       ),
-                      BlocProvider(
-                        create: (_) => ServiceBloc(
-                          const ServiceEmptyState(),
-                          serviceDataRepository: context
-                              .repository<ServiceModel, ServiceSearchModel>(),
-                        ),
-                      ),
                     ],
                     child: AutoRouter(
                       navigatorObservers: () => [

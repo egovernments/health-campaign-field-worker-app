@@ -248,6 +248,7 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    ...CheckListRoute().pagesMap,
   };
 }
 

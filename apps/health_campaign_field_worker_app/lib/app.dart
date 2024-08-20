@@ -1,4 +1,3 @@
-
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
@@ -134,9 +133,9 @@ class MainApplicationState extends State<MainApplication>
                                     const LocalizationState(),
                                     LocalizationRepository(
                                       widget.client,
-                                      widget.isar,
+                                      widget.sql,
                                     ),
-                                    widget.isar,
+                                    widget.sql,
                                   )..add(
                                       LocalizationEvent.onLoadLocalization(
                                         module: localizationModulesList
@@ -156,9 +155,9 @@ class MainApplicationState extends State<MainApplication>
                                     const LocalizationState(),
                                     LocalizationRepository(
                                       widget.client,
-                                      widget.isar,
+                                      widget.sql,
                                     ),
-                                    widget.isar,
+                                    widget.sql,
                                   ),
                         ),
                         BlocProvider(
@@ -188,13 +187,7 @@ class MainApplicationState extends State<MainApplication>
                             projectRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectModel,
                                     ProjectSearchModel>>(),
-                            // serviceDefinitionRemoteRepository: ctx.read<
-                            //     RemoteRepository<ServiceDefinitionModel,
-                            //         ServiceDefinitionSearchModel>>(),
                             isar: widget.isar,
-                            // serviceDefinitionLocalRepository: ctx.read<
-                            //     LocalRepository<ServiceDefinitionModel,
-                            //         ServiceDefinitionSearchModel>>(),
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
                                     BoundarySearchModel>>(),
@@ -291,7 +284,7 @@ class MainApplicationState extends State<MainApplication>
                                   })
                                 : [firstLanguage],
                             localizationsDelegates: getAppLocalizationDelegates(
-                              isar: widget.isar,
+                              sql: widget.sql,
                               appConfig: appConfig,
                               selectedLocale: selectedLocale,
                             ),

@@ -31,7 +31,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final Isar isar;
   final MdmsRepository mdmsRepository;
 
-
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
       projectStaffRemoteRepository;
@@ -60,11 +59,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       facilityRemoteRepository;
   final LocalRepository<FacilityModel, FacilitySearchModel>
       facilityLocalRepository;
-
-  // final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-  //     serviceDefinitionRemoteRepository;
-  // final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
-  //     serviceDefinitionLocalRepository;
 
   ///Boundary Resource Repositories
   final RemoteRepository<BoundaryModel, BoundarySearchModel>
@@ -95,11 +89,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     required this.projectFacilityLocalRepository,
     required this.facilityRemoteRepository,
     required this.facilityLocalRepository,
-    // required this.serviceDefinitionRemoteRepository,
     required this.boundaryRemoteRepository,
     required this.boundaryLocalRepository,
     required this.isar,
-    // required this.serviceDefinitionLocalRepository,
     required this.projectResourceLocalRepository,
     required this.projectResourceRemoteRepository,
     required this.productVariantLocalRepository,
@@ -198,7 +190,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
               userUuid: [projectStaff.userId.toString()],
             ),
           );
-  
         }
 
         staffProjects = await projectRemoteRepository.search(
@@ -229,6 +220,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
+      // INFO : Need to add project load functions
+
       try {
         await _loadProjectFacilities(projects);
       } catch (_) {
@@ -246,26 +239,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           state.copyWith(
             loading: false,
             syncError: ProjectSyncErrorType.productVariants,
-          ),
-        );
-      }
-      try {
-        await _loadServiceDefinition(projects);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.serviceDefinitions,
-          ),
-        );
-      }
-      try {
-        await _loadServiceDefinition(projects);
-      } catch (_) {
-        emit(
-          state.copyWith(
-            loading: false,
-            syncError: ProjectSyncErrorType.serviceDefinitions,
           ),
         );
       }
@@ -317,34 +290,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
-  }
-
-  FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
-    final configs = await isar.appConfigurations.where().findAll();
-    final userObject = await localSecureStore.userRequestModel;
-    List<String> codes = [];
-    for (UserRoleModel elements in userObject!.roles) {
-      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
-        for (final project in projects) {
-          codes.add(
-            '${project.name}.$element.${elements.code.snakeCase.toUpperCase()}',
-          );
-        }
-      });
-    }
-
-    // final serviceDefinition = await serviceDefinitionRemoteRepository
-    //     .search(ServiceDefinitionSearchModel(
-    //   tenantId: envConfig.variables.tenantId,
-    //   code: codes,
-    // ));
-    //
-    // for (var element in serviceDefinition) {
-    //   await serviceDefinitionLocalRepository.create(
-    //     element,
-    //     createOpLog: false,
-    //   );
-    // }
   }
 
   FutureOr<void> _loadProductVariants(List<ProjectModel> projects) async {
