@@ -8,7 +8,6 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
-import '../data/local_store/app_shared_preferences.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -56,37 +55,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                       );
                     } else if (!state.loading && isDialogVisible) {
                       isDialogVisible = false;
-                      DigitComponentsUtils()
-                          .hideLocalizationLoadingDialog(context);
-                    }
-                    if (!state.loading && state.retryModule != null) {
-                      DigitSyncDialog.show(
-                        context,
-                        type: DigitSyncDialogType.failed,
-                        label: i18.common.failedToFetch,
-                        primaryAction: DigitDialogActions(
-                          label: AppLocalizations.of(context).translate(
-                            i18.common.coreCommonRetry,
-                          ),
-                          action: (ctx) {
-                            context.read<LocalizationBloc>().add(
-                                LocalizationEvent.onLoadLocalization(
-                                    module: state.retryModule.toString(),
-                                    tenantId: appConfig.tenantId ?? "default",
-                                    locale: AppSharedPreferences()
-                                        .getSelectedLocale
-                                        .toString(),
-                                    path: Constants.localizationApiPath));
-                            Navigator.pop(ctx);
-                          },
-                        ),
-                        secondaryAction: DigitDialogActions(
-                          label: AppLocalizations.of(context).translate(
-                            i18.common.corecommonclose,
-                          ),
-                          action: (ctx) => Navigator.pop(ctx),
-                        ),
-                      );
+                      DigitComponentsUtils().hideLocalizationLoadingDialog(context);
                     }
                   },
                   builder: (context, localizationState) {
@@ -103,52 +72,52 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
                     return localizationModulesList != null
                         ? DigitLanguageCard(
-                            digitRowCardItems: languages.map((e) {
-                              var index = languages.indexOf(e);
+                      digitRowCardItems: languages.map((e) {
+                        var index = languages.indexOf(e);
 
-                              return DigitRowCardModel(
-                                label: e.label,
-                                value: e.value,
-                                isSelected: getSelectedLanguage(
-                                  state,
-                                  index,
-                                ),
-                              );
-                            }).toList(),
-                            onLanguageChange: (value) async {
-                              final info = await PackageInfo.fromPlatform();
-                              Constants().initialize(info.version);
-                              int index = languages.indexWhere(
-                                (ele) =>
-                                    ele.value.toString() ==
-                                    value.value.toString(),
-                              );
+                        return DigitRowCardModel(
+                          label: e.label,
+                          value: e.value,
+                          isSelected: getSelectedLanguage(
+                            state,
+                            index,
+                          ),
+                        );
+                      }).toList(),
+                      onLanguageChange: (value) async {
+                        final info = await PackageInfo.fromPlatform();
+                        Constants().initialize(info.version);
+                        int index = languages.indexWhere(
+                              (ele) =>
+                          ele.value.toString() ==
+                              value.value.toString(),
+                        );
 
-                              context.read<LocalizationBloc>().add(
-                                    LocalizationEvent.onLoadLocalization(
-                                      module: localizationModulesList
-                                          .map((e) => e.name.toString())
-                                          .join(',')
-                                          .toString(),
-                                      tenantId: appConfig.tenantId ?? "default",
-                                      locale: value.value.toString(),
-                                      path: Constants.localizationApiPath,
-                                    ),
-                                  );
+                        context.read<LocalizationBloc>().add(
+                          LocalizationEvent.onLoadLocalization(
+                            module: localizationModulesList
+                                .map((e) => e.name.toString())
+                                .join(',')
+                                .toString(),
+                            tenantId: appConfig.tenantId ?? "default",
+                            locale: value.value.toString(),
+                            path: Constants.localizationApiPath,
+                          ),
+                        );
 
-                              context.read<LocalizationBloc>().add(
-                                    OnUpdateLocalizationIndexEvent(
-                                      index: index,
-                                      code: value.value.toString(),
-                                    ),
-                                  );
-                            },
-                            onLanguageSubmit: () => context.router.push(
-                              LoginRoute(),
-                            ),
-                            languageSubmitLabel: AppLocalizations.of(context)
-                                .translate(i18.common.coreCommonContinue),
-                          )
+                        context.read<LocalizationBloc>().add(
+                          OnUpdateLocalizationIndexEvent(
+                            index: index,
+                            code: value.value.toString(),
+                          ),
+                        );
+                      },
+                      onLanguageSubmit: () => context.router.push(
+                        LoginRoute(),
+                      ),
+                      languageSubmitLabel: AppLocalizations.of(context)
+                          .translate(i18.common.coreCommonContinue),
+                    )
                         : const Offstage();
                   },
                 );
