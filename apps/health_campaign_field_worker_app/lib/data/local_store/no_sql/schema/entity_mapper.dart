@@ -1,3 +1,4 @@
+import 'package:complaints/complaints.dart';
 import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_listener.dart';
 import 'package:digit_data_model/data_model.dart';
 
@@ -24,6 +25,10 @@ class EntityMapper extends EntityMapperListener {
 
       case "service":
         final entity = ServiceModelMapper.fromJson(entityString);
+        return entity;
+
+      case "complaints":
+        final entity = PgrServiceModelMapper.fromJson(entityString);
         return entity;
 
       default:

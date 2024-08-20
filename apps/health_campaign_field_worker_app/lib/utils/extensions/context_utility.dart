@@ -101,6 +101,7 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     // INFO: Set Boundary for packages
+    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
 
     return selectedBoundary;
   }

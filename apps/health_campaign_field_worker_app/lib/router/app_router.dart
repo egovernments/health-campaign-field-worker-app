@@ -1,3 +1,5 @@
+import 'package:complaints/router/complaints_router.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -28,7 +30,7 @@ part 'app_router.gr.dart';
 @AutoRouterConfig(
   // INFO : Need to add the router modules here
   modules: [
-    
+    ComplaintsRoute,
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -62,7 +64,60 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
+        AutoRoute(
+          page: ComplaintsInboxWrapperRoute.page,
+          path: 'complaints-inbox',
+          children: [
+            AutoRoute(
+              page: ComplaintsInboxRoute.page,
+              path: 'complaints-inbox-items',
+              initial: true,
+            ),
+            AutoRoute(
+              page: ComplaintsInboxFilterRoute.page,
+              path: 'complaints-inbox-filter',
+            ),
+            AutoRoute(
+              page: ComplaintsInboxSearchRoute.page,
+              path: 'complaints-inbox-search',
+            ),
+            AutoRoute(
+              page: ComplaintsInboxSortRoute.page,
+              path: 'complaints-inbox-sort',
+            ),
+            AutoRoute(
+              page: ComplaintsDetailsViewRoute.page,
+              path: 'complaints-inbox-view-details',
+            ),
+          ],
+        ),
 
+        /// Complaints registration
+        AutoRoute(
+          page: ComplaintsRegistrationWrapperRoute.page,
+          path: 'complaints-registration',
+          children: [
+            AutoRoute(
+              page: ComplaintTypeRoute.page,
+              path: 'complaints-type',
+              initial: true,
+            ),
+            AutoRoute(
+              page: ComplaintsLocationRoute.page,
+              path: 'complaints-location',
+            ),
+            AutoRoute(
+              page: ComplaintsDetailsRoute.page,
+              path: 'complaints-details',
+            ),
+          ],
+        ),
+
+        /// Complaints Acknowledgemnet
+        AutoRoute(
+          page: ComplaintsAcknowledgementRoute.page,
+          path: 'complaints-acknowledgement',
+        ),
 
         AutoRoute(
             page: ChecklistWrapperRoute.page,
@@ -96,7 +151,6 @@ class AppRouter extends _$AppRouter {
           page: BoundarySelectionRoute.page,
           path: 'select-boundary',
         ),
-
       ],
     )
   ];

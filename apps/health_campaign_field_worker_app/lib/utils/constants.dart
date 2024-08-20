@@ -1,3 +1,4 @@
+import 'package:complaints/complaints.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
@@ -99,7 +100,10 @@ class Constants {
         sql,
         BoundaryOpLogManager(isar),
       ),
-  
+      PgrServiceLocalRepository(
+        sql,
+        PgrServiceOpLogManager(isar),
+      ),
     ];
   }
 
@@ -131,7 +135,6 @@ class Constants {
       remoteRepositories.addAll([
         if (value == DataModelType.facility)
           FacilityRemoteRepository(dio, actionMap: actions),
-
         if (value == DataModelType.productVariant)
           ProductVariantRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.boundary)
@@ -152,6 +155,8 @@ class Constants {
           IndividualRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.downsync)
           DownsyncRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.complaints)
+          PgrServiceRemoteRepository(dio, actionMap: actions),
       ]);
     }
 

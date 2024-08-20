@@ -1,7 +1,7 @@
 library app_utils;
 
-// import 'package:attendance_management/attendance_management.dart'
-//     as attendance_mappers;
+
+import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'dart:async';
 import 'dart:io';
@@ -17,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -29,43 +30,52 @@ import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'extensions/extensions.dart';
 
+
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
 
+
 class CustomValidator {
   /// Validates that control's value must be `true`
   static Map<String, dynamic>? requiredMin(
-    AbstractControl<dynamic> control,
-  ) {
+      AbstractControl<dynamic> control,
+      ) {
     return control.value == null ||
-            control.value.toString().length >= 2 ||
-            control.value.toString().trim().isEmpty
+        control.value.toString().length >= 2 ||
+        control.value.toString().trim().isEmpty
         ? null
         : {'required': true};
   }
 
+
   static Map<String, dynamic>? validMobileNumber(
-    AbstractControl<dynamic> control,
-  ) {
+      AbstractControl<dynamic> control,
+      ) {
     if (control.value == null || control.value.toString().isEmpty) {
       return null;
     }
 
+
     const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
+
 
     if (RegExp(pattern).hasMatch(control.value.toString())) return null;
 
+
     if (control.value.toString().length < 10) return {'mobileNumber': true};
+
 
     return {'mobileNumber': true};
   }
 }
 
+
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);
 }
+
 
 performBackgroundService({
   BuildContext? context,
@@ -74,10 +84,12 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
+
   final isOnline = connectivityResult == ConnectivityResult.wifi ||
       connectivityResult == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
+
 
   if (stopService) {
     if (isRunning) {
@@ -111,33 +123,40 @@ performBackgroundService({
   }
 }
 
+
 String maskString(String input) {
   // Define the character to use for masking (e.g., "*")
   const maskingChar = '*';
 
+
   // Create a new string with the same length as the input string
   final maskedString =
-      List<String>.generate(input.length, (index) => maskingChar).join();
+  List<String>.generate(input.length, (index) => maskingChar).join();
+
 
   return maskedString;
 }
+
 
 List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
   return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
 }
 
+
 Timer makePeriodicTimer(
-  Duration duration,
-  void Function(Timer timer) callback, {
-  bool fireNow = false,
-}) {
+    Duration duration,
+    void Function(Timer timer) callback, {
+      bool fireNow = false,
+    }) {
   var timer = Timer.periodic(duration, callback);
   if (fireNow) {
     callback(timer);
   }
 
+
   return timer;
 }
+
 
 final requestData = {
   "data": [
@@ -197,6 +216,7 @@ final requestData = {
   ],
 };
 
+
 Future<bool> getIsConnected() async {
   try {
     final result = await InternetAddress.lookup('example.com');
@@ -204,22 +224,25 @@ Future<bool> getIsConnected() async {
       return true;
     }
 
+
     return false;
   } on SocketException catch (_) {
     return false;
   }
 }
 
+
 void showDownloadDialog(
-  BuildContext context, {
-  required DownloadBeneficiary model,
-  required DigitProgressDialogType dialogType,
-  bool isPop = true,
-  StreamController<double>? downloadProgressController,
-}) {
+    BuildContext context, {
+      required DownloadBeneficiary model,
+      required DigitProgressDialogType dialogType,
+      bool isPop = true,
+      StreamController<double>? downloadProgressController,
+    }) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
+
 
   switch (dialogType) {
     case DigitProgressDialogType.failed:
@@ -235,14 +258,14 @@ void showDownloadDialog(
                 dialogType == DigitProgressDialogType.checkFailed) {
               Navigator.of(context, rootNavigator: true).pop();
               context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncGetBatchSizeEvent(
-                      appConfiguration: [model.appConfiguartion!],
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
-                      pendingSyncCount: model.pendingSyncCount ?? 0,
-                      boundaryName: model.boundaryName,
-                    ),
-                  );
+                DownSyncGetBatchSizeEvent(
+                  appConfiguration: [model.appConfiguartion!],
+                  projectId: context.projectId,
+                  boundaryCode: model.boundary,
+                  pendingSyncCount: model.pendingSyncCount ?? 0,
+                  boundaryName: model.boundaryName,
+                ),
+              );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.pop();
@@ -282,32 +305,32 @@ void showDownloadDialog(
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
-                        DownSyncBeneficiaryEvent(
-                          projectId: context.projectId,
-                          boundaryCode: model.boundary,
-                          // Batch Size need to be defined based on Internet speed.
-                          batchSize: model.batchSize ?? 1,
-                          initialServerCount: model.totalCount ?? 0,
-                          boundaryName: model.boundaryName,
-                        ),
-                      );
+                    DownSyncBeneficiaryEvent(
+                      projectId: context.projectId,
+                      boundaryCode: model.boundary,
+                      // Batch Size need to be defined based on Internet speed.
+                      batchSize: model.batchSize ?? 1,
+                      initialServerCount: model.totalCount ?? 0,
+                      boundaryName: model.boundaryName,
+                    ),
+                  );
                 } else {
                   Navigator.of(context, rootNavigator: true).pop();
                   context.read<BeneficiaryDownSyncBloc>().add(
-                        const DownSyncResetStateEvent(),
-                      );
+                    const DownSyncResetStateEvent(),
+                  );
                 }
               }
             },
           ),
           secondaryAction: model.secondaryButtonLabel != null
               ? DigitDialogActions(
-                  label: model.secondaryButtonLabel ?? '',
-                  action: (ctx) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.popUntilRouteWithName(HomeRoute.name);
-                  },
-                )
+            label: model.secondaryButtonLabel ?? '',
+            action: (ctx) {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.popUntilRouteWithName(HomeRoute.name);
+            },
+          )
               : null,
         ),
       );
@@ -322,8 +345,8 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                        '',
+                '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
+                    '',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -339,23 +362,27 @@ void showDownloadDialog(
   }
 }
 
+
 //Function to read the localizations from ISAR,
 getLocalizationString(Isar isar, String selectedLocale) async {
   List<dynamic> localizationValues = [];
 
+
   final List<LocalizationWrapper> localizationList =
-      await isar.localizationWrappers
-          .filter()
-          .localeEqualTo(
-            selectedLocale.toString(),
-          )
-          .findAll();
+  await isar.localizationWrappers
+      .filter()
+      .localeEqualTo(
+    selectedLocale.toString(),
+  )
+      .findAll();
   if (localizationList.isNotEmpty) {
     localizationValues.addAll(localizationList.first.localization!);
   }
 
+
   return localizationValues;
 }
+
 
 getSelectedLanguage(AppInitialized state, int index) {
   if (AppSharedPreferences().getSelectedLocale == null) {
@@ -366,16 +393,20 @@ getSelectedLanguage(AppInitialized state, int index) {
   final isSelected =
       state.appConfiguration.languages![index].value == selectedLanguage;
 
+
   return isSelected;
 }
+
 
 initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
+    Future(() => complaints_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
+
 
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
@@ -399,5 +430,59 @@ int getSyncCount(List<OpLog> oplogs) {
     }
   }).length;
 
+
   return count;
+}
+
+
+class LocalizationParams {
+  static final LocalizationParams _singleton = LocalizationParams._internal();
+
+
+  factory LocalizationParams() {
+    return _singleton;
+  }
+
+
+  LocalizationParams._internal();
+
+
+  List<String>? _code;
+  String? _module;
+  Locale? _locale;
+  bool? _exclude = true;
+
+
+  void setCode(List<String>? code) {
+    _code = code;
+  }
+
+
+  void setModule(String? module, bool? exclude) {
+    _module = module;
+    _exclude = exclude;
+  }
+
+
+  void setLocale(Locale locale) {
+    _locale = locale;
+  }
+
+
+  void clear() {
+    _code = null;
+    _module = null;
+  }
+
+
+  List<String>? get code => _code;
+
+
+  String? get module => _module;
+
+
+  Locale? get locale => _locale;
+
+
+  bool? get exclude => _exclude;
 }

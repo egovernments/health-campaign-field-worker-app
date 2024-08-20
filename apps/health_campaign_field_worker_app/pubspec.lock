@@ -421,11 +421,12 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "packages/dart_mappable_builder"
+      ref: PGR-Package-Yash
+      resolved-ref: "0f3eb6cd27a27415c95b4071575194896dd2e142"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -493,17 +494,20 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "0e1ec8e4d2776fcc4a8118ac85043b8876466ec7399c14880f3d585ad3586ef6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
+      path: "packages/digit_data_model"
+      ref: PGR-Package-Yash
+      resolved-ref: "99feae716580b562ee04ff9f925a7a646e2344bf"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
+    version: "1.0.3"
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_firebase_services"
-      relative: true
-    source: path
+      path: "packages/digit_firebase_services"
+      ref: PGR-Package-Yash
+      resolved-ref: "0f3eb6cd27a27415c95b4071575194896dd2e142"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "0.0.1"
   digit_showcase:
     dependency: "direct main"

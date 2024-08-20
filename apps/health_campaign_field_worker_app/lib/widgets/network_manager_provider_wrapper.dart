@@ -18,6 +18,7 @@ import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../models/downsync/downsync.dart';
+import 'package:complaints/complaints.dart';
 
 class NetworkManagerProviderWrapper extends StatelessWidget {
   final LocalSqlDataStore sql;
@@ -176,6 +177,13 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       ),
 
       // INFO Need to add packages here
+      RepositoryProvider<
+          LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(
+        create: (_) => PgrServiceLocalRepository(
+          sql,
+          PgrServiceOpLogManager(isar),
+        ),
+      ),
     ];
   }
 
@@ -314,6 +322,14 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
             ),
           ),
 // INFO Need to add the packages here
+        if (value == DataModelType.complaints)
+          RepositoryProvider<
+              RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(
+            create: (_) => PgrServiceRemoteRepository(
+              dio,
+              actionMap: actions,
+            ),
+          ),
       ]);
     }
 
