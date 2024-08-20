@@ -56,6 +56,7 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
+              enableFixedButton: true,
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                 padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),

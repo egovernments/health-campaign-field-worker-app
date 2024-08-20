@@ -23,6 +23,7 @@ class ComplaintsConstants{
     street: "XYZ",
     city: "ABC",
   );
+  static final String createdByUserId = "1234567";
 
   static var mockPgrServiceModel = PgrServiceModel(
       clientReferenceId: '123',
