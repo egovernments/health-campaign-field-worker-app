@@ -361,7 +361,7 @@ packages:
     source: hosted
     version: "1.18.0"
   complaints:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "../../packages/complaints"
       relative: true
