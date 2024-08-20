@@ -63,7 +63,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                       DigitSyncDialog.show(
                         context,
                         type: DigitSyncDialogType.failed,
-                        label: 'Failed to load localizations',
+                        label: i18.common.failedToFetch,
                         primaryAction: DigitDialogActions(
                           label: AppLocalizations.of(context).translate(
                             i18.common.coreCommonRetry,

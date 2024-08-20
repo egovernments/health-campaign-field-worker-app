@@ -63,6 +63,7 @@ class Common {
 
   String get coreCommonRetry => 'CORE_COMMON_RETRY';
 
+  String get failedToFetch => 'CORE_COMMON_FAILED_TO_FETCH';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 
