@@ -42,12 +42,6 @@ dependencies:
   formula_parser: ^2.0.1
   registration_delivery: ^1.0.3
 
-
-dependency_overrides:
-  dart_mappable_builder:
-    path: ../../packages/dart_mappable_builder
-
-
 dev_dependencies:
   flutter_test:
     sdk: flutter

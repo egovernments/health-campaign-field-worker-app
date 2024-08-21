@@ -1,6 +1,5 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:inventory_management/inventory_management.dart';
-import 'package:checklist/checklist.dart';
 
 typedef FacilityDataRepository
     = DataRepository<FacilityModel, FacilitySearchModel>;
@@ -22,10 +21,6 @@ typedef ProjectResourceDataRepository
     = DataRepository<ProjectResourceModel, ProjectResourceSearchModel>;
 typedef ProjectStaffDataRepository
     = DataRepository<ProjectStaffModel, ProjectStaffSearchModel>;
-typedef ServiceDefinitionDataRepository
-    = DataRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>;
-typedef ServiceDataRepository
-    = DataRepository<ServiceModel, ServiceSearchModel>;
 typedef PgrServiceDataRepository
     = DataRepository<PgrServiceModel, PgrServiceSearchModel>;
 

@@ -21,7 +21,7 @@ class ServiceDefinitionBloc
     on(_handleSelect);
   }
 
-  //this function is called to fetch all the service definitions from the table for the selected project
+  // This function is called to fetch all the service definitions from the table for the selected project
   FutureOr<void> _handleFetch(
       ServiceDefinitionFetchEvent event,
       ServiceDefinitionEmitter emit,

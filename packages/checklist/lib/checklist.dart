@@ -20,6 +20,5 @@ export 'utils/utils.dart';
 export 'blocs/service.dart';
 export 'blocs/service_definition.dart';
 export 'blocs/app_localization.dart';
-// export 'utils/typedefs.dart';
 
 
