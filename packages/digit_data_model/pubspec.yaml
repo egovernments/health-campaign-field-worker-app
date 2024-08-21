@@ -26,8 +26,6 @@ dependencies:
   dio: ^5.1.2
   mocktail: ^1.0.2
   collection: ^1.16.0
-  checklist: ^0.0.1
-
 
 dev_dependencies:
   flutter_test:

@@ -49,10 +49,6 @@ dev_dependencies:
   dart_mappable_builder: ^4.2.0
   auto_route_generator: ^7.3.2
 
-dependency_overrides:
-  dart_mappable_builder:
-    path: ../../packages/dart_mappable_builder
-
 flutter:
   assets:
     - assets/images/

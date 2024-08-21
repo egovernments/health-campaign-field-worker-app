@@ -290,6 +290,9 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
+
+      // INFO : Need to add project load functions
+
       try {
         await _loadProjectFacilities(projects);
       } catch (_) {
