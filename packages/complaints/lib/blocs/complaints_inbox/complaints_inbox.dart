@@ -49,7 +49,6 @@ class ComplaintsInboxBloc
     if (pgrRepository is PgrServiceLocalRepository) {
       complaints = await (pgrRepository as PgrServiceLocalRepository).search(
         PgrServiceSearchModel(
-          // tenantId: envConfig.variables.tenantId,
             tenantId: ComplaintsSingleton().tenantId
         ),
         event.createdByUserId,
@@ -57,7 +56,6 @@ class ComplaintsInboxBloc
     } else if (pgrRepository is PgrServiceRemoteRepository) {
       complaints = await pgrRepository.search(
         PgrServiceSearchModel(
-          // tenantId: envConfig.variables.tenantId,
             tenantId: ComplaintsSingleton().tenantId
         ),
       );

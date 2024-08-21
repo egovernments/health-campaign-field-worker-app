@@ -34,8 +34,6 @@ void main(){
     blocTest<ComplaintsInboxBloc, ComplaintInboxState>(
         'emits [ComplaintsInboxState with isFiltered false] when ComplaintInboxLoadComplaintEvent is added',
         build: (){
-          // when(()=> pgrServiceDataRepository.search(any()))
-          //     .thenAnswer((_) async => [ComplaintsConstants.mockPgrServiceModel]);
           return complaintsInboxBloc;
         },
         act: (bloc){

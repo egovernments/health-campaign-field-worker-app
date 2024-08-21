@@ -22,7 +22,6 @@ class BoundarySelectionWrapper extends StatelessWidget {
         listener: (context, state) {
           if (state.hasSubmitted) {
             context.navigateTo(
-              // HomeRoute(),
               const ComplaintsInboxWrapperRoute(),
               onFailure: (failure) {
                 AppLogger.instance.error(

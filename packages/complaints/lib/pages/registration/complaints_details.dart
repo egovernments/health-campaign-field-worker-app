@@ -71,7 +71,6 @@ class ComplaintsDetailsPageState
             listener: (context, complaintState) {
               complaintState.mapOrNull(
                 persisted: (value) {
-
                   router.replace(ComplaintsAcknowledgementRoute());
                 },
               );

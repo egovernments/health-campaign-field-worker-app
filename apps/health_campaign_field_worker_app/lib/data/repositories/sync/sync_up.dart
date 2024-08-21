@@ -183,7 +183,7 @@ class PerformSyncUp {
               operationGroupedEntity.key,
             );
             for (final syncedEntity in sublist) {
-              // if (syncedEntity.type == DataModelType.complaints) continue;
+              if (syncedEntity.type == DataModelType.complaints) continue;
               await local.markSyncedUp(
                 entry: syncedEntity,
                 nonRecoverableError: syncedEntity.nonRecoverableError,

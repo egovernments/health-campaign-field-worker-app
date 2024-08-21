@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
+// ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'pgr_complaints_response.dart';
@@ -16,8 +16,6 @@ class PgrServiceCreateResponseModelMapper
       MapperContainer.globals
           .use(_instance = PgrServiceCreateResponseModelMapper._());
       EntityModelMapper.ensureInitialized();
-      PgrComplaintResponseModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -100,8 +98,10 @@ mixin PgrServiceCreateResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return PgrServiceCreateResponseModelMapper.ensureInitialized()
-        .equalsValue(this as PgrServiceCreateResponseModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PgrServiceCreateResponseModelMapper.ensureInitialized()
+                .isValueEqual(this as PgrServiceCreateResponseModel, other));
   }
 
   @override
@@ -196,9 +196,6 @@ class PgrComplaintResponseModelMapper
       MapperContainer.globals
           .use(_instance = PgrComplaintResponseModelMapper._());
       EntityModelMapper.ensureInitialized();
-      PgrServiceResponseModelMapper.ensureInitialized();
-      PgrWorkflowModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -284,8 +281,10 @@ mixin PgrComplaintResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return PgrComplaintResponseModelMapper.ensureInitialized()
-        .equalsValue(this as PgrComplaintResponseModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PgrComplaintResponseModelMapper.ensureInitialized()
+                .isValueEqual(this as PgrComplaintResponseModel, other));
   }
 
   @override
@@ -378,9 +377,6 @@ class PgrServiceResponseModelMapper
       MapperContainer.globals
           .use(_instance = PgrServiceResponseModelMapper._());
       EntityModelMapper.ensureInitialized();
-      PgrServiceApplicationStatusMapper.ensureInitialized();
-      PgrComplainantResponseModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -511,8 +507,10 @@ mixin PgrServiceResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return PgrServiceResponseModelMapper.ensureInitialized()
-        .equalsValue(this as PgrServiceResponseModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PgrServiceResponseModelMapper.ensureInitialized()
+                .isValueEqual(this as PgrServiceResponseModel, other));
   }
 
   @override
@@ -636,8 +634,6 @@ class PgrComplainantResponseModelMapper
       MapperContainer.globals
           .use(_instance = PgrComplainantResponseModelMapper._());
       EntityModelMapper.ensureInitialized();
-      PgrRolesModelMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -767,8 +763,10 @@ mixin PgrComplainantResponseModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return PgrComplainantResponseModelMapper.ensureInitialized()
-        .equalsValue(this as PgrComplainantResponseModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PgrComplainantResponseModelMapper.ensureInitialized()
+                .isValueEqual(this as PgrComplainantResponseModel, other));
   }
 
   @override

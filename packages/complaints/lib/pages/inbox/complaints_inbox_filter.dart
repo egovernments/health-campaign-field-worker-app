@@ -170,7 +170,6 @@ class ComplaintsInboxFilterPageState
                               if (!formGroup.valid) return;
 
                               final bloc = context.read<ComplaintsInboxBloc>();
-                              // final userBloc = context.read<AuthBloc>();
 
                               final assignedTo = formGroup
                                   .control(_complaintAssignmentType)
@@ -187,17 +186,6 @@ class ComplaintsInboxFilterPageState
                               bloc.add(
                                 ComplaintInboxFilterComplaintsEvent(
                                   complaintAssignedTo: assignedTo,
-                                  // currentUserName: userBloc.state.whenOrNull(
-                                  //   authenticated: (
-                                  //     accessToken,
-                                  //     refreshToken,
-                                  //     userModel,
-                                  //     actions,
-                                  //     individualId,
-                                  //   ) {
-                                  //     return userModel.name;
-                                  //   },
-                                  // ),
                                   currentUserName:
                                       ComplaintsSingleton().loggedInUserName,
                                   complaintTypeCode: complaintType,

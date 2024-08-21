@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
+// ignore_for_file: unused_element, unnecessary_cast
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'pgr_address.dart';
@@ -13,10 +13,6 @@ class PgrAddressModelMapper extends SubClassMapperBase<PgrAddressModel> {
   static PgrAddressModelMapper ensureInitialized() {
     if (_instance == null) {
       MapperContainer.globals.use(_instance = PgrAddressModelMapper._());
-      EntityModelMapper.ensureInitialized().addSubMapper(_instance!);
-      LocalityModelMapper.ensureInitialized();
-      GeoLocationMapper.ensureInitialized();
-      AuditDetailsMapper.ensureInitialized();
     }
     return _instance!;
   }
@@ -185,8 +181,10 @@ mixin PgrAddressModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return PgrAddressModelMapper.ensureInitialized()
-        .equalsValue(this as PgrAddressModel, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            PgrAddressModelMapper.ensureInitialized()
+                .isValueEqual(this as PgrAddressModel, other));
   }
 
   @override
@@ -410,8 +408,10 @@ mixin GeoLocationMappable {
 
   @override
   bool operator ==(Object other) {
-    return GeoLocationMapper.ensureInitialized()
-        .equalsValue(this as GeoLocation, other);
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            GeoLocationMapper.ensureInitialized()
+                .isValueEqual(this as GeoLocation, other));
   }
 
   @override

@@ -340,9 +340,10 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      path: "../../packages/closed_household"
-      relative: true
-    source: path
+      name: closed_household
+      sha256: "7d3ae93e5702df79b1fb88720bba30fe4b8a603dd2b128a53bbf77d0a8a1dba4"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.1"
   code_builder:
     dependency: transitive
@@ -497,9 +498,10 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_components"
-      relative: true
-    source: path
+      name: digit_components
+      sha256: "01320d4c72829045e789d1a56e23ff2bd85dad6a1831d27bd507a1acaceae17e"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.1"
   digit_data_model:
     dependency: "direct main"
@@ -526,16 +528,18 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: "1f1fe3ca8f038a3c93cd52491cf72c0b0e45c88b14580243d47eac59672e67ea"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   dio:
     dependency: "direct main"
