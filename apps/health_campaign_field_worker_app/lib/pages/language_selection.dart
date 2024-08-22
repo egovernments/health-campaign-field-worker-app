@@ -9,6 +9,7 @@ import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/app_localization.dart';
 import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
 import '../utils/i18_key_constants.dart' as i18;
@@ -24,6 +25,12 @@ class LanguageSelectionPage extends StatefulWidget {
 
 class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
   bool isDialogVisible = false;
+
+  @override
+  void dispose() {
+    isDialogVisible = false;
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +66,9 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                       DigitComponentsUtils()
                           .hideLocalizationLoadingDialog(context);
                     }
-                    if (!state.loading && state.retryModule != null) {
+                    if (!state.loading &&
+                        !isDialogVisible &&
+                        state.retryModule != null) {
                       DigitSyncDialog.show(
                         context,
                         type: DigitSyncDialogType.failed,
@@ -123,25 +132,12 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                                     ele.value.toString() ==
                                     value.value.toString(),
                               );
-
-                              context.read<LocalizationBloc>().add(
-                                    LocalizationEvent.onLoadLocalization(
-                                      module: localizationModulesList
-                                          .map((e) => e.name.toString())
-                                          .join(',')
-                                          .toString(),
-                                      tenantId: appConfig.tenantId ?? "default",
-                                      locale: value.value.toString(),
-                                      path: Constants.localizationApiPath,
-                                    ),
-                                  );
-
-                              context.read<LocalizationBloc>().add(
-                                    OnUpdateLocalizationIndexEvent(
-                                      index: index,
-                                      code: value.value.toString(),
-                                    ),
-                                  );
+                              triggerLanguageChange(
+                                index,
+                                localizationModulesList,
+                                appConfig.tenantId ?? "default",
+                                value.value.toString(),
+                              );
                             },
                             onLanguageSubmit: () => context.router.push(
                               LoginRoute(),
@@ -158,5 +154,32 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
         ),
       ),
     );
+  }
+
+  void triggerLanguageChange(
+    int index,
+    List<Interfaces> localizationModulesList,
+    String tenantId,
+    String locale,
+  ) {
+    setState(() {});
+    context.read<LocalizationBloc>().add(
+          LocalizationEvent.onLoadLocalization(
+            module: localizationModulesList
+                .map((e) => e.name.toString())
+                .join(',')
+                .toString(),
+            tenantId: tenantId,
+            locale: locale,
+            path: Constants.localizationApiPath,
+          ),
+        );
+
+    context.read<LocalizationBloc>().add(
+          OnUpdateLocalizationIndexEvent(
+            index: index,
+            code: locale,
+          ),
+        );
   }
 }

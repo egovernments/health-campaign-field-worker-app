@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 
 import '../../../data_model.dart';
@@ -130,16 +131,23 @@ abstract class OpLogManager<T extends EntityModel> {
   }
 
   Future<void> put(OpLogEntry<dynamic> entry) async {
-    await isar.writeTxn(() async {
-      await isar.opLogs.put(entry
-          .copyWith(
-            clientReferenceId: getClientReferenceId(entry.entity),
-            serverGeneratedId: getServerGeneratedId(entry.entity),
-            rowVersion: getRowVersion(entry.entity),
-            nonRecoverableError: getNonRecoverableError(entry.entity),
-          )
-          .oplog);
-    });
+    try {
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(entry
+            .copyWith(
+              clientReferenceId: getClientReferenceId(entry.entity),
+              serverGeneratedId: getServerGeneratedId(entry.entity),
+              rowVersion: getRowVersion(entry.entity),
+              nonRecoverableError: getNonRecoverableError(entry.entity),
+            )
+            .oplog);
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print('error in isar ${e}');
+      }
+      rethrow;
+    }
 
     return;
   }
@@ -154,8 +162,8 @@ abstract class OpLogManager<T extends EntityModel> {
       final oplog = await isar.opLogs.filter().idEqualTo(id).findFirst();
       if (oplog == null) return;
       final OpLogEntry<T> fetchedEntry = OpLogEntry.fromOpLog<T>(oplog);
-      await isar.writeTxn(() async {
-        await isar.opLogs.put(fetchedEntry
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(fetchedEntry
             .copyWith(
               syncedUp: true,
               syncedDown: true,
@@ -235,8 +243,8 @@ abstract class OpLogManager<T extends EntityModel> {
 
       final updatedOplog = updatedEntry.oplog;
 
-      await isar.writeTxn(() async {
-        await isar.opLogs.put(updatedOplog);
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(updatedOplog);
       });
     }
 
@@ -295,8 +303,8 @@ abstract class OpLogManager<T extends EntityModel> {
         updatedEntry = updatedEntry.copyWith(nonRecoverableError: true);
       }
 
-      await isar.writeTxn(() async {
-        await isar.opLogs.put(updatedEntry.oplog);
+      isar.writeTxnSync(() {
+        isar.opLogs.putSync(updatedEntry.oplog);
       });
     }
 
