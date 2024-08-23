@@ -1,6 +1,5 @@
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:flutter/material.dart';
-import 'package:isar/isar.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/localization.dart';
 import '../../data/repositories/local/localization.dart';
