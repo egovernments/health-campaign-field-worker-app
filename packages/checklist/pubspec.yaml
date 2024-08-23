@@ -27,9 +27,7 @@ dependencies:
   path: ^1.8.2
   drift_db_viewer: ^2.0.0
   auto_route: ^7.8.4
-#  digit_data_model: ^1.0.2
-  digit_data_model:
-    path: ../../packages/digit_data_model
+  digit_data_model: ^1.0.4-dev.2
   connectivity_plus: ^5.0.2
   collection: ^1.16.0
   location: ^5.0.0
