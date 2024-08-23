@@ -3,7 +3,7 @@ import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:isar/isar.dart';
+
 import '../../data/local_store/app_shared_preferences.dart';
 import '../../data/repositories/remote/localization.dart';
 import 'app_localization.dart';
@@ -14,13 +14,11 @@ typedef LocalizationEmitter = Emitter<LocalizationState>;
 
 class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
   final LocalizationRepository localizationRepository;
-  // final Isar isar;
   final LocalSqlDataStore sql;
 
   LocalizationBloc(
     super.initialState,
     this.localizationRepository,
-    // this.isar,
       this.sql,
   ) {
     on(_onLoadLocalization);

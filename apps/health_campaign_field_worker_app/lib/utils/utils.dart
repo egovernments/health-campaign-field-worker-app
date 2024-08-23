@@ -1,7 +1,5 @@
 library app_utils;
 
-
-import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'dart:async';
 import 'dart:io';
@@ -402,7 +400,6 @@ initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
-    Future(() => complaints_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }

@@ -189,7 +189,6 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
-    ...ComplaintsRoute().pagesMap,
   };
 }
 

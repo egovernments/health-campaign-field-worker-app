@@ -1,6 +1,3 @@
-import 'package:complaints/complaints.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
-
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -298,15 +295,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
-        ),
-      ),
 
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
@@ -365,9 +353,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.showcaseKey,
-
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
 
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -376,8 +361,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
-      i18.home.fileComplaint,
-
       i18.home.myCheckList,
       i18.home.syncDataLabel,
       i18.home.db,
@@ -416,18 +399,12 @@ class _HomePageState extends LocalizedState<HomePage> {
               localRepositories: [
                 // INFO : Need to add local repo of package Here
                 context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-
-                context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
-                context.read<
-                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-
                 context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
                 context
@@ -445,15 +422,6 @@ void setPackagesSingleton(BuildContext context) {
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
-        ComplaintsSingleton().setInitialData(
-          tenantId: envConfig.variables.tenantId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          userMobileNumber: context.loggedInUser.mobileNumber,
-          loggedInUserName: context.loggedInUser.name,
-          complaintTypes:
-              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
-          userName: context.loggedInUser.name ?? '',
-        );
       });
 }
 

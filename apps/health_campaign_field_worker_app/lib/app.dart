@@ -291,7 +291,6 @@ class MainApplicationState extends State<MainApplication>
                                   })
                                 : [firstLanguage],
                             localizationsDelegates: getAppLocalizationDelegates(
-                              // isar: widget.isar,
                               sql: widget.sql,
                               appConfig: appConfig,
                               selectedLocale: selectedLocale,

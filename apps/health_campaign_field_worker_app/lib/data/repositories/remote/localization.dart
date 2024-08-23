@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
-// import 'package:isar/isar.dart';
 import 'package:drift/drift.dart';
 
 import '../../../models/localization/localization_model.dart';
@@ -11,12 +10,10 @@ import '../../local_store/no_sql/schema/localization.dart';
 
 class LocalizationRepository {
   final Dio _client;
-  // final Isar _isar;
   final LocalSqlDataStore _sql;
 
   const LocalizationRepository(
     this._client,
-    // this._isar,
       this._sql,
   );
 
