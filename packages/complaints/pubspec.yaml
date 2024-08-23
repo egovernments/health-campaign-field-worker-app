@@ -15,8 +15,10 @@ dependencies:
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
   auto_route: ^7.8.4
-  digit_data_model: ^1.0.2
-  dart_mappable: ^4.2.0
+  digit_data_model:
+    path: ../../packages/digit_data_model
+  dart_mappable_builder:
+    path: ../../packages/dart_mappable_builder
   group_radio_button: ^1.3.0
   reactive_forms: ^14.1.0
   recase: ^4.1.0
