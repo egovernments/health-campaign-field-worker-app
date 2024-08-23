@@ -1,4 +1,3 @@
-
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
@@ -188,13 +187,7 @@ class MainApplicationState extends State<MainApplication>
                             projectRemoteRepository: ctx.read<
                                 RemoteRepository<ProjectModel,
                                     ProjectSearchModel>>(),
-                            serviceDefinitionRemoteRepository: ctx.read<
-                                RemoteRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
                             isar: widget.isar,
-                            serviceDefinitionLocalRepository: ctx.read<
-                                LocalRepository<ServiceDefinitionModel,
-                                    ServiceDefinitionSearchModel>>(),
                             boundaryRemoteRepository: ctx.read<
                                 RemoteRepository<BoundaryModel,
                                     BoundarySearchModel>>(),

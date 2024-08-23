@@ -312,6 +312,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  checklist:
+    dependency: "direct main"
+    description:
+      path: "packages/checklist"
+      ref: checklist-package
+      resolved-ref: fad0d7cf9b0cf9cfc67265f791fb2bdc55bf0027
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
+    version: "0.0.1-dev.1"
   cli_util:
     dependency: transitive
     description:
@@ -411,9 +420,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: checklist-package
+      resolved-ref: fad0d7cf9b0cf9cfc67265f791fb2bdc55bf0027
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -475,25 +486,35 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "53ee8c0a7c992c0e8d1c9c867b6cf1d52e1728200f4b4436943a5d6c5e4984c3"
+      sha256: "01320d4c72829045e789d1a56e23ff2bd85dad6a1831d27bd507a1acaceae17e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+2"
+    version: "1.0.1"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: e1ea907e9cb7d521341325ac1b1b98fad8bd5e5ca1bab7f7c18ed02ccd2f2c2b
+      sha256: "14ebea5f17921081025963b379efd5e16d155dd920d5a42ab2f2f392afb649de"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4-dev.1"
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_firebase_services"
-      relative: true
-    source: path
+      path: "packages/digit_firebase_services"
+      ref: checklist-package
+      resolved-ref: fad0d7cf9b0cf9cfc67265f791fb2bdc55bf0027
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "0.0.1"
+  digit_scanner:
+    dependency: "direct main"
+    description:
+      name: digit_scanner
+      sha256: "1f1fe3ca8f038a3c93cd52491cf72c0b0e45c88b14580243d47eac59672e67ea"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   digit_showcase:
     dependency: "direct main"
     description:

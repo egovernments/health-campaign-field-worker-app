@@ -4,7 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import '../blocs/localization/app_localization.dart';
 import '../data/local/localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
-import 'utils.dart';
+import '../data/repositories/local/localization.dart';
+
 
 getAppLocalizationDelegates({
   required LocalSqlDataStore sql,

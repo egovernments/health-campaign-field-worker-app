@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:recase/recase.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -295,17 +296,6 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
-
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
-        child: HomeItemCard(
-          enableCustomIcon: true,
-          customIcon: myChecklistSvg,
-          icon: Icons.checklist,
-          label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
-        ),
-      ),
-
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -353,15 +343,12 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
-
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
-      i18.home.myCheckList,
       i18.home.syncDataLabel,
       i18.home.db,
     ];
@@ -400,15 +387,11 @@ class _HomePageState extends LocalizedState<HomePage> {
                 // INFO : Need to add local repo of package Here
                 context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
-                context
-                    .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
                 context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
-                context
-                    .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
               ],
             ),
           );

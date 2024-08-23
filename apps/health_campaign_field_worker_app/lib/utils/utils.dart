@@ -15,7 +15,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
 import '../data/local_store/app_shared_preferences.dart';
@@ -28,11 +27,9 @@ import '../widgets/progress_indicator/progress_indicator.dart';
 import 'constants.dart';
 import 'extensions/extensions.dart';
 
-
 export 'app_exception.dart';
 export 'constants.dart';
 export 'extensions/extensions.dart';
-
 
 class CustomValidator {
   /// Validates that control's value must be `true`
@@ -46,7 +43,6 @@ class CustomValidator {
         : {'required': true};
   }
 
-
   static Map<String, dynamic>? validMobileNumber(
       AbstractControl<dynamic> control,
       ) {
@@ -54,26 +50,20 @@ class CustomValidator {
       return null;
     }
 
-
     const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
-
 
     if (RegExp(pattern).hasMatch(control.value.toString())) return null;
 
-
     if (control.value.toString().length < 10) return {'mobileNumber': true};
-
 
     return {'mobileNumber': true};
   }
 }
 
-
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);
 }
-
 
 performBackgroundService({
   BuildContext? context,
@@ -82,12 +72,10 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-
   final isOnline = connectivityResult == ConnectivityResult.wifi ||
       connectivityResult == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
-
 
   if (stopService) {
     if (isRunning) {
@@ -121,25 +109,20 @@ performBackgroundService({
   }
 }
 
-
 String maskString(String input) {
   // Define the character to use for masking (e.g., "*")
   const maskingChar = '*';
-
 
   // Create a new string with the same length as the input string
   final maskedString =
   List<String>.generate(input.length, (index) => maskingChar).join();
 
-
   return maskedString;
 }
-
 
 List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
   return masterNames.map((e) => MdmsMasterDetailModel(e)).toList();
 }
-
 
 Timer makePeriodicTimer(
     Duration duration,
@@ -151,10 +134,8 @@ Timer makePeriodicTimer(
     callback(timer);
   }
 
-
   return timer;
 }
-
 
 final requestData = {
   "data": [
@@ -214,7 +195,6 @@ final requestData = {
   ],
 };
 
-
 Future<bool> getIsConnected() async {
   try {
     final result = await InternetAddress.lookup('example.com');
@@ -222,13 +202,11 @@ Future<bool> getIsConnected() async {
       return true;
     }
 
-
     return false;
   } on SocketException catch (_) {
     return false;
   }
 }
-
 
 void showDownloadDialog(
     BuildContext context, {
@@ -240,7 +218,6 @@ void showDownloadDialog(
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
-
 
   switch (dialogType) {
     case DigitProgressDialogType.failed:
@@ -370,10 +347,8 @@ getSelectedLanguage(AppInitialized state, int index) {
   final isSelected =
       state.appConfiguration.languages![index].value == selectedLanguage;
 
-
   return isSelected;
 }
-
 
 initializeAllMappers() async {
   List<Future> initializations = [
@@ -383,11 +358,9 @@ initializeAllMappers() async {
   await Future.wait(initializations);
 }
 
-
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
     switch (element.entityType) {
-      //add SyncCount case for package
       case DataModelType.household:
       case DataModelType.individual:
       case DataModelType.householdMember:
@@ -406,7 +379,6 @@ int getSyncCount(List<OpLog> oplogs) {
         return false;
     }
   }).length;
-
 
   return count;
 }

@@ -6,11 +6,6 @@ import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
 import '../pages/boundary_selection.dart';
-import '../pages/checklist/checklist.dart';
-import '../pages/checklist/checklist_boundary_view.dart';
-import '../pages/checklist/checklist_preview.dart';
-import '../pages/checklist/checklist_view.dart';
-import '../pages/checklist/checklist_wrapper.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
@@ -61,19 +56,7 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
-        AutoRoute(
-            page: ChecklistWrapperRoute.page,
-            path: 'checklist',
-            children: [
-              AutoRoute(
-                page: ChecklistRoute.page,
-                path: '',
-              ),
-              AutoRoute(
-                  page: ChecklistBoundaryViewRoute.page, path: 'view-boundary'),
-              AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-              AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
-            ]),
+
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),
 
         AutoRoute(

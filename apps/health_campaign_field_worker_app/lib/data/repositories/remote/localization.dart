@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 import 'package:drift/drift.dart';
@@ -12,10 +11,8 @@ class LocalizationRepository {
   final Dio _client;
   final LocalSqlDataStore _sql;
 
-  const LocalizationRepository(
-    this._client,
-      this._sql,
-  );
+  const LocalizationRepository(this._client,
+      this._sql,);
 
   Future<LocalizationModel> search({
     required Map<String, String> queryParameters,
@@ -43,7 +40,7 @@ class LocalizationRepository {
     required String module,
     required String tenantId,
   }) async {
-    final List<Localization> localizationList = [];
+    List<Localization> localizationList = [];
 
     final query = _sql.select(_sql.localization).join([])
       ..where(
@@ -53,6 +50,15 @@ class LocalizationRepository {
       );
 
     final results = await query.get();
+
+    localizationList = results.map((e) {
+      final data = e.readTableOrNull(_sql.localization);
+      return Localization()
+        ..code = data!.code
+        ..locale = data.locale
+        ..module = data.module
+        ..message = data.message;
+    }).toList();
 
     if (localizationList.isEmpty) {
       final result = await search(
@@ -68,14 +74,14 @@ class LocalizationRepository {
         batch.insertAll(
             _sql.localization,
             result.messages
-                .map((e) => LocalizationCompanion(
-              code: Value(e.code),
-              locale: Value(e.locale),
-              message: Value(e.message),
-              module: Value(e.module),
-            ))
+                .map((e) =>
+                LocalizationCompanion(
+                  code: Value(e.code),
+                  locale: Value(e.locale),
+                  message: Value(e.message),
+                  module: Value(e.module),
+                ))
                 .toList());
       });
     }
-  }
-}
+  }}
