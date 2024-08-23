@@ -1,3 +1,8 @@
+## 1.0.4-dev.1
+
+* Separated PGR Package 
+* Moved Models, Bloc, Repositories related to PGR Package
+
 ## 1.0.3
 
 * Added localization table
