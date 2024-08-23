@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'checklist_localization_delegate.dart';
 
-// Class responsible for handling attendance localization
+// Class responsible for handling checklist localization
 class ChecklistLocalization {
   final Locale locale;
   final Future<dynamic> localizedStrings;
@@ -19,8 +19,9 @@ class ChecklistLocalization {
 
   // Method to get the delegate for localization
   static LocalizationsDelegate<ChecklistLocalization> getDelegate(
-      Future<dynamic> localizedStrings, List<dynamic> languages) =>
-      ChecklistLocalizationDelegate(localizedStrings, languages);
+      Future<dynamic> localizedStrings, List<dynamic> languages) {
+      return ChecklistLocalizationDelegate(localizedStrings, languages);
+  }
 
   // Method to load localized strings
   Future<bool> load() async {

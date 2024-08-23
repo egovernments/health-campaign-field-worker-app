@@ -4,6 +4,7 @@ import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
@@ -15,6 +16,7 @@ Widget buildTableContent(
   BuildContext context,
   List<ProductVariantModel>? variant,
   IndividualModel? individualModel,
+  HouseholdModel? householdModel,
 ) {
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
   final currentCycle =
@@ -44,7 +46,7 @@ Widget buildTableContent(
   final item =
       projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
-      fetchProductVariant(item, individualModel)?.productVariants;
+      fetchProductVariant(item, individualModel, householdModel)?.productVariants;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
   const paddingHeight = (kPadding * 2);
@@ -72,9 +74,9 @@ Widget buildTableContent(
           element: {
             localizations.translate(
               i18.beneficiaryDetails.beneficiaryAge,
-            ): fetchProductVariant(item, individualModel)?.condition != null
+            ): fetchProductVariant(item, individualModel, householdModel)?.condition != null
                 ? localizations.translate(
-                    fetchProductVariant(item, individualModel)!.condition!)
+                    fetchProductVariant(item, individualModel, householdModel)!.condition!)
                 : null,
           },
         ),
@@ -82,11 +84,11 @@ Widget buildTableContent(
           thickness: 1.0,
         ),
         // Build the DigitTable with the data
-        fetchProductVariant(item, individualModel)?.productVariants != null
+        fetchProductVariant(item, individualModel, householdModel)?.productVariants != null
             ? DigitTable(
                 headerList: headerListResource,
                 tableData: [
-                  ...fetchProductVariant(item, individualModel)!
+                  ...fetchProductVariant(item, individualModel, householdModel )!
                       .productVariants!
                       .map(
                     (e) {
@@ -102,7 +104,7 @@ Widget buildTableContent(
                         // Display the dose information in the first column if it's the first row,
                         // otherwise, display an empty cell.
 
-                        fetchProductVariant(item, individualModel)
+                        fetchProductVariant(item, individualModel, householdModel)
                                     ?.productVariants
                                     ?.indexOf(e) ==
                                 0
@@ -121,7 +123,7 @@ Widget buildTableContent(
                   ),
                 ],
                 columnWidth: columnWidth,
-                height: ((fetchProductVariant(item, individualModel)
+                height: ((fetchProductVariant(item, individualModel, householdModel)
                                     ?.productVariants ??
                                 [])
                             .length +

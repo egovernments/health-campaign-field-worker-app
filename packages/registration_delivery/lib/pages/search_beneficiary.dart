@@ -169,19 +169,27 @@ class _SearchBeneficiaryPageState
                                   }
                                 },
                               ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: kPadding),
-                                  child: DigitIconButton(
-                                    textDirection: TextDirection.rtl,
-                                    iconText: getFilterIconNLabel()['label'],
-                                    icon: getFilterIconNLabel()['icon'],
-                                    onPressed: () => showFilterDialog(),
-                                  ),
-                                ),
-                              ),
+                              RegistrationDeliverySingleton()
+                                              .searchHouseHoldFilter !=
+                                          null &&
+                                      RegistrationDeliverySingleton()
+                                          .searchHouseHoldFilter!
+                                          .isNotEmpty
+                                  ? Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: kPadding),
+                                        child: DigitIconButton(
+                                          textDirection: TextDirection.rtl,
+                                          iconText:
+                                              getFilterIconNLabel()['label'],
+                                          icon: getFilterIconNLabel()['icon'],
+                                          onPressed: () => showFilterDialog(),
+                                        ),
+                                      ),
+                                    )
+                                  : const Offstage(),
                               selectedFilters.isNotEmpty
                                   ? Align(
                                       alignment: Alignment.topLeft,
@@ -474,9 +482,13 @@ class _SearchBeneficiaryPageState
           dialogPadding: EdgeInsets.zero,
           contentPadding: EdgeInsets.zero,
           barrierDismissible: true,
-          content: StatusFilter(selectedFilters: selectedFilters, titleIcon: Icon(getFilterIconNLabel()['icon'],
-              color: const DigitColors().burningOrange),
-            titleText: getFilterIconNLabel()['label'],  isCloseIcon: true,),
+          content: StatusFilter(
+            selectedFilters: selectedFilters,
+            titleIcon: Icon(getFilterIconNLabel()['icon'],
+                color: const DigitColors().burningOrange),
+            titleText: getFilterIconNLabel()['label'],
+            isCloseIcon: true,
+          ),
         ));
 
     if (filters != null && filters.isNotEmpty) {
@@ -510,6 +522,7 @@ class _SearchBeneficiaryPageState
                 globalSearchParams: GlobalSearchParameters(
           isProximityEnabled: isProximityEnabled,
           latitude: lat,
+          projectId: RegistrationDeliverySingleton().projectId!,
           longitude: long,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
           nameSearch: searchController.text.trim().length > 2
@@ -517,10 +530,10 @@ class _SearchBeneficiaryPageState
               : blocWrapper.searchHouseholdsBloc.state.searchQuery,
           filter: selectedFilters,
           offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              ? blocWrapper.individualGlobalSearchBloc.state.offset
               : offset,
           limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              ? blocWrapper.individualGlobalSearchBloc.state.limit
               : limit,
         )));
       }
@@ -534,6 +547,7 @@ class _SearchBeneficiaryPageState
           isProximityEnabled: isProximityEnabled,
           latitude: lat,
           longitude: long,
+          projectId: RegistrationDeliverySingleton().projectId!,
           maxRadius: RegistrationDeliverySingleton().maxRadius,
           nameSearch: searchController.text.trim().length > 2
               ? searchController.text.trim()
@@ -553,7 +567,7 @@ class _SearchBeneficiaryPageState
   String getStatus(String selectedFilter) {
     final statusMap = {
       Status.delivered.toValue(): Status.delivered,
-      Status.notDelivered.toValue(): Status.notDelivered,
+      Status.notAdministered.toValue(): Status.notAdministered,
       Status.visited.toValue(): Status.visited,
       Status.notVisited.toValue(): Status.notVisited,
       Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,

@@ -1,3 +1,4 @@
 ## 0.0.1
 
-* TODO: Describe initial release.
+* Removed checklist models, blocs and repositories from digit_data_model
+* Added imports for checklist package in registration_delivery and referral_reconciliation

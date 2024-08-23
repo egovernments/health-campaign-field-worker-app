@@ -5,10 +5,8 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
-import 'package:digit_data_model/blocs/service/service.dart';
-import 'package:digit_data_model/blocs/service_definition/service_definition.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:checklist/checklist.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -26,10 +24,10 @@ class ChecklistPreviewPage extends LocalizedStatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ChecklistPreviewPage> createState() => _ChecklistPreviewPageState();
+  State<ChecklistPreviewPage> createState() => ChecklistPreviewPageState();
 }
 
-class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
+class ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

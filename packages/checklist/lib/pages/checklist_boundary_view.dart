@@ -11,7 +11,6 @@ import '../router/checklist_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../utils/i18_key_constants.dart' as i18;
-import '../blocs/app_localization.dart';
 
 @RoutePage()
 class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
@@ -22,10 +21,10 @@ class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
 
   @override
   State<ChecklistBoundaryViewPage> createState() =>
-      _ChecklistBoundaryViewPageState();
+      ChecklistBoundaryViewPageState();
 }
 
-class _ChecklistBoundaryViewPageState
+class ChecklistBoundaryViewPageState
     extends State<ChecklistBoundaryViewPage> {
   @override
   Widget build(BuildContext context) {

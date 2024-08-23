@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:checklist/checklist.dart';
 import 'package:drift/drift.dart';
 
 class ServiceDefinitionLocalRepository extends LocalRepository<
@@ -50,6 +51,7 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
 
       final results = await (selectQuery
         ..where(buildAnd([
+          // To fetch service definition with the id
           if (query.id != null)
             sql.serviceDefinition.id.equals(
               query.id!,

@@ -1,9 +1,9 @@
 // Generated using mason. Do not modify by hand
 
 import 'package:digit_data_model/data_model.dart';
-import '../../../models/entities/service_definition.dart'as svc_def;
+import '../../../models/entities/service_definition.dart';
 
-class ServiceDefinitionRemoteRepository extends RemoteRepository<svc_def.ServiceDefinitionModel, svc_def.ServiceDefinitionSearchModel> {
+class ServiceDefinitionRemoteRepository extends RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel> {
   ServiceDefinitionRemoteRepository(
       super.dio, {
         required super.actionMap,

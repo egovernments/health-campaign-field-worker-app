@@ -188,7 +188,6 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
                   ),
-                  // AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
                   AutoRoute(
                     page: DeliverySummaryRoute.page,
                     path: 'delivery-summary',
@@ -227,6 +226,7 @@ class AppRouter extends _$AppRouter {
                   page: ChecklistBoundaryViewRoute.page, path: 'view-boundary'),
               AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
               AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+              AutoRoute(page: ChecklistAcknowledgementRoute.page, path: 'checklist-acknowledgement'),
             ]),
         AutoRoute(
           page: BeneficiaryAcknowledgementRoute.page,

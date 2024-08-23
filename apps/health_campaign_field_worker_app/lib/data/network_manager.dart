@@ -105,7 +105,7 @@ class NetworkManager {
     return isSyncCompleted;
   }
 
-  //
+
   FutureOr<void> writeToEntityDB(
     Map<String, dynamic> response,
     List<LocalRepository> localRepositories,

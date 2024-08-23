@@ -27,8 +27,8 @@ class StatusMapper extends EnumMapper<Status> {
     switch (value) {
       case "DELIVERED":
         return Status.delivered;
-      case "NOT_DELIVERED":
-        return Status.notDelivered;
+      case "NOT_ADMINISTERED":
+        return Status.notAdministered;
       case "VISITED":
         return Status.visited;
       case "NOT_VISITED":
@@ -61,8 +61,8 @@ class StatusMapper extends EnumMapper<Status> {
     switch (self) {
       case Status.delivered:
         return "DELIVERED";
-      case Status.notDelivered:
-        return "NOT_DELIVERED";
+      case Status.notAdministered:
+        return "NOT_ADMINISTERED";
       case Status.visited:
         return "VISITED";
       case Status.notVisited:

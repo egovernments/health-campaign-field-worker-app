@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:checklist/utils/extensions/extensions.dart';
+import 'package:checklist/utils/extensions/context_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:checklist/checklist.dart';
 
 @RoutePage()
 class ChecklistWrapperPage extends StatelessWidget {
@@ -15,7 +15,6 @@ class ChecklistWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("This page");
     final serviceDefinition = context
         .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>(context);
 
@@ -28,6 +27,7 @@ class ChecklistWrapperPage extends StatelessWidget {
             const ServiceDefinitionEmptyState(),
             serviceDefinitionDataRepository: serviceDefinition,
           )..add(const ServiceDefinitionFetchEvent()),
+          lazy: false,
         ),
         BlocProvider(
           create: (_) => ServiceBloc(
@@ -36,7 +36,7 @@ class ChecklistWrapperPage extends StatelessWidget {
           ),
         ),
       ],
-      child: AutoRouter(),
+      child: const AutoRouter(),
     );
   }
 }
