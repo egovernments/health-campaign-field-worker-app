@@ -104,12 +104,6 @@ class ComplaintsDetailsPageState
                         }
 
                         if (!form.valid){
-                          print("hereee");
-                          form.controls.forEach((key, control) {
-                            if (control.invalid) {
-                              print("Invalid field: $key");
-                            }
-                          });
                           return;
                         }
 

@@ -31,7 +31,6 @@ class Localization {
 Future<dynamic> loadLocalizedStrings() async{
   final String jsonString =
   await rootBundle.loadString('lib/localization_strings.json');
-  print(jsonString);
   final decode = json.decode(jsonString);
 
 
