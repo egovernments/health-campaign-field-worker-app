@@ -324,10 +324,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: e1ea907e9cb7d521341325ac1b1b98fad8bd5e5ca1bab7f7c18ed02ccd2f2c2b
+      sha256: a9e3526b4963d4e8a35bb3c2bebf6424f7a78a0b53a8cf564be27dd40a18f18e
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4-dev.2"
   dio:
     dependency: "direct main"
     description:
