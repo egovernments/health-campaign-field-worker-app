@@ -22,12 +22,12 @@ import 'package:flutter/material.dart' as _i8;
 abstract class $CheckListRoute extends _i7.AutoRouterModule {
   @override
   final Map<String, _i7.PageFactory> pagesMap = {
-    AcknowledgementRoute.name: (routeData) {
-      final args = routeData.argsAs<AcknowledgementRouteArgs>(
-          orElse: () => const AcknowledgementRouteArgs());
+    ChecklistAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<ChecklistAcknowledgementRouteArgs>(
+          orElse: () => const ChecklistAcknowledgementRouteArgs());
       return _i7.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i1.AcknowledgementPage(
+        child: _i1.ChecklistAcknowledgementPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
           isDataRecordSuccess: args.isDataRecordSuccess,
@@ -97,9 +97,10 @@ abstract class $CheckListRoute extends _i7.AutoRouterModule {
 }
 
 /// generated route for
-/// [_i1.AcknowledgementPage]
-class AcknowledgementRoute extends _i7.PageRouteInfo<AcknowledgementRouteArgs> {
-  AcknowledgementRoute({
+/// [_i1.ChecklistAcknowledgementPage]
+class ChecklistAcknowledgementRoute
+    extends _i7.PageRouteInfo<ChecklistAcknowledgementRouteArgs> {
+  ChecklistAcknowledgementRoute({
     _i8.Key? key,
     _i9.ChecklistLocalization? appLocalizations,
     bool isDataRecordSuccess = false,
@@ -108,8 +109,8 @@ class AcknowledgementRoute extends _i7.PageRouteInfo<AcknowledgementRouteArgs> {
     Map<String, dynamic>? descriptionTableData,
     List<_i7.PageRouteInfo>? children,
   }) : super(
-          AcknowledgementRoute.name,
-          args: AcknowledgementRouteArgs(
+          ChecklistAcknowledgementRoute.name,
+          args: ChecklistAcknowledgementRouteArgs(
             key: key,
             appLocalizations: appLocalizations,
             isDataRecordSuccess: isDataRecordSuccess,
@@ -120,14 +121,14 @@ class AcknowledgementRoute extends _i7.PageRouteInfo<AcknowledgementRouteArgs> {
           initialChildren: children,
         );
 
-  static const String name = 'AcknowledgementRoute';
+  static const String name = 'ChecklistAcknowledgementRoute';
 
-  static const _i7.PageInfo<AcknowledgementRouteArgs> page =
-      _i7.PageInfo<AcknowledgementRouteArgs>(name);
+  static const _i7.PageInfo<ChecklistAcknowledgementRouteArgs> page =
+      _i7.PageInfo<ChecklistAcknowledgementRouteArgs>(name);
 }
 
-class AcknowledgementRouteArgs {
-  const AcknowledgementRouteArgs({
+class ChecklistAcknowledgementRouteArgs {
+  const ChecklistAcknowledgementRouteArgs({
     this.key,
     this.appLocalizations,
     this.isDataRecordSuccess = false,
@@ -150,7 +151,7 @@ class AcknowledgementRouteArgs {
 
   @override
   String toString() {
-    return 'AcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData}';
+    return 'ChecklistAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, isDataRecordSuccess: $isDataRecordSuccess, label: $label, description: $description, descriptionTableData: $descriptionTableData}';
   }
 }
 

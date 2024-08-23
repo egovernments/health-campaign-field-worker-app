@@ -24,10 +24,10 @@ class ChecklistPreviewPage extends LocalizedStatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ChecklistPreviewPage> createState() => _ChecklistPreviewPageState();
+  State<ChecklistPreviewPage> createState() => ChecklistPreviewPageState();
 }
 
-class _ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
+class ChecklistPreviewPageState extends LocalizedState<ChecklistPreviewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);

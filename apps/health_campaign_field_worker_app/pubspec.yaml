@@ -18,7 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
-  digit_components: ^1.0.0+7
+  digit_components: ^1.0.1
   auto_route: ^7.8.4
   flutter_bloc: ^8.1.1
   collection: ^1.16.0
@@ -65,16 +65,17 @@ dependencies:
   disk_space: ^0.2.1
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
-  attendance_management: ^1.0.1
-  digit_scanner: ^1.0.3-dev.1
-  inventory_management: ^1.0.2
+  attendance_management: ^1.0.2
+  digit_scanner: ^1.0.3
+  inventory_management: ^1.0.3+1
   referral_reconciliation: ^1.0.2
-  digit_data_model: ^1.0.3-dev.3
-  registration_delivery: ^1.0.3-dev.5
+  digit_data_model: ^1.0.3
+  registration_delivery: ^1.0.3
   disable_battery_optimization: ^1.1.1
-  digit_dss: ^0.0.1-dev.1
-  closed_household: ^0.0.0-dev.2
-  checklist: ^0.0.1
+
+  checklist: ^0.0.1-dev.1
+  digit_dss: ^1.0.0
+  closed_household: ^1.0.1
 
 dev_dependencies:
   flutter_test:
@@ -107,7 +108,7 @@ flutter:
   assets:
     - ./
     - assets/icons/svg/
-    
+
   fonts:
     - family: Roboto
       fonts:

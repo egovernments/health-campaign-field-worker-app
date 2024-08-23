@@ -35,7 +35,7 @@ dependencies:
   collection: ^1.16.0
   digit_data_model: ^1.0.2
   stream_transform: ^2.1.0
-  checklist: ^0.0.1
+  checklist: ^0.0.1-dev.1
 
 dev_dependencies:
   flutter_test:

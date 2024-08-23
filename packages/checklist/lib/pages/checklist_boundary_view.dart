@@ -21,10 +21,10 @@ class ChecklistBoundaryViewPage extends LocalizedStatefulWidget {
 
   @override
   State<ChecklistBoundaryViewPage> createState() =>
-      _ChecklistBoundaryViewPageState();
+      ChecklistBoundaryViewPageState();
 }
 
-class _ChecklistBoundaryViewPageState
+class ChecklistBoundaryViewPageState
     extends State<ChecklistBoundaryViewPage> {
   @override
   Widget build(BuildContext context) {

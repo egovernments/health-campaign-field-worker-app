@@ -33,7 +33,18 @@ void main() {
   var homeFilePath = appRoot + '/pages/home.dart';
   var projectFilePath = appRoot + '/blocs/project/project.dart';
   var authenticatedFilePath = appRoot + '/pages/authenticated.dart';
+  var contextUtilityFilePath = appRoot + '/utils/extensions/context_utility.dart';
+  var appFilePath = appRoot + '/app.dart';
+  var extensionFilePath = appRoot + '/utils/extensions/extensions.dart';
 
+  _updateExtensionFilePath(extensionFilePath);
+
+  _updateAppFile(appFilePath);
+
+  // Initialise Boundarycode in checklistSingleton class
+  _updateContextUtilityFile(contextUtilityFilePath);
+
+  // Add Imports and service definition repo
   _addprojectFilePath(projectFilePath);
 
   _addauthenticatedFilePath(authenticatedFilePath);
@@ -68,7 +79,10 @@ void main() {
     networkManagerProviderWrapperFilePath,
     localizationDelegatesFilePath,
     projectFilePath,
-    authenticatedFilePath
+    authenticatedFilePath,
+    contextUtilityFilePath,
+    appFilePath,
+    extensionFilePath
   ]);
 }
 
@@ -79,9 +93,119 @@ void _formatFiles(List<String> filePaths) {
   }
 }
 
+void _updateExtensionFilePath(extensionFilePath){
+  var importStatement = '''
+      import 'package:checklist/utils/utils.dart';''';
+
+  // Check if the extension.dart file exists
+  var extensionFile = File(extensionFilePath);
+  if (!extensionFile.existsSync()) {
+    print('Error: project file does not exist at path: $extensionFilePath');
+    return;
+  }
+
+  // Read the authenticated.dart file
+  var extensionFileContent = extensionFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!extensionFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    extensionFileContent = importStatement + '\n' + extensionFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  extensionFile.writeAsStringSync(extensionFileContent);
+}
+
+void _updateAppFile(appFilePath) {
+  var importStatement = '''
+      import 'package:checklist/checklist.dart';''';
+
+  var ServiceDefinitionRepository = '''serviceDefinitionRemoteRepository: ctx.read<
+                                RemoteRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),
+                            serviceDefinitionLocalRepository: ctx.read<
+                                LocalRepository<ServiceDefinitionModel,
+                                    ServiceDefinitionSearchModel>>(),''';
+
+  // Check if the app.dart file exists
+  var appFile = File(appFilePath);
+  if (!appFile.existsSync()) {
+    print('Error: project file does not exist at path: $appFilePath');
+    return;
+  }
+
+  // Read the app.dart file
+  var appFileContent = appFile.readAsStringSync();
+
+  // Check if the import statement already exists and add it if not
+  if (!appFileContent
+      .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
+    appFileContent = importStatement + '\n' + appFileContent;
+    print('The import statement was added.');
+  } else {
+    print('The import statement already exists.');
+  }
+
+  // Check if the new cases already exist in the file
+  if (!appFileContent
+      .contains(ServiceDefinitionRepository.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the new cases (before the default case)
+    var caseInsertionIndex = appFileContent.indexOf('ProjectBloc(');
+    caseInsertionIndex += 'ProjectBloc('.length;
+    if (caseInsertionIndex != -1) {
+      appFileContent =
+          appFileContent.substring(0, caseInsertionIndex) +
+              ServiceDefinitionRepository +
+              '\n' +
+              appFileContent.substring(caseInsertionIndex);
+      print('The new cases were added.');
+
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The new cases already exist.');
+  }
+
+  appFile.writeAsStringSync(appFileContent);
+}
+
+void _updateContextUtilityFile(String contextUtilityFilepath) {
+  var checklistBoundary = '''ChecklistSingleton().setBoundary(boundary: selectedBoundary);''';
+
+  // Check if the context_utility.dart file exists
+  var contextUtilityFile = File(contextUtilityFilepath);
+  if (!contextUtilityFile.existsSync()) {
+    print('Error: Context Utility file does not exist at path: $contextUtilityFilepath');
+    return;
+  }
+
+  // Read the context_utility.dart file
+  var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
+
+  // Insert the data to be added
+  contextUtilityFileContent = insertData(contextUtilityFileContent,
+      '// INFO: Set Boundary for packages', checklistBoundary);
+
+  // Write the updated content back to the context_utility.dart file
+  contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
+}
+
 void _addauthenticatedFilePath(String authenticatedFilePath) {
   var importStatement = '''
       import 'package:checklist/checklist.dart';''';
+
+  var providers = '''BlocProvider(
+                        create: (_) => ServiceBloc(
+                          const ServiceEmptyState(),
+                          serviceDataRepository: context
+                              .repository<ServiceModel, ServiceSearchModel>(),
+                        ),
+                      ),''';
 
   // Check if the authenticated.dart file exists
   var authenticatedFile = File(authenticatedFilePath);
@@ -102,12 +226,92 @@ void _addauthenticatedFilePath(String authenticatedFilePath) {
     print('The import statement already exists.');
   }
 
+  // Check if the new cases already exist in the file
+  if (!authenticatedFileContent
+      .contains(providers.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the new cases (before the default case)
+    var caseInsertionIndex = authenticatedFileContent.indexOf('providers: [');
+    caseInsertionIndex += 'providers: ['.length;
+    if (caseInsertionIndex != -1) {
+      authenticatedFileContent =
+          authenticatedFileContent.substring(0, caseInsertionIndex) +
+              providers +
+              '\n' +
+              authenticatedFileContent.substring(caseInsertionIndex);
+      print('The new cases were added.');
+
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The new cases already exist.');
+  }
+
   authenticatedFile.writeAsStringSync(authenticatedFileContent);
 }
 
 void _addprojectFilePath(String projectFilePath) {
   var importStatement = '''
       import 'package:checklist/checklist.dart';''';
+
+  var ServicedefinitionRepo = '''/// Service Definition Repositories
+  final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionRemoteRepository;
+  final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
+      serviceDefinitionLocalRepository;''';
+
+  var projectBloc = '''required this.serviceDefinitionRemoteRepository,
+  required this.serviceDefinitionLocalRepository,''';
+
+  var loadServicedefinition = '''FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
+    final configs = await isar.appConfigurations.where().findAll();
+    final userObject = await localSecureStore.userRequestModel;
+    List<String> codes = [];
+    for (UserRoleModel elements in userObject!.roles) {
+      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+        for (final project in projects) {
+          codes.add(
+          '\${project.name}.\$element.\${elements.code.snakeCase.toUpperCase()}',
+        );
+        }
+      });
+    }
+
+    final serviceDefinition = await serviceDefinitionRemoteRepository
+        .search(ServiceDefinitionSearchModel(
+      tenantId: envConfig.variables.tenantId,
+      code: codes,
+    ));
+
+    for (var element in serviceDefinition) {
+      await serviceDefinitionLocalRepository.create(
+        element,
+        createOpLog: false,
+      );
+    }
+  }''';
+
+  var loadfunctions = '''try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }
+      try {
+        await _loadServiceDefinition(projects);
+      } catch (_) {
+        emit(
+          state.copyWith(
+            loading: false,
+            syncError: ProjectSyncErrorType.serviceDefinitions,
+          ),
+        );
+      }''';
 
   // Check if the project.dart file exists
   var projectFile = File(projectFilePath);
@@ -126,6 +330,90 @@ void _addprojectFilePath(String projectFilePath) {
     print('The import statement was added.');
   } else {
     print('The import statement already exists.');
+  }
+
+  // Check if the Service Definition repo already exist in the file
+  if (!projectFileContent
+      .contains(ServicedefinitionRepo.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the Service Definition Repo
+    var caseInsertionIndex = projectFileContent.indexOf('class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
+    caseInsertionIndex += 'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent =
+          projectFileContent.substring(0, caseInsertionIndex) + '\n' +
+              ServicedefinitionRepo +
+              '\n' +
+              projectFileContent.substring(caseInsertionIndex);
+      print('The Service Definition repo were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The Service Definition Repo already exist.');
+  }
+
+  // Check if the Project Bloc already exist in the file
+  if (!projectFileContent
+      .contains(projectBloc.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the Project Bloc
+    var caseInsertionIndex = projectFileContent.indexOf('ProjectBloc({');
+    caseInsertionIndex += 'ProjectBloc({'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent =
+          projectFileContent.substring(0, caseInsertionIndex) + '\n' +
+              projectBloc +
+              '\n' +
+              projectFileContent.substring(caseInsertionIndex);
+      print('The Project Bloc were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The Project Bloc already exist.');
+  }
+
+  // Check if the load service definition function already exist in the file
+  if (!projectFileContent
+      .contains(loadServicedefinition.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the load service definition function
+    var caseInsertionIndex = projectFileContent.indexOf('class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {');
+    caseInsertionIndex += 'class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent =
+          projectFileContent.substring(0, caseInsertionIndex) + '\n' +
+              loadServicedefinition +
+              '\n' +
+              projectFileContent.substring(caseInsertionIndex);
+      print('The load service definition function were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The load service definition function already exist.');
+  }
+
+  // Check if the load functions calling already exist in the file
+  if (!projectFileContent
+      .contains(loadfunctions.replaceAll(RegExp(r'\s'), ''))) {
+    // Find the position to insert the load function calling
+    var caseInsertionIndex = projectFileContent.indexOf('// INFO : Need to add project load functions');
+    caseInsertionIndex += '// INFO : Need to add project load functions'.length;
+    if (caseInsertionIndex != -1) {
+      projectFileContent =
+          projectFileContent.substring(0, caseInsertionIndex) + '\n' +
+              loadfunctions +
+              '\n' +
+              projectFileContent.substring(caseInsertionIndex);
+      print('The load function calling were added.');
+    } else {
+      print('Error: Could not find the insertion point.');
+      return;
+    }
+  } else {
+    print('The load function calling already exist.');
   }
 
   // Write the updated content back to the project.dart file
@@ -312,6 +600,7 @@ void _addchecklistRoutesAndImportToRouterFile(String routerFilePath) {
                   page: ChecklistBoundaryViewRoute.page, path: 'view-boundary'),
               AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
               AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
+              AutoRoute(page: ChecklistAcknowledgementRoute.page, path: 'checklist-acknowledgement'),
             ]),
   ''';
 
@@ -364,7 +653,7 @@ void _addchecklistRoutesAndImportToRouterFile(String routerFilePath) {
         var modulesEndIndex =
         routerFileContent.lastIndexOf(']', endOfModulesIndex);
         routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
-            ',CheckListRoute,' +
+            'CheckListRoute,' +
             routerFileContent.substring(modulesEndIndex);
 
         // Write the updated content back to the project.dart file
@@ -605,13 +894,13 @@ void _addRepoToNetworkManagerProviderWrapper(
           isar,
         ),
       ),
-    ),'''
-        '''RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
+    ),
+    RepositoryProvider<LocalRepository<ServiceModel, ServiceSearchModel>>(
       create: (_) => ServiceLocalRepository(
         sql,
         ServiceOpLogManager(isar),
       ),
-    ),'''
+    )'''
   ];
 
 // Define the remote repositories of checklist
@@ -623,8 +912,8 @@ void _addRepoToNetworkManagerProviderWrapper(
         dio,
         actionMap: actions,
       ),
-    ),''',
-    '''if (value == DataModelType.serviceDefinition)
+    ),
+    if (value == DataModelType.serviceDefinition)
       RepositoryProvider<
           RemoteRepository<ServiceDefinitionModel,
               ServiceDefinitionSearchModel>>(
@@ -632,7 +921,7 @@ void _addRepoToNetworkManagerProviderWrapper(
           dio,
           actionMap: actions,
         ),
-      ),'''
+      )'''
   ];
 
 // Read the network_manager_provider_wrapper.dart file

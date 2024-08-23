@@ -1,4 +1,7 @@
-part of 'extensions.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../utils.dart';
 
 extension ContextUtilityExtensions on BuildContext {
   int millisecondsSinceEpoch([DateTime? dateTime]) {

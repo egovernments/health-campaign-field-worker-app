@@ -6,12 +6,12 @@ import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
 @RoutePage()
-class AcknowledgementPage extends LocalizedStatefulWidget {
+class ChecklistAcknowledgementPage extends LocalizedStatefulWidget {
   final bool isDataRecordSuccess;
   final String? label;
   final String? description;
   final Map<String, dynamic>? descriptionTableData;
-  const AcknowledgementPage({
+  const ChecklistAcknowledgementPage({
     super.key,
     super.appLocalizations,
     this.isDataRecordSuccess = false,
@@ -21,10 +21,10 @@ class AcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<AcknowledgementPage> createState() => _AcknowledgementPageState();
+  State<ChecklistAcknowledgementPage> createState() => AcknowledgementPageState();
 }
 
-class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
+class AcknowledgementPageState extends LocalizedState<ChecklistAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,7 +63,7 @@ class _AcknowledgementPageState extends LocalizedState<AcknowledgementPage> {
                   child: Text(localizations
                       .translate(i18.acknowledgementSuccess.goToHome)),
                   onPressed: () {
-                    context.router.popUntilRoot();
+                    context.router.maybePop();
                   },
                 ),
               ],

@@ -68,10 +68,11 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
-      path: "../../packages/attendance_management"
-      relative: true
-    source: path
-    version: "1.0.1+1"
+      name: attendance_management
+      sha256: b14b538f2d2900c5e4f6a12fefef615d08905398338deb5ea6d67f45f52c8ef0
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   audioplayers:
     dependency: "direct main"
     description:
@@ -326,7 +327,7 @@ packages:
       path: "../../packages/checklist"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.1-dev.1"
   cli_util:
     dependency: transitive
     description:
@@ -346,10 +347,11 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      path: "../../packages/closed_household"
-      relative: true
-    source: path
-    version: "0.0.0-dev.2"
+      name: closed_household
+      sha256: "7d3ae93e5702df79b1fb88720bba30fe4b8a603dd2b128a53bbf77d0a8a1dba4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   code_builder:
     dependency: transitive
     description:
@@ -499,27 +501,29 @@ packages:
       path: "../../packages/digit_components"
       relative: true
     source: path
-    version: "1.0.0+8"
+    version: "1.0.1"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.3-dev.3"
+    version: "1.0.3"
   digit_dss:
     dependency: "direct main"
     description:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "0.0.1-dev.2"
+    version: "1.0.0"
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_firebase_services"
-      relative: true
-    source: path
+      path: "packages/digit_firebase_services"
+      ref: checklist-tanishi
+      resolved-ref: "62ae41965c43d60e698a38edcdb5eb65f1a8b078"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "0.0.1"
   digit_scanner:
     dependency: "direct main"
@@ -527,13 +531,14 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "1.0.3-dev.1"
+    version: "1.0.3"
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   dio:
     dependency: "direct main"
@@ -944,13 +949,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.2.5"
-  forms_engine:
-    dependency: "direct overridden"
-    description:
-      path: "../../packages/forms_engine"
-      relative: true
-    source: path
-    version: "0.0.1"
   formula_parser:
     dependency: transitive
     description:
@@ -1124,10 +1122,11 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
-    version: "1.0.3-dev.2"
+      name: inventory_management
+      sha256: "5bad99832b9d828839f69e0288ad8fe06188e6504301c298f5dc3258cf677c75"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3+1"
   io:
     dependency: transitive
     description:
@@ -1549,7 +1548,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.3-dev.5"
+    version: "1.0.3"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

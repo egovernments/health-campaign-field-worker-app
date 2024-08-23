@@ -142,8 +142,8 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             )..add(DeliverInterventionSearchEvent(
                   taskSearch: TaskSearchModel(
                 projectBeneficiaryClientReferenceId: houseHoldOverviewState
-                    .householdMemberWrapper.projectBeneficiaries
-                    ?.map((e) => e.clientReferenceId)
+                    .householdMemberWrapper.projectBeneficiaries?.where((element) => element.projectId == RegistrationDeliverySingleton().projectId)
+                    .map((e) => e.clientReferenceId)
                     .toList(),
               ))),
             child: BlocProvider(

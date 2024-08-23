@@ -67,7 +67,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               .toLocal()
               .millisecondsSinceEpoch; // Get start date in milliseconds
           final endDate = DateTime(event.selectedDate.year,
-                  event.selectedDate.month, event.selectedDate.day, 11, 59)
+                  event.selectedDate.month, event.selectedDate.day, 23, 59)
               .toLocal()
               .millisecondsSinceEpoch; // Get end date in milliseconds
 
@@ -79,10 +79,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               ),
             );
             List<String> attendeesIndividualIds = [];
-            registers.map((r) =>
-                r.attendees?.where((a) => a.individualId != null).map((att) {
-                  attendeesIndividualIds.add(att.individualId.toString());
-                }));
+            registers.forEach((r) {
+              r.attendees?.where((a) => a.individualId != null).forEach((att) {
+                attendeesIndividualIds.add(att.individualId.toString());
+              });
+            });
             final individuals =
                 await individualDataRepository.search(IndividualSearchModel(
               id: attendeesIndividualIds,
@@ -113,7 +114,9 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 selectedDate: event.selectedDate)); // Trigger search event
           } catch (e) {
             debugPrint(e.toString()); // Print error
-            add(const DashboardEvent.handleSearch());
+            add(const DashboardEvent.handleSearch(
+              isNetworkError: true,
+            ));
           }
         } else if (!isConnected && event.syncFromServer) {
           emit(
@@ -137,6 +140,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           .where()
           .filter()
           .chartTypeEqualTo(DSSEnums.metric.toValue())
+          .projectIdEqualTo(DashboardSingleton().projectId)
           .findAll(); // Query metric charts from Isar database
       Map<String, MetricWrapper> metrics = {}; // Initialize metrics map
       List<TableWrapper> tableWrapperList = []; // Initialize table wrapper list
@@ -167,6 +171,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
           .where()
           .filter()
           .chartTypeEqualTo(DSSEnums.table.toValue())
+          .projectIdEqualTo(DashboardSingleton().projectId)
           .findAll(); // Query table charts from Isar database
       for (DashboardResponse chart in tableCharts) {
         if ((chart.data ?? []).isNotEmpty) {
@@ -230,6 +235,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
         selectedDate: metricCharts.firstOrNull?.lastSelectedDate ??
             event.selectedDate ??
             DateTime.now(),
+        isNetworkError: event.isNetworkError,
       )); // Emit fetched state with metric and table data
     } catch (error) {
       rethrow; // Rethrow any caught errors
@@ -242,6 +248,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 class DashboardEvent with _$DashboardEvent {
   const factory DashboardEvent.handleSearch({
     DateTime? selectedDate,
+    @Default(false) bool? isNetworkError,
   }) = DashboardSearchEvent; // Define handleSearch event
   const factory DashboardEvent.handleRefresh({
     required DateTime selectedDate,
@@ -261,6 +268,7 @@ class DashboardState with _$DashboardState {
     Map<String, MetricWrapper>? metricData,
     List<TableWrapper>? tableData,
     DateTime? selectedDate,
+    @Default(false) bool? isNetworkError,
   }) = DashboardFetchedState; // Define fetched state
   const factory DashboardState.error() =
       DashboardErrorState; // Define error state
