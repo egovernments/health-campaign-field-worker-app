@@ -10,7 +10,6 @@ import '../../local_store/no_sql/schema/localization.dart';
 class LocalizationLocalRepository {
   FutureOr<List<Localization>> returnLocalizationFromSQL(
       LocalSqlDataStore sql) async {
-    print("SQL ->>>>>>>>>>> ${sql.toString()}");
     final selectQuery = sql.select(sql.localization).join([]);
 
     // List to hold the AND conditions
