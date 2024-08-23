@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:complaints/blocs/localization/app_localization.dart';
 import 'package:complaints/complaints.dart';
+import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -92,11 +94,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Demo"),
+        title: Text("PGR-Complaints Example"),
       ),
-      body: ElevatedButton(
+      body: Center(
+        child :DigitOutLineButton(
         onPressed: () {
           Navigator.of(context).push(
             MaterialPageRoute(
@@ -105,8 +109,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         },
-        child: Text("Demo Acknowledgemnet"),
+        label: "Demo Acknowledgemnet",
+        buttonStyle: OutlinedButton.styleFrom(
+          shape: const BeveledRectangleBorder(),
+          padding: const EdgeInsets.all(14),
+          side: BorderSide(
+            width: 1.0,
+            color: theme.colorScheme.primary,
+          ),
+        ),
       ),
+    )
     );
   }
 }
