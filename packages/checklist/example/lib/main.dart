@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:checklist/blocs/app_localization.dart';
 import 'package:checklist/blocs/checklist_localization_delegate.dart';
+import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:checklist/pages/acknowledgement.dart';
 import 'package:flutter/services.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Checklist Package Example'),
     );
   }
 }
@@ -81,21 +82,23 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => ChecklistAcknowledgementPage(
-                      appLocalizations: ChecklistLocalization(
-                          Locale("en","MZ"),
-                          localizedStrings,
-                          languages
-                      ),
-                    ))
-            );
-          },
-          tooltip: 'Open Checklist',
-          child: const Icon(Icons.open_in_browser_rounded),
+        child:Container(
+          width: 300,
+          child: DigitElevatedButton(
+            child: Text("Acknowledgement Page"),
+            onPressed: () {
+              Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => ChecklistAcknowledgementPage(
+                        appLocalizations: ChecklistLocalization(
+                            Locale("en","MZ"),
+                            localizedStrings,
+                            languages
+                        ),
+                      ))
+              );
+            },
+          ),
         ),
       ),
     );

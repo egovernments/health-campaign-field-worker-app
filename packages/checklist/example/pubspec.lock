@@ -249,7 +249,7 @@ packages:
     source: hosted
     version: "0.7.10"
   digit_components:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: digit_components
       sha256: "01320d4c72829045e789d1a56e23ff2bd85dad6a1831d27bd507a1acaceae17e"

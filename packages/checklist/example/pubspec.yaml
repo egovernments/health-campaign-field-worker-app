@@ -28,6 +28,7 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  digit_components: ^1.0.0+2
   checklist: ^0.0.1-dev.1
   flutter:
     sdk: flutter
