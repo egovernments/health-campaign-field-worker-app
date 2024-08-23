@@ -533,7 +533,7 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
   }
 }
 
-///not needed ig
+// initializing Map
 void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
   // Define the attendance related lines
   var complaintsImportStatement = [

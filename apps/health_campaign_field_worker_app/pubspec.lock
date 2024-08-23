@@ -509,7 +509,7 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.3"
+    version: "1.0.4-dev.1"
   digit_dss:
     dependency: "direct main"
     description:
