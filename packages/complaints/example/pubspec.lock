@@ -183,7 +183,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.1-dev.1"
   convert:
     dependency: transitive
     description:
@@ -219,10 +219,11 @@ packages:
   dart_mappable_builder:
     dependency: transitive
     description:
-      path: "../../dart_mappable_builder"
-      relative: true
-    source: path
-    version: "4.2.0"
+      name: dart_mappable_builder
+      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -250,9 +251,10 @@ packages:
   digit_data_model:
     dependency: transitive
     description:
-      path: "../../digit_data_model"
-      relative: true
-    source: path
+      name: digit_data_model
+      sha256: e1ea907e9cb7d521341325ac1b1b98fad8bd5e5ca1bab7f7c18ed02ccd2f2c2b
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3"
   dio:
     dependency: transitive

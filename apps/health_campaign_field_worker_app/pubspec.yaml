@@ -74,7 +74,7 @@ dependencies:
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.0
   closed_household: ^1.0.1
-  complaints: ^0.0.1
+  complaints: ^0.0.1-dev.1
 
 dev_dependencies:
   flutter_test:
