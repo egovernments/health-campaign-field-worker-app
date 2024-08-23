@@ -1,3 +1,8 @@
+## 1.0.4-dev.2
+
+* Removed Service and Service Definition models
+  - Removed Service repositories and Service blocs to integrate in checklist package
+
 ## 1.0.3
 
 * Added localization table
