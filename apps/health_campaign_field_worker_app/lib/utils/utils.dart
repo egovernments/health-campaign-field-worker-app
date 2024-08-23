@@ -396,7 +396,6 @@ int getSyncCount(List<OpLog> oplogs) {
       case DataModelType.stock:
       case DataModelType.stockReconciliation:
       case DataModelType.service:
-      case DataModelType.complaints:
       case DataModelType.sideEffect:
       case DataModelType.referral:
       case DataModelType.hFReferral:
