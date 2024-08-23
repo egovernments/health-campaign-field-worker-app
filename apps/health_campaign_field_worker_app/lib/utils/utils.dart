@@ -361,27 +361,6 @@ void showDownloadDialog(
 }
 
 
-//Function to read the localizations from ISAR,
-getLocalizationString(Isar isar, String selectedLocale) async {
-  List<dynamic> localizationValues = [];
-
-
-  final List<LocalizationWrapper> localizationList =
-  await isar.localizationWrappers
-      .filter()
-      .localeEqualTo(
-    selectedLocale.toString(),
-  )
-      .findAll();
-  if (localizationList.isNotEmpty) {
-    localizationValues.addAll(localizationList.first.localization!);
-  }
-
-
-  return localizationValues;
-}
-
-
 getSelectedLanguage(AppInitialized state, int index) {
   if (AppSharedPreferences().getSelectedLocale == null) {
     AppSharedPreferences()
@@ -408,6 +387,7 @@ initializeAllMappers() async {
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
     switch (element.entityType) {
+      //add SyncCount case for package
       case DataModelType.household:
       case DataModelType.individual:
       case DataModelType.householdMember:

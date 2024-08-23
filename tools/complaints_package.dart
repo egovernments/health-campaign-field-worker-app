@@ -269,7 +269,7 @@ void _updateSyncUpFile(String syncUpFilePath) {
                  break;
 ''';
 
-  // Check if the sync_down file exists
+  // Check if the sync_up file exists
   var syncUpFile = File(syncUpFilePath);
 
   if (!syncUpFile.existsSync()) {
@@ -277,7 +277,7 @@ void _updateSyncUpFile(String syncUpFilePath) {
     return;
   }
 
-  // Read the sync_down file
+  // Read the sync_up file
   var syncUpFileContent = syncUpFile.readAsStringSync();
   print(syncUpFileContent);
   // Check if the import statement already exists and add it if not
@@ -305,21 +305,21 @@ void _updateSyncUpFile(String syncUpFilePath) {
                 newCases +
                 '\n' +
                 syncUpFileContent.substring(caseInsertionIndex);
-        print('The new cases were added to sync_down.dart.');
+        print('The new cases were added to sync_up.dart.');
 
         // Write the updated content back to the file
         syncUpFile.writeAsStringSync(syncUpFileContent);
       } else {
         print(
-            'Error: Could not find the default case in the switch statement in sync_down.dart.');
+            'Error: Could not find the default case in the switch statement in sync_up.dart.');
         return;
       }
     } else {
-      print('Error: Could not find the switch statement in sync_down.dart.');
+      print('Error: Could not find the switch statement in sync_up.dart.');
       return;
     }
   } else {
-    print('The new cases already exist in sync_down.dart.');
+    print('The new cases already exist in sync_up.dart.');
   }
 }
 
@@ -535,7 +535,7 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
 
 //initialise mappers
 void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
-  // Define the attendance related lines
+  // Define the complaints related lines
   var complaintsImportStatement = [
     "import 'package:complaints/complaints.init.dart' as complaints_mappers;"
   ];
@@ -571,7 +571,7 @@ void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
   }
 
   if (!utilsFileContent.contains(complaintsInitializationStatement)) {
-    // Add the attendance related initialization statement to the file
+    // Add the complaints related initialization statement to the file
     var initializeAllMappersIndex =
     utilsFileContent.indexOf('initializeAllMappers() async {');
     if (initializeAllMappersIndex == -1) {
