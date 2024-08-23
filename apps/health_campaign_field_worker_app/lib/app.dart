@@ -134,9 +134,9 @@ class MainApplicationState extends State<MainApplication>
                                     const LocalizationState(),
                                     LocalizationRepository(
                                       widget.client,
-                                      widget.isar,
+                                      widget.sql,
                                     ),
-                                    widget.isar,
+                                    widget.sql,
                                   )..add(
                                       LocalizationEvent.onLoadLocalization(
                                         module: localizationModulesList
@@ -156,9 +156,9 @@ class MainApplicationState extends State<MainApplication>
                                     const LocalizationState(),
                                     LocalizationRepository(
                                       widget.client,
-                                      widget.isar,
+                                      widget.sql,
                                     ),
-                                    widget.isar,
+                                    widget.sql,
                                   ),
                         ),
                         BlocProvider(
@@ -291,7 +291,7 @@ class MainApplicationState extends State<MainApplication>
                                   })
                                 : [firstLanguage],
                             localizationsDelegates: getAppLocalizationDelegates(
-                              isar: widget.isar,
+                              sql: widget.sql,
                               appConfig: appConfig,
                               selectedLocale: selectedLocale,
                             ),

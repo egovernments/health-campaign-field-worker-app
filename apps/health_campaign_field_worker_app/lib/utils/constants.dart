@@ -99,11 +99,6 @@ class Constants {
         sql,
         BoundaryOpLogManager(isar),
       ),
-      PgrServiceLocalRepository(
-        sql,
-        PgrServiceOpLogManager(isar),
-      ),
-  
     ];
   }
 
@@ -135,8 +130,6 @@ class Constants {
       remoteRepositories.addAll([
         if (value == DataModelType.facility)
           FacilityRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.complaints)
-          PgrServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.productVariant)
           ProductVariantRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.boundary)

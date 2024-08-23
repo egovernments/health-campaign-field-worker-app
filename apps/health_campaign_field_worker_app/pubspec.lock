@@ -483,10 +483,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "0e1ec8e4d2776fcc4a8118ac85043b8876466ec7399c14880f3d585ad3586ef6"
+      sha256: e1ea907e9cb7d521341325ac1b1b98fad8bd5e5ca1bab7f7c18ed02ccd2f2c2b
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.3"
   digit_firebase_services:
     dependency: "direct main"
     description:

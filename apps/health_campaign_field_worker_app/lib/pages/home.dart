@@ -295,6 +295,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
@@ -304,15 +305,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () => context.router.push(ChecklistWrapperRoute()),
         ),
       ),
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
-        ),
-      ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -361,8 +354,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
       i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.showcaseKey,
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
     };
@@ -370,7 +362,6 @@ class _HomePageState extends LocalizedState<HomePage> {
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.myCheckList,
-      i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.db,
     ];
@@ -411,8 +402,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context
                     .read<LocalRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<
-                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -420,8 +409,6 @@ class _HomePageState extends LocalizedState<HomePage> {
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
                 context
                     .read<RemoteRepository<ServiceModel, ServiceSearchModel>>(),
-                context.read<
-                    RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
               ],
             ),
           );
