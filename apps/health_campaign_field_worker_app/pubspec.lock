@@ -521,7 +521,7 @@ packages:
     description:
       path: "packages/digit_firebase_services"
       ref: checklist-tanishi
-      resolved-ref: "62ae41965c43d60e698a38edcdb5eb65f1a8b078"
+      resolved-ref: fce6c99cd77120ffeebb88eddedd4e55c803350e
       url: "https://github.com/egovernments/health-campaign-field-worker-app"
     source: git
     version: "0.0.1"
