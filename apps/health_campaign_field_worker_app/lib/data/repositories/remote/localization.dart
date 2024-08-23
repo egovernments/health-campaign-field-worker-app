@@ -11,10 +11,8 @@ class LocalizationRepository {
   final Dio _client;
   final LocalSqlDataStore _sql;
 
-  const LocalizationRepository(
-      this._client,
-      this._sql,
-      );
+  const LocalizationRepository(this._client,
+      this._sql,);
 
   Future<LocalizationModel> search({
     required Map<String, String> queryParameters,
@@ -71,18 +69,19 @@ class LocalizationRepository {
           "tenantId": tenantId,
         },
       );
+
       await _sql.batch((batch) {
         batch.insertAll(
             _sql.localization,
             result.messages
-                .map((e) => LocalizationCompanion(
-              code: Value(e.code),
-              locale: Value(e.locale),
-              message: Value(e.message),
-              module: Value(e.module),
-            ))
+                .map((e) =>
+                LocalizationCompanion(
+                  code: Value(e.code),
+                  locale: Value(e.locale),
+                  message: Value(e.message),
+                  module: Value(e.module),
+                ))
                 .toList());
       });
     }
-  }
-}
+  }}

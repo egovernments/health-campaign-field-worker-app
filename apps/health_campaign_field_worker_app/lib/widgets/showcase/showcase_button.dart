@@ -73,34 +73,7 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
         return stockReconciliationShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
-      // case ChecklistRoute.name:
-      //   return selectChecklistShowcaseData.showcaseData.map(
-      //     (e) => e.showcaseKey,
-      //   );
-      // case ChecklistBoundaryViewRoute.name:
-      //   return checklistDataShowcaseData.showcaseData.map(
-      //     (e) => e.showcaseKey,
-      //   );
-      // case ChecklistPreviewRoute.name:
-      //   return checklistListShowcaseData.showcaseData.map(
-      //     (e) => e.showcaseKey,
-      //   );
-      case ComplaintTypeRoute.name:
-        return complaintTypeShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ComplaintsDetailsRoute.name:
-        return complaintsDetailsShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ComplaintsInboxRoute.name:
-        return complaintsInboxShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ComplaintsDetailsViewRoute.name:
-        return complaintsDetailsViewShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
+
       default:
         return null;
     }

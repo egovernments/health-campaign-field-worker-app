@@ -23,6 +23,7 @@ class EntityMapper extends EntityMapperListener {
         return entity;
 
 
+
       default:
         final entity = EntityModelMapper.fromJson(entityString);
         return entity;
