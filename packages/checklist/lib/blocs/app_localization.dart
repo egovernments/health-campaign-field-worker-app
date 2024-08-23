@@ -19,8 +19,9 @@ class ChecklistLocalization {
 
   // Method to get the delegate for localization
   static LocalizationsDelegate<ChecklistLocalization> getDelegate(
-      Future<dynamic> localizedStrings, List<dynamic> languages) =>
-      ChecklistLocalizationDelegate(localizedStrings, languages);
+      Future<dynamic> localizedStrings, List<dynamic> languages) {
+      return ChecklistLocalizationDelegate(localizedStrings, languages);
+  }
 
   // Method to load localized strings
   Future<bool> load() async {
