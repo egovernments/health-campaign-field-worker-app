@@ -249,13 +249,13 @@ packages:
     source: hosted
     version: "1.0.1"
   digit_data_model:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: e1ea907e9cb7d521341325ac1b1b98fad8bd5e5ca1bab7f7c18ed02ccd2f2c2b
+      sha256: "14ebea5f17921081025963b379efd5e16d155dd920d5a42ab2f2f392afb649de"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4-dev.1"
   dio:
     dependency: transitive
     description:

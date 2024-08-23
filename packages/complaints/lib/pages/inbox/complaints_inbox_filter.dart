@@ -134,6 +134,7 @@ class ComplaintsInboxFilterPageState
                     ),
                   ],
                 ),
+                enableFixedButton: true,
                 footer: SizedBox(
                   child: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),

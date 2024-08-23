@@ -38,25 +38,23 @@ void main() {
   // Set boundary in the context utility file
   _setBoundaryInContextUtilityFile(extensionsFilePath, contextUtilityFilePath);
 
-
   // Add complaints to home file
   _updateHome(homeFilePath);
 
-  // Update the sync_down.dart file
+  // Update the sync_up.dart file
   _updateSyncUpFile(syncUpFilePath);
 
   // Add complaints routes and import to the router file
   _addComplaintsRoutesAndImportToRouterFile(routerFilePath);
 
   // Add new case statements to the entity_mapper.dart file
-
   _updateEntityMapperFile(entityMapperFilePath);
 
   _createLocalizationDelegatesFile(localizationDelegatesFilePath);
 
   _addRepoToNetworkManagerProviderWrapper(
       networkManagerProviderWrapperFilePath:
-      networkManagerProviderWrapperFilePath);
+          networkManagerProviderWrapperFilePath);
 
   _addComplaintsConstantsToConstantsFile(constantsFilePath: constantsFilePath);
 
@@ -85,51 +83,51 @@ void _formatFiles(List<String> filePaths) {
 
 void _updateHome(String homeFilePath) {
   var importStatement = '''
-      import 'package:complaints/complaints.dart';
-      import 'package:complaints/router/complaints_router.gm.dart';
-      ''';
+    import 'package:complaints/complaints.dart';
+    import 'package:complaints/router/complaints_router.gm.dart';
+    ''';
 
   var homeItemsData = '''
-    i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
-        ),
+  i18.home.fileComplaint:
+        homeShowcaseData.distributorFileComplaint.buildWith(
+      child: HomeItemCard(
+        icon: Icons.announcement,
+        label: i18.home.fileComplaint,
+        onPressed: () =>
+            context.router.push(const ComplaintsInboxWrapperRoute()),
       ),
-  ''';
+    ),
+''';
 
   var showCaseData = '''
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.showcaseKey,
-  ''';
+    i18.home.fileComplaint:
+        homeShowcaseData.distributorFileComplaint.showcaseKey,
+''';
 
   var itemsLabel = '''
-        i18.home.fileComplaint,
-  ''';
+      i18.home.fileComplaint,
+''';
 
   // Define the data to be added
   var singletonData = '''
-    ComplaintsSingleton().setInitialData(
-          tenantId: envConfig.variables.tenantId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          userMobileNumber: context.loggedInUser.mobileNumber,
-          loggedInUserName: context.loggedInUser.name,
-          complaintTypes:
-              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
-         userName: context.loggedInUser.name ?? '',
-        );
-  ''';
+  ComplaintsSingleton().setInitialData(
+        tenantId: envConfig.variables.tenantId,
+        loggedInUserUuid: context.loggedInUserUuid,
+        userMobileNumber: context.loggedInUser.mobileNumber,
+        loggedInUserName: context.loggedInUser.name,
+        complaintTypes:
+            appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+       userName: context.loggedInUser.name ?? '',
+      );
+''';
 
   var localRepoData = '''
-    context.read<LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-  ''';
+  context.read<LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+''';
 
   var remoteRepoData = '''
-   context.read<RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
-  ''';
+ context.read<RemoteRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+''';
 
   // Check if the home.dart file exists
   var homeFile = File(homeFilePath);
@@ -192,90 +190,106 @@ void _updateSyncUpFile(String syncUpFilePath) {
   // Define the import statement and the new case statements
   var importStatement = "import 'package:complaints/complaints.dart';";
   var newCases = '''
-          case DataModelType.complaints:
-                  for (final entity in entities) {
-                    if (remote is PgrServiceRemoteRepository &&
-                        entity is PgrServiceModel) {
-                      final response = await remote.create(entity);
-                      final responseData = response.data;
-                      if (responseData is! Map<String, dynamic>) {
-                        AppLogger.instance.error(
-                          title: 'NetworkManager : PgrServiceRemoteRepository',
-                          message: responseData,
-                          stackTrace: StackTrace.current,
-                        );
-                        continue;
-                      }
-
-                      PgrServiceCreateResponseModel
-                          pgrServiceCreateResponseModel;
-                      PgrComplaintResponseModel pgrComplaintModel;
-                      try {
-                        pgrServiceCreateResponseModel =
-                            PgrServiceCreateResponseModelMapper.fromMap(
-                          responseData,
-                        );
-                        pgrComplaintModel =
-                            pgrServiceCreateResponseModel.serviceWrappers.first;
-                      } catch (e) {
-                        rethrow;
-                      }
-
-                      final service = pgrComplaintModel.service;
-                      final serviceRequestId = service.serviceRequestId;
-
-                      if (serviceRequestId == null ||
-                          serviceRequestId.isEmpty) {
-                        AppLogger.instance.error(
-                          title: 'NetworkManager : PgrServiceRemoteRepository',
-                          message: 'Service Request ID is null',
-                          stackTrace: StackTrace.current,
-                        );
-                        continue;
-                      }
-
-                      await local.markSyncedUp(
-                        entry: sublist.firstWhere((element) =>
-                            element.clientReferenceId ==
-                            entity.clientReferenceId),
-                        clientReferenceId: entity.clientReferenceId,
-                        nonRecoverableError: entity.nonRecoverableError,
+        case DataModelType.complaints:
+                for (final entity in entities) {
+                  if (remote is PgrServiceRemoteRepository &&
+                      entity is PgrServiceModel) {
+                    final response = await remote.create(entity);
+                    final responseData = response.data;
+                    if (responseData is! Map<String, dynamic>) {
+                      AppLogger.instance.error(
+                        title: 'NetworkManager : PgrServiceRemoteRepository',
+                        message: responseData,
+                        stackTrace: StackTrace.current,
                       );
-
-                      await local.opLogManager.updateServerGeneratedIds(
-                        model: UpdateServerGeneratedIdModel(
-                          clientReferenceId: entity.clientReferenceId,
-                          serverGeneratedId: serviceRequestId,
-                          dataOperation: operationGroupedEntity.key,
-                          rowVersion: entity.rowVersion,
-                        ),
-                      );
-
-                      await local.update(
-                        entity.copyWith(
-                          serviceRequestId: serviceRequestId,
-                          id: service.id,
-                          applicationStatus: service.applicationStatus,
-                          accountId: service.accountId,
-                        ),
-                        createOpLog: false,
-                      );
+                      continue;
                     }
+
+
+
+
+                    PgrServiceCreateResponseModel
+                        pgrServiceCreateResponseModel;
+                    PgrComplaintResponseModel pgrComplaintModel;
+                    try {
+                      pgrServiceCreateResponseModel =
+                          PgrServiceCreateResponseModelMapper.fromMap(
+                        responseData,
+                      );
+                      pgrComplaintModel =
+                          pgrServiceCreateResponseModel.serviceWrappers.first;
+                    } catch (e) {
+                      rethrow;
+                    }
+
+
+
+
+                    final service = pgrComplaintModel.service;
+                    final serviceRequestId = service.serviceRequestId;
+
+
+
+
+                    if (serviceRequestId == null ||
+                        serviceRequestId.isEmpty) {
+                      AppLogger.instance.error(
+                        title: 'NetworkManager : PgrServiceRemoteRepository',
+                        message: 'Service Request ID is null',
+                        stackTrace: StackTrace.current,
+                      );
+                      continue;
+                    }
+
+
+
+
+                    await local.markSyncedUp(
+                      entry: sublist.firstWhere((element) =>
+                          element.clientReferenceId ==
+                          entity.clientReferenceId),
+                      clientReferenceId: entity.clientReferenceId,
+                      nonRecoverableError: entity.nonRecoverableError,
+                    );
+
+
+
+
+                    await local.opLogManager.updateServerGeneratedIds(
+                      model: UpdateServerGeneratedIdModel(
+                        clientReferenceId: entity.clientReferenceId,
+                        serverGeneratedId: serviceRequestId,
+                        dataOperation: operationGroupedEntity.key,
+                        rowVersion: entity.rowVersion,
+                      ),
+                    );
+
+
+
+
+                    await local.update(
+                      entity.copyWith(
+                        serviceRequestId: serviceRequestId,
+                        id: service.id,
+                        applicationStatus: service.applicationStatus,
+                        accountId: service.accountId,
+                      ),
+                      createOpLog: false,
+                    );
                   }
-                  break;
+                }
+                break;
 ''';
 
-  // Check if the sync_down file exists
+  // Check if the sync_up file exists
   var syncUpFile = File(syncUpFilePath);
-
-
 
   if (!syncUpFile.existsSync()) {
     print('Error: Sync Up file does not exist at path: $syncUpFilePath');
     return;
   }
 
-  // Read the sync_down file
+  // Read the sync_up file
   var syncUpFileContent = syncUpFile.readAsStringSync();
   print(syncUpFileContent);
   // Check if the import statement already exists and add it if not
@@ -283,53 +297,49 @@ void _updateSyncUpFile(String syncUpFilePath) {
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     syncUpFileContent = importStatement + '\n' + syncUpFileContent;
     print('The import statement was added to sync_up.dart.');
-
   } else {
     print('The import statement already exists in sync_up.dart.');
   }
 
   // Insert the new case statements
-  if (!syncUpFileContent
-      .contains('case DataModelType.complaints:'.replaceAll(RegExp(r'\s'), ''))) {
+  if (!syncUpFileContent.contains(
+      'case DataModelType.complaints:'.replaceAll(RegExp(r'\s'), ''))) {
     // Find the position to insert the new cases within the switch statement
     var switchIndex =
-    syncUpFileContent.indexOf('switch (typeGroupedEntity.key) {');
+        syncUpFileContent.indexOf('switch (typeGroupedEntity.key) {');
     if (switchIndex != -1) {
       var caseInsertionIndex =
-      syncUpFileContent.indexOf('default:', switchIndex);
+          syncUpFileContent.indexOf('default:', switchIndex);
       if (caseInsertionIndex != -1) {
-        syncUpFileContent =
-            syncUpFileContent.substring(0, caseInsertionIndex) +
-                newCases +
-                '\n' +
-                syncUpFileContent.substring(caseInsertionIndex);
-        print('The new cases were added to sync_down.dart.');
+        syncUpFileContent = syncUpFileContent.substring(0, caseInsertionIndex) +
+            newCases +
+            '\n' +
+            syncUpFileContent.substring(caseInsertionIndex);
+        print('The new cases were added to sync_up.dart.');
 
         // Write the updated content back to the file
-
         syncUpFile.writeAsStringSync(syncUpFileContent);
       } else {
         print(
-            'Error: Could not find the default case in the switch statement in sync_down.dart.');
+            'Error: Could not find the default case in the switch statement in sync_up.dart.');
         return;
       }
     } else {
-      print('Error: Could not find the switch statement in sync_down.dart.');
+      print('Error: Could not find the switch statement in sync_up.dart.');
       return;
     }
   } else {
-    print('The new cases already exist in sync_down.dart.');
+    print('The new cases already exist in sync_up.dart.');
   }
 }
 
 void _updateEntityMapperFile(String entityMapperFilePath) {
   // Define the import statement and new case statements
-  var importStatement =
-      "import 'package:complaints/complaints.dart';";
+  var importStatement = "import 'package:complaints/complaints.dart';";
   var newCases = '''
-      case "complaints":
-        final entity = PgrServiceModelMapper.fromJson(entityString);
-        return entity;
+    case "complaints":
+      final entity = PgrServiceModelMapper.fromJson(entityString);
+      return entity;
 ''';
 
   // Check if the entity_mapper file exists
@@ -376,65 +386,72 @@ void _updateEntityMapperFile(String entityMapperFilePath) {
     print('The new cases already exist.');
   }
 }
+
 //script working
 void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
   // Define the complaints route lines
   var complaintsRoutes = '''
-        AutoRoute(
-          page: ComplaintsInboxWrapperRoute.page,
-          path: 'complaints-inbox',
-          children: [
-            AutoRoute(
-              page: ComplaintsInboxRoute.page,
-              path: 'complaints-inbox-items',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsInboxFilterRoute.page,
-              path: 'complaints-inbox-filter',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSearchRoute.page,
-              path: 'complaints-inbox-search',
-            ),
-            AutoRoute(
-              page: ComplaintsInboxSortRoute.page,
-              path: 'complaints-inbox-sort',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsViewRoute.page,
-              path: 'complaints-inbox-view-details',
-            ),
-          ],
-        ),
+      AutoRoute(
+        page: ComplaintsInboxWrapperRoute.page,
+        path: 'complaints-inbox',
+        children: [
+          AutoRoute(
+            page: ComplaintsInboxRoute.page,
+            path: 'complaints-inbox-items',
+            initial: true,
+          ),
+          AutoRoute(
+            page: ComplaintsInboxFilterRoute.page,
+            path: 'complaints-inbox-filter',
+          ),
+          AutoRoute(
+            page: ComplaintsInboxSearchRoute.page,
+            path: 'complaints-inbox-search',
+          ),
+          AutoRoute(
+            page: ComplaintsInboxSortRoute.page,
+            path: 'complaints-inbox-sort',
+          ),
+          AutoRoute(
+            page: ComplaintsDetailsViewRoute.page,
+            path: 'complaints-inbox-view-details',
+          ),
+        ],
+      ),
 
-        /// Complaints registration
-        AutoRoute(
-          page: ComplaintsRegistrationWrapperRoute.page,
-          path: 'complaints-registration',
-          children: [
-            AutoRoute(
-              page: ComplaintTypeRoute.page,
-              path: 'complaints-type',
-              initial: true,
-            ),
-            AutoRoute(
-              page: ComplaintsLocationRoute.page,
-              path: 'complaints-location',
-            ),
-            AutoRoute(
-              page: ComplaintsDetailsRoute.page,
-              path: 'complaints-details',
-            ),
-          ],
-        ),
 
-        /// Complaints Acknowledgemnet
-        AutoRoute(
-          page: ComplaintsAcknowledgementRoute.page,
-          path: 'complaints-acknowledgement',
-        ),
-  ''';
+
+
+      /// Complaints registration
+      AutoRoute(
+        page: ComplaintsRegistrationWrapperRoute.page,
+        path: 'complaints-registration',
+        children: [
+          AutoRoute(
+            page: ComplaintTypeRoute.page,
+            path: 'complaints-type',
+            initial: true,
+          ),
+          AutoRoute(
+            page: ComplaintsLocationRoute.page,
+            path: 'complaints-location',
+          ),
+          AutoRoute(
+            page: ComplaintsDetailsRoute.page,
+            path: 'complaints-details',
+          ),
+        ],
+      ),
+
+
+
+
+      /// Complaints Acknowledgemnet
+      AutoRoute(
+        page: ComplaintsAcknowledgementRoute.page,
+        path: 'complaints-acknowledgement',
+      ),
+''';
 
   // Define the import statement
   var importStatement1 =
@@ -484,16 +501,15 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
     var moduleInsertionIndex = routerFileContent.indexOf('@AutoRouterConfig(');
     if (moduleInsertionIndex != -1) {
       var endOfModulesIndex =
-      routerFileContent.indexOf(']', moduleInsertionIndex);
+          routerFileContent.indexOf(']', moduleInsertionIndex);
       if (endOfModulesIndex != -1) {
         var modulesEndIndex =
-        routerFileContent.lastIndexOf(']', endOfModulesIndex);
+            routerFileContent.lastIndexOf(']', endOfModulesIndex);
         routerFileContent = routerFileContent.substring(0, modulesEndIndex) +
             ' ComplaintsRoute,' +
             routerFileContent.substring(modulesEndIndex);
 
         print('The ComplaintsRoute module was added.');
-
       } else {
         print('Error: Could not find the end of the modules list.');
         return;
@@ -519,9 +535,7 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
           routerFileContent.substring(insertionIndex +
               '// INFO : Need to add Router of package Here'.length);
 
-
       print('The complaint routes were added.');
-
       // Write the updated content back to the file
       routerFile.writeAsStringSync(routerFileContent);
     } else {
@@ -533,11 +547,11 @@ void _addComplaintsRoutesAndImportToRouterFile(String routerFilePath) {
   }
 }
 
-// initializing Map
+//initialise mappers
 void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
-  // Define the attendance related lines
+  // Define the complaints related lines
   var complaintsImportStatement = [
-  "import 'package:complaints/complaints.init.dart' as complaints_mappers;"
+    "import 'package:complaints/complaints.init.dart' as complaints_mappers;"
   ];
   var complaintsInitializationStatement =
       "Future(() => complaints_mappers.initializeMappers()),";
@@ -550,6 +564,8 @@ void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
 
   // Normalize the whitespace in the file content
   var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
+
+  var getSyncCountStatement = "case DataModelType.complaints:";
 
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
@@ -571,9 +587,9 @@ void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
   }
 
   if (!utilsFileContent.contains(complaintsInitializationStatement)) {
-    // Add the attendance related initialization statement to the file
+    // Add the complaints related initialization statement to the file
     var initializeAllMappersIndex =
-    utilsFileContent.indexOf('initializeAllMappers() async {');
+        utilsFileContent.indexOf('initializeAllMappers() async {');
     if (initializeAllMappersIndex == -1) {
       print(
           'Error: Could not find a place to insert the complaint initialization statement.');
@@ -592,6 +608,28 @@ void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
     print('The complaint initialization statement already exists.');
   }
 
+  if (!utilsFileContent.contains(getSyncCountStatement)) {
+    var getSyncCountStatementIndex =
+        utilsFileContent.indexOf('add SyncCount case for package');
+    if (getSyncCountStatementIndex == -1) {
+      print(
+          'Error: Could not find a place to insert the complaint DataModelType statement.');
+      return;
+    }
+
+    var endOfgetSyncCountStatementIndex = getSyncCountStatementIndex +
+        utilsFileContent.substring(getSyncCountStatementIndex).indexOf('}') +
+        1;
+    utilsFileContent =
+        utilsFileContent.substring(0, getSyncCountStatementIndex + 30) +
+            '\n    ' +
+            getSyncCountStatement +
+            utilsFileContent.substring(getSyncCountStatementIndex + 30);
+    print('complaint DataModelType statement added to utils.dart');
+  } else {
+    print('The complaint DataModelType statement already exists.');
+  }
+
   // Write the updated content back to the utils.dart file
   utilsFile.writeAsStringSync(utilsFileContent);
 }
@@ -603,23 +641,21 @@ void _addComplaintsConstantsToConstantsFile(
     "import 'package:complaints/complaints.dart';",
   ];
 
-
-
   // Define the local and remote repositories
   var localRepository = [
     '''
-  PgrServiceLocalRepository(
-        sql,
-        PgrServiceOpLogManager(isar),
-      ),
-  '''
+PgrServiceLocalRepository(
+      sql,
+      PgrServiceOpLogManager(isar),
+    ),
+'''
   ];
 
   var remoteRepository = [
     '''
 if (value == DataModelType.complaints)
-          PgrServiceRemoteRepository(dio, actionMap: actions),
-  '''
+        PgrServiceRemoteRepository(dio, actionMap: actions),
+'''
   ];
 
   // Check if the constants.dart file exists
@@ -634,9 +670,7 @@ if (value == DataModelType.complaints)
 
   // Normalize the whitespace in the file content and the complaints configuration
   var normalizedFileContent =
-  constantsFileContent.replaceAll(RegExp(r'\s'), '');
-  // var normalizedComplaintsConfiguration =
-  //     complaintsConfiguration.replaceAll(RegExp(r'\s'), '');
+      constantsFileContent.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statements already exist in the file
   for (var importStatement in importStatements) {
@@ -648,11 +682,9 @@ if (value == DataModelType.complaints)
     }
   }
 
- 
-
   // Add the local and remote repositories to the getLocalRepositories and getRemoteRepositories methods
   var getLocalRepositoriesIndex =
-  constantsFileContent.indexOf('getLocalRepositories(');
+      constantsFileContent.indexOf('getLocalRepositories(');
   if (getLocalRepositoriesIndex != -1) {
     var endOfGetLocalRepositories = getLocalRepositoriesIndex +
         constantsFileContent.substring(getLocalRepositoriesIndex).indexOf(']') +
@@ -666,7 +698,7 @@ if (value == DataModelType.complaints)
   }
 
   var getRemoteRepositoriesIndex =
-  constantsFileContent.indexOf('getRemoteRepositories(');
+      constantsFileContent.indexOf('getRemoteRepositories(');
   if (getRemoteRepositoriesIndex != -1) {
     var endOfGetRemoteRepositories = getRemoteRepositoriesIndex +
         constantsFileContent
@@ -674,8 +706,8 @@ if (value == DataModelType.complaints)
             .indexOf('addAll(') +
         'addAll('.length;
     var endOfAddAll = constantsFileContent
-        .substring(endOfGetRemoteRepositories)
-        .indexOf(']') +
+            .substring(endOfGetRemoteRepositories)
+            .indexOf(']') +
         endOfGetRemoteRepositories;
     constantsFileContent = constantsFileContent.substring(0, endOfAddAll) +
         remoteRepository.join('\n') +
@@ -704,9 +736,9 @@ void _addRepoToNetworkManagerProviderWrapper(
 
 // Read the network_manager_provider_wrapper.dart file
   var networkManagerProviderWrapperFile =
-  File(networkManagerProviderWrapperFilePath);
+      File(networkManagerProviderWrapperFilePath);
   var networkManagerProviderWrapperFileContent =
-  networkManagerProviderWrapperFile.readAsStringSync();
+      networkManagerProviderWrapperFile.readAsStringSync();
 
 // Find the last import statement in the file
   var lastImportIndex = networkManagerProviderWrapperFileContent
@@ -726,7 +758,7 @@ void _addRepoToNetworkManagerProviderWrapper(
         // Add the import statement after the last import
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.substring(
-                0, endOfLastImport) +
+                    0, endOfLastImport) +
                 '\n' +
                 importStatement +
                 networkManagerProviderWrapperFileContent
@@ -740,12 +772,12 @@ void _addRepoToNetworkManagerProviderWrapper(
 
     // Normalize the whitespace in the file content and the remote repository of complaints
     var normalizedFileContent =
-    networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
+        networkManagerProviderWrapperFileContent.replaceAll(RegExp(r'\s'), '');
 
 // Check if the local repository providers already exist in the file
     for (var repositoryProvider in localRepositories) {
       var normalizedLocalRepositoryOfComplaints =
-      repositoryProvider.replaceAll(RegExp(r'\s'), '');
+          repositoryProvider.replaceAll(RegExp(r'\s'), '');
 
       if (!normalizedFileContent
           .contains(normalizedLocalRepositoryOfComplaints)) {
@@ -761,17 +793,17 @@ void _addRepoToNetworkManagerProviderWrapper(
 
 // Check if the remote repository of complaints already exists in the file
     for (var remoteRepositoryOfRegistrationDelivery
-    in remoteRepositoriesOfRegistrationDelivery) {
+        in remoteRepositoriesOfRegistrationDelivery) {
       var normalizedRemoteRepositoryOfRegistrationDelivery =
-      remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
+          remoteRepositoryOfRegistrationDelivery.replaceAll(RegExp(r'\s'), '');
 
       if (!normalizedFileContent
           .contains(normalizedRemoteRepositoryOfRegistrationDelivery)) {
         // Add the remote repository of complaints to the _getRemoteRepositories method
         var replacementString =
-        networkManagerProviderWrapperFileContent.contains(']);')
-            ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
-            : '  $remoteRepositoryOfRegistrationDelivery\n]);';
+            networkManagerProviderWrapperFileContent.contains(']);')
+                ? '  $remoteRepositoryOfRegistrationDelivery,\n]);'
+                : '  $remoteRepositoryOfRegistrationDelivery\n]);';
         networkManagerProviderWrapperFileContent =
             networkManagerProviderWrapperFileContent.replaceFirst(
                 ']);', replacementString);
@@ -798,23 +830,23 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   // Read the localization delegates file
   var localizationDelegatesFile = File(localizationDelegatesFilePath);
   var localizationDelegatesFileContent =
-  localizationDelegatesFile.readAsStringSync();
+      localizationDelegatesFile.readAsStringSync();
 
   var normalizedFileContent =
-  localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
+      localizationDelegatesFileContent.replaceAll(RegExp(r'\s'), '');
 
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent
       .contains(importStatement.replaceAll(RegExp(r'\s'), ''))) {
     localizationDelegatesFileContent =
-    '$importStatement\n$localizationDelegatesFileContent';
+        '$importStatement\n$localizationDelegatesFileContent';
     print('The import statement was added.');
   }
 
   if (!normalizedFileContent.contains(delegate.replaceAll(RegExp(r'\s'), ''))) {
     var lastDelegateIndex =
-    localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
+        localizationDelegatesFileContent.lastIndexOf(RegExp(r','));
     if (lastDelegateIndex != -1) {
       localizationDelegatesFileContent =
           localizationDelegatesFileContent.substring(0, lastDelegateIndex + 1) +
@@ -828,12 +860,10 @@ void _createLocalizationDelegatesFile(String localizationDelegatesFilePath) {
   localizationDelegatesFile.writeAsStringSync(localizationDelegatesFileContent);
 }
 
-
 void _setBoundaryInContextUtilityFile(
     String extensionsFilePath, String contextUtilityFilePath) {
   // Define the lines to be added
-  var importStatement =
-      "import 'package:complaints/utils/utils.dart';";
+  var importStatement = "import 'package:complaints/utils/utils.dart';";
   var boundaryStatement =
       'ComplaintsSingleton().setBoundary(boundary: selectedBoundary);';
 
@@ -845,7 +875,7 @@ void _setBoundaryInContextUtilityFile(
     extensionsFile.writeAsStringSync(extensionsFileContent);
     print('Updated the extensions.dart file.');
   }
- 
+
   // Update the context_utility.dart file
   var contextUtilityFile = File(contextUtilityFilePath);
   var contextUtilityFileContent = contextUtilityFile.readAsStringSync();
@@ -856,8 +886,4 @@ void _setBoundaryInContextUtilityFile(
 
   // Write the updated content back to the context_utility.dart file
   contextUtilityFile.writeAsStringSync(contextUtilityFileContent);
-
-
 }
-
-

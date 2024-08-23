@@ -424,7 +424,7 @@ int getSyncCount(List<OpLog> oplogs) {
       }
     } else {
       switch (element.entityType) {
-        // #ADD DataModelType
+        // add syncCount case for package
         case DataModelType.household:
         case DataModelType.individual:
         case DataModelType.householdMember:
