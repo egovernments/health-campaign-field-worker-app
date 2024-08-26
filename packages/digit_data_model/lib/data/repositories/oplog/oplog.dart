@@ -16,7 +16,7 @@ abstract class OpLogManager<T extends EntityModel> {
     DataModelType type, {
     required String createdBy,
   }) async {
-    final createOpLogs = await isar.opLogs
+    final createOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
         .operationEqualTo(DataOperation.create)
@@ -24,9 +24,9 @@ abstract class OpLogManager<T extends EntityModel> {
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
         .createdByEqualTo(createdBy)
-        .findAll();
+        .findAllSync();
 
-    final singleCreateOpLogs = await isar.opLogs
+    final singleCreateOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
         .operationEqualTo(DataOperation.singleCreate)
@@ -34,9 +34,9 @@ abstract class OpLogManager<T extends EntityModel> {
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
         .createdByEqualTo(createdBy)
-        .findAll();
+        .findAllSync();
 
-    final updateOpLogs = await isar.opLogs
+    final updateOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
         .operationEqualTo(DataOperation.update)
@@ -45,17 +45,17 @@ abstract class OpLogManager<T extends EntityModel> {
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
         .createdByEqualTo(createdBy)
-        .findAll();
+        .findAllSync();
 
-    final errorOpLogs = await isar.opLogs
+    final errorOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
         .syncedDownEqualTo(false)
         .nonRecoverableErrorEqualTo(true)
         .createdByEqualTo(createdBy)
-        .findAll();
+        .findAllSync();
 
-    final deleteOpLogs = await isar.opLogs
+    final deleteOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
         .operationEqualTo(DataOperation.delete)
@@ -63,9 +63,9 @@ abstract class OpLogManager<T extends EntityModel> {
         .syncedUpEqualTo(false)
         .syncedDownEqualTo(false)
         .createdByEqualTo(createdBy)
-        .findAll();
+        .findAllSync();
 
-    final nonRecoverableOpLogs = await isar.opLogs
+    final nonRecoverableOpLogs = isar.opLogs
         .filter()
         .entityTypeEqualTo(type)
         .syncedUpEqualTo(true)
@@ -75,7 +75,7 @@ abstract class OpLogManager<T extends EntityModel> {
           5 - 1,
         )
         .createdByEqualTo(createdBy)
-        .findAll();
+        .findAllSync();
 
     var entries = [
       createOpLogs,
@@ -109,13 +109,13 @@ abstract class OpLogManager<T extends EntityModel> {
     DataModelType type, {
     required String createdBy,
   }) async {
-    var oplogs = await isar.opLogs
+    var oplogs = isar.opLogs
         .filter()
         .syncedUpEqualTo(true)
         .syncDownRetryCountLessThan(5)
         .syncedDownEqualTo(false)
         .entityTypeEqualTo(type)
-        .findAll();
+        .findAllSync();
 
     oplogs = oplogs
         .sortedBy((element) => element.createdAt)
@@ -215,10 +215,10 @@ abstract class OpLogManager<T extends EntityModel> {
   Future<void> updateServerGeneratedIds({
     required UpdateServerGeneratedIdModel model,
   }) async {
-    final opLogs = await isar.opLogs
+    final opLogs = isar.opLogs
         .filter()
         .clientReferenceIdEqualTo(model.clientReferenceId)
-        .findAll();
+        .findAllSync();
 
     for (final oplog in opLogs
         .where(
@@ -255,11 +255,11 @@ abstract class OpLogManager<T extends EntityModel> {
     String clientReferenceId,
     DataOperation operation,
   ) async {
-    final oplog = await isar.opLogs
+    final oplog = isar.opLogs
         .filter()
         .operationEqualTo(operation)
         .clientReferenceIdEqualTo(clientReferenceId)
-        .findAll();
+        .findAllSync();
 
     if (oplog.isEmpty) {
       throw AppException('OpLog not found for id: $clientReferenceId');
@@ -271,10 +271,10 @@ abstract class OpLogManager<T extends EntityModel> {
   Future<List<OpLog>> getSyncDownRetryList(
     String clientReferenceId,
   ) async {
-    final oplogs = await isar.opLogs
+    final oplogs = isar.opLogs
         .filter()
         .clientReferenceIdEqualTo(clientReferenceId)
-        .findAll();
+        .findAllSync();
 
     return oplogs;
   }
@@ -282,10 +282,10 @@ abstract class OpLogManager<T extends EntityModel> {
   Future<bool> updateSyncDownRetry(
     String clientReferenceId,
   ) async {
-    final oplogs = await isar.opLogs
+    final oplogs = isar.opLogs
         .filter()
         .clientReferenceIdEqualTo(clientReferenceId)
-        .findAll();
+        .findAllSync();
 
     if (oplogs.isEmpty) {
       throw AppException('OpLog not found for id: $clientReferenceId');
