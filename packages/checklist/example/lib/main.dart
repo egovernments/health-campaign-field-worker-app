@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     localizedStrings = loadLocalizedStrings();
 
     ChecklistLocalizationDelegate delegate = ChecklistLocalizationDelegate(localizedStrings, languages);
-    delegate.load(Locale("en","MZ"));
+    delegate.load(const Locale("en","MZ"));
   }
 
   @override
@@ -85,13 +85,13 @@ class _MyHomePageState extends State<MyHomePage> {
         child:Container(
           width: 300,
           child: DigitElevatedButton(
-            child: Text("Acknowledgement Page"),
+            child: const Text("Acknowledgement Page"),
             onPressed: () {
               Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (BuildContext context) => ChecklistAcknowledgementPage(
                         appLocalizations: ChecklistLocalization(
-                            Locale("en","MZ"),
+                            const Locale("en","MZ"),
                             localizedStrings,
                             languages
                         ),
