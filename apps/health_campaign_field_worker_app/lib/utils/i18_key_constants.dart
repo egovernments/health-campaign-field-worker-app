@@ -11,6 +11,7 @@ const checklist = Checklist();
 const complaints = Complaints();
 const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
+const privacyPolicy = PrivacyPolicy();
 const dashBoard = Dashboard();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
@@ -1035,6 +1036,23 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+}
+
+class PrivacyPolicy {
+  const PrivacyPolicy();
+
+  String get acceptText {
+    return 'PRIVACY_POLICY_ACCEPT_TEXT';
+  }
+
+  String get declineText {
+    return 'PRIVACY_POLICY_DECLINE_TEXT';
+  }
+
+  String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
+  String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
+  String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
+
 }
 
 class Dashboard {
