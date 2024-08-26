@@ -4,11 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
+import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
+import '../widgets/privacy_notice/privacy_component.dart';
 
 @RoutePage()
 class LoginPage extends LocalizedStatefulWidget {
@@ -23,8 +26,10 @@ class LoginPage extends LocalizedStatefulWidget {
 
 class _LoginPageState extends LocalizedState<LoginPage> {
   var passwordVisible = false;
+  bool isPrivacyEnabled =false;
   static const _userId = 'userId';
   static const _password = 'password';
+  static const _privacyCheck = 'privacyCheck';
 
   @override
   void initState() {
@@ -120,6 +125,31 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         obscureText: !passwordVisible,
                         suffix: buildPasswordVisibility(),
                       ),
+                      BlocBuilder<AppInitializationBloc,
+                              AppInitializationState>(
+                          builder: (context, initState) {
+                        final privacyPolicyJson = initState.maybeWhen(
+                            initialized:
+                                (AppConfiguration appConfiguration, _, __) =>
+                                    appConfiguration.privacyPolicyConfig,
+                            orElse: () => null);
+                        if(privacyPolicyJson?.active==false){
+                          return const SizedBox.shrink();
+                        }
+                        setState(() {
+                          isPrivacyEnabled = true;
+                        });
+                        return PrivacyComponent(
+                          privacyPolicy: privacyPolicyJson,
+                          formControlName: _privacyCheck,
+                          text: localizations
+                              .translate(i18.privacyPolicy.privacyNoticeText),
+                          linkText: localizations.translate(
+                              i18.privacyPolicy.privacyPolicyLinkText),
+                          validationMessage: localizations.translate(
+                              i18.privacyPolicy.privacyPolicyValidationText),
+                        );
+                      }),
                       const SizedBox(height: 16),
                       DigitElevatedButton(
                         onPressed: () {
@@ -202,5 +232,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           validators: [Validators.required],
           value: '',
         ),
+        _privacyCheck: FormControl<bool>(
+          validators: [Validators.requiredTrue],
+          value: isPrivacyEnabled ? false : true,
+        )
       });
 }
