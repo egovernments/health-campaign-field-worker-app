@@ -203,7 +203,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                   (i, plot) => TableData(
                     plot.symbol == DSSEnums.number.toValue() ||
                             plot.symbol == DSSEnums.percentage.toValue()
-                        ? plot.name == 'Lastsyncedtime' &&
+                        ? plot.name == DSSEnums.lastSyncedTime.toValue() &&
                                 plot.symbol == DSSEnums.number.toValue()
                             ? DigitDateUtils.getDateFromTimestamp(int.parse(
                                 double.parse(plot.value.toString())
