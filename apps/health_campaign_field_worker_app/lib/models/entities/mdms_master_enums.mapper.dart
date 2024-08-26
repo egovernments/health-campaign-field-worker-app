@@ -69,7 +69,7 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.firebaseConfig;
       case "SEARCH_HOUSEHOLD_FILTERS":
         return MasterEnums.searchHouseHoldFilters;
-      case "PrivacyPolicy":
+      case "PRIVACY_POLICY":
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
         return MasterEnums.dashboardConfig;
@@ -126,7 +126,7 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
       case MasterEnums.searchHouseHoldFilters:
         return "SEARCH_HOUSEHOLD_FILTERS";
       case MasterEnums.privacyPolicy:
-        return "PrivacyPolicy";
+        return "PRIVACY_POLICY";
       case MasterEnums.dashboardConfig:
         return "dashboardConfig";
     }
