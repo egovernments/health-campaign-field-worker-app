@@ -6,6 +6,7 @@ import 'package:collection/collection.dart'; // Import the collection package fo
 import 'package:digit_components/models/digit_table_model.dart'; // Import the digit_table_model.dart file from the digit_components package
 import 'package:digit_components/theme/colors.dart'; // Import the colors.dart file from the digit_components package
 import 'package:digit_components/theme/digit_theme.dart'; // Import the digit_theme.dart file from the digit_components package
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart'; // Import the digit_dss.dart file from the digit_dss package
 import 'package:flutter/cupertino.dart';
@@ -202,13 +203,19 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                   (i, plot) => TableData(
                     plot.symbol == DSSEnums.number.toValue() ||
                             plot.symbol == DSSEnums.percentage.toValue()
-                        ? double.parse(plot.value.toString()) ==
-                                double.parse(plot.value.toString()).toInt()
-                            ? double.parse(plot.value.toString())
-                                .toInt()
-                                .toString()
-                            : double.parse(plot.value.toString())
-                                .toStringAsFixed(2)
+                        ? plot.name == DSSEnums.lastSyncedTime.toValue() &&
+                                plot.symbol == DSSEnums.number.toValue()
+                            ? DigitDateUtils.getDateFromTimestamp(int.parse(
+                                double.parse(plot.value.toString())
+                                    .toInt()
+                                    .toString()))
+                            : double.parse(plot.value.toString()) ==
+                                    double.parse(plot.value.toString()).toInt()
+                                ? double.parse(plot.value.toString())
+                                    .toInt()
+                                    .toString()
+                                : double.parse(plot.value.toString())
+                                    .toStringAsFixed(2)
                         : plot.label.toString(),
                     cellKey: plot.name,
                     style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium

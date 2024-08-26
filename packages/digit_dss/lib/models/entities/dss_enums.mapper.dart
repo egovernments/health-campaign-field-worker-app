@@ -51,6 +51,8 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return DSSEnums.uuid;
       case "projectId":
         return DSSEnums.projectId;
+      case "Lastsyncedtime":
+        return DSSEnums.lastSyncedTime;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -85,6 +87,8 @@ class DSSEnumsMapper extends EnumMapper<DSSEnums> {
         return "uuid";
       case DSSEnums.projectId:
         return "projectId";
+      case DSSEnums.lastSyncedTime:
+        return "Lastsyncedtime";
     }
   }
 }
