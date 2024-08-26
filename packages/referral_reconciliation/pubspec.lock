@@ -284,9 +284,11 @@ packages:
   checklist:
     dependency: "direct main"
     description:
-      path: "../checklist"
-      relative: true
-    source: path
+      path: "packages/checklist"
+      ref: checklist-package
+      resolved-ref: de677659de120747206ad0237d7b04a0a7fa7b0a
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "0.0.1-dev.1"
   cli_util:
     dependency: transitive
