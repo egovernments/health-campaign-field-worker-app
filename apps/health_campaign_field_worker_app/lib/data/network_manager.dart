@@ -231,9 +231,9 @@ abstract class SyncError implements Exception {
 }
 
 class SyncUpError extends SyncError {
-  const SyncUpError([dynamic error]) : super(error);
+  const SyncUpError([super.error]);
 }
 
 class SyncDownError extends SyncError {
-  const SyncDownError([dynamic error]) : super(error);
+  const SyncDownError([super.error]);
 }

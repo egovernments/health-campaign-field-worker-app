@@ -99,7 +99,10 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     }
                   },
                   builder: (context, localizationState) {
-                    if (localizationState.loading && !isDialogVisible) {
+                    if (localizationState.loading &&
+                        !isDialogVisible &&
+                        mounted &&
+                        Navigator.canPop(context)) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
                         isDialogVisible = true;
                         DigitComponentsUtils().showLocationCapturingDialog(

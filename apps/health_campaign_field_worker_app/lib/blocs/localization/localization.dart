@@ -34,13 +34,13 @@ class LocalizationBloc extends Bloc<LocalizationEvent, LocalizationState> {
 
     try {
       final boundaryModuleCheck =
-          event.module.contains('rainmaker-boundary-admin');
+          event.module.contains(Constants.boundaryLocalizationPath);
       final allModules = event.module.split(',');
       var boundaryModule;
 
       if (boundaryModuleCheck) {
         final boundaryModuleIndex =
-            allModules.indexOf('rainmaker-boundary-admin');
+            allModules.indexOf(Constants.boundaryLocalizationPath);
         boundaryModule = allModules[boundaryModuleIndex];
         allModules.removeAt(boundaryModuleIndex);
       }
