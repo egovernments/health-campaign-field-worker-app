@@ -38,17 +38,17 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
-      length ??= getSyncCount(await isar.opLogs
+      length ??= getSyncCount(isar.opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
               .syncedUpEqualTo(false)
-              .findAll()) +
-          getSyncCount(await isar.opLogs
+              .findAllSync()) +
+          getSyncCount(isar.opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
               .syncedUpEqualTo(true)
               .syncedDownEqualTo(false)
-              .findAll());
+              .findAllSync());
     } catch (_) {
       rethrow;
     } finally {
