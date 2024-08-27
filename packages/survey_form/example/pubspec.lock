@@ -229,10 +229,10 @@ packages:
     dependency: transitive
     description:
       name: digit_data_model
-      sha256: a9e3526b4963d4e8a35bb3c2bebf6424f7a78a0b53a8cf564be27dd40a18f18e
+      sha256: "058168c32c198f7c76ff8765f56827812f9c71cd269d5cb792afd77302b766ab"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.2"
+    version: "1.0.4-dev.3"
   dio:
     dependency: transitive
     description:
@@ -628,10 +628,10 @@ packages:
     dependency: transitive
     description:
       name: mime
-      sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
+      sha256: "801fd0b26f14a4a58ccb09d5892c3fbdeff209594300a542492cf13fba9d247a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.6"
   mocktail:
     dependency: transitive
     description:
@@ -922,7 +922,7 @@ packages:
     description:
       path: "packages/survey_form"
       ref: checklist-package
-      resolved-ref: "19827f10568fa8084ea8755f25511f7b1d5abd59"
+      resolved-ref: bbac302cdb35f380fb369faf3bc778ee0cbf1bbf
       url: "https://github.com/egovernments/health-campaign-field-worker-app"
     source: git
     version: "0.0.1-dev.1"
