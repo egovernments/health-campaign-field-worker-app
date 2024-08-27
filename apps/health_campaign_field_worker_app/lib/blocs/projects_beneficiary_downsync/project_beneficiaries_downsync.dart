@@ -140,6 +140,7 @@ class BeneficiaryDownSyncBloc
           event.batchSize,
         ));
       } else {
+        await LocalSecureStore.instance.setManualSyncTrigger(false);
         emit(const BeneficiaryDownSyncState.resetState());
         emit(const BeneficiaryDownSyncState.totalCountCheckFailed());
       }
