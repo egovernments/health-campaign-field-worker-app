@@ -80,6 +80,8 @@ class Constants {
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
   static const String healthFacilityChecklistPrefix = 'HF_RF';
 
+  static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
+
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
     Isar isar,

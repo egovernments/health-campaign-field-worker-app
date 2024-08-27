@@ -39,8 +39,8 @@ class DashboardRemoteRepository {
 
       if (dashboardResponse.data != null) {
         // Write transaction to delete existing data and insert new data
-        await isar.writeTxn(() async {
-          await isar.dashboardResponses
+        isar.writeTxnSync(() {
+          isar.dashboardResponses
               .where()
               .filter()
               .projectIdEqualTo(projectId)
@@ -94,8 +94,8 @@ class DashboardRemoteRepository {
         chart.data = dataPlots; // Set the data plots
 
         // Write transaction to insert the new chart data
-        return await isar.writeTxn(() async {
-          await isar.dashboardResponses.put(chart);
+        return isar.writeTxnSync(() {
+          isar.dashboardResponses.putSync(chart);
         });
       }
     } on DioException catch (e) {
@@ -145,8 +145,8 @@ class DashboardRemoteRepository {
         return dssChart;
       }).toList();
 
-    await isar.writeTxn(() async {
-      await isar.dashboardConfigSchemas.put(dashboardConfig);
+    isar.writeTxnSync(() {
+      isar.dashboardConfigSchemas.putSync(dashboardConfig);
     });
   }
 }
