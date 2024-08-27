@@ -189,7 +189,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   state.maybeWhen(
                     orElse: () => null,
                     syncInProgress: () async {
-                      await localSecureStore.setManualSyncTrigger(false);
+                      await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         DigitSyncDialog.show(
                           context,
