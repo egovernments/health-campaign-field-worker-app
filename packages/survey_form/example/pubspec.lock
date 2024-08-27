@@ -920,9 +920,11 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      path: "packages/survey_form"
+      ref: checklist-package
+      resolved-ref: "19827f10568fa8084ea8755f25511f7b1d5abd59"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "0.0.1-dev.1"
   term_glyph:
     dependency: transitive

@@ -297,14 +297,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.4"
-  change_app_package_name:
-    dependency: "direct dev"
-    description:
-      name: change_app_package_name
-      sha256: f734e127d334053873733fb61b1ecae73c09abb694b759a4afd26aa9c9547850
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.0"
   characters:
     dependency: transitive
     description:
@@ -1791,9 +1783,11 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "../../packages/survey_form"
-      relative: true
-    source: path
+      path: "packages/survey_form"
+      ref: checklist-package
+      resolved-ref: "19827f10568fa8084ea8755f25511f7b1d5abd59"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "0.0.1-dev.1"
   sync_http:
     dependency: transitive
