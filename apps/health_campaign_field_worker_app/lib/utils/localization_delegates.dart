@@ -32,6 +32,9 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
+
+    // INFO : Need to add package delegates here
+
     referral_reconciliation_localization.ReferralReconLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,

@@ -593,7 +593,7 @@ void _addSurveyFormRoutesAndImportToRouterFile(String routerFilePath) {
             path: 'surveyForm',
             children: [
               AutoRoute(
-                page: SurveyFormRoute.page,
+                page: SurveyformRoute.page,
                 path: '',
               ),
               AutoRoute(
