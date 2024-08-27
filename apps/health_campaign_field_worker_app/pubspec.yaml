@@ -73,11 +73,12 @@ dependencies:
   registration_delivery: ^1.0.3
   disable_battery_optimization: ^1.1.1
 
-  checklist:
-    git:
-      url: https://github.com/egovernments/health-campaign-field-worker-app
-      ref: checklist-package
-      path: ./packages/checklist
+  survey_form:
+    path: ../../packages/survey_form
+#    git:
+#      url: https://github.com/egovernments/health-campaign-field-worker-app
+#      ref: checklist-package
+#      path: ./packages/checklist
   digit_dss: ^1.0.0
   closed_household: ^1.0.1
 

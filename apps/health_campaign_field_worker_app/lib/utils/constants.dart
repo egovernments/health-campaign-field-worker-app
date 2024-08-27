@@ -1,5 +1,5 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:checklist/checklist.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
@@ -75,11 +75,11 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
-  static const String checklistPreviewDateFormat = 'dd MMMM yyyy';
+  static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
-  static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
-  static const String healthFacilityChecklistPrefix = 'HF_RF';
+  static const String surveyFormViewDateFormat = 'dd/MM/yyyy hh:mm a';
+  static const String healthFacilitySurveyFormPrefix = 'HF_RF';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -303,7 +303,7 @@ class Modules {
 }
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
-const String myChecklistSvg = 'assets/icons/svg/mychecklist.svg';
+const String mySurveyFormSvg = 'assets/icons/svg/mychecklist.svg';
 
 enum DigitProgressDialogType {
   inProgress,

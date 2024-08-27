@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:checklist/checklist.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class _BeneficiaryChecklistPageState
   void initState() {
 
     context.read<ServiceBloc>().add(
-    ServiceChecklistEvent(
+    ServiceSurveyFormEvent(
       value: Random().nextInt(100).toString(),
       submitTriggered: true,
     ),
@@ -113,7 +113,7 @@ class _BeneficiaryChecklistPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                          const ServiceChecklistEvent(
+                          const ServiceSurveyFormEvent(
                             value: '',
                             submitTriggered: true,
                           ),
@@ -351,7 +351,7 @@ class _BeneficiaryChecklistPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -437,7 +437,7 @@ class _BeneficiaryChecklistPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: curValue
                                                               .toString(),
                                                           submitTriggered:

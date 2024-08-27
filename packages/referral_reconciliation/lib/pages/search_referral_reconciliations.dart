@@ -1,5 +1,5 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:checklist/checklist.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';

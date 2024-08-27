@@ -11,8 +11,8 @@ import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:checklist/router/checklist_router.dart';
-import 'package:checklist/router/checklist_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -56,7 +56,7 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     ClosedHouseholdPackageRoute,
     DashboardRoute,
-    CheckListRoute
+    SurveyFormRoute
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -215,18 +215,18 @@ class AppRouter extends _$AppRouter {
             ]),
 
         AutoRoute(
-            page: ChecklistWrapperRoute.page,
-            path: 'checklist',
+            page: SurveyFormWrapperRoute.page,
+            path: 'surveyForm',
             children: [
               AutoRoute(
-                page: ChecklistRoute.page,
+                page: SurveyformRoute.page,
                 path: '',
               ),
               AutoRoute(
-                  page: ChecklistBoundaryViewRoute.page, path: 'view-boundary'),
-              AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
-              AutoRoute(page: ChecklistPreviewRoute.page, path: 'preview'),
-              AutoRoute(page: ChecklistAcknowledgementRoute.page, path: 'checklist-acknowledgement'),
+                  page: SurveyFormBoundaryViewRoute.page, path: 'view-boundary'),
+              AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
+              AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
+              AutoRoute(page: SurveyFormAcknowledgementRoute.page, path: 'surveyForm-acknowledgement'),
             ]),
         AutoRoute(
           page: BeneficiaryAcknowledgementRoute.page,

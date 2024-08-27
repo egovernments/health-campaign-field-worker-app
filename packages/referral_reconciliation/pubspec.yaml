@@ -35,11 +35,12 @@ dependencies:
   collection: ^1.16.0
   digit_data_model: ^1.0.4-dev.2
   stream_transform: ^2.1.0
-  checklist:
-    git:
-      url: https://github.com/egovernments/health-campaign-field-worker-app
-      ref: checklist-package
-      path: ./packages/checklist
+  survey_form:
+    path: ../../packages/survey_form
+#    git:
+#      url: https://github.com/egovernments/health-campaign-field-worker-app
+#      ref: checklist-package
+#      path: ./packages/checklist
 
 
 dev_dependencies:

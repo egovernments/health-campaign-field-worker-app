@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:checklist/checklist.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -27,7 +27,7 @@ import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
-import 'package:checklist/router/checklist_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -387,13 +387,13 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
-          customIcon: myChecklistSvg,
+          customIcon: mySurveyFormSvg,
           icon: Icons.checklist,
-          label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          label: i18.home.mySurveyForm,
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
       i18.home.fileComplaint:
@@ -505,7 +505,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -526,7 +526,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
-      i18.home.myCheckList,
+      i18.home.mySurveyForm,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
@@ -696,7 +696,7 @@ void setPackagesSingleton(BuildContext context) {
           appVersion: Constants().version,
         );
 
-        ChecklistSingleton().setInitialData(
+        SurveyFormSingleton().setInitialData(
           projectId: context.projectId,
           projectName: context.selectedProject.name,
           loggedInIndividualId: context.loggedInIndividualId ?? '',

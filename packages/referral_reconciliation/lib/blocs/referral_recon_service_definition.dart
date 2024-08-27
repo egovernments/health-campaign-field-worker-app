@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:digit_data_model/data_model.dart';
-import 'package:checklist/checklist.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:referral_reconciliation/utils/typedefs.dart';

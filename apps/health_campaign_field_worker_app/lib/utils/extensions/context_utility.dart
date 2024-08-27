@@ -104,7 +104,7 @@ extension ContextUtilityExtensions on BuildContext {
     ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
-    ChecklistSingleton().setBoundary(boundary: selectedBoundary);
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
   }
 

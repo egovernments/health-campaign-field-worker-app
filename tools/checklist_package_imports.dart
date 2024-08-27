@@ -121,7 +121,7 @@ void _updateExtensionFilePath(extensionFilePath){
 
 void _updateAppFile(appFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';''';
+      import 'package:checklist/survey_form.dart';''';
 
   var ServiceDefinitionRepository = '''serviceDefinitionRemoteRepository: ctx.read<
                                 RemoteRepository<ServiceDefinitionModel,
@@ -197,7 +197,7 @@ void _updateContextUtilityFile(String contextUtilityFilepath) {
 
 void _addauthenticatedFilePath(String authenticatedFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';''';
+      import 'package:checklist/survey_form.dart';''';
 
   var providers = '''BlocProvider(
                         create: (_) => ServiceBloc(
@@ -253,7 +253,7 @@ void _addauthenticatedFilePath(String authenticatedFilePath) {
 
 void _addprojectFilePath(String projectFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';''';
+      import 'package:checklist/survey_form.dart';''';
 
   var ServicedefinitionRepo = '''/// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -422,7 +422,7 @@ void _addprojectFilePath(String projectFilePath) {
 
 void _updateHome(String homeFilePath) {
   var importStatement = '''
-      import 'package:checklist/checklist.dart';
+      import 'package:checklist/survey_form.dart';
       import 'package:checklist/router/checklist_router.gm.dart';
       ''';
 
@@ -532,7 +532,7 @@ String insertData(String fileContent, String marker, String data) {
 void _updateEntityMapperFile(String entityMapperFilePath) {
   // Define the import statement and new case statements
   var importStatement =
-      "import 'package:checklist/checklist.dart';";
+      "import 'package:checklist/survey_form.dart';";
   var newCases = '''
       case "service":
         final entity = ServiceModelMapper.fromJson(entityString);
@@ -606,7 +606,7 @@ void _addchecklistRoutesAndImportToRouterFile(String routerFilePath) {
 
   // Define the import statement
   var importStatement1 =
-      "import 'package:checklist/router/checklist_router.dart';";
+      "import 'package:checklist/router/survey_form_router.dart';";
   // Define the import statement
   var importStatement2 =
       "import 'package:checklist/router/checklist_router.gm.dart';";
@@ -764,7 +764,7 @@ void _addChecklistConstantsToConstantsFile(
     {required String constantsFilePath}) {
   // Define the import statements
   var importStatements = [
-    "import 'package:checklist/checklist.dart';",
+    "import 'package:checklist/survey_form.dart';",
   ];
 
   // Define the Checklist configuration
@@ -882,7 +882,7 @@ void _addRepoToNetworkManagerProviderWrapper(
     {required String networkManagerProviderWrapperFilePath}) {
   // Define the import statements and repository providers
   var importStatements = [
-    "import 'package:checklist/checklist.dart';",
+    "import 'package:checklist/survey_form.dart';",
   ];
   var localRepositories = [
     '''RepositoryProvider<

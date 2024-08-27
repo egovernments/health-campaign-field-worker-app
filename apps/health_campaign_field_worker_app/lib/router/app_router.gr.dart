@@ -255,7 +255,7 @@ abstract class _$AppRouter extends RootStackRouter {
     ...RegistrationDeliveryRoute().pagesMap,
     ...ClosedHouseholdPackageRoute().pagesMap,
     ...DashboardRoute().pagesMap,
-    ...CheckListRoute().pagesMap,
+    ...SurveyFormRoute().pagesMap,
   };
 }
 
