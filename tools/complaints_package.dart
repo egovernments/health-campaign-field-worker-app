@@ -551,6 +551,8 @@ void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
   // Normalize the whitespace in the file content
   var normalizedFileContent = utilsFileContent.replaceAll(RegExp(r'\s'), '');
 
+  var getSyncCountStatement = "case DataModelType.complaints:";
+
   // Check if the import statement and delegate already exist in the file
   // If not, add them to the file
   if (!normalizedFileContent
@@ -590,6 +592,28 @@ void _addComplaintsMapperToUtilsFile({required String utilsFilePath}) {
     print('complaint initialization statement added to utils.dart');
   } else {
     print('The complaint initialization statement already exists.');
+  }
+
+  if (!utilsFileContent.contains(getSyncCountStatement)) {
+    var getSyncCountStatementIndex =
+    utilsFileContent.indexOf('add SyncCount case for package');
+    if (getSyncCountStatementIndex == -1) {
+      print(
+          'Error: Could not find a place to insert the complaint DataModelType statement.');
+      return;
+    }
+
+    var endOfgetSyncCountStatementIndex = getSyncCountStatementIndex +
+        utilsFileContent.substring(getSyncCountStatementIndex).indexOf('}') +
+        1;
+    utilsFileContent =
+        utilsFileContent.substring(0, getSyncCountStatementIndex + 30) +
+            '\n    ' +
+            getSyncCountStatement +
+            utilsFileContent.substring(getSyncCountStatementIndex + 30);
+    print('complaint DataModelType statement added to utils.dart');
+  } else {
+    print('The complaint DataModelType statement already exists.');
   }
 
   // Write the updated content back to the utils.dart file
