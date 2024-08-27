@@ -361,6 +361,7 @@ initializeAllMappers() async {
 int getSyncCount(List<OpLog> oplogs) {
   int count = oplogs.where((element) {
     switch (element.entityType) {
+      //add SyncCount case for package
       case DataModelType.household:
       case DataModelType.individual:
       case DataModelType.householdMember:
@@ -369,7 +370,6 @@ int getSyncCount(List<OpLog> oplogs) {
       case DataModelType.stock:
       case DataModelType.stockReconciliation:
       case DataModelType.service:
-      case DataModelType.complaints:
       case DataModelType.sideEffect:
       case DataModelType.referral:
       case DataModelType.hFReferral:
