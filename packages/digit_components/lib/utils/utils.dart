@@ -2,7 +2,7 @@ import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 
 class DigitComponentsUtils {
-  void hideLocationDialog(BuildContext context) {
+  void hideLocationDialog(BuildContext context) { // [TODO: create it as a common method since it has the similar behaviour of hideLocalizationLoadingDialog]
     Navigator.of(
       context,
       rootNavigator: true,

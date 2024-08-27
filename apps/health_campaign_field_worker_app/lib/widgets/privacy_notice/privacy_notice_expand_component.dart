@@ -1,9 +1,7 @@
 import 'package:closed_household/widgets/showcase/showcase_wrappers.dart';
-import 'package:collection/collection.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:flutter/material.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
-import '../../models/privacy_notice/privacy_notice_model.dart';
 import '../localized.dart';
 
 class ExpandableSection extends LocalizedStatefulWidget {
@@ -27,7 +25,7 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
     return Container(
       decoration: BoxDecoration(
         color: const DigitColors().alabasterWhite,
-        borderRadius: const BorderRadius.all(Radius.circular(kPadding/2)),
+        borderRadius: const BorderRadius.all(Radius.circular(kPadding / 2)),
         border: Border.all(color: const DigitColors().quillGray, width: 1.0),
       ),
       child: Column(
@@ -40,21 +38,30 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
               });
             },
             child: Container(
-              padding: _isExpanded ? const EdgeInsets.only(top: kPadding*2, left: kPadding*2, right: kPadding*2): const EdgeInsets.all(kPadding*2),
+              padding: _isExpanded
+                  ? const EdgeInsets.only(
+                      top: kPadding * 2,
+                      left: kPadding * 2,
+                      right: kPadding * 2)
+                  : const EdgeInsets.all(kPadding * 2),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if(widget.content.header != null)
-                  Flexible(
-                    child: Text(
-                      localizations.translate(widget.content.header!),
-                      maxLines: 3,
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
+                  if (widget.content.header != null)
+                    Flexible(
+                      child: Text(
+                        localizations.translate(widget.content.header!),
+                        maxLines: 3,
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.copyWith(fontWeight: FontWeight.bold),
+                      ),
                     ),
-                  ),
                   Icon(
-                    _isExpanded ? Icons.expand_less : Icons.chevron_right, size: kPadding*3,
+                    _isExpanded ? Icons.expand_less : Icons.chevron_right,
+                    size: kPadding * 3,
                   ),
                 ],
               ),
@@ -62,10 +69,11 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
           ),
           if (_isExpanded && widget.content.descriptions != null)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kPadding*2),
+              padding: const EdgeInsets.symmetric(horizontal: kPadding * 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: widget.content.descriptions!.asMap().entries.map((entry) {
+                children:
+                    widget.content.descriptions!.asMap().entries.map((entry) {
                   int index = entry.key;
                   Description desc = entry.value;
                   int? stepNumber = desc.type == 'step' ? index + 1 : null;
@@ -110,16 +118,22 @@ class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildDescriptionText(descriptionText, descriptionType, isBold, widget.stepNumber),
+          _buildDescriptionText(
+              descriptionText, descriptionType, isBold, widget.stepNumber),
           if (hasSubDescriptions)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: widget.description.subDescriptions!.asMap().entries.map((entry) {
+              children: widget.description.subDescriptions!
+                  .asMap()
+                  .entries
+                  .map((entry) {
                 final index = entry.key;
                 final subDesc = entry.value;
                 return SubDescriptionWidget(
                   subDescription: subDesc,
-                  stepNumber: subDesc.type == 'step' ? index + 1 : null, // Pass step number if type is 'step'
+                  stepNumber: subDesc.type == 'step'
+                      ? index + 1
+                      : null, // Pass step number if type is 'step'
                 );
               }).toList(),
             ),
@@ -128,33 +142,48 @@ class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
     );
   }
 
-  Widget _buildDescriptionText(String descriptionText, String descriptionType, bool isBold, int? stepNumber) {
+  Widget _buildDescriptionText(String descriptionText, String descriptionType,
+      bool isBold, int? stepNumber) {
     if (descriptionType == 'step') {
-      return Text(
-        '$stepNumber. ${localizations.translate(descriptionText)}',
-        textAlign: TextAlign.justify,
-        style: TextStyle(
-          fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+      return RichText(
+        text: TextSpan(
+          text: '$stepNumber. ',
+          style: TextStyle(
+            fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+          ),
+          children: [
+            TextSpan(
+              text: localizations.translate(descriptionText),
+              style: TextStyle(
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
         ),
+        textAlign: TextAlign.justify,
       );
     } else if (descriptionType == 'points') {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Column(
-          children: [
-            SizedBox(height: kPadding/4,),
-            Icon(Icons.circle, size: kPadding),
-          ],
+            children: [
+              SizedBox(
+                height: kPadding / 4,
+              ),
+              Icon(Icons.circle, size: kPadding),
+            ],
           ),
           const SizedBox(width: kPadding),
           Expanded(
-            child: Text(
-              localizations.translate(descriptionText),
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+            child: RichText(
+              text: TextSpan(
+                text: localizations.translate(descriptionText),
+                style: TextStyle(
+                  fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                ),
               ),
+              textAlign: TextAlign.justify,
             ),
           ),
         ],
@@ -195,17 +224,22 @@ class _SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
     final isSpaceRequired = widget.subDescription.isSpaceRequired ?? false;
 
     return Padding(
-      padding: EdgeInsets.only(left: isSpaceRequired ? kPadding*2 : 0.0, top: kPadding/2, bottom: kPadding/2),
+      padding: EdgeInsets.only(
+          left: isSpaceRequired ? kPadding * 2 : 0.0,
+          top: kPadding / 2,
+          bottom: kPadding / 2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildSubDescriptionText(subDescriptionText, subDescriptionType, isBold, widget.stepNumber),
+          _buildSubDescriptionText(subDescriptionText, subDescriptionType,
+              isBold, widget.stepNumber),
         ],
       ),
     );
   }
 
-  Widget _buildSubDescriptionText(String subDescriptionText, String subDescriptionType, bool isBold, int? stepNumber) {
+  Widget _buildSubDescriptionText(String subDescriptionText,
+      String subDescriptionType, bool isBold, int? stepNumber) {
     if (subDescriptionType == 'step') {
       return Text(
         '$stepNumber. ${localizations.translate(subDescriptionText)}',
@@ -220,7 +254,9 @@ class _SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
         children: [
           const Column(
             children: [
-              SizedBox(height: kPadding/4,),
+              SizedBox(
+                height: kPadding / 4,
+              ),
               Icon(Icons.circle, size: kPadding),
             ],
           ),
@@ -247,5 +283,3 @@ class _SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
     }
   }
 }
-
-

@@ -1,10 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/app_initialization/app_initialization.dart';
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
-import '../../models/privacy_notice/privacy_notice_model.dart';
 import '../localized.dart';
 import 'privacy_notice_dialog.dart';
 import 'package:reactive_forms/reactive_forms.dart';
