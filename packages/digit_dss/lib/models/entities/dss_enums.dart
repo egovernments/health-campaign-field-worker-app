@@ -31,4 +31,6 @@ enum DSSEnums {
   uuid,
   @MappableValue("projectId")
   projectId,
+  @MappableValue("Lastsyncedtime")
+  lastSyncedTime,
 }

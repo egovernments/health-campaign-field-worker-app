@@ -1,3 +1,8 @@
+## 1.0.4-dev.3
+
+* Updated oplog transactions to synchronous - fix for write transaction lock
+* Same change in 1.0.3-hotfix, 1.0.4-dev.3
+
 ## 1.0.3
 
 * Added localization table
