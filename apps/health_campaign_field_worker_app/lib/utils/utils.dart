@@ -1,10 +1,5 @@
 library app_utils;
 
-import 'package:registration_delivery/registration_delivery.init.dart'
-    as registration_delivery_mappers;
-import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
-import 'package:inventory_management/inventory_management.init.dart'
-    as inventory_mappers;
 import 'dart:async';
 import 'dart:io';
 
@@ -16,13 +11,20 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
+import 'package:digit_dss/digit_dss.dart' as dss_mappers;
+import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:inventory_management/inventory_management.init.dart'
+    as inventory_mappers;
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
+import 'package:registration_delivery/registration_delivery.init.dart'
+    as registration_delivery_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -69,6 +71,15 @@ class CustomValidator {
   }
 }
 
+Future<void> requestDisableBatteryOptimization() async {
+  bool isIgnoringBatteryOptimizations =
+      await DisableBatteryOptimization.isBatteryOptimizationDisabled ?? false;
+
+  if (!isIgnoringBatteryOptimizations) {
+    await DisableBatteryOptimization.showDisableBatteryOptimizationSettings();
+  }
+}
+
 setBgRunning(bool isBgRunning) async {
   final localSecureStore = LocalSecureStore.instance;
   await localSecureStore.setBackgroundService(isBgRunning);
@@ -104,7 +115,8 @@ performBackgroundService({
   } else {
     if (!isRunning && isOnline) {
       service.startService();
-      if (context != null) {
+      if (context != null && context.mounted) {
+        requestDisableBatteryOptimization();
         DigitToast.show(
           context,
           options: DigitToastOptions(
@@ -252,7 +264,7 @@ void showDownloadDialog(
                   );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
-              context.router.pop();
+              context.router.replaceAll([HomeRoute()]);
             }
           },
         ),
@@ -260,7 +272,7 @@ void showDownloadDialog(
           label: model.secondaryButtonLabel ?? '',
           action: (ctx) {
             Navigator.of(context, rootNavigator: true).pop();
-            context.router.pop();
+            context.router.replaceAll([HomeRoute()]);
           },
         ),
       );
@@ -285,7 +297,7 @@ void showDownloadDialog(
             action: (ctx) {
               if (dialogType == DigitProgressDialogType.pendingSync) {
                 Navigator.of(context, rootNavigator: true).pop();
-                context.router.popUntilRouteWithName(HomeRoute.name);
+                context.router.replaceAll([HomeRoute()]);
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
@@ -310,9 +322,12 @@ void showDownloadDialog(
           secondaryAction: model.secondaryButtonLabel != null
               ? DigitDialogActions(
                   label: model.secondaryButtonLabel ?? '',
-                  action: (ctx) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                    context.router.popUntilRouteWithName(HomeRoute.name);
+                  action: (ctx) async {
+                    await LocalSecureStore.instance.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      Navigator.of(context, rootNavigator: true).pop();
+                      context.router.replaceAll([HomeRoute()]);
+                    }
                   },
                 )
               : null,
@@ -329,8 +344,7 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                        '',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -384,6 +398,7 @@ initializeAllMappers() async {
     Future(() => inventory_mappers.initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
+    Future(() => dss_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -430,4 +445,45 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+class LocalizationParams {
+  static final LocalizationParams _singleton = LocalizationParams._internal();
+
+  factory LocalizationParams() {
+    return _singleton;
+  }
+
+  LocalizationParams._internal();
+
+  List<String>? _code;
+  String? _module;
+  Locale? _locale;
+  bool? _exclude = true;
+
+  void setCode(List<String>? code) {
+    _code = code;
+  }
+
+  void setModule(String? module, bool? exclude) {
+    _module = module;
+    _exclude = exclude;
+  }
+
+  void setLocale(Locale locale) {
+    _locale = locale;
+  }
+
+  void clear() {
+    _code = null;
+    _module = null;
+  }
+
+  List<String>? get code => _code;
+
+  String? get module => _module;
+
+  Locale? get locale => _locale;
+
+  bool? get exclude => _exclude;
 }

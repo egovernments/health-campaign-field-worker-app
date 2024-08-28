@@ -461,6 +461,7 @@ class PerformSyncDown {
             }
 
             break;
+
           case DataModelType.hFReferral:
             responseEntities = await remote.search(
               HFReferralSearchModel(

@@ -42,6 +42,7 @@ class InventorySingleton {
 
   // Various properties related to the inventory.
   String _projectId = '';
+  UserModel? _loggedInUser;
   String? _loggedInUserUuid = '';
   String? _boundaryName = '';
   String? _tenantId = '';
@@ -52,18 +53,21 @@ class InventorySingleton {
       .offlineFirst; // Default to offline first persistence configuration
 
   // Sets the initial data for the inventory.
-  void setInitialData(
-      {String? loggedInUserUuid,
-      required String projectId,
-      required bool isDistributor,
-      required bool isWareHouseMgr,
-      List<InventoryTransportTypes>? transportTypes}) {
+  void setInitialData({
+    String? loggedInUserUuid,
+    required String projectId,
+    required bool isDistributor,
+    required bool isWareHouseMgr,
+    List<InventoryTransportTypes>? transportTypes,
+    UserModel? loggedInUser,
+  }) {
     _projectId = projectId;
     _loggedInUserUuid = loggedInUserUuid;
     _transportType = transportTypes;
     _isDistributor = isDistributor;
     _isWareHouseMgr = isWareHouseMgr;
     _transportType = transportTypes;
+    _loggedInUser = loggedInUser;
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
@@ -87,4 +91,5 @@ class InventorySingleton {
   get transportType => _transportType;
   get tenantId => _tenantId;
   get persistenceConfiguration => _persistenceConfiguration;
+  UserModel? get loggedInUser => _loggedInUser;
 }

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,6 +20,7 @@ import '../../widgets/localized.dart';
 @RoutePage()
 class ChecklistViewPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
+
   const ChecklistViewPage({
     Key? key,
     this.referralClientRefId,
@@ -135,6 +137,16 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           }
                         }
 
+                        // Request location from LocationBloc
+                        context.read<LocationBloc>().add(const LocationEvent.load());
+
+                        // Wait for the location to be obtained
+                        final locationState =
+                            context.read<LocationBloc>().state;
+                        double? latitude = locationState.latitude;
+                        double? longitude = locationState.longitude;
+
+
                         final shouldSubmit = await DigitDialog.show(
                           context,
                           options: DigitDialogOptions(
@@ -201,7 +213,19 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                     .text
                                                     .toString()
                                             : null,
-                                  ));
+                                    additionalFields: ServiceAttributesAdditionalFields(
+                                      version: 1,
+                                      fields: [
+                                        AdditionalField(
+                                          'latitude', latitude,
+                                        ),
+                                        AdditionalField(
+                                          'longitude', longitude,
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  );
                                 }
 
                                 context.read<ServiceBloc>().add(
@@ -438,6 +462,65 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       index,
                                       value.selectedServiceDefinition,
                                       context,
+                                    ),
+                                  ),
+                              ]else if (e.dataType == 'Boolean') ...[
+                                if (!(e.code ?? '').contains('.'))
+                                  DigitCard(
+                                    child: Column(
+                                      children: [
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8),
+                                            child: Column(
+                                              children: [
+                                                Text(
+                                                  '${localizations.translate(
+                                                    '${selectedServiceDefinition?.code}.${e.code}',
+                                                  )} ${e.required == true ? '*' : ''}',
+                                                  style: theme.textTheme.headlineSmall,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        BlocBuilder<ServiceBloc, ServiceState>(
+                                          builder: (context, state) {
+                                            return SelectionBox<bool>(
+                                              //label: e,
+                                              allowMultipleSelection: false,
+                                              width: 110,
+                                              valueMapper: (value) {
+                                                return value ? localizations.translate(
+                                                  i18.common.coreCommonYes,
+                                                ) : localizations.translate(
+                                                  i18.common.coreCommonNo,
+                                                );
+                                              },
+                                              initialSelection: controller[index].text=='true' ?  [true] : controller[index].text=='false' ?[false] : [],
+                                              options: const [true, false], // TODO: need to update
+                                              onSelectionChanged: (curValue) {
+                                                if(curValue.isNotEmpty){
+                                                  context
+                                                      .read<ServiceBloc>()
+                                                      .add(
+                                                    ServiceChecklistEvent(
+                                                      value: curValue.toString(),
+                                                      submitTriggered:
+                                                      submitTriggered,
+                                                    ),
+                                                  );
+                                                  controller[index].value = TextEditingValue(
+                                                    text: curValue.first.toString(),
+                                                  );
+                                                }
+
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
                               ],
@@ -753,6 +836,64 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
           ),
         ],
       );
+    } else if (item.dataType == 'Boolean') {
+      return Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                children: [
+                  Text(
+                    '${localizations.translate(
+                      '${selectedServiceDefinition?.code}.${item.code}',
+                    )} ${item.required == true ? '*' : ''}',
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          BlocBuilder<ServiceBloc, ServiceState>(
+            builder: (context, state) {
+              return SelectionBox<bool>(
+                //label: e,
+                allowMultipleSelection: false,
+                width: 110,
+                valueMapper: (value) {
+                  return value ? 'Yes' : 'No';
+                },
+                initialSelection: const [false],
+                options: const [true, false],
+                onSelectionChanged: (valuec) {
+                  print(submitTriggered);
+                  print(controller[index].text.split('.').contains(e));
+                  context.read<ServiceBloc>().add(
+                        ServiceChecklistEvent(
+                          value: valuec.toString(),
+                          submitTriggered: submitTriggered,
+                        ),
+                      );
+                  final String ele;
+                  var val = controller[index].text.split('.');
+                  if (val.contains(e)) {
+                    val.remove(e);
+                    ele = val.join(".");
+                  } else {
+                    ele = "${controller[index].text}.$e";
+                  }
+                  controller[index].value = TextEditingController.fromValue(
+                    TextEditingValue(
+                      text: ele,
+                    ),
+                  ).value;
+                },
+              );
+            },
+          ),
+        ],
+      );
     } else {
       return const SizedBox.shrink();
     }
@@ -783,8 +924,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                 : const DigitColors().white,
             child: _buildChecklist(
               matchingChildItem,
-              initialAttributes?.indexOf(matchingChildItem) ??
-                  parentIndex, // Pass parentIndex here as we're building at the same level
+              initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
+              // Pass parentIndex here as we're building at the same level
               selectedServiceDefinition,
               context,
             ),

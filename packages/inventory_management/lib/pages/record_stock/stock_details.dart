@@ -1,25 +1,22 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
+import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:inventory_management/utils/extensions/extensions.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;
-import '../../../utils/utils.dart';
 import '../../../widgets/localized.dart';
 import '../../blocs/product_variant.dart';
 import '../../blocs/record_stock.dart';
-import '../../models/entities/inventory_transport_type.dart';
-import '../../models/entities/stock.dart';
-import '../../models/entities/transaction_reason.dart';
-import '../../models/entities/transaction_type.dart';
 import '../../widgets/back_navigation_help_header.dart';
 
 @RoutePage()
@@ -30,10 +27,10 @@ class StockDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<StockDetailsPage> createState() => _StockDetailsPageState();
+  State<StockDetailsPage> createState() => StockDetailsPageState();
 }
 
-class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
+class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _secondaryPartyKey = 'secondaryParty';
   static const _transactionQuantityKey = 'quantity';
@@ -47,6 +44,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   bool deliveryTeamSelected = false;
   String? selectedFacilityId;
   List<InventoryTransportTypes> transportTypes = [];
+
+  List<GS1Barcode> scannedResources = [];
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -76,6 +75,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   void initState() {
     clearQRCodes();
     transportTypes = InventorySingleton().transportType;
+    context.read<LocationBloc>().add(const LoadLocationEvent());
     super.initState();
   }
 
@@ -182,6 +182,11 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                   builder: (context, form, child) {
                     return BlocBuilder<DigitScannerBloc, DigitScannerState>(
                         builder: (context, scannerState) {
+                      if (scannerState.barCodes.isNotEmpty) {
+                        scannedResources.clear();
+                        scannedResources.addAll(scannerState.barCodes);
+                      }
+
                       return ScrollableContent(
                         header: Column(children: [
                           BackNavigationHelpHeaderWidget(
@@ -211,8 +216,20 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                             0,
                           ),
                           child: ReactiveFormConsumer(
-                            builder: (context, form, child) =>
-                                DigitElevatedButton(
+                              builder: (context, form, child) {
+                            if (form
+                                    .control(_deliveryTeamKey)
+                                    .value
+                                    .toString()
+                                    .isEmpty ||
+                                form.control(_deliveryTeamKey).value == null ||
+                                scannerState.qrCodes.isNotEmpty) {
+                              form.control(_deliveryTeamKey).value =
+                                  scannerState.qrCodes.isNotEmpty
+                                      ? scannerState.qrCodes.last
+                                      : '';
+                            }
+                            return DigitElevatedButton(
                               onPressed: !form.valid
                                   ? null
                                   : () async {
@@ -275,246 +292,280 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       } else {
                                         FocusManager.instance.primaryFocus
                                             ?.unfocus();
+                                        context
+                                            .read<LocationBloc>()
+                                            .add(const LoadLocationEvent());
+                                        DigitComponentsUtils()
+                                            .showLocationCapturingDialog(
+                                                context,
+                                                localizations.translate(i18
+                                                    .common.locationCapturing),
+                                                DigitSyncDialogType.inProgress);
+                                        Future.delayed(
+                                            const Duration(seconds: 2),
+                                            () async {
+                                          DigitComponentsUtils()
+                                              .hideLocationDialog(context);
+                                          final bloc =
+                                              context.read<RecordStockBloc>();
 
-                                        final bloc =
-                                            context.read<RecordStockBloc>();
+                                          final productVariant = form
+                                              .control(_productVariantKey)
+                                              .value as ProductVariantModel;
 
-                                        final productVariant = form
-                                            .control(_productVariantKey)
-                                            .value as ProductVariantModel;
+                                          switch (entryType) {
+                                            case StockRecordEntryType.receipt:
+                                              transactionReason =
+                                                  TransactionReason.received
+                                                      .toValue();
+                                              break;
+                                            case StockRecordEntryType.dispatch:
+                                              transactionReason = null;
+                                              break;
+                                            case StockRecordEntryType.returned:
+                                              transactionReason =
+                                                  TransactionReason.returned
+                                                      .toValue();
+                                              break;
+                                            default:
+                                              transactionReason = form
+                                                  .control(
+                                                    _transactionReasonKey,
+                                                  )
+                                                  .value as String?;
+                                              break;
+                                          }
 
-                                        switch (entryType) {
-                                          case StockRecordEntryType.receipt:
-                                            transactionReason =
-                                                TransactionReason.received
-                                                    .toValue();
-                                            break;
-                                          case StockRecordEntryType.dispatch:
-                                            transactionReason = null;
-                                            break;
-                                          case StockRecordEntryType.returned:
-                                            transactionReason =
-                                                TransactionReason.returned
-                                                    .toValue();
-                                            break;
-                                          default:
-                                            transactionReason = form
-                                                .control(
-                                                  _transactionReasonKey,
-                                                )
-                                                .value as String?;
-                                            break;
-                                        }
+                                          final quantity = form
+                                              .control(_transactionQuantityKey)
+                                              .value;
 
-                                        final quantity = form
-                                            .control(_transactionQuantityKey)
-                                            .value;
+                                          final waybillNumber = form
+                                              .control(_waybillNumberKey)
+                                              .value as String?;
 
-                                        final waybillNumber = form
-                                            .control(_waybillNumberKey)
-                                            .value as String?;
+                                          final waybillQuantity = form
+                                              .control(_waybillQuantityKey)
+                                              .value as String?;
 
-                                        final waybillQuantity = form
-                                            .control(_waybillQuantityKey)
-                                            .value as String?;
+                                          final vehicleNumber = form
+                                              .control(_vehicleNumberKey)
+                                              .value as String?;
 
-                                        final vehicleNumber = form
-                                            .control(_vehicleNumberKey)
-                                            .value as String?;
+                                          final lat = locationState.latitude;
+                                          final lng = locationState.longitude;
 
-                                        final lat = locationState.latitude;
-                                        final lng = locationState.longitude;
+                                          final hasLocationData =
+                                              lat != null && lng != null;
 
-                                        final hasLocationData =
-                                            lat != null && lng != null;
+                                          final comments = form
+                                              .control(_commentsKey)
+                                              .value as String?;
 
-                                        final comments = form
-                                            .control(_commentsKey)
-                                            .value as String?;
+                                          final deliveryTeamName = form
+                                              .control(_deliveryTeamKey)
+                                              .value as String?;
 
-                                        final deliveryTeamName = form
-                                            .control(_deliveryTeamKey)
-                                            .value as String?;
+                                          String? senderId;
+                                          String? senderType;
+                                          String? receiverId;
+                                          String? receiverType;
 
-                                        String? senderId;
-                                        String? senderType;
-                                        String? receiverId;
-                                        String? receiverType;
+                                          final primaryType =
+                                              BlocProvider.of<RecordStockBloc>(
+                                            context,
+                                          ).state.primaryType;
 
-                                        final primaryType =
-                                            BlocProvider.of<RecordStockBloc>(
-                                          context,
-                                        ).state.primaryType;
+                                          final primaryId =
+                                              BlocProvider.of<RecordStockBloc>(
+                                            context,
+                                          ).state.primaryId;
 
-                                        final primaryId =
-                                            BlocProvider.of<RecordStockBloc>(
-                                          context,
-                                        ).state.primaryId;
+                                          switch (entryType) {
+                                            case StockRecordEntryType.receipt:
+                                            case StockRecordEntryType.loss:
+                                            case StockRecordEntryType.damaged:
+                                              if (deliveryTeamSelected) {
+                                                senderId = deliveryTeamName;
+                                                senderType = "STAFF";
+                                              } else {
+                                                senderId = secondaryParty?.id;
+                                                senderType = "WAREHOUSE";
+                                              }
+                                              receiverId = primaryId;
+                                              receiverType = primaryType;
 
-                                        switch (entryType) {
-                                          case StockRecordEntryType.receipt:
-                                          case StockRecordEntryType.loss:
-                                          case StockRecordEntryType.damaged:
-                                            if (deliveryTeamSelected) {
-                                              senderId = deliveryTeamName;
-                                              senderType = "STAFF";
-                                            } else {
-                                              senderId = secondaryParty?.id;
-                                              senderType = "WAREHOUSE";
-                                            }
-                                            receiverId = primaryId;
-                                            receiverType = primaryType;
+                                              break;
+                                            case StockRecordEntryType.dispatch:
+                                            case StockRecordEntryType.returned:
+                                              if (deliveryTeamSelected) {
+                                                receiverId = deliveryTeamName;
+                                                receiverType = "STAFF";
+                                              } else {
+                                                receiverId = secondaryParty?.id;
+                                                receiverType = "WAREHOUSE";
+                                              }
+                                              senderId = primaryId;
+                                              senderType = primaryType;
+                                              break;
+                                          }
 
-                                            break;
-                                          case StockRecordEntryType.dispatch:
-                                          case StockRecordEntryType.returned:
-                                            if (deliveryTeamSelected) {
-                                              receiverId = deliveryTeamName;
-                                              receiverType = "STAFF";
-                                            } else {
-                                              receiverId = secondaryParty?.id;
-                                              receiverType = "WAREHOUSE";
-                                            }
-                                            senderId = primaryId;
-                                            senderType = primaryType;
-                                            break;
-                                        }
-
-                                        final stockModel = StockModel(
-                                          clientReferenceId: IdGen.i.identifier,
-                                          productVariantId: productVariant.id,
-                                          transactionReason: transactionReason,
-                                          transactionType: transactionType,
-                                          referenceId: stockState.projectId,
-                                          referenceIdType: 'PROJECT',
-                                          quantity: quantity.toString(),
-                                          waybillNumber: waybillNumber,
-                                          receiverId: receiverId,
-                                          receiverType: receiverType,
-                                          senderId: senderId,
-                                          senderType: senderType,
-                                          auditDetails: AuditDetails(
-                                            createdBy: InventorySingleton()
-                                                .loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          clientAuditDetails:
-                                              ClientAuditDetails(
-                                            createdBy: InventorySingleton()
-                                                .loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy: InventorySingleton()
-                                                .loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          additionalFields: [
-                                                    waybillQuantity,
-                                                    vehicleNumber,
-                                                    comments,
-                                                  ].any((element) =>
-                                                      element != null) ||
-                                                  hasLocationData
-                                              ? StockAdditionalFields(
-                                                  version: 1,
-                                                  fields: [
-                                                    if (waybillQuantity !=
-                                                            null &&
-                                                        waybillQuantity
-                                                            .trim()
-                                                            .isNotEmpty)
+                                          final stockModel = StockModel(
+                                            clientReferenceId:
+                                                IdGen.i.identifier,
+                                            productVariantId: productVariant.id,
+                                            transactionReason:
+                                                transactionReason,
+                                            transactionType: transactionType,
+                                            referenceId: stockState.projectId,
+                                            referenceIdType: 'PROJECT',
+                                            quantity: quantity.toString(),
+                                            waybillNumber: waybillNumber,
+                                            receiverId: receiverId,
+                                            receiverType: receiverType,
+                                            senderId: senderId,
+                                            senderType: senderType,
+                                            auditDetails: AuditDetails(
+                                              createdBy: InventorySingleton()
+                                                  .loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            clientAuditDetails:
+                                                ClientAuditDetails(
+                                              createdBy: InventorySingleton()
+                                                  .loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                              lastModifiedBy:
+                                                  InventorySingleton()
+                                                      .loggedInUserUuid,
+                                              lastModifiedTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            additionalFields: [
+                                                      waybillQuantity,
+                                                      vehicleNumber,
+                                                      comments,
+                                                    ].any((element) =>
+                                                        element != null) ||
+                                                    hasLocationData
+                                                ? StockAdditionalFields(
+                                                    version: 1,
+                                                    fields: [
                                                       AdditionalField(
-                                                        'waybill_quantity',
-                                                        waybillQuantity,
+                                                        InventoryManagementEnums
+                                                            .name
+                                                            .toValue(),
+                                                        InventorySingleton()
+                                                            .loggedInUser
+                                                            ?.name,
                                                       ),
-                                                    if (vehicleNumber != null &&
-                                                        vehicleNumber
-                                                            .trim()
-                                                            .isNotEmpty)
-                                                      AdditionalField(
-                                                        'vehicle_number',
-                                                        vehicleNumber,
-                                                      ),
-                                                    if (comments != null &&
-                                                        comments
-                                                            .trim()
-                                                            .isNotEmpty)
-                                                      AdditionalField(
-                                                        'comments',
-                                                        comments,
-                                                      ),
-                                                    if (deliveryTeamName !=
-                                                            null &&
-                                                        deliveryTeamName
-                                                            .trim()
-                                                            .isNotEmpty)
-                                                      AdditionalField(
-                                                        'deliveryTeam',
-                                                        deliveryTeamName,
-                                                      ),
-                                                    if (hasLocationData) ...[
-                                                      AdditionalField(
-                                                        'lat',
-                                                        lat,
-                                                      ),
-                                                      AdditionalField(
-                                                        'lng',
-                                                        lng,
-                                                      ),
+                                                      if (waybillQuantity !=
+                                                              null &&
+                                                          waybillQuantity
+                                                              .trim()
+                                                              .isNotEmpty)
+                                                        AdditionalField(
+                                                          'waybill_quantity',
+                                                          waybillQuantity,
+                                                        ),
+                                                      if (vehicleNumber !=
+                                                              null &&
+                                                          vehicleNumber
+                                                              .trim()
+                                                              .isNotEmpty)
+                                                        AdditionalField(
+                                                          'vehicle_number',
+                                                          vehicleNumber,
+                                                        ),
+                                                      if (comments != null &&
+                                                          comments
+                                                              .trim()
+                                                              .isNotEmpty)
+                                                        AdditionalField(
+                                                          'comments',
+                                                          comments,
+                                                        ),
+                                                      if (deliveryTeamName !=
+                                                              null &&
+                                                          deliveryTeamName
+                                                              .trim()
+                                                              .isNotEmpty)
+                                                        AdditionalField(
+                                                          'deliveryTeam',
+                                                          deliveryTeamName,
+                                                        ),
+                                                      if (hasLocationData) ...[
+                                                        AdditionalField(
+                                                          'lat',
+                                                          lat,
+                                                        ),
+                                                        AdditionalField(
+                                                          'lng',
+                                                          lng,
+                                                        ),
+                                                      ],
+                                                      if (scannerState
+                                                          .barCodes.isNotEmpty)
+                                                        addBarCodesToFields(
+                                                            scannerState
+                                                                .barCodes),
                                                     ],
-                                                  ],
-                                                )
-                                              : null,
-                                        );
+                                                  )
+                                                : null,
+                                          );
 
-                                        bloc.add(
-                                          RecordStockSaveStockDetailsEvent(
-                                            stockModel: stockModel,
-                                          ),
-                                        );
+                                          bloc.add(
+                                            RecordStockSaveStockDetailsEvent(
+                                              stockModel: stockModel,
+                                            ),
+                                          );
 
-                                        final submit =
-                                            await DigitDialog.show<bool>(
-                                          context,
-                                          options: DigitDialogOptions(
-                                            key: const Key('submitDialog'),
-                                            titleText: localizations.translate(
-                                              i18.stockDetails.dialogTitle,
-                                            ),
-                                            contentText:
-                                                localizations.translate(
-                                              i18.stockDetails.dialogContent,
-                                            ),
-                                            primaryAction: DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonSubmit,
+                                          final submit =
+                                              await DigitDialog.show<bool>(
+                                            context,
+                                            options: DigitDialogOptions(
+                                              key: const Key('submitDialog'),
+                                              titleText:
+                                                  localizations.translate(
+                                                i18.stockDetails.dialogTitle,
                                               ),
-                                              action: (context) {
-                                                Navigator.of(
+                                              contentText:
+                                                  localizations.translate(
+                                                i18.stockDetails.dialogContent,
+                                              ),
+                                              primaryAction: DigitDialogActions(
+                                                label: localizations.translate(
+                                                  i18.common.coreCommonSubmit,
+                                                ),
+                                                action: (context) {
+                                                  Navigator.of(
+                                                    context,
+                                                    rootNavigator: true,
+                                                  ).pop(true);
+                                                },
+                                              ),
+                                              secondaryAction:
+                                                  DigitDialogActions(
+                                                label: localizations.translate(
+                                                  i18.common.coreCommonCancel,
+                                                ),
+                                                action: (context) =>
+                                                    Navigator.of(
                                                   context,
                                                   rootNavigator: true,
-                                                ).pop(true);
-                                              },
-                                            ),
-                                            secondaryAction: DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonCancel,
+                                                ).pop(false),
                                               ),
-                                              action: (context) => Navigator.of(
-                                                context,
-                                                rootNavigator: true,
-                                              ).pop(false),
                                             ),
-                                          ),
-                                        );
-
-                                        if (submit ?? false) {
-                                          bloc.add(
-                                            const RecordStockCreateStockEntryEvent(),
                                           );
-                                        }
+
+                                          if (submit ?? false) {
+                                            bloc.add(
+                                              const RecordStockCreateStockEntryEvent(),
+                                            );
+                                          }
+                                        });
                                       }
                                     },
                               child: Center(
@@ -523,8 +574,8 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       .translate(i18.common.coreCommonSubmit),
                                 ),
                               ),
-                            ),
-                          ),
+                            );
+                          }),
                         ),
                         children: [
                           DigitCard(
@@ -608,7 +659,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   await context.router.push(
                                                           InventoryFacilitySelectionRoute(
                                                               facilities:
-                                                                  facilities))
+                                                                  allFacilities))
                                                       as FacilityModel?;
 
                                               if (facility == null) return;
@@ -664,7 +715,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   final facility =
                                                       await context.router.push(
                                                     InventoryFacilitySelectionRoute(
-                                                      facilities: facilities,
+                                                      facilities: allFacilities,
                                                     ),
                                                   ) as FacilityModel?;
 
@@ -926,14 +977,12 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                           ],
                                         ),
-                                        ...scannerState.barCodes
-                                            .map((e) => Align(
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  child: Text(e.elements.values
-                                                      .first.data
-                                                      .toString()),
-                                                ))
+                                        ...scannedResources.map((e) => Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(e
+                                                  .elements.values.first.data
+                                                  .toString()),
+                                            ))
                                       ])
                               ],
                             ),
@@ -973,7 +1022,7 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   ///
   /// @param barCodes The list of GS1Barcode objects to be processed.
   /// @return A map where the keys and values are joined by '|'.
-  Map<String, String> addBarCodesToFields(List<GS1Barcode> barCodes) {
+  AdditionalField addBarCodesToFields(List<GS1Barcode> barCodes) {
     List<String> keys = [];
     List<String> values = [];
     for (var element in barCodes) {
@@ -982,8 +1031,6 @@ class _StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         values.add(e.value.data.toString());
       }
     }
-    return {
-      keys.join('|'): values.join('|'),
-    };
+    return AdditionalField(keys.join('|'), values.join('|'));
   }
 }

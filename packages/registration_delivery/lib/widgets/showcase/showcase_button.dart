@@ -15,10 +15,10 @@ class ShowcaseButton extends LocalizedStatefulWidget {
   const ShowcaseButton({super.key, this.showcaseFor});
 
   @override
-  LocalizedState<ShowcaseButton> createState() => _ShowcaseButtonState();
+  LocalizedState<ShowcaseButton> createState() => ShowcaseButtonState();
 }
 
-class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
+class ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
   @override
   Widget build(BuildContext context) {
     return TextButton(

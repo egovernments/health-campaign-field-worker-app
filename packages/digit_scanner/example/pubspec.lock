@@ -306,19 +306,20 @@ packages:
     source: hosted
     version: "2.3.6"
   digit_components:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: "../../digit_components"
-      relative: true
-    source: path
-    version: "1.0.0+2"
+      name: digit_components
+      sha256: "01320d4c72829045e789d1a56e23ff2bd85dad6a1831d27bd507a1acaceae17e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   digit_scanner:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.3"
   easy_stepper:
     dependency: transitive
     description:

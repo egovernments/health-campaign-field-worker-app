@@ -69,9 +69,10 @@ class HouseholdOverviewBloc
     // Retrieve household members based on certain criteria.
     final members = await householdMemberRepository.search(
       HouseholdMemberSearchModel(
-        householdClientReferenceId: [
-          state.householdMemberWrapper.household.clientReferenceId
-        ],
+        householdClientReferenceId:
+            state.householdMemberWrapper.household != null
+                ? [state.householdMemberWrapper.household!.clientReferenceId]
+                : [],
       ),
     );
 
@@ -81,7 +82,7 @@ class HouseholdOverviewBloc
     );
 
     final householdId =
-        state.householdMemberWrapper.household.clientReferenceId;
+        state.householdMemberWrapper.household?.clientReferenceId;
 
     // Check if the current household has any members.
     if (!groupedHouseholds.containsKey(householdId)) {
@@ -102,7 +103,8 @@ class HouseholdOverviewBloc
 
     // Search for households with the specified client reference ID.
     final households = await householdRepository.search(
-      HouseholdSearchModel(clientReferenceId: [householdId]),
+      HouseholdSearchModel(
+          clientReferenceId: householdId != null ? [householdId] : []),
     );
 
     // Check if any households were found.

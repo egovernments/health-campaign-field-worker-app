@@ -31,10 +31,10 @@ class ReferBeneficiaryPage extends LocalizedStatefulWidget {
     required this.projectBeneficiaryClientRefId,
   });
   @override
-  State<ReferBeneficiaryPage> createState() => _ReferBeneficiaryPageState();
+  State<ReferBeneficiaryPage> createState() => ReferBeneficiaryPageState();
 }
 
-class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
+class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
   static const _dateOfReferralKey = 'dateOfReferral';
   static const _administrativeUnitKey = 'administrativeUnit';
   static const _referredByKey = 'referredBy';
@@ -380,7 +380,8 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
     return fb.group(<String, Object>{
       _dateOfReferralKey: FormControl<DateTime>(value: DateTime.now()),
       _administrativeUnitKey: FormControl<String>(
-          value: RegistrationDeliverySingleton().boundary!.name),
+          value: localizations.translate(
+              RegistrationDeliverySingleton().boundary!.name.toString())),
       _referredByKey: FormControl<String>(
         value: RegistrationDeliverySingleton().loggedInUserUuid,
         validators: [Validators.required],

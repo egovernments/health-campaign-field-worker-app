@@ -35,10 +35,10 @@ class InventoryReportDetailsPage extends LocalizedStatefulWidget {
 
   @override
   State<InventoryReportDetailsPage> createState() =>
-      _InventoryReportDetailsPageState();
+      InventoryReportDetailsPageState();
 }
 
-class _InventoryReportDetailsPageState
+class InventoryReportDetailsPageState
     extends LocalizedState<InventoryReportDetailsPage> {
   static const _productVariantKey = 'productVariant';
   static const _facilityKey = 'facilityKey';
@@ -239,9 +239,6 @@ class _InventoryReportDetailsPageState
                                                       selectedFacilityId =
                                                           facility.id;
                                                     });
-                                                    form
-                                                        .control(_facilityKey)
-                                                        .value = facility;
                                                     stockReconciliationBloc.add(
                                                       StockReconciliationSelectFacilityEvent(
                                                         facility,

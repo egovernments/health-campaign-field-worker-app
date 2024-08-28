@@ -28,11 +28,11 @@ class ReadonlyDigitGrid extends LocalizedStatefulWidget {
 
   /// Creating the state for ReadonlyDigitGrid
   @override
-  State<StatefulWidget> createState() => _ReadonlyDigitGridState();
+  State<StatefulWidget> createState() => ReadonlyDigitGridState();
 }
 
 /// State class for ReadonlyDigitGrid
-class _ReadonlyDigitGridState extends LocalizedState<ReadonlyDigitGrid> {
+class ReadonlyDigitGridState extends LocalizedState<ReadonlyDigitGrid> {
   @override
   Widget build(BuildContext context) {
     // Returns a PlutoGrid with the given configuration and data

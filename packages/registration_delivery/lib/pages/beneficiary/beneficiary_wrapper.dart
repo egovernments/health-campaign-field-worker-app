@@ -56,6 +56,9 @@ class BeneficiaryWrapperPage extends StatelessWidget {
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
 
+    final serviceDefinationRepo = context.repository<ServiceDefinitionModel,
+        ServiceDefinitionSearchModel>(context);
+
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -63,6 +66,12 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             const ServiceEmptyState(),
             serviceDataRepository: service,
           ),
+        ),
+        BlocProvider(
+          create: (_) => ServiceDefinitionBloc(
+            const ServiceDefinitionEmptyState(),
+            serviceDefinitionDataRepository: serviceDefinition,
+          )..add(const ServiceDefinitionFetchEvent()),
         ),
         BlocProvider(
           create: (_) => FacilityBloc(
@@ -132,7 +141,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             )..add(DeliverInterventionSearchEvent(
                   taskSearch: TaskSearchModel(
                 projectBeneficiaryClientReferenceId: houseHoldOverviewState
-                    .householdMemberWrapper.projectBeneficiaries
+                    .householdMemberWrapper.projectBeneficiaries?.where((element) => element.projectId == RegistrationDeliverySingleton().projectId)
                     .map((e) => e.clientReferenceId)
                     .toList(),
               ))),
@@ -146,7 +155,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
               )..add(ReferralSearchEvent(ReferralSearchModel(
                   projectBeneficiaryClientReferenceId: houseHoldOverviewState
                       .householdMemberWrapper.projectBeneficiaries
-                      .map((e) => e.clientReferenceId)
+                      ?.map((e) => e.clientReferenceId)
                       .toList(),
                 ))),
               child: BlocProvider(

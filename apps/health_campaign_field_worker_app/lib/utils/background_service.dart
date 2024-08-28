@@ -62,7 +62,7 @@ Future<void> initializeService(dio, isar) async {
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
   }
-
+  requestDisableBatteryOptimization();
   await service.configure(
     androidConfiguration: AndroidConfiguration(
       // this will be executed when app is in foreground or background in separated isolate
@@ -127,6 +127,9 @@ void onStart(ServiceInstance service) async {
     makePeriodicTimer(
       Duration(seconds: interval),
       (timer) async {
+        service.invoke('serviceRunning', {
+          "enablesManualSync": false,
+        });
         var battery = Battery();
         final int batteryPercent = await battery.batteryLevel;
         if (batteryPercent <=
@@ -137,85 +140,93 @@ void onStart(ServiceInstance service) async {
           final FlutterLocalNotificationsPlugin
               flutterLocalNotificationsPlugin =
               FlutterLocalNotificationsPlugin();
-          if (frequencyCount != null) {
+          final isManualSyncRunning =
+              await LocalSecureStore.instance.isManualSyncRunning;
+          if (frequencyCount != null && !isManualSyncRunning) {
             final serviceRegistryList =
                 await _isar.serviceRegistrys.where().findAll();
             if (serviceRegistryList.isNotEmpty) {
-              final bandwidthPath = serviceRegistryList
-                  .firstWhere((element) => element.service == 'BANDWIDTH-CHECK')
-                  .actions
-                  .first
-                  .path;
+              final bandwidthService = serviceRegistryList.firstWhereOrNull(
+                (element) => element.service == 'BANDWIDTH-CHECK',
+              );
+              if (bandwidthService != null) {
+                final bandwidthPath = bandwidthService.actions.first.path;
 
-              List speedArray = [];
-              for (var i = 0; i < frequencyCount; i++) {
-                try {
-                  final double speed = await BandwidthCheckRepository(
-                    _dio,
-                    bandwidthPath: bandwidthPath,
-                  ).pingBandwidthCheck(bandWidthCheckModel: null);
-                  speedArray.add(speed);
-                } catch (e) {
-                  service.invoke('serviceRunning', {
-                    "enablesManualSync": true,
-                  });
-                  service.stopSelf();
-                  break;
+                List speedArray = [];
+                for (var i = 0; i < frequencyCount; i++) {
+                  try {
+                    final double speed = await BandwidthCheckRepository(
+                      _dio,
+                      bandwidthPath: bandwidthPath,
+                    ).pingBandwidthCheck(bandWidthCheckModel: null);
+                    speedArray.add(speed);
+                  } catch (e) {
+                    service.invoke('serviceRunning', {
+                      "enablesManualSync": true,
+                    });
+                    service.stopSelf();
+                    break;
+                  }
                 }
-              }
-              double sum = speedArray.fold(0, (p, c) => p + c);
+                double sum = speedArray.fold(0, (p, c) => p + c);
 
-              int configuredBatchSize = getBatchSizeToBandwidth(
-                sum / speedArray.length,
-                appConfiguration,
-              );
-              final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-                'userId': userRequestModel!.uuid,
-                'batchSize': configuredBatchSize,
-              });
-              flutterLocalNotificationsPlugin.show(
-                888,
-                'Auto Sync',
-                'Speed : ${speedArray.firstOrNull}Mb/ps - BatchSize : $configuredBatchSize',
-                const NotificationDetails(
-                  android: AndroidNotificationDetails(
-                    "my_foreground",
-                    'AUTO SYNC',
-                    icon: 'ic_bg_service_small',
-                    ongoing: true,
+                int configuredBatchSize = getBatchSizeToBandwidth(
+                  sum / speedArray.length,
+                  appConfiguration,
+                );
+                final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
+                  'userId': userRequestModel?.uuid,
+                  'batchSize': configuredBatchSize,
+                });
+                flutterLocalNotificationsPlugin.show(
+                  888,
+                  'Auto Sync',
+                  'Speed : ${speedArray.isNotEmpty && speedArray.firstOrNull != null ? double.tryParse(speedArray.first.toString())?.toStringAsFixed(2) ?? '0' : '0'}Mb/ps - BatchSize : $configuredBatchSize',
+                  const NotificationDetails(
+                    android: AndroidNotificationDetails(
+                      "my_foreground",
+                      'AUTO SYNC',
+                      icon: 'ic_bg_service_small',
+                      ongoing: true,
+                    ),
                   ),
-                ),
-              );
-              final isSyncCompleted = await const NetworkManager(
-                configuration: NetworkManagerConfiguration(
-                  persistenceConfig: PersistenceConfiguration.offlineFirst,
-                ),
-              ).performSync(
-                localRepositories: Constants.getLocalRepositories(
-                  _sql,
-                  _isar,
-                ).toList(),
-                remoteRepositories: Constants.getRemoteRepositories(
-                  _dio,
-                  getActionMap(serviceRegistryList),
-                ),
-                bandwidthModel: bandwidthModel,
-                service: service,
-              );
+                );
+                final isSyncCompleted = await const NetworkManager(
+                  configuration: NetworkManagerConfiguration(
+                    persistenceConfig: PersistenceConfiguration.offlineFirst,
+                  ),
+                ).performSync(
+                  localRepositories: Constants.getLocalRepositories(
+                    _sql,
+                    _isar,
+                  ).toList(),
+                  remoteRepositories: Constants.getRemoteRepositories(
+                    _dio,
+                    getActionMap(serviceRegistryList),
+                  ),
+                  bandwidthModel: bandwidthModel,
+                  service: service,
+                );
 
-              i++;
-              final isAppInActive =
-                  await LocalSecureStore.instance.isAppInActive;
+                i++;
+                final isAppInActive =
+                    await LocalSecureStore.instance.isAppInActive;
 
-              if (isSyncCompleted && i >= 2 && isAppInActive) {
-                service.stopSelf();
+                if (isSyncCompleted && i >= 2 && isAppInActive) {
+                  service.stopSelf();
+                }
               }
             }
           }
         }
+        service.invoke('serviceRunning', {
+          "enablesManualSync": true,
+        });
       },
       fireNow: true,
     );
+  } else {
+    service.stopSelf();
   }
 }
 

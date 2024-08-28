@@ -53,7 +53,7 @@ class _DigitReactiveSearchDropdownState<T>
   Widget build(BuildContext context) {
     return LabeledField(
       padding: widget.padding ?? const EdgeInsets.only(top: kPadding * 2),
-      label: '${widget.label}${widget.isRequired ? '*' : ''}',
+      label: '${widget.label}${widget.isRequired ? ' *' : ''}',
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +67,7 @@ class _DigitReactiveSearchDropdownState<T>
             displayItemFn: (dynamic str) => Text(
               str != null ? widget.valueMapper(str) : '',
               style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   color: !widget.enabled
                       ? const DigitColors().hintGrey
                       : const DigitColors().woodsmokeBlack),

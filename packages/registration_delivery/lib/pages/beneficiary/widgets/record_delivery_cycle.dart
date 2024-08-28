@@ -28,10 +28,10 @@ class RecordDeliveryCycle extends LocalizedStatefulWidget {
   });
 
   @override
-  State<RecordDeliveryCycle> createState() => _RecordDeliveryCycleState();
+  State<RecordDeliveryCycle> createState() => RecordDeliveryCycleState();
 }
 
-class _RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
+class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
   bool isExpanded = false;
   bool isDivider = false;
 

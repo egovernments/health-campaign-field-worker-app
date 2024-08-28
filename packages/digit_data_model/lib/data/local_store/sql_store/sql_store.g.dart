@@ -38695,6 +38695,277 @@ class ReferralCompanion extends UpdateCompanion<ReferralData> {
   }
 }
 
+class $LocalizationTable extends Localization
+    with TableInfo<$LocalizationTable, LocalizationData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalizationTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _localeMeta = const VerificationMeta('locale');
+  @override
+  late final GeneratedColumn<String> locale = GeneratedColumn<String>(
+      'locale', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 255),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _codeMeta = const VerificationMeta('code');
+  @override
+  late final GeneratedColumn<String> code = GeneratedColumn<String>(
+      'code', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 255),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _messageMeta =
+      const VerificationMeta('message');
+  @override
+  late final GeneratedColumn<String> message = GeneratedColumn<String>(
+      'message', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 500),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  static const VerificationMeta _moduleMeta = const VerificationMeta('module');
+  @override
+  late final GeneratedColumn<String> module = GeneratedColumn<String>(
+      'module', aliasedName, false,
+      additionalChecks:
+          GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 255),
+      type: DriftSqlType.string,
+      requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [locale, code, message, module];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'localization';
+  @override
+  VerificationContext validateIntegrity(Insertable<LocalizationData> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('locale')) {
+      context.handle(_localeMeta,
+          locale.isAcceptableOrUnknown(data['locale']!, _localeMeta));
+    } else if (isInserting) {
+      context.missing(_localeMeta);
+    }
+    if (data.containsKey('code')) {
+      context.handle(
+          _codeMeta, code.isAcceptableOrUnknown(data['code']!, _codeMeta));
+    } else if (isInserting) {
+      context.missing(_codeMeta);
+    }
+    if (data.containsKey('message')) {
+      context.handle(_messageMeta,
+          message.isAcceptableOrUnknown(data['message']!, _messageMeta));
+    } else if (isInserting) {
+      context.missing(_messageMeta);
+    }
+    if (data.containsKey('module')) {
+      context.handle(_moduleMeta,
+          module.isAcceptableOrUnknown(data['module']!, _moduleMeta));
+    } else if (isInserting) {
+      context.missing(_moduleMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => const {};
+  @override
+  LocalizationData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalizationData(
+      locale: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}locale'])!,
+      code: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}code'])!,
+      message: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}message'])!,
+      module: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}module'])!,
+    );
+  }
+
+  @override
+  $LocalizationTable createAlias(String alias) {
+    return $LocalizationTable(attachedDatabase, alias);
+  }
+}
+
+class LocalizationData extends DataClass
+    implements Insertable<LocalizationData> {
+  final String locale;
+  final String code;
+  final String message;
+  final String module;
+  const LocalizationData(
+      {required this.locale,
+      required this.code,
+      required this.message,
+      required this.module});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['locale'] = Variable<String>(locale);
+    map['code'] = Variable<String>(code);
+    map['message'] = Variable<String>(message);
+    map['module'] = Variable<String>(module);
+    return map;
+  }
+
+  LocalizationCompanion toCompanion(bool nullToAbsent) {
+    return LocalizationCompanion(
+      locale: Value(locale),
+      code: Value(code),
+      message: Value(message),
+      module: Value(module),
+    );
+  }
+
+  factory LocalizationData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalizationData(
+      locale: serializer.fromJson<String>(json['locale']),
+      code: serializer.fromJson<String>(json['code']),
+      message: serializer.fromJson<String>(json['message']),
+      module: serializer.fromJson<String>(json['module']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'locale': serializer.toJson<String>(locale),
+      'code': serializer.toJson<String>(code),
+      'message': serializer.toJson<String>(message),
+      'module': serializer.toJson<String>(module),
+    };
+  }
+
+  LocalizationData copyWith(
+          {String? locale, String? code, String? message, String? module}) =>
+      LocalizationData(
+        locale: locale ?? this.locale,
+        code: code ?? this.code,
+        message: message ?? this.message,
+        module: module ?? this.module,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('LocalizationData(')
+          ..write('locale: $locale, ')
+          ..write('code: $code, ')
+          ..write('message: $message, ')
+          ..write('module: $module')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(locale, code, message, module);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalizationData &&
+          other.locale == this.locale &&
+          other.code == this.code &&
+          other.message == this.message &&
+          other.module == this.module);
+}
+
+class LocalizationCompanion extends UpdateCompanion<LocalizationData> {
+  final Value<String> locale;
+  final Value<String> code;
+  final Value<String> message;
+  final Value<String> module;
+  final Value<int> rowid;
+  const LocalizationCompanion({
+    this.locale = const Value.absent(),
+    this.code = const Value.absent(),
+    this.message = const Value.absent(),
+    this.module = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalizationCompanion.insert({
+    required String locale,
+    required String code,
+    required String message,
+    required String module,
+    this.rowid = const Value.absent(),
+  })  : locale = Value(locale),
+        code = Value(code),
+        message = Value(message),
+        module = Value(module);
+  static Insertable<LocalizationData> custom({
+    Expression<String>? locale,
+    Expression<String>? code,
+    Expression<String>? message,
+    Expression<String>? module,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (locale != null) 'locale': locale,
+      if (code != null) 'code': code,
+      if (message != null) 'message': message,
+      if (module != null) 'module': module,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalizationCompanion copyWith(
+      {Value<String>? locale,
+      Value<String>? code,
+      Value<String>? message,
+      Value<String>? module,
+      Value<int>? rowid}) {
+    return LocalizationCompanion(
+      locale: locale ?? this.locale,
+      code: code ?? this.code,
+      message: message ?? this.message,
+      module: module ?? this.module,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (locale.present) {
+      map['locale'] = Variable<String>(locale.value);
+    }
+    if (code.present) {
+      map['code'] = Variable<String>(code.value);
+    }
+    if (message.present) {
+      map['message'] = Variable<String>(message.value);
+    }
+    if (module.present) {
+      map['module'] = Variable<String>(module.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalizationCompanion(')
+          ..write('locale: $locale, ')
+          ..write('code: $code, ')
+          ..write('message: $message, ')
+          ..write('module: $module, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   _$LocalSqlDataStore(QueryExecutor e) : super(e);
   late final $AttendanceRegisterTable attendanceRegister =
@@ -38747,6 +39018,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final $TaskResourceTable taskResource = $TaskResourceTable(this);
   late final $SideEffectTable sideEffect = $SideEffectTable(this);
   late final $ReferralTable referral = $ReferralTable(this);
+  late final $LocalizationTable localization = $LocalizationTable(this);
   late final Index attendanceClientref = Index('attendance_clientref',
       'CREATE INDEX attendance_clientref ON attendance (client_reference_id)');
   late final Index attendanceIndividualid = Index('attendance_individualid',
@@ -38812,6 +39084,8 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
   late final Index referralProjectbeneficiaryclientref = Index(
       'referral_projectbeneficiaryclientref',
       'CREATE INDEX referral_projectbeneficiaryclientref ON referral (project_beneficiary_client_reference_id)');
+  late final Index localizationModule = Index('localization_module',
+      'CREATE INDEX localization_module ON localization (module)');
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -38857,6 +39131,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         taskResource,
         sideEffect,
         referral,
+        localization,
         attendanceClientref,
         attendanceIndividualid,
         projectClinetref,
@@ -38885,6 +39160,7 @@ abstract class _$LocalSqlDataStore extends GeneratedDatabase {
         sideeffectTaskclientref,
         referralClinetref,
         referralProjectid,
-        referralProjectbeneficiaryclientref
+        referralProjectbeneficiaryclientref,
+        localizationModule
       ];
 }

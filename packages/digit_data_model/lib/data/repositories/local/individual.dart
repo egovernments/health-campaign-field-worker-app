@@ -107,6 +107,8 @@ class IndividualLocalRepository
               clientReferenceId: individual.clientReferenceId,
               dateOfBirth: individual.dateOfBirth,
               mobileNumber: individual.mobileNumber,
+              userUuid: individual.userUuid,
+              userId: individual.userUuid,
               isDeleted: individual.isDeleted,
               rowVersion: individual.rowVersion,
               clientAuditDetails: (individual.clientCreatedBy != null &&

@@ -1,19 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
-import 'package:isar/isar.dart';
+import 'package:drift/drift.dart';
 
 import '../../../models/localization/localization_model.dart';
 import '../../local_store/no_sql/schema/localization.dart';
+import '../local/localization.dart';
 
 class LocalizationRepository {
   final Dio _client;
-  final Isar _isar;
+  final LocalSqlDataStore _sql;
 
   const LocalizationRepository(
     this._client,
-    this._isar,
+    this._sql,
   );
 
   Future<LocalizationModel> search({
@@ -30,7 +31,7 @@ class LocalizationRepository {
       return LocalizationModel.fromJson(
         json.decode(response.toString()),
       );
-    } on DioError catch (_) {
+    } on DioException catch (_) {
       // Assuming there will be an errorMessage property in the JSON object
       rethrow;
     }
@@ -42,38 +43,22 @@ class LocalizationRepository {
     required String module,
     required String tenantId,
   }) async {
-    final List<LocalizationWrapper> localizationList = await _isar
-        .localizationWrappers
-        .filter()
-        .localeEqualTo(locale)
-        .findAll();
+    var results = await search(
+      url: path,
+      queryParameters: {
+        "module": module,
+        "locale": locale,
+        "tenantId": tenantId,
+      },
+    );
 
-    if (localizationList.isEmpty) {
-      final result = await search(
-        url: path,
-        queryParameters: {
-          "module": module,
-          "locale": locale,
-          "tenantId": tenantId,
-        },
-      );
-
-      final List<Localization> newLocalizationList = result.messages
-          .map((e) => Localization()
-            ..message = e.message
-            ..code = e.code
-            ..locale = e.locale
-            ..module = e.module)
-          .toList();
-
-      final localizationWrapper = LocalizationWrapper()
-        ..locale = locale
-        ..localization = newLocalizationList;
-
-      await _isar.writeTxn(() async {
-        await _isar.localizationWrappers.put(localizationWrapper);
-        // insert & update
-      });
-    }
+    return results.messages
+        .map((e) => LocalizationCompanion(
+              code: Value(e.code),
+              locale: Value(e.locale),
+              message: Value(e.message),
+              module: Value(e.module),
+            ))
+        .toList();
   }
 }

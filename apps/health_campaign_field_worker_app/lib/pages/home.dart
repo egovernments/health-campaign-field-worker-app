@@ -2,16 +2,23 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/closed_household.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
+import 'package:digit_dss/models/entities/dashboard_response_model.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
+import 'package:digit_dss/utils/utils.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -21,7 +28,9 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
+import '../blocs/localization/localization.dart';
 import '../blocs/sync/sync.dart';
+import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
@@ -92,7 +101,6 @@ class _HomePageState extends LocalizedState<HomePage> {
       return e.code;
     });
 
-    //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
         roles.contains(RolesType.registrar.toValue()))) {
       skipProgressBar = true;
@@ -181,7 +189,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   state.maybeWhen(
                     orElse: () => null,
                     syncInProgress: () async {
-                      await localSecureStore.setManualSyncTrigger(false);
+                      await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         DigitSyncDialog.show(
                           context,
@@ -315,6 +323,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
+        child: HomeItemCard(
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
+          onPressed: () {
+            context.router.push(const UserDashboardRoute());
+          },
+        ),
+      ),
+
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.buildWith(
         child: HomeItemCard(
@@ -322,6 +340,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
             await context.router.push(const RegistrationDeliveryWrapperRoute());
+          },
+        ),
+      ),
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home,
+          enableCustomIcon: true,
+          customIconSize: 48,
+          customIcon: Constants.closedHouseholdSvg,
+          label: i18.home.closedHouseHoldLabel,
+          onPressed: () {
+            context.router.push(const ClosedHouseholdWrapperRoute());
           },
         ),
       ),
@@ -333,7 +363,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
                     context.router.push(ManageStocksRoute());
                   },
                 );
@@ -404,7 +438,11 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             context.read<AppInitializationBloc>().state.maybeWhen(
                   orElse: () {},
-                  initialized: (AppConfiguration appConfiguration, _) {
+                  initialized: (
+                    AppConfiguration appConfiguration,
+                    _,
+                    __,
+                  ) {
                     context.router.push(SearchReferralReconciliationsRoute());
                   },
                 );
@@ -445,18 +483,12 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.db: homeShowcaseData.db.buildWith(
+      i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
-          icon: Icons.table_chart,
-          label: i18.home.db,
+          icon: Icons.bar_chart_sharp,
+          label: i18.home.dashboard,
           onPressed: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => DriftDbViewer(
-                  context.read<LocalSqlDataStore>(),
-                ),
-              ),
-            );
+            context.router.push(const UserDashboardRoute());
           },
         ),
       ),
@@ -480,11 +512,15 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.manageAttendanceLabel:
           homeShowcaseData.manageAttendance.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.closedHouseHoldLabel:
+          homeShowcaseData.closedHouseHold.showcaseKey,
+      i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
+      i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
       i18.home.myCheckList,
@@ -494,6 +530,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.beneficiaryReferralLabel,
       i18.home.manageAttendanceLabel,
       i18.home.db,
+      i18.home.dashboard,
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -598,9 +635,15 @@ class _HomePageState extends LocalizedState<HomePage> {
 void setPackagesSingleton(BuildContext context) {
   context.read<AppInitializationBloc>().state.maybeWhen(
       orElse: () {},
-      initialized: (AppConfiguration appConfiguration, _) {
+      initialized: (
+        AppConfiguration appConfiguration,
+        List<ServiceRegistry> serviceRegistry,
+        DashboardConfigSchema? dashboardConfigSchema,
+      ) {
+        loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
+          loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
           projectId: context.projectId,
@@ -623,9 +666,24 @@ void setPackagesSingleton(BuildContext context) {
               .map((e) => e.code)
               .toList(),
           symptomsTypes:
-              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
+              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
+              ? appConfiguration.searchHouseHoldFilters!
+                  .map((e) => e.code)
+                  .toList()
+              : [],
           referralReasons:
-              appConfiguration.referralReasons!.map((e) => e.code).toList(),
+              appConfiguration.referralReasons?.map((e) => e.code).toList(),
+          houseStructureTypes:
+              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
+          refusalReasons:
+              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+        );
+
+        ClosedHouseholdSingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
         );
 
         AttendanceSingleton().setInitialData(
@@ -670,6 +728,7 @@ void setPackagesSingleton(BuildContext context) {
               )
               .toList()
               .isNotEmpty,
+          loggedInUser: context.loggedInUserModel,
           projectId: context.projectId,
           loggedInUserUuid: context.loggedInUserUuid,
           transportTypes: appConfiguration.transportTypes
@@ -678,7 +737,28 @@ void setPackagesSingleton(BuildContext context) {
                 ..code = e.code)
               .toList(),
         );
+        DashboardSingleton().setInitialData(
+            projectId: context.projectId,
+            tenantId: envConfig.variables.tenantId,
+            dashboardConfig: dashboardConfigSchema,
+            appVersion: Constants().version,
+            selectedProject: context.selectedProject,
+            actionPath: Constants.getEndPoint(
+              serviceRegistry: serviceRegistry,
+              service: DashboardResponseModel.schemaName.toUpperCase(),
+              action: ApiOperation.search.toValue(),
+              entityName: DashboardResponseModel.schemaName,
+            ));
       });
+}
+
+void loadLocalization(
+    BuildContext context, AppConfiguration appConfiguration) async {
+  context.read<LocalizationBloc>().add(
+      LocalizationEvent.onUpdateLocalizationIndex(
+          index: appConfiguration.languages!.indexWhere((element) =>
+              element.value == AppSharedPreferences().getSelectedLocale),
+          code: AppSharedPreferences().getSelectedLocale!));
 }
 
 class _HomeItemDataModel {
