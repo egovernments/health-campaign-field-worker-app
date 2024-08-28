@@ -6,6 +6,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:registration_delivery/models/entities/household.dart';
 
 import '../models/entities/additional_fields_type.dart';
 import '../models/entities/referral.dart';
@@ -47,16 +48,14 @@ class CustomValidator {
   ) {
     if (control.value != null &&
         control.value.toString().isNotEmpty &&
-        control.value.toString().length < 10) {
+        control.value.toString().length < 9) {
       return {'minLength': true};
     }
   }
 }
 
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
-  if (currentCycle == null ||
-      currentCycle.startDate == null ||
-      currentCycle.endDate == null) {
+  if (currentCycle == null) {
     return false;
   }
 
@@ -91,7 +90,7 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.beneficiaryRefused.toValue());
+      tasks.last.status == Status.administeredFailed.toValue());
 
   return isBeneficiaryRefused;
 }
@@ -183,19 +182,34 @@ bool checkIfBeneficiaryReferred(
   }
 }
 
-DeliveryDoseCriteria? fetchProductVariant(
-  ProjectCycleDelivery? currentDelivery,
-  IndividualModel? individualModel,
-) {
-  if (currentDelivery != null && individualModel != null) {
-    final individualAge = DigitDateUtils.calculateAge(
-      DigitDateUtils.getFormattedDateToDateTime(
-            individualModel.dateOfBirth!,
-          ) ??
-          DateTime.now(),
-    );
-    final individualAgeInMonths =
-        individualAge.years * 12 + individualAge.months;
+DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
+    IndividualModel? individualModel, HouseholdModel? householdModel) {
+  if (currentDelivery != null) {
+    var individualAgeInMonths = 0;
+    var gender;
+    var roomCount;
+    var memberCount;
+
+    if (individualModel != null) {
+      final individualAge = DigitDateUtils.calculateAge(
+        DigitDateUtils.getFormattedDateToDateTime(
+              individualModel.dateOfBirth!,
+            ) ??
+            DateTime.now(),
+      );
+      individualAgeInMonths = individualAge.years * 12 + individualAge.months;
+
+      gender = individualModel.gender?.index;
+    }
+    if (householdModel != null && householdModel.additionalFields != null) {
+      memberCount = householdModel.memberCount;
+      roomCount = int.tryParse(householdModel.additionalFields?.fields
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+          '1')!;
+    }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
@@ -208,8 +222,9 @@ DeliveryDoseCriteria? fetchProductVariant(
             element,
             {
               'age': individualAgeInMonths,
-              if (individualModel.gender != null)
-                'gender': individualModel.gender?.index,
+              if (gender != null) 'gender': gender,
+              if (memberCount != null) 'memberCount': memberCount,
+              if (roomCount != null) 'roomCount': roomCount
             },
           );
           final error = expression.parse;
@@ -291,7 +306,7 @@ class RegistrationDeliverySingleton {
 
   String? _tenantId;
   String? _loggedInUserUuid;
-
+  UserModel? _loggedInUser;
   double? _maxRadius;
   String? _projectId;
   BeneficiaryType? _beneficiaryType;
@@ -306,7 +321,10 @@ class RegistrationDeliverySingleton {
   List<String>? _householdMemberDeletionReasonOptions;
   List<String>? _deliveryCommentOptions;
   List<String>? _symptomsTypes;
+  List<String>? _searchHouseHoldFilter;
   List<String>? _referralReasons;
+  List<String>? _houseStructureTypes;
+  List<String>? _refusalReasons;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -317,20 +335,25 @@ class RegistrationDeliverySingleton {
     _persistenceConfiguration = persistenceConfiguration;
   }
 
-  void setInitialData(
-      {required String loggedInUserUuid,
-      required double maxRadius,
-      required String projectId,
-      required BeneficiaryType selectedBeneficiaryType,
-      required ProjectTypeModel? projectType,
-      required ProjectModel selectedProject,
-      required List<String>? genderOptions,
-      required List<String>? idTypeOptions,
-      required List<String>? householdDeletionReasonOptions,
-      required List<String>? householdMemberDeletionReasonOptions,
-      required List<String>? deliveryCommentOptions,
-      required List<String>? symptomsTypes,
-      required List<String>? referralReasons}) {
+  void setInitialData({
+    required String loggedInUserUuid,
+    required double maxRadius,
+    required String projectId,
+    required BeneficiaryType selectedBeneficiaryType,
+    required ProjectTypeModel? projectType,
+    required ProjectModel selectedProject,
+    required List<String>? genderOptions,
+    required List<String>? idTypeOptions,
+    required List<String>? householdDeletionReasonOptions,
+    required List<String>? householdMemberDeletionReasonOptions,
+    required List<String>? deliveryCommentOptions,
+    required List<String>? symptomsTypes,
+    required List<String>? searchHouseHoldFilter,
+    required List<String>? referralReasons,
+    required List<String>? houseStructureTypes,
+    required List<String>? refusalReasons,
+    required UserModel? loggedInUser,
+  }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
     _projectId = projectId;
@@ -344,7 +367,11 @@ class RegistrationDeliverySingleton {
         householdMemberDeletionReasonOptions;
     _deliveryCommentOptions = deliveryCommentOptions;
     _symptomsTypes = symptomsTypes;
+    _searchHouseHoldFilter = searchHouseHoldFilter;
     _referralReasons = referralReasons;
+    _houseStructureTypes = houseStructureTypes;
+    _refusalReasons = refusalReasons;
+    _loggedInUser = loggedInUser;
   }
 
   void setTenantId(String tenantId) {
@@ -369,7 +396,11 @@ class RegistrationDeliverySingleton {
       _householdMemberDeletionReasonOptions;
   List<String>? get deliveryCommentOptions => _deliveryCommentOptions;
   List<String>? get symptomsTypes => _symptomsTypes;
+  List<String>? get searchHouseHoldFilter => _searchHouseHoldFilter;
   List<String>? get referralReasons => _referralReasons;
+  List<String>? get houseStructureTypes => _houseStructureTypes;
+  List<String>? get refusalReasons => _refusalReasons;
+  UserModel? get loggedInUser => _loggedInUser;
 }
 
 bool allDosesDelivered(
@@ -416,4 +447,31 @@ bool allDosesDelivered(
       return false;
     }
   }
+}
+
+Status getTaskStatus(Iterable<TaskModel> tasks) {
+  final statusMap = {
+    Status.delivered.toValue(): Status.delivered,
+    Status.notAdministered.toValue(): Status.notAdministered,
+    Status.visited.toValue(): Status.visited,
+    Status.notVisited.toValue(): Status.notVisited,
+    Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+    Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+    Status.administeredSuccess.toValue(): Status.administeredSuccess,
+    Status.administeredFailed.toValue(): Status.administeredFailed,
+    Status.inComplete.toValue(): Status.inComplete,
+    Status.toAdminister.toValue(): Status.toAdminister,
+    Status.closeHousehold.toValue(): Status.closeHousehold,
+  };
+
+  if (tasks.isEmpty) {
+    return Status.registered.toValue();
+  } else {
+    final mappedStatus = statusMap[tasks.last.status ?? Status.registered];
+    if (mappedStatus != null) {
+      return mappedStatus;
+    }
+  }
+
+  return Status.registered.toValue();
 }

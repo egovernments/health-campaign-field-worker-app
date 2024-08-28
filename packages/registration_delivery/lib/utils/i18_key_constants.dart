@@ -17,6 +17,7 @@ const householdDetailsShowcase = HouseholdDetailsShowcase();
 const individualDetailsShowcase = IndividualDetailsShowcase();
 const householdOverviewShowcase = HouseholdOverviewShowcase();
 const deliverInterventionShowcase = DeliverInterventionShowcase();
+const checklist = Checklist();
 
 class Common {
   const Common();
@@ -113,6 +114,12 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+  String get locationCapturing => 'CAPTURING_LOCATION';
+  String get locationCaptured => 'LOCATION_CAPTURED';
+  String get coreCommonSummaryDetails => 'CORE_COMMON_SUMMARY_DETAILS';
+
+  String get metersNear => 'METERS_NEAR';
+  String get coreCommonLoadingText => 'CORE_COMMON_LOADING_TEXT';
 }
 
 class SearchBeneficiary {
@@ -139,6 +146,12 @@ class SearchBeneficiary {
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
+
+  String get filterLabel => 'FILTER_LABEL';
+
+  String get clearFilter => 'CLEAR_FILTER';
+
+  String get applyFilter => 'APPLY_FILTER';
 
   String get yearsAbbr => 'YEARS_ABBR';
 
@@ -227,6 +240,7 @@ class BeneficiaryDetails {
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
   String get householdMemberSingular => 'BENEFICIARY_HOUSEHOLD_MEMBER';
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';
+  String get totalMembers => 'TOTAL_HOUSEHOLD_MEMBERS';
 }
 
 class IndividualDetails {
@@ -283,7 +297,11 @@ class HouseholdLocation {
 
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 
+  String get householdLocationDescriptionText =>
+      'HOUSEHOLD_LOCATION_DESCRIPTION_TEXT';
+
   String get administrationAreaFormLabel => 'ADMINISTRATION_AREA_FORM_LABEL';
+  String get gpsAccuracyLabel => 'CLOSE_HOUSEHOLD_GPS_ACCURACY_LABEL';
 
   String get administrationAreaRequiredValidation =>
       'HOUSEHOLD_LOCATION_ADMINISTRATION_AREA_REQUIRED_VALIDATION';
@@ -292,6 +310,8 @@ class HouseholdLocation {
       'HOUSEHOLD_ADDRESS_LINE_1_FORM_LABEL';
 
   String get landmarkFormLabel => 'LANDMARK_FORM_LABEL';
+
+  String get villageLabel => 'VILLAGE_LABEL';
 
   String get householdAddressLine2LabelText =>
       'HOUSEHOLD_ADDRESS_LINE_2_FORM_LABEL';
@@ -316,10 +336,52 @@ class AcknowledgementSuccess {
   String get dataDownloadedSuccessLabel => 'DATA_DOWNLOADED_SUCCESS_LABEL';
 }
 
+class Checklist {
+  const Checklist();
+
+  String get checklist => 'CHECKLIST';
+
+  String get checklistlabel => 'CHECKLIST_LABEL';
+
+  String get checklistCreateActionLabel => 'CHECKLIST_CREATE_ACTION_LABEL';
+
+  String get checklistViewActionLabel => 'CHECKLIST_VIEW_ACTION_LABEL';
+
+  String get checklistDetailLabel => 'CHECKLIST_DETAILS_LABEL';
+
+  String get checklistDialogLabel => 'CHECKLIST_DIALOG_LABEL';
+
+  String get checklistDialogDescription => 'CHECKLIST_DIALOG_DESCRITPTION';
+
+  String get checklistDialogPrimaryAction => 'CHECKLIST_DIALOG_PRIMARY_ACTION';
+
+  String get checklistDialogSecondaryAction =>
+      'CHECKLIST_DIALOG_SECONDARY_ACTION';
+
+  String get checklistdate => 'CHECKLIST_DATE';
+
+  String get checklistReasonRequiredError => 'CHECKLIST_REASON_REQUIRED_ERROR';
+
+  String get notSelectedKey => 'NOT_SELECTED';
+
+  String get checklistBackDialogLabel => 'CHECKLIST_BACK_DIALOG_LABEL';
+
+  String get checklistBackDialogDescription =>
+      'CHECKLIST_BACK_DIALOG_DESCRITPTION';
+
+  String get checklistBackDialogPrimaryAction =>
+      'CHECKLIST_BACK_DIALOG_PRIMARY_ACTION';
+
+  String get checklistBackDialogSecondaryAction =>
+      'CHECKLIST_BACK_DIALOG_SECONDARY_ACTION';
+}
+
 class HouseholdDetails {
   const HouseholdDetails();
 
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
+
+  String get householdDetailsDescription => 'HOUSEHOLD_DETAILS_DESCRIPTION';
 
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
 
@@ -327,8 +389,15 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+  String get noOfPregnantWomenCountLabel => 'NO_OF_PREGNANT_WOMEN_LABEL';
+  String get noOfChildrenBelow5YearsLabel => 'NO_OF_CHILDREN_BELOW_5_YR_LABEL';
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+  String get noOfRoomsLabel => 'NO_OF_ROOMS_LABEL';
+  String get houseDetailsLabel => 'HOUSE_DETAILS_LABEL';
+  String get selectStructureTypeError => 'PLEASE_SELECT_STRUCTURE_TYPE';
+  String get memberCountError => 'MEMBER_COUNT_ERROR';
+  String get typeOfStructure => 'TYPE_OF_STRUCTURE';
 }
 
 class HouseholdOverView {
@@ -356,6 +425,12 @@ class HouseholdOverView {
 
   String get householdOverViewDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
+
+  String get householdOverViewRegisteredIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_REGISTERED_ICON_LABEL';
+
+  String get householdOverViewNotRegisteredIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_NOT_REGISTERED_ICON_LABEL';
 
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
@@ -420,6 +495,13 @@ class DeliverIntervention {
   const DeliverIntervention();
 
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
+  String get beneficiaryChecklistDialogTitle =>
+      'BENEFICIARY_CHECKLIST_DIALOG_TITLE';
+
+  String get refusedDeliveryLabel => 'REFUSED_DELIVERY_LABEL';
+  String get refusedDeliveryVisitDateLabel => 'REFUSED_DELIVERY_VISIT_DATE';
+  String get reasonForRefusalLabel => 'REASON_FOR_REFUSAL_LABEL';
+  String get reasonForRefusalCommentLabel => 'REASON_FOR_REFUSAL_COMMENT_LABEL';
 
   String get deliverInterventionResourceLabel =>
       'DELIVER_INTERVENTION_RESOURCE_LABEL';
@@ -430,6 +512,8 @@ class DeliverIntervention {
   String get resourceDeliveredLabel =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_LABEL';
 
+  String get typeOfResourceUsed => 'TYPE_OF_RESOURCE_USED';
+
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
@@ -438,6 +522,11 @@ class DeliverIntervention {
 
   String get deliveryCommentLabel =>
       'DELIVER_INTERVENTION_DELIVERY_COMMENT_LABEL';
+  String get deliveryCommentHeading =>
+      'DELIVER_INTERVENTION_DELIVERY_COMMENT_HEADING';
+
+  String get deliveryDetailsLabel =>
+      'DELIVER_INTERVENTION_DELIVERY_DETAILS_LABEL';
 
   String get idTypeText => 'DELIVER_INTERVENTION_ID_TYPE_TEXT';
 
@@ -647,6 +736,10 @@ class HouseholdLocationShowcase {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
   }
 
+  String get gpsAccuracy {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_GPS_ACCURACY_LABEL';
+  }
+
   String get landmark {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_LANDMARK';
   }
@@ -670,6 +763,17 @@ class HouseholdDetailsShowcase {
   String get numberOfMembersLivingInHousehold {
     return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_HOUSEHOLD';
   }
+
+  String get numberOfPregnantWomenInHousehold =>
+      'HOUSEHOLD_DETAILS_SHOWCASE_NO_OF_PREGNANT_WOMEN_IN_HOUSEHOLD';
+
+  String get numberOfChildrenBelow5InHousehold =>
+      'HOUSEHOLD_DETAILS_SHOWCASE_NO_OF_CHILD_BELOW_5_IN_HOUSEHOLD';
+
+  String get numberOfRoomsInHousehold =>
+      'HOUSE_DETAILS_SHOWCASE_NO_OF_ROOMS_IN_HOUSEHOLD';
+
+  String get typeOfStructure => 'HOUSE_DETAILS_SHOWCASE_TYPE_OF_STRUCTURE';
 }
 
 class IndividualDetailsShowcase {
@@ -750,6 +854,18 @@ class HouseholdOverviewShowcase {
 
 class DeliverInterventionShowcase {
   const DeliverInterventionShowcase();
+
+  String get dateOfVisitLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';
+  }
+
+  String get reasonOfRefusalLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_TO_DELIVER';
+  }
+
+  String get commentLabel {
+    return 'DELIVER_INTERVENTION_SHOWCASE_NUMBER_OF_BEDNETS_DISTRIBUTED';
+  }
 
   String get memberCount {
     return 'DELIVER_INTERVENTION_SHOWCASE_MEMBER_COUNT';

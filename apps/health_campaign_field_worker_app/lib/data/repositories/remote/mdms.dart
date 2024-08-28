@@ -8,6 +8,7 @@ import 'package:isar/isar.dart';
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../../models/mdms/service_registry/pgr_service_defenitions.dart';
 import '../../../models/mdms/service_registry/service_registry_model.dart';
+import '../../../models/privacy_notice/privacy_notice_model.dart';
 import '../../../models/role_actions/role_actions_model.dart';
 import '../../local_store/no_sql/schema/app_configuration.dart';
 import '../../local_store/no_sql/schema/row_versions.dart';
@@ -113,7 +114,7 @@ class MdmsRepository {
     app_configuration.AppConfigPrimaryWrapperModel result,
     PGRServiceDefinitions pgrServiceDefinitions,
     Isar isar,
-  ) async {
+  ) {
     final appConfiguration = AppConfiguration();
 
     final data = result.rowVersions?.rowVersionslist;
@@ -216,6 +217,35 @@ class MdmsRepository {
       return genderOption;
     }).toList();
 
+    final privacyPolicyConfig = commonMasters?.privacyPolicyConfig;
+
+    final privacyPolicy = PrivacyPolicy()
+      ..header = privacyPolicyConfig?.first.header ?? ''
+      ..module = privacyPolicyConfig?.first.module ?? ''
+      ..active = privacyPolicyConfig?.first.active
+      ..contents = (privacyPolicyConfig?.first.contents ?? []).map((cont) {
+        final content = Content()
+          ..header = cont.header
+          ..descriptions = (cont.descriptions ?? []).map((d) {
+            final description = Description()
+              ..text = d.text
+              ..type = d.type
+              ..isBold = d.isBold
+              ..subDescriptions = (d.subDescriptions ?? []).map((sd) {
+                final subDescription = SubDescription()
+                  ..text = sd.text
+                  ..type = sd.type
+                  ..isBold = sd.isBold
+                  ..isSpaceRequired = sd.isSpaceRequired;
+                return subDescription;
+              }).toList();
+            return description;
+          }).toList();
+        return content;
+      }).toList();
+
+
+
     final List<IdTypeOptions>? idTypeOptions =
         element?.idTypeOptions.map((element) {
       final idOption = IdTypeOptions()
@@ -277,6 +307,7 @@ class MdmsRepository {
       ..interfaces = interfaceList ?? [];
     appConfiguration.genderOptions = genderOptions;
     appConfiguration.idTypeOptions = idTypeOptions;
+    appConfiguration.privacyPolicyConfig = privacyPolicy;
     appConfiguration.deliveryCommentOptions = deliveryCommentOptions;
     appConfiguration.householdDeletionReasonOptions =
         householdDeletionReasonOptions;
@@ -290,6 +321,15 @@ class MdmsRepository {
     appConfiguration.complaintTypes = complaintTypesList;
     appConfiguration.bandwidthBatchSize = bandwidthBatchSize;
     appConfiguration.downSyncBandwidthBatchSize = downSyncBandWidthBatchSize;
+    appConfiguration.searchHouseHoldFilters =
+        result.hcmWrapperModel?.searchHouseHoldFilters?.map((e) {
+      final searchFilters = SearchHouseHoldFilters()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+      return searchFilters;
+    }).toList();
+
     appConfiguration.symptomsTypes =
         result.hcmWrapperModel?.symptomsTypeList?.map((e) {
       final symptomTypes = SymptomsTypes()
@@ -309,10 +349,29 @@ class MdmsRepository {
 
       return reasonTypes;
     }).toList();
+    appConfiguration.houseStructureTypes =
+        result.hcmWrapperModel?.houseStructureTypes?.map((e) {
+      final structureTypes = HouseStructureTypes()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
 
-    await isar.writeTxn(() async {
-      await isar.appConfigurations.put(appConfiguration);
-      await isar.rowVersionLists.putAll(rowVersionList);
+      return structureTypes;
+    }).toList();
+
+    appConfiguration.refusalReasons =
+        result.hcmWrapperModel?.refusalReasons?.map((e) {
+      final reasonTypes = RefusalReasons()
+        ..name = e.name.toString()
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
+    isar.writeTxnSync(() {
+      isar.appConfigurations.putSync(appConfiguration);
+      isar.rowVersionLists.putAllSync(rowVersionList);
     });
   }
 

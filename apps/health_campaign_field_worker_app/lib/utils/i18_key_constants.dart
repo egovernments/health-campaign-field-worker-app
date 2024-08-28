@@ -11,6 +11,8 @@ const checklist = Checklist();
 const complaints = Complaints();
 const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
+const privacyPolicy = PrivacyPolicy();
+const dashBoard = Dashboard();
 
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
@@ -59,6 +61,10 @@ class Common {
   String get coreCommonReasonRequired => 'CORE_COMMON_REASON_REQUIRED';
 
   String get corecommonclose => 'CORE_COMMON_CLOSE';
+
+  String get coreCommonRetry => 'CORE_COMMON_RETRY';
+
+  String get failedToFetch => 'CORE_COMMON_FAILED_TO_FETCH';
 
   String get coreCommonOk => 'CORE_COMMON_OK';
 
@@ -592,8 +598,11 @@ class Home {
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
+  String get dashboard => 'HOME_DASHBOARD_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
+
+  String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 }
 
 class AcknowledgementSuccess {
@@ -1031,4 +1040,27 @@ class BeneficiaryDetails {
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
+}
+
+class PrivacyPolicy {
+  const PrivacyPolicy();
+
+  String get acceptText {
+    return 'PRIVACY_POLICY_ACCEPT_TEXT';
+  }
+
+  String get declineText {
+    return 'PRIVACY_POLICY_DECLINE_TEXT';
+  }
+
+  String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
+  String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
+  String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
+
+}
+
+class Dashboard {
+  const Dashboard();
+
+  String get dashboardHeaderLabel => 'DASHBOARD_HEADER';
 }

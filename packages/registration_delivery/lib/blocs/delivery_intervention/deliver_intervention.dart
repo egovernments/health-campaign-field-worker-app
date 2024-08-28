@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:registration_delivery/blocs/search_households/search_households.dart';
 
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/deliver_strategy_type.dart';
@@ -36,20 +38,26 @@ class DeliverInterventionBloc
     emit(state.copyWith(loading: true));
     try {
       if (event.isEditing) {
+        if (!event.navigateToSummary) {
+          await taskRepository.update(event.task.copyWith(
+            clientAuditDetails: (event.task.clientAuditDetails?.createdBy !=
+                        null &&
+                    event.task.clientAuditDetails?.createdTime != null)
+                ? ClientAuditDetails(
+                    createdBy: event.task.clientAuditDetails!.createdBy,
+                    createdTime: event.task.clientAuditDetails!.createdTime,
+                    lastModifiedBy: event.task.auditDetails?.lastModifiedBy ??
+                        event.task.clientAuditDetails!.createdBy,
+                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                  )
+                : null,
+          ));
+        }
+
+        emit(state.copyWith(
+            oldTask: event.task,
+            householdMemberWrapper: event.householdMemberWrapper));
         // Update an existing task
-        await taskRepository.update(event.task.copyWith(
-          clientAuditDetails:
-              (event.task.clientAuditDetails?.createdBy != null &&
-                      event.task.clientAuditDetails?.createdTime != null)
-                  ? ClientAuditDetails(
-                      createdBy: event.task.clientAuditDetails!.createdBy,
-                      createdTime: event.task.clientAuditDetails!.createdTime,
-                      lastModifiedBy: event.task.auditDetails?.lastModifiedBy ??
-                          event.task.clientAuditDetails!.createdBy,
-                      lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                    )
-                  : null,
-        ));
       } else {
         // Create a new task
         final code = event.boundaryModel.code;
@@ -59,14 +67,17 @@ class DeliverInterventionBloc
             ? null
             : LocalityModel(code: code, name: name);
 
-        await taskRepository.create(event.task.copyWith(
-          address: event.task.address?.copyWith(
-            locality: localityModel,
-          ),
-        ));
+        if (!event.navigateToSummary) {
+          await taskRepository.create(event.task.copyWith(
+            address: event.task.address?.copyWith(
+              locality: localityModel,
+            ),
+          ));
+        }
+
         emit(state.copyWith(
-          oldTask: event.task,
-        ));
+            oldTask: event.task,
+            householdMemberWrapper: event.householdMemberWrapper));
       }
     } catch (error) {
       rethrow;
@@ -87,16 +98,17 @@ class DeliverInterventionBloc
       );
 
       final List<TaskModel> futureTask = tasks
-          .where((element) =>
-              element.additionalFields?.fields
-                      .firstWhere(
-                        (a) =>
-                            a.key ==
-                            AdditionalFieldsType.deliveryStrategy.toValue(),
-                      )
-                      .value ==
-                  DeliverStrategyType.indirect.toValue() &&
-              element.status == Status.delivered.toValue())
+          .where((element) => element.additionalFields != null
+              ? element.additionalFields!.fields
+                          .firstWhereOrNull(
+                            (a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryStrategy.toValue(),
+                          )
+                          ?.value ==
+                      DeliverStrategyType.indirect.toValue() &&
+                  element.status == Status.delivered.toValue()
+              : false)
           .toList();
 
       if (tasks.isNotEmpty) {
@@ -242,6 +254,8 @@ class DeliverInterventionEvent with _$DeliverInterventionEvent {
     required TaskModel task,
     required bool isEditing,
     required BoundaryModel boundaryModel,
+    @Default(false) bool navigateToSummary,
+    HouseholdMemberWrapper? householdMemberWrapper,
   }) = DeliverInterventionSubmitEvent;
 
   const factory DeliverInterventionEvent.handleSearch({
@@ -272,6 +286,7 @@ class DeliverInterventionState with _$DeliverInterventionState {
     List<ProjectCycle>? pastCycles,
     @Default(true) bool hasCycleArrived,
     @Default(false) bool isLastDoseOfCycle,
+    HouseholdMemberWrapper? householdMemberWrapper,
     List<TaskModel>? tasks,
     List<ProjectCycleDelivery>? futureDeliveries,
     List<TaskModel>? futureTask,

@@ -22,6 +22,8 @@ class TagSearchBloc extends SearchHouseholdsBloc {
     required super.sideEffectDataRepository,
     required super.addressRepository,
     required super.referralDataRepository,
+    required super.individualGlobalSearchRepository,
+    required super.houseHoldGlobalSearchRepository
   }) {
     on(handleSearchByTag);
   }
@@ -38,9 +40,6 @@ class TagSearchBloc extends SearchHouseholdsBloc {
       ),
     );
 
-    /* [TODO: Need to handle the Tag search based on Beneficary Type
-   current implementation is based on the individual based project
-   ] */
     List<IndividualModel> individuals = [];
     List<HouseholdModel> households = [];
 

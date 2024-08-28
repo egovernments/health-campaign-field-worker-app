@@ -28,10 +28,10 @@ class StockReconciliationPage extends LocalizedStatefulWidget {
 
   @override
   State<StockReconciliationPage> createState() =>
-      _StockReconciliationPageState();
+      StockReconciliationPageState();
 }
 
-class _StockReconciliationPageState
+class StockReconciliationPageState
     extends LocalizedState<StockReconciliationPage> {
   static const _facilityKey = 'facility';
   static const _productVariantKey = 'productVariant';

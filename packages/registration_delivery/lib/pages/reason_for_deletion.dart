@@ -22,11 +22,10 @@ class ReasonForDeletionPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ReasonForDeletionPage> createState() => _ReasonForDeletionPageState();
+  State<ReasonForDeletionPage> createState() => ReasonForDeletionPageState();
 }
 
-class _ReasonForDeletionPageState
-    extends LocalizedState<ReasonForDeletionPage> {
+class ReasonForDeletionPageState extends LocalizedState<ReasonForDeletionPage> {
   static const _reasonForDeletionKey = 'reasonForDeletion';
 
   @override
@@ -57,7 +56,7 @@ class _ReasonForDeletionPageState
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId!,
                                     householdModel:
-                                        state.householdMemberWrapper.household,
+                                        state.householdMemberWrapper.household!,
                                     individualModel: state.selectedIndividual!,
                                     projectBeneficiaryType:
                                         RegistrationDeliverySingleton()
@@ -69,12 +68,12 @@ class _ReasonForDeletionPageState
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId!,
                                     householdModel:
-                                        state.householdMemberWrapper.household,
+                                        state.householdMemberWrapper.household!,
                                     members:
-                                        state.householdMemberWrapper.members,
+                                        state.householdMemberWrapper.members!,
                                     projectBeneficiaryModel: state
                                         .householdMemberWrapper
-                                        .projectBeneficiaries
+                                        .projectBeneficiaries!
                                         .first,
                                     projectBeneficiaryType:
                                         RegistrationDeliverySingleton()
@@ -82,12 +81,39 @@ class _ReasonForDeletionPageState
                                   ),
                                 );
 
-                        context.router.maybePop();
+                        // context.router.maybePop();
+                        final parent = context.router.parent() as StackRouter;
 
                         if (widget.isHousholdDelete) {
                           (context.router.parent() as StackRouter).maybePop();
                         }
-                        context.router.push(BeneficiaryAcknowledgementRoute());
+                        parent.popUntil((route) =>
+                            route.settings.name ==
+                            BeneficiaryWrapperRoute.name);
+                        final reloadState =
+                            context.read<HouseholdOverviewBloc>();
+                        Future.delayed(
+                          const Duration(milliseconds: 500),
+                          () {
+                            reloadState.add(
+                              HouseholdOverviewReloadEvent(
+                                projectId:
+                                    RegistrationDeliverySingleton().projectId!,
+                                projectBeneficiaryType:
+                                    RegistrationDeliverySingleton()
+                                        .beneficiaryType!,
+                              ),
+                            );
+                          },
+                        ).then(
+                          (value) => context.router.push(
+                            HouseholdAcknowledgementRoute(
+                              enableViewHousehold: true,
+                            ),
+                          ),
+                        );
+                        // context.router.push(HouseholdAcknowledgementRoute(
+                        //     enableViewHousehold: true));
                       } else {
                         DigitToast.show(context,
                             options: DigitToastOptions(

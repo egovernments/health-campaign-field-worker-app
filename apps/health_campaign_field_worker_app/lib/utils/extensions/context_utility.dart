@@ -101,6 +101,7 @@ extension ContextUtilityExtensions on BuildContext {
     }
     // INFO: Set Boundary for packages
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
+    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
@@ -144,6 +145,21 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     return individualUUID;
+  }
+
+  UserModel? get loggedInUserModel {
+    final userRequestModel = loggedInUser;
+    final userModel = UserModel(
+      userName: userRequestModel.userName,
+      name: userRequestModel.name,
+      uuid: userRequestModel.uuid,
+      mobileNumber: userRequestModel.mobileNumber,
+      gender: userRequestModel.gender,
+      active: userRequestModel.active,
+      tenantId: userRequestModel.tenantId,
+    );
+
+    return userModel;
   }
 
   String get loggedInUserUuid => loggedInUser.uuid;

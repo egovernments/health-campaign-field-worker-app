@@ -20,10 +20,10 @@ class HouseholdAcknowledgementPage extends LocalizedStatefulWidget {
 
   @override
   State<HouseholdAcknowledgementPage> createState() =>
-      _HouseholdAcknowledgementPageState();
+      HouseholdAcknowledgementPageState();
 }
 
-class _HouseholdAcknowledgementPageState
+class HouseholdAcknowledgementPageState
     extends LocalizedState<HouseholdAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
@@ -34,6 +34,8 @@ class _HouseholdAcknowledgementPageState
           builder: (context, householdState) {
             return DigitAcknowledgement.success(
               action: () {
+                context
+                    .read<SearchHouseholdsBloc>().add(const SearchHouseholdsEvent.clear());
                 final parent = context.router.parent() as StackRouter;
                 // Pop twice to navigate back to the previous screen
                 parent.popUntilRoot();

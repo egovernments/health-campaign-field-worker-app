@@ -1,5 +1,7 @@
+import 'package:digit_dss/digit_dss.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../privacy_notice/privacy_notice_model.dart';
 import '../referral_reasons/referral_reasons_model.dart';
 import '../symptoms_types/symptoms_types_model.dart';
 
@@ -87,9 +89,15 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'TRANSPORT_TYPES')
     required List<TransportTypes> transportTypes,
     @JsonKey(name: 'SYMPTOM_TYPES') List<SymptomsType>? symptomsTypeList,
+    @JsonKey(name: 'SEARCH_HOUSEHOLD_FILTERS')
+    List<SearchHouseHoldFilters>? searchHouseHoldFilters,
     @JsonKey(name: 'REFERRAL_REASONS')
     List<ReferralReasonType>? referralReasonList,
-    @JsonKey(name: 'FIREBASE_CONFIG') required List<FirebaseConfig>? firebaseConfig,
+    @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
+    List<CommonMasterModel>? houseStructureTypes,
+    @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
+    @JsonKey(name: 'FIREBASE_CONFIG')
+    required List<FirebaseConfig>? firebaseConfig,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -115,6 +123,7 @@ class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
   const factory CommonMastersWrapperModel({
     @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
     @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
+    @JsonKey(name: 'PrivacyPolicy') required List<PrivacyPolicyModel> privacyPolicyConfig,
   }) = _CommonMastersWrapperModel;
 
   factory CommonMastersWrapperModel.fromJson(
@@ -318,6 +327,18 @@ class CallSupportList with _$CallSupportList {
 
   factory CallSupportList.fromJson(Map<String, dynamic> json) =>
       _$CallSupportListFromJson(json);
+}
+
+@freezed
+class SearchHouseHoldFilters with _$SearchHouseHoldFilters {
+  factory SearchHouseHoldFilters({
+    required String name,
+    required String code,
+    required bool active,
+  }) = _SearchHouseHoldFilters;
+
+  factory SearchHouseHoldFilters.fromJson(Map<String, dynamic> json) =>
+      _$SearchHouseHoldFiltersFromJson(json);
 }
 
 @freezed

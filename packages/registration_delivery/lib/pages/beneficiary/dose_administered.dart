@@ -37,10 +37,10 @@ class DoseAdministeredPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<DoseAdministeredPage> createState() => _DoseAdministeredPageState();
+  State<DoseAdministeredPage> createState() => DoseAdministeredPageState();
 }
 
-class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
+class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
   static const _doseAdministeredKey = 'doseAdministered';
   bool doseAdministered = false;
   bool formSubmitted = false;
@@ -108,9 +108,9 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   }
                                   form.markAllAsTouched();
 
-                                  if (!form.valid)
+                                  if (!form.valid) {
                                     return;
-                                  else {
+                                  } else {
                                     final doseAdministered = form
                                         .control(_doseAdministeredKey)
                                         .value as KeyValue;
@@ -170,9 +170,12 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                   .millisecondsSinceEpoch(),
                                             ),
                                             resources: fetchProductVariant(
-                                              e,
-                                              overViewBloc.selectedIndividual,
-                                            )
+                                                    e,
+                                                    overViewBloc
+                                                        .selectedIndividual,
+                                                    overViewBloc
+                                                        .householdMemberWrapper
+                                                        .household)
                                                 ?.productVariants
                                                 ?.map((variant) =>
                                                     TaskResourceModel(
@@ -364,9 +367,10 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         deliveryState.dose +
                                         1;
                                     List<String> skus = fetchProductVariant(
-                                      e,
-                                      overViewBloc.selectedIndividual,
-                                    )!
+                                            e,
+                                            overViewBloc.selectedIndividual,
+                                            overViewBloc.householdMemberWrapper
+                                                .household)!
                                         .productVariants!
                                         .map((ele) {
                                       final pv = variant!.firstWhere(
@@ -416,12 +420,16 @@ class _DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           localizations.translate(
                                             i18.beneficiaryDetails
                                                 .beneficiaryAge,
-                                          ): localizations
-                                              .translate(fetchProductVariant(
-                                            deliveryState
-                                                .futureDeliveries?.first,
-                                            overViewBloc.selectedIndividual,
-                                          )!
+                                          ): localizations.translate(
+                                              fetchProductVariant(
+                                                      deliveryState
+                                                          .futureDeliveries
+                                                          ?.first,
+                                                      overViewBloc
+                                                          .selectedIndividual,
+                                                      overViewBloc
+                                                          .householdMemberWrapper
+                                                          .household)!
                                                   .condition!),
                                         },
                                       ),

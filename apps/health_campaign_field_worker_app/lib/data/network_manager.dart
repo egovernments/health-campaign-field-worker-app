@@ -5,12 +5,10 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-
 import 'repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
-import '../utils/constants.dart';
 import 'local_store/secure_store/secure_store.dart';
 import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';
@@ -233,9 +231,9 @@ abstract class SyncError implements Exception {
 }
 
 class SyncUpError extends SyncError {
-  const SyncUpError([dynamic error]) : super(error);
+  const SyncUpError([super.error]);
 }
 
 class SyncDownError extends SyncError {
-  const SyncDownError([dynamic error]) : super(error);
+  const SyncDownError([super.error]);
 }
