@@ -71,7 +71,7 @@ class _HouseholdOverviewPageState
                     ),
                     enableFixedButton: true,
                     footer: Offstage(
-                      offstage: beneficiaryType == BeneficiaryType.individual,
+                      offstage: beneficiaryType == BeneficiaryType.individual || (RegistrationDeliverySingleton().selectedProject?.startDate != null && RegistrationDeliverySingleton().selectedProject?.endDate != null &&  (DateTime.now().millisecondsSinceEpoch <(RegistrationDeliverySingleton().selectedProject!.startDate!)||  DateTime.now().millisecondsSinceEpoch > RegistrationDeliverySingleton().selectedProject!.endDate!)),
                       child: BlocBuilder<ServiceDefinitionBloc,
                           ServiceDefinitionState>(
                         builder: (context, serviceDefinitionState) =>
