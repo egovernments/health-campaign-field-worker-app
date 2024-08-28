@@ -47,13 +47,12 @@ class _BeneficiaryChecklistPageState
 
   @override
   void initState() {
-
     context.read<ServiceBloc>().add(
-    ServiceSurveyFormEvent(
-      value: Random().nextInt(100).toString(),
-      submitTriggered: true,
-    ),
-  );
+          ServiceSurveyFormEvent(
+            value: Random().nextInt(100).toString(),
+            submitTriggered: true,
+          ),
+        );
 
     super.initState();
   }
@@ -113,13 +112,13 @@ class _BeneficiaryChecklistPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                          const ServiceSurveyFormEvent(
-                            value: '',
-                            submitTriggered: true,
-                          ),
-                        );
-                       final isValid =
-                        checklistFormKey.currentState?.validate();
+                              const ServiceSurveyFormEvent(
+                                value: '',
+                                submitTriggered: true,
+                              ),
+                            );
+                        final isValid =
+                            checklistFormKey.currentState?.validate();
                         if (!isValid!) {
                           return;
                         }
@@ -129,13 +128,12 @@ class _BeneficiaryChecklistPageState
 
                         for (int i = 0; i < controller.length; i++) {
                           if (itemsAttributes?[i].required == true &&
-                              ( (itemsAttributes?[i].dataType ==
-                                  'Boolean' &&
-                                  (controller[i].text == '')) )) {
-                              setState(() {
-                                validFields = false;
-                                validChecklist = false;
-                              });
+                              ((itemsAttributes?[i].dataType == 'Boolean' &&
+                                  (controller[i].text == '')))) {
+                            setState(() {
+                              validFields = false;
+                              validChecklist = false;
+                            });
                           }
                         }
 
@@ -146,58 +144,77 @@ class _BeneficiaryChecklistPageState
                         for (int i = 0; i < controller.length; i++) {
                           final attribute = initialAttributes;
                           attributes.add(ServiceAttributesModel(
-                              attributeCode: '${attribute?[i].code}',
-                              dataType: attribute?[i].dataType,
-                              clientReferenceId: IdGen.i.identifier,
-                              referenceId: widget.beneficiaryClientRefId,
-                              value: attribute?[i].dataType !=
-                                  'SingleValueList'
-                                  ? controller[i]
-                                  .text
-                                  .toString()
-                                  .trim()
-                                  .isNotEmpty
-                                  ? controller[i].text.toString()
-                                  : ''
-                                  : visibleChecklistIndexes.contains(i)
-                                  ? controller[i].text.toString()
-                                  : i18.checklist.notSelectedKey,
-                              rowVersion: 1,
-                              tenantId: attribute?[i].tenantId,
-                              additionalDetails: null));
+                            attributeCode: '${attribute?[i].code}',
+                            dataType: attribute?[i].dataType,
+                            clientReferenceId: IdGen.i.identifier,
+                            referenceId: widget.beneficiaryClientRefId,
+                            value: attribute?[i].dataType != 'SingleValueList'
+                                ? controller[i]
+                                        .text
+                                        .toString()
+                                        .trim()
+                                        .isNotEmpty
+                                    ? controller[i].text.toString()
+                                    : ''
+                                : visibleChecklistIndexes.contains(i)
+                                    ? controller[i].text.toString()
+                                    : i18.checklist.notSelectedKey,
+                            rowVersion: 1,
+                            tenantId: attribute?[i].tenantId,
+                            additionalDetails: null,
+                          ));
                         }
 
                         context.read<ServiceBloc>().add(
-                          ServiceCreateEvent(
-                            serviceModel: ServiceModel(
-                              createdAt: DigitDateUtils
-                                  .getDateFromTimestamp(
-                                DateTime.now()
-                                    .toLocal()
-                                    .millisecondsSinceEpoch,
-                                dateFormat: Constants.checklistViewDateFormat,
+                              ServiceCreateEvent(
+                                serviceModel: ServiceModel(
+                                  createdAt:
+                                      DigitDateUtils.getDateFromTimestamp(
+                                    DateTime.now()
+                                        .toLocal()
+                                        .millisecondsSinceEpoch,
+                                    dateFormat:
+                                        Constants.checklistViewDateFormat,
+                                  ),
+                                  tenantId: selectedServiceDefinition!.tenantId,
+                                  clientId:
+                                      widget.beneficiaryClientRefId.toString(),
+                                  serviceDefId: selectedServiceDefinition?.id,
+                                  attributes: attributes,
+                                  rowVersion: 1,
+                                  accountId:
+                                      RegistrationDeliverySingleton().projectId,
+                                  additionalDetails:
+                                      RegistrationDeliverySingleton()
+                                          .boundary
+                                          ?.code,
+                                  auditDetails: AuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                  ),
+                                  clientAuditDetails: ClientAuditDetails(
+                                    createdBy: RegistrationDeliverySingleton()
+                                        .loggedInUserUuid!,
+                                    createdTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                    lastModifiedBy:
+                                        RegistrationDeliverySingleton()
+                                            .loggedInUserUuid!,
+                                    lastModifiedTime:
+                                        DateTime.now().millisecondsSinceEpoch,
+                                  ),
+                                ),
                               ),
-                              tenantId: selectedServiceDefinition!
-                                  .tenantId,
-                              clientId: widget.beneficiaryClientRefId
-                                  .toString(),
-                              serviceDefId: selectedServiceDefinition?.id,
-                              attributes: attributes,
-                              rowVersion: 1,
-                              accountId: RegistrationDeliverySingleton()
-                                  .projectId,
-                              additionalDetails:
-                              RegistrationDeliverySingleton()
-                                  .boundary
-                                  ?.code,
-                            ),
-                          ),
-                        );
+                            );
 
                         DigitDialog.show<bool>(
                           context,
                           options: DigitDialogOptions(
-                            titleText: localizations.translate(i18.deliverIntervention.beneficiaryChecklistDialogTitle),
+                            titleText: localizations.translate(i18
+                                .deliverIntervention
+                                .beneficiaryChecklistDialogTitle),
                             titlePadding: const EdgeInsets.only(top: kPadding),
                             barrierDismissible: false,
                             enableRecordPast: true,
@@ -207,7 +224,6 @@ class _BeneficiaryChecklistPageState
                               kPadding,
                               0,
                             ),
-
                             contentPadding: EdgeInsets.zero,
                             primaryAction: DigitDialogActions(
                               label: localizations.translate(
@@ -233,7 +249,6 @@ class _BeneficiaryChecklistPageState
                             ),
                           ),
                         );
-
                       },
                       child: Text(
                         localizations.translate(i18.common.coreCommonSubmit),
@@ -245,7 +260,6 @@ class _BeneficiaryChecklistPageState
                       key: checklistFormKey, //assigning key to form
                       child: DigitCard(
                         padding: EdgeInsets.zero,
-
                         child: Column(children: [
                           ...initialAttributes!.map((
                             e,
@@ -398,7 +412,6 @@ class _BeneficiaryChecklistPageState
                                                   )} ${e.required == true ? '*' : ''}',
                                                   style: theme
                                                       .textTheme.headlineSmall,
-
                                                 ),
                                               ],
                                             ),
@@ -420,8 +433,13 @@ class _BeneficiaryChecklistPageState
                                                         i18.common.coreCommonNo,
                                                       );
                                               },
-                                              errorMessage: ( !validFields &&
-                                                  (controller[index].text == '')) ? localizations.translate(i18.common.corecommonRequired) : null,
+                                              errorMessage: (!validFields &&
+                                                      (controller[index].text ==
+                                                          ''))
+                                                  ? localizations.translate(i18
+                                                      .common
+                                                      .corecommonRequired)
+                                                  : null,
                                               initialSelection:
                                                   controller[index].text ==
                                                           'true'
@@ -447,11 +465,11 @@ class _BeneficiaryChecklistPageState
                                                   setState(() {
                                                     controller[index].value =
                                                         TextEditingValue(
-                                                          text: curValue.first
-                                                              .toString(),
-                                                        );
+                                                      text: curValue.first
+                                                          .toString(),
+                                                    );
                                                   });
-                                                }else{
+                                                } else {
                                                   controller[index].value =
                                                       const TextEditingValue(
                                                     text: '',

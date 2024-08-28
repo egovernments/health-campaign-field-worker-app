@@ -560,10 +560,10 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           rowVersion.version = element.version;
           rowVersionList.add(rowVersion);
         }
-        await isar.writeTxn(() async {
-          await isar.rowVersionLists.clear();
+        isar.writeTxnSync(() {
+          isar.rowVersionLists.clear();
 
-          await isar.rowVersionLists.putAll(rowVersionList);
+          isar.rowVersionLists.putAllSync(rowVersionList);
         });
       } else {
         boundaries = await boundaryLocalRepository.search(

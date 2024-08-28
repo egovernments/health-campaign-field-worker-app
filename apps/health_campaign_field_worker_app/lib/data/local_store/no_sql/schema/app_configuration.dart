@@ -1,5 +1,7 @@
 import 'package:isar/isar.dart';
 
+import '../../../../models/privacy_notice/privacy_notice_model.dart';
+
 part 'app_configuration.g.dart';
 
 @Collection()
@@ -78,6 +80,7 @@ class AppConfiguration {
   late List<ReferralReasons>? referralReasons;
   late List<HouseStructureTypes>? houseStructureTypes;
   late List<RefusalReasons>? refusalReasons;
+  late PrivacyPolicy? privacyPolicyConfig;
 }
 
 @embedded
@@ -223,3 +226,34 @@ class RefusalReasons {
   late String name;
   late bool active;
 }
+
+@embedded
+class PrivacyPolicy {
+  late String header;
+  late String module;
+  late bool? active;
+  late List<Content>? contents;
+}
+
+@embedded
+class Content {
+  late String? header;
+  late List<Description>? descriptions;
+}
+
+@embedded
+class Description {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late List<SubDescription>? subDescriptions;
+}
+
+@embedded
+class SubDescription {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late bool? isSpaceRequired;
+}
+

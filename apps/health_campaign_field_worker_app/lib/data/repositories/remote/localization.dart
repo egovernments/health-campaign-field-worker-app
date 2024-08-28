@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 
 import '../../../models/localization/localization_model.dart';
 import '../../local_store/no_sql/schema/localization.dart';
+import '../local/localization.dart';
 
 class LocalizationRepository {
   final Dio _client;
@@ -30,7 +31,7 @@ class LocalizationRepository {
       return LocalizationModel.fromJson(
         json.decode(response.toString()),
       );
-    } on DioError catch (_) {
+    } on DioException catch (_) {
       // Assuming there will be an errorMessage property in the JSON object
       rethrow;
     }
@@ -42,47 +43,22 @@ class LocalizationRepository {
     required String module,
     required String tenantId,
   }) async {
-    List<Localization> localizationList = [];
+    var results = await search(
+      url: path,
+      queryParameters: {
+        "module": module,
+        "locale": locale,
+        "tenantId": tenantId,
+      },
+    );
 
-    final query = _sql.select(_sql.localization).join([])
-      ..where(
-        buildAnd([
-          _sql.localization.locale.equals(locale),
-        ]),
-      );
-
-    final results = await query.get();
-
-    localizationList = results.map((e) {
-      final data = e.readTableOrNull(_sql.localization);
-      return Localization()
-        ..code = data!.code
-        ..locale = data.locale
-        ..module = data.module
-        ..message = data.message;
-    }).toList();
-
-    if (localizationList.isEmpty) {
-      final result = await search(
-        url: path,
-        queryParameters: {
-          "module": module,
-          "locale": locale,
-          "tenantId": tenantId,
-        },
-      );
-      await _sql.batch((batch) {
-        batch.insertAll(
-            _sql.localization,
-            result.messages
-                .map((e) => LocalizationCompanion(
-                      code: Value(e.code),
-                      locale: Value(e.locale),
-                      message: Value(e.message),
-                      module: Value(e.module),
-                    ))
-                .toList());
-      });
-    }
+    return results.messages
+        .map((e) => LocalizationCompanion(
+              code: Value(e.code),
+              locale: Value(e.locale),
+              message: Value(e.message),
+              module: Value(e.module),
+            ))
+        .toList();
   }
 }
