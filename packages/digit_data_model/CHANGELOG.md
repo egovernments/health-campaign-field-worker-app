@@ -1,7 +1,8 @@
 ## 1.0.4-dev.4
 
-* Removed Service and Service Definition models
-  - Removed Service repositories and Service blocs to integrate in checklist package
+* synced with 1.0.4-dev.3 changes
+
+
 ## 1.0.4-dev.3
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
