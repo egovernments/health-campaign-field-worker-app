@@ -428,10 +428,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: a9e3526b4963d4e8a35bb3c2bebf6424f7a78a0b53a8cf564be27dd40a18f18e
+      sha256: "30f77f39977fabc3ef0cb7ed84b7377f987a309982b996096cb4bb8227fd363c"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.2"
+    version: "1.0.4-dev.4"
   digit_scanner:
     dependency: "direct main"
     description:

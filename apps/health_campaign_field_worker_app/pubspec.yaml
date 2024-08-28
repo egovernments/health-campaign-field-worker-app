@@ -69,7 +69,7 @@ dependencies:
   digit_scanner: ^1.0.3
   inventory_management: ^1.0.3+1
   referral_reconciliation: ^1.0.2
-  digit_data_model: ^1.0.4-dev.2
+  digit_data_model: ^1.0.4-dev.4
   registration_delivery: ^1.0.3
   disable_battery_optimization: ^1.1.1
 
