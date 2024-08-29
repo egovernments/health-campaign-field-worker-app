@@ -617,10 +617,6 @@ class DeliverInterventionPageState
     return false;
   }
 
-  void handleResourceValidation(BuildContext context, FormGroup form, List<ProductVariantModel?> deliveredProducts) async {
-
-  }
-
 
   // ignore: long-parameter-list
   TaskModel _getTaskModel(
