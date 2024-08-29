@@ -192,10 +192,6 @@ void onStart(ServiceInstance service) async {
                   ),
                 );
                 // Insert sync logic here
-                final BandwidthModel bandwidthModel = BandwidthModel.fromJson({
-                  'userId': userRequestModel!.uuid,
-                  'batchSize': configuredBatchSize,
-                });
                 final isSyncCompleted = await SyncService().performSync(
                   localRepositories: Constants.getLocalRepositories(
                     _sql,

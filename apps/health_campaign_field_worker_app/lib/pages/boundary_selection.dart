@@ -10,6 +10,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/localization.dart';
@@ -624,7 +625,6 @@ class _BoundarySelectionPageState
                                   ),
                                 ),
                               ),
-                            ),
                           ],
                         ),
                       ),

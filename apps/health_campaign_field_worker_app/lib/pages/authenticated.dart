@@ -114,8 +114,7 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           final userId = context.loggedInUserUuid;
 
                           final isar = context.read<Isar>();
-                          final bloc = SyncBloc
-                            (
+                          final bloc = SyncBloc(
                             isar: isar,
                             syncService: SyncService(),
                           );
@@ -189,7 +188,6 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                           downSyncLocalRepository: ctx.read<
                               LocalRepository<DownsyncModel,
                                   DownsyncSearchModel>>(),
-                          networkManager: ctx.read(),
                           householdLocalRepository: ctx.read<
                               LocalRepository<HouseholdModel,
                                   HouseholdSearchModel>>(),

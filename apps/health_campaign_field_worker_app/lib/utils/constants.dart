@@ -22,6 +22,7 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../data/sync_service_mapper.dart';
 import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
