@@ -5,7 +5,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:sync_service/utils/utils.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
-import '../../sync_service.dart';
 import 'remote_type.dart';
 
 /// The `PerformSyncDown` class provides a method to perform a sync down operation.

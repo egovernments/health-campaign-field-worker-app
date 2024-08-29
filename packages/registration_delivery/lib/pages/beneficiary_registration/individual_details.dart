@@ -767,7 +767,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
@@ -789,8 +790,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
-        CustomValidator.validMobileNumber,
-        CustomValidator.minPhoneNumValidation,
+        Validators.pattern(Constants.mobileNumberRegExp,
+            validationMessage:
+                localizations.translate(i18.common.coreCommonMobileNumber)),
         Validators.maxLength(10)
       ]),
     });
