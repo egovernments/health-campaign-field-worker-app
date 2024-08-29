@@ -35,7 +35,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                   Flexible(
                     child: TextButton.icon(
                       style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onBackground,
+                        foregroundColor: theme.colorScheme.onSurface,
                         padding: EdgeInsets.zero,
                       ),
                       onPressed: () {

@@ -234,7 +234,7 @@ class _ComplaintsLocationPageState
         value: addressModel?.buildingName,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.min(2),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -242,7 +242,7 @@ class _ComplaintsLocationPageState
         value: addressModel?.street,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.min(2),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -250,7 +250,7 @@ class _ComplaintsLocationPageState
         value: addressModel?.landmark,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.min(2),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -258,14 +258,14 @@ class _ComplaintsLocationPageState
         value: addressModel?.pincode,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.min(2),
           Validators.maxLength(6),
         ],
       ),
       _latKey: FormControl<double>(
         value: addressModel?.geoLocation?.latitude,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.min(2),
         ],
       ),
       _lngKey: FormControl<double>(

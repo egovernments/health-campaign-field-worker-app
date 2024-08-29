@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -45,12 +46,13 @@ class StockReconciliationPageState
         validators: isDistributor ? [] : [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(),
-      _manualCountKey: FormControl<String>(
-        value: '0',
+      _manualCountKey: FormControl<int>(
+        value: 0,
         validators: [
-          Validators.number,
+          Validators.number(),
           Validators.required,
-          CustomValidator.validStockCount,
+          Validators.min(0),
+          Validators.max(10000)
         ],
       ),
       _reconciliationCommentsKey: FormControl<String>(),

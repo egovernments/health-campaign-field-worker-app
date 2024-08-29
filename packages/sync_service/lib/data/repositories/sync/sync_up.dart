@@ -3,24 +3,25 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:registration_delivery/models/entities/household.dart';
-import 'package:registration_delivery/models/entities/task.dart';
+import 'package:sync_service/utils/utils.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
-import '../../../utils/environment_config.dart';
 import 'remote_type.dart';
 
+/// The `PerformSyncUp` class provides a method to perform a sync up operation.
 class PerformSyncUp {
+  /// Performs a sync up operation.
+  ///
+  /// This method accepts a `BandwidthModel`, a list of `LocalRepository` objects, and a list of `RemoteRepository` objects as parameters.
+  /// It gets the items to be synced up from each local repository and groups them by type and operation.
+  /// It then gets the remote and local repositories for each type and applies the server generated ID to each entity.
+  /// Finally, it updates each entity in the local repository.
   static FutureOr<void> syncUp({
     required BandwidthModel bandwidthModel,
     required List<LocalRepository> localRepositories,
     required List<RemoteRepository> remoteRepositories,
   }) async {
-    const taskResourceIdKey = 'taskResourceId';
-    const individualIdentifierIdKey = 'individualIdentifierId';
-    const householdAddressIdKey = 'householdAddressId';
-    const individualAddressIdKey = 'individualAddressId';
-
+    // Helper function to get the entity model from a list of operation log entries
     List<EntityModel> getEntityModel(
       List<OpLogEntry<EntityModel>> opLogList,
       LocalRepository<EntityModel, EntitySearchModel> local,
@@ -32,74 +33,16 @@ class PerformSyncUp {
             final serverGeneratedId = e.serverGeneratedId;
             final rowVersion = e.rowVersion;
             if (serverGeneratedId != null) {
-              var updatedEntity =
+              EntityModel? updatedEntity =
                   local.opLogManager.applyServerGeneratedIdToEntity(
                 oplogEntryEntity,
                 serverGeneratedId,
                 rowVersion,
               );
 
-              if (updatedEntity is HouseholdModel) {
-                final addressId = e.additionalIds.firstWhereOrNull(
-                  (element) {
-                    return element.idType == householdAddressIdKey;
-                  },
-                )?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  address: updatedEntity.address?.copyWith(
-                    id: updatedEntity.address?.id ?? addressId,
-                  ),
-                );
-              }
-
-              if (updatedEntity is IndividualModel) {
-                final identifierId = e.additionalIds.firstWhereOrNull(
-                  (element) {
-                    return element.idType == individualIdentifierIdKey;
-                  },
-                )?.id;
-
-                final addressId = e.additionalIds.firstWhereOrNull(
-                  (element) {
-                    return element.idType == individualAddressIdKey;
-                  },
-                )?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  identifiers: updatedEntity.identifiers?.map((e) {
-                    return e.copyWith(
-                      id: e.id ?? identifierId,
-                    );
-                  }).toList(),
-                  address: updatedEntity.address?.map((e) {
-                    return e.copyWith(
-                      id: e.id ?? addressId,
-                    );
-                  }).toList(),
-                );
-              }
-
-              if (updatedEntity is TaskModel) {
-                final resourceId = e.additionalIds
-                    .firstWhereOrNull(
-                      (element) => element.idType == taskResourceIdKey,
-                    )
-                    ?.id;
-
-                updatedEntity = updatedEntity.copyWith(
-                  resources: updatedEntity.resources?.map((e) {
-                    if (resourceId != null) {
-                      return e.copyWith(
-                        taskId: serverGeneratedId,
-                        id: e.id ?? resourceId,
-                      );
-                    }
-
-                    return e.copyWith(taskId: serverGeneratedId);
-                  }).toList(),
-                );
-              }
+              updatedEntity = SyncServiceSingleton()
+                  .entityMapper
+                  ?.updatedEntity(updatedEntity, e, serverGeneratedId);
 
               return updatedEntity;
             }
@@ -110,23 +53,26 @@ class PerformSyncUp {
           .toList();
     }
 
+    // Get the items to be synced up from each local repository
     final futures = await Future.wait(
       localRepositories
           .map((e) => e.getItemsToBeSyncedUp(bandwidthModel.userId)),
     );
 
+    // Group the items by type and operation
     final pendingSyncEntries = futures.expand((e) => e).toList();
     pendingSyncEntries.sort((a, b) => a.createdAt.compareTo(b.createdAt));
     final groupedEntries = pendingSyncEntries.groupListsBy(
       (element) => element.type,
     );
 
-// Note : Sort the entries by DataModelType enum
+    // Sort the entries by DataModelType enum
     final entries = groupedEntries.entries.toList();
     entries.sort((a, b) => DataModelType.values
         .indexOf(a.key)
         .compareTo(DataModelType.values.indexOf(b.key)));
 
+    // For each type and operation, get the remote and local repositories and apply the server generated ID to each entity
     for (final typeGroupedEntity in entries) {
       final groupedOperations = typeGroupedEntity.value.groupListsBy(
         (element) => element.operation,
@@ -142,6 +88,7 @@ class PerformSyncUp {
         localRepositories,
       );
 
+      // For each operation, update each entity in the local repository
       for (final operationGroupedEntity in groupedOperations.entries) {
         // [returns list of oplogs whose nonRecoverableError is false and syncedup is false]
         final opLogList = operationGroupedEntity.value
@@ -154,12 +101,12 @@ class PerformSyncUp {
             .where((element) => element.nonRecoverableError)
             .toList();
 
-        // [returns list of oplogs whose nonRecoverableError is false and retry count is equal to configured value]
+        // [returns list of opLogs whose nonRecoverableError is false and retry count is equal to configured value]
         final nonRecoverableErrorList = operationGroupedEntity.value
             .where((element) =>
                 !element.nonRecoverableError &&
                 element.syncDownRetryCount >=
-                    envConfig.variables.syncDownRetryCount)
+                    SyncServiceSingleton().syncDownRetryCount)
             .toList();
 
         final List<List<OpLogEntry<EntityModel>>> listOfBatchedOpLogList =
@@ -172,6 +119,7 @@ class PerformSyncUp {
             listOfBatchedNonRecoverableErrorList =
             nonRecoverableErrorList.slices(bandwidthModel.batchSize).toList();
 
+        // Handle non-recoverable errors
         if (listOfBatchedNonRecoverableErrorList.isNotEmpty) {
           for (final sublist in listOfBatchedNonRecoverableErrorList) {
             final nonRecoverableErrorEntities = getEntityModel(sublist, local);
@@ -191,6 +139,7 @@ class PerformSyncUp {
           }
         }
 
+        // Handle errors
         if (listOfBatchedOpLogErrorList.isNotEmpty) {
           for (final sublist in listOfBatchedOpLogErrorList) {
             final errorEntities = getEntityModel(sublist, local);
@@ -208,6 +157,8 @@ class PerformSyncUp {
             }
           }
         }
+
+        // Handle successful operations
         if (listOfBatchedOpLogList.isNotEmpty) {
           for (final sublist in listOfBatchedOpLogList) {
             final entities = getEntityModel(sublist, local);

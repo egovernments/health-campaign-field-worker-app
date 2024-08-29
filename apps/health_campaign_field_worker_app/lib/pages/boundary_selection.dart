@@ -14,7 +14,6 @@ import 'package:reactive_forms/reactive_forms.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/localization/localization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
-import '../blocs/sync/sync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../models/entities/roles_type.dart';
@@ -41,19 +40,21 @@ class _BoundarySelectionPageState
   int i = 0;
   int pendingSyncCount = 0;
   final clickedStatus = ValueNotifier<bool>(false);
-  var expenseTypeCtrl = TextEditingController();
   StreamController<double> downloadProgress = StreamController<double>();
 
   Map<String, TextEditingController> dropdownControllers = {};
+  late StreamSubscription syncSubscription;
 
   @override
   void initState() {
+    context.syncRefresh();
     LocalizationParams().setModule('common', false);
     context.read<SyncBloc>().add(SyncRefreshEvent(context.loggedInUserUuid));
     context.read<BeneficiaryDownSyncBloc>().add(
           const DownSyncResetStateEvent(),
         );
     super.initState();
+    listenToSyncCount();
   }
 
   @override
@@ -67,6 +68,7 @@ class _BoundarySelectionPageState
   @override
   void dispose() {
     clickedStatus.dispose();
+    syncSubscription.cancel();
     super.dispose();
   }
 
@@ -525,41 +527,31 @@ class _BoundarySelectionPageState
                                 padding: const EdgeInsets.fromLTRB(
                                     kPadding, 0, kPadding, 0),
                                 child: SafeArea(
-                                  child: BlocListener<SyncBloc, SyncState>(
-                                    listener: (context, syncState) {
-                                      setState(() {
-                                        pendingSyncCount = syncState.maybeWhen(
-                                          orElse: () => 0,
-                                          pendingSync: (count) => count,
-                                        );
-                                      });
-                                    },
-                                    child: ValueListenableBuilder(
-                                      valueListenable: clickedStatus,
-                                      builder: (context, bool isClicked, _) {
-                                        return DigitElevatedButton(
-                                          onPressed: selectedBoundary == null ||
-                                                  isClicked
-                                              ? null
-                                              : () async {
-                                                  if (!form.valid ||
-                                                      validateAllBoundarySelection()) {
-                                                    clickedStatus.value = false;
-                                                    await DigitToast.show(
-                                                      context,
-                                                      options:
-                                                          DigitToastOptions(
-                                                        localizations.translate(i18
-                                                            .common
-                                                            .corecommonRequired),
-                                                        true,
-                                                        Theme.of(context),
-                                                      ),
-                                                    );
-                                                  } else {
-                                                    setState(() {
-                                                      shouldPop = true;
-                                                    });
+                                  child: ValueListenableBuilder(
+                                    valueListenable: clickedStatus,
+                                    builder: (context, bool isClicked, _) {
+                                      return DigitElevatedButton(
+                                        onPressed: selectedBoundary == null ||
+                                                isClicked
+                                            ? null
+                                            : () async {
+                                                if (!form.valid ||
+                                                    validateAllBoundarySelection()) {
+                                                  clickedStatus.value = false;
+                                                  await DigitToast.show(
+                                                    context,
+                                                    options: DigitToastOptions(
+                                                      localizations.translate(i18
+                                                          .common
+                                                          .corecommonRequired),
+                                                      true,
+                                                      Theme.of(context),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  setState(() {
+                                                    shouldPop = true;
+                                                  });
 
                                                     context
                                                         .read<BoundaryBloc>()
@@ -698,5 +690,17 @@ class _BoundarySelectionPageState
 
     // Return false if none of the form controls have a null value
     return false;
+  }
+
+  void listenToSyncCount() async {
+    syncSubscription = context.syncCount().listen((state) {
+      state.maybeWhen(
+          orElse: () {},
+          pendingSync: (count) {
+            setState(() {
+              pendingSyncCount = count;
+            });
+          });
+    });
   }
 }
