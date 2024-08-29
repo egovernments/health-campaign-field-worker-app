@@ -92,8 +92,8 @@ performBackgroundService({
 }) async {
   final connectivityResult = await (Connectivity().checkConnectivity());
 
-  final isOnline = connectivityResult == ConnectivityResult.wifi ||
-      connectivityResult == ConnectivityResult.mobile;
+  final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+      connectivityResult.firstOrNull == ConnectivityResult.mobile;
   final service = FlutterBackgroundService();
   var isRunning = await service.isRunning();
 
@@ -401,50 +401,6 @@ initializeAllMappers() async {
     Future(() => dss_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
-}
-
-int getSyncCount(List<OpLog> oplogs) {
-  int count = oplogs.where((element) {
-    if (element.syncedDown == false && element.syncedUp == true) {
-      switch (element.entityType) {
-        case DataModelType.household:
-        case DataModelType.individual:
-        case DataModelType.householdMember:
-        case DataModelType.projectBeneficiary:
-        case DataModelType.task:
-        case DataModelType.stock:
-        case DataModelType.stockReconciliation:
-        case DataModelType.sideEffect:
-        case DataModelType.referral:
-        case DataModelType.hFReferral:
-        case DataModelType.attendance:
-          return true;
-        default:
-          return false;
-      }
-    } else {
-      switch (element.entityType) {
-        case DataModelType.household:
-        case DataModelType.individual:
-        case DataModelType.householdMember:
-        case DataModelType.projectBeneficiary:
-        case DataModelType.task:
-        case DataModelType.stock:
-        case DataModelType.stockReconciliation:
-        case DataModelType.service:
-        case DataModelType.complaints:
-        case DataModelType.sideEffect:
-        case DataModelType.referral:
-        case DataModelType.hFReferral:
-        case DataModelType.attendance:
-          return true;
-        default:
-          return false;
-      }
-    }
-  }).length;
-
-  return count;
 }
 
 class LocalizationParams {

@@ -47,7 +47,6 @@ class FacilitySelectionPage extends StatelessWidget {
                       .toLowerCase();
                   final lowerCaseQuery = query.toLowerCase();
                   return localizedFacilityIdWithPrefix.contains(lowerCaseQuery);
-                  return false;
                 }).toList();
 
                 return ScrollableContent(

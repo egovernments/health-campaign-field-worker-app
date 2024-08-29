@@ -82,9 +82,7 @@ class AttendanceIndividualBloc
 
       checkResponse(filteredLogs ?? [], attendees, event);
     } catch (ex) {
-      String? error = ex as String;
-
-      emit(AttendanceIndividualState.error(error));
+      emit(AttendanceIndividualState.error(ex.toString()));
     }
   }
 

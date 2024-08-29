@@ -35,22 +35,7 @@ void main() {
 
   // Grouping tests related to RecordStockBloc
   group('RecordHFReferralBloc', () {
-    // Declaring variables for mock and bloc
-    late MockReferralReconSingleton mockReferralReconSingleton;
-    late RecordHFReferralBloc recordHFReferralBloc;
-
-    // Setting up the mock and the bloc for each test
-    setUp(() {
-      mockReferralReconSingleton = MockReferralReconSingleton();
-      recordHFReferralBloc = RecordHFReferralBloc(
-        RecordHFReferralState.create(
-          projectId: mockProjectId,
-          facilityId: mockProjectFacilityModel.id,
-          healthFacilityCord: mockHealthFacilityCoordinator,
-          dateOfEvaluation: mockDateOfRecord,
-        ),
-      );
-    });
+    setUp(() {});
 
     // Test for saveWarehouseDetails event
     blocTest<RecordHFReferralBloc, RecordHFReferralState>(
