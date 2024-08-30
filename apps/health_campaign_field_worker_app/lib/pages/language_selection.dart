@@ -28,6 +28,10 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
   @override
   void dispose() {
+    if (isDialogVisible) {
+      // Close the dialog if it's visible
+      DigitComponentsUtils().hideLocalizationLoadingDialog(context);
+    }
     isDialogVisible = false;
     super.dispose();
   }

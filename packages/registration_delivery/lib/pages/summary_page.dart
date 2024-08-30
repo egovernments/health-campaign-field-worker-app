@@ -206,11 +206,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                   label: localizations.translate(
                                       i18.householdLocation.villageLabel),
                                   value: householdState.householdModel?.address
-                                          ?.locality?.code
-                                          .split('_')
-                                          .last
-                                          .toString()
-                                          .titleCase ??
+                                          ?.locality?.code ??
                                       localizations
                                           .translate(i18.common.coreCommonNA),
                                   isInline: true),
