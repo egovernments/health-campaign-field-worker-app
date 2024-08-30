@@ -624,7 +624,7 @@ class DeliverInterventionPageState
         }
       }
       bool hasDuplicateProductIdOrNoProductId =
-          deliveredProducts.any((ele) => ele?.productId == null);
+      deliveredProducts.any((ele) => ele?.productId == null);
 
       return hasDuplicateProductIdOrNoProductId;
     }
