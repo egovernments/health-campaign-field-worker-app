@@ -1,6 +1,7 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -430,11 +431,11 @@ class BeneficiaryRegistrationBloc
           final projectBeneficiary = await projectBeneficiaryRepository.search(
             ProjectBeneficiarySearchModel(
               projectId: [RegistrationDeliverySingleton().projectId.toString()],
-              beneficiaryClientReferenceId: beneficiaryType ==
-                      BeneficiaryType
-                          .individual ? getIndividualBeneficiaryClientReferenceId(
-                  value.individualModel)
-                  : [event.household.clientReferenceId],
+              beneficiaryClientReferenceId:
+                  beneficiaryType == BeneficiaryType.individual
+                      ? getIndividualBeneficiaryClientReferenceId(
+                          value.individualModel)
+                      : [event.household.clientReferenceId],
             ),
           );
 
@@ -456,36 +457,38 @@ class BeneficiaryRegistrationBloc
               }
             }
           } else {
-            await projectBeneficiaryRepository.create(ProjectBeneficiaryModel(
-                rowVersion: 1,
-                clientReferenceId: IdGen.i.identifier,
-                dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
-                projectId: RegistrationDeliverySingleton().projectId,
-                tenantId: RegistrationDeliverySingleton().tenantId,
-                beneficiaryClientReferenceId:
-                    beneficiaryType == BeneficiaryType.individual
-                        ? value.individualModel.first.clientReferenceId
-                        : value.householdModel.clientReferenceId,
-                clientAuditDetails: ClientAuditDetails(
-                  createdBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                  createdTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                ),
-                auditDetails: AuditDetails(
-                  createdBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                  createdTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
-                  lastModifiedBy: RegistrationDeliverySingleton()
-                      .loggedInUserUuid
-                      .toString(),
-                )));
+            for (var element in value.individualModel) {
+              await projectBeneficiaryRepository.create(ProjectBeneficiaryModel(
+                  rowVersion: 1,
+                  clientReferenceId: IdGen.i.identifier,
+                  dateOfRegistration: DateTime.now().millisecondsSinceEpoch,
+                  projectId: RegistrationDeliverySingleton().projectId,
+                  tenantId: RegistrationDeliverySingleton().tenantId,
+                  beneficiaryClientReferenceId:
+                      beneficiaryType == BeneficiaryType.individual
+                          ? element.clientReferenceId
+                          : value.householdModel.clientReferenceId,
+                  clientAuditDetails: ClientAuditDetails(
+                    createdBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                    createdTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                  ),
+                  auditDetails: AuditDetails(
+                    createdBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                    createdTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedTime: DateTime.now().millisecondsSinceEpoch,
+                    lastModifiedBy: RegistrationDeliverySingleton()
+                        .loggedInUserUuid
+                        .toString(),
+                  )));
+            }
           }
 
           for (var element in value.individualModel) {
@@ -569,6 +572,7 @@ class BeneficiaryRegistrationBloc
           emit(value.copyWith(loading: false));
           emit(BeneficiaryRegistrationPersistedState(
             householdModel: value.householdModel,
+            projectBeneficiaryModel: value.projectBeneficiaryModel,
           ));
         }
       },

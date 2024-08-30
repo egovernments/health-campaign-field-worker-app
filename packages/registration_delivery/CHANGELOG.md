@@ -1,3 +1,10 @@
+## 1.0.3+1
+
+* Bug Fixes -
+  * Reload fix after edit
+  * Project Beneficiary create for all members if not registered for campaign
+* Updated digit_scanner package, digit_components, digit_data_model
+
 ## 1.0.3
 
 * IRS Campaign changes

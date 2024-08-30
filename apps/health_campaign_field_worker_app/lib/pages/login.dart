@@ -26,7 +26,7 @@ class LoginPage extends LocalizedStatefulWidget {
 
 class _LoginPageState extends LocalizedState<LoginPage> {
   var passwordVisible = false;
-  bool isPrivacyEnabled =false;
+  bool isPrivacyEnabled = false;
   static const _userId = 'userId';
   static const _password = 'password';
   static const _privacyCheck = 'privacyCheck';
@@ -126,30 +126,30 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         suffix: buildPasswordVisibility(),
                       ),
                       BlocBuilder<AppInitializationBloc,
-                              AppInitializationState>(
+                          AppInitializationState>(
                           builder: (context, initState) {
-                        final privacyPolicyJson = initState.maybeWhen(
-                            initialized:
-                                (AppConfiguration appConfiguration, _, __) =>
-                                    appConfiguration.privacyPolicyConfig,
-                            orElse: () => null);
-                        if(privacyPolicyJson?.active==false){
-                          return const SizedBox.shrink();
-                        }
-                        setState(() {
-                          isPrivacyEnabled = true;
-                        });
-                        return PrivacyComponent(
-                          privacyPolicy: privacyPolicyJson,
-                          formControlName: _privacyCheck,
-                          text: localizations
-                              .translate(i18.privacyPolicy.privacyNoticeText),
-                          linkText: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyLinkText),
-                          validationMessage: localizations.translate(
-                              i18.privacyPolicy.privacyPolicyValidationText),
-                        );
-                      }),
+                            final privacyPolicyJson = initState.maybeWhen(
+                                initialized:
+                                    (AppConfiguration appConfiguration, _, __) =>
+                                appConfiguration.privacyPolicyConfig,
+                                orElse: () => null);
+                            if (privacyPolicyJson?.active == false) {
+                              return const SizedBox.shrink();
+                            }
+
+                            form.control(_privacyCheck).setValidators([Validators.requiredTrue]);
+                            form.control(_privacyCheck).updateValueAndValidity();
+                            return PrivacyComponent(
+                              privacyPolicy: privacyPolicyJson,
+                              formControlName: _privacyCheck,
+                              text: localizations
+                                  .translate(i18.privacyPolicy.privacyNoticeText),
+                              linkText: localizations.translate(
+                                  i18.privacyPolicy.privacyPolicyLinkText),
+                              validationMessage: localizations.translate(
+                                  i18.privacyPolicy.privacyPolicyValidationText),
+                            );
+                          }),
                       const SizedBox(height: 16),
                       DigitElevatedButton(
                         onPressed: () {
@@ -159,16 +159,16 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                           FocusManager.instance.primaryFocus?.unfocus();
 
                           context.read<AuthBloc>().add(
-                                AuthLoginEvent(
-                                  userId:
-                                      (form.control(_userId).value as String)
-                                          .trim(),
-                                  password:
-                                      (form.control(_password).value as String)
-                                          .trim(),
-                                  tenantId: envConfig.variables.tenantId,
-                                ),
-                              );
+                            AuthLoginEvent(
+                              userId:
+                              (form.control(_userId).value as String)
+                                  .trim(),
+                              password:
+                              (form.control(_password).value as String)
+                                  .trim(),
+                              tenantId: envConfig.variables.tenantId,
+                            ),
+                          );
                         },
                         child: Center(
                           child: Text(
@@ -224,17 +224,16 @@ class _LoginPageState extends LocalizedState<LoginPage> {
   }
 
   FormGroup buildForm() => fb.group(<String, Object>{
-        _userId: FormControl<String>(
-          value: '',
-          validators: [Validators.required],
-        ),
-        _password: FormControl<String>(
-          validators: [Validators.required],
-          value: '',
-        ),
-        _privacyCheck: FormControl<bool>(
-          validators: [Validators.requiredTrue],
-          value: isPrivacyEnabled ? false : true,
-        )
-      });
+    _userId: FormControl<String>(
+      value: '',
+      validators: [Validators.required],
+    ),
+    _password: FormControl<String>(
+      validators: [Validators.required],
+      value: '',
+    ),
+    _privacyCheck: FormControl<bool>(
+      value: false,
+    )
+  });
 }
