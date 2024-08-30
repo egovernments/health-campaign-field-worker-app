@@ -64,7 +64,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     } else if (!state.loading && isDialogVisible) {
                       isDialogVisible = false;
                       DigitComponentsUtils()
-                          .hideLocalizationLoadingDialog(context);
+                          .hideDialog(context);
                     }
                     if (!state.loading &&
                         !isDialogVisible &&

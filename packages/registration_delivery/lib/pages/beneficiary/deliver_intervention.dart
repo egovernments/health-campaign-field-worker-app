@@ -118,7 +118,7 @@ class DeliverInterventionPageState
 
       Future.delayed(const Duration(seconds: 2), () {
         // After delay, hide the initial dialog
-        DigitComponentsUtils().hideLocationDialog(context);
+        DigitComponentsUtils().hideDialog(context);
         handleCapturedLocationState(
             locationState,
             context,
