@@ -63,7 +63,7 @@ class ComplaintsDetailsPageState
         ),
         builder: (_, form, __) => BlocListener<BoundaryBloc, BoundaryState>(
           listener: (context, state) {
-            context.navigateTo(ComplaintsInboxWrapperRoute());
+            context.navigateTo(const ComplaintsInboxWrapperRoute());
           },
 
           child: BlocConsumer<ComplaintsRegistrationBloc,
@@ -114,9 +114,6 @@ class ComplaintsDetailsPageState
 
                         final complaintRaisedFor =
                         form.control(_complaintRaisedFor).value as String;
-
-                        final administrativeArea =
-                        form.control(_administrativeArea).value as String;
 
                         final complainantName =
                         form.control(_complainantName).value as String;

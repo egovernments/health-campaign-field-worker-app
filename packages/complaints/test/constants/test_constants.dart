@@ -5,10 +5,10 @@ import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 class ComplaintsConstants{
   static final ComplaintsDetailsModel complaintsDetailsModel = ComplaintsDetailsModel(
       dateOfComplaint: DateTime(2024),
-      administrativeArea: "abcd",
+      administrativeArea: "Settlement 1",
       complaintRaisedFor: "myself",
-      complainantName: "test",
-      complainantContactNumber: "8888888",
+      complainantName: "Security Issues",
+      complainantContactNumber: "9192939495",
       complaintDescription: "test complaint"
   );
 
@@ -17,24 +17,24 @@ class ComplaintsConstants{
     longitude: "88",
   );
 
-  static const String complaintType = "test-type";
+  static const String complaintType = "Security Issues";
 
   static final PgrAddressModel addressModel = PgrAddressModel(
-    street: "XYZ",
-    city: "ABC",
+    street: "Jane",
+    city: "NY",
   );
-  static final String createdByUserId = "1234567";
+  static const String createdByUserId = "123456789";
 
   static var mockPgrServiceModel = PgrServiceModel(
       clientReferenceId: '123',
-      tenantId: 'abc',
+      tenantId: 'mz',
       serviceCode: complaintType,
       description: 'test-complaint',
       applicationStatus: PgrServiceApplicationStatus.created,
-      user: PgrComplainantModel(
+      user: const PgrComplainantModel(
         clientReferenceId: '123',
         complaintClientReferenceId: '123',
-        tenantId: 'abc',
+        tenantId: 'mz',
       ),
       address: addressModel
   );

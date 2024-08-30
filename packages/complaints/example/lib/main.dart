@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:complaints/blocs/localization/app_localization.dart';
 import 'package:complaints/complaints.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -63,7 +62,7 @@ class MyApp extends StatelessWidget {
       ),
       home: MyHomePage(title: "Complaints Package Demo"),
       locale: Locale('en','MZ'),
-      supportedLocales: [Locale('en','MZ')],
+      supportedLocales: [const Locale('en','MZ')],
       localizationsDelegates: [
         ComplaintsLocalization.getDelegate(loadLocalizedStrings(), [
           Language("English", "en_MZ")

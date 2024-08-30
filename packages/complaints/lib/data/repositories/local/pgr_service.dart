@@ -193,7 +193,6 @@ class PgrServiceLocalRepository
               code: address.localityBoundaryCode ?? "",
             ),
 
-            // boundary: address.boundary,
             geoLocation: GeoLocation(
               latitude: address.latitude,
               longitude: address.longitude,

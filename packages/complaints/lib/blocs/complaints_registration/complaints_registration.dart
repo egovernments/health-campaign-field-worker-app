@@ -1,5 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:js';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
@@ -31,6 +32,7 @@ class ComplaintsRegistrationBloc
     on(_handleComplaintDetails);
     on(_handleSubmitComplaints);
   }
+
 
   FutureOr<void> _handleSaveComplaintType(
     ComplaintsRegistrationSaveComplaintTypeEvent event,
@@ -88,6 +90,7 @@ class ComplaintsRegistrationBloc
     ComplaintsRegistrationSubmitComplaintEvent event,
     ComplaintsRegistrationEmitter emit,
   ) async {
+
 
     await state.maybeMap(
       orElse: () => throw (const InvalidComplaintsRegistrationStateException()),

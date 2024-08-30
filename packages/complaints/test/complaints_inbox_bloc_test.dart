@@ -19,7 +19,7 @@ void main(){
     late ComplaintsInboxBloc complaintsInboxBloc;
 
     //Mock the required repositories
-    late var pgrServiceDataRepository;
+    late MockPgrServiceDataRepository pgrServiceDataRepository;
 
     setUp((){
       pgrServiceDataRepository = MockPgrServiceDataRepository();
