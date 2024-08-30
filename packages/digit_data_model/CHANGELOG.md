@@ -1,3 +1,7 @@
+## 1.0.3+1
+
+* Updated oplog transactions to synchronous - fix for write transaction lock
+
 ## 1.0.4-dev.3
 
 * Updated oplog transactions to synchronous - fix for write transaction lock

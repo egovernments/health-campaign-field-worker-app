@@ -1,5 +1,9 @@
 ## 1.0.3+1
 
+* Updated digit_scanner package, digit_components, digit_data_model
+
+## 1.0.3+1
+
 * Updated scanner package
 
 ## 1.0.3

@@ -327,6 +327,9 @@ class _HouseholdOverviewPageState
                                 child: BlocBuilder<DeliverInterventionBloc,
                                         DeliverInterventionState>(
                                     builder: (ctx, deliverInterventionState) {
+
+                                      bool shouldShowStatus = beneficiaryType == BeneficiaryType.household;
+
                                   return Column(
                                     children: [
                                       DigitTableCard(
@@ -350,6 +353,7 @@ class _HouseholdOverviewPageState
                                                 .memberCountText,
                                           ): state.householdMemberWrapper
                                               .household?.memberCount,
+                                          if(shouldShowStatus)
                                           localizations.translate(i18
                                               .beneficiaryDetails
                                               .status): localizations.translate(
