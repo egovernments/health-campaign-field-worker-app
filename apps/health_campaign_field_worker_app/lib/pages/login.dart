@@ -136,9 +136,9 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                         if(privacyPolicyJson?.active==false){
                           return const SizedBox.shrink();
                         }
-                        setState(() {
-                          isPrivacyEnabled = true;
-                        });
+
+                        form.control(_privacyCheck).setValidators([Validators.requiredTrue]);
+                        form.control(_privacyCheck).updateValueAndValidity();
                         return PrivacyComponent(
                           privacyPolicy: privacyPolicyJson,
                           formControlName: _privacyCheck,
@@ -233,8 +233,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           value: '',
         ),
         _privacyCheck: FormControl<bool>(
-          validators: [Validators.requiredTrue],
-          value: isPrivacyEnabled ? false : true,
+          value: false,
         )
       });
 }
