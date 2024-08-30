@@ -28,10 +28,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
 
   @override
   void dispose() {
-    if (isDialogVisible) {
-      // Close the dialog if it's visible
-      DigitComponentsUtils().hideLocalizationLoadingDialog(context);
-    }
     isDialogVisible = false;
     super.dispose();
   }
@@ -103,20 +99,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     }
                   },
                   builder: (context, localizationState) {
-                    if (localizationState.loading &&
-                        !isDialogVisible &&
-                        mounted &&
-                        ModalRoute.of(context)?.isCurrent == true) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        isDialogVisible = true;
-                        DigitComponentsUtils().showLocationCapturingDialog(
-                          context,
-                          '',
-                          DigitSyncDialogType.inProgress,
-                        );
-                      });
-                    }
-
                     return localizationModulesList != null
                         ? DigitLanguageCard(
                             digitRowCardItems: languages.map((e) {
