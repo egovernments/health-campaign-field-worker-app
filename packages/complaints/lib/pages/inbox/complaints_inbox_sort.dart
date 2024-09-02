@@ -1,9 +1,10 @@
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '/blocs/complaints_inbox/complaints_inbox.dart';
@@ -67,7 +68,7 @@ class ComplaintsInboxSortPageState
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 20),
+                          padding: const EdgeInsets.only(left: spacer5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -83,45 +84,34 @@ class ComplaintsInboxSortPageState
                         ),
                       ],
                     ),
-                    footer: SizedBox(
-                      child: DigitCard(
-                        margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                        padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: DigitElevatedButton(
-                                onPressed: () {
-                                  formGroup.markAllAsTouched();
+                    footer: DigitCard(
+                      cardType: CardType.primary,
+                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                      padding: const EdgeInsets.all(spacer2),
+                      children: [Button(
+                        type: ButtonType.primary,
+                        size: ButtonSize.large,
+                        label: localizations
+                            .translate(i18.complaints.sortCTA),
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          formGroup.markAllAsTouched();
 
-                                  var sortOrder =
-                                      formGroup.control(_sortOrder).value;
+                          var sortOrder =
+                              formGroup.control(_sortOrder).value;
 
-                                  if (!formGroup.valid || sortOrder == null) {
-                                    return;
-                                  }
+                          if (!formGroup.valid || sortOrder == null) {
+                            return;
+                          }
 
-                                  bloc.add(
-                                    ComplaintInboxSortComplaintsEvent(
-                                      sortOrder,
-                                    ),
-                                  );
-                                  router.pop();
-                                },
-                                child: Center(
-                                  child: Text(
-                                    localizations
-                                        .translate(i18.complaints.sortCTA),
-                                  ),
-                                ),
-                              ),
+                          bloc.add(
+                            ComplaintInboxSortComplaintsEvent(
+                              sortOrder,
                             ),
-                          ],
-                        ),
-                      ),
+                          );
+                          router.pop();
+                        },
+                      ),]
                     ),
                     children: [
                       Column(
@@ -131,22 +121,24 @@ class ComplaintsInboxSortPageState
                               BlocBuilder<ComplaintsInboxBloc,
                                   ComplaintInboxState>(
                                 builder: (context, state) {
-                                  // TODO(neel): Use Reactive components if possible
 
-                                  return RadioGroup<String>.builder(
+                                  return RadioList(
+                                    radioButtons: sortOrders
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                        (item)=>RadioButtonModel(
+                                            code: item.value,
+                                            name: localizations.translate(item.value.trim()),
+                                        )
+                                    ).toList(),
                                     groupValue:
                                         formGroup.control(_sortOrder).value ??
                                             "",
                                     onChanged: (changedValue) {
-                                      setState(() {
-                                        formGroup.control(_sortOrder).value =
-                                            changedValue;
-                                      });
+                                      formGroup.control(_sortOrder).value =
+                                          changedValue.code;
                                     },
-                                    items: sortOrders,
-                                    itemBuilder: (item) => RadioButtonBuilder(
-                                      localizations.translate(item.trim()),
-                                    ),
                                   );
                                 },
                               ),

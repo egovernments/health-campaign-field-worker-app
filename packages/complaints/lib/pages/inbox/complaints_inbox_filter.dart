@@ -1,14 +1,11 @@
 import 'dart:collection';
-
-
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
-
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
@@ -93,7 +90,7 @@ class ComplaintsInboxFilterPageState
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 16),
+                      padding: const EdgeInsets.only(left: spacer4),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -137,36 +134,34 @@ class ComplaintsInboxFilterPageState
                 enableFixedButton: true,
                 footer: SizedBox(
                   child: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: Row(
+                    cardType: CardType.primary,
+                    margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                    padding: const EdgeInsets.all(spacer2),
+                    children: [Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           flex: 1,
-                          child: DigitOutLineButton(
+                          child: Button(
+                            type: ButtonType.secondary,
+                            size: ButtonSize.large,
                             label: localizations.translate(
                               i18.complaints.complaintsFilterClearAll,
                             ),
                             onPressed: () {
                               clearFilters(formGroup);
                             },
-                            buttonStyle: OutlinedButton.styleFrom(
-                              shape: const BeveledRectangleBorder(),
-                              padding: const EdgeInsets.all(14),
-                              side: BorderSide(
-                                width: 1.0,
-                                color: theme.colorScheme.secondary,
-                              ),
-                            ),
                           ),
                         ),
                         const SizedBox(width: 10),
                         Expanded(
                           flex: 1,
-                          child: DigitElevatedButton(
+                          child: Button(
+                            label: localizations
+                                .translate(i18.complaints.filterCTA),
+                            type: ButtonType.primary,
+                            size: ButtonSize.large,
                             onPressed: () {
                               if (!formGroup.valid) return;
 
@@ -199,21 +194,15 @@ class ComplaintsInboxFilterPageState
 
                               context.router.pop();
                             },
-                            child: Center(
-                              child: Text(
-                                localizations
-                                    .translate(i18.complaints.filterCTA),
-                              ),
-                            ),
                           ),
                         ),
                       ],
-                    ),
+                    ),]
                   ),
                 ),
                 children: [
                   Padding(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(spacer4),
                     child: Column(
                       children: [
                         BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
@@ -263,54 +252,76 @@ class ComplaintsInboxFilterPageState
                                 BlocBuilder<ComplaintsInboxBloc,
                                     ComplaintInboxState>(
                                   builder: (context, state) {
-                                    return RadioGroup<String>.builder(
-                                      groupValue: formGroup
-                                              .control(_complaintAssignmentType)
-                                              .value ??
-                                          "",
-                                      onChanged: (changedValue) {
-                                        setState(() {
-                                          formGroup
-                                              .control(_complaintAssignmentType)
-                                              .value = changedValue;
-                                        });
-                                      },
-                                      items: _complaintAssignmentTypes,
-                                      itemBuilder: (item) => RadioButtonBuilder(
-                                        localizations.translate(item.trim()),
+                                    return Align(
+                                      alignment: Alignment.topLeft,
+                                      child: RadioList(
+                                        radioButtons: _complaintAssignmentTypes
+                                        .asMap()
+                                        .entries
+                                        .map(
+                                            (item)=>RadioButtonModel(
+                                                code: item.value,
+                                                name: localizations.translate(item.value.trim()),
+                                            )
+                                        ).toList(),
+
+                                        groupValue: formGroup
+                                                .control(_complaintAssignmentType)
+                                                .value ??
+                                            "",
+                                        onChanged: (changedValue) {
+                                          setState(() {
+                                            formGroup
+                                                .control(_complaintAssignmentType)
+                                                .value = changedValue.code;
+                                          });
+                                        },
                                       ),
                                     );
                                   },
                                 ),
-                                DigitReactiveSearchDropdown<String>(
+                                LabeledField(
                                   label: localizations.translate(
                                     i18.complaints.complaintsTypeHeading,
                                   ),
-                                  form: formGroup,
-                                  menuItems: complaintTypes.toList(),
-                                  formControlName: _complaintType,
-                                  valueMapper: (value) {
-                                    return localizations.translate(
-                                      value
-                                          .toString()
-                                          .trim()
-                                          .snakeCase
-                                          .toUpperCase(),
-                                    );
-                                  },
-                                  emptyText: localizations
-                                      .translate(i18.common.noMatchFound),
+                                  child: DigitDropdown<String>(
+                                      items: complaintTypes.toList()
+                                          .asMap()
+                                          .entries
+                                          .map(
+                                            (item) => DropdownItem(
+                                                name: localizations.translate(
+                                                    item.value.toString()
+                                                        .trim()
+                                                        .snakeCase
+                                                        .toUpperCase()
+                                                ),
+                                                code: item.value,
+                                            )
+                                      ).toList(),
+                                    emptyItemText: localizations
+                                        .translate(i18.common.noMatchFound),
+                                    isSearchable: true,
+                                    onSelect: (value)=>formGroup.control(_complaintType).value=value.code,
+                                  ),
                                 ),
-                                DigitReactiveSearchDropdown<String>(
+                                LabeledField(
                                   label: localizations
                                       .translate(i18.complaints.locality),
-                                  form: formGroup,
-                                  menuItems: locality.toList(),
-                                  formControlName: _complaintLocality,
-                                  valueMapper: (value) => localizations
-                                      .translate(value.toString().trim()),
-                                  emptyText: localizations
-                                      .translate(i18.common.noMatchFound),
+                                  child: DigitDropdown<String>(
+                                    items: locality.toList()
+                                    .asMap()
+                                    .entries
+                                    .map((item)=> DropdownItem(
+                                        name: localizations
+                                            .translate(item.value.toString().trim()),
+                                        code: item.value,
+                                    )
+                                    ).toList(),
+                                    emptyItemText: localizations
+                                        .translate(i18.common.noMatchFound),
+                                    onSelect: (value)=>formGroup.control(_complaintLocality).value=value.code,
+                                ),
                                 ),
                                 if (uniqueStatuses.isNotEmpty) ...[
                                   LabeledField(
