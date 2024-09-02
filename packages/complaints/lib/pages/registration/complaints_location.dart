@@ -4,9 +4,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
-import 'package:drift/remote.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +46,7 @@ class ComplaintsLocationPageState
     final theme = Theme.of(context);
     final bloc = context.read<ComplaintsRegistrationBloc>();
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -145,7 +146,7 @@ class ComplaintsLocationPageState
                         localizations.translate(
                           i18.complaints.complaintsLocationLabel,
                         ),
-                        style: theme.textTheme.displayMedium,
+                        style: textTheme.headingXl,
                       ),
                     ),
                     ReactiveWrapperField<String>(

@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 
 import '/blocs/localization/app_localization.dart';
@@ -33,22 +34,15 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             child: Row(
               children: [
                 if (showBackNavigation)
-                  Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        context.router.maybePop();
-                        handleBack != null ? handleBack!() : null;
-                      },
-                      icon: const Icon(Icons.arrow_left_sharp),
-                      label: Text(
-                        ComplaintsLocalization.of(context).translate(
-                          i18.common.coreCommonBack,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: EdgeInsets.all(spacer2),
+                      child: BackNavigationButton(
+                        handleBack: () {
+                          context.router.maybePop();
+                          handleBack != null ? handleBack!() : null;
+                        },
                       ),
                     ),
                   ),
