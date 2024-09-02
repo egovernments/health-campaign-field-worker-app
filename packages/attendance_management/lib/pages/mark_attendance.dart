@@ -448,7 +448,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
         localizations.translate(i18.common.locationCapturing),
         DigitSyncDialogType.inProgress);
     Future.delayed(const Duration(seconds: 2), () async {
-      DigitComponentsUtils().hideLocationDialog(context);
+      DigitComponentsUtils().hideDialog(context);
       state.maybeWhen(
           orElse: () {},
           loaded: (

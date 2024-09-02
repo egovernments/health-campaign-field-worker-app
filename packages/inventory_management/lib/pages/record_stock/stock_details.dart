@@ -296,7 +296,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             const Duration(seconds: 2),
                                             () async {
                                           DigitComponentsUtils()
-                                              .hideLocationDialog(context);
+                                              .hideDialog(context);
                                           final bloc =
                                               context.read<RecordStockBloc>();
 

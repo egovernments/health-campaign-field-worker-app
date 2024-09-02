@@ -46,7 +46,7 @@ class DashboardRemoteRepository {
               .projectIdEqualTo(projectId)
               .visualizationCodeEqualTo(dashboardResponse.visualizationCode)
               .chartTypeEqualTo(dashboardResponse.chartType)
-              .deleteAll(); // Delete existing data matching the project ID, visualization code, and chart type
+              .deleteAllSync(); // Delete existing data matching the project ID, visualization code, and chart type
         });
 
         final data =
