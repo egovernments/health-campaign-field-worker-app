@@ -1,3 +1,6 @@
+## 1.0.1+1
+* Changed similar dialogs to a common hideDialog
+
 ## 1.0.1
 * Added new loader dialog
 

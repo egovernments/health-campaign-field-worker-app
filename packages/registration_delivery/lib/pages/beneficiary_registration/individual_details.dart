@@ -68,7 +68,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
           listener: (context, state) {
             state.mapOrNull(
-              persisted: (value) {
+              persisted: (value) async {
                 if (value.navigateToRoot) {
                   final overviewBloc = context.read<HouseholdOverviewBloc>();
 
@@ -81,6 +81,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               BeneficiaryType.household,
                     ),
                   );
+
+                  await overviewBloc.stream.firstWhere((element) =>
+                      element.loading == false &&
+                      element.householdMemberWrapper.household != null);
                   HouseholdMemberWrapper memberWrapper =
                       overviewBloc.state.householdMemberWrapper;
                   final route = router.parent() as StackRouter;
