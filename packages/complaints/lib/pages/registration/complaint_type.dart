@@ -9,7 +9,6 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
 
@@ -38,6 +37,7 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
     final bloc = context.read<ComplaintsRegistrationBloc>();
     final router = context.router;
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -123,7 +123,7 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         localizations.translate(
                           i18.complaints.complaintsTypeHeading,
                         ),
-                        style: theme.textTheme.displayMedium,
+                        style: textTheme.headingXl,
                       ),
                     ),
                     LabeledField(
@@ -137,7 +137,7 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                               (item) => RadioButtonModel(
                             code: item,
                             name: localizations.translate(
-                              item.replaceAll('_',' ').toUpperCase().trim(),
+                              item.toString().snakeCase.toUpperCase().trim(),
                             ),
                           ),
                         ).toList():
@@ -146,8 +146,10 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                             form.control(_complaintType).value ?? "",
                         onChanged: (changedValue) {
                           if (form.control(_complaintType).disabled) return;
-                          form.control(_complaintType).value =
-                            changedValue.code;
+                          setState(() {
+                            form.control(_complaintType).value =
+                                changedValue.code;
+                          });
                         },
                       ),
                     ),

@@ -1,8 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/utils/validators/validator.dart'
-    as component_validator;
-import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
@@ -36,6 +34,7 @@ class ComplaintsInboxSearchPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     final bloc = context.read<ComplaintsInboxBloc>();
 
     return Scaffold(
@@ -51,22 +50,20 @@ class ComplaintsInboxSearchPageState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            foregroundColor: theme.colorScheme.onBackground,
-                            padding: EdgeInsets.zero,
+                        Padding(
+                          padding: EdgeInsets.zero,
+                          child: Button(
+                              label: "",
+                              onPressed: () => context.router.pop(),
+                              type: ButtonType.tertiary,
+                              size: ButtonSize.large,
+                              prefixIcon: Icons.close,
                           ),
-                          onPressed: () => context.router.pop(),
-                          child: const Row(
-                            children: [
-                              Icon(Icons.close),
-                            ],
-                          ),
-                        ),
+                        )
                       ],
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 20),
+                      padding: const EdgeInsets.only(left: spacer5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,54 +72,52 @@ class ComplaintsInboxSearchPageState
                             localizations.translate(
                               i18.complaints.complaintInboxSearchHeading,
                             ),
-                            style: theme.textTheme.displayMedium,
+                            style: textTheme.headingXl,
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                footer: SizedBox(
-                  child: DigitCard(
-                      cardType: CardType.primary,
-                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                      padding: const EdgeInsets.all(spacer2),
-                      children: [
-                        Button(
-                          mainAxisSize: MainAxisSize.max,
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
-                          label: localizations
-                              .translate(i18.complaints.searchCTA),
-                          onPressed: () {
-                            formGroup.markAllAsTouched();
+                footer: DigitCard(
+                    cardType: CardType.primary,
+                    margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                    padding: const EdgeInsets.all(spacer2),
+                    children: [
+                      Button(
+                        mainAxisSize: MainAxisSize.max,
+                        type: ButtonType.primary,
+                        size: ButtonSize.large,
+                        label: localizations
+                            .translate(i18.complaints.searchCTA),
+                        onPressed: () {
+                          formGroup.markAllAsTouched();
 
-                            if (!formGroup.valid) return;
+                          if (!formGroup.valid) return;
 
-                            final complaintNumberValue =
-                                formGroup.control(_complaintNumber).value;
-                            final mobileNumberValue =
-                                formGroup.control(_mobileNumber).value;
+                          final complaintNumberValue =
+                              formGroup.control(_complaintNumber).value;
+                          final mobileNumberValue =
+                              formGroup.control(_mobileNumber).value;
 
-                            bloc.add(
-                              ComplaintInboxSearchComplaintsEvent(
-                                mobileNumber: mobileNumberValue == ""
-                                    ? null
-                                    : mobileNumberValue,
-                                complaintNumber:
-                                    complaintNumberValue == ""
-                                        ? null
-                                        : complaintNumberValue,
-                                createdByUserId: ComplaintsSingleton()
-                                    .loggedInUserUuid,
-                              ),
-                            );
+                          bloc.add(
+                            ComplaintInboxSearchComplaintsEvent(
+                              mobileNumber: mobileNumberValue == ""
+                                  ? null
+                                  : mobileNumberValue,
+                              complaintNumber:
+                                  complaintNumberValue == ""
+                                      ? null
+                                      : complaintNumberValue,
+                              createdByUserId: ComplaintsSingleton()
+                                  .loggedInUserUuid,
+                            ),
+                          );
 
-                            context.router.pop();
-                          },
-                        ),
-                      ]),
-                ),
+                          context.router.pop();
+                        },
+                      ),
+                    ]),
                 children: [
                   Column(
                     children: [

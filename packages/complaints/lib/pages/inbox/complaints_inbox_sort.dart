@@ -1,6 +1,7 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,7 @@ class ComplaintsInboxSortPageState
     final theme = Theme.of(context);
     final bloc = context.read<ComplaintsInboxBloc>();
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
@@ -53,16 +55,14 @@ class ComplaintsInboxSortPageState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                foregroundColor: theme.colorScheme.onBackground,
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: () => context.router.pop(),
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.close),
-                                ],
+                            Padding(
+                              padding: EdgeInsets.zero,
+                              child: Button(
+                                  label: "",
+                                  onPressed: () => context.router.pop(),
+                                  type: ButtonType.tertiary,
+                                  size: ButtonSize.large,
+                                  prefixIcon: Icons.close,
                               ),
                             ),
                           ],
@@ -77,7 +77,7 @@ class ComplaintsInboxSortPageState
                                 localizations.translate(
                                   i18.complaints.complaintInboxSortHeading,
                                 ),
-                                style: theme.textTheme.displayMedium,
+                                style: textTheme.headingXl,
                               ),
                             ],
                           ),
@@ -114,37 +114,32 @@ class ComplaintsInboxSortPageState
                       ),]
                     ),
                     children: [
-                      Column(
-                        children: [
-                          Column(
-                            children: [
-                              BlocBuilder<ComplaintsInboxBloc,
-                                  ComplaintInboxState>(
-                                builder: (context, state) {
+                      BlocBuilder<ComplaintsInboxBloc,
+                          ComplaintInboxState>(
+                        builder: (context, state) {
 
-                                  return RadioList(
-                                    radioButtons: sortOrders
-                                      .asMap()
-                                      .entries
-                                      .map(
-                                        (item)=>RadioButtonModel(
-                                            code: item.value,
-                                            name: localizations.translate(item.value.trim()),
-                                        )
-                                    ).toList(),
-                                    groupValue:
-                                        formGroup.control(_sortOrder).value ??
-                                            "",
-                                    onChanged: (changedValue) {
-                                      formGroup.control(_sortOrder).value =
-                                          changedValue.code;
-                                    },
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                          return Padding(
+                            padding: EdgeInsets.only(top: spacer2),
+                            child: RadioList(
+                              radioButtons: sortOrders
+                                .asMap()
+                                .entries
+                                .map(
+                                  (item)=>RadioButtonModel(
+                                      code: item.value,
+                                      name: localizations.translate(item.value.trim()),
+                                  )
+                              ).toList(),
+                              groupValue:
+                                  formGroup.control(_sortOrder).value ??
+                                      "",
+                              onChanged: (changedValue) {
+                                formGroup.control(_sortOrder).value =
+                                    changedValue.code;
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ],
                   );

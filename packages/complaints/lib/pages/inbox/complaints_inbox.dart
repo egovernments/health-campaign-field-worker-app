@@ -3,6 +3,7 @@ import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/app_logger.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,7 +72,7 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(left: spacer2*2),
+                              padding: const EdgeInsets.only(left: spacer2 * 2),
                               child: Button(
                                 type: ButtonType.tertiary,
                                 size: ButtonSize.medium,
@@ -90,7 +91,7 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                                 type: ButtonType.tertiary,
                                 size: ButtonSize.medium,
                                 label: localizations.translate(
-                                    i18.complaints.filterCTA,
+                                  i18.complaints.filterCTA,
                                 ),
                                 prefixIcon: Icons.filter_list_alt,
                                 onPressed: () {
@@ -99,12 +100,13 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(right: spacer2*2),
+                              padding:
+                                  const EdgeInsets.only(right: spacer2 * 2),
                               child: Button(
                                 type: ButtonType.tertiary,
                                 size: ButtonSize.medium,
                                 label: localizations.translate(
-                                      i18.complaints.sortCTA,
+                                  i18.complaints.sortCTA,
                                 ),
                                 prefixIcon: Icons.segment,
                                 onPressed: () {
@@ -206,158 +208,67 @@ class _ComplaintsInboxItem extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    return DigitCard(cardType: CardType.primary, children: [
-      Padding(
-        padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                localizations.translate(i18.complaints.inboxNumberLabel),
-                style: textTheme.headingS
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                item.serviceRequestId ??
-                    "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                style: TextStyle(
-                  color: item.serviceRequestId != null
-                      ? theme.colorScheme.secondary
-                      : theme.colorTheme.text.primary,
+    return Padding(
+      padding: EdgeInsets.only(top: spacer3),
+      child: DigitCard(cardType: CardType.primary, children: [
+        Padding(
+            padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
+            child: LabelValueList(
+              padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
+              labelFlex: 6,
+              items: [
+                LabelValuePair(
+                    label: localizations
+                        .translate(i18.complaints.inboxNumberLabel),
+                    value: item.serviceRequestId ??
+                        "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}"
                 ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                localizations.translate(i18.complaints.inboxTypeLabel),
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                localizations.translate(
-                  item.serviceCode.snakeCase.toUpperCase().trim(),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                localizations.translate(i18.complaints.inboxDateLabel),
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                item.auditDetails?.createdTime.toDateTime
-                        .getFormattedDate() ??
-                    "",
-              ),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                localizations.translate(i18.complaints.inboxAreaLabel),
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                item.address.locality?.name ?? "",
-              ),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: spacer2, bottom: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Text(
-                localizations.translate(i18.complaints.inboxStatusLabel),
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Text(
-                localizations.translate(
-                  "COMPLAINTS_STATUS_${item.applicationStatus.name.snakeCase.toUpperCase()}",
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(top: spacer2 * 2),
-        child: Row(
-          children: [
-            Expanded(
-              flex: 1,
-              child: OutlinedButton(
-                onPressed: () {
-                  context.router.push(ComplaintsDetailsViewRoute(
-                    complaint: item,
-                  ));
-                },
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    width: 1.0,
-                    color: theme.colorScheme.secondary,
-                  ),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
+                LabelValuePair(
+                  label: localizations.translate(i18.complaints.inboxTypeLabel),
+                  value: localizations.translate(
+                    item.serviceCode.snakeCase.toUpperCase().trim(),
                   ),
                 ),
-                child: Text(
-                  localizations.translate(i18.searchBeneficiary.iconLabel),
-                  style: DigitTheme
-                      .instance.mobileTheme.textTheme.headlineSmall
-                      ?.apply(
-                    color: theme.colorScheme.secondary,
-                  ),
+                LabelValuePair(
+                    label:
+                        localizations.translate(i18.complaints.inboxDateLabel),
+                    value: item.auditDetails?.createdTime.toDateTime
+                            .getFormattedDate() ??
+                        ""),
+                LabelValuePair(
+                    label:
+                        localizations.translate(i18.complaints.inboxAreaLabel),
+                    value: item.address.locality?.name ?? ""),
+                LabelValuePair(
+                    label: localizations
+                        .translate(i18.complaints.inboxStatusLabel),
+                    value: localizations.translate(
+                      "COMPLAINTS_STATUS_${item.applicationStatus.name.snakeCase.toUpperCase()}",
+                    )),
+              ],
+            )),
+        Padding(
+          padding: const EdgeInsets.only(top: spacer2 * 2),
+          child: Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: Button(
+                  label:
+                      localizations.translate(i18.searchBeneficiary.iconLabel),
+                  type: ButtonType.secondary,
+                  size: ButtonSize.large,
+                  onPressed: () {
+                    context.router.push(ComplaintsDetailsViewRoute(
+                      complaint: item,
+                    ));
+                  },
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ]);
+      ]),
+    );
   }
 }
