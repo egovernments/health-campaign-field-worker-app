@@ -118,7 +118,7 @@ class DeliverInterventionPageState
 
       Future.delayed(const Duration(seconds: 2), () {
         // After delay, hide the initial dialog
-        DigitComponentsUtils().hideLocationDialog(context);
+        DigitComponentsUtils().hideDialog(context);
         handleCapturedLocationState(
             locationState,
             context,
@@ -270,14 +270,23 @@ class DeliverInterventionPageState
                                                       ? null
                                                       : () async {
                                                           final deliveredProducts =
-                                                              ((form.control(
-                                                            _resourceDeliveredKey,
-                                                          ) as FormArray)
+                                                              ((form.control(_resourceDeliveredKey)
+                                                                          as FormArray)
                                                                       .value
                                                                   as List<
                                                                       ProductVariantModel?>);
-                                                          if (hasDuplicatesOrEmptyResource(
-                                                              deliveredProducts)) {
+                                                          final hasEmptyResources =
+                                                              hasEmptyOrNullResources(
+                                                                  deliveredProducts);
+                                                          final hasZeroQuantity =
+                                                              hasEmptyOrZeroQuantity(
+                                                                  form);
+                                                          final hasDuplicates =
+                                                              hasDuplicateResources(
+                                                                  deliveredProducts,
+                                                                  form);
+
+                                                          if (hasEmptyResources) {
                                                             await DigitToast
                                                                 .show(
                                                               context,
@@ -291,13 +300,21 @@ class DeliverInterventionPageState
                                                                 theme,
                                                               ),
                                                             );
-                                                          } else if ((((form
-                                                                          .control(
-                                                                    _quantityDistributedKey,
-                                                                  ) as FormArray)
-                                                                      .value) ??
-                                                                  [])
-                                                              .any((e) => e == 0)) {
+                                                          } else if (hasDuplicates) {
+                                                            await DigitToast
+                                                                .show(
+                                                              context,
+                                                              options:
+                                                                  DigitToastOptions(
+                                                                localizations
+                                                                    .translate(i18
+                                                                        .deliverIntervention
+                                                                        .resourceDuplicateValidation),
+                                                                true,
+                                                                theme,
+                                                              ),
+                                                            );
+                                                          } else if (hasZeroQuantity) {
                                                             await DigitToast
                                                                 .show(
                                                               context,
@@ -318,13 +335,14 @@ class DeliverInterventionPageState
                                                                 .add(
                                                                     const LoadLocationEvent());
                                                             handleLocationState(
-                                                                locationState,
-                                                                context,
-                                                                deliveryInterventionState,
-                                                                form,
-                                                                householdMemberWrapper,
-                                                                projectBeneficiary!
-                                                                    .first);
+                                                              locationState,
+                                                              context,
+                                                              deliveryInterventionState,
+                                                              form,
+                                                              householdMemberWrapper,
+                                                              projectBeneficiary!
+                                                                  .first,
+                                                            );
                                                           }
                                                         },
                                                   child: Center(
@@ -586,8 +604,16 @@ class DeliverInterventionPageState
         .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
   }
 
-  bool hasDuplicatesOrEmptyResource(
-      List<ProductVariantModel?> deliveredProducts) {
+  bool hasEmptyOrZeroQuantity(FormGroup form) {
+    final quantityDistributedArray =
+        form.control(_quantityDistributedKey) as FormArray;
+
+    // Check if any quantity is zero or null
+    return quantityDistributedArray.value?.any((e) => e == 0 || e == null) ??
+        true;
+  }
+
+  bool hasEmptyOrNullResources(List<ProductVariantModel?> deliveredProducts) {
     final Map<String?, List<ProductVariantModel?>> groupedVariants = {};
     if (deliveredProducts.isNotEmpty) {
       for (final variant in deliveredProducts) {
@@ -598,12 +624,32 @@ class DeliverInterventionPageState
         }
       }
       bool hasDuplicateProductIdOrNoProductId =
-          deliveredProducts.any((ele) => ele?.productId == null);
+      deliveredProducts.any((ele) => ele?.productId == null);
 
       return hasDuplicateProductIdOrNoProductId;
     }
 
     return true;
+  }
+
+  bool hasDuplicateResources(
+      List<ProductVariantModel?> deliveredProducts, FormGroup form) {
+    final resourceDeliveredArray =
+        form.control(_resourceDeliveredKey) as FormArray;
+    final Set<String?> uniqueProductIds = {};
+
+    for (int i = 0; i < resourceDeliveredArray.value!.length; i++) {
+      final productId = deliveredProducts[i]?.id;
+      if (productId != null) {
+        if (uniqueProductIds.contains(productId)) {
+          // Duplicate found
+          return true;
+        } else {
+          uniqueProductIds.add(productId);
+        }
+      }
+    }
+    return false;
   }
 
   // ignore: long-parameter-list
