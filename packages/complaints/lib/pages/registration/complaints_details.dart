@@ -11,7 +11,7 @@ import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../../blocs/complaints_registration/complaints_registration.dart';
@@ -53,6 +53,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
       i18.complaints.raisedForMyself,
       i18.complaints.raisedForAnotherUser,
     ];
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -86,154 +87,146 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                     BackNavigationHelpHeaderWidget(),
                   ],
                 ),
-                footer: SizedBox(
-                  child: DigitCard(
-                      cardType: CardType.primary,
-                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                      padding: const EdgeInsets.all(spacer2),
-                      children: [
-                        Button(
-                          label: form.control(_complaintDetailsForm).disabled
-                              ? localizations
-                                  .translate(i18.complaints.backToInbox)
-                              : localizations
-                                  .translate(i18.common.coreCommonSubmit),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
-                          mainAxisSize: MainAxisSize.max,
-                          onPressed: () async {
-                            setState(() {
-                              form.markAllAsTouched();
-                            });
+                footer: DigitCard(
+                    cardType: CardType.primary,
+                    margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                    padding: const EdgeInsets.all(spacer2),
+                    children: [
+                      Button(
+                        label: form.control(_complaintDetailsForm).disabled
+                            ? localizations
+                                .translate(i18.complaints.backToInbox)
+                            : localizations
+                                .translate(i18.common.coreCommonSubmit),
+                        type: ButtonType.primary,
+                        size: ButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () async {
+                          setState(() {
+                            form.markAllAsTouched();
+                          });
 
-                            if (form.control(_complaintDetailsForm).disabled) {
-                              router.parent()?.maybePop();
-                            }
+                          if (form.control(_complaintDetailsForm).disabled) {
+                            router.parent()?.maybePop();
+                          }
 
-                            if (!form.valid) {
-                              return;
-                            }
+                          if (!form.valid) {
+                            return;
+                          }
 
-                            FocusManager.instance.primaryFocus?.unfocus();
+                          FocusManager.instance.primaryFocus?.unfocus();
 
-                            final dateOfComplaint = form
-                                .control(_dateOfComplaint)
-                                .value as DateTime;
+                          final dateOfComplaint =
+                              form.control(_dateOfComplaint).value as DateTime;
 
-                            final complaintRaisedFor = form
-                                .control(_complaintRaisedFor)
-                                .value as String;
+                          final complaintRaisedFor =
+                              form.control(_complaintRaisedFor).value as String;
 
-                            final administrativeArea = form
-                                .control(_administrativeArea)
-                                .value as String;
+                          final administrativeArea =
+                              form.control(_administrativeArea).value as String;
 
-                            final complainantName =
-                                form.control(_complainantName).value as String;
+                          final complainantName =
+                              form.control(_complainantName).value as String;
 
-                            final complainantContactNumber = form
-                                .control(_complainantContactNumber)
-                                .value as String;
+                          final complainantContactNumber = form
+                              .control(_complainantContactNumber)
+                              .value as String;
 
-                            final supervisorName =
-                                form.control(_supervisorName).value as String?;
+                          final supervisorName =
+                              form.control(_supervisorName).value as String?;
 
-                            final supervisorContactNumber = form
-                                .control(_supervisorContactNumber)
-                                .value as String?;
+                          final supervisorContactNumber = form
+                              .control(_supervisorContactNumber)
+                              .value as String?;
 
-                            final complaintDescription = form
-                                .control(_complaintDescription)
-                                .value as String;
+                          final complaintDescription = form
+                              .control(_complaintDescription)
+                              .value as String;
 
-                            state.whenOrNull(
-                              create: (
-                                loading,
-                                complaintType,
-                                _,
-                                addressModel,
-                                complaintsDetailsModel,
-                              ) {
-                                bloc.add(
-                                  ComplaintsRegistrationEvent
-                                      .saveComplaintDetails(
-                                    boundaryModel:
-                                        ComplaintsSingleton().boundary,
-                                    complaintsDetailsModel:
-                                        ComplaintsDetailsModel(
-                                      administrativeArea: ComplaintsSingleton()
-                                          .boundary
-                                          .code
-                                          .toString(),
-                                      dateOfComplaint: dateOfComplaint,
-                                      complaintRaisedFor: complaintRaisedFor,
-                                      complainantName: complainantName,
-                                      complainantContactNumber:
-                                          complainantContactNumber,
-                                      supervisorName: supervisorName,
-                                      supervisorContactNumber:
-                                          supervisorContactNumber,
-                                      complaintDescription:
-                                          complaintDescription,
-                                    ),
+                          state.whenOrNull(
+                            create: (
+                              loading,
+                              complaintType,
+                              _,
+                              addressModel,
+                              complaintsDetailsModel,
+                            ) {
+                              bloc.add(
+                                ComplaintsRegistrationEvent
+                                    .saveComplaintDetails(
+                                  boundaryModel: ComplaintsSingleton().boundary,
+                                  complaintsDetailsModel:
+                                      ComplaintsDetailsModel(
+                                    administrativeArea: ComplaintsSingleton()
+                                        .boundary
+                                        .code
+                                        .toString(),
+                                    dateOfComplaint: dateOfComplaint,
+                                    complaintRaisedFor: complaintRaisedFor,
+                                    complainantName: complainantName,
+                                    complainantContactNumber:
+                                        complainantContactNumber,
+                                    supervisorName: supervisorName,
+                                    supervisorContactNumber:
+                                        supervisorContactNumber,
+                                    complaintDescription: complaintDescription,
                                   ),
-                                );
-                              },
-                            );
-
-                            final userId =
-                                ComplaintsSingleton().loggedInUserUuid;
-
-                            showPopup(
-                                context: context,
-                                title: localizations.translate(
-                                  i18.complaints.dialogTitle,
                                 ),
-                                type: PopUpType.simple,
-                                description: localizations.translate(
-                                  i18.complaints.dialogContent,
+                              );
+                            },
+                          );
+
+                          final userId = ComplaintsSingleton().loggedInUserUuid;
+
+                          showPopup(
+                              context: context,
+                              title: localizations.translate(
+                                i18.complaints.dialogTitle,
+                              ),
+                              type: PopUpType.simple,
+                              description: localizations.translate(
+                                i18.complaints.dialogContent,
+                              ),
+                              actions: [
+                                Button(
+                                  label: localizations.translate(
+                                    i18.common.coreCommonSubmit,
+                                  ),
+                                  onPressed: () {
+                                    bloc.add(
+                                      ComplaintsRegistrationSubmitComplaintEvent(
+                                        userId: userId,
+                                      ),
+                                    );
+                                    Navigator.of(context, rootNavigator: true)
+                                        .pop();
+                                  },
+                                  type: ButtonType.primary,
+                                  size: ButtonSize.large,
                                 ),
-                                actions: [
-                                  Button(
+                                Button(
                                     label: localizations.translate(
-                                      i18.common.coreCommonSubmit,
+                                      i18.common.coreCommonCancel,
                                     ),
                                     onPressed: () {
-                                      bloc.add(
-                                        ComplaintsRegistrationSubmitComplaintEvent(
-                                          userId: userId,
-                                        ),
-                                      );
-                                      Navigator.of(context, rootNavigator: true)
-                                          .pop();
+                                      Navigator.of(
+                                        context,
+                                        rootNavigator: true,
+                                      ).pop();
                                     },
-                                    type: ButtonType.primary,
-                                    size: ButtonSize.large,
-                                  ),
-                                  Button(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonCancel,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop();
-                                      },
-                                      type: ButtonType.secondary,
-                                      size: ButtonSize.large),
-                                ]);
-                          },
-                        ),
-                      ]),
-                ),
+                                    type: ButtonType.secondary,
+                                    size: ButtonSize.large),
+                              ]);
+                        },
+                      ),
+                    ]),
                 children: [
                   DigitCard(cardType: CardType.primary, children: [
                     Text(
                       localizations.translate(
                         i18.complaints.complaintsDetailsLabel,
                       ),
-                      style: theme.textTheme.displayMedium,
+                      style: textTheme.headingXl,
                     ),
                     LabeledField(
                       label: localizations.translate(
@@ -242,8 +235,8 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                       child: DigitDateFormInput(
                         isRequired: true,
                         readOnly: true,
-                        initialValue:
-                            form.control(_dateOfComplaint).value?.toString(),
+                        initialValue: DateFormat('yyyy-MM-dd')
+                            .format(form.control(_dateOfComplaint).value),
                         initialDate: DateTime.now(),
                         confirmText: localizations.translate(
                           i18.common.coreCommonOk,
@@ -264,43 +257,45 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                       ),
                     ),
                     LabeledField(
-                      label: "${localizations.translate(
+                      label: localizations.translate(
                         i18.complaints.complainantTypeQuestion,
-                      )} *",
+                      ),
+                      isRequired: true,
                       child: Column(
                         children: [
-                          RadioGroup<String>.builder(
-                            groupValue:
-                                form.control(_complaintRaisedFor).value ?? "",
-                            onChanged: (changedValue) {
-                              if (form.control(_complaintRaisedFor).disabled)
-                                return;
+                          Align(
+                            alignment: AlignmentDirectional.topStart,
+                            child: RadioList(
+                              radioButtons: complainantRaisedFor
+                                  .map((item) => RadioButtonModel(
+                                        code: item,
+                                        name:
+                                            localizations.translate(item.trim()),
+                                      ))
+                                  .toList(),
+                              groupValue:
+                                  form.control(_complaintRaisedFor).value ?? "",
+                              onChanged: (changedValue) {
+                                if (form.control(_complaintRaisedFor).disabled)
+                                  return;
 
-                              if (changedValue ==
-                                  i18.complaints.raisedForAnotherUser) {
-                                form.control(_complainantName).value = "";
-                                form.control(_complainantContactNumber).value =
-                                    "";
-                              } else {
-                                form.control(_complainantName).value =
-                                    ComplaintsSingleton().userName;
-                                form.control(_complainantContactNumber).value =
-                                    ComplaintsSingleton().userMobileNumber;
-                              }
+                                if (changedValue.code ==
+                                    i18.complaints.raisedForAnotherUser) {
+                                  form.control(_complainantName).value = "";
+                                  form.control(_complainantContactNumber).value =
+                                      "";
+                                } else {
+                                  form.control(_complainantName).value =
+                                      ComplaintsSingleton().userName;
+                                  form.control(_complainantContactNumber).value =
+                                      ComplaintsSingleton().userMobileNumber;
+                                }
 
-                              setState(() {
-                                form.control(_complaintRaisedFor).value =
-                                    changedValue;
-                              });
-                            },
-                            textStyle: TextStyle(
-                              color: form.control(_complaintRaisedFor).disabled
-                                  ? theme.colorScheme.shadow
-                                  : theme.colorScheme.onBackground,
-                            ),
-                            items: complainantRaisedFor,
-                            itemBuilder: (item) => RadioButtonBuilder(
-                              localizations.translate(item.trim()),
+                                setState(() {
+                                  form.control(_complaintRaisedFor).value =
+                                      changedValue.code;
+                                });
+                              },
                             ),
                           ),
                           if (form.touched &&
@@ -309,8 +304,8 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                               alignment: Alignment.topLeft,
                               child: Padding(
                                 padding: const EdgeInsets.only(
-                                  top: 5,
-                                  bottom: 5,
+                                  top: spacer1,
+                                  bottom: spacer1,
                                 ),
                                 child: Text(
                                   localizations.translate(i18
@@ -329,7 +324,6 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                       children: [
                         ReactiveWrapperField<String>(
                             formControlName: _complainantName,
-                            showErrors: (control)=>control.invalid,
                             validationMessages: {
                               'required': (object) => localizations.translate(
                                   i18.complaints.validationRequiredError),
@@ -338,38 +332,27 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                                   .replaceAll('{}', '64'),
                             },
                             builder: (field) {
-                              return ReactiveWrapperField<String>(
-                                  formControlName: _complainantName,
-                                  validationMessages: {
-                                    'required': (object) =>
-                                        localizations.translate(i18.complaints
-                                            .validationRequiredError),
-                                    'maxLength': (object) => localizations
-                                        .translate(i18.common.maxCharsRequired)
-                                        .replaceAll('{}', '64'),
-                                  },
-                                  builder: (field) {
-                                    return LabeledField(
-                                      label: localizations.translate(
-                                        i18.complaints.complainantName,
-                                      ),
-                                      child: DigitTextFormInput(
-                                        readOnly: (form.control(_complainantName).value==null ||
-                                        form.control(_complainantName).value.isEmpty())?
-                                        false:true,
-                                        initialValue: form.control(_complainantName).value,
-                                        isRequired: true,
-                                        errorMessage: field.errorText,
-                                        onChange: (value) => form
-                                            .control(_complainantName)
-                                            .value = value,
-                                      ),
-                                    );
-                                  });
+                              return LabeledField(
+                                label: localizations.translate(
+                                  i18.complaints.complainantName,
+                                ),
+                                isRequired: true,
+                                child: DigitTextFormInput(
+                                  readOnly:(isRaisedForSelf)?
+                                      (field.value == null || field.value.isEmpty)
+                                          ? false
+                                          : true:false,
+                                  initialValue: field.value,
+                                  isRequired: true,
+                                  errorMessage: field.errorText,
+                                  onChange: (value) => form
+                                      .control(_complainantName)
+                                      .value = value,
+                                ),
+                              );
                             }),
                         ReactiveWrapperField<String>(
                             formControlName: _complainantContactNumber,
-                            showErrors: (control)=>control.invalid,
                             validationMessages: {
                               'mobileNumber': (object) =>
                                   localizations.translate(i18.individualDetails
@@ -387,11 +370,14 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                                 label: localizations.translate(
                                   i18.complaints.complainantContactNumber,
                                 ),
+                                isRequired: true,
                                 child: DigitTextFormInput(
-                                  readOnly: (form.control(_complainantContactNumber).value==null ||
-                                      form.control(_complainantContactNumber).value.isEmpty())?
-                                  false:true,
-                                  initialValue: form.control(_complainantContactNumber).value,
+                                  readOnly: (isRaisedForSelf)?(field.value ==
+                                              null ||
+                                          field.value.isEmpty)
+                                      ? false
+                                      : true:false,
+                                  initialValue: field.value,
                                   isRequired: true,
                                   keyboardType: TextInputType.number,
                                   inputFormatters: [
@@ -427,6 +413,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                         }),
                     ReactiveWrapperField<String>(
                         formControlName: _supervisorContactNumber,
+                        showErrors: (control)=>control.touched,
                         validationMessages: {
                           'mobileNumber': (object) => localizations.translate(
                                 i18.individualDetails
@@ -470,6 +457,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                             label: localizations.translate(
                               i18.complaints.complaintDescription,
                             ),
+                            isRequired: true,
                             child: DigitTextAreaFormInput(
                               maxLine: 3,
                               errorMessage: field.errorText,

@@ -2,6 +2,7 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +28,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
     final router = context.router;
     final theme = Theme.of(context);
     final localizations = ComplaintsLocalization.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -41,7 +43,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                 child: Text(
                   localizations
                       .translate(i18.complaints.complaintsDetailsLabel),
-                  style: theme.textTheme.displayMedium,
+                  style: textTheme.headingXl,
                 ),
               ),
             ),
@@ -63,193 +65,63 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
               ),
             ]),
         children: [
-          DigitCard(cardType: CardType.primary, children: [
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          Padding(
+            padding: EdgeInsets.only(top: spacer4),
+            child: DigitCard(
+                cardType: CardType.primary,
                 children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations.translate(i18.complaints.inboxNumberLabel),
-                      style: theme.textTheme.headlineSmall,
+              LabelValueList(
+                padding: EdgeInsets.only(top: spacer4, bottom: spacer4),
+                  labelFlex: 6,
+                  items: [
+                    LabelValuePair(
+                        label: localizations.translate(i18.complaints.inboxNumberLabel),
+                        value: complaint.serviceRequestId ??
+                            "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}"
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      complaint.serviceRequestId ??
-                          "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                      style: TextStyle(
-                        color: complaint.serviceRequestId != null
-                            ? theme.colorScheme.secondary
-                            : theme.colorTheme.text.primary,
-                      ),
+                    LabelValuePair(
+                        label: localizations.translate(i18.complaints.inboxTypeLabel),
+                        value: localizations.translate(
+                          complaint.serviceCode.snakeCase.toUpperCase().trim(),
+                        )
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations.translate(i18.complaints.inboxTypeLabel),
-                      style: theme.textTheme.headlineSmall,
+                    LabelValuePair(
+                        label: localizations.translate(i18.complaints.inboxDateLabel),
+                        value: complaint.auditDetails?.createdTime.toDateTime
+                            .getFormattedDate() ??
+                            "",
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      localizations.translate(
-                        complaint.serviceCode.snakeCase.toUpperCase().trim(),
-                      ),
+                    LabelValuePair(
+                      label: localizations.translate(i18.complaints.complainantName),
+                      value: complaint.user.name ?? "",
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations.translate(i18.complaints.inboxDateLabel),
-                      style: theme.textTheme.headlineSmall,
+                    LabelValuePair(
+                      label: localizations.translate(i18.complaints.inboxAreaLabel),
+                      value: complaint.address.locality?.name ?? "",
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      complaint.auditDetails?.createdTime.toDateTime
-                              .getFormattedDate() ??
-                          "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations.translate(i18.complaints.complainantName),
-                      style: theme.textTheme.headlineSmall,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      complaint.user.name ?? "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations.translate(i18.complaints.inboxAreaLabel),
-                      style: theme.textTheme.headlineSmall,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      complaint.address.locality?.name ?? "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations.translate(
+                    LabelValuePair(
+                      label: localizations.translate(
                         i18.complaints.complainantContactNumber,
                       ),
-                      style: theme.textTheme.headlineSmall,
+                      value: complaint.user.mobileNumber ?? "",
                     ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      complaint.user.mobileNumber ?? "",
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations.translate(i18.complaints.inboxStatusLabel),
-                      style: theme.textTheme.headlineSmall,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      localizations.translate(
+                    LabelValuePair(
+                      label: localizations.translate(i18.complaints.inboxStatusLabel),
+                      value: localizations.translate(
                         "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      localizations
+                    LabelValuePair(
+                      label: localizations
                           .translate(i18.complaints.complaintDescription),
-                      style: theme.textTheme.headlineSmall,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      localizations.translate(
+                      value: localizations.translate(
                         complaint.description,
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-          ]),
+                  ]
+              )
+            ]),
+          ),
         ],
       ),
     );
