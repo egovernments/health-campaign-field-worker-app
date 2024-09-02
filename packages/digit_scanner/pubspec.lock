@@ -321,14 +321,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  dart_mappable:
-    dependency: transitive
-    description:
-      name: dart_mappable
-      sha256: "47269caf2060533c29b823ff7fa9706502355ffcb61e7f2a374e3a0fb2f2c3f0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.2"
   dart_style:
     dependency: transitive
     description:
@@ -349,10 +341,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "53ee8c0a7c992c0e8d1c9c867b6cf1d52e1728200f4b4436943a5d6c5e4984c3"
+      sha256: "9cca4d9a546037080afe02b6ade82fdf01574e11f5656ad12120fd6966578616"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+2"
+    version: "1.0.1+1"
   easy_stepper:
     dependency: transitive
     description:
@@ -748,10 +740,10 @@ packages:
     dependency: "direct dev"
     description:
       name: mocktail
-      sha256: "80a996cd9a69284b3dc521ce185ffe9150cde69767c2d3a0720147d93c0cef53"
+      sha256: "890df3f9688106f25755f26b1c60589a92b3ab91a22b8b224947ad041bf172d8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.0"
+    version: "1.0.4"
   nested:
     dependency: transitive
     description:
