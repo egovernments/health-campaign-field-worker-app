@@ -1,15 +1,20 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/validators/validator.dart'
+    as component_validator;
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '/blocs/complaints_inbox/complaints_inbox.dart';
+
 import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
 import '/widgets/localized.dart';
-import '../../utils/constants.dart';
+import 'package:flutter/services.dart';
 
 @RoutePage()
 class ComplaintsInboxSearchPage extends LocalizedStatefulWidget {
@@ -79,52 +84,44 @@ class ComplaintsInboxSearchPageState
                 ),
                 footer: SizedBox(
                   child: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      cardType: CardType.primary,
+                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                      padding: const EdgeInsets.all(spacer2),
                       children: [
-                        Expanded(
-                          flex: 1,
-                          child: DigitElevatedButton(
-                            onPressed: () {
-                              formGroup.markAllAsTouched();
+                        Button(
+                          mainAxisSize: MainAxisSize.max,
+                          type: ButtonType.primary,
+                          size: ButtonSize.large,
+                          label: localizations
+                              .translate(i18.complaints.searchCTA),
+                          onPressed: () {
+                            formGroup.markAllAsTouched();
 
-                              if (!formGroup.valid) return;
+                            if (!formGroup.valid) return;
 
-                              final complaintNumberValue =
-                                  formGroup.control(_complaintNumber).value;
-                              final mobileNumberValue =
-                                  formGroup.control(_mobileNumber).value;
+                            final complaintNumberValue =
+                                formGroup.control(_complaintNumber).value;
+                            final mobileNumberValue =
+                                formGroup.control(_mobileNumber).value;
 
-                              bloc.add(
-                                ComplaintInboxSearchComplaintsEvent(
-                                  mobileNumber: mobileNumberValue == ""
-                                      ? null
-                                      : mobileNumberValue,
-                                  complaintNumber: complaintNumberValue == ""
-                                      ? null
-                                      : complaintNumberValue,
-                                  createdByUserId:
-                                      ComplaintsSingleton().loggedInUserUuid,
-                                ),
-                              );
-
-                              context.router.pop();
-                            },
-                            child: Center(
-                              child: Text(
-                                localizations
-                                    .translate(i18.complaints.searchCTA),
+                            bloc.add(
+                              ComplaintInboxSearchComplaintsEvent(
+                                mobileNumber: mobileNumberValue == ""
+                                    ? null
+                                    : mobileNumberValue,
+                                complaintNumber:
+                                    complaintNumberValue == ""
+                                        ? null
+                                        : complaintNumberValue,
+                                createdByUserId: ComplaintsSingleton()
+                                    .loggedInUserUuid,
                               ),
-                            ),
-                          ),
+                            );
+
+                            context.router.pop();
+                          },
                         ),
-                      ],
-                    ),
-                  ),
+                      ]),
                 ),
                 children: [
                   Column(
@@ -132,33 +129,52 @@ class ComplaintsInboxSearchPageState
                       BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                         builder: (context, state) {
                           return Padding(
-                            padding: const EdgeInsets.all(kPadding * 2),
+                            padding: const EdgeInsets.all(spacer2 * 2),
                             child: Column(
                               children: [
-                                DigitTextFormField(
-                                  formControlName: _complaintNumber,
-                                  label: localizations.translate(
-                                    i18.complaints.inboxNumberLabel,
-                                  ),
-                                  maxLength: 65,
-                                ),
-                                DigitTextFormField(
-                                  formControlName: _mobileNumber,
-                                  label: localizations.translate(
-                                    i18.common.coreCommonMobileNumber,
-                                  ),
-                                  maxLength: 10,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  validationMessages: {
-                                    'mobileNumber': (object) =>
-                                        localizations.translate(i18
-                                            .individualDetails
-                                            .mobileNumberInvalidFormatValidationMessage),
-                                  },
-                                ),
+                                ReactiveWrapperField<String>(
+                                    formControlName: _complaintNumber,
+                                    builder: (context) {
+                                      return LabeledField(
+                                        label: localizations.translate(
+                                          i18.complaints.inboxNumberLabel,
+                                        ),
+                                        child: DigitTextFormInput(
+                                          onChange: (value){
+                                            formGroup.control(_complaintNumber).value = value;
+                                          },
+                                          charCount: true,
+                                          maxLength: 65,
+                                        ),
+                                      );
+                                    }),
+                                ReactiveWrapperField<String>(
+                                    formControlName: _mobileNumber,
+                                    showErrors: (control) => control.invalid && control.touched,
+                                    validationMessages: {
+                                      'mobileNumber': (object) =>
+                                          localizations.translate(i18
+                                              .individualDetails
+                                              .mobileNumberInvalidFormatValidationMessage),
+                                    },
+                                    builder: (field) {
+                                      return LabeledField(
+                                        label: localizations.translate(
+                                          i18.common.coreCommonMobileNumber,
+                                        ),
+                                        child: DigitTextFormInput(
+                                          charCount: true,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                          ],
+                                          onChange: (value)=>formGroup.control(_mobileNumber).value=value,
+                                          errorMessage: field.errorText,
+                                          maxLength: 10,
+                                        ),
+                                      );
+                                    }),
                               ],
                             ),
                           );
@@ -182,7 +198,7 @@ class ComplaintsInboxSearchPageState
         value: state.searchKeys?.complaintNumber,
       ),
       _mobileNumber: FormControl<String>(
-        validators: [Validators.pattern(Constants.mobileNumberRegExp)],
+        validators: [CustomValidator.validMobileNumber],
         value: state.searchKeys?.complainantMobileNumber,
       ),
     });
