@@ -1,10 +1,8 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
@@ -66,18 +64,19 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             ]),
         children: [
           Padding(
-            padding: EdgeInsets.only(top: spacer4),
+            padding: const EdgeInsets.only(top: spacer4),
             child: DigitCard(
                 cardType: CardType.primary,
                 children: [
               LabelValueList(
-                padding: EdgeInsets.only(top: spacer4, bottom: spacer4),
+                padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
                   labelFlex: 6,
                   items: [
                     LabelValuePair(
                         label: localizations.translate(i18.complaints.inboxNumberLabel),
                         value: complaint.serviceRequestId ??
-                            "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}"
+                            "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+                        valueTextStyle: complaint.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
                     ),
                     LabelValuePair(
                         label: localizations.translate(i18.complaints.inboxTypeLabel),
