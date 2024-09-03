@@ -6,7 +6,6 @@ import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -168,6 +167,7 @@ class ComplaintsLocationPageState
                             ),
                             child: DigitTextFormInput(
                               errorMessage: field.errorText,
+                              initialValue: field.value,
                               onChange: (value) => form
                                   .control(_addressLine1Key)
                                   .value = value,
@@ -185,6 +185,7 @@ class ComplaintsLocationPageState
                             padding: const EdgeInsets.only(top: spacer2 / 2),
                             child: DigitTextFormInput(
                               maxLength: maxLength,
+                              initialValue: field.value,
                               onChange: (value) => form
                                   .control(_addressLine2Key)
                                   .value = value,
@@ -201,6 +202,7 @@ class ComplaintsLocationPageState
                             ),
                             padding: const EdgeInsets.only(top: spacer2 / 2),
                             child: DigitTextFormInput(
+                              initialValue: field.value,
                               onChange: (value) => form
                                   .control(_landmarkKey)
                                   .value = value,
@@ -218,6 +220,7 @@ class ComplaintsLocationPageState
                             padding: const EdgeInsets.only(top: spacer2 / 3.5),
                             child: DigitTextFormInput(
                               keyboardType: TextInputType.text,
+                              initialValue: field.value,
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],

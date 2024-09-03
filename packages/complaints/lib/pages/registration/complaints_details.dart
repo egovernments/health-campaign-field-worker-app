@@ -3,11 +3,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
-import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -406,6 +404,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                             ),
                             child: DigitTextFormInput(
                               errorMessage: field.errorText,
+                              initialValue: field.value,
                               onChange: (value) =>
                                   form.control(_supervisorName).value = value,
                             ),
@@ -432,6 +431,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                             ),
                             child: DigitTextFormInput(
                               keyboardType: TextInputType.number,
+                              initialValue: field.value,
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
@@ -459,6 +459,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                             ),
                             isRequired: true,
                             child: DigitTextAreaFormInput(
+                              initialValue: field.value,
                               maxLine: 3,
                               errorMessage: field.errorText,
                               isRequired: true,
