@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: ^1.0.0+2
+  digit_ui_components:
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
@@ -48,6 +48,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/icons/svg/
+    - assets/animated_json/
 
   # To add assets to your package, add an assets section, like this:
   # assets:

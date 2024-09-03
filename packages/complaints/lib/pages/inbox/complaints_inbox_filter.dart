@@ -4,7 +4,6 @@ import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -77,17 +76,6 @@ class ComplaintsInboxFilterPageState
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        // TextButton(
-                        //   style: TextButton.styleFrom(
-                        //     foregroundColor: theme.colorScheme.onBackground,
-                        //     padding: EdgeInsets.zero,
-                        //   ),
-                        //   onPressed: () => context.router.maybePop(),
-                        //   child: const Row(
-                        //     children: [
-                        //       Icon(Icons.close),
-                        //     ],
-                        //   ),
                         Padding(
                           padding: EdgeInsets.zero,
                           child: Button(
@@ -313,7 +301,7 @@ class ComplaintsInboxFilterPageState
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: spacer2),
+                                  padding: const EdgeInsets.only(top: spacer2),
                                   child: LabeledField(
                                     label: localizations
                                         .translate(i18.complaints.locality),

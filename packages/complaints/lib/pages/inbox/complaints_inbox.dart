@@ -215,13 +215,14 @@ class _ComplaintsInboxItem extends StatelessWidget {
             padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
             child: LabelValueList(
               padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
-              labelFlex: 6,
+              labelFlex: 5,
               items: [
                 LabelValuePair(
                     label: localizations
                         .translate(i18.complaints.inboxNumberLabel),
                     value: item.serviceRequestId ??
-                        "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}"
+                        "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+                  valueTextStyle: item.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
                 ),
                 LabelValuePair(
                   label: localizations.translate(i18.complaints.inboxTypeLabel),
