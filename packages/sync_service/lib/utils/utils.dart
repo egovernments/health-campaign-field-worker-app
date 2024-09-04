@@ -1,9 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-
-import '../blocs/sync/sync.dart';
-import '../data/sync_entity_mapper_listener.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 /// The `SyncServiceSingleton` class is a singleton that provides access to sync service related configurations and listeners.
 ///
@@ -25,6 +23,8 @@ class SyncServiceSingleton {
   // Listener for sync entity mapper events
   SyncEntityMapperListener? _entityListener;
 
+  SyncServiceRegistry? _registries;
+
   // Number of times to retry sync down operation
   late int _syncDownRetryCount = 0;
 
@@ -45,8 +45,14 @@ class SyncServiceSingleton {
     _entityListener = entityMapper;
   }
 
+  void setRegistries(SyncServiceRegistry? registries) {
+    _registries = registries;
+  }
+
   // Getter for the sync entity mapper listener
   SyncEntityMapperListener? get entityMapper => _entityListener;
+
+  SyncServiceRegistry? get registries => _registries;
 
   // Getter for the sync down retry count
   int get syncDownRetryCount => _syncDownRetryCount;

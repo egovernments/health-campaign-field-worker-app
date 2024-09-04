@@ -74,7 +74,7 @@ class PerformSyncDown {
 
         responseEntities = await SyncServiceSingleton()
             .entityMapper
-            ?.entityResponse(typeGroupedEntity, operationGroupedEntity,
+            ?.syncDownEntityResponse(typeGroupedEntity, operationGroupedEntity,
                 entities, remote, local);
 
         for (var element in responseEntities!) {

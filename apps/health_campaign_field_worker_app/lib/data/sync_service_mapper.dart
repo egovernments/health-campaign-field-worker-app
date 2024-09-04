@@ -88,23 +88,42 @@ class SyncServiceMapper extends SyncEntityMapperListener {
   @override
   int getSyncCount(List<OpLog> opLogs) {
     int count = opLogs.where((element) {
-      switch (element.entityType) {
-        case DataModelType.household:
-        case DataModelType.individual:
-        case DataModelType.householdMember:
-        case DataModelType.projectBeneficiary:
-        case DataModelType.task:
-        case DataModelType.stock:
-        case DataModelType.stockReconciliation:
-        case DataModelType.service:
-        case DataModelType.complaints:
-        case DataModelType.sideEffect:
-        case DataModelType.referral:
-        case DataModelType.hFReferral:
-        case DataModelType.attendance:
-          return true;
-        default:
-          return false;
+      if (element.syncedDown == false && element.syncedUp == true) {
+        switch (element.entityType) {
+          case DataModelType.household:
+          case DataModelType.individual:
+          case DataModelType.householdMember:
+          case DataModelType.projectBeneficiary:
+          case DataModelType.task:
+          case DataModelType.stock:
+          case DataModelType.stockReconciliation:
+          case DataModelType.sideEffect:
+          case DataModelType.referral:
+          case DataModelType.hFReferral:
+          case DataModelType.attendance:
+            return true;
+          default:
+            return false;
+        }
+      } else {
+        switch (element.entityType) {
+          case DataModelType.household:
+          case DataModelType.individual:
+          case DataModelType.householdMember:
+          case DataModelType.projectBeneficiary:
+          case DataModelType.task:
+          case DataModelType.stock:
+          case DataModelType.stockReconciliation:
+          case DataModelType.service:
+          case DataModelType.complaints:
+          case DataModelType.sideEffect:
+          case DataModelType.referral:
+          case DataModelType.hFReferral:
+          case DataModelType.attendance:
+            return true;
+          default:
+            return false;
+        }
       }
     }).length;
 
@@ -112,7 +131,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
   }
 
   @override
-  Future<List<EntityModel>> entityResponse(
+  Future<List<EntityModel>> syncDownEntityResponse(
       MapEntry<DataModelType, List<OpLogEntry<EntityModel>>> typeGroupedEntity,
       MapEntry<DataOperation, List<OpLogEntry<EntityModel>>>
           operationGroupedEntity,
@@ -622,7 +641,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           if (serverGeneratedId != null) {
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
-                clientReferenceId: entity.clientReferenceId!,
+                clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
@@ -692,71 +711,73 @@ class SyncServiceMapper extends SyncEntityMapperListener {
 
         break;
 
-      case DataModelType.complaints:
-        if (remote is! PgrServiceRemoteRepository) return responseEntities;
+    // Note: Uncomment the following code block to enable complaints sync down
 
-        final futures = entities
-            .whereType<PgrServiceModel>()
-            .map((e) => e.serviceRequestId)
-            .whereNotNull()
-            .map(
-          (e) {
-            final future = remote.searchWithoutClientReferenceId(
-              PgrServiceSearchModel(
-                serviceRequestId: e,
-              ),
-            );
-
-            return Future.sync(() => future);
-          },
-        );
-
-        final resolvedFutures = await Future.wait(futures);
-
-        responseEntities = resolvedFutures
-            .expand((element) => element)
-            .whereType<PgrServiceResponseModel>()
-            // We only need serviceRequestId and application status
-            .map((e) => PgrServiceModel(
-                  clientReferenceId: '',
-                  tenantId: e.tenantId ?? '',
-                  serviceCode: e.serviceCode ?? '',
-                  description: e.description ?? '',
-                  serviceRequestId: e.serviceRequestId,
-                  applicationStatus: e.applicationStatus ??
-                      PgrServiceApplicationStatus.pendingAssignment,
-                  user: PgrComplainantModel(
-                    clientReferenceId: '',
-                    tenantId: '',
-                    complaintClientReferenceId: e.serviceRequestId ?? '',
-                  ),
-                  address: PgrAddressModel(),
-                ))
-            .toList();
-
-        for (var element in operationGroupedEntity.value) {
-          if (element.id == null) continue;
-          final entity = element.entity as PgrServiceModel;
-          final responseEntity =
-              responseEntities.whereType<PgrServiceModel>().firstWhereOrNull(
-                    (e) => e.clientReferenceId == entity.clientReferenceId,
-                  );
-
-          final serverGeneratedId = responseEntity?.serviceRequestId;
-          final rowVersion = responseEntity?.rowVersion;
-
-          if (serverGeneratedId != null) {
-            await local.opLogManager.updateServerGeneratedIds(
-              model: UpdateServerGeneratedIdModel(
-                clientReferenceId: entity.clientReferenceId,
-                serverGeneratedId: serverGeneratedId,
-                dataOperation: element.operation,
-                rowVersion: rowVersion,
-              ),
-            );
-          }
-        }
-        break;
+      // case DataModelType.complaints:
+      //   if (remote is! PgrServiceRemoteRepository) break;
+      //
+      //   final futures = entities
+      //       .whereType<PgrServiceModel>()
+      //       .map((e) => e.serviceRequestId)
+      //       .whereNotNull()
+      //       .map(
+      //     (e) {
+      //       final future = remote.searchWithoutClientReferenceId(
+      //         PgrServiceSearchModel(
+      //           serviceRequestId: e,
+      //         ),
+      //       );
+      //
+      //       return Future.sync(() => future);
+      //     },
+      //   );
+      //
+      //   final resolvedFutures = await Future.wait(futures);
+      //
+      //   responseEntities = resolvedFutures
+      //       .expand((element) => element)
+      //       .whereType<PgrServiceResponseModel>()
+      //       // We only need serviceRequestId and application status
+      //       .map((e) => PgrServiceModel(
+      //             clientReferenceId: '',
+      //             tenantId: e.tenantId ?? '',
+      //             serviceCode: e.serviceCode ?? '',
+      //             description: e.description ?? '',
+      //             serviceRequestId: e.serviceRequestId,
+      //             applicationStatus: e.applicationStatus ??
+      //                 PgrServiceApplicationStatus.pendingAssignment,
+      //             user: PgrComplainantModel(
+      //               clientReferenceId: '',
+      //               tenantId: '',
+      //               complaintClientReferenceId: e.serviceRequestId ?? '',
+      //             ),
+      //             address: PgrAddressModel(),
+      //           ))
+      //       .toList();
+      //
+      //   for (var element in operationGroupedEntity.value) {
+      //     if (element.id == null) continue;
+      //     final entity = element.entity as PgrServiceModel;
+      //     final responseEntity =
+      //         responseEntities.whereType<PgrServiceModel>().firstWhereOrNull(
+      //               (e) => e.clientReferenceId == entity.clientReferenceId,
+      //             );
+      //
+      //     final serverGeneratedId = responseEntity?.serviceRequestId;
+      //     final rowVersion = responseEntity?.rowVersion;
+      //
+      //     if (serverGeneratedId != null) {
+      //       await local.opLogManager.updateServerGeneratedIds(
+      //         model: UpdateServerGeneratedIdModel(
+      //           clientReferenceId: entity.clientReferenceId,
+      //           serverGeneratedId: serverGeneratedId,
+      //           dataOperation: element.operation,
+      //           rowVersion: rowVersion,
+      //         ),
+      //       );
+      //     }
+      //   }
+      //   break;
 
       default:
         break;
@@ -766,7 +787,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
   }
 
   @override
-  EntityModel updatedEntity(EntityModel entity, OpLogEntry<EntityModel> e,
+  EntityModel updatedEntity(EntityModel entity, OpLogEntry<EntityModel> entry,
       String? serverGeneratedId) {
     var updatedEntity = entity;
 
@@ -776,7 +797,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     const individualAddressIdKey = 'individualAddressId';
 
     if (updatedEntity is HouseholdModel) {
-      final addressId = e.additionalIds.firstWhereOrNull(
+      final addressId = entry.additionalIds.firstWhereOrNull(
         (element) {
           return element.idType == householdAddressIdKey;
         },
@@ -790,13 +811,13 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     }
 
     if (updatedEntity is IndividualModel) {
-      final identifierId = e.additionalIds.firstWhereOrNull(
+      final identifierId = entry.additionalIds.firstWhereOrNull(
         (element) {
           return element.idType == individualIdentifierIdKey;
         },
       )?.id;
 
-      final addressId = e.additionalIds.firstWhereOrNull(
+      final addressId = entry.additionalIds.firstWhereOrNull(
         (element) {
           return element.idType == individualAddressIdKey;
         },
@@ -817,7 +838,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
     }
 
     if (updatedEntity is TaskModel) {
-      final resourceId = e.additionalIds
+      final resourceId = entry.additionalIds
           .firstWhereOrNull(
             (element) => element.idType == taskResourceIdKey,
           )

@@ -23,6 +23,7 @@ import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
 import '../data/sync_service_mapper.dart';
+import '../data/sync_registry.dart';
 import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
@@ -275,9 +276,14 @@ class Constants {
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
     SyncServiceSingleton().setData(
-        syncDownRetryCount: envConfig.variables.syncDownRetryCount,
-        persistenceConfiguration: PersistenceConfiguration.offlineFirst,
-        entityMapper: SyncServiceMapper());
+      syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+      persistenceConfiguration: PersistenceConfiguration.offlineFirst,
+      entityMapper: SyncServiceMapper(),
+    );
+    SyncServiceSingleton().setRegistries(SyncServiceRegistry());
+    SyncServiceSingleton().registries?.registerSyncRegistries({
+      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+    });
   }
 }
 
