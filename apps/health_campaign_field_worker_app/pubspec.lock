@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.2+1"
+    version: "1.0.2+2"
   audioplayers:
     dependency: transitive
     description:
@@ -429,7 +429,7 @@ packages:
       path: "../../packages/dart_mappable_builder"
       relative: true
     source: path
-    version: "4.2.0"
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:

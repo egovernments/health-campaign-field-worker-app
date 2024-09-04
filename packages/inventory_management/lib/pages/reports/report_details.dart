@@ -136,8 +136,9 @@ class InventoryReportDetailsPageState
               i18.inventoryReportDetails.noRecordsMessage,
             );
             final noFilterMessage = localizations.translate(
-              InventorySingleton().isDistributor && !InventorySingleton().isWareHouseMgr
-              ? i18.inventoryReportDetails.noFilterMessageDistributor
+              InventorySingleton().isDistributor &&
+                      !InventorySingleton().isWareHouseMgr
+                  ? i18.inventoryReportDetails.noFilterMessageDistributor
                   : i18.inventoryReportDetails.noFilterMessage,
             );
 
@@ -797,6 +798,29 @@ class InventoryReportDetailsPageState
       return '0';
     }
     return (double.tryParse(count.value.toString()) ?? 0.0).toStringAsFixed(0);
+  }
+
+  handleFacilitySelection(
+      FormGroup form, List<FacilityModel> facilities) async {
+    final stockReconciliationBloc = context.read<StockReconciliationBloc>();
+
+    final facility = await context.router
+            .push(InventoryFacilitySelectionRoute(facilities: facilities))
+        as FacilityModel?;
+
+    if (facility == null) {
+      return;
+    }
+    form.control(_facilityKey).value = facility;
+    stockReconciliationBloc.add(
+      StockReconciliationSelectFacilityEvent(
+        facility,
+      ),
+    );
+
+    if (mounted) {
+      handleSelection(form, context.read<InventoryReportBloc>());
+    }
   }
 }
 

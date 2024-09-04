@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'document.dart';
@@ -101,10 +101,8 @@ mixin DocumentSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DocumentSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as DocumentSearchModel, other));
+    return DocumentSearchModelMapper.ensureInitialized()
+        .equalsValue(this as DocumentSearchModel, other);
   }
 
   @override
@@ -306,10 +304,8 @@ mixin DocumentModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DocumentModelMapper.ensureInitialized()
-                .isValueEqual(this as DocumentModel, other));
+    return DocumentModelMapper.ensureInitialized()
+        .equalsValue(this as DocumentModel, other);
   }
 
   @override
@@ -511,10 +507,8 @@ mixin DocumentAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DocumentAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as DocumentAdditionalFields, other));
+    return DocumentAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as DocumentAdditionalFields, other);
   }
 
   @override

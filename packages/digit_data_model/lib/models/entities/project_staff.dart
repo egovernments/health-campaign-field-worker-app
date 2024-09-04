@@ -1,7 +1,6 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
 
 part 'project_staff.mapper.dart';
