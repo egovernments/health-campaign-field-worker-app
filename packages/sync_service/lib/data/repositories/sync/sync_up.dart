@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:sync_service/utils/utils.dart';
 
 import '../../../models/bandwidth/bandwidth_model.dart';
@@ -119,6 +119,15 @@ class PerformSyncUp {
             listOfBatchedNonRecoverableErrorList =
             nonRecoverableErrorList.slices(bandwidthModel.batchSize).toList();
 
+        final registry = SyncServiceSingleton()
+            .registries
+            ?.getSyncRegistries(typeGroupedEntity.key, remote);
+        if (registry == null) {
+          if (kDebugMode) {
+            print('no custom sync registry found for ${typeGroupedEntity.key}');
+          }
+        }
+
         // Handle non-recoverable errors
         if (listOfBatchedNonRecoverableErrorList.isNotEmpty) {
           for (final sublist in listOfBatchedNonRecoverableErrorList) {
@@ -127,14 +136,17 @@ class PerformSyncUp {
               nonRecoverableErrorEntities,
               operationGroupedEntity.key,
             );
-            for (final syncedEntity in sublist) {
-              if (syncedEntity.type == DataModelType.complaints) continue;
-              await local.markSyncedUp(
-                entry: syncedEntity,
-                nonRecoverableError: syncedEntity.nonRecoverableError,
-                clientReferenceId: syncedEntity.clientReferenceId,
-                id: syncedEntity.id,
-              );
+            if (registry != null) {
+              await registry.localMarkSyncUp(sublist, local);
+            } else {
+              for (final syncedEntity in sublist) {
+                await local.markSyncedUp(
+                  entry: syncedEntity,
+                  nonRecoverableError: syncedEntity.nonRecoverableError,
+                  clientReferenceId: syncedEntity.clientReferenceId,
+                  id: syncedEntity.id,
+                );
+              }
             }
           }
         }
@@ -160,108 +172,131 @@ class PerformSyncUp {
 
         // Handle successful operations
         if (listOfBatchedOpLogList.isNotEmpty) {
+          final registry = SyncServiceSingleton()
+              .registries
+              ?.getSyncRegistries(typeGroupedEntity.key, remote);
+          if (registry == null) {
+            if (kDebugMode) {
+              print(
+                  'no custom sync registry found for ${typeGroupedEntity.key}');
+            }
+          }
           for (final sublist in listOfBatchedOpLogList) {
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {
-              switch (typeGroupedEntity.key) {
-                case DataModelType.complaints:
-                  for (final entity in entities) {
-                    if (remote is PgrServiceRemoteRepository &&
-                        entity is PgrServiceModel) {
-                      final response = await remote.create(entity);
-                      final responseData = response.data;
-                      if (responseData is! Map<String, dynamic>) {
-                        AppLogger.instance.error(
-                          title: 'NetworkManager : PgrServiceRemoteRepository',
-                          message: responseData,
-                          stackTrace: StackTrace.current,
-                        );
-                        continue;
-                      }
-
-                      PgrServiceCreateResponseModel
-                          pgrServiceCreateResponseModel;
-                      PgrComplaintResponseModel pgrComplaintModel;
-                      try {
-                        pgrServiceCreateResponseModel =
-                            PgrServiceCreateResponseModelMapper.fromMap(
-                          responseData,
-                        );
-                        pgrComplaintModel =
-                            pgrServiceCreateResponseModel.serviceWrappers.first;
-                      } catch (e) {
-                        rethrow;
-                      }
-
-                      final service = pgrComplaintModel.service;
-                      final serviceRequestId = service.serviceRequestId;
-
-                      if (serviceRequestId == null ||
-                          serviceRequestId.isEmpty) {
-                        AppLogger.instance.error(
-                          title: 'NetworkManager : PgrServiceRemoteRepository',
-                          message: 'Service Request ID is null',
-                          stackTrace: StackTrace.current,
-                        );
-                        continue;
-                      }
-
-                      await local.markSyncedUp(
-                        entry: sublist.firstWhere((element) =>
-                            element.clientReferenceId ==
-                            entity.clientReferenceId),
-                        clientReferenceId: entity.clientReferenceId,
-                        nonRecoverableError: entity.nonRecoverableError,
-                      );
-
-                      await local.opLogManager.updateServerGeneratedIds(
-                        model: UpdateServerGeneratedIdModel(
-                          clientReferenceId: entity.clientReferenceId,
-                          serverGeneratedId: serviceRequestId,
-                          dataOperation: operationGroupedEntity.key,
-                          rowVersion: entity.rowVersion,
-                        ),
-                      );
-
-                      await local.update(
-                        entity.copyWith(
-                          serviceRequestId: serviceRequestId,
-                          id: service.id,
-                          applicationStatus: service.applicationStatus,
-                          accountId: service.accountId,
-                        ),
-                        createOpLog: false,
-                      );
-                    }
-                  }
-                  break;
-                default:
-                  await remote.bulkCreate(entities);
+              if (registry != null) {
+                await registry.create(
+                    entities: entities,
+                    entry: sublist,
+                    local: local,
+                    operationGroupedEntity: operationGroupedEntity,
+                    typeGroupedEntity: typeGroupedEntity);
+              } else {
+                remote.bulkCreate(entities);
               }
             } else if (operationGroupedEntity.key == DataOperation.update) {
               await Future.delayed(const Duration(seconds: 1));
-              await remote.bulkUpdate(entities);
+              if (registry != null) {
+                await registry.update(entities, local);
+              } else {
+                remote.bulkUpdate(entities);
+              }
             } else if (operationGroupedEntity.key == DataOperation.delete) {
               await Future.delayed(const Duration(seconds: 1));
-              await remote.bulkDelete(entities);
+              if (registry != null) {
+                await registry.delete(entities, local);
+              } else {
+                remote.bulkDelete(entities);
+              }
             }
             if (operationGroupedEntity.key == DataOperation.singleCreate) {
               for (var element in entities) {
-                await remote.singleCreate(element);
+                if (registry != null) {
+                  await registry.singleCreate(element, local);
+                } else {
+                  remote.singleCreate(element);
+                }
               }
             }
-            for (final syncedEntity in sublist) {
-              if (syncedEntity.type == DataModelType.complaints) continue;
-              await local.markSyncedUp(
-                entry: syncedEntity,
-                id: syncedEntity.id,
-                nonRecoverableError: syncedEntity.nonRecoverableError,
-                clientReferenceId: syncedEntity.clientReferenceId,
-              );
+            if (registry != null) {
+              registry.localMarkSyncUp(sublist, local);
+            } else {
+              for (final syncedEntity in sublist) {
+                await local.markSyncedUp(
+                  entry: syncedEntity,
+                  id: syncedEntity.id,
+                  nonRecoverableError: syncedEntity.nonRecoverableError,
+                  clientReferenceId: syncedEntity.clientReferenceId,
+                );
+              }
             }
           }
         }
       }
     }
+  }
+}
+
+abstract class SyncUpOperation {
+  Future<void> create(
+      {required List<OpLogEntry<EntityModel>> entry,
+      required List<EntityModel> entities,
+      required LocalRepository local,
+      required MapEntry<DataOperation, List<OpLogEntry<EntityModel>>>
+          operationGroupedEntity,
+      required MapEntry<DataModelType, List<OpLogEntry<EntityModel>>>
+          typeGroupedEntity});
+  Future<void> update(List<EntityModel> entities, LocalRepository local);
+  Future<void> delete(List<EntityModel> entities, LocalRepository local);
+  Future<void> singleCreate(EntityModel entity, LocalRepository local);
+  Future<void> localMarkSyncUp(
+      List<OpLogEntry<EntityModel>> entity, LocalRepository local);
+}
+
+class SyncServiceRegistry {
+  // Singleton instance
+  static final SyncServiceRegistry _instance = SyncServiceRegistry._internal();
+
+  // Private constructor for singleton pattern
+  SyncServiceRegistry._internal();
+
+  // Factory constructor to return the singleton instance
+  factory SyncServiceRegistry() {
+    return _instance;
+  }
+
+  // Private map to store registries
+  static final Map<DataModelType, SyncUpOperation Function(RemoteRepository)>
+      _registries = {};
+
+  /// Registers a sync registry for a given [DataModelType].
+  void registerSyncRegistries(
+    Map<DataModelType, SyncUpOperation Function(RemoteRepository)> registries,
+  ) {
+    registries.forEach((type, strategyList) {
+      _registries[type] = strategyList; // Create a new list
+    });
+  }
+
+  /// Retrieves a sync registry for the given [DataModelType].
+  SyncUpOperation? getSyncRegistries(
+      DataModelType type, RemoteRepository remote) {
+    final strategyFunction = _registries[type];
+    return strategyFunction != null ? strategyFunction(remote) : null;
+  }
+
+  /// Getter to access the _registries map
+  Map<DataModelType, SyncUpOperation Function(RemoteRepository)>
+      get registries {
+    return _registries;
+  }
+
+  /// Setter to update the _registries map
+  set registries(
+      Map<DataModelType, SyncUpOperation Function(RemoteRepository)>
+          newStrategies) {
+    newStrategies.forEach((type, strategyList) {
+      _registries[type] = strategyList; // Create a new list
+    });
   }
 }

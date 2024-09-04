@@ -71,7 +71,7 @@ class SyncService {
       service?.stopSelf();
     }
 
-    if (syncError != null) throw syncError;
+    if (syncError != null) throw 'SyncUp Error: ${syncError.error}';
 
     // Recursive function which will call the Perform Sync
 

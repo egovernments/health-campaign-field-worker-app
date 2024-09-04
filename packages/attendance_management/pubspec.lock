@@ -260,11 +260,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -295,14 +294,14 @@ packages:
       path: "../digit_components"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.1+1"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.3+1"
   dio:
     dependency: "direct main"
     description:
@@ -932,7 +931,7 @@ packages:
     source: hosted
     version: "2.1.1"
   reactive_forms:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: reactive_forms
       sha256: "9b1fb18e0aae9c50cfa0aaabaaa38bc4d78eefc9b7b95fa9c947b051f6524b8e"

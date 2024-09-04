@@ -26,7 +26,7 @@ abstract class SyncEntityMapperListener {
   /// This method accepts a `MapEntry` of `DataModelType` and a list of `OpLogEntry<EntityModel>` objects, another `MapEntry` of `DataOperation` and a list of `OpLogEntry<EntityModel>` objects, a list of `EntityModel` objects, a `RemoteRepository<EntityModel, EntitySearchModel>` object, and a `LocalRepository<EntityModel, EntitySearchModel>` object as parameters.
   /// It returns a `Future` that resolves to a list of `EntityModel` objects.
   /// It is expected to be overridden in a concrete implementation of `SyncEntityMapperListener`.
-  Future<List<EntityModel>> entityResponse(
+  Future<List<EntityModel>> syncDownEntityResponse(
       MapEntry<DataModelType, List<OpLogEntry<EntityModel>>> typeGroupedEntity,
       MapEntry<DataOperation, List<OpLogEntry<EntityModel>>>
           operationGroupedEntity,
@@ -40,5 +40,5 @@ abstract class SyncEntityMapperListener {
   /// It returns an updated `EntityModel` object.
   /// It is expected to be overridden in a concrete implementation of `SyncEntityMapperListener`.
   EntityModel updatedEntity(
-      EntityModel entity, OpLogEntry<EntityModel> e, String? serverGeneratedId);
+      EntityModel entity, OpLogEntry<EntityModel> entry, String? serverGeneratedId);
 }
