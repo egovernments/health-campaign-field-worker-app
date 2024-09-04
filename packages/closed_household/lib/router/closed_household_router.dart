@@ -1,10 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'closed_household_router.gm.dart';
+import 'closed_household_router.gr.dart';
 
-
-@AutoRouterConfig.module()
-class ClosedHouseholdPackageRoute extends $ClosedHouseholdPackageRoute {
+@AutoRouterConfig()
+class ClosedHouseholdPackageRoute extends RootStackRouter {
   @override
   RouteType get defaultRouteType => const RouteType.material();
 
@@ -15,8 +14,8 @@ class ClosedHouseholdPackageRoute extends $ClosedHouseholdPackageRoute {
         path: 'closed-household-wrapper',
         children: [
           AutoRoute(
-              page: ClosedHouseholdDetailsRoute.page,
-              path: 'closed-household-details',
+            page: ClosedHouseholdDetailsRoute.page,
+            path: 'closed-household-details',
             initial: true,
           ),
           AutoRoute(
@@ -26,6 +25,5 @@ class ClosedHouseholdPackageRoute extends $ClosedHouseholdPackageRoute {
               page: ClosedHouseholdAcknowledgementRoute.page,
               path: 'closed-household-acknowledgement'),
         ]),
-
   ];
 }

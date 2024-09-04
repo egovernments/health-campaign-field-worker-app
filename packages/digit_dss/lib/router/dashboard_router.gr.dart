@@ -11,7 +11,9 @@
 import 'package:auto_route/auto_route.dart' as _i2;
 import 'package:digit_dss/pages/dashboard/dashboard.dart' as _i1;
 
-abstract class $DashboardRoute extends _i2.AutoRouterModule {
+abstract class $DashboardRoute extends _i2.RootStackRouter {
+  $DashboardRoute({super.navigatorKey});
+
   @override
   final Map<String, _i2.PageFactory> pagesMap = {
     UserDashboardRoute.name: (routeData) {

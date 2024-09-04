@@ -13,7 +13,7 @@ import 'package:registration_delivery/pages/beneficiary/widgets/past_delivery.da
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/additional_fields_type.dart';
-import '../../router/registration_delivery_router.gm.dart';
+import '../../router/registration_delivery_router.gr.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';

@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'referral_reconciliation_router.gm.dart';
+import 'referral_reconciliation_router.gr.dart';
 
-@AutoRouterConfig.module()
-class ReferralReconciliationRoute extends $ReferralReconciliationRoute {
+@AutoRouterConfig()
+class ReferralReconciliationRoute extends RootStackRouter {
+  @override
   RouteType get defaultRouteType => const RouteType.material();
 
+  @override
   List<AutoRoute> routes = [
     AutoRoute(
       page: SearchReferralReconciliationsRoute.page,

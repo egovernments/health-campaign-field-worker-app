@@ -14,7 +14,7 @@ import '../../blocs/search_households/search_households.dart';
 import '../../models/entities/household.dart';
 import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/status.dart';
-import '../../router/registration_delivery_router.gm.dart';
+import '../../router/registration_delivery_router.gr.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';

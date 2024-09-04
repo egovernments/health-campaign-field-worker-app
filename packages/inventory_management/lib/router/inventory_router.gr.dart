@@ -29,7 +29,9 @@ import 'package:inventory_management/pages/reports/report_selection.dart'
 import 'package:inventory_management/pages/stock_reconciliation/stock_reconciliation.dart'
     as _i8;
 
-abstract class $InventoryRoute extends _i10.AutoRouterModule {
+abstract class $InventoryRoute extends _i10.RootStackRouter {
+  $InventoryRoute({super.navigatorKey});
+
   @override
   final Map<String, _i10.PageFactory> pagesMap = {
     InventoryAcknowledgementRoute.name: (routeData) {

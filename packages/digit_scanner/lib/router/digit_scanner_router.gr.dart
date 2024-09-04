@@ -13,7 +13,9 @@ import 'package:digit_scanner/blocs/app_localization.dart' as _i4;
 import 'package:digit_scanner/pages/qr_scanner.dart' as _i1;
 import 'package:flutter/material.dart' as _i3;
 
-abstract class $DigitScannerPackageRoute extends _i2.AutoRouterModule {
+abstract class $DigitScannerPackageRoute extends _i2.RootStackRouter {
+  $DigitScannerPackageRoute({super.navigatorKey});
+
   @override
   final Map<String, _i2.PageFactory> pagesMap = {
     DigitScannerRoute.name: (routeData) {

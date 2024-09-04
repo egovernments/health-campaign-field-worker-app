@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'digit_scanner_router.gm.dart';
+import 'digit_scanner_router.gr.dart';
 
-@AutoRouterConfig.module()
+@AutoRouterConfig()
 class DigitScannerPackageRoute extends $DigitScannerPackageRoute {
   RouteType get defaultRouteType => const RouteType.material();
 
