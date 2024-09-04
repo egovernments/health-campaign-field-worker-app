@@ -10,7 +10,7 @@ import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/status.dart';
-import '../router/registration_delivery_router.gm.dart';
+import '../router/registration_delivery_router.gr.dart';
 import '../utils/global_search_parameters.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';

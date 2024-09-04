@@ -62,7 +62,9 @@ import 'package:registration_delivery/pages/search_beneficiary.dart' as _i21;
 import 'package:registration_delivery/pages/summary_page.dart' as _i24;
 import 'package:registration_delivery/registration_delivery.dart' as _i28;
 
-abstract class $RegistrationDeliveryRoute extends _i25.AutoRouterModule {
+abstract class $RegistrationDeliveryRoute extends _i25.RootStackRouter {
+  $RegistrationDeliveryRoute({super.navigatorKey});
+
   @override
   final Map<String, _i25.PageFactory> pagesMap = {
     BeneficiaryAcknowledgementRoute.name: (routeData) {

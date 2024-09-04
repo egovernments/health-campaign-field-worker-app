@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/blocs/app_localization.dart';
-import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:closed_household/router/closed_household_router.gr.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:flutter/material.dart';

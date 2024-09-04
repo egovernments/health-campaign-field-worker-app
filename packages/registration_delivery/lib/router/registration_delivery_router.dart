@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'registration_delivery_router.gm.dart';
+import 'registration_delivery_router.gr.dart';
 
-@AutoRouterConfig.module()
-class RegistrationDeliveryRoute extends $RegistrationDeliveryRoute {
+@AutoRouterConfig()
+class RegistrationDeliveryRoute extends RootStackRouter {
+  @override
   RouteType get defaultRouteType => const RouteType.material();
 
+  @override
   List<AutoRoute> get routes => [
         AutoRoute(
             page: RegistrationDeliveryWrapperRoute.page,

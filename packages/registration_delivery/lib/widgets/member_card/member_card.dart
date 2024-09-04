@@ -12,7 +12,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
-import '../../router/registration_delivery_router.gm.dart';
+import '../../router/registration_delivery_router.gr.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../action_card/action_card.dart';

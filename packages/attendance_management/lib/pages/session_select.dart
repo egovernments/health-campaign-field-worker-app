@@ -16,7 +16,7 @@ import '../blocs/attendance_individual_bloc.dart';
 import '../models/entities/attendance_log.dart';
 import '../models/entities/attendance_register.dart';
 import '../models/entities/enum_values.dart';
-import '../router/attendance_router.gm.dart';
+import '../router/attendance_router.gr.dart';
 import '../utils/constants.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
