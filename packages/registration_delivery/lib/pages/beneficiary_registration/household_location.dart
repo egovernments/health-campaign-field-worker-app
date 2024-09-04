@@ -405,29 +405,31 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       ),
       _addressLine1Key:
           FormControl<String>(value: addressModel?.addressLine1, validators: [
-        Validators.minLength(2),
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(64),
       ]),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.addressLine2,
         validators: [
-          Validators.minLength(2),
+          Validators.delegate(
+              (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(64),
         ],
       ),
       _landmarkKey:
           FormControl<String>(value: addressModel?.landmark, validators: [
-        Validators.minLength(2),
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(64),
       ]),
       _postalCodeKey:
           FormControl<String>(value: addressModel?.pincode, validators: [
-        Validators.minLength(2),
+        Validators.delegate(
+            (validator) => CustomValidator.requiredMin(validator)),
         Validators.maxLength(6),
       ]),
-      _latKey: FormControl<double>(value: addressModel?.latitude, validators: [
-        Validators.min(2),
-      ]),
+      _latKey: FormControl<double>(value: addressModel?.latitude),
       _lngKey: FormControl<double>(
         value: addressModel?.longitude,
       ),

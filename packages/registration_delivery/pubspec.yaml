@@ -42,6 +42,7 @@ dependencies:
   stream_transform: ^2.1.0
   async: ^2.11.0
   formula_parser: ^2.0.1
+  flutter_keyboard_visibility: ^5.4.1
 
 
 dev_dependencies:
@@ -52,6 +53,7 @@ dev_dependencies:
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0
+  build_runner: ^2.4.11
   mocktail: ^1.0.2
   build_runner: ^2.4.11
   dart_mappable_builder:
