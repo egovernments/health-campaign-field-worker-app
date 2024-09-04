@@ -202,13 +202,16 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                 .mapIndexed(
                   (i, plot) => TableData(
                     plot.symbol == DSSEnums.number.toValue() ||
-                            plot.symbol == DSSEnums.percentage.toValue()
-                        ? plot.name == DSSEnums.lastSyncedTime.toValue() &&
-                                plot.symbol == DSSEnums.number.toValue()
-                            ? DigitDateUtils.getDateFromTimestamp(int.parse(
-                                double.parse(plot.value.toString())
-                                    .toInt()
-                                    .toString()))
+                            plot.symbol == DSSEnums.percentage.toValue() ||
+                            plot.symbol == DSSEnums.amount.toValue()
+                        ? plot.name == DSSEnums.lastSyncedTime.toValue()
+                            ? double.tryParse(plot.value.toString())?.toInt() !=
+                                    0
+                                ? DigitDateUtils.getDateFromTimestamp(int.parse(
+                                    double.parse(plot.value.toString())
+                                        .toInt()
+                                        .toString()))
+                                : ''
                             : double.parse(plot.value.toString()) ==
                                     double.parse(plot.value.toString()).toInt()
                                 ? double.parse(plot.value.toString())
