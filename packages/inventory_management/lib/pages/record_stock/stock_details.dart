@@ -558,7 +558,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           }
                                         });
                                       }
-                                    },
+                                    }
                               child: Center(
                                 child: Text(
                                   localizations

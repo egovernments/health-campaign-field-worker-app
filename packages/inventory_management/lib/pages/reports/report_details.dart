@@ -136,9 +136,8 @@ class InventoryReportDetailsPageState
               i18.inventoryReportDetails.noRecordsMessage,
             );
             final noFilterMessage = localizations.translate(
-              InventorySingleton().isDistributor &&
-                      !InventorySingleton().isWareHouseMgr
-                  ? i18.inventoryReportDetails.noFilterMessageDistributor
+              InventorySingleton().isDistributor && !InventorySingleton().isWareHouseMgr
+              ? i18.inventoryReportDetails.noFilterMessageDistributor
                   : i18.inventoryReportDetails.noFilterMessage,
             );
 
