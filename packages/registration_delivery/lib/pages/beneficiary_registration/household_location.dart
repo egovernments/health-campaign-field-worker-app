@@ -81,7 +81,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                     if (locationState.accuracy != null) {
                       //Hide the dialog after 1 seconds
                       Future.delayed(const Duration(seconds: 1), () {
-                        DigitComponentsUtils().hideLocationDialog(context);
+                        DigitComponentsUtils().hideDialog(context);
                       });
                     }
                   });
@@ -400,7 +400,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     return fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
         value: localizations.translate(
-            RegistrationDeliverySingleton().boundary!.name.toString()),
+            RegistrationDeliverySingleton().boundary!.code ?? ''),
         validators: [Validators.required],
       ),
       _addressLine1Key:

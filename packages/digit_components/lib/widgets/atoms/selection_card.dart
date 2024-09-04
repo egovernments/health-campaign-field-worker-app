@@ -43,9 +43,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
     }
 
     if (widget.equalWidthOptions) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
         _calculateMaxOptionWidth();
-      });
     }
   }
 
@@ -53,9 +51,7 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (widget.equalWidthOptions) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
         _calculateMaxOptionWidth();
-      });
     }
   }
   @override
@@ -71,15 +67,17 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
 
   void _calculateMaxOptionWidth() {
     double maxWidth = 0;
-    final textTheme = Theme.of(context).textTheme;
 
     for (var option in widget.options) {
       final textPainter = TextPainter(
         text: TextSpan(
           text: widget.valueMapper(option),
-          style: textTheme.bodyLarge?.copyWith(
+          style: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 16,
+            fontWeight: FontWeight.w400,
             color: const DigitColors().woodsmokeBlack,
-          ),
+          )
         ),
         textDirection: TextDirection.ltr,
       );

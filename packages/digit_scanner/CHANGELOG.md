@@ -1,3 +1,6 @@
+## 1.0.3+1
+* Updated Digit_Components
+
 ## 1.0.3
 * Manual code entry fixes with stable version
 

@@ -1,3 +1,7 @@
+## 1.0.1+1
+
+* Updated digit_data_model, digit_components and registration_delivery
+
 ## 1.0.1
 
 * Updated digit_data_model and registration_delivery

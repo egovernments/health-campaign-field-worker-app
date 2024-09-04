@@ -388,9 +388,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: "9b887d24c05459c027a92391869d4c10b440e00f"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -420,26 +422,26 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "90e12017934343a197a0c25bec00e5fc28e19cfbf11e522798cc39719609612c"
+      sha256: "9cca4d9a546037080afe02b6ade82fdf01574e11f5656ad12120fd6966578616"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0+9"
+    version: "1.0.1+1"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: e1ea907e9cb7d521341325ac1b1b98fad8bd5e5ca1bab7f7c18ed02ccd2f2c2b
+      sha256: "0b81e96636496b56b4f9c5d918690a17d8985d6b131e0ab54968eb5471ee4f54"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.3+1"
   digit_scanner:
     dependency: "direct main"
     description:
       name: digit_scanner
-      sha256: "1f1fe3ca8f038a3c93cd52491cf72c0b0e45c88b14580243d47eac59672e67ea"
+      sha256: "9862c4885465bb1942e36dc9b42596c201648db9b0f5ffb8ad768e2409fc2742"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.3+1"
   dio:
     dependency: transitive
     description:
