@@ -41,9 +41,7 @@ class RecordReferralDetailsPage extends LocalizedStatefulWidget {
 class _RecordReferralDetailsPageState
     extends LocalizedState<RecordReferralDetailsPage> {
   static const _nameOfChildKey = 'nameOfChild';
-  static const _evaluationFacilityKey = 'evaluationFacility';
   static const _referralReason = 'referralReason';
-  static const _referredByKey = 'referredBy';
   static const _genderKey = 'gender';
   static const _cycleKey = 'cycle';
   static const _beneficiaryIdKey = 'beneficiaryId';
@@ -60,7 +58,6 @@ class _RecordReferralDetailsPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final router = context.router;
 
     return BlocBuilder<ReferralReconServiceDefinitionBloc,
         ReferralReconServiceDefinitionState>(
@@ -326,34 +323,30 @@ class _RecordReferralDetailsPageState
                                                                   .toValue(),
                                                               dateOfEvaluation,
                                                             ),
-                                                          if (nameOfChild !=
-                                                                  null &&
-                                                              nameOfChild
-                                                                  .toString()
-                                                                  .trim()
-                                                                  .isNotEmpty)
+                                                          if (nameOfChild
+                                                              .toString()
+                                                              .trim()
+                                                              .isNotEmpty)
                                                             AdditionalField(
                                                               ReferralReconEnums
                                                                   .nameOfReferral
                                                                   .toValue(),
                                                               nameOfChild,
                                                             ),
-                                                          if (age != null &&
-                                                              age
-                                                                  .toString()
-                                                                  .trim()
-                                                                  .isNotEmpty)
+                                                          if (age
+                                                              .toString()
+                                                              .trim()
+                                                              .isNotEmpty)
                                                             AdditionalField(
                                                               ReferralReconEnums
                                                                   .age
                                                                   .toValue(),
                                                               age,
                                                             ),
-                                                          if (gender != null &&
-                                                              gender
-                                                                  .toString()
-                                                                  .trim()
-                                                                  .isNotEmpty)
+                                                          if (gender
+                                                              .toString()
+                                                              .trim()
+                                                              .isNotEmpty)
                                                             AdditionalField(
                                                               ReferralReconEnums
                                                                   .gender
@@ -666,35 +659,30 @@ class _RecordReferralDetailsPageState
                                                                     .toValue(),
                                                                 dateOfEvaluation,
                                                               ),
-                                                            if (nameOfChild !=
-                                                                    null &&
-                                                                nameOfChild
-                                                                    .toString()
-                                                                    .trim()
-                                                                    .isNotEmpty)
+                                                            if (nameOfChild
+                                                                .toString()
+                                                                .trim()
+                                                                .isNotEmpty)
                                                               AdditionalField(
                                                                 ReferralReconEnums
                                                                     .nameOfReferral
                                                                     .toValue(),
                                                                 nameOfChild,
                                                               ),
-                                                            if (age != null &&
-                                                                age
-                                                                    .toString()
-                                                                    .trim()
-                                                                    .isNotEmpty)
+                                                            if (age
+                                                                .toString()
+                                                                .trim()
+                                                                .isNotEmpty)
                                                               AdditionalField(
                                                                 ReferralReconEnums
                                                                     .age
                                                                     .toValue(),
                                                                 age,
                                                               ),
-                                                            if (gender !=
-                                                                    null &&
-                                                                gender
-                                                                    .toString()
-                                                                    .trim()
-                                                                    .isNotEmpty)
+                                                            if (gender
+                                                                .toString()
+                                                                .trim()
+                                                                .isNotEmpty)
                                                               AdditionalField(
                                                                 ReferralReconEnums
                                                                     .gender

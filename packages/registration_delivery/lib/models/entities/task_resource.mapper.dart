@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'task_resource.dart';
@@ -102,10 +102,8 @@ mixin TaskResourceSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TaskResourceSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as TaskResourceSearchModel, other));
+    return TaskResourceSearchModelMapper.ensureInitialized()
+        .equalsValue(this as TaskResourceSearchModel, other);
   }
 
   @override
@@ -315,10 +313,8 @@ mixin TaskResourceModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TaskResourceModelMapper.ensureInitialized()
-                .isValueEqual(this as TaskResourceModel, other));
+    return TaskResourceModelMapper.ensureInitialized()
+        .equalsValue(this as TaskResourceModel, other);
   }
 
   @override
@@ -540,10 +536,8 @@ mixin TaskResourceAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            TaskResourceAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as TaskResourceAdditionalFields, other));
+    return TaskResourceAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as TaskResourceAdditionalFields, other);
   }
 
   @override

@@ -1,11 +1,7 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
-
-import '../../data/local_store/sql_store/sql_store.dart';
-import 'attributes.dart';
 
 part 'service_definition.mapper.dart';
 
