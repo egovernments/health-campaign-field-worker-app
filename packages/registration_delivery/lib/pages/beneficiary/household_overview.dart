@@ -71,7 +71,7 @@ class _HouseholdOverviewPageState
                     ),
                     enableFixedButton: true,
                     footer: Offstage(
-                      offstage: beneficiaryType == BeneficiaryType.individual,
+                      offstage: beneficiaryType == BeneficiaryType.individual || isOutsideProjectDateRange(),
                       child: BlocBuilder<ServiceDefinitionBloc,
                           ServiceDefinitionState>(
                         builder: (context, serviceDefinitionState) =>
@@ -327,6 +327,9 @@ class _HouseholdOverviewPageState
                                 child: BlocBuilder<DeliverInterventionBloc,
                                         DeliverInterventionState>(
                                     builder: (ctx, deliverInterventionState) {
+
+                                      bool shouldShowStatus = beneficiaryType == BeneficiaryType.household;
+
                                   return Column(
                                     children: [
                                       DigitTableCard(
@@ -344,14 +347,13 @@ class _HouseholdOverviewPageState
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
-                                          ): RegistrationDeliverySingleton()
-                                              .boundary
-                                              ?.name,
+                                          ): state.householdMemberWrapper.headOfHousehold?.address?.first.locality?.code,
                                           localizations.translate(
                                             i18.deliverIntervention
                                                 .memberCountText,
                                           ): state.householdMemberWrapper
                                               .household?.memberCount,
+                                          if(shouldShowStatus)
                                           localizations.translate(i18
                                               .beneficiaryDetails
                                               .status): localizations.translate(
@@ -743,6 +745,21 @@ class _HouseholdOverviewPageState
       ),
     );
   }
+
+  bool isOutsideProjectDateRange() {
+    final project = RegistrationDeliverySingleton().selectedProject;
+
+    if (project?.startDate != null && project?.endDate != null) {
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final startDate = project!.startDate!;
+      final endDate = project!.endDate!;
+
+      return now < startDate || now > endDate;
+    }
+
+    return false;
+  }
+
 
   getStatusAttributes(HouseholdOverviewState state,
       DeliverInterventionState deliverInterventionState) {

@@ -1,3 +1,9 @@
+## 1.0.1
+* Bug fixes
+* Added enums for dss charts
+* Fixed chart delete issue
+* Updated digit_scanner package, digit_components, digit_data_model, attendance_management
+
 ## 1.0.0
 * Initial DSS Dashboard Release supporting metric and table charts
 

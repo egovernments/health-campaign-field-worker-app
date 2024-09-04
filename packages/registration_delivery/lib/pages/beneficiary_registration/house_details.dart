@@ -238,19 +238,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                     options: RegistrationDeliverySingleton()
                                             .houseStructureTypes ??
                                         [],
-                                    initialSelection: registrationState
-                                        .householdModel
-                                        ?.additionalFields
-                                        ?.fields
-                                        .where((e) =>
-                                            e.key ==
-                                            AdditionalFieldsType
-                                                .houseStructureTypes
-                                                .toValue())
-                                        .first
-                                        .value
-                                        .toString()
-                                        .split("|"),
+                                    initialSelection: form.control(_householdStructureKey).value!= null ? [...form.control(_householdStructureKey).value ] : [],
                                     onSelectionChanged: (values) {
                                       form
                                           .control(_householdStructureKey)
