@@ -95,6 +95,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
             );
           },
           builder: (context, state) {
+            // context.
             return ScrollableContent(
               enableFixedButton: true,
               header: const Column(children: [
