@@ -28,9 +28,9 @@ class InventoryManagementEnumsMapper
   InventoryManagementEnums decode(dynamic value) {
     switch (value) {
       case "waybill_quantity":
-        return InventoryManagementEnums.waybill_quantity;
+        return InventoryManagementEnums.wayBillQuantity;
       case "vehicle_number":
-        return InventoryManagementEnums.vehicle_number;
+        return InventoryManagementEnums.vehicleNumber;
       case "comments":
         return InventoryManagementEnums.comments;
       case "deliveryTeam":
@@ -51,9 +51,9 @@ class InventoryManagementEnumsMapper
   @override
   dynamic encode(InventoryManagementEnums self) {
     switch (self) {
-      case InventoryManagementEnums.waybill_quantity:
+      case InventoryManagementEnums.wayBillQuantity:
         return "waybill_quantity";
-      case InventoryManagementEnums.vehicle_number:
+      case InventoryManagementEnums.vehicleNumber:
         return "vehicle_number";
       case InventoryManagementEnums.comments:
         return "comments";
