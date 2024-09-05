@@ -151,10 +151,8 @@ class ClosedHouseholdSummaryPageState
                           LabelValuePair(
                             label: localizations.translate(i18
                                 .closeHousehold.closeHouseholdGpsAccuracyLabel),
-                            value: householdState.locationAccuracy != null
-                                ? '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}'
-                                : localizations
-                                    .translate(i18.common.coreCommonNA),
+                            value:
+                                '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}',
                           ),
                         ]),
                   ),

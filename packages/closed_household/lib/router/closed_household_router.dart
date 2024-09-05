@@ -4,10 +4,8 @@ import 'closed_household_router.gm.dart';
 
 @AutoRouterConfig.module()
 class ClosedHouseholdPackageRoute extends $ClosedHouseholdPackageRoute {
-  @override
   RouteType get defaultRouteType => const RouteType.material();
 
-  @override
   List<AutoRoute> routes = [
     AutoRoute(
         page: ClosedHouseholdWrapperRoute.page,
