@@ -134,6 +134,17 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 List<ServiceAttributesModel> attributes = [];
                                 for (int i = 0; i < controller.length; i++) {
                                   final attribute = initialAttributes;
+                                  /// Conditionally add the 'reason' field if additionalDetails is present
+                                  final String? additionalDetailValue = isHealthFacilityWorker &&
+                                      widget.referralClientRefId != null
+                                      ? null
+                                      : ((attribute?[i].values?.length == 2 || attribute?[i].values?.length == 3) &&
+                                      controller[i].text == attribute?[i].values?[1].trim())
+                                      ? additionalController[i].text.toString().isNotEmpty
+                                      ? additionalController[i].text.toString()
+                                      : null
+                                      : null;
+
                                   attributes.add(ServiceAttributesModel(
                                     auditDetails: AuditDetails(
                                       createdBy: context.loggedInUserUuid,
@@ -161,27 +172,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                         : i18.checklist.notSelectedKey,
                                     rowVersion: 1,
                                     tenantId: attribute?[i].tenantId,
-                                    additionalDetails: isHealthFacilityWorker &&
-                                        widget.referralClientRefId != null
-                                        ? null
-                                        : ((attribute?[i].values?.length == 2 ||
-                                        attribute?[i]
-                                            .values
-                                            ?.length ==
-                                            3) &&
-                                        controller[i].text ==
-                                            attribute?[i]
-                                                .values?[1]
-                                                .trim())
-                                        ? additionalController[i]
-                                        .text
-                                        .toString()
-                                        .isEmpty
-                                        ? null
-                                        : additionalController[i]
-                                        .text
-                                        .toString()
-                                        : null,
                                     additionalFields: ServiceAttributesAdditionalFields(
                                       version: 1,
                                       fields: [
@@ -191,6 +181,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                         AdditionalField(
                                           'longitude', longitude,
                                         ),
+                                        if(additionalDetailValue != null)
+                                          AdditionalField(
+                                            'reason', additionalDetailValue,
+                                          ),
                                       ],
                                     ),
                                   )
