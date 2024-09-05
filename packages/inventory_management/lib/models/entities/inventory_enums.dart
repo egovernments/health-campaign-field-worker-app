@@ -6,9 +6,9 @@ part 'inventory_enums.mapper.dart';
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum InventoryManagementEnums {
   @MappableValue("waybill_quantity")
-  waybill_quantity,
+  wayBillQuantity,
   @MappableValue("vehicle_number")
-  vehicle_number,
+  vehicleNumber,
   @MappableValue("comments")
   comments,
   @MappableValue("deliveryTeam")

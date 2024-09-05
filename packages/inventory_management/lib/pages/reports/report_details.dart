@@ -21,7 +21,6 @@ import '../../models/entities/stock.dart';
 import '../../models/entities/stock_reconciliation.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../facility_selection.dart';
 
 @RoutePage()
 class InventoryReportDetailsPage extends LocalizedStatefulWidget {
@@ -214,41 +213,9 @@ class InventoryReportDetailsPageState
                                                         [];
 
                                                 return InkWell(
-                                                  onTap: () async {
-                                                    final stockReconciliationBloc =
-                                                        context.read<
-                                                            StockReconciliationBloc>();
-
-                                                    final facility = await context
-                                                            .router
-                                                            .push(InventoryFacilitySelectionRoute(
-                                                                facilities:
-                                                                    facilities))
-                                                        as FacilityModel?;
-
-                                                    if (facility == null)
-                                                      return;
-                                                    form
-                                                            .control(_facilityKey)
-                                                            .value =
-                                                        localizations.translate(
-                                                      'FAC_${facility.id}',
-                                                    );
-
-                                                    setState(() {
-                                                      selectedFacilityId =
-                                                          facility.id;
-                                                    });
-                                                    stockReconciliationBloc.add(
-                                                      StockReconciliationSelectFacilityEvent(
-                                                        facility,
-                                                      ),
-                                                    );
-
-                                                    handleSelection(
-                                                        form,
-                                                        context.read<
-                                                            InventoryReportBloc>());
+                                                  onTap: () {
+                                                    handleFacilitySelection(
+                                                        form, facilities);
                                                   },
                                                   child: IgnorePointer(
                                                     child: DigitTextFormField(
@@ -269,48 +236,9 @@ class InventoryReportDetailsPageState
                                                           _facilityKey,
                                                       readOnly: false,
                                                       isRequired: true,
-                                                      onTap: () async {
-                                                        final stockReconciliationBloc =
-                                                            context.read<
-                                                                StockReconciliationBloc>();
-
-                                                        final facility = await context
-                                                                .router
-                                                                .push(InventoryFacilitySelectionRoute(
-                                                                    facilities:
-                                                                        facilities))
-                                                            as FacilityModel?;
-
-                                                        if (facility == null)
-                                                          return;
-                                                        form
-                                                                .control(
-                                                                    _facilityKey)
-                                                                .value =
-                                                            localizations
-                                                                .translate(
-                                                          'FAC_${facility.id}',
-                                                        );
-
-                                                        setState(() {
-                                                          selectedFacilityId =
-                                                              facility.id;
-                                                        });
-                                                        form
-                                                            .control(
-                                                                _facilityKey)
-                                                            .value = facility;
-                                                        stockReconciliationBloc
-                                                            .add(
-                                                          StockReconciliationSelectFacilityEvent(
-                                                            facility,
-                                                          ),
-                                                        );
-
-                                                        handleSelection(
-                                                            form,
-                                                            context.read<
-                                                                InventoryReportBloc>());
+                                                      onTap: () {
+                                                        handleFacilitySelection(
+                                                            form, facilities);
                                                       },
                                                     ),
                                                   ),
@@ -811,7 +739,9 @@ class InventoryReportDetailsPageState
     if (facility == null) {
       return;
     }
-    form.control(_facilityKey).value = facility;
+    form.control(_facilityKey).value = localizations.translate(
+      'FAC_${facility.id}',
+    );
     stockReconciliationBloc.add(
       StockReconciliationSelectFacilityEvent(
         facility,
