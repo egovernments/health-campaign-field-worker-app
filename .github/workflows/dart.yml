@@ -1,8 +1,3 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: Run analysis and tests
 
 on:
@@ -24,8 +19,35 @@ jobs:
         with:
           flutter-version: "3.22.1"
 
+      - name: Restore cache
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            .pub-cache
+            apps/**/.dart_tool
+            packages/**/.dart_tool
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      - name: Clean previous builds
+        run: flutter clean
+
+      - name: Install dependencies
+        run: flutter pub get
+
       - name: Generate models
         run: ./tools/install_bricks.sh
 
       - name: Analyze code
         run: melos run analyze
+
+      - name: Save cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            .pub-cache
+            apps/**/.dart_tool
+            packages/**/.dart_tool
+          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
