@@ -35,7 +35,7 @@ dev_dependencies:
   freezed: ^2.1.0+1
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
-  build_runner: ^2.4.7
+  build_runner: ^2.4.11
   bloc_test: ^9.1.0
   mocktail: ^1.0.2
   dart_mappable_builder:

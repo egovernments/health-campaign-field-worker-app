@@ -16,7 +16,7 @@ import 'package:location/location.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../blocs/attendance_individual_bloc.dart';
-import '../router/attendance_router.gr.dart';
+import '../router/attendance_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/circular_button.dart';
 import '../widgets/no_result_card.dart';

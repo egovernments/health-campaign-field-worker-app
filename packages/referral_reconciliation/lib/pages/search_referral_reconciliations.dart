@@ -2,7 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/router/digit_scanner_router.gr.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
@@ -10,7 +10,7 @@ import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 
 import '../blocs/search_referral_reconciliations.dart';
 import '../models/entities/hf_referral.dart';
-import '../router/referral_reconciliation_router.gr.dart';
+import '../router/referral_reconciliation_router.gm.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';

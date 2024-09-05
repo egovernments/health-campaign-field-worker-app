@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'dashboard_router.gr.dart';
+import 'dashboard_router.gm.dart';
 
-@AutoRouterConfig()
-class DashboardRoute extends RootStackRouter {
+@AutoRouterConfig.module()
+class DashboardRoute extends $DashboardRoute {
   @override
   RouteType get defaultRouteType => const RouteType.material();
 

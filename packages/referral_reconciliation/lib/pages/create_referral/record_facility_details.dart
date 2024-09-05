@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/models/entities/referral_recon_enums.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gr.dart';
+import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 
 import '../../../utils/i18_key_constants.dart' as i18;

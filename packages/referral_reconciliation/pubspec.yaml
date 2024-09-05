@@ -26,7 +26,6 @@ dependencies:
   uuid: ^4.4.0
   recase: ^4.1.0
   pluto_grid: ^8.0.0
-  build_runner: ^2.2.1
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
   sqlite3_flutter_libs: ^0.5.10

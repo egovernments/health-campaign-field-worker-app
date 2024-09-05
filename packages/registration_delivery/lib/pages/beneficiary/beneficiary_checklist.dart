@@ -11,7 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:registration_delivery/utils/constants.dart';
 
-import '../../router/registration_delivery_router.gr.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';

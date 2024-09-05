@@ -4,7 +4,7 @@ import 'package:digit_showcase/showcase_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
-import '../../router/registration_delivery_router.gr.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 import 'config/showcase_constants.dart';

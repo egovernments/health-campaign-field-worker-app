@@ -6,7 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../../router/registration_delivery_router.gr.dart';
+import '../../router/registration_delivery_router.gm.dart';
 
 @RoutePage()
 class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {

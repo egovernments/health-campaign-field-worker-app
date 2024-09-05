@@ -4,7 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
-import '../../../router/registration_delivery_router.gr.dart';
+import '../../../router/registration_delivery_router.gm.dart';
 import '../../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 
