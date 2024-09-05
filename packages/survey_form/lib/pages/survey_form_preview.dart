@@ -1,10 +1,8 @@
 import 'package:auto_route/annotations.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/widgets/atoms/digit_divider.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/digit_outline_button.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,6 +29,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -44,17 +43,23 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
               serviceSearch: (value1, value2, value3) {
                 return value2 != null
                     ? DigitCard(
-                        child: DigitElevatedButton(
-                          onPressed: () {
-                            context.read<ServiceBloc>().add(
-                                  ServiceResetEvent(serviceList: value1),
-                                );
-                          },
-                          child: Text(
-                            localizations.translate(i18.common.corecommonclose),
-                          ),
-                        ),
-                      )
+                        cardType: CardType.primary,
+                        margin: const EdgeInsets.only(top: spacer2),
+                        padding: const EdgeInsets.all(spacer2),
+                        children: [
+                            Button(
+                              mainAxisSize: MainAxisSize.max,
+                              label: localizations
+                                  .translate(i18.common.corecommonclose),
+                              type: ButtonType.primary,
+                              size: ButtonSize.large,
+                              onPressed: () {
+                                context.read<ServiceBloc>().add(
+                                      ServiceResetEvent(serviceList: value1),
+                                    );
+                              },
+                            ),
+                          ])
                     : const Offstage();
               },
             );
@@ -73,22 +78,20 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                               ...serviceList
                                   .map((e) => e.serviceDefId != null
                                       ? DigitCard(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
+                                          cardType: CardType.primary,
+                                          children: [
                                               Align(
                                                 alignment: Alignment.centerLeft,
                                                 child: Text(
                                                   DateFormat(Constants.SurveyFormPreviewDateFormat)
                                                       .format(
-                                                    DateFormat(Constants.defaultDateFormat)
+                                                    DateFormat(Constants
+                                                            .defaultDateFormat)
                                                         .parse(
                                                       e.createdAt.toString(),
                                                     ),
                                                   ),
-                                                  style: theme
-                                                      .textTheme.headlineMedium,
+                                                  style: textTheme.headingXl,
                                                 ),
                                               ),
                                               Row(
@@ -103,12 +106,13 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                       ),
                                                     ),
                                                   ),
-                                                  DigitOutLineButton(
-                                                    label:
-                                                        localizations.translate(
+                                                  Button(
+                                                    label: localizations.translate(
                                                       i18.searchBeneficiary
                                                           .iconLabel,
                                                     ),
+                                                    type: ButtonType.secondary,
+                                                    size: ButtonSize.medium,
                                                     onPressed: () {
                                                       context
                                                           .read<ServiceBloc>()
@@ -118,20 +122,10 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                             ),
                                                           );
                                                     },
-                                                    buttonStyle: OutlinedButton
-                                                        .styleFrom(
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.zero,
-                                                      ),
-                                                    ),
                                                   ),
                                                 ],
                                               ),
-                                            ],
-                                          ),
-                                        )
+                                            ])
                                       : const Offstage())
                                   .toList(),
                             ],
@@ -156,120 +150,113 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                             item2,
                           ) {
                             return DigitCard(
-                              child: Column(
+                              cardType: CardType.primary,
+                              children: [Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    margin: const EdgeInsets.all(8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            localizations.translate(
-                                              item2?.code ?? '',
-                                            ),
-                                            style:
-                                                theme.textTheme.displayMedium,
-                                          ),
-                                        ),
-                                        ...(selectedService.attributes ?? [])
-                                            .where((a) =>
-                                                a.value !=
-                                                    i18.surveyForm
-                                                        .notSelectedKey &&
-                                                a.value != '')
-                                            .map(
-                                              (e) => Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        localizations.translate(
-                                                          "${item2?.code ?? ''}.${e.attributeCode!}",
-                                                        ),
-                                                        style: theme.textTheme
-                                                            .headlineSmall,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: const EdgeInsets
-                                                              .only()
-                                                          .copyWith(
-                                                        top: kPadding,
-                                                        bottom: kPadding,
-                                                      ),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .centerLeft,
-                                                        child: Text(
-                                                          e.dataType ==
-                                                                  'SingleValueList'
-                                                              ? localizations
-                                                                  .translate(
-                                                                  'CORE_COMMON_${e.value.toString().toUpperCase()}',
-                                                                )
-                                                              : e.value ?? "",
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    e.additionalDetails != '' &&
-                                                            e.additionalDetails !=
-                                                                null
-                                                        ? Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only()
-                                                                    .copyWith(
-                                                              top: kPadding,
-                                                              bottom: kPadding,
-                                                            ),
-                                                            child: Column(
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    localizations
-                                                                        .translate(
-                                                                      "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    localizations
-                                                                        .translate(
-                                                                      e.additionalDetails,
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : const Offstage(),
-                                                    const DigitDivider(),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                      ].toList(),
+                                  Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      localizations.translate(
+                                        item2?.code ?? '',
+                                      ),
+                                      style:
+                                          theme.textTheme.displayMedium,
                                     ),
                                   ),
-                                ],
-                              ),
+                                  ...(selectedService.attributes ?? [])
+                                      .where((a) =>
+                                          a.value !=
+                                              i18.surveyForm
+                                                  .notSelectedKey &&
+                                          a.value != '')
+                                      .map(
+                                        (e) => Padding(
+                                          padding:
+                                              const EdgeInsets.all(8),
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            children: [
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerLeft,
+                                                child: Text(
+                                                  localizations.translate(
+                                                    "${item2?.code ?? ''}.${e.attributeCode!}",
+                                                  ),
+                                                  style: theme.textTheme
+                                                      .headlineSmall,
+                                                ),
+                                              ),
+                                              Container(
+                                                margin: const EdgeInsets
+                                                        .only()
+                                                    .copyWith(
+                                                  top: spacer2,
+                                                  bottom: spacer2,
+                                                ),
+                                                child: Align(
+                                                  alignment: Alignment
+                                                      .centerLeft,
+                                                  child: Text(
+                                                    e.dataType ==
+                                                            'SingleValueList'
+                                                        ? localizations
+                                                            .translate(
+                                                            'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                          )
+                                                        : e.value ?? "",
+                                                  ),
+                                                ),
+                                              ),
+                                              e.additionalDetails != '' &&
+                                                      e.additionalDetails !=
+                                                          null
+                                                  ? Container(
+                                                      margin:
+                                                          const EdgeInsets
+                                                                  .only()
+                                                              .copyWith(
+                                                        top: spacer2,
+                                                        bottom: spacer2,
+                                                      ),
+                                                      child: Column(
+                                                        children: [
+                                                          Align(
+                                                            alignment:
+                                                                Alignment
+                                                                    .centerLeft,
+                                                            child: Text(
+                                                              localizations
+                                                                  .translate(
+                                                                "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Align(
+                                                            alignment:
+                                                                Alignment
+                                                                    .centerLeft,
+                                                            child: Text(
+                                                              localizations
+                                                                  .translate(
+                                                                e.additionalDetails,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    )
+                                                  : const Offstage(),
+                                              const DigitDivider(),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                ].toList(),
+                              ),]
                             );
                           },
                           orElse: () => const Offstage(),
