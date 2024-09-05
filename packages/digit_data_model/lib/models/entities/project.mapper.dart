@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'project.dart';
@@ -151,10 +151,8 @@ mixin ProjectSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectSearchModel, other));
+    return ProjectSearchModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectSearchModel, other);
   }
 
   @override
@@ -448,10 +446,8 @@ mixin ProjectModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectModel, other));
+    return ProjectModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectModel, other);
   }
 
   @override
@@ -732,10 +728,8 @@ mixin ProjectAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as ProjectAdditionalFields, other));
+    return ProjectAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as ProjectAdditionalFields, other);
   }
 
   @override
@@ -865,10 +859,8 @@ mixin ProjectAdditionalDetailsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectAdditionalDetailsMapper.ensureInitialized()
-                .isValueEqual(this as ProjectAdditionalDetails, other));
+    return ProjectAdditionalDetailsMapper.ensureInitialized()
+        .equalsValue(this as ProjectAdditionalDetails, other);
   }
 
   @override

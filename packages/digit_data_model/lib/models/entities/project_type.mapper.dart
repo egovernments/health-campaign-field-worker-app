@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'project_type.dart';
@@ -171,10 +171,8 @@ mixin ProjectTypeModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectTypeModelMapper.ensureInitialized()
-                .isValueEqual(this as ProjectTypeModel, other));
+    return ProjectTypeModelMapper.ensureInitialized()
+        .equalsValue(this as ProjectTypeModel, other);
   }
 
   @override
@@ -450,10 +448,8 @@ mixin ProjectTypeAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectTypeAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as ProjectTypeAdditionalFields, other));
+    return ProjectTypeAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as ProjectTypeAdditionalFields, other);
   }
 
   @override
@@ -606,10 +602,8 @@ mixin ProjectCycleMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectCycleMapper.ensureInitialized()
-                .isValueEqual(this as ProjectCycle, other));
+    return ProjectCycleMapper.ensureInitialized()
+        .equalsValue(this as ProjectCycle, other);
   }
 
   @override
@@ -776,10 +770,8 @@ mixin ProjectCycleDeliveryMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProjectCycleDeliveryMapper.ensureInitialized()
-                .isValueEqual(this as ProjectCycleDelivery, other));
+    return ProjectCycleDeliveryMapper.ensureInitialized()
+        .equalsValue(this as ProjectCycleDelivery, other);
   }
 
   @override
@@ -946,10 +938,8 @@ mixin DeliveryDoseCriteriaMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DeliveryDoseCriteriaMapper.ensureInitialized()
-                .isValueEqual(this as DeliveryDoseCriteria, other));
+    return DeliveryDoseCriteriaMapper.ensureInitialized()
+        .equalsValue(this as DeliveryDoseCriteria, other);
   }
 
   @override
@@ -1099,10 +1089,8 @@ mixin DeliveryProductVariantMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            DeliveryProductVariantMapper.ensureInitialized()
-                .isValueEqual(this as DeliveryProductVariant, other));
+    return DeliveryProductVariantMapper.ensureInitialized()
+        .equalsValue(this as DeliveryProductVariant, other);
   }
 
   @override

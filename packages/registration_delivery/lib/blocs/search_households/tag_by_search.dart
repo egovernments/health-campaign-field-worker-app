@@ -99,7 +99,7 @@ class TagSearchBloc extends SearchHouseholdsBloc {
       ));
 
       // Search for tasks and side effects based on project beneficiaries.
-      final tasks = await fetchTaskbyProjectBeneficiary(beneficiaries);
+      final tasks = await fetchTaskByProjectBeneficiary(beneficiaries);
 
       final referrals = await referralDataRepository.search(ReferralSearchModel(
         projectBeneficiaryClientReferenceId:

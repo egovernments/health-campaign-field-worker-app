@@ -150,11 +150,6 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
           sideEffects,
         );
-        final isSideEffectRecorded = recordedSideEffect(
-          currentCycle,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
-          sideEffects,
-        );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskData);
         final isBeneficiaryReferred = checkIfBeneficiaryReferred(
           referralData,
