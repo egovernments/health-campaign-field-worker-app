@@ -29,7 +29,6 @@ dependencies:
   pluto_grid: ^8.0.0
   digit_scanner: ^1.0.0+1
   digit_components: ^1.0.1+1
-  build_runner: ^2.2.1
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
   sqlite3_flutter_libs: ^0.5.10
@@ -52,8 +51,8 @@ dev_dependencies:
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
   bloc_test: ^9.1.0
-  build_runner: ^2.4.11
   mocktail: ^1.0.2
+  build_runner: ^2.4.11
   dart_mappable_builder: ^4.2.2
   auto_route_generator: ^8.0.0
 

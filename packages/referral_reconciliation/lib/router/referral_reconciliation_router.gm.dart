@@ -30,9 +30,7 @@ import 'package:referral_reconciliation/pages/project_facility/project_facility_
 import 'package:referral_reconciliation/pages/search_referral_reconciliations.dart'
     as _i8;
 
-abstract class $ReferralReconciliationRoute extends _i9.RootStackRouter {
-  $ReferralReconciliationRoute({super.navigatorKey});
-
+abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
   @override
   final Map<String, _i9.PageFactory> pagesMap = {
     HFCreateReferralWrapperRoute.name: (routeData) {

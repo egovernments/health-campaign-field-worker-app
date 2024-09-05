@@ -18,9 +18,7 @@ import 'package:closed_household/pages/closed_household_summary.dart' as _i3;
 import 'package:closed_household/pages/closed_household_wrapper.dart' as _i4;
 import 'package:flutter/material.dart' as _i6;
 
-abstract class $ClosedHouseholdPackageRoute extends _i5.RootStackRouter {
-  $ClosedHouseholdPackageRoute({super.navigatorKey});
-
+abstract class $ClosedHouseholdPackageRoute extends _i5.AutoRouterModule {
   @override
   final Map<String, _i5.PageFactory> pagesMap = {
     ClosedHouseholdAcknowledgementRoute.name: (routeData) {

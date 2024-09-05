@@ -22,9 +22,7 @@ import 'package:attendance_management/widgets/attendance_acknowledgement.dart'
 import 'package:auto_route/auto_route.dart' as _i5;
 import 'package:flutter/material.dart' as _i6;
 
-abstract class $AttendanceRoute extends _i5.RootStackRouter {
-  $AttendanceRoute({super.navigatorKey});
-
+abstract class $AttendanceRoute extends _i5.AutoRouterModule {
   @override
   final Map<String, _i5.PageFactory> pagesMap = {
     AttendanceAcknowledgementRoute.name: (routeData) {

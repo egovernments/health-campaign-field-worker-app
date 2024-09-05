@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'closed_household_router.gr.dart';
+import 'closed_household_router.gm.dart';
 
-@AutoRouterConfig()
-class ClosedHouseholdPackageRoute extends RootStackRouter {
+@AutoRouterConfig.module()
+class ClosedHouseholdPackageRoute extends $ClosedHouseholdPackageRoute {
   @override
   RouteType get defaultRouteType => const RouteType.material();
 

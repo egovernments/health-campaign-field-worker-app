@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/blocs/closed_household.dart';
-import 'package:closed_household/router/closed_household_router.gr.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';

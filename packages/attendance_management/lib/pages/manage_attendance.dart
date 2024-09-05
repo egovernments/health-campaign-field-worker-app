@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
-import '../router/attendance_router.gr.dart';
+import '../router/attendance_router.gm.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../widgets/no_result_card.dart';

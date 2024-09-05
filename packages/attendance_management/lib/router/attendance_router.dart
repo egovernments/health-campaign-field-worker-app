@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'attendance_router.gr.dart';
+import 'attendance_router.gm.dart';
 
-@AutoRouterConfig()
-class AttendanceRoute extends RootStackRouter {
+@AutoRouterConfig.module()
+class AttendanceRoute extends $AttendanceRoute {
   @override
   RouteType get defaultRouteType => const RouteType.material();
 

@@ -11,7 +11,7 @@ import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/referral_management/referral_management.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/referral.dart';
-import '../../router/registration_delivery_router.gr.dart';
+import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';

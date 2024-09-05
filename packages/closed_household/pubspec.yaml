@@ -14,7 +14,6 @@ dependencies:
   digit_components: ^1.0.1+1
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
-  build_runner: ^2.2.1
   reactive_forms: ^17.0.0
   fluttertoast: ^8.1.2
   overlay_builder: ^1.1.0
@@ -58,6 +57,7 @@ dev_dependencies:
       ref: master
       path: ./packages/dart_mappable_builder
   auto_route_generator: ^8.0.0
+  build_runner: ^2.4.11
   isar_generator: ^3.1.0+1
 
 flutter:

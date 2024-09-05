@@ -7,7 +7,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../blocs/household_overview/household_overview.dart';
-import '../router/registration_delivery_router.gr.dart';
+import '../router/registration_delivery_router.gm.dart';
 import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';

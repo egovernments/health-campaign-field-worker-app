@@ -1,9 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 
-import 'inventory_router.gr.dart';
+import 'inventory_router.gm.dart';
 
-@AutoRouterConfig()
-class InventoryRoute extends RootStackRouter {
+@AutoRouterConfig.module()
+class InventoryRoute extends $InventoryRoute {
   @override
   RouteType get defaultRouteType => const RouteType.material();
 

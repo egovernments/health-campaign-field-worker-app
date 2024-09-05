@@ -1,20 +1,16 @@
 import 'package:attendance_management/router/attendance_router.dart';
-import 'package:attendance_management/router/attendance_router.gr.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/router/closed_household_router.dart';
-import 'package:closed_household/router/closed_household_router.gr.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
-import 'package:digit_dss/router/dashboard_router.gr.dart';
+import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
-import 'package:digit_scanner/router/digit_scanner_router.gr.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
-import 'package:inventory_management/router/inventory_router.gr.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
-import 'package:referral_reconciliation/router/referral_reconciliation_router.gr.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
-import 'package:registration_delivery/router/registration_delivery_router.gr.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -50,16 +46,16 @@ export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
 
-final registrationDeliveryRoute = RegistrationDeliveryRoute();
-final closedHouseholdRoute = ClosedHouseholdPackageRoute();
-final inventoryRoute = InventoryRoute();
-final attendanceRoute = AttendanceRoute();
-final referralReconciliationRoute = ReferralReconciliationRoute();
-final digitScannerRoute = DigitScannerPackageRoute();
-final dashboardRoute = DashboardRoute();
-
-@AutoRouterConfig()
-class AppRouter extends RootStackRouter {
+@AutoRouterConfig(modules: [
+  RegistrationDeliveryRoute,
+  ClosedHouseholdPackageRoute,
+  InventoryRoute,
+  AttendanceRoute,
+  ReferralReconciliationRoute,
+  DigitScannerPackageRoute,
+  DashboardRoute
+])
+class AppRouter extends _$AppRouter {
   @override
   RouteType get defaultRouteType => const RouteType.material();
 
@@ -94,10 +90,10 @@ class AppRouter extends RootStackRouter {
           page: UserDashboardRoute.page,
           path: 'dashboard',
         ),
-        ...registrationDeliveryRoute.routes,
+        ...RegistrationDeliveryRoute().routes,
 
         /// close household
-        ...closedHouseholdRoute.routes,
+        ...ClosedHouseholdPackageRoute().routes,
 
         AutoRoute(
             page: ChecklistWrapperRoute.page,
@@ -194,13 +190,13 @@ class AppRouter extends RootStackRouter {
         ),
 
         // Attendance Route
-        ...attendanceRoute.routes,
+        ...AttendanceRoute().routes,
 
         //Inventory Route
-        ...inventoryRoute.routes,
+        ...InventoryRoute().routes,
 
         // Referral Reconciliation Route
-        ...referralReconciliationRoute.routes,
+        ...ReferralReconciliationRoute().routes,
       ],
     )
   ];
