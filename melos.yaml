@@ -14,16 +14,17 @@ command:
       post: melos generate
 
 scripts:
-
   generate:
-    description: Generate code for all packages.
-    run: melos run generate-flutter --no-select && melos run generate-dart --no-select
+    description: Generate code for all packages (Flutter and Dart).
+    run: |
+      melos run generate-flutter --no-select &
+      melos run generate-dart --no-select
     exec:
-      concurrency: 1
+      concurrency: 2
 
   generate-flutter:
-    description: Generate code for all flutter packages.
-    run: flutter packages run build_runner build --delete-conflicting-outputs
+    description: Generate code for all Flutter packages.
+    run: flutter packages run build_runner build
     exec:
       concurrency: 1
     packageFilters:
@@ -32,8 +33,8 @@ scripts:
         - build_runner
 
   generate-dart:
-    description: Generate code for all packages.
-    run: dart run build_runner build --delete-conflicting-outputs
+    description: Generate code for all Dart packages.
+    run: dart run build_runner build
     exec:
       concurrency: 1
     packageFilters:
@@ -44,7 +45,7 @@ scripts:
 
   generate-hooks:
     description: Generate hooks for all packages.
-    run: dart run build_runner build --delete-conflicting-outputs
+    run: dart run build_runner build
     exec:
       concurrency: 1
     packageFilters:
@@ -80,7 +81,7 @@ scripts:
     description: Run all Flutter tests in this project.
     run: melos run test --no-select
     exec:
-      concurrency: 1
+      concurrency: 2
     packageFilters:
       flutter: true
       dirExists: test
@@ -100,4 +101,3 @@ scripts:
       concurrency: 1
     packageFilters:
       dart: true
-
