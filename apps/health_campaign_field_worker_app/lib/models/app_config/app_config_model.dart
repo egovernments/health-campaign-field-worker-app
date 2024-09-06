@@ -1,4 +1,3 @@
-import 'package:digit_dss/digit_dss.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../privacy_notice/privacy_notice_model.dart';

@@ -92,21 +92,7 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
               fetched:
                   (metricData, tableData, selectedDate, isNetworkError) async {
                 bool isConnected = await getIsConnected();
-                if (isConnected) {
-                  context.read<DashboardBloc>().add(DashboardRefreshEvent(
-                        projectId: DashboardSingleton().projectId,
-                        syncFromServer: true,
-                        selectedDate: selectedDate ?? DateTime.now(),
-                      ));
-                } else {
-                  DigitToast.show(context,
-                      options: DigitToastOptions(
-                        localizations
-                            .translate(i18.dashboard.networkFailureError),
-                        true,
-                        DigitTheme.instance.mobileTheme,
-                      ));
-                }
+                fetchData(isConnected, selectedDate);
               });
 
           return Future<void>.delayed(const Duration(seconds: 1));
@@ -154,9 +140,7 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                                     columnWidth:
                                         MediaQuery.of(context).size.width / 2,
                                     columnRowFixedHeight: 65,
-                                    scrollPhysics: (table.tableData.length ??
-                                                0) >
-                                            5
+                                    scrollPhysics: (table.tableData.length) > 5
                                         ? const ClampingScrollPhysics()
                                         : const NeverScrollableScrollPhysics(),
                                   ),
@@ -180,5 +164,22 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
         ),
       );
     });
+  }
+
+  void fetchData(bool isConnected, DateTime? selectedDate) {
+    if (isConnected) {
+      context.read<DashboardBloc>().add(DashboardRefreshEvent(
+            projectId: DashboardSingleton().projectId,
+            syncFromServer: true,
+            selectedDate: selectedDate ?? DateTime.now(),
+          ));
+    } else {
+      DigitToast.show(context,
+          options: DigitToastOptions(
+            localizations.translate(i18.dashboard.networkFailureError),
+            true,
+            DigitTheme.instance.mobileTheme,
+          ));
+    }
   }
 }
