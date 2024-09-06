@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -10,6 +10,7 @@ import 'package:referral_reconciliation/models/entities/referral_recon_enums.dar
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 
+import '../../../utils/date_utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../blocs/referral_recon_record.dart';
 import '../../utils/utils.dart';
@@ -24,7 +25,7 @@ class ReferralFacilityPage extends LocalizedStatefulWidget {
   const ReferralFacilityPage({
     super.key,
     super.appLocalizations,
-    this.isEditing = false,
+    this.isEditing = false,show
   });
 
   @override
@@ -52,7 +53,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
     setState(() {
       selectedProjectFacilityId = referralState.mapOrNull(
         create: (value) =>
-            value.viewOnly ? value.hfReferralModel?.projectFacilityId : null,
+        value.viewOnly ? value.hfReferralModel?.projectFacilityId : null,
       );
     });
     super.initState();
@@ -79,286 +80,283 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
 
             return facilities.isNotEmpty
                 ? Scaffold(
-                    body: BlocBuilder<RecordHFReferralBloc,
-                        RecordHFReferralState>(
-                      builder: (context, recordState) {
-                        final bool viewOnly = recordState.mapOrNull(
-                              create: (value) => value.viewOnly,
-                            ) ??
-                            false;
+              body: BlocBuilder<RecordHFReferralBloc,
+                  RecordHFReferralState>(
+                builder: (context, recordState) {
+                  final bool viewOnly = recordState.mapOrNull(
+                    create: (value) => value.viewOnly,
+                  ) ??
+                      false;
 
-                        return ReactiveFormBuilder(
-                          form: () => buildForm(recordState, projectFacilities),
-                          builder: (context, form, child) => ScrollableContent(
-                            enableFixedButton: true,
-                            header: const Column(children: [
-                              BackNavigationHelpHeaderWidget(),
-                            ]),
-                            footer: DigitCard(
-                              margin:
-                                  const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                              padding: const EdgeInsets.fromLTRB(
-                                  kPadding, 0, kPadding, 0),
-                              child: ValueListenableBuilder(
-                                valueListenable: clickedStatus,
-                                builder: (context, bool isClicked, _) {
-                                  return DigitElevatedButton(
-                                    onPressed: () {
-                                      form.markAllAsTouched();
-                                      if (!form.valid) {
-                                        return;
+                  return ReactiveFormBuilder(
+                    form: () => buildForm(recordState, projectFacilities),
+                    builder: (context, form, child) => ScrollableContent(
+                      enableFixedButton: true,
+                      header: const Column(children: [
+                        BackNavigationHelpHeaderWidget(),
+                      ]),
+                      footer: DigitCard(
+                          margin:
+                          EdgeInsets.fromLTRB(0, theme.spacerTheme.spacer2, 0, 0),
+                          padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                          cardType: CardType.primary,
+                          children: [ValueListenableBuilder(
+                            valueListenable: clickedStatus,
+                            builder: (context, bool isClicked, _) {
+                              return Button(
+                                size: ButtonSize.large,
+                                label: localizations.translate(
+                                  i18.common.coreCommonNext,
+                                ),
+                                onPressed: () {
+                                  form.markAllAsTouched();
+                                  if (!form.valid) {
+                                    return;
+                                  } else {
+                                    clickedStatus.value = true;
+                                    if (viewOnly) {
+                                      context.router.push(
+                                        RecordReferralDetailsRoute(
+                                          projectId:
+                                          ReferralReconSingleton()
+                                              .projectId,
+                                          cycles: ReferralReconSingleton()
+                                              .cycles,
+                                        ),
+                                      );
+                                    } else {
+                                      final evaluationFacility =
+                                          selectedProjectFacilityId;
+                                      if (evaluationFacility == null) {
+                                        Toast.showToast(
+                                          context,
+                                          message: 'Facility is mandatory',
+                                          type: ToastType.error,
+                                        );
                                       } else {
-                                        clickedStatus.value = true;
-                                        if (viewOnly) {
-                                          context.router.push(
+                                        final dateOfEvaluation = form
+                                            .control(_dateOfEvaluationKey)
+                                            .value as DateTime;
+                                        final hfCoordinator = form
+                                            .control(_hfCoordinatorKey)
+                                            .value as String?;
+                                        final referredByTeam = form
+                                            .control(_referredByKey)
+                                            .value as String?;
+
+                                        final event = context
+                                            .read<RecordHFReferralBloc>();
+                                        event.add(
+                                          RecordHFReferralSaveFacilityDetailsEvent(
+                                            dateOfEvaluation:
+                                            dateOfEvaluation,
+                                            facilityId: evaluationFacility
+                                                .toString(),
+                                            healthFacilityCord:
+                                            hfCoordinator,
+                                            referredBy: referredByTeam,
+                                          ),
+                                        );
+
+                                        context.router.push(
                                             RecordReferralDetailsRoute(
                                               projectId:
-                                                  ReferralReconSingleton()
-                                                      .projectId,
-                                              cycles: ReferralReconSingleton()
-                                                  .cycles,
-                                            ),
-                                          );
-                                        } else {
-                                          final evaluationFacility =
-                                              selectedProjectFacilityId;
-                                          if (evaluationFacility == null) {
-                                            DigitToast.show(
-                                              context,
-                                              options: DigitToastOptions(
-                                                'Facility is mandatory',
-                                                true,
-                                                theme,
-                                              ),
-                                            );
-                                          } else {
-                                            final dateOfEvaluation = form
-                                                .control(_dateOfEvaluationKey)
-                                                .value as DateTime;
-                                            final hfCoordinator = form
-                                                .control(_hfCoordinatorKey)
-                                                .value as String?;
-                                            final referredByTeam = form
-                                                .control(_referredByKey)
-                                                .value as String?;
-
-                                            final event = context
-                                                .read<RecordHFReferralBloc>();
-                                            event.add(
-                                              RecordHFReferralSaveFacilityDetailsEvent(
-                                                dateOfEvaluation:
-                                                    dateOfEvaluation,
-                                                facilityId: evaluationFacility
-                                                    .toString(),
-                                                healthFacilityCord:
-                                                    hfCoordinator,
-                                                referredBy: referredByTeam,
-                                              ),
-                                            );
-
-                                            context.router.push(
-                                                RecordReferralDetailsRoute(
-                                              projectId:
-                                                  ReferralReconSingleton()
-                                                      .projectId,
+                                              ReferralReconSingleton()
+                                                  .projectId,
                                               cycles: ReferralReconSingleton()
                                                   .cycles,
                                             ));
-                                          }
-                                        }
                                       }
-                                    },
-                                    child: Center(
-                                      child: Text(
+                                    }
+                                  }
+                                },
+                                type: ButtonType.primary,
+                                mainAxisSize: MainAxisSize.max,
+                              );
+                            },
+                          ),]
+                      ),
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: DigitCard(
+                              cardType: CardType.primary,
+                              children: [
+                                Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.referralReconciliation
+                                            .facilityDetails,
+                                      ),
+                                      style:
+                                      theme.textTheme.displayMedium,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              ReactiveWrapperField<String>(
+                                  formControlName: _administrativeUnitKey,
+                                  builder: (field){
+                                    return LabeledField(
+                                    isRequired: true,
+                                    label: localizations.translate(
+                                      i18.referralReconciliation
+                                          .administrationUnitFormLabel,
+                                    ),
+                                    child: DigitTextFormInput(
+                                      readOnly: true,
+                                      initialValue: field.value,
+                                    ),
+                                  );}
+                              ),
+                              ReactiveWrapperField(
+                                  formControlName: _dateOfEvaluationKey,
+                                  validationMessages: {
+                                    'required': (_) =>
                                         localizations.translate(
-                                          i18.common.coreCommonNext,
+                                          i18.common.corecommonRequired,
                                         ),
+                                  },
+                                  showErrors: (control) => control.invalid && control.touched,  // Ensures error is shown if invalid and touched
+                                  builder: (field){
+                                    return LabeledField(
+                                    isRequired: true,
+                                    label: localizations.translate(
+                                      i18.referralReconciliation
+                                          .dateOfEvaluationLabel,
+                                    ),
+                                    child: DigitDateFormInput(
+                                      onChange: (val) => {
+                                        form.control(_dateOfEvaluationKey).markAsTouched(),
+                                        form.control(_dateOfEvaluationKey).value = DigitDateUtils.getFormattedDateToDateTime(val),
+                                      },
+                                      readOnly: viewOnly,
+                                      errorMessage: field.errorText,
+                                      initialValue: DigitDateUtils.getDateString(form.control(_dateOfEvaluationKey).value),
+
+                                      lastDate: DateTime.now(),
+                                      cancelText: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      confirmText: localizations.translate(
+                                        i18.common.coreCommonOk,
                                       ),
                                     ),
-                                  );
-                                },
+                                  );}
                               ),
-                            ),
-                            slivers: [
-                              SliverToBoxAdapter(
-                                child: DigitCard(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              localizations.translate(
-                                                i18.referralReconciliation
-                                                    .facilityDetails,
-                                              ),
-                                              style:
-                                                  theme.textTheme.displayMedium,
+                              InkWell(
+                                onTap: viewOnly
+                                    ? null
+                                    : () async {
+                                  final facility =
+                                  await Navigator.of(
+                                      context)
+                                      .push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          ReferralReconProjectFacilitySelectionPage(
+                                            projectFacilities:
+                                            facilities,
+                                          ),
+                                    ),
+                                  );
+
+                                  if (facility == null) return;
+                                  form
+                                      .control(
+                                    _evaluationFacilityKey,
+                                  )
+                                      .value =
+                                      localizations.translate(
+                                          'PJ_FAC_${facility.id}');
+                                  setState(() {
+                                    selectedProjectFacilityId =
+                                        facility.id;
+                                  });
+                                },
+                                child: IgnorePointer(
+                                  child: ReactiveWrapperField<String>(
+                                      validationMessages: {
+                                        'required': (_) =>
+                                            localizations.translate(
+                                              i18.referralReconciliation
+                                                  .facilityValidationMessage,
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                      Column(children: [
-                                        DigitTextFormField(
-                                          formControlName:
-                                              _administrativeUnitKey,
-                                          label: localizations.translate(
-                                            i18.referralReconciliation
-                                                .administrationUnitFormLabel,
-                                          ),
-                                          isRequired: true,
-                                          readOnly: true,
+                                      },
+                                      formControlName: _evaluationFacilityKey,
+                                      showErrors: (control) => control.invalid && control.touched,  // Ensures error is shown if invalid and touched
+                                      builder: (field){return LabeledField(
+                                        isRequired: true,
+                                        label: localizations.translate(
+                                          i18.referralReconciliation
+                                              .evaluationFacilityLabel,
                                         ),
-                                        DigitDateFormPicker(
-                                          formControlName: _dateOfEvaluationKey,
-                                          label: localizations.translate(
-                                            i18.referralReconciliation
-                                                .dateOfEvaluationLabel,
-                                          ),
-                                          isEnabled: !viewOnly,
-                                          isRequired: true,
-                                          initialDate: DateTime.now(),
-                                          cancelText: localizations.translate(
-                                            i18.common.coreCommonCancel,
-                                          ),
-                                          confirmText: localizations.translate(
-                                            i18.common.coreCommonOk,
-                                          ),
-                                          padding: const EdgeInsets.only(
-                                            bottom: kPadding,
-                                            top: kPadding,
-                                          ),
-                                          lastDate: DateTime.now(),
-                                          validationMessages: {
-                                            'required': (_) =>
-                                                localizations.translate(
-                                                  i18.common.corecommonRequired,
-                                                ),
+                                        child: DigitSearchFormInput(
+                                          onChange: (val) => {
+                                            form.control(_evaluationFacilityKey).markAsTouched(),
+                                            form.control(_evaluationFacilityKey).value = val,
                                           },
-                                        ),
-                                        InkWell(
-                                          onTap: viewOnly
-                                              ? null
-                                              : () async {
-                                                  final facility =
-                                                      await Navigator.of(
-                                                              context)
-                                                          .push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          ReferralReconProjectFacilitySelectionPage(
-                                                        projectFacilities:
-                                                            facilities,
-                                                      ),
-                                                    ),
-                                                  );
-
-                                                  if (facility == null) return;
-                                                  form
-                                                          .control(
-                                                            _evaluationFacilityKey,
-                                                          )
-                                                          .value =
-                                                      localizations.translate(
-                                                          'PJ_FAC_${facility.id}');
-                                                  setState(() {
-                                                    selectedProjectFacilityId =
-                                                        facility.id;
-                                                  });
-                                                },
-                                          child: IgnorePointer(
-                                            child: DigitTextFormField(
-                                              hideKeyboard: true,
-                                              readOnly: viewOnly,
-                                              label: localizations.translate(
-                                                i18.referralReconciliation
-                                                    .evaluationFacilityLabel,
-                                              ),
-                                              isRequired: true,
-                                              suffix: const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Icon(Icons.search),
-                                              ),
-                                              formControlName:
-                                                  _evaluationFacilityKey,
-                                              validationMessages: {
-                                                'required': (_) =>
-                                                    localizations.translate(
-                                                      i18.referralReconciliation
-                                                          .facilityValidationMessage,
-                                                    ),
-                                              },
-                                              onTap: viewOnly
-                                                  ? null
-                                                  : () async {
-                                                      final facility =
-                                                          await Navigator.of(
-                                                                  context)
-                                                              .push(
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              ReferralReconProjectFacilitySelectionPage(
-                                                            projectFacilities:
-                                                                facilities,
-                                                          ),
-                                                        ),
-                                                      );
-
-                                                      if (facility == null)
-                                                        return;
-                                                      form
-                                                              .control(
-                                                                _evaluationFacilityKey,
-                                                              )
-                                                              .value =
-                                                          localizations
-                                                              .translate(
-                                                        'PJ_FAC_${facility.id}',
-                                                      );
-                                                      setState(() {
-                                                        selectedProjectFacilityId =
-                                                            facility.id;
-                                                      });
-                                                    },
-                                            ),
-                                          ),
-                                        ),
-                                        DigitTextFormField(
-                                          formControlName: _hfCoordinatorKey,
-                                          label: localizations.translate(
-                                            i18.referralReconciliation
-                                                .healthFacilityCoordinatorLabel,
-                                          ),
                                           readOnly: viewOnly,
+                                          errorMessage: field.errorText,
+                                          initialValue: form.control(_evaluationFacilityKey).value,
                                         ),
-                                        DigitTextFormField(
-                                          formControlName: _referredByKey,
-                                          label: localizations.translate(
-                                            i18.referralReconciliation
-                                                .referredByTeamCodeLabel,
-                                          ),
-                                          readOnly: viewOnly,
-                                        ),
-                                      ]),
-                                    ],
+                                      );}
                                   ),
                                 ),
                               ),
-                            ],
+                              ReactiveWrapperField<String>(
+                                  formControlName: _hfCoordinatorKey,
+                                  builder: (field){
+                                    return LabeledField(
+                                      label: localizations.translate(
+                                        i18.referralReconciliation
+                                            .healthFacilityCoordinatorLabel,
+                                      ),
+                                      child: DigitTextFormInput(
+                                        onChange: (val) => {
+                                          form.control(_hfCoordinatorKey).markAsTouched(),
+                                          form.control(_hfCoordinatorKey).value = val,
+                                        },
+                                        readOnly: viewOnly,
+                                        initialValue: form.control(_hfCoordinatorKey).value,
+                                      )
+                                  );}
+                              ),
+                              ReactiveWrapperField<String>(
+                                  formControlName: _referredByKey,
+                                  builder: (field){return LabeledField(
+                                      label: localizations.translate(
+                                        i18.referralReconciliation
+                                            .referredByTeamCodeLabel,
+                                      ),
+                                      child: DigitTextFormInput(
+                                        onChange: (val) => {
+                                          form.control(_referredByKey).markAsTouched(),
+                                          form.control(_referredByKey).value = val,
+                                        },
+                                        readOnly: viewOnly,
+                                        initialValue: form.control(_referredByKey).value,
+                                      )
+                                  );}
+                              ),]
                           ),
-                        );
-                      },
-                    ),
-                  )
-                : Center(
-                    child: Text(
-                      localizations.translate(
-                        i18.referralReconciliation.noFacilitiesAssigned,
-                      ),
+                        ),
+                      ],
                     ),
                   );
+                },
+              ),
+            )
+                : Center(
+              child: Text(
+                localizations.translate(
+                  i18.referralReconciliation.noFacilitiesAssigned,
+                ),
+              ),
+            );
           },
           loading: () => const Center(
             child: CircularProgressIndicator(),
@@ -376,32 +374,32 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
   }
 
   FormGroup buildForm(
-    RecordHFReferralState referralState,
-    List<ProjectFacilityModel> facilities,
-  ) {
+      RecordHFReferralState referralState,
+      List<ProjectFacilityModel> facilities,
+      ) {
     final dateOfEvaluation = referralState.mapOrNull(
       create: (value) => value.viewOnly &&
-              value.hfReferralModel?.additionalFields?.fields
-                      .where((e) =>
-                          e.key ==
-                          ReferralReconEnums.dateOfEvaluation.toValue())
-                      .firstOrNull
-                      ?.value !=
-                  null
+          value.hfReferralModel?.additionalFields?.fields
+              .where((e) =>
+          e.key ==
+              ReferralReconEnums.dateOfEvaluation.toValue())
+              .firstOrNull
+              ?.value !=
+              null
           ? DigitDateUtils.getFormattedDateToDateTime(
-              DigitDateUtils.getDateFromTimestamp(
-                int.tryParse(value.hfReferralModel?.additionalFields?.fields
-                            .where((e) =>
-                                e.key ==
-                                ReferralReconEnums.dateOfEvaluation.toValue())
-                            .firstOrNull
-                            ?.value
-                            .toString() ??
-                        '') ??
-                    DateTime.now().millisecondsSinceEpoch,
-                dateFormat: defaultDateFormat,
-              ),
-            )
+        DigitDateUtils.getDateFromTimestamp(
+          int.tryParse(value.hfReferralModel?.additionalFields?.fields
+              .where((e) =>
+          e.key ==
+              ReferralReconEnums.dateOfEvaluation.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
+              '') ??
+              DateTime.now().millisecondsSinceEpoch,
+          dateFormat: defaultDateFormat,
+        ),
+      )
           : DateTime.now(),
     );
 
@@ -420,19 +418,19 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
       _hfCoordinatorKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where((e) =>
-                              e.key ==
-                              ReferralReconEnums.hFCoordinator.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? value.hfReferralModel?.additionalFields?.fields
+              value.hfReferralModel?.additionalFields?.fields
                   .where((e) =>
-                      e.key == ReferralReconEnums.hFCoordinator.toValue())
+              e.key ==
+                  ReferralReconEnums.hFCoordinator.toValue())
                   .firstOrNull
-                  ?.value
-                  .toString()
+                  ?.value !=
+                  null
+              ? value.hfReferralModel?.additionalFields?.fields
+              .where((e) =>
+          e.key == ReferralReconEnums.hFCoordinator.toValue())
+              .firstOrNull
+              ?.value
+              .toString()
               : ReferralReconSingleton().userName,
         ),
       ),
@@ -440,10 +438,10 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly
               ? localizations.translate(
-                  'PJ_FAC_${facilities.where(
-                        (e) => e.id == value.hfReferralModel?.projectFacilityId,
-                      ).first.id.toString()}',
-                )
+            'PJ_FAC_${facilities.where(
+                  (e) => e.id == value.hfReferralModel?.projectFacilityId,
+            ).first.id.toString()}',
+          )
               : null,
         ),
         validators: [Validators.required],
@@ -451,18 +449,18 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
       _referredByKey: FormControl<String>(
         value: referralState.mapOrNull(
           create: (value) => value.viewOnly &&
-                  value.hfReferralModel?.additionalFields?.fields
-                          .where((e) =>
-                              e.key == ReferralReconEnums.referredBy.toValue())
-                          .firstOrNull
-                          ?.value !=
-                      null
-              ? value.hfReferralModel?.additionalFields?.fields
-                  .where(
-                      (e) => e.key == ReferralReconEnums.referredBy.toValue())
+              value.hfReferralModel?.additionalFields?.fields
+                  .where((e) =>
+              e.key == ReferralReconEnums.referredBy.toValue())
                   .firstOrNull
-                  ?.value
-                  .toString()
+                  ?.value !=
+                  null
+              ? value.hfReferralModel?.additionalFields?.fields
+              .where(
+                  (e) => e.key == ReferralReconEnums.referredBy.toValue())
+              .firstOrNull
+              ?.value
+              .toString()
               : null,
         ),
       ),

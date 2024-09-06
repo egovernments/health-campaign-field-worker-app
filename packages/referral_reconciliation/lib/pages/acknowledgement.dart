@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
@@ -32,26 +35,31 @@ class _AcknowledgementPageState
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: DigitAcknowledgement.success(
-        description: widget.description ??
-            localizations.translate(
-              i18.acknowledgementSuccess.acknowledgementDescriptionText,
-            ),
-        descriptionWidget: widget.isDataRecordSuccess
-            ? DigitTableCard(
-                element: widget.descriptionTableData ?? {},
-              )
-            : null,
-        label: widget.label ??
-            localizations.translate(
-              i18.acknowledgementSuccess.acknowledgementLabelText,
-            ),
-        action: () {
-          context.router.popUntilRoot();
-        },
-        enableBackToSearch: widget.isDataRecordSuccess ? false : true,
-        actionLabel:
-            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+      body: DigitCard(
+          cardType: CardType.primary,
+        children: [
+          PanelCard(
+          type: PanelType.success,
+          title: widget.label ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementLabelText,
+              ),
+          description: widget.description ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementDescriptionText,
+              ),
+                actions: [
+                  Button(
+                      label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+                      onPressed: () {
+                        context.router.popUntilRoot();
+                      },
+                      type: ButtonType.primary,
+                    size: ButtonSize.large,
+                    mainAxisSize: MainAxisSize.max,
+                  )
+                ]
+        ),]
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
@@ -59,13 +67,17 @@ class _AcknowledgementPageState
         child: SizedBox(
           height: 150,
           child: DigitCard(
-            margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-            child: Column(
+            cardType: CardType.primary,
+            margin: EdgeInsets.fromLTRB(0, theme.spacerTheme.spacer2, 0, 0),
+            padding: EdgeInsets.fromLTRB(theme.spacerTheme.spacer2, 0, theme.spacerTheme.spacer2, 0),
+            children: [Column(
               children: [
-                DigitElevatedButton(
-                  child: Text(localizations
-                      .translate(i18.acknowledgementSuccess.goToHome)),
+                Button(
+                  size: ButtonSize.large,
+                  type: ButtonType.primary,
+                  mainAxisSize: MainAxisSize.max,
+                  label: localizations
+                      .translate(i18.acknowledgementSuccess.goToHome),
                   onPressed: () {
                     context.router.popUntilRoot();
                   },
@@ -73,29 +85,18 @@ class _AcknowledgementPageState
                 const SizedBox(
                   height: 12,
                 ),
-                DigitOutLineButton(
+                Button(
+                  size: ButtonSize.large,
+                  type: ButtonType.secondary,
+                  mainAxisSize: MainAxisSize.max,
                   onPressed: () {
                     context.router.popUntilRoot();
                   },
                   label: localizations
                       .translate(i18.acknowledgementSuccess.downloadmoredata),
-                  buttonStyle: OutlinedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
-                    ),
-                    side: BorderSide(
-                      width: 1.0,
-                      color: theme.colorScheme.secondary,
-                    ),
-                    minimumSize: Size(
-                      MediaQuery.of(context).size.width,
-                      50,
-                    ),
-                  ),
                 ),
               ],
-            ),
+            ),]
           ),
         ),
       ),
