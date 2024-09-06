@@ -105,8 +105,6 @@ class _BeneficiaryChecklistPageState
                         const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: DigitElevatedButton(
                       onPressed: () async {
-                        // TODO: Submit checklist
-                        final router = context.router;
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(

@@ -4,7 +4,6 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:referral_reconciliation/blocs/app_localization.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 import 'package:referral_reconciliation/widgets/localized.dart';
 
@@ -48,7 +47,7 @@ class _ReferralReconProjectFacilitySelectionPageState
           body: ReactiveFormConsumer(
             builder: (context, form, _) {
               final filteredProjectFacilities =
-                  (widget.projectFacilities ?? []).isNotEmpty
+                  (widget.projectFacilities).isNotEmpty
                       ? widget.projectFacilities.where((element) {
                           final query =
                               form.control(_facilityName).value as String?;

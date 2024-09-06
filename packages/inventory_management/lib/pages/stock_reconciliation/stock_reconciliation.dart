@@ -45,13 +45,12 @@ class StockReconciliationPageState
         validators: isDistributor ? [] : [Validators.required],
       ),
       _productVariantKey: FormControl<ProductVariantModel>(),
-      _manualCountKey: FormControl<int>(
-        value: 0,
+      _manualCountKey: FormControl<String>(
+        value: '0',
         validators: [
           Validators.number(),
           Validators.required,
-          Validators.min(0),
-          Validators.max(10000)
+          Validators.delegate(CustomValidator.validStockCount)
         ],
       ),
       _reconciliationCommentsKey: FormControl<String>(),

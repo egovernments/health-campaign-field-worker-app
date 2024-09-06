@@ -752,7 +752,7 @@ class _HouseholdOverviewPageState
     if (project?.startDate != null && project?.endDate != null) {
       final now = DateTime.now().millisecondsSinceEpoch;
       final startDate = project!.startDate!;
-      final endDate = project!.endDate!;
+      final endDate = project.endDate!;
 
       return now < startDate || now > endDate;
     }

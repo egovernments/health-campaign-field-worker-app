@@ -35,16 +35,12 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
 
   @override
   void initState() {
-    final registrationState = context.read<HouseholdOverviewBloc>().state;
-
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bloc = context.read<HouseholdOverviewBloc>();
-    final router = context.router;
 
     return Scaffold(
       body: ReactiveFormBuilder(

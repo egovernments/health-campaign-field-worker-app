@@ -5,6 +5,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/widgets/localized.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_commons/google_mlkit_commons.dart';
@@ -254,9 +255,15 @@ class _CameraViewState extends State<CameraView> {
       });
       _controller?.getMinExposureOffset().then((value) {
         _minAvailableExposureOffset = value;
+        if (kDebugMode) {
+          print('minAvailableExposureOffset: $_minAvailableExposureOffset');
+        }
       });
       _controller?.getMaxExposureOffset().then((value) {
         _maxAvailableExposureOffset = value;
+        if (kDebugMode) {
+          print('maxAvailableExposureOffset: $_maxAvailableExposureOffset');
+        }
       });
       _controller?.startImageStream(_processCameraImage).then((value) {
         if (widget.onCameraFeedReady != null) {

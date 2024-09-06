@@ -42,9 +42,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
     return ProductVariantBlocWrapper(
       child: Scaffold(
           body: BlocConsumer<DeliverInterventionBloc, DeliverInterventionState>(
-        listener: (context, deliverState) {
-          final router = context.router;
-        },
+        listener: (context, deliverState) {},
         builder: (context, deliverState) {
           return ScrollableContent(
               enableFixedButton: true,

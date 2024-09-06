@@ -50,7 +50,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
         builder: (context, form, child) {
           int pregnantWomen = form.control(_pregnantWomenCountKey).value;
           int children = form.control(_childrenCountKey).value;
-          int memberCount = form.control(_memberCountKey).value;
           return BlocConsumer<BeneficiaryRegistrationBloc,
               BeneficiaryRegistrationState>(
             listener: (context, state) {

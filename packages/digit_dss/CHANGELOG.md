@@ -1,3 +1,7 @@
+## 1.0.2
+* Updated to latest package versions
+* Updated flutter version to 3.22.1
+
 ## 1.0.1
 * Bug fixes
 * Added enums for dss charts

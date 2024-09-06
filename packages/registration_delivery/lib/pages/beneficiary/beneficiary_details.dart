@@ -182,12 +182,13 @@ class BeneficiaryDetailsPageState
                                                           .beneficiaryDetails
                                                           .resourcesTobeDelivered),
                                                   content: buildTableContent(
-                                                    deliverState,
-                                                    context,
-                                                    variant,
-                                                    state.selectedIndividual,
-                                                    state.householdMemberWrapper.household
-                                                  ),
+                                                      deliverState,
+                                                      context,
+                                                      variant,
+                                                      state.selectedIndividual,
+                                                      state
+                                                          .householdMemberWrapper
+                                                          .household),
                                                   barrierDismissible: true,
                                                   primaryAction:
                                                       DigitDialogActions(
@@ -305,9 +306,8 @@ class BeneficiaryDetailsPageState
                                       }
 
                                       return maskString(identifiers
-                                              .first.identifierId
-                                              .toString()) ??
-                                          '--';
+                                          .first.identifierId
+                                          .toString());
                                     }(),
                                     localizations.translate(
                                       i18.common.coreCommonAge,
