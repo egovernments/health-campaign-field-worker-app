@@ -306,8 +306,9 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                         ),
                                                       );
 
-                                                      if (facility == null)
+                                                      if (facility == null) {
                                                         return;
+                                                      }
                                                       form
                                                               .control(
                                                                 _evaluationFacilityKey,

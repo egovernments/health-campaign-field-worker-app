@@ -393,7 +393,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     var variables = selectQuery.constructQuery().introducedVariables;
     var indexesLength = selectQuery.constructQuery().variableIndices;
 
-    var totalCount;
+    dynamic totalCount;
 
     try {
       totalCount = await sql

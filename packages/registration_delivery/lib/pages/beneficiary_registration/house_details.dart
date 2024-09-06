@@ -34,8 +34,6 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
 
   @override
   void initState() {
-    final registrationState = context.read<BeneficiaryRegistrationBloc>().state;
-
     super.initState();
   }
 

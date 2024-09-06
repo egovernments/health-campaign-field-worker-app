@@ -254,14 +254,14 @@ packages:
       path: "../digit_components"
       relative: true
     source: path
-    version: "1.0.1+1"
+    version: "1.0.2"
   digit_data_model:
     dependency: "direct overridden"
     description:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.4"
   dio:
     dependency: transitive
     description:

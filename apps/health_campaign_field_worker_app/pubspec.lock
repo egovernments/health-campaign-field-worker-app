@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.2+2"
+    version: "1.0.3"
   audioplayers:
     dependency: transitive
     description:
@@ -342,7 +342,7 @@ packages:
       path: "../../packages/closed_household"
       relative: true
     source: path
-    version: "1.0.1+1"
+    version: "1.0.2"
   code_builder:
     dependency: transitive
     description:
@@ -492,21 +492,21 @@ packages:
       path: "../../packages/digit_components"
       relative: true
     source: path
-    version: "1.0.1+1"
+    version: "1.0.2"
   digit_data_model:
     dependency: "direct main"
     description:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.4"
   digit_dss:
     dependency: "direct main"
     description:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -520,14 +520,14 @@ packages:
       path: "../../packages/digit_scanner"
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.4"
   digit_showcase:
     dependency: "direct main"
     description:
       path: "../../packages/digit_showcase"
       relative: true
     source: path
-    version: "1.0.0"
+    version: "1.0.1"
   dio:
     dependency: "direct main"
     description:
@@ -1113,7 +1113,7 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
-    version: "1.0.3+2"
+    version: "1.0.4"
   io:
     dependency: transitive
     description:
@@ -1544,14 +1544,14 @@ packages:
       path: "../../packages/referral_reconciliation"
       relative: true
     source: path
-    version: "1.0.2+1"
+    version: "1.0.3"
   registration_delivery:
     dependency: "direct main"
     description:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.4"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -1779,7 +1779,7 @@ packages:
       path: "../../packages/sync_service"
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.1-dev.1"
   synchronized:
     dependency: transitive
     description:

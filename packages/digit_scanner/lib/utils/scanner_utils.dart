@@ -96,7 +96,7 @@ class DigitScannerUtils {
     setText('');
 
     // Process the image to detect barcodes
-    final barcodes;
+    final List<Barcode> barcodes;
 
     try {
       barcodes = await barcodeScanner.processImage(inputImage);

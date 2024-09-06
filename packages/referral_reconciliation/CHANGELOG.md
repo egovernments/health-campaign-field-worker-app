@@ -1,3 +1,8 @@
+## 1.0.3
+* Updated to latest package versions
+* Updated flutter version to 3.22.1
+
+
 ## 1.0.2+1
 
 * Updated digit_scanner package, digit_components, digit_data_model

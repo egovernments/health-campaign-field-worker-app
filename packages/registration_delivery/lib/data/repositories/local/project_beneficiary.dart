@@ -202,8 +202,7 @@ class ProjectBeneficiaryLocalRepository extends LocalRepository<
       final updated = entity.copyWith(
         isDeleted: true,
         rowVersion: entity.rowVersion,
-        clientAuditDetails: (entity.clientAuditDetails?.createdBy != null &&
-                entity.clientAuditDetails!.createdTime != null)
+        clientAuditDetails: (entity.clientAuditDetails?.createdBy != null)
             ? ClientAuditDetails(
                 createdBy: entity.clientAuditDetails!.createdBy,
                 createdTime: entity.clientAuditDetails!.createdTime,

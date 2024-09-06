@@ -366,14 +366,14 @@ packages:
       path: "../digit_components"
       relative: true
     source: path
-    version: "1.0.1+1"
+    version: "1.0.2"
   digit_data_model:
     dependency: "direct overridden"
     description:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.3+1"
+    version: "1.0.4"
   dio:
     dependency: transitive
     description:
@@ -1027,7 +1027,7 @@ packages:
     source: hosted
     version: "2.1.1"
   reactive_forms:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: reactive_forms
       sha256: "9b1fb18e0aae9c50cfa0aaabaaa38bc4d78eefc9b7b95fa9c947b051f6524b8e"
