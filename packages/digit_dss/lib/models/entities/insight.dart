@@ -1,6 +1,5 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:digit_data_model/data_model.dart';
 
 part 'insight.mapper.dart';
 
