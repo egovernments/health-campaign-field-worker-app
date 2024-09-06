@@ -1,8 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:survey_form/survey_form.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -43,18 +44,18 @@ class _ReferralReasonChecklistPreviewPageState
               serviceSearch: (serviceList, selectedService, loading) {
                 return selectedService != null
                     ? DigitCard(
-                        child: DigitElevatedButton(
+                        cardType: CardType.primary,
+                        children: [
+                          Button(
+                          size: ButtonSize.large,
+                          label: localizations.translate(i18.common.corecommonclose),
+                          mainAxisSize: MainAxisSize.max,
                           onPressed: () {
                             context.read<ServiceBloc>().add(
-                                  ServiceResetEvent(serviceList: serviceList),
-                                );
+                              ServiceResetEvent(serviceList: serviceList),
+                            );
                           },
-                          child: Text(
-                            localizations.translate(i18.common.corecommonclose),
-                          ),
-                        ),
-                      )
-                    : const Offstage();
+                          type: ButtonType.primary,)]) : const Offstage();
               },
             );
           },
@@ -70,7 +71,8 @@ class _ReferralReasonChecklistPreviewPageState
                         children: [
                           ...value1.map((e) => e.serviceDefId != null
                               ? DigitCard(
-                                  child: Column(
+                                  cardType: CardType.primary,
+                                  children: [Column(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
@@ -96,7 +98,7 @@ class _ReferralReasonChecklistPreviewPageState
                                               ),
                                             ),
                                           ),
-                                          DigitOutLineButton(
+                                          Button(
                                             label: localizations.translate(
                                               i18.referralReconciliation
                                                   .iconLabel,
@@ -108,18 +110,13 @@ class _ReferralReasonChecklistPreviewPageState
                                                     ),
                                                   );
                                             },
-                                            buttonStyle:
-                                                OutlinedButton.styleFrom(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.zero,
-                                              ),
-                                            ),
+                                            type: ButtonType.secondary,
+                                            size: ButtonSize.large,
                                           ),
                                         ],
                                       ),
                                     ],
-                                  ),
+                                  ),]
                                 )
                               : const Offstage()),
                         ],
@@ -133,7 +130,8 @@ class _ReferralReasonChecklistPreviewPageState
                             item2,
                           ) {
                             return DigitCard(
-                              child: Column(
+                              cardType: CardType.primary,
+                              children: [Column(
                                 children: [
                                   Container(
                                     width: MediaQuery.of(context).size.width,
@@ -181,8 +179,8 @@ class _ReferralReasonChecklistPreviewPageState
                                                       margin: const EdgeInsets
                                                               .only()
                                                           .copyWith(
-                                                        top: kPadding,
-                                                        bottom: kPadding,
+                                                        top: theme.spacerTheme.spacer2,
+                                                        bottom: theme.spacerTheme.spacer2,
                                                       ),
                                                       child: Align(
                                                         alignment: Alignment
@@ -206,8 +204,8 @@ class _ReferralReasonChecklistPreviewPageState
                                                                 const EdgeInsets
                                                                         .only()
                                                                     .copyWith(
-                                                              top: kPadding,
-                                                              bottom: kPadding,
+                                                              top: theme.spacerTheme.spacer2,
+                                                              bottom: theme.spacerTheme.spacer2,
                                                             ),
                                                             child: Column(
                                                               children: [
@@ -246,7 +244,7 @@ class _ReferralReasonChecklistPreviewPageState
                                     ),
                                   ),
                                 ],
-                              ),
+                              )],
                             );
                           },
                           orElse: () => const Offstage(),
