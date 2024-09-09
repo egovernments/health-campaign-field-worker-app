@@ -77,55 +77,58 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                             children: [
                               ...serviceList
                                   .map((e) => e.serviceDefId != null
-                                      ? DigitCard(
-                                          cardType: CardType.primary,
-                                          children: [
-                                              Align(
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  DateFormat(Constants.SurveyFormPreviewDateFormat)
-                                                      .format(
-                                                    DateFormat(Constants
-                                                            .defaultDateFormat)
-                                                        .parse(
-                                                      e.createdAt.toString(),
-                                                    ),
-                                                  ),
-                                                  style: textTheme.headingXl,
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  SizedBox(
-                                                    child: Text(
-                                                      localizations.translate(
-                                                        '${e.tenantId}',
+                                      ? Padding(
+                                        padding: const EdgeInsets.all(spacer2),
+                                        child: DigitCard(
+                                            cardType: CardType.primary,
+                                            children: [
+                                                Align(
+                                                  alignment: Alignment.centerLeft,
+                                                  child: Text(
+                                                    DateFormat(Constants.SurveyFormPreviewDateFormat)
+                                                        .format(
+                                                      DateFormat(Constants
+                                                              .defaultDateFormat)
+                                                          .parse(
+                                                        e.createdAt.toString(),
                                                       ),
                                                     ),
+                                                    style: textTheme.headingXl,
                                                   ),
-                                                  Button(
-                                                    label: localizations.translate(
-                                                      i18.searchBeneficiary
-                                                          .iconLabel,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      child: Text(
+                                                        localizations.translate(
+                                                          '${e.tenantId}',
+                                                        ),
+                                                      ),
                                                     ),
-                                                    type: ButtonType.secondary,
-                                                    size: ButtonSize.medium,
-                                                    onPressed: () {
-                                                      context
-                                                          .read<ServiceBloc>()
-                                                          .add(
-                                                            ServiceSelectionEvent(
-                                                              service: e,
-                                                            ),
-                                                          );
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ])
+                                                    Button(
+                                                      label: localizations.translate(
+                                                        i18.searchBeneficiary
+                                                            .iconLabel,
+                                                      ),
+                                                      type: ButtonType.secondary,
+                                                      size: ButtonSize.medium,
+                                                      onPressed: () {
+                                                        context
+                                                            .read<ServiceBloc>()
+                                                            .add(
+                                                              ServiceSelectionEvent(
+                                                                service: e,
+                                                              ),
+                                                            );
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ]),
+                                      )
                                       : const Offstage())
                                   .toList(),
                             ],
@@ -152,8 +155,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                             return DigitCard(
                               cardType: CardType.primary,
                               children: [Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -174,7 +176,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                       .map(
                                         (e) => Padding(
                                           padding:
-                                              const EdgeInsets.all(8),
+                                              const EdgeInsets.all(spacer2),
                                           child: Column(
                                             mainAxisAlignment:
                                                 MainAxisAlignment.start,
@@ -207,7 +209,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                             .translate(
                                                             'CORE_COMMON_${e.value.toString().toUpperCase()}',
                                                           )
-                                                        : e.value ?? "",
+                                                        : e.value??"",
                                                   ),
                                                 ),
                                               ),
