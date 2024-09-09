@@ -19,18 +19,6 @@ jobs:
         with:
           flutter-version: "3.22.1"
 
-      - name: Restore cache
-        id: cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            .pub-cache
-            apps/**/.dart_tool
-            packages/**/.dart_tool
-          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-flutter-
-
       - name: Clean previous builds
         run: flutter clean
 
@@ -42,12 +30,3 @@ jobs:
 
       - name: Analyze code
         run: melos run analyze
-
-      - name: Save cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            .pub-cache
-            apps/**/.dart_tool
-            packages/**/.dart_tool
-          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.lock') }}
