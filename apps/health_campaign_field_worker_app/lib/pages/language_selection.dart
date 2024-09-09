@@ -64,7 +64,7 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     } else if (!state.loading && isDialogVisible) {
                       isDialogVisible = false;
                       DigitComponentsUtils()
-                          .hideLocalizationLoadingDialog(context);
+                          .hideDialog(context);
                     }
                     if (!state.loading &&
                         !isDialogVisible &&
@@ -99,20 +99,6 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                     }
                   },
                   builder: (context, localizationState) {
-                    if (localizationState.loading &&
-                        !isDialogVisible &&
-                        mounted &&
-                        ModalRoute.of(context)?.isCurrent == true) {
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        isDialogVisible = true;
-                        DigitComponentsUtils().showLocationCapturingDialog(
-                          context,
-                          '',
-                          DigitSyncDialogType.inProgress,
-                        );
-                      });
-                    }
-
                     return localizationModulesList != null
                         ? DigitLanguageCard(
                             digitRowCardItems: languages.map((e) {

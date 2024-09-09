@@ -80,7 +80,7 @@ class LocalizationLocalRepository {
       required String module}) async {
     final query = sql.select(sql.localization).join([])
       ..where(
-        buildAnd([
+        buildOr([
           sql.localization.locale.equals(locale),
           sql.localization.module.contains(module),
         ]),

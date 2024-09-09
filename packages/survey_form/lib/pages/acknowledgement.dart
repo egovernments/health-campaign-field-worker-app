@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/i18_key_constants.dart' as i18;
@@ -28,26 +30,26 @@ class AcknowledgementPageState extends LocalizedState<SurveyFormAcknowledgementP
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: DigitAcknowledgement.success(
-        description: widget.description ??
-            localizations.translate(
-              i18.acknowledgementSuccess.acknowledgementDescriptionText,
-            ),
-        descriptionWidget: widget.isDataRecordSuccess
-            ? DigitTableCard(
-                element: widget.descriptionTableData ?? {},
-              )
-            : null,
-        label: widget.label ??
-            localizations.translate(
-              i18.acknowledgementSuccess.acknowledgementLabelText,
-            ),
-        action: () {
-          context.router.popUntilRoot();
-        },
-        enableBackToSearch: widget.isDataRecordSuccess ? false : true,
-        actionLabel:
-            localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+      body: Padding(
+        padding: const EdgeInsets.all(spacer4),
+        child: PanelCard(
+          type: PanelType.success,
+          title: localizations.translate(
+            i18.acknowledgementSuccess.acknowledgementLabelText,
+          ),
+          description: localizations.translate(
+          i18.acknowledgementSuccess.acknowledgementDescriptionText,
+        ),
+
+          actions: [
+            Button(
+              label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+              onPressed: () => context.router.popUntilRoot(),
+              type: ButtonType.primary,
+              size: ButtonSize.large,
+            )
+          ],
+        ),
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
@@ -55,19 +57,22 @@ class AcknowledgementPageState extends LocalizedState<SurveyFormAcknowledgementP
         child: SizedBox(
           height: 150,
           child: DigitCard(
-            margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-            padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-            child: Column(
+            cardType: CardType.primary,
+            margin: const EdgeInsets.only(top: spacer2),
+            padding: const EdgeInsets.all(spacer2),
+            children: [Column(
               children: [
-                DigitElevatedButton(
-                  child: Text(localizations
-                      .translate(i18.acknowledgementSuccess.goToHome)),
+                Button(
+                  label: localizations
+                      .translate(i18.acknowledgementSuccess.goToHome),
+                  type: ButtonType.primary,
+                  size: ButtonSize.large,
                   onPressed: () {
                     context.router.maybePop();
                   },
                 ),
               ],
-            ),
+            ),]
           ),
         ),
       ),

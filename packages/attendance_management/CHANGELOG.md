@@ -1,3 +1,6 @@
+## 1.0.2+1
+* Updated Digit_components
+
 ## 1.0.2
 * Capturing location on attendance submit
 * Pagination issue fix to fetch all attendees

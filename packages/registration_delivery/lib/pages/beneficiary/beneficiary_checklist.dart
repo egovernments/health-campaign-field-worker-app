@@ -10,6 +10,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:registration_delivery/utils/constants.dart';
 
 import '../../router/registration_delivery_router.gm.dart';
@@ -69,9 +70,8 @@ class _BeneficiaryChecklistPageState
             state.mapOrNull(
               serviceDefinitionFetch: (value) {
                 selectedServiceDefinition = value.serviceDefinitionList
-                    .where((element) => element.code
-                        .toString()
-                        .contains('IRS.TRAINING_SUPERVISION.DISTRIBUTOR'))
+                    .where((element) => element.code.toString().contains(
+                        '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
                     .toList()
                     .first;
 

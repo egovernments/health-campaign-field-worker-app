@@ -572,6 +572,8 @@ class DeliverIntervention {
 
   String get resourceDeliveredValidation => 'RESOURCE_DELIVERED_VALIDATION';
 
+  String get resourceDuplicateValidation => 'RESOURCE_DUPLICATE_VALIDATION';
+
   String get unableToScan => 'UNABLE_TO_SCAN';
 
   String get scanValidResource => 'SCAN_VALID_RESOURCE';
