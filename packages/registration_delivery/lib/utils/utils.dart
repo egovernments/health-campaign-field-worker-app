@@ -26,32 +26,6 @@ class CustomValidator {
         ? null
         : {'required': true};
   }
-
-  static Map<String, dynamic>? validMobileNumber(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value == null || control.value.toString().isEmpty) {
-      return null;
-    }
-
-    const pattern = r'^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$';
-
-    if (RegExp(pattern).hasMatch(control.value.toString())) return null;
-
-    if (control.value.toString().length < 10) return {'mobileNumber': true};
-
-    return {'mobileNumber': true};
-  }
-
-  static Map<String, dynamic>? minPhoneNumValidation(
-    AbstractControl<dynamic> control,
-  ) {
-    if (control.value != null &&
-        control.value.toString().isNotEmpty &&
-        control.value.toString().length < 9) {
-      return {'minLength': true};
-    }
-  }
 }
 
 bool checkStatus(List<TaskModel>? tasks, ProjectCycle? currentCycle) {
@@ -89,7 +63,7 @@ bool checkIfBeneficiaryRefused(
   List<TaskModel>? tasks,
 ) {
   final isBeneficiaryRefused = (tasks != null &&
-      (tasks ?? []).isNotEmpty &&
+      (tasks).isNotEmpty &&
       tasks.last.status == Status.administeredFailed.toValue());
 
   return isBeneficiaryRefused;
@@ -105,13 +79,11 @@ bool checkEligibilityForAgeAndSideEffect(
   int totalAgeMonths = age.years * 12 + age.months;
   final currentCycle = projectType?.cycles?.firstWhereOrNull(
     (e) =>
-        (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-        (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
+        (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+        (e.endDate) > DateTime.now().millisecondsSinceEpoch,
     // Return null when no matching cycle is found
   );
-  if (currentCycle != null &&
-      currentCycle.startDate != null &&
-      currentCycle.endDate != null) {
+  if (currentCycle != null) {
     bool recordedSideEffect = false;
     if ((tasks != null) && sideEffects != null && sideEffects.isNotEmpty) {
       final lastTaskTime =
@@ -119,8 +91,8 @@ bool checkEligibilityForAgeAndSideEffect(
               ? tasks.clientAuditDetails?.createdTime
               : null;
       recordedSideEffect = lastTaskTime != null &&
-          (lastTaskTime >= currentCycle.startDate! &&
-              lastTaskTime <= currentCycle.endDate!);
+          (lastTaskTime >= currentCycle.startDate &&
+              lastTaskTime <= currentCycle.endDate);
 
       return projectType?.validMinAge != null &&
               projectType?.validMaxAge != null
@@ -147,9 +119,7 @@ bool recordedSideEffect(
   TaskModel? task,
   List<SideEffectModel>? sideEffects,
 ) {
-  if (selectedCycle != null &&
-      selectedCycle.startDate != null &&
-      selectedCycle.endDate != null) {
+  if (selectedCycle != null) {
     if ((task != null) && (sideEffects ?? []).isNotEmpty) {
       final lastTaskCreatedTime =
           task.clientReferenceId == sideEffects?.last.taskClientReferenceId
@@ -171,7 +141,7 @@ bool checkIfBeneficiaryReferred(
 ) {
   if (currentCycle?.startDate != null && currentCycle?.endDate != null) {
     final isBeneficiaryReferred = (referrals != null &&
-        (referrals ?? []).isNotEmpty &&
+        (referrals).isNotEmpty &&
         referrals.last.clientAuditDetails!.createdTime >=
             currentCycle!.startDate &&
         referrals.last.clientAuditDetails!.createdTime <= currentCycle.endDate);
@@ -186,9 +156,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     IndividualModel? individualModel, HouseholdModel? householdModel) {
   if (currentDelivery != null) {
     var individualAgeInMonths = 0;
-    var gender;
-    var roomCount;
-    var memberCount;
+    int? gender;
+    int? roomCount;
+    int? memberCount;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
@@ -212,7 +182,7 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
-      final condition = criteria.condition;
+      final String? condition = criteria.condition;
       if (condition != null) {
         final conditions = condition.split('and');
 

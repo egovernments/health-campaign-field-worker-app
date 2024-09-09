@@ -180,7 +180,7 @@ class _ComplaintsInboxSearchPageState
         value: state.searchKeys?.complaintNumber,
       ),
       _mobileNumber: FormControl<String>(
-        validators: [CustomValidator.validMobileNumber],
+        validators: [Validators.pattern(Constants.mobileNumberRegExp)],
         value: state.searchKeys?.complainantMobileNumber,
       ),
     });

@@ -1,3 +1,7 @@
+## 1.0.4
+* Updated to latest package versions
+* Updated flutter version to 3.22.1
+
 ## 1.0.3+1
 
 * Updated oplog transactions to synchronous - fix for write transaction lock

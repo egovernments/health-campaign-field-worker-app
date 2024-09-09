@@ -10,6 +10,5 @@ abstract class ProjectBeneficiaryLocalBaseRepository
   @override
   DataModelType get type => DataModelType.projectBeneficiary;
 
-  @override
   TableInfo get table => sql.projectBeneficiary;
 }

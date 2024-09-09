@@ -91,20 +91,18 @@ class RecordHFReferralBloc
           emit(value.copyWith(loading: true));
 
           try {
-            if (event.hfReferralModel != null) {
-              referralReconDataRepository?.create(event.hfReferralModel);
-              emit(
-                RecordHFReferralPersistedState(
-                  hfReferralModel: event.hfReferralModel,
-                  projectId: value.projectId,
-                  facilityId: value.facilityId,
-                  dateOfEvaluation: value.dateOfEvaluation,
-                  healthFacilityCord: value.healthFacilityCord,
-                  referredBy: value.referredBy,
-                ),
-              );
-            }
-          } catch (error) {
+            referralReconDataRepository?.create(event.hfReferralModel);
+            emit(
+              RecordHFReferralPersistedState(
+                hfReferralModel: event.hfReferralModel,
+                projectId: value.projectId,
+                facilityId: value.facilityId,
+                dateOfEvaluation: value.dateOfEvaluation,
+                healthFacilityCord: value.healthFacilityCord,
+                referredBy: value.referredBy,
+              ),
+            );
+                    } catch (error) {
             emit(value.copyWith(loading: false));
             rethrow;
           }

@@ -13,6 +13,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:sync_service/sync_service_lib.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/entity_mapper.dart';
@@ -21,6 +22,8 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../data/sync_service_mapper.dart';
+import '../data/sync_registry.dart';
 import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
@@ -81,6 +84,9 @@ class Constants {
   static const String healthFacilityChecklistPrefix = 'HF_RF';
 
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
+
+  static RegExp mobileNumberRegExp =
+      RegExp(r'^(?=.{10}$)[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$');
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -269,6 +275,15 @@ class Constants {
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+    SyncServiceSingleton().setData(
+      syncDownRetryCount: envConfig.variables.syncDownRetryCount,
+      persistenceConfiguration: PersistenceConfiguration.offlineFirst,
+      entityMapper: SyncServiceMapper(),
+    );
+    SyncServiceSingleton().setRegistries(SyncServiceRegistry());
+    SyncServiceSingleton().registries?.registerSyncRegistries({
+      DataModelType.complaints: (remote) => CustomSyncRegistry(remote),
+    });
   }
 }
 

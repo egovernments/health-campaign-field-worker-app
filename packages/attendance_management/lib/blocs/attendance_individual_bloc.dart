@@ -82,9 +82,7 @@ class AttendanceIndividualBloc
 
       checkResponse(filteredLogs ?? [], attendees, event);
     } catch (ex) {
-      String? error = ex as String;
-
-      emit(AttendanceIndividualState.error(error));
+      emit(AttendanceIndividualState.error(ex.toString()));
     }
   }
 
@@ -246,7 +244,7 @@ class AttendanceIndividualBloc
   checkResponse(
       List<AttendanceLogModel> logResponse,
       List<AttendeeModel> attendees,
-      AttendanceIndividualLogSearchEvent event) async {
+      AttendanceIndividualLogSearchEvent event) async* {
     bool anyLogPresent = false;
     final currentDate = DateTime.fromMillisecondsSinceEpoch(event.currentDate);
     int twelvePM =
@@ -293,7 +291,7 @@ class AttendanceIndividualBloc
                       : 1);
     }).toList();
 
-    emit(AttendanceIndividualState.loaded(
+    yield (AttendanceIndividualState.loaded(
         attendanceCollectionModel: attendees, viewOnly: anyLogPresent));
   }
 

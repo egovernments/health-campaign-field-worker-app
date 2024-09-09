@@ -48,9 +48,9 @@ class StockReconciliationPageState
       _manualCountKey: FormControl<String>(
         value: '0',
         validators: [
-          Validators.number,
+          Validators.number(),
           Validators.required,
-          CustomValidator.validStockCount,
+          Validators.delegate(CustomValidator.validStockCount)
         ],
       ),
       _reconciliationCommentsKey: FormControl<String>(),

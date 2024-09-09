@@ -57,30 +57,7 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
                 child: InkWell(
                   onTap: () async {
                     bool isConnected = await getIsConnected();
-                    if (isConnected) {
-                      DateTime? pickedDate = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1900),
-                        lastDate: DateTime.now(),
-                      );
-
-                      if (pickedDate != null && pickedDate != DateTime.now()) {
-                        final dashboardBloc = context.read<DashboardBloc>();
-                        dashboardBloc.add(DashboardRefreshEvent(
-                          selectedDate: pickedDate.toLocal(),
-                          projectId: DashboardSingleton().projectId,
-                          syncFromServer: true,
-                        ));
-                      }
-                    } else {
-                      DigitToast.show(context,
-                          options: DigitToastOptions(
-                              localizations
-                                  .translate(i18.dashboard.networkFailureError),
-                              true,
-                              DigitTheme.instance.mobileTheme));
-                    }
+                    fetchChartData(isConnected);
                   },
                   child: Container(
                     alignment: Alignment.centerRight,
@@ -187,5 +164,31 @@ class _DashboardMetricCardState extends LocalizedState<DashboardMetricCard> {
         ],
       ));
     });
+  }
+
+  void fetchChartData(bool isConnected) async {
+    if (isConnected) {
+      DateTime? pickedDate = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1900),
+        lastDate: DateTime.now(),
+      );
+
+      if (pickedDate != null && pickedDate != DateTime.now() && mounted) {
+        final dashboardBloc = context.read<DashboardBloc>();
+        dashboardBloc.add(DashboardRefreshEvent(
+          selectedDate: pickedDate.toLocal(),
+          projectId: DashboardSingleton().projectId,
+          syncFromServer: true,
+        ));
+      }
+    } else {
+      DigitToast.show(context,
+          options: DigitToastOptions(
+              localizations.translate(i18.dashboard.networkFailureError),
+              true,
+              DigitTheme.instance.mobileTheme));
+    }
   }
 }

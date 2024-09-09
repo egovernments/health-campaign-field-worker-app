@@ -73,7 +73,7 @@ class JsonSchemaIntegerBuilder extends JsonSchemaBuilder<int> {
         aspectRatio: 1,
         child: Material(
           shape: border,
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           child: InkWell(onTap: onPressed, child: Icon(icon)),
         ),
       );

@@ -1,6 +1,7 @@
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:easy_stepper/easy_stepper.dart';
+import 'package:flutter/material.dart';
 
 class DigitStepper extends StatelessWidget {
   final int activeStep;
@@ -112,21 +113,26 @@ class DigitStepper extends StatelessWidget {
   Widget build(BuildContext context) {
     return EasyStepper(
         activeStep: activeStep,
-        lineLength: lineLength,
-        lineSpace: lineSpace,
-        lineType: lineType,
+        lineStyle: LineStyle(
+          lineLength: lineLength,
+          lineSpace: lineSpace,
+          lineType: lineType,
+          defaultLineColor: defaultLineColor ?? const DigitColors().cloudGray,
+          lineThickness: lineThickness,
+          activeLineColor: activeLineColor,
+          unreachedLineColor:
+              unreachedLineColor ?? const DigitColors().cloudGray,
+          finishedLineColor: finishedLineColor ?? const DigitColors().cloudGray,
+        ),
         maxReachedStep: maxStepReached,
-        defaultLineColor: defaultLineColor ?? const DigitColors().cloudGray,
         activeStepBackgroundColor:
             activeStepBackgroundColor ?? const DigitColors().burningOrange,
         activeStepBorderColor: activeStepBorderColor,
         activeStepTextColor:
             activeStepTextColor ?? DigitTheme.instance.colorScheme.onSurface,
-        activeLineColor: activeLineColor,
         activeStepBorderType: activeStepBorderType ?? defaultStepBorderType,
         activeStepIconColor: activeStepIconColor,
         alignment: alignment,
-        unreachedLineColor: unreachedLineColor ?? const DigitColors().cloudGray,
         unreachedStepBorderColor:
             unreachedStepBorderColor ?? const DigitColors().cloudGray,
         unreachedStepBorderType:
@@ -137,7 +143,6 @@ class DigitStepper extends StatelessWidget {
             unreachedStepBackgroundColor ?? const DigitColors().cloudGray,
         unreachedStepTextColor:
             unreachedStepTextColor ?? DigitTheme.instance.colorScheme.onSurface,
-        finishedLineColor: finishedLineColor ?? const DigitColors().cloudGray,
         finishedStepBackgroundColor:
             finishedStepBackgroundColor ?? const DigitColors().burningOrange,
         finishedStepTextColor:
@@ -151,7 +156,6 @@ class DigitStepper extends StatelessWidget {
         showLoadingAnimation: showLoadingAnimation,
         stepRadius: stepRadius,
         showStepBorder: showStepBorder,
-        lineThickness: lineThickness,
         onStepReached: onStepReached,
         disableScroll: disableScroll,
         enableStepTapping: enableStepTapping,
@@ -162,7 +166,7 @@ class DigitStepper extends StatelessWidget {
         loadingAnimation: loadingAnimation,
         padding: padding,
         showTitle: showTitle,
-        stepAnimationCurve: stepAnimationCurve ?? stepReachedAnimationEffect,
+        stepAnimationCurve: stepAnimationCurve ?? stepReachedAnimationEffect ?? Curves.easeInOut,
         stepAnimationDuration:
             stepAnimationDuration ?? stepReachedAnimationDuration,
         stepBorderRadius: stepBorderRadius,

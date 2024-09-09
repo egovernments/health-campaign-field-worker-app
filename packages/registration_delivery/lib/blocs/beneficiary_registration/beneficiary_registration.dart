@@ -1,7 +1,6 @@
 // GENERATED using mason_cli
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/utils/typedefs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

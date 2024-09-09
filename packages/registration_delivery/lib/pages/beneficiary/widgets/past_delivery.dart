@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
-import '../../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../utils/utils.dart';
 

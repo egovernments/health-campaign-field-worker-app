@@ -80,11 +80,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               ),
             );
             List<String> attendeesIndividualIds = [];
-            registers.forEach((r) {
+            for (var r in registers) {
               r.attendees?.where((a) => a.individualId != null).forEach((att) {
                 attendeesIndividualIds.add(att.individualId.toString());
               });
-            });
+            }
             final individuals =
                 await individualDataRepository.search(IndividualSearchModel(
               id: attendeesIndividualIds,
@@ -186,7 +186,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                   .map((e) {
                 final headerData = transformToLocaleCode(e.name ?? '');
                 return TableHeader(
-                  headerData ?? '',
+                  headerData,
                   cellKey: e.name,
                 );
               }).toList() ??
