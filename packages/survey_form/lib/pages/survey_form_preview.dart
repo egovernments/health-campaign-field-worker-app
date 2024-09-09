@@ -1,7 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:survey_form/survey_form.dart';
@@ -73,7 +73,6 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                 return selectedService == null
                     ? serviceList.isNotEmpty
                         ? Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               ...serviceList
                                   .map((e) => e.serviceDefId != null
@@ -154,17 +153,19 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                           ) {
                             return DigitCard(
                               cardType: CardType.primary,
-                              children: [Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Column(
                                 children: [
                                   Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(
-                                      localizations.translate(
-                                        item2?.code ?? '',
+                                    alignment: Alignment.topLeft,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(spacer2),
+                                      child: Text(
+                                        localizations.translate(
+                                          item2?.code ?? '',
+                                        ),
+                                        style: textTheme.headingXl,
                                       ),
-                                      style:
-                                          theme.textTheme.displayMedium,
                                     ),
                                   ),
                                   ...(selectedService.attributes ?? [])
@@ -175,88 +176,37 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                           a.value != '')
                                       .map(
                                         (e) => Padding(
-                                          padding:
-                                              const EdgeInsets.all(spacer2),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: [
-                                              Align(
-                                                alignment:
-                                                    Alignment.centerLeft,
-                                                child: Text(
-                                                  localizations.translate(
-                                                    "${item2?.code ?? ''}.${e.attributeCode!}",
-                                                  ),
-                                                  style: theme.textTheme
-                                                      .headlineSmall,
-                                                ),
-                                              ),
-                                              Container(
-                                                margin: const EdgeInsets
-                                                        .only()
-                                                    .copyWith(
-                                                  top: spacer2,
-                                                  bottom: spacer2,
-                                                ),
-                                                child: Align(
-                                                  alignment: Alignment
-                                                      .centerLeft,
-                                                  child: Text(
-                                                    e.dataType ==
-                                                            'SingleValueList'
-                                                        ? localizations
-                                                            .translate(
-                                                            'CORE_COMMON_${e.value.toString().toUpperCase()}',
-                                                          )
-                                                        : e.value??"",
-                                                  ),
-                                                ),
-                                              ),
-                                              e.additionalDetails != '' &&
-                                                      e.additionalDetails !=
-                                                          null
-                                                  ? Container(
-                                                      margin:
-                                                          const EdgeInsets
-                                                                  .only()
-                                                              .copyWith(
-                                                        top: spacer2,
-                                                        bottom: spacer2,
+                                          padding: const EdgeInsets.all(spacer2),
+                                          child: Align(
+                                            alignment: AlignmentDirectional.topStart,
+                                            child: LabelValueList(
+                                                items: [
+                                                  LabelValuePair(
+                                                      label: localizations.translate(
+                                                        "${item2?.code ?? ''}.${e.attributeCode!}",
                                                       ),
-                                                      child: Column(
-                                                        children: [
-                                                          Align(
-                                                            alignment:
-                                                                Alignment
-                                                                    .centerLeft,
-                                                            child: Text(
-                                                              localizations
-                                                                  .translate(
-                                                                "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          Align(
-                                                            alignment:
-                                                                Alignment
-                                                                    .centerLeft,
-                                                            child: Text(
-                                                              localizations
-                                                                  .translate(
-                                                                e.additionalDetails,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ],
-                                                      ),
+                                                      value: e.dataType ==
+                                                          'SingleValueList'
+                                                          ? localizations
+                                                          .translate(
+                                                        'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                      )
+                                                          : e.value??"",
+                                                      isInline: false,
+                                                  ),
+                                                  if(e.additionalDetails!='' && e.additionalDetails!=null)...[
+                                                    LabelValuePair(
+                                                      label: localizations.translate("${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",),
+                                                      value: localizations.translate(e.additionalDetails,),
+                                                      isInline: false,
+                                                      labelTextStyle: textTheme.bodyL,
                                                     )
-                                                  : const Offstage(),
-                                              const DigitDivider(),
-                                            ],
+                                                  ]
+                                                ]
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                  )
                                 ].toList(),
                               ),]
                             );

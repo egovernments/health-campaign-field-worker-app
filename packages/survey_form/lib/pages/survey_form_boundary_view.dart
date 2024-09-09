@@ -65,6 +65,7 @@ class SurveyFormBoundaryViewPageState
               ),
               child: DigitDateFormInput(
                 readOnly: true,
+                editable: false,
                 initialValue: DateFormat('dd MMMM yyyy').format(DateTime.now()),
                 controller: TextEditingController(
                   text: DateFormat('dd MMMM yyyy').format(DateTime.now()),
