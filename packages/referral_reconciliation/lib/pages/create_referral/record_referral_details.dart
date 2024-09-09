@@ -838,18 +838,15 @@ class _RecordReferralDetailsPageState
                                                     form
                                                         .control(
                                                             _cycleKey)
-                                                        .value = val.name,
+                                                        .value = val.code,
                                                   },
                                                   selectedOption: widget
                                                       .cycles
-                                                      .asMap()
-                                                      .entries
                                                       .map((item) =>
                                                           DropdownItem(
                                                             name:
-                                                                'Cycle ${item.value}',
-                                                            code: item.key
-                                                                .toString(),
+                                                                '${localizations.translate(i18.referralReconciliation.cycle) } $item',
+                                                            code: item.toString(),
                                                           ))
                                                       .firstWhere(
                                                         (item) =>
@@ -866,15 +863,12 @@ class _RecordReferralDetailsPageState
                                                   errorMessage:
                                                       field.errorText,
                                                   items: widget.cycles
-                                                      .asMap()
-                                                      .entries
                                                       .map(
                                                         (item) =>
                                                             DropdownItem(
-                                                          name:
-                                                              'Cycle ${item.value}',
-                                                          code: item.key
-                                                              .toString(),
+                                                              name:
+                                                              '${localizations.translate(i18.referralReconciliation.cycle) } $item',
+                                                              code: item.toString(),
                                                         ),
                                                       )
                                                       .toList(),
@@ -1088,21 +1082,17 @@ class _RecordReferralDetailsPageState
                                                     form
                                                         .control(
                                                             _genderKey)
-                                                        .value = val.name,
+                                                        .value = val.code,
                                                   },
                                                   errorMessage:
                                                       field.errorText,
                                                   selectedOption:
                                                       ReferralReconSingleton()
                                                           .genderOptions
-                                                          .asMap()
-                                                          .entries
                                                           .map((item) =>
                                                               DropdownItem(
-                                                                name: item
-                                                                    .value,
+                                                                name: localizations.translate(item),
                                                                 code: item
-                                                                    .key
                                                                     .toString(),
                                                               ))
                                                           .firstWhere(
@@ -1122,15 +1112,11 @@ class _RecordReferralDetailsPageState
                                                   items:
                                                       ReferralReconSingleton()
                                                           .genderOptions
-                                                          .asMap()
-                                                          .entries
                                                           .map(
                                                             (item) =>
                                                                 DropdownItem(
-                                                              name: item
-                                                                  .value,
+                                                              name: localizations.translate(item),
                                                               code: item
-                                                                  .key
                                                                   .toString(),
                                                             ),
                                                           )
@@ -1153,7 +1139,7 @@ class _RecordReferralDetailsPageState
                                   return DigitCard(
                                       cardType: CardType.primary,
                                       children: [
-                                        ReactiveWrapperField<String>(
+                                        ReactiveWrapperField<ReferralReasonModel>(
                                             formControlName: _referralReason,
                                             validationMessages: {
                                               'required': (_) =>
@@ -1182,24 +1168,21 @@ class _RecordReferralDetailsPageState
                                                     form
                                                         .control(
                                                             _referralReason)
-                                                        .value = val.name;
-                                                    selectedReasonIndex =
-                                                        val.code;
+                                                        .value = ReferralReasonModel(code: val.code, value: val.name);
                                                   },
-                                                  groupValue: selectedReasonIndex,
+                                                  groupValue: form
+                                                      .control(
+                                                      _referralReason)
+                                                      .value?.code ?? "",
                                                   errorMessage: field.errorText,
                                                   radioButtons:
                                                       ReferralReconSingleton()
                                                           .referralReasons
-                                                          .asMap()
-                                                          .entries
-                                                          .map((entry) {
-                                                    int index = entry.key;
-                                                    String val = entry.value;
+                                                          .map((r) {
                                                     return RadioButtonModel(
-                                                      code: index.toString(),
+                                                      code: r.toString().toUpperCase(),
                                                       // Use the index as the code
-                                                      name: val,
+                                                      name: localizations.translate(r.toString().toUpperCase()),
                                                     );
                                                   }).toList(),
                                                 ),
@@ -1359,21 +1342,49 @@ class _RecordReferralDetailsPageState
               ]
             : [Validators.required],
       ),
-      _referralReason: FormControl<String>(
+      _referralReason: FormControl<ReferralReasonModel>(
         value: referralState.mapOrNull(
-          create: (value) =>
-              value.viewOnly && value.hfReferralModel?.symptom != null
-                  ? value.hfReferralModel?.symptom
-                  : null,
+          create: (value) {
+            if (value.viewOnly && value.hfReferralModel?.symptom != null) {
+              return ReferralReasonModel(
+                code: value.hfReferralModel?.symptom ?? '',
+                value: value.hfReferralModel?.symptom ?? '',
+              );
+            }
+            return null;
+          },
         ),
         disabled: referralState.mapOrNull(
-              create: (value) => value.viewOnly,
-            ) ??
-            false,
+          create: (value) => value.viewOnly,
+        ) ?? false,
         validators: [
           Validators.required,
         ],
       ),
+
+      // _referralReason: FormControl<String>(
+      //   value: referralState.mapOrNull(
+      //     create: (value) =>
+      //         value.viewOnly && value.hfReferralModel?.symptom != null
+      //             ? value.hfReferralModel?.symptom
+      //             : null,
+      //   ),
+      //   disabled: referralState.mapOrNull(
+      //         create: (value) => value.viewOnly,
+      //       ) ??
+      //       false,
+      //   validators: [
+      //     Validators.required,
+      //   ],
+      // ),
     });
   }
 }
+
+class ReferralReasonModel {
+  final String code;
+  final String value;
+
+  ReferralReasonModel({required this.code, required this.value});
+}
+
