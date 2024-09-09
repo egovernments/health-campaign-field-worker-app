@@ -1,7 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
+import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:digit_ui_components/widgets/helper_widget/button_list.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
@@ -50,18 +51,17 @@ class SurveyFormPageState extends State<SurveyformPage> {
                 ),
                 serviceDefinitionFetch:
                     (ServiceDefinitionServiceFetchedState value) {
-                  final values = value.serviceDefinitionList
-                      .where((item) =>
-                          !SurveyFormSingleton()
-                              .roles
-                              .indexOf(
-                                item.code!.split('.').lastOrNull!,
-                              )
-                              .isNegative &&
-                          !item.code!.contains(
-                              Constants.healthFacilitySurveyFormPrefix) &&
-                          (item.code ?? '')
-                              .contains(SurveyFormSingleton().projectName));
+                  final values = value.serviceDefinitionList.where((item) =>
+                      !SurveyFormSingleton()
+                          .roles
+                          .indexOf(
+                            item.code!.split('.').lastOrNull!,
+                          )
+                          .isNegative &&
+                      !item.code!
+                          .contains(Constants.healthFacilitySurveyFormPrefix) &&
+                      (item.code ?? '')
+                          .contains(SurveyFormSingleton().projectName));
 
                   if (values.isEmpty) {
                     return Column(
@@ -75,79 +75,83 @@ class SurveyFormPageState extends State<SurveyformPage> {
                       ],
                     );
                   }
-                  return Padding(
-                    padding: const EdgeInsets.all(spacer4),
-                    child: ButtonListTile(
-                        spacing: spacer4,
-                        sortButtons: false,
-                        isVertical: true,
-                        buttons: values
-                            .map((e)=>Button(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            label: localizations.translate('${e.code}'),
-                            type: ButtonType.secondary,
-                            size: ButtonSize.large,
-                            prefixIcon: Icons.article,
-                            suffixIcon: Icons.arrow_forward,
-                            onPressed: () {
-                              context.read<ServiceDefinitionBloc>().add(
-                                  ServiceDefinitionSelectionEvent(
-                                    serviceDefinition: e,));
-
-                              showPopup(
-                                  context: context,
-                                  title: "",
-                                  type: PopUpType.simple,
-                                  actions: [
-                                    Button(
-                                        label: localizations.translate(i18
-                                            .surveyForm
-                                            .surveyFormCreateActionLabel),
-                                        onPressed: () {
-                                          context.router.push(
-                                            SurveyFormBoundaryViewRoute(),
-                                          );
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop();
-                                        },
-                                        type: ButtonType.secondary,
-                                        size: ButtonSize.medium,
-                                      prefixIcon: Icons.edit_calendar,
+                  return Column(
+                    children: values
+                        .map((e) => Padding(
+                          padding: const EdgeInsets.only(
+                              left: spacer4,
+                              right: spacer4,
+                              top: spacer2
+                          ),
+                          child: MenuCard(
+                                icon: Icons.article,
+                                heading: localizations.translate('${e.code}'),
+                                onTap: () {
+                                  context
+                                      .read<ServiceDefinitionBloc>()
+                                      .add(ServiceDefinitionSelectionEvent(
+                                        serviceDefinition: e,
+                                      ));
+                          
+                                  showDialog(
+                                    context: context,
+                                    builder: (ctx)=>ActionCard(
+                                      onOutsideTap: (){
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop();
+                                      },
+                                      actions: [
+                                        Button(
+                                          label: localizations.translate(i18
+                                              .surveyForm
+                                              .surveyFormCreateActionLabel),
+                                          onPressed: () {
+                                            context.router.push(
+                                              SurveyFormBoundaryViewRoute(),
+                                            );
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          },
+                                          type: ButtonType.secondary,
+                                          size: ButtonSize.large,
+                                          prefixIcon: Icons.edit_calendar,
+                                        ),
+                                        Button(
+                                          label: localizations.translate(i18
+                                              .surveyForm
+                                              .surveyFormViewActionLabel),
+                                          onPressed: () {
+                                            context.read<ServiceBloc>().add(
+                                                  ServiceSearchEvent(
+                                                    serviceSearchModel:
+                                                        ServiceSearchModel(
+                                                      id: e.id,
+                                                    ),
+                                                  ),
+                                                );
+                                            context.router.push(
+                                              SurveyFormPreviewRoute(),
+                                            );
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop();
+                                          },
+                                          type: ButtonType.secondary,
+                                          size: ButtonSize.large,
+                                          prefixIcon: Icons.visibility,
+                                        )
+                                      ],
                                     ),
-                                    Button(
-                                        label: localizations.translate(i18
-                                            .surveyForm
-                                            .surveyFormViewActionLabel),
-                                        onPressed: () {
-                                          context
-                                              .read<ServiceBloc>()
-                                              .add(
-                                            ServiceSearchEvent(
-                                              serviceSearchModel:
-                                              ServiceSearchModel(
-                                                id: e.id,
-                                              ),
-                                            ),
-                                          );
-                                          context.router.push(
-                                            SurveyFormPreviewRoute(),
-                                          );
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop();
-                                        },
-                                        type: ButtonType.secondary,
-                                        size: ButtonSize.medium,
-                                        prefixIcon: Icons.visibility,
-                                    ),
-                                  ]
-                              );
-                            },
-                        )).toList()
-                    ),
+                                  );
+                                },
+                              ),
+                        ))
+                        .toList(),
                   );
                 },
               );

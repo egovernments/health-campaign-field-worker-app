@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class SurveyFormBoundaryViewPageState
   Widget build(BuildContext context) {
     final localizations = SurveyFormLocalization.of(context);
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -55,7 +57,7 @@ class SurveyFormBoundaryViewPageState
               localizations.translate(
                 i18.surveyForm.surveyFormDetailLabel,
               ),
-              style: theme.textTheme.displayMedium,
+              style: textTheme.headingXl,
             ),
             LabeledField(
               label: localizations.translate(
