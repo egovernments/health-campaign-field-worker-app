@@ -201,9 +201,9 @@ class _RecordReferralDetailsPageState
                                                       .isEmpty) {
                                                     Toast.showToast(
                                                       context,
-                                                      message: i18
+                                                      message: localizations.translate(i18
                                                           .referralReconciliation
-                                                          .noChecklistFound,
+                                                          .noChecklistFound),
                                                       type: ToastType.error,
                                                     );
                                                   } else {
@@ -541,9 +541,9 @@ class _RecordReferralDetailsPageState
                                                         .isEmpty) {
                                                       Toast.showToast(
                                                         context,
-                                                        message: i18
+                                                        message: localizations.translate(i18
                                                             .referralReconciliation
-                                                            .noChecklistFound,
+                                                            .noChecklistFound),
                                                         type: ToastType.error,
                                                       );
                                                     } else {
