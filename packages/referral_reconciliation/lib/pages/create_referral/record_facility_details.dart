@@ -130,7 +130,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                       if (evaluationFacility == null) {
                                         Toast.showToast(
                                           context,
-                                          message: 'Facility is mandatory',
+                                          message: localizations.translate(i18.referralReconciliation.facilityIsMandatory),
                                           type: ToastType.error,
                                         );
                                       } else {
