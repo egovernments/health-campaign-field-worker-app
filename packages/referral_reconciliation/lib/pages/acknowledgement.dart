@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
-import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
@@ -35,68 +34,59 @@ class _AcknowledgementPageState
     final theme = Theme.of(context);
 
     return Scaffold(
-      body: DigitCard(
-          cardType: CardType.primary,
-        children: [
-          PanelCard(
-          type: PanelType.success,
-          title: widget.label ??
-              localizations.translate(
-                i18.acknowledgementSuccess.acknowledgementLabelText,
+      body: PanelCard(
+      type: PanelType.success,
+      title: widget.label ??
+          localizations.translate(
+            i18.acknowledgementSuccess.acknowledgementLabelText,
+          ),
+      description: widget.description ??
+          localizations.translate(
+            i18.acknowledgementSuccess.acknowledgementDescriptionText,
+          ),
+            actions: [
+              Button(
+                  label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+                  onPressed: () {
+                    context.router.popUntilRoot();
+                  },
+                  type: ButtonType.primary,
+                size: ButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+              )
+            ]
               ),
-          description: widget.description ??
-              localizations.translate(
-                i18.acknowledgementSuccess.acknowledgementDescriptionText,
-              ),
-                actions: [
-                  Button(
-                      label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-                      onPressed: () {
-                        context.router.popUntilRoot();
-                      },
-                      type: ButtonType.primary,
-                    size: ButtonSize.large,
-                    mainAxisSize: MainAxisSize.max,
-                  )
-                ]
-        ),]
-      ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
         child: SizedBox(
           height: 150,
-          child: DigitCard(
-            cardType: CardType.primary,
-            margin: EdgeInsets.fromLTRB(0, theme.spacerTheme.spacer2, 0, 0),
-            padding: EdgeInsets.fromLTRB(theme.spacerTheme.spacer2, 0, theme.spacerTheme.spacer2, 0),
-            children: [Column(
-              children: [
-                Button(
-                  size: ButtonSize.large,
-                  type: ButtonType.primary,
-                  mainAxisSize: MainAxisSize.max,
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.goToHome),
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                Button(
-                  size: ButtonSize.large,
-                  type: ButtonType.secondary,
-                  mainAxisSize: MainAxisSize.max,
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.downloadmoredata),
-                ),
-              ],
-            ),]
+          child: Column(
+            children: [
+              Button(
+                size: ButtonSize.large,
+                type: ButtonType.primary,
+                mainAxisSize: MainAxisSize.max,
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.goToHome),
+                onPressed: () {
+                  context.router.popUntilRoot();
+                },
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              Button(
+                size: ButtonSize.large,
+                type: ButtonType.secondary,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  context.router.popUntilRoot();
+                },
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.downloadmoredata),
+              ),
+            ],
           ),
         ),
       ),
