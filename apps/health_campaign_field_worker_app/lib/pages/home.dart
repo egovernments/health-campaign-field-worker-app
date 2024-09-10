@@ -542,7 +542,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db || element == i18.home.beneficiaryReferralLabel)
+            element == i18.home.db)
         .toList();
 
     final showcaseKeys = filteredLabels

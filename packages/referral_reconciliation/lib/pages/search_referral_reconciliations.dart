@@ -3,9 +3,9 @@ import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
-// import 'package:digit_ui_components/widgets/scrollable_content.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:survey_form/survey_form.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
@@ -57,7 +57,6 @@ class _SearchReferralReconciliationsPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) => BlocProvider<
             SearchReferralsBloc>(

@@ -105,13 +105,8 @@ class _RecordReferralDetailsPageState
                           builder: (context, serviceState) {
                             return serviceState.maybeWhen(
                               orElse: () => DigitCard(
-                                  margin: EdgeInsets.fromLTRB(
-                                      0, theme.spacerTheme.spacer2, 0, 0),
-                                  padding: EdgeInsets.fromLTRB(
-                                      theme.spacerTheme.spacer2,
-                                      0,
-                                      theme.spacerTheme.spacer2,
-                                      0),
+                                  padding: EdgeInsets.all(
+                                      theme.spacerTheme.spacer2),
                                   cardType: CardType.primary,
                                   children: [
                                     ValueListenableBuilder(
@@ -431,10 +426,7 @@ class _RecordReferralDetailsPageState
                                   ]),
                               serviceSearch: (value1, value2, value3) {
                                 return DigitCard(
-                                    margin: EdgeInsets.all(
-                                        theme.spacerTheme.spacer2),
-                                    padding: EdgeInsets.all(
-                                        theme.spacerTheme.spacer2),
+                                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                                     cardType: CardType.primary,
                                     children: [
                                       ValueListenableBuilder(
@@ -468,7 +460,7 @@ class _RecordReferralDetailsPageState
                                                           .control(_cycleKey)
                                                           .setErrors(
                                                               {'': true});
-                                                    } else if (form
+                                                    } if (form
                                                             .control(_genderKey)
                                                             .value ==
                                                         null) {
@@ -850,7 +842,7 @@ class _RecordReferralDetailsPageState
                                                           ))
                                                       .firstWhere(
                                                         (item) =>
-                                                            item.name ==
+                                                            item.code ==
                                                             form
                                                                 .control(
                                                                     _cycleKey)
@@ -1097,7 +1089,7 @@ class _RecordReferralDetailsPageState
                                                               ))
                                                           .firstWhere(
                                                             (item) =>
-                                                                item.name ==
+                                                                item.code ==
                                                                 form
                                                                     .control(
                                                                         _genderKey)
@@ -1139,55 +1131,59 @@ class _RecordReferralDetailsPageState
                                   return DigitCard(
                                       cardType: CardType.primary,
                                       children: [
-                                        ReactiveWrapperField<ReferralReasonModel>(
-                                            formControlName: _referralReason,
-                                            validationMessages: {
-                                              'required': (_) =>
-                                                  localizations.translate(
-                                                    i18.common
-                                                        .corecommonRequired,
+                                        SizedBox(
+                                          width: double.infinity,
+                                          child: ReactiveWrapperField<String>(
+                                              formControlName: _referralReason,
+                                              validationMessages: {
+                                                'required': (_) =>
+                                                    localizations.translate(
+                                                      i18.common
+                                                          .corecommonRequired,
+                                                    ),
+                                              },
+                                              showErrors: (control) =>
+                                                  control.invalid &&
+                                                  control.touched,
+                                              // Ensures error is shown if invalid and touched
+                                              builder: (field) {
+                                                return LabeledField(
+                                                  isRequired: true,
+                                                  label: localizations.translate(
+                                                    i18.referralReconciliation
+                                                        .reasonForReferralHeader,
                                                   ),
-                                            },
-                                            showErrors: (control) =>
-                                                control.invalid &&
-                                                control.touched,
-                                            // Ensures error is shown if invalid and touched
-                                            builder: (field) {
-                                              return LabeledField(
-                                                isRequired: true,
-                                                label: localizations.translate(
-                                                  i18.referralReconciliation
-                                                      .reasonForReferralHeader,
-                                                ),
-                                                child: RadioList(
-                                                  onChanged: (val) {
-                                                    form
+                                                  child: RadioList(
+                                                    readOnly: viewOnly,
+                                                    onChanged: (val) {
+                                                      form
+                                                          .control(
+                                                              _referralReason)
+                                                          .markAsTouched();
+                                                      form
+                                                          .control(
+                                                              _referralReason)
+                                                          .value = val.code;
+                                                    },
+                                                    groupValue: form
                                                         .control(
-                                                            _referralReason)
-                                                        .markAsTouched();
-                                                    form
-                                                        .control(
-                                                            _referralReason)
-                                                        .value = ReferralReasonModel(code: val.code, value: val.name);
-                                                  },
-                                                  groupValue: form
-                                                      .control(
-                                                      _referralReason)
-                                                      .value?.code ?? "",
-                                                  errorMessage: field.errorText,
-                                                  radioButtons:
-                                                      ReferralReconSingleton()
-                                                          .referralReasons
-                                                          .map((r) {
-                                                    return RadioButtonModel(
-                                                      code: r.toString().toUpperCase(),
-                                                      // Use the index as the code
-                                                      name: localizations.translate(r.toString().toUpperCase()),
-                                                    );
-                                                  }).toList(),
-                                                ),
-                                              );
-                                            }),
+                                                        _referralReason)
+                                                        .value ?? "",
+                                                    errorMessage: field.errorText,
+                                                    radioButtons:
+                                                        ReferralReconSingleton()
+                                                            .referralReasons
+                                                            .map((r) {
+                                                      return RadioButtonModel(
+                                                        code: r.toString().toUpperCase(),
+                                                        // Use the index as the code
+                                                        name: localizations.translate(r.toString().toUpperCase()),
+                                                      );
+                                                    }).toList(),
+                                                  ),
+                                                );
+                                              }),
+                                        ),
                                       ]);
                                 }),
                               ],
@@ -1342,49 +1338,29 @@ class _RecordReferralDetailsPageState
               ]
             : [Validators.required],
       ),
-      _referralReason: FormControl<ReferralReasonModel>(
+      _referralReason: FormControl<String>(
         value: referralState.mapOrNull(
-          create: (value) {
-            if (value.viewOnly && value.hfReferralModel?.symptom != null) {
-              return ReferralReasonModel(
-                code: value.hfReferralModel?.symptom ?? '',
-                value: value.hfReferralModel?.symptom ?? '',
-              );
-            }
-            return null;
-          },
+          create: (value) =>
+              value.viewOnly && value.hfReferralModel?.symptom != null
+                  ? value.hfReferralModel?.symptom
+                  : null,
         ),
         disabled: referralState.mapOrNull(
-          create: (value) => value.viewOnly,
-        ) ?? false,
+              create: (value) => value.viewOnly,
+            ) ??
+            false,
         validators: [
           Validators.required,
         ],
       ),
-
-      // _referralReason: FormControl<String>(
-      //   value: referralState.mapOrNull(
-      //     create: (value) =>
-      //         value.viewOnly && value.hfReferralModel?.symptom != null
-      //             ? value.hfReferralModel?.symptom
-      //             : null,
-      //   ),
-      //   disabled: referralState.mapOrNull(
-      //         create: (value) => value.viewOnly,
-      //       ) ??
-      //       false,
-      //   validators: [
-      //     Validators.required,
-      //   ],
-      // ),
     });
   }
 }
 
-class ReferralReasonModel {
+class ReferralReason {
   final String code;
   final String value;
 
-  ReferralReasonModel({required this.code, required this.value});
+  ReferralReason({required this.code, required this.value});
 }
 
