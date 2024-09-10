@@ -45,6 +45,7 @@ class _ReferralReasonChecklistPreviewPageState
                 return selectedService != null
                     ? DigitCard(
                         cardType: CardType.primary,
+                        padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                         children: [
                           Button(
                           size: ButtonSize.large,
@@ -54,6 +55,8 @@ class _ReferralReasonChecklistPreviewPageState
                             context.read<ServiceBloc>().add(
                               ServiceResetEvent(serviceList: serviceList),
                             );
+                            context.router.popUntil((route) => route.settings.name == 'SearchReferralReconciliationsRoute');
+                            context.router.maybePop();
                           },
                           type: ButtonType.primary,)]) : const Offstage();
               },
@@ -71,6 +74,7 @@ class _ReferralReasonChecklistPreviewPageState
                         children: [
                           ...value1.map((e) => e.serviceDefId != null
                               ? DigitCard(
+                            margin: EdgeInsets.all(theme.spacerTheme.spacer2),
                                   cardType: CardType.primary,
                                   children: [Column(
                                     mainAxisAlignment:
