@@ -1,17 +1,18 @@
+import 'package:digit_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:flutter/material.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../models/privacy_policy_model.dart';
+import '../../theme/digit_theme.dart';
 import '../localized.dart';
 import 'privacy_notice_expand_component.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../models/privacy_notice/privacy_notice_model.dart';
-import '../showcase/showcase_wrappers.dart';
+
 
 class FullPageDialog extends LocalizedStatefulWidget {
-  final PrivacyPolicy privacyPolicy;
+  final PrivacyNoticeModel privacyPolicy;
   final VoidCallback onAccept;
   final VoidCallback onDecline;
 
@@ -49,7 +50,7 @@ class _FullPageDialogState extends LocalizedState<FullPageDialog> {
                           Padding(
                             padding: const EdgeInsets.only(top: kPadding*3, left: 0),
                             child: Text(
-                              localizations.translate(widget.privacyPolicy.header),
+                              localizations.translate(widget.privacyPolicy.header ?? ''),
                               maxLines: 3,
                               style: Theme.of(context).textTheme.displayMedium?.copyWith(
                                 color: const DigitColors().woodsmokeBlack,
