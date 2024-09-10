@@ -8,3 +8,4 @@ export 'data/repositories/sync/sync_up.dart';
 export 'models/bandwidth/bandwidth_model.dart';
 export 'blocs/sync/sync.dart';
 export 'utils/utils.dart';
+export 'data/sync_service_annotation.dart';
