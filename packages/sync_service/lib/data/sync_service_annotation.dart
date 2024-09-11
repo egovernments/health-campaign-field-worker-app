@@ -18,8 +18,8 @@ class SyncEnumAnnotation extends EnumAnnotation {
   void apply(Enum target, LibraryBuilder output) {
     // Define the method that will contain the generated cases
     final StringBuffer methodBuffer = StringBuffer()
-      ..writeln('class syncDownEntity {')
-      ..writeln('void syncEntities(')
+      ..writeln('class SyncDownEntity {')
+      ..writeln('syncEntities(')
       ..writeln(
           '  MapEntry<DataModelType, List<OpLogEntry<EntityModel>>> typeGroupedEntity,')
       ..writeln(
@@ -86,7 +86,7 @@ class SyncEnumAnnotation extends EnumAnnotation {
     // Close the switch and method
     methodBuffer
       ..writeln('  }')
-      ..writeln('  }')
+      ..writeln('  return responseEntities;}')
       ..writeln('}');
 
     // Add the generated method to the output
