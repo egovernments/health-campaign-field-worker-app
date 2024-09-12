@@ -8,12 +8,10 @@
 // coverage:ignore-file
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:ui' as _i8;
-
-import 'package:attendance_management/attendance_management.dart' as _i10;
+import 'package:attendance_management/attendance_management.dart' as _i9;
 import 'package:attendance_management/blocs/app_localization.dart' as _i7;
 import 'package:attendance_management/models/entities/attendance_register.dart'
-    as _i9;
+    as _i8;
 import 'package:attendance_management/pages/manage_attendance.dart' as _i3;
 import 'package:attendance_management/pages/mark_attendance.dart' as _i4;
 import 'package:attendance_management/pages/session_select.dart' as _i2;
@@ -38,8 +36,6 @@ abstract class $AttendanceRoute extends _i5.AutoRouterModule {
           descriptionWidget: args.descriptionWidget,
           action: args.action,
           actionLabel: args.actionLabel,
-          icon: args.icon,
-          color: args.color,
           enableBackToSearch: args.enableBackToSearch,
           secondaryAction: args.secondaryAction,
           secondaryLabel: args.secondaryLabel,
@@ -97,8 +93,6 @@ class AttendanceAcknowledgementRoute
     _i6.Widget? descriptionWidget,
     void Function()? action,
     String? actionLabel,
-    _i6.IconData? icon,
-    _i8.Color? color,
     bool enableBackToSearch = true,
     void Function()? secondaryAction,
     String? secondaryLabel,
@@ -114,8 +108,6 @@ class AttendanceAcknowledgementRoute
             descriptionWidget: descriptionWidget,
             action: action,
             actionLabel: actionLabel,
-            icon: icon,
-            color: color,
             enableBackToSearch: enableBackToSearch,
             secondaryAction: secondaryAction,
             secondaryLabel: secondaryLabel,
@@ -139,8 +131,6 @@ class AttendanceAcknowledgementRouteArgs {
     this.descriptionWidget,
     this.action,
     this.actionLabel,
-    this.icon,
-    this.color,
     this.enableBackToSearch = true,
     this.secondaryAction,
     this.secondaryLabel,
@@ -162,10 +152,6 @@ class AttendanceAcknowledgementRouteArgs {
 
   final String? actionLabel;
 
-  final _i6.IconData? icon;
-
-  final _i8.Color? color;
-
   final bool enableBackToSearch;
 
   final void Function()? secondaryAction;
@@ -174,7 +160,7 @@ class AttendanceAcknowledgementRouteArgs {
 
   @override
   String toString() {
-    return 'AttendanceAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, label: $label, subLabel: $subLabel, description: $description, descriptionWidget: $descriptionWidget, action: $action, actionLabel: $actionLabel, icon: $icon, color: $color, enableBackToSearch: $enableBackToSearch, secondaryAction: $secondaryAction, secondaryLabel: $secondaryLabel}';
+    return 'AttendanceAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, label: $label, subLabel: $subLabel, description: $description, descriptionWidget: $descriptionWidget, action: $action, actionLabel: $actionLabel, enableBackToSearch: $enableBackToSearch, secondaryAction: $secondaryAction, secondaryLabel: $secondaryLabel}';
   }
 }
 
@@ -183,7 +169,7 @@ class AttendanceAcknowledgementRouteArgs {
 class AttendanceDateSessionSelectionRoute
     extends _i5.PageRouteInfo<AttendanceDateSessionSelectionRouteArgs> {
   AttendanceDateSessionSelectionRoute({
-    required List<_i9.AttendanceRegisterModel> registers,
+    required List<_i8.AttendanceRegisterModel> registers,
     required String registerID,
     _i6.Key? key,
     _i7.AttendanceLocalization? appLocalizations,
@@ -213,7 +199,7 @@ class AttendanceDateSessionSelectionRouteArgs {
     this.appLocalizations,
   });
 
-  final List<_i9.AttendanceRegisterModel> registers;
+  final List<_i8.AttendanceRegisterModel> registers;
 
   final String registerID;
 
@@ -248,12 +234,12 @@ class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
     required int exitTime,
     required int entryTime,
     required DateTime dateTime,
-    required List<_i10.AttendeeModel> attendees,
+    required List<_i9.AttendeeModel> attendees,
     required String registerId,
     required String tenantId,
     int? session,
     _i6.Key? key,
-    _i10.AttendanceLocalization? appLocalizations,
+    _i9.AttendanceLocalization? appLocalizations,
     List<_i5.PageRouteInfo>? children,
   }) : super(
           MarkAttendanceRoute.name,
@@ -296,7 +282,7 @@ class MarkAttendanceRouteArgs {
 
   final DateTime dateTime;
 
-  final List<_i10.AttendeeModel> attendees;
+  final List<_i9.AttendeeModel> attendees;
 
   final String registerId;
 
@@ -306,7 +292,7 @@ class MarkAttendanceRouteArgs {
 
   final _i6.Key? key;
 
-  final _i10.AttendanceLocalization? appLocalizations;
+  final _i9.AttendanceLocalization? appLocalizations;
 
   @override
   String toString() {

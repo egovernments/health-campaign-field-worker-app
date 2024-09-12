@@ -62,6 +62,19 @@ class AttendanceDateTimeManagement {
     }
   }
 
+  // Function to get a formatted date string based on the provided date string and date format.
+  static getFilteredDate(String date, {String? dateFormat}) {
+    if (date.trim().isEmpty) return '';
+    try {
+      var dateTime = DateTime.parse(date).toLocal();
+      return DateFormat(dateFormat ?? "dd/MM/yyyy").format(dateTime);
+    } on Exception catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+    }
+  }
+
   // Function to get a formatted date string from the provided timestamp in milliseconds.
   static String getDateFromTimestamp(int timestamp, {String? dateFormat}) {
     DateTime date = DateTime.fromMillisecondsSinceEpoch(timestamp);

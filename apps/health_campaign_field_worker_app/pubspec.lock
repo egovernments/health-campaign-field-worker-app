@@ -541,7 +541,7 @@ packages:
     source: hosted
     version: "1.0.0"
   digit_ui_components:
-    dependency: "direct overridden"
+    dependency: "direct main"
     description:
       path: "flutter/digit-ui-components/digit_components"
       ref: enhancement-branch-flutter

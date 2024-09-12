@@ -3,11 +3,18 @@ import 'dart:async';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/blocs/location/location.dart';
 import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/utils/utils.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_components/widgets/molecules/digit_loader.dart';
+import 'package:digit_components/widgets/molecules/digit_table.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -155,69 +162,57 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ? const SizedBox.shrink()
                                 : SizedBox(
                                     height: 140,
-                                    child: Card(
-                                      margin: const EdgeInsets.all(0),
-                                      child: Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            kPadding, 0, kPadding, 0),
-                                        child: Column(
-                                          children: [
-                                            DigitOutlineIconButton(
-                                              buttonStyle:
-                                                  OutlinedButton.styleFrom(
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.zero,
-                                                ),
-                                              ),
-                                              onPressed: () {
+                                    child: DigitCard(
+                                      children: [
+                                        Button(
+                                        size: ButtonSize.large,
+                                        type: ButtonType.secondary,
+                                        mainAxisSize: MainAxisSize.max,
+                                        onPressed: () {
+                                          checkIfAllAttendeesMarked(
+                                            state,
+                                            localizations,
+                                            theme,
+                                            EnumValues.draft.toValue(),
+                                            locationState.latitude,
+                                            locationState.longitude,
+                                            context,
+                                          );
+                                        },
+                                        prefixIcon: Icons.drafts_outlined,
+                                        label: localizations.translate(
+                                          i18.attendance
+                                              .saveAndMarkLaterLabel,
+                                        ),
+                                      ),
+                                      Button(
+                                        size: ButtonSize.large,
+                                        type: ButtonType.primary,
+                                        mainAxisSize: MainAxisSize.max,
+                                        onPressed: !viewOnly
+                                            ? () {
                                                 checkIfAllAttendeesMarked(
                                                   state,
                                                   localizations,
                                                   theme,
-                                                  EnumValues.draft.toValue(),
+                                                  EnumValues.submit
+                                                      .toValue(),
                                                   locationState.latitude,
                                                   locationState.longitude,
                                                   context,
                                                 );
+                                              }
+                                            : () {
+                                                // context.router.pop();
                                               },
-                                              icon: Icons.drafts_outlined,
-                                              label: localizations.translate(
-                                                i18.attendance
-                                                    .saveAndMarkLaterLabel,
-                                              ),
-                                            ),
-                                            DigitElevatedButton(
-                                              onPressed: !viewOnly
-                                                  ? () {
-                                                      checkIfAllAttendeesMarked(
-                                                        state,
-                                                        localizations,
-                                                        theme,
-                                                        EnumValues.submit
-                                                            .toValue(),
-                                                        locationState.latitude,
-                                                        locationState.longitude,
-                                                        context,
-                                                      );
-                                                    }
-                                                  : () {
-                                                      // context.router.pop();
-                                                    },
-                                              child: Text(
-                                                localizations.translate(
-                                                  (!viewOnly)
-                                                      ? i18.common
-                                                          .coreCommonSubmit
-                                                      : i18.attendance
-                                                          .closeButton,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
+                                        label: localizations.translate(
+                                            (!viewOnly)
+                                                ? i18.common
+                                                    .coreCommonSubmit
+                                                : i18.attendance
+                                                    .closeButton,
+                                          ),
+                                      ),]
                                     ),
                                   ),
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -227,8 +222,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             ),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  left: kPadding * 2,
+                                padding: EdgeInsets.only(
+                                  left: theme.spacerTheme.spacer2 * 2,
                                 ),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
@@ -242,8 +237,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    left: kPadding * 2, top: 4, bottom: 16),
+                                padding: EdgeInsets.only(
+                                    left: theme.spacerTheme.spacer2 * 2, top: 4, bottom: 16),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
@@ -272,14 +267,57 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               DigitCard(
-                                child: Column(
+                                children: [
+                                  Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Padding(
                                       padding:
                                           const EdgeInsets.only(bottom: 8.0),
                                       child: tableData.isNotEmpty
-                                          ? DigitTable(
+                                          ?
+                          // CustomTable(
+                          //                         columns: [TableColumn(
+                          //                         header: 'Name',
+                          //                         //columnType: ColumnType.checkbox,
+                          //                         ),
+                          //                         TableColumn(
+                          //                         header: 'Attendance',
+                          //                         //columnType: ColumnType.text,
+                          //                         ),
+                          //                         TableColumn(
+                          //                         header: 'Identification',
+                          //                         //columnType: ColumnType.numeric,
+                          //                         ),],
+                          //                         rows: List.generate(
+                          //                         40,
+                          //                         (index) => [
+                          //                         CustomColumn(
+                          //                         columnType: ColumnType.text,
+                          //                         value: index % 2 == 0,
+                          //                         // Example checkbox value: true for even rows, false for odd rows
+                          //                         label: 'Select',
+                          //                         onCheckboxChanged: (newValue) {
+                          //                         // Handle checkbox change
+                          //                         print('Checkbox changed: $newValue');
+                          //                         },
+                          //                         ),
+                          //                         CustomColumn(
+                          //                         columnType: ColumnType.text,
+                          //                         label: 'Data ${index + 1}', // Text data
+                          //                         ),
+                          //                         CustomColumn(
+                          //                         columnType: ColumnType.button,
+                          //                         label: 'Button ${index + 1}', // Button label
+                          //                         onButtonPressed: () {
+                          //                         // Handle button press
+                          //                         print('Button ${index + 1} pressed');
+                          //                         },
+                          //                         ),
+                          //                         ],
+                          //                         ),
+                          //                         )
+                                      DigitTable(
                                               height: tableData.length > 2
                                                   ? (tableData.length + 1) * 57
                                                   : (tableData.length + 1) * 65,
@@ -300,7 +338,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             ),
                                     ),
                                   ],
-                                ),
+                                ),]
                               ),
                             ],
                           );
@@ -414,12 +452,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   SizedBox(
                     width: 100,
                     height: 40,
-                    child: DigitElevatedButton(
-                      child: Text(
+                    child: Button(
+                      size: ButtonSize.large,
+                      type: ButtonType.primary,
+                      mainAxisSize: MainAxisSize.max,
+                      label:
                         k.translate(
                           i18.attendance.closeButton,
                         ),
-                      ),
                       onPressed: () {
                         context.router.maybePop();
                       },
@@ -466,14 +506,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ((attendanceCollectionModel ?? [])
                         .every((a) => a.status == -1 || a.status == null) &&
                     type == EnumValues.draft.toValue())) {
-              DigitToast.show(
+              Toast.showToast(
                 context,
-                options: DigitToastOptions(
-                  localizations
-                      .translate(i18.attendance.pleaseMarkAttForIndividuals),
-                  true,
-                  theme,
-                ),
+                message: localizations
+                    .translate(i18.attendance.pleaseMarkAttForIndividuals),
+                type: ToastType.error,
               );
             } else {
               if (type == EnumValues.draft.toValue()) {
@@ -486,48 +523,93 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   latitude: latitude,
                   longitude: longitude,
                 ));
-                DigitToast.show(
+                Toast.showToast(
                   context,
-                  options: DigitToastOptions(
-                    localizations.translate(i18.attendance.draftSavedMessage),
-                    false,
-                    theme,
-                  ),
+                  message: localizations.translate(i18.attendance.draftSavedMessage),
+                  type: ToastType.success,
                 );
               } else {
-                DigitDialog.show(context,
-                    options: DigitDialogOptions(
-                      titleText: localizations.translate(
-                        i18.attendance.confirmationLabel,
-                      ),
-                      contentText:
-                          '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
-                      primaryAction: DigitDialogActions(
-                        label: localizations.translate(
-                          i18.attendance.proceed,
+                showDialog(
+                    context: context,
+                    builder: (BuildContext ctx) {
+                      return Popup(
+                        title: localizations.translate(
+                          i18.attendance.confirmationLabel,
                         ),
-                        action: (context) {
-                          individualLogBloc?.add(SaveAsDraftEvent(
-                            entryTime: widget.entryTime,
-                            exitTime: widget.exitTime,
-                            selectedDate: widget.dateTime,
-                            isSingleSession: widget.session == null,
-                            createOplog: type != EnumValues.draft.toValue(),
-                            latitude: latitude,
-                            longitude: longitude,
-                          ));
-                          Navigator.of(context).pop();
-                          navigateToAcknowledgement(localizations);
-                        },
-                      ),
-                      secondaryAction: DigitDialogActions(
-                        label: localizations
-                            .translate(i18.common.coreCommonGoback),
-                        action: (context) {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ));
+                        description: '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+                        actions: [
+                          Button(
+                            label: localizations.translate(
+                              i18.attendance.proceed,
+                            ),
+                            type: ButtonType.primary,
+                            size: ButtonSize.large,
+                            onPressed: () {
+                              individualLogBloc?.add(SaveAsDraftEvent(
+                                entryTime: widget.entryTime,
+                                exitTime: widget.exitTime,
+                                selectedDate: widget.dateTime,
+                                isSingleSession: widget.session == null,
+                                createOplog: type != EnumValues.draft.toValue(),
+                                latitude: latitude,
+                                longitude: longitude,
+                              ));
+                              Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pop(true);
+                              navigateToAcknowledgement(localizations);
+                            },
+                          ),
+                          Button(
+                            label: localizations
+                                .translate(i18.common.coreCommonGoback),
+                            type: ButtonType.secondary,
+                            size: ButtonSize.large,
+                            onPressed: () {
+                              Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pop(false);
+                              // Navigator.of(context).pop();
+                            },
+                          )
+                        ],
+                      );
+                    });
+                // DigitDialog.show(context,
+                //     options: DigitDialogOptions(
+                //       titleText: localizations.translate(
+                //         i18.attendance.confirmationLabel,
+                //       ),
+                //       contentText:
+                //           '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+                //       primaryAction: DigitDialogActions(
+                //         label: localizations.translate(
+                //           i18.attendance.proceed,
+                //         ),
+                //         action: (context) {
+                //           individualLogBloc?.add(SaveAsDraftEvent(
+                //             entryTime: widget.entryTime,
+                //             exitTime: widget.exitTime,
+                //             selectedDate: widget.dateTime,
+                //             isSingleSession: widget.session == null,
+                //             createOplog: type != EnumValues.draft.toValue(),
+                //             latitude: latitude,
+                //             longitude: longitude,
+                //           ));
+                //           Navigator.of(context).pop();
+                //           navigateToAcknowledgement(localizations);
+                //         },
+                //       ),
+                //       secondaryAction: DigitDialogActions(
+                //         label: localizations
+                //             .translate(i18.common.coreCommonGoback),
+                //         action: (context) {
+                //           Navigator.of(context).pop();
+                //         },
+                //       ),
+                //     ));
               }
             }
           });
