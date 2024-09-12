@@ -385,6 +385,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             case StockRecordEntryType.receipt:
                                             case StockRecordEntryType.loss:
                                             case StockRecordEntryType.damaged:
+                                            case StockRecordEntryType.returned:
                                               if (deliveryTeamSelected) {
                                                 senderId = deliveryTeamName;
                                                 senderType = "STAFF";
@@ -397,7 +398,6 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
 
                                               break;
                                             case StockRecordEntryType.dispatch:
-                                            case StockRecordEntryType.returned:
                                               if (deliveryTeamSelected) {
                                                 receiverId = deliveryTeamName;
                                                 receiverType = "STAFF";
@@ -420,7 +420,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             referenceId: stockState.projectId,
                                             referenceIdType: 'PROJECT',
                                             quantity: quantity.toString(),
-                                            waybillNumber: waybillNumber,
+                                            wayBillNumber: waybillNumber,
                                             receiverId: receiverId,
                                             receiverType: receiverType,
                                             senderId: senderId,
