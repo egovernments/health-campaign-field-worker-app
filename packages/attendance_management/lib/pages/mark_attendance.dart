@@ -5,13 +5,12 @@ import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/blocs/location/location.dart';
 import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/utils/utils.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/molecules/digit_loader.dart';
 import 'package:digit_components/widgets/molecules/digit_table.dart';
 import 'package:digit_data_model/data/data_repository.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -256,7 +255,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: EdgeInsets.all(theme.spacerTheme.spacer3),
                                 child: DigitSearchBar(
                                   controller: controller,
                                   hintText: localizations
@@ -267,13 +266,14 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               DigitCard(
+                                margin: EdgeInsets.all(theme.spacerTheme.spacer3),
                                 children: [
                                   Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Padding(
                                       padding:
-                                          const EdgeInsets.only(bottom: 8.0),
+                                         EdgeInsets.only(bottom: theme.spacerTheme.spacer2),
                                       child: tableData.isNotEmpty
                                           ?
                           // CustomTable(
@@ -483,10 +483,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
       double? longitude,
       BuildContext context) {
     context.read<LocationBloc>().add(const LoadLocationEvent());
-    DigitComponentsUtils().showLocationCapturingDialog(
+    DigitComponentsUtils().showDialog(
         context,
         localizations.translate(i18.common.locationCapturing),
-        DigitSyncDialogType.inProgress);
+        DialogType.inProgress);
     Future.delayed(const Duration(seconds: 2), () async {
       DigitComponentsUtils().hideDialog(context);
       state.maybeWhen(

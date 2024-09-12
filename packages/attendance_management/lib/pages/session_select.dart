@@ -341,14 +341,16 @@ class _AttendanceDateSessionSelectionPageState
                                   selectedRegister,
                                   DateTime.now(),
                                 ))
-                                  InfoCard(
-                                    title: localizations.translate(
-                                          i18.attendance.missedAttendanceHeader,
-                                    ),
-                                    type: InfoType.info,
-                                    description: localizations.translate(
-                                      getMissedDays(context),
-                                    ),
+                                  DigitCard(
+                                    children: [InfoCard(
+                                      title: localizations.translate(
+                                            i18.attendance.missedAttendanceHeader,
+                                      ),
+                                      type: InfoType.info,
+                                      description: localizations.translate(
+                                        getMissedDays(context),
+                                      ),
+                                    ),]
                                   )
                                 else
                                   const SizedBox(),
