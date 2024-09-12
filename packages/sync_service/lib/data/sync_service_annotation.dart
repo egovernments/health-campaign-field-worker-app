@@ -1,22 +1,50 @@
 import 'package:recase/recase.dart';
 import 'package:super_annotations/super_annotations.dart';
 
+/// This class uses the [SyncServiceAnnotation] to define entities that require synchronization.
+///
+/// The `SyncServiceAnnotation` is applied with a list of entity types that define which
+/// entities should be synchronized down from a remote repository.
+///
+/// ### Example Usage
+///
+/// To add a new entity type to the synchronization list, modify the annotation as shown below:
+///
+/// ```dart
+/// @SyncServiceAnnotation([
+///   'newEntityType',  // Add your entity type here
+///   'individual.address_.identifier_s',
+///   'household.address',
+///   'projectBeneficiary',
+///   // Other existing types...
+/// ])
+/// class SyncModule {
+///   // Your sync module implementation
+/// }
+/// ```
+///
+/// Additionally, ensure that the entity type follows the expected naming conventions:
+///
+/// - Entity types can include nested entities separated by dots (`.`).
+/// - If the entity type ends with a pluralized suffix (`_s` or `_`), the synchronization logic will treat it accordingly.
+///
+/// For further details, see the [SyncServiceAnnotation] class and its documentation.
+/// [@SyncServiceAnnotation([
+///  'individual.address_.identifier_s',
+///  'household.address',
+///  'task.resource_s',
+/// ])]
+/// class Example {
+      // Class implementation
+/// }
+
 class SyncServiceAnnotation extends ClassAnnotation {
-  const SyncServiceAnnotation();
+  final List<String> types;
+
+  const SyncServiceAnnotation(this.types);
 
   @override
-  void apply(Class element, LibraryBuilder output) {
-    output.body.add(Code(
-        '//case DataModelType.${element.fields.map((f) => f.type!.symbol)}: \n var responseEntities = await remote.search(${element.name}(clientReferenceId:entities.whereType<${element.name}>().map((e)=>e.clientReferenceId).whereNotNull().toList(),),);'));
-  }
-}
-
-class SyncEnumAnnotation extends EnumAnnotation {
-  const SyncEnumAnnotation();
-
-  @override
-  void apply(Enum target, LibraryBuilder output) {
-    // Define the method that will contain the generated cases
+  void apply(Class target, LibraryBuilder output) {
     final StringBuffer methodBuffer = StringBuffer()
       ..writeln('class SyncDownEntity {')
       ..writeln('syncEntities(')
@@ -29,19 +57,16 @@ class SyncEnumAnnotation extends EnumAnnotation {
       ..writeln('  RemoteRepository<EntityModel, EntitySearchModel> remote,')
       ..writeln(
           '  LocalRepository<EntityModel, EntitySearchModel> local) async {')
-      ..writeln('  const taskResourceIdKey = "taskResourceId";')
-      ..writeln('  const individualIdentifierIdKey = "individualIdentifierId";')
-      ..writeln('  const householdAddressIdKey = "householdAddressId";')
-      ..writeln('  const individualAddressIdKey = "individualAddressId";')
-      ..writeln('  switch (typeGroupedEntity.key) {');
+      ..writeln('  switch (typeGroupedEntity.key.name) {');
 
-    // Generate case statements for each enum value
-    for (var entity in target.values.map((v) => v.name)) {
-      final entityPascalCase = entity.pascalCase; // Convert to PascalCase
-      final entityCamelCase = entity.camelCase; // Convert to camelCase
+    for (var entity in types) {
+      final entityPascalCase = entity.contains('.')
+          ? entity.split('.')[0].pascalCase
+          : entity.pascalCase;
 
       methodBuffer
-        ..writeln('    case DataModelType.${entity}:')
+        ..writeln(
+            '    case "${entity.contains('.') ? entity.split('.')[0] : entity}":')
         ..writeln(
             '      responseEntities = await remote.search(${entityPascalCase}SearchModel(')
         ..writeln(
@@ -60,18 +85,63 @@ class SyncEnumAnnotation extends EnumAnnotation {
         ..writeln(
             '            .firstWhereOrNull((e) => e.clientReferenceId == entity.clientReferenceId);')
         ..writeln('        final serverGeneratedId = responseEntity?.id;')
-        ..writeln('        final rowVersion = responseEntity?.rowVersion;')
+        ..writeln('        final rowVersion = responseEntity?.rowVersion;');
+
+      methodBuffer
         ..writeln('        if (serverGeneratedId != null) {')
+        ..writeln('          final additionalIds = <AdditionalId>[];');
+
+      // Check each part after the first dot
+      if (entity.contains('.')) {
+        final parts = entity.split('.');
+        parts.removeAt(0); // Remove the first part
+        for (var part in parts) {
+          if (isPlural(part)) {
+            methodBuffer
+              ..writeln(
+                  '          final ${removePluralSuffix(part)}AdditionalIds = responseEntity?.${removePluralSuffix(part)}?.map((e) {')
+              ..writeln('            final id = e.id;')
+              ..writeln('            if (id == null) return null;')
+              ..writeln('            return AdditionalId(')
+              ..writeln(
+                  '              idType: "${entity.contains('.') ? entity.split('.')[0] : entity}${isPlural(part.pascalCase) ? removePluralSuffix(part) : part.pascalCase}Id",')
+              ..writeln('              id: id,')
+              ..writeln('            );')
+              ..writeln('          }).whereNotNull().toList();')
+              ..writeln(
+                  '          additionalIds.addAll(${removePluralSuffix(part)}AdditionalIds ?? []);');
+          } else {
+            methodBuffer
+              ..writeln(
+                  '          final ${part}AdditionalIds = responseEntity?.${part} != null')
+              ..writeln('            ? null')
+              ..writeln('            : AdditionalId(')
+              ..writeln(
+                  '              idType: "${entity.contains('.') ? entity.split('.')[0] : entity}${part.pascalCase}Id",')
+              ..writeln('              id: responseEntity!.${part}!.id!,')
+              ..writeln('            );')
+              ..writeln(
+                  '          additionalIds.addAll([${part}AdditionalIds!] ?? []);');
+          }
+        }
+      }
+
+      methodBuffer
         ..writeln(
             '          await local.opLogManager.updateServerGeneratedIds(')
         ..writeln('            model: UpdateServerGeneratedIdModel(')
         ..writeln('              clientReferenceId: entity.clientReferenceId,')
         ..writeln('              serverGeneratedId: serverGeneratedId,')
+        ..writeln(
+            '              nonRecoverableError: entity.nonRecoverableError,')
+        ..writeln('              additionalIds: additionalIds,')
         ..writeln('              dataOperation: element.operation,')
         ..writeln('              rowVersion: rowVersion,')
         ..writeln('            ),')
         ..writeln('          );')
-        ..writeln('        } else {')
+        ..writeln('        } else {');
+
+      methodBuffer
         ..writeln(
             '          final bool markAsNonRecoverable = await local.opLogManager.updateSyncDownRetry(entity.clientReferenceId);')
         ..writeln('          if (markAsNonRecoverable) {')
@@ -83,61 +153,27 @@ class SyncEnumAnnotation extends EnumAnnotation {
         ..writeln('      break;');
     }
 
-    // Close the switch and method
     methodBuffer
       ..writeln('  }')
       ..writeln('  return responseEntities;}')
       ..writeln('}');
 
-    // Add the generated method to the output
     output.body.add(Code(methodBuffer.toString()));
   }
+
+  bool isPlural(String word) {
+    var result = word.contains('_') ? true : false;
+    return result;
+  }
+
+  String removePluralSuffix(String word) {
+    const pluralSuffixes = ['_'];
+
+    for (var suffix in pluralSuffixes) {
+      if (word.contains(suffix)) {
+        return word.replaceAll('_', '');
+      }
+    }
+    return word;
+  }
 }
-
-//  case DataModelType.stock:
-//           responseEntities = await remote.search(
-//             StockSearchModel(
-//               clientReferenceId: entities
-//                   .whereType<StockModel>()
-//                   .map((e) => e.clientReferenceId)
-//                   .whereNotNull()
-//                   .toList(),
-//             ),
-//           );
-
-//           for (var element in operationGroupedEntity.value) {
-//             if (element.id == null) return;
-//             final entity = element.entity as StockModel;
-//             final responseEntity =
-//                 responseEntities.whereType<StockModel>().firstWhereOrNull(
-//                       (e) => e.clientReferenceId == entity.clientReferenceId,
-//                     );
-
-//             final serverGeneratedId = responseEntity?.id;
-//             final rowVersion = responseEntity?.rowVersion;
-
-//             if (serverGeneratedId != null) {
-//               await local.opLogManager.updateServerGeneratedIds(
-//                 model: UpdateServerGeneratedIdModel(
-//                   clientReferenceId: entity.clientReferenceId!,
-//                   serverGeneratedId: serverGeneratedId,
-//                   dataOperation: element.operation,
-//                   rowVersion: rowVersion,
-//                 ),
-//               );
-//             } else {
-//               final bool markAsNonRecoverable = await local.opLogManager
-//                   .updateSyncDownRetry(entity.clientReferenceId);
-
-//               if (markAsNonRecoverable) {
-//                 await local.update(
-//                   entity.copyWith(
-//                     nonRecoverableError: true,
-//                   ),
-//                   createOpLog: false,
-//                 );
-//               }
-//             }
-//           }
-
-// break;
