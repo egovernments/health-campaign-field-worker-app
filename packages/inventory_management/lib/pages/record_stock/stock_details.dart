@@ -60,7 +60,9 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
         Validators.max(10000),
       ]),
       _transactionReasonKey: FormControl<String>(),
-      _waybillNumberKey: FormControl<String>(),
+      _waybillNumberKey: FormControl<String>(
+        validators: [Validators.minLength(2), Validators.maxLength(200)],
+      ),
       _waybillQuantityKey: FormControl<String>(),
       _vehicleNumberKey: FormControl<String>(),
       _typeOfTransportKey: FormControl<String>(),
@@ -834,16 +836,25 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                 ),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
-                                    key: const Key(_waybillNumberKey),
-                                    label: localizations.translate(
-                                      i18.stockDetails.waybillNumberLabel,
-                                    ),
-                                    formControlName: _waybillNumberKey,
-                                    keyboardType:
-                                        const TextInputType.numberWithOptions(
-                                      decimal: true,
-                                    ),
-                                  ),
+                                      key: const Key(_waybillNumberKey),
+                                      label: localizations.translate(
+                                        i18.stockDetails.waybillNumberLabel,
+                                      ),
+                                      formControlName: _waybillNumberKey,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                        decimal: true,
+                                      ),
+                                      validationMessages: {
+                                        'maxLength': (object) => localizations
+                                            .translate(
+                                                i18.common.maxCharsRequired)
+                                            .replaceAll('{}', '200'),
+                                        'minLength': (object) => localizations
+                                            .translate(
+                                                i18.common.min2CharsRequired)
+                                            .replaceAll('{}', ''),
+                                      }),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
                                       label: localizations.translate(

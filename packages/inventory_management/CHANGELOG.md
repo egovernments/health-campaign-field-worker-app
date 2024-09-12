@@ -1,3 +1,7 @@
+## 1.0.3+4
+
+* Updated wayBillNumber validation
+
 ## 1.0.3+3
 
 * Updated key name of waybillNumber to wayBillNumber
