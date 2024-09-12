@@ -1,19 +1,11 @@
 import 'package:collection/collection.dart';
-import 'package:digit_data_model/data_model.dart' hide DataModelType;
-
-import 'package:inventory_management/models/entities/stock.dart';
-import 'package:inventory_management/models/entities/stock_reconciliation.dart';
-import 'package:referral_reconciliation/models/entities/hf_referral.dart';
-import 'package:registration_delivery/models/entities/household_member.dart';
-import 'package:registration_delivery/models/entities/project_beneficiary.dart';
-import 'package:registration_delivery/models/entities/referral.dart';
-import 'package:registration_delivery/models/entities/side_effect.dart';
-import 'package:registration_delivery/models/entities/task.dart';
-
-import 'sync_annotation_module.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:referral_reconciliation/referral_reconciliation.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 class SyncDownEntity {
-  Future<List<EntityModel>> syncEntities(
+  syncEntities(
       MapEntry<DataModelType, List<OpLogEntry<EntityModel>>> typeGroupedEntity,
       MapEntry<DataOperation, List<OpLogEntry<EntityModel>>>
           operationGroupedEntity,
@@ -21,12 +13,119 @@ class SyncDownEntity {
       List<EntityModel> responseEntities,
       RemoteRepository<EntityModel, EntitySearchModel> remote,
       LocalRepository<EntityModel, EntitySearchModel> local) async {
-    const taskResourceIdKey = "taskResourceId";
-    const individualIdentifierIdKey = "individualIdentifierId";
-    const householdAddressIdKey = "householdAddressId";
-    const individualAddressIdKey = "individualAddressId";
-    switch (typeGroupedEntity.key) {
-      case DataModelType.projectBeneficiary:
+    switch (typeGroupedEntity.key.name) {
+      case "individual":
+        responseEntities = await remote.search(IndividualSearchModel(
+          clientReferenceId: entities
+              .whereType<IndividualModel>()
+              .map((e) => e.clientReferenceId)
+              .whereNotNull()
+              .toList(),
+          isDeleted: true,
+        ));
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as IndividualModel;
+          final responseEntity = responseEntities
+              .whereType<IndividualModel>()
+              .firstWhereOrNull(
+                  (e) => e.clientReferenceId == entity.clientReferenceId);
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
+            final addressAdditionalIds = responseEntity?.address
+                ?.map((e) {
+                  final id = e.id;
+                  if (id == null) return null;
+                  return AdditionalId(
+                    idType: "individualAddressId",
+                    id: id,
+                  );
+                })
+                .whereNotNull()
+                .toList();
+            additionalIds.addAll(addressAdditionalIds ?? []);
+            final identifiersAdditionalIds = responseEntity?.identifiers
+                ?.map((e) {
+                  final id = e.id;
+                  if (id == null) return null;
+                  return AdditionalId(
+                    idType: "individualIdentifierSId",
+                    id: id,
+                  );
+                })
+                .whereNotNull()
+                .toList();
+            additionalIds.addAll(identifiersAdditionalIds ?? []);
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(entity.clientReferenceId);
+            if (markAsNonRecoverable) {
+              await local.update(entity.copyWith(nonRecoverableError: true),
+                  createOpLog: false);
+            }
+          }
+        }
+        break;
+      case "household":
+        responseEntities = await remote.search(HouseholdSearchModel(
+          clientReferenceId: entities
+              .whereType<HouseholdModel>()
+              .map((e) => e.clientReferenceId)
+              .whereNotNull()
+              .toList(),
+          isDeleted: true,
+        ));
+        for (var element in operationGroupedEntity.value) {
+          if (element.id == null) continue;
+          final entity = element.entity as HouseholdModel;
+          final responseEntity = responseEntities
+              .whereType<HouseholdModel>()
+              .firstWhereOrNull(
+                  (e) => e.clientReferenceId == entity.clientReferenceId);
+          final serverGeneratedId = responseEntity?.id;
+          final rowVersion = responseEntity?.rowVersion;
+          if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
+            final addressAdditionalIds = responseEntity?.address != null
+                ? null
+                : AdditionalId(
+                    idType: "householdAddressId",
+                    id: responseEntity!.address!.id!,
+                  );
+            additionalIds.addAll([addressAdditionalIds!] ?? []);
+            await local.opLogManager.updateServerGeneratedIds(
+              model: UpdateServerGeneratedIdModel(
+                clientReferenceId: entity.clientReferenceId,
+                serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
+                dataOperation: element.operation,
+                rowVersion: rowVersion,
+              ),
+            );
+          } else {
+            final bool markAsNonRecoverable = await local.opLogManager
+                .updateSyncDownRetry(entity.clientReferenceId);
+            if (markAsNonRecoverable) {
+              await local.update(entity.copyWith(nonRecoverableError: true),
+                  createOpLog: false);
+            }
+          }
+        }
+        break;
+      case "projectBeneficiary":
         responseEntities = await remote.search(ProjectBeneficiarySearchModel(
           clientReferenceId: entities
               .whereType<ProjectBeneficiaryModel>()
@@ -45,10 +144,13 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -63,7 +165,7 @@ class SyncDownEntity {
           }
         }
         break;
-      case DataModelType.householdMember:
+      case "householdMember":
         responseEntities = await remote.search(HouseholdMemberSearchModel(
           clientReferenceId: entities
               .whereType<HouseholdMemberModel>()
@@ -82,10 +184,13 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -100,7 +205,7 @@ class SyncDownEntity {
           }
         }
         break;
-      case DataModelType.stock:
+      case "stock":
         responseEntities = await remote.search(StockSearchModel(
           clientReferenceId: entities
               .whereType<StockModel>()
@@ -119,10 +224,13 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -137,7 +245,7 @@ class SyncDownEntity {
           }
         }
         break;
-      case DataModelType.stockReconciliation:
+      case "stockReconciliation":
         responseEntities = await remote.search(StockReconciliationSearchModel(
           clientReferenceId: entities
               .whereType<StockReconciliationModel>()
@@ -156,10 +264,13 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -174,7 +285,7 @@ class SyncDownEntity {
           }
         }
         break;
-      case DataModelType.task:
+      case "task":
         responseEntities = await remote.search(TaskSearchModel(
           clientReferenceId: entities
               .whereType<TaskModel>()
@@ -193,10 +304,25 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
+            final resourcesAdditionalIds = responseEntity?.resources
+                ?.map((e) {
+                  final id = e.id;
+                  if (id == null) return null;
+                  return AdditionalId(
+                    idType: "taskResourceSId",
+                    id: id,
+                  );
+                })
+                .whereNotNull()
+                .toList();
+            additionalIds.addAll(resourcesAdditionalIds ?? []);
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -211,7 +337,7 @@ class SyncDownEntity {
           }
         }
         break;
-      case DataModelType.sideEffect:
+      case "sideEffect":
         responseEntities = await remote.search(SideEffectSearchModel(
           clientReferenceId: entities
               .whereType<SideEffectModel>()
@@ -230,10 +356,13 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -248,7 +377,7 @@ class SyncDownEntity {
           }
         }
         break;
-      case DataModelType.referral:
+      case "referral":
         responseEntities = await remote.search(ReferralSearchModel(
           clientReferenceId: entities
               .whereType<ReferralModel>()
@@ -267,10 +396,13 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
@@ -285,7 +417,7 @@ class SyncDownEntity {
           }
         }
         break;
-      case DataModelType.hFReferral:
+      case "hFReferral":
         responseEntities = await remote.search(HFReferralSearchModel(
           clientReferenceId: entities
               .whereType<HFReferralModel>()
@@ -304,10 +436,13 @@ class SyncDownEntity {
           final serverGeneratedId = responseEntity?.id;
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
+            final additionalIds = <AdditionalId>[];
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
                 serverGeneratedId: serverGeneratedId,
+                nonRecoverableError: entity.nonRecoverableError,
+                additionalIds: additionalIds,
                 dataOperation: element.operation,
                 rowVersion: rowVersion,
               ),
