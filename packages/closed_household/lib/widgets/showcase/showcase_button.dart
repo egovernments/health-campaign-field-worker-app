@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/blocs/app_localization.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_showcase/showcase_widget.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
@@ -20,6 +20,8 @@ class ShowcaseButton extends LocalizedStatefulWidget {
 class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return TextButton(
       style: TextButton.styleFrom(padding: EdgeInsets.zero),
       onPressed: () {
@@ -42,11 +44,11 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
       child: Row(
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(
-              kPadding,
-              kPadding,
-              kPadding / 2,
-              kPadding,
+            padding: EdgeInsets.fromLTRB(
+              theme.spacerTheme.spacer2,
+              theme.spacerTheme.spacer2,
+              theme.spacerTheme.spacer2 / 2,
+              theme.spacerTheme.spacer2,
             ),
             child: Text(
               ClosedHouseholdLocalization.of(context)
