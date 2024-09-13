@@ -1357,10 +1357,3 @@ class _RecordReferralDetailsPageState
   }
 }
 
-class ReferralReason {
-  final String code;
-  final String value;
-
-  ReferralReason({required this.code, required this.value});
-}
-
