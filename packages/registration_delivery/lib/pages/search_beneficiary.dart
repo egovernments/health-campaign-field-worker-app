@@ -586,7 +586,9 @@ class _SearchBeneficiaryPageState
         .first
         .key;
     if (mappedStatus != null) {
-      return mappedStatus;
+      return mappedStatus == Status.administeredSuccess.toValue()
+          ? '${RegistrationDeliverySingleton().selectedProject!.name}_$mappedStatus'
+          : mappedStatus;
     } else {
       return selectedFilter;
     }
