@@ -102,10 +102,8 @@ class StatusFilterState extends LocalizedState<StatusFilter> {
                       });
                     },
                     valueMapper: (value) {
-                      return localizations.translate(value ==
-                              Status.administeredSuccess
-                          ? '${RegistrationDeliverySingleton().selectedProject!.name}_${value.toValue().toString()}'
-                          : value.toValue().toString());
+                      return localizations
+                          .translate(value.toValue().toString());
                     },
                   ),
                 ),
