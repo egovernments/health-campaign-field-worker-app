@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   digit_components: ^1.0.1+1
+  digit_ui_components: 0.0.3-beta
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
@@ -41,13 +42,13 @@ dependencies:
   async: ^2.11.0
   formula_parser: ^2.0.1
   registration_delivery: ^1.0.3+1
+  location: ^5.0.0
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  dart_code_metrics: ^5.7.6
   freezed: ^2.1.0+1
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
@@ -64,3 +65,4 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/svg/
+    - assets/animated_json/
