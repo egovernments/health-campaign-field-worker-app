@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/blocs/location/location.dart';
 import 'package:digit_components/models/digit_table_model.dart';
 import 'package:digit_components/widgets/molecules/digit_loader.dart';
 import 'package:digit_components/widgets/molecules/digit_table.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
@@ -38,12 +38,12 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
   final int? session;
 
   const MarkAttendancePage({
-    required this.exitTime,
-    required this.entryTime,
-    required this.dateTime,
     required this.attendees,
     required this.registerId,
     required this.tenantId,
+    required this.dateTime,
+    required this.entryTime,
+    required this.exitTime,
     this.session,
     super.key,
     super.appLocalizations,
@@ -63,7 +63,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   void initState() {
     controller = TextEditingController();
     controller.addListener(searchByName);
-    context.read<LocationBloc>().add(const LoadLocationEvent());
     individualLogBloc = AttendanceIndividualBloc(
       const AttendanceIndividualState.loading(),
       attendanceLogDataRepository: context

@@ -65,12 +65,12 @@ abstract class $AttendanceRoute extends _i5.AutoRouterModule {
       return _i5.AutoRoutePage<dynamic>(
         routeData: routeData,
         child: _i4.MarkAttendancePage(
-          exitTime: args.exitTime,
-          entryTime: args.entryTime,
-          dateTime: args.dateTime,
           attendees: args.attendees,
           registerId: args.registerId,
           tenantId: args.tenantId,
+          dateTime: args.dateTime,
+          entryTime: args.entryTime,
+          exitTime: args.exitTime,
           session: args.session,
           key: args.key,
           appLocalizations: args.appLocalizations,
@@ -231,12 +231,12 @@ class ManageAttendanceRoute extends _i5.PageRouteInfo<void> {
 /// [_i4.MarkAttendancePage]
 class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
   MarkAttendanceRoute({
-    required int exitTime,
-    required int entryTime,
-    required DateTime dateTime,
     required List<_i9.AttendeeModel> attendees,
     required String registerId,
     required String tenantId,
+    required DateTime dateTime,
+    required int entryTime,
+    required int exitTime,
     int? session,
     _i6.Key? key,
     _i9.AttendanceLocalization? appLocalizations,
@@ -244,12 +244,12 @@ class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
   }) : super(
           MarkAttendanceRoute.name,
           args: MarkAttendanceRouteArgs(
-            exitTime: exitTime,
-            entryTime: entryTime,
-            dateTime: dateTime,
             attendees: attendees,
             registerId: registerId,
             tenantId: tenantId,
+            dateTime: dateTime,
+            entryTime: entryTime,
+            exitTime: exitTime,
             session: session,
             key: key,
             appLocalizations: appLocalizations,
@@ -265,28 +265,28 @@ class MarkAttendanceRoute extends _i5.PageRouteInfo<MarkAttendanceRouteArgs> {
 
 class MarkAttendanceRouteArgs {
   const MarkAttendanceRouteArgs({
-    required this.exitTime,
-    required this.entryTime,
-    required this.dateTime,
     required this.attendees,
     required this.registerId,
     required this.tenantId,
+    required this.dateTime,
+    required this.entryTime,
+    required this.exitTime,
     this.session,
     this.key,
     this.appLocalizations,
   });
-
-  final int exitTime;
-
-  final int entryTime;
-
-  final DateTime dateTime;
 
   final List<_i9.AttendeeModel> attendees;
 
   final String registerId;
 
   final String tenantId;
+
+  final DateTime dateTime;
+
+  final int entryTime;
+
+  final int exitTime;
 
   final int? session;
 
@@ -296,6 +296,6 @@ class MarkAttendanceRouteArgs {
 
   @override
   String toString() {
-    return 'MarkAttendanceRouteArgs{exitTime: $exitTime, entryTime: $entryTime, dateTime: $dateTime, attendees: $attendees, registerId: $registerId, tenantId: $tenantId, session: $session, key: $key, appLocalizations: $appLocalizations}';
+    return 'MarkAttendanceRouteArgs{attendees: $attendees, registerId: $registerId, tenantId: $tenantId, dateTime: $dateTime, entryTime: $entryTime, exitTime: $exitTime, session: $session, key: $key, appLocalizations: $appLocalizations}';
   }
 }

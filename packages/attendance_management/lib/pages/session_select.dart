@@ -202,7 +202,7 @@ class _AttendanceDateSessionSelectionPageState
 
                                                 final submit =
                                                     await context.router.push(
-                                                  MarkAttendanceRoute(
+                                                      MarkAttendanceRoute(
                                                     attendees: selectedRegister
                                                                 .attendees !=
                                                             null
