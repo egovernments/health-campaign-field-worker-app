@@ -1,3 +1,6 @@
+## 1.0.2
+* Added privacy notice component
+
 ## 1.0.1+1
 * Changed similar dialogs to a common hideDialog
 

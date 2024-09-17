@@ -4,7 +4,6 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:flutter/material.dart';
-import '../../models/privacy_policy_model.dart';
 import '../../theme/digit_theme.dart';
 import '../localized.dart';
 import 'privacy_notice_expand_component.dart';
@@ -25,10 +24,10 @@ class FullPageDialog extends LocalizedStatefulWidget {
   });
 
   @override
-  _FullPageDialogState createState() => _FullPageDialogState();
+  FullPageDialogState createState() => FullPageDialogState();
 }
 
-class _FullPageDialogState extends LocalizedState<FullPageDialog> {
+class FullPageDialogState extends LocalizedState<FullPageDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog.fullscreen(
