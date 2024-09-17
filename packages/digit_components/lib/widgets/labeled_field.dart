@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 class LabeledField extends StatelessWidget {
   final Widget child;
   final String? label;
+  final String? description;
   final IconData? icon;
   final String? tooltipMessage;
   final TextStyle? labelStyle;
+  final TextStyle? descriptionStyle;
   final EdgeInsets? padding;
   final bool preferToolTipBelow;
   final TooltipTriggerMode tooltipTriggerMode;
@@ -17,6 +19,8 @@ class LabeledField extends StatelessWidget {
     super.key,
     required this.child,
     this.label,
+    this.description,
+    this.descriptionStyle,
     this.icon,
     this.tooltipMessage,
     this.labelStyle,
@@ -34,28 +38,42 @@ class LabeledField extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            if(label != null)
-            Row(
-              children: [
-                Flexible(
-                  child: Text(
-                    label!,
-                    style: labelStyle ??
-                        DigitTheme.instance.mobileTheme.textTheme.labelSmall,
+            if (label != null)
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      label!,
+                      style: labelStyle ??
+                          DigitTheme.instance.mobileTheme.textTheme.labelSmall,
+                    ),
                   ),
-                ),
-                if(isRequired) Text(' *', style: labelStyle ??
-                    DigitTheme.instance.mobileTheme.textTheme.labelSmall,),
-                icon != null
-                    ? Tooltip(
-                        message: tooltipMessage ?? '',
-                        preferBelow: preferToolTipBelow,
-                        triggerMode: tooltipTriggerMode,
-                        child: Icon(icon ?? Icons.info_outline))
-                    : const SizedBox.shrink()
-              ],
-            ),
-            if(label != null)
+                  if (isRequired)
+                    Text(
+                      ' *',
+                      style: labelStyle ??
+                          DigitTheme.instance.mobileTheme.textTheme.labelSmall,
+                    ),
+                  icon != null
+                      ? Tooltip(
+                          message: tooltipMessage ?? '',
+                          preferBelow: preferToolTipBelow,
+                          triggerMode: tooltipTriggerMode,
+                          child: Icon(icon ?? Icons.info_outline))
+                      : const SizedBox.shrink()
+                ],
+              ),
+            if (label != null) const SizedBox(height: 8),
+            description != null
+                ? Flexible(
+                    child: Text(
+                      description ?? '',
+                      style: descriptionStyle ??
+                          DigitTheme.instance.mobileTheme.textTheme.bodyMedium
+                              ?.copyWith(fontWeight: FontWeight.w100),
+                    ),
+                  )
+                : const SizedBox.shrink(),
             const SizedBox(height: 8),
             child,
           ],

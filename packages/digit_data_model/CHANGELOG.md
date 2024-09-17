@@ -1,3 +1,7 @@
+## 1.0.3+2
+
+* Modified attributes and service definitions for mapping additional details
+
 ## 1.0.3+1
 
 * Updated oplog transactions to synchronous - fix for write transaction lock

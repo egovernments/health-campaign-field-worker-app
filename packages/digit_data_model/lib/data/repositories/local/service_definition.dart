@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -76,10 +77,10 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
             .get();
 
         final res = val.map((e) {
-          final resull = e.readTableOrNull(sql.attributes);
-          if (resull != null) {
-            List<String> list = resull.values != null
-                ? resull.values!
+          final result = e.readTableOrNull(sql.attributes);
+          if (result != null) {
+            List<String> list = result.values != null
+                ? result.values!
                     .replaceFirst('[', '')
                     .replaceFirst(']', '')
                     .replaceAll(" ", '')
@@ -88,18 +89,21 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
             if (list.isEmpty) list.removeRange(0, list.length);
 
             return AttributesModel(
-              id: resull.id,
-              code: resull.code,
-              dataType: resull.dataType,
-              referenceId: resull.referenceId,
-              tenantId: resull.tenantId,
-              values: resull.values?.isNotEmpty == true ? list : null,
-              isActive: resull.isActive,
-              required: resull.required,
-              regex: resull.regex,
-              order: resull.order,
-              isDeleted: resull.isDeleted,
-              rowVersion: resull.rowVersion,
+              id: result.id,
+              code: result.code,
+              dataType: result.dataType,
+              referenceId: result.referenceId,
+              additionalDetails: result.additionalDetails == null
+                  ? null
+                  : jsonDecode(result.additionalDetails!.toString()),
+              tenantId: result.tenantId,
+              values: result.values?.isNotEmpty == true ? list : null,
+              isActive: result.isActive,
+              required: result.required,
+              regex: result.regex,
+              order: result.order,
+              isDeleted: result.isDeleted,
+              rowVersion: result.rowVersion,
             );
           }
         }).toList();
