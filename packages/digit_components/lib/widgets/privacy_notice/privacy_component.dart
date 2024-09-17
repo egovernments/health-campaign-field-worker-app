@@ -1,7 +1,7 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../localized.dart';
 import 'privacy_notice_dialog.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -10,7 +10,7 @@ class PrivacyComponent extends LocalizedStatefulWidget {
   final String formControlName;
   final String text;
   final String linkText;
-  final PrivacyPolicy? privacyPolicy;
+  final PrivacyNoticeModel? privacyPolicy;
   final String? trailingText;
   final String validationMessage;
 
@@ -21,7 +21,7 @@ class PrivacyComponent extends LocalizedStatefulWidget {
     required this.text,
     required this.linkText,
     this.trailingText,
-    this.privacyPolicy,
+     this.privacyPolicy,
     required this.validationMessage,
   });
 
@@ -54,6 +54,7 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
         return ValueListenableBuilder<bool>(
           valueListenable: checkboxStateNotifier,
           builder: (context, value, child) {
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -120,7 +121,7 @@ class _PrivacyComponentState extends LocalizedState<PrivacyComponent> {
                                     builder: (context) {
 
                                         return FullPageDialog(
-                                          privacyPolicy: widget.privacyPolicy ?? PrivacyPolicy(),
+                                          privacyPolicy: widget.privacyPolicy ?? const PrivacyNoticeModel(header: '', module: ''),
                                           onAccept: () {
                                             checkboxStateNotifier.value = true;
                                             field.didChange(true);
