@@ -67,8 +67,8 @@ class InventoryReportBloc
       } else if (reportType == InventoryReportType.returned) {
         transactionType = [TransactionType.received.toValue()];
         transactionReason = [TransactionReason.returned.toValue()];
-        receiverId = null;
-        senderId = facilityId;
+        receiverId = facilityId;
+        senderId = null;
       } else if (reportType == InventoryReportType.damage) {
         transactionType = [TransactionType.dispatched.toValue()];
         transactionReason = [
