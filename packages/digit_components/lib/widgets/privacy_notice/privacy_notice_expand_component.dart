@@ -1,11 +1,12 @@
-import 'package:closed_household/widgets/showcase/showcase_wrappers.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:flutter/material.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../models/privacy_notice/privacy_notice_model.dart';
+import '../../models/privacy_policy_model.dart';
+import '../../theme/digit_theme.dart';
 import '../localized.dart';
 
 class ExpandableSection extends LocalizedStatefulWidget {
-  final Content content;
+  final ContentNoticeModel content;
 
   const ExpandableSection({
     super.key,
@@ -75,7 +76,7 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
                 children:
                     widget.content.descriptions!.asMap().entries.map((entry) {
                   int index = entry.key;
-                  Description desc = entry.value;
+                  DescriptionNoticeModel desc = entry.value;
                   int? stepNumber = desc.type == 'step' ? index + 1 : null;
                   return DescriptionWidget(
                     description: desc,
@@ -91,7 +92,7 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
 }
 
 class DescriptionWidget extends LocalizedStatefulWidget {
-  final Description description;
+  final DescriptionNoticeModel description;
   final int? stepNumber;
 
   const DescriptionWidget({
@@ -201,7 +202,7 @@ class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
 }
 
 class SubDescriptionWidget extends LocalizedStatefulWidget {
-  final SubDescription subDescription;
+  final SubDescriptionNoticeModel subDescription;
   final int? stepNumber;
 
   const SubDescriptionWidget({
