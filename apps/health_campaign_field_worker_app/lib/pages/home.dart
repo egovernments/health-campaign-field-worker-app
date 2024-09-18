@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:drift/drift.dart' as drift;
+import 'package:flutter/services.dart' show rootBundle;
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
@@ -473,6 +476,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.db,
           onPressed: () {
+            createAndCheckTable(context);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
@@ -628,6 +632,115 @@ class _HomePageState extends LocalizedState<HomePage> {
             ),
           );
     }
+  }
+}
+
+Future<String?> generateCreateTableSQL() async {
+  try {
+    final content =
+        await rootBundle.loadString('assets/jsons/address_new.json');
+    final data = jsonDecode(content);
+    final tableName = data['name'];
+    final attributes = data['attributes'] as List<dynamic>;
+
+    final buffer = StringBuffer();
+    buffer.writeln('CREATE TABLE IF NOT EXISTS $tableName (');
+
+    List<String> columns = [];
+    String? primaryKey;
+
+    for (var attribute in attributes) {
+      if (attribute['includeForTable'] != false) {
+        final name = attribute['name'];
+        final type = attribute['type'];
+        final nullable = attribute['nullable'] ?? false;
+        final isPk = attribute['isPk'] ?? false;
+
+        String sqlType;
+        switch (type) {
+          case 'String':
+            sqlType = 'TEXT';
+            break;
+          case 'double':
+            sqlType = 'REAL';
+            break;
+          case 'int':
+            sqlType = 'INTEGER';
+            break;
+          default:
+            throw UnsupportedError('Unsupported type $type');
+        }
+
+        var columnDef = '$name $sqlType';
+        if (!nullable) {
+          columnDef += ' NOT NULL';
+        }
+        columns.add(columnDef);
+
+        if (isPk) {
+          primaryKey = name;
+        }
+      }
+    }
+
+    if (primaryKey != null) {
+      columns.add('PRIMARY KEY ($primaryKey)');
+    }
+
+    buffer.writeln(columns.join(', '));
+    buffer.writeln(');');
+
+    return buffer.toString();
+  } catch (e) {
+    print('error: $e');
+    return null;
+  }
+}
+
+void createCustomTable(BuildContext context) async {
+  var sql = await generateCreateTableSQL();
+  try {
+    if (sql != null) {
+      await context
+          .read<LocalSqlDataStore>()
+          .customStatement(sql)
+          .then((value) {
+        print('Table created successfully');
+      }).catchError((e) {
+        print('Error creating table: $e');
+      });
+    }
+  } catch (e) {
+    print('error: $e');
+  }
+}
+
+Future<bool> doesTableExist(String tableName, BuildContext context) async {
+  try {
+    final result = await context.read<LocalSqlDataStore>().customSelect(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
+        variables: [drift.Variable.withString(tableName)]).get();
+
+    print('List of tables:');
+    for (final row in result) {
+      print(row.read<String>('name'));
+    }
+
+    return result.isNotEmpty;
+  } catch (e) {
+    print('Error: $e');
+  }
+
+  return true;
+}
+
+void createAndCheckTable(BuildContext context) async {
+  bool exists = await doesTableExist('NewTable', context);
+  if (exists) {
+    print('Table exists!');
+  } else {
+    createCustomTable(context);
+    print('Table not found!');
   }
 }
 
