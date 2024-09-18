@@ -115,12 +115,6 @@ class BeneficiaryRegistrationBloc
           registrationDate: event.registrationDate,
         ));
       },
-      summary: (value) {
-        emit(value.copyWith(
-          householdModel: event.household,
-          registrationDate: event.registrationDate,
-        ));
-      },
     );
   }
 

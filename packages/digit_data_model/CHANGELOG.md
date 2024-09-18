@@ -1,3 +1,7 @@
+## 1.0.4-dev.5
+
+* Merged pgr and checklist changes
+
 ## 1.0.3+1
 
 * Updated oplog transactions to synchronous - fix for write transaction lock

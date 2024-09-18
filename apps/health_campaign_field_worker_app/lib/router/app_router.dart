@@ -1,16 +1,15 @@
-import 'package:complaints/router/complaints_router.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
-
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:complaints/router/complaints_router.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -48,8 +47,8 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     ClosedHouseholdPackageRoute,
     DashboardRoute,
-    SurveyFormRoute
-    ComplaintsRoute,
+    SurveyFormRoute,
+    ComplaintsRoute
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -177,7 +176,6 @@ class AppRouter extends _$AppRouter {
                     page: HouseholdAcknowledgementRoute.page,
                     path: 'household-acknowledgement',
                   ),
-                  AutoRoute(page: ChecklistViewRoute.page, path: 'view'),
                   AutoRoute(
                     page: DeliverySummaryRoute.page,
                     path: 'delivery-summary',
