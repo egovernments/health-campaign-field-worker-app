@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:survey_form/survey_form.dart';
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -192,7 +194,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   state.maybeWhen(
                     orElse: () => null,
                     syncInProgress: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
+                      await localSecureStore.setManualSyncTrigger(false);
                       if (context.mounted) {
                         DigitSyncDialog.show(
                           context,
@@ -206,7 +208,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     },
                     completedSync: () async {
                       Navigator.of(context, rootNavigator: true).pop();
-                      await localSecureStore.setManualSyncTrigger(false);
+                      await localSecureStore.setManualSyncTrigger(true);
                       if (context.mounted) {
                         DigitSyncDialog.show(
                           context,
@@ -326,6 +328,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.fileComplaint:
+          homeShowcaseData.distributorFileComplaint.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.fileComplaint,
+          onPressed: () =>
+              context.router.push(const ComplaintsInboxWrapperRoute()),
+        ),
+      ),
+
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
@@ -396,15 +408,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
-        ),
-      ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -569,6 +573,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               localRepositories: [
                 // INFO : Need to add local repo of package Here
                 context.read<
+                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
+                context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context.read<
                     LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
@@ -645,6 +652,16 @@ void setPackagesSingleton(BuildContext context) {
       ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
+
         RegistrationDeliverySingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,

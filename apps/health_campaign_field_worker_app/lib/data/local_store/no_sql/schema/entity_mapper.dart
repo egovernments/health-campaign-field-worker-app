@@ -1,3 +1,5 @@
+import 'package:complaints/complaints.dart';
+
 import 'package:attendance_management/models/entities/attendance_log.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_listener.dart';

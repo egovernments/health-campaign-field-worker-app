@@ -2,10 +2,24 @@
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
 
+## 1.0.4-dev.4
+
+* synced with 1.0.4-dev.3 changes
+
 ## 1.0.4-dev.3
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
 * Same change in 1.0.3-hotfix, 1.0.4-dev.3
+
+## 1.0.4-dev.2
+
+* Removed Service and Service Definition models
+    - Removed Service repositories and Service blocs to integrate in checklist package
+
+## 1.0.4-dev.1
+
+* Separated PGR Package 
+* Moved Models, Bloc, Repositories related to PGR Package
 
 ## 1.0.3
 
