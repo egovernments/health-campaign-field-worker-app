@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:attendance_management/blocs/app_localization.dart'
     as attendance_localization;
+import 'package:survey_form/blocs/app_localization.dart' as survey_form_localization;
 import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
@@ -32,6 +33,9 @@ getAppLocalizationDelegates({
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
+
+    // INFO : Need to add package delegates here
+
     referral_reconciliation_localization.ReferralReconLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
@@ -41,6 +45,10 @@ getAppLocalizationDelegates({
       appConfig.languages!,
     ),
     attendance_localization.AttendanceLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    ),
+    survey_form_localization.SurveyFormLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
@@ -64,6 +72,6 @@ getAppLocalizationDelegates({
     component_localization.ComponentLocalization.getDelegate(
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
-    ),
+    )
   ];
 }
