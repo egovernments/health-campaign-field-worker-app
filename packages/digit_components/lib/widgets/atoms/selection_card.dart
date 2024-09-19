@@ -43,7 +43,9 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
     }
 
     if (widget.equalWidthOptions) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _calculateMaxOptionWidth();
+      });
     }
   }
 
@@ -51,7 +53,9 @@ class _SelectionBoxState<T> extends State<SelectionBox<T>> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (widget.equalWidthOptions) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         _calculateMaxOptionWidth();
+      });
     }
   }
   @override

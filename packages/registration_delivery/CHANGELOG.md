@@ -1,3 +1,7 @@
+## 1.0.4-dev.1
+
+* Integrated survey_form package
+
 ## 1.0.3+1
 
 * Bug Fixes -

@@ -16,7 +16,6 @@ migrate_working_dir/
 *.iws
 .idea/
 
-
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
@@ -57,3 +56,7 @@ pubspec_overrides.yaml
 apps/health_campaign_field_worker_app/.env
 apps/health_campaign_field_worker_app/libisar.dylib
 *.properties
+
+# FVM Version Cache
+.fvm/
+.fvmrc

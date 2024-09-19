@@ -1,3 +1,7 @@
+## 1.0.3-dev.1
+
+* Integrated with survey_form package
+
 ## 1.0.2+1
 
 * Updated digit_scanner package, digit_components, digit_data_model
