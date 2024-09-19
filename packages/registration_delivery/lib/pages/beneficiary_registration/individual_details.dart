@@ -358,10 +358,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             i18.individualDetails.checkboxLabelText,
                           ),
                           value: widget.isHeadOfHousehold,
-                          isDisabled: widget.isHeadOfHousehold,
-                          onChanged: (_){
-
-                          },
+                          readOnly: widget.isHeadOfHousehold,
+                          onChanged: (_){},
                         ),
                       ),
                       ReactiveWrapperField(
@@ -377,6 +375,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           ),
                           isRequired: true,
                           child: DigitDropdown<String>(
+                            selectedOption: DropdownItem(
+                                name: localizations.translate(form.control(_idTypeKey).value),
+                                code: form.control(_idTypeKey).value
+                            ),
                             items: RegistrationDeliverySingleton()
                                 .idTypeOptions!
                                 .map(

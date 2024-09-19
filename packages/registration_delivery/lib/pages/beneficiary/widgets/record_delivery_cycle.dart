@@ -220,6 +220,7 @@ class RecordDeliveryCycleState extends LocalizedState<RecordDeliveryCycle> {
               width: MediaQuery.of(context).size.width,
               height: ((e.deliveries?.length ?? 0) + 1) * 57.5,
               child: DigitTable(
+                tableHeight: ((e.deliveries?.length ?? 0) + 1) * 57.5,
                 enableBorder: true,
                 showSelectedState: false,
                 showPagination: false,

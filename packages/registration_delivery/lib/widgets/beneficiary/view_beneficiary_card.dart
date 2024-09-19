@@ -2,11 +2,9 @@ import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
-import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 
@@ -146,11 +144,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               : DateTime.now(),
         ).months;
 
-        final canProceed = (RegistrationDeliverySingleton().projectType!.validMinAge!=null
-            && RegistrationDeliverySingleton().projectType!.validMaxAge!=null
-        )?true:false;
 
-        final isNotEligible = (canProceed)?!checkEligibilityForAgeAndSideEffect(
+        final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAgeConvertor(
             years: ageInYears,
             months: ageInMonths,
@@ -158,7 +153,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           RegistrationDeliverySingleton().projectType,
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
           sideEffects,
-        ):false;
+        );
         final isSideEffectRecorded = recordedSideEffect(
           currentCycle,
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
@@ -253,11 +248,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           : DateTime.now(),
     ).months;
 
-    final canProceed = (RegistrationDeliverySingleton().projectType!.validMinAge!=null
-        && RegistrationDeliverySingleton().projectType!.validMaxAge!=null
-    )?true:false;
 
-    final isNotEligible = (canProceed)?!checkEligibilityForAgeAndSideEffect(
+    final isNotEligible = !checkEligibilityForAgeAndSideEffect(
       DigitDOBAgeConvertor(
         years: ageInYears,
         months: ageInMonths,
@@ -269,7 +261,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       (householdMember.sideEffects ?? []).isNotEmpty
           ? householdMember.sideEffects
           : null,
-    ):false;
+    );
 
 
     final isBeneficiaryRefused =
@@ -330,30 +322,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               child: Button(
                 label:
                 localizations.translate(i18.searchBeneficiary.iconLabel),
-                onPressed: (canProceed)
-                    ?widget.onOpenPressed
-                    :(){
-                  showDialog(
-                      context: context,
-                      builder: (ctx)=>Popup(
-                        title: localizations.translate(i18.common.coreCommonCanNotProceed),
-                        type: PopUpType.alert,
-                        description: localizations.translate(i18.common.coreCommonCanNotProceedDescription),
-                        actions: [
-                          Button(
-                              label: localizations.translate(i18.common.coreCommonGoback),
-                              onPressed: (){
-                                Navigator.of(context,
-                                    rootNavigator: true
-                                ).pop();
-                              },
-                              type: ButtonType.primary,
-                              size: ButtonSize.large
-                          ),
-                        ],
-                      )
-                  );
-                },
+                onPressed: widget.onOpenPressed,
                 type: ButtonType.secondary,
                 size: ButtonSize.medium,
               ),
