@@ -8,6 +8,7 @@ import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../router/registration_delivery_router.gm.dart';
+import '../../utils/utils.dart';
 
 @RoutePage()
 class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
@@ -26,6 +27,11 @@ class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
 
 class BeneficiaryAcknowledgementPageState
     extends LocalizedState<BeneficiaryAcknowledgementPage> {
+
+  final canProceed = (RegistrationDeliverySingleton().projectType!.validMinAge!=null
+      && RegistrationDeliverySingleton().projectType!.validMaxAge!=null
+  )?true:false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +40,8 @@ class BeneficiaryAcknowledgementPageState
         title: localizations
             .translate(i18.acknowledgementSuccess.acknowledgementLabelText),
         actions: [
-          Button(
+          if(canProceed)
+            Button(
               label: localizations.translate(
                 i18.householdDetails.viewHouseHoldDetailsAction,
               ),
@@ -53,7 +60,7 @@ class BeneficiaryAcknowledgementPageState
           Button(
               label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
               onPressed: ()=>context.router.maybePop(),
-              type: ButtonType.secondary,
+              type: (canProceed)?ButtonType.secondary:ButtonType.primary,
               size: ButtonSize.large
           ),
         ],

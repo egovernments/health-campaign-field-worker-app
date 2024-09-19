@@ -1,11 +1,13 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,6 +62,7 @@ class _BeneficiaryChecklistPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return PopScope(
       canPop: false,
@@ -101,11 +104,16 @@ class _BeneficiaryChecklistPageState
                   ]),
                   enableFixedButton: true,
                   footer: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                    margin: const EdgeInsets.only(top: spacer2),
                     padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: DigitElevatedButton(
-                      onPressed: () async {
+                        const EdgeInsets.all(spacer2),
+                    children: [
+                      Button(
+                        label: localizations.translate(i18.common.coreCommonSubmit),
+                        type: ButtonType.primary,
+                        size: ButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () async {
                         // TODO: Submit checklist
                         final router = context.router;
                         submitTriggered = true;
@@ -208,58 +216,58 @@ class _BeneficiaryChecklistPageState
                               ),
                             );
 
-                        DigitDialog.show<bool>(
-                          context,
-                          options: DigitDialogOptions(
-                            titleText: localizations.translate(i18
+                        showPopup(
+                          context: context,
+                          title: localizations.translate(i18
                                 .deliverIntervention
                                 .beneficiaryChecklistDialogTitle),
-                            titlePadding: const EdgeInsets.only(top: kPadding),
-                            barrierDismissible: false,
-                            enableRecordPast: true,
-                            dialogPadding: const EdgeInsets.fromLTRB(
-                              kPadding,
-                              kPadding,
-                              kPadding,
-                              0,
+                          type: PopUpType.simple,
+                          actions: [
+                            Button(
+                                label: localizations.translate(
+                                  i18.common.coreCommonYes,
+                                ),
+                                onPressed: () {
+                                  context.router.push(
+                                    DeliverInterventionRoute(),
+                                  );
+                                  Navigator.of(
+                                      context,
+                                      rootNavigator: true
+                                  ).pop();
+                                },
+                                type: ButtonType.primary,
+                                size: ButtonSize.large
                             ),
-                            contentPadding: EdgeInsets.zero,
-                            primaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.common.coreCommonYes,
-                              ),
-                              action: (ctx) {
-                                Navigator.of(ctx).pop();
-                                ctx.router.push(
-                                  DeliverInterventionRoute(),
-                                );
-                              },
-                            ),
-                            secondaryAction: DigitDialogActions(
-                              label: localizations.translate(
-                                i18.common.coreCommonNo,
-                              ),
-                              action: (ctx) {
-                                Navigator.of(ctx).pop();
-                                ctx.router.push(
-                                  RefusedDeliveryRoute(),
-                                );
-                              },
-                            ),
-                          ),
+                            Button(
+                                label: localizations.translate(
+                                  i18.common.coreCommonNo,
+                                ),
+                                onPressed: () {
+                                  context.router.push(
+                                    RefusedDeliveryRoute(),
+                                  );
+                                  Navigator.of(
+                                      context,
+                                    rootNavigator: true,
+                                  ).pop();
+                                },
+                                type: ButtonType.secondary,
+                                size: ButtonSize.large
+                            )
+                          ]
                         );
+
                       },
-                      child: Text(
-                        localizations.translate(i18.common.coreCommonSubmit),
-                      ),
                     ),
+                    ]
                   ),
                   children: [
                     Form(
                       key: checklistFormKey, //assigning key to form
                       child: DigitCard(
                         padding: EdgeInsets.zero,
-                        child: Column(children: [
+                        children: [
                           ...initialAttributes!.map((
                             e,
                           ) {
@@ -268,17 +276,8 @@ class _BeneficiaryChecklistPageState
                             return Column(children: [
                               if (e.dataType == 'String' &&
                                   !(e.code ?? '').contains('.')) ...[
-                                DigitTextField(
-                                  onChange: (value) {
-                                    checklistFormKey.currentState?.validate();
-                                  },
-                                  isRequired: false,
-                                  controller: controller[index],
-                                  inputFormatter: [
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[a-zA-Z0-9]",
-                                    )),
-                                  ],
+                                FormField<String>(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
                                   validator: (value) {
                                     if (((value == null || value == '') &&
                                         e.required == true)) {
@@ -289,28 +288,36 @@ class _BeneficiaryChecklistPageState
                                       return (RegExp(e.regex!).hasMatch(value!))
                                           ? null
                                           : localizations
-                                              .translate("${e.code}_REGEX");
+                                          .translate("${e.code}_REGEX");
                                     }
 
                                     return null;
                                   },
-                                  label: localizations.translate(
-                                    '${selectedServiceDefinition?.code}.${e.code}',
+                                  builder: (field)=> LabeledField(
+                                    label: localizations.translate(
+                                      '${selectedServiceDefinition?.code}.${e.code}',
+                                    ),
+                                    isRequired: e.required??false,
+                                    child: DigitTextFormInput(
+                                      onChange: (value) {
+                                        field.didChange(value);
+                                        controller[index].text=value;
+                                        checklistFormKey.currentState?.validate();
+                                      },
+                                      isRequired: e.required ?? false,
+                                      controller: controller[index],
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(
+                                          "[a-zA-Z0-9]",
+                                        )),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ] else if (e.dataType == 'Number' &&
                                   !(e.code ?? '').contains('.')) ...[
-                                DigitTextField(
-                                  onChange: (value) {
-                                    checklistFormKey.currentState?.validate();
-                                  },
-                                  textStyle: theme.textTheme.headlineMedium,
-                                  textInputType: TextInputType.number,
-                                  inputFormatter: [
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[0-9]",
-                                    )),
-                                  ],
+                                FormField<String>(
+                                  autovalidateMode: AutovalidateMode.onUserInteraction,
                                   validator: (value) {
                                     if (((value == null || value == '') &&
                                         e.required == true)) {
@@ -322,15 +329,31 @@ class _BeneficiaryChecklistPageState
                                       return (RegExp(e.regex!).hasMatch(value!))
                                           ? null
                                           : localizations
-                                              .translate("${e.code}_REGEX");
+                                          .translate("${e.code}_REGEX");
                                     }
 
                                     return null;
                                   },
-                                  controller: controller[index],
-                                  label: '${localizations.translate(
-                                        '${value.selectedServiceDefinition?.code}.${e.code}',
-                                      ).trim()} ${e.required == true ? '*' : ''}',
+                                  builder: (field)=> LabeledField(
+                                    label: localizations.translate(
+                                      '${value.selectedServiceDefinition?.code}.${e.code}',
+                                    ).trim(),
+                                    isRequired: e.required??false,
+                                    child: DigitTextFormInput(
+                                      onChange: (value) {
+                                        field.didChange(value);
+                                        controller[index].text=value;
+                                        checklistFormKey.currentState?.validate();
+                                      },
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(RegExp(
+                                          "[0-9]",
+                                        )),
+                                      ],
+                                      controller: controller[index],
+                                    ),
+                                  ),
                                 ),
                               ] else if (e.dataType == 'MultiValueList' &&
                                   !(e.code ?? '').contains('.')) ...[
@@ -344,7 +367,7 @@ class _BeneficiaryChecklistPageState
                                           '${localizations.translate(
                                             '${selectedServiceDefinition?.code}.${e.code}',
                                           )} ${e.required == true ? '*' : ''}',
-                                          style: theme.textTheme.headlineSmall,
+                                          style: textTheme.headingM,
                                         ),
                                       ],
                                     ),
@@ -354,7 +377,7 @@ class _BeneficiaryChecklistPageState
                                   builder: (context, state) {
                                     return Column(
                                       children: e.values!
-                                          .map((e) => DigitCheckboxTile(
+                                          .map((e) => DigitCheckbox(
                                                 label: e,
                                                 value: controller[index]
                                                     .text
@@ -397,29 +420,17 @@ class _BeneficiaryChecklistPageState
                               ] else if (e.dataType == 'Boolean') ...[
                                 if (!(e.code ?? '').contains('.'))
                                   DigitCard(
-                                    child: Column(
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.topLeft,
-                                          child: Padding(
-                                            padding: EdgeInsets.zero,
-                                            child: Column(
-                                              children: [
-                                                Text(
-                                                  '${localizations.translate(
-                                                    '${selectedServiceDefinition?.code}.${e.code}',
-                                                  )} ${e.required == true ? '*' : ''}',
-                                                  style: theme
-                                                      .textTheme.headlineSmall,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        BlocBuilder<ServiceBloc, ServiceState>(
-                                          builder: (context, state) {
-                                            return SelectionBox<bool>(
-                                              //label: e,
+                                    children: [
+                                      BlocBuilder<ServiceBloc, ServiceState>(
+                                        builder: (context, state) {
+                                          return Align(
+                                            alignment: Alignment.topLeft,
+                                            child: SelectionCard<bool>(
+                                              // label: e,
+                                              title: localizations.translate(
+                                                '${selectedServiceDefinition?.code}.${e.code}',
+                                              ),
+                                              isRequired: e.required??false,
                                               allowMultipleSelection: false,
                                               width: 110,
                                               valueMapper: (value) {
@@ -475,11 +486,11 @@ class _BeneficiaryChecklistPageState
                                                   );
                                                 }
                                               },
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ]
                                   ),
                               ],
                             ]);
@@ -487,7 +498,7 @@ class _BeneficiaryChecklistPageState
                           const SizedBox(
                             height: 15,
                           ),
-                        ]),
+                        ]
                       ),
                     ),
                   ],
