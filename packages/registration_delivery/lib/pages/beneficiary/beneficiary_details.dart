@@ -1,8 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -19,6 +22,7 @@ import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/table_card/table_card.dart';
 import 'widgets/record_delivery_cycle.dart';
 
 @RoutePage()
@@ -45,6 +49,7 @@ class BeneficiaryDetailsPageState
     final theme = Theme.of(context);
     final localizations = RegistrationDeliveryLocalization.of(context);
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     return ProductVariantBlocWrapper(
       child: BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
@@ -141,11 +146,17 @@ class BeneficiaryDetailsPageState
                             return cycles != null && cycles.isNotEmpty
                                 ? deliverState.hasCycleArrived
                                     ? DigitCard(
-                                        margin: const EdgeInsets.fromLTRB(
-                                            0, kPadding, 0, 0),
-                                        padding: const EdgeInsets.fromLTRB(
-                                            kPadding, 0, kPadding, 0),
-                                        child: DigitElevatedButton(
+                                        margin: const EdgeInsets.only(
+                                            top: spacer2),
+                                        padding: const EdgeInsets.all(spacer2),
+                                        children: [Button(
+                                          label: '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
+                                              '${(deliverState.cycle == 0 ? (deliverState.cycle + 1)
+                                              : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} '
+                                              '${(deliverState.dose).toString()}',
+                                          type: ButtonType.primary,
+                                          size: ButtonSize.large,
+                                          mainAxisSize: MainAxisSize.max,
                                           onPressed: () async {
                                             final selectedCycle =
                                                 cycles.firstWhereOrNull((c) =>
@@ -167,222 +178,203 @@ class BeneficiaryDetailsPageState
                                                       state.selectedIndividual,
                                                 ),
                                               );
-                                              await DigitDialog.show<bool>(
-                                                context,
-                                                options: DigitDialogOptions(
-                                                  titlePadding:
-                                                      const EdgeInsets.fromLTRB(
-                                                    kPadding,
-                                                    0,
-                                                    kPadding,
-                                                    0,
+                                              showPopup(
+                                                context: context,
+                                                title: localizations.translate(i18.beneficiaryDetails.resourcesTobeDelivered),
+                                                type: PopUpType.simple,
+                                                additionalWidgets: [
+                                                  buildTableContent(
+                                                      deliverState,
+                                                      context,
+                                                      variant,
+                                                      state.selectedIndividual,
+                                                      state.householdMemberWrapper.household
+                                                    ),
+                                                  ],
+                                                actions: [
+                                                  Button(
+                                                      label: localizations.translate(i18.beneficiaryDetails.ctaProceed),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                        ).pop();
+                                                        router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      },
+                                                      type: ButtonType.primary,
+                                                      size: ButtonSize.large
                                                   ),
-                                                  titleText: localizations
-                                                      .translate(i18
-                                                          .beneficiaryDetails
-                                                          .resourcesTobeDelivered),
-                                                  content: buildTableContent(
-                                                    deliverState,
-                                                    context,
-                                                    variant,
-                                                    state.selectedIndividual,
-                                                    state.householdMemberWrapper.household
-                                                  ),
-                                                  barrierDismissible: true,
-                                                  primaryAction:
-                                                      DigitDialogActions(
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .beneficiaryDetails
-                                                            .ctaProceed),
-                                                    action: (ctx) {
-                                                      Navigator.of(ctx).pop();
-                                                      router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    },
-                                                  ),
-                                                ),
+                                                ]
                                               );
                                             }
                                           },
-                                          child: Center(
-                                            child: Text(
-                                              '${localizations.translate(i18.beneficiaryDetails.recordCycle)} ${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} ${(deliverState.dose).toString()}',
-                                            ),
-                                          ),
-                                        ),
+                                        ),]
                                       )
                                     : const SizedBox.shrink()
                                 : DigitCard(
                                     margin:
-                                        const EdgeInsets.only(top: kPadding),
-                                    padding: const EdgeInsets.fromLTRB(
-                                        kPadding, 0, kPadding, 0),
-                                    child: DigitElevatedButton(
-                                      child: Center(
-                                        child: Text(localizations.translate(i18
-                                            .householdOverView
-                                            .householdOverViewActionText)),
-                                      ),
+                                        const EdgeInsets.only(top: spacer2),
+                                    padding: const EdgeInsets.all(
+                                        spacer2),
+                                    children: [Button(
+                                      label: localizations.translate(i18.householdOverView
+                                          .householdOverViewActionText),
+                                      type: ButtonType.primary,
+                                      size: ButtonSize.large,
+                                      mainAxisSize: MainAxisSize.max,
                                       onPressed: () {
                                         context.router
                                             .push(DeliverInterventionRoute());
                                       },
-                                    ),
+                                    ),]
                                   );
                           },
                         ),
                         children: [
                           DigitCard(
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Flexible(
-                                      child: Text(
-                                        localizations.translate(i18
-                                            .beneficiaryDetails
-                                            .beneficiarysDetailsLabelText),
-                                        style: theme.textTheme.displayMedium,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                DigitTableCard(
-                                  element: {
-                                    localizations.translate(
+                            margin: const EdgeInsets.only(
+                              top: spacer2,bottom: spacer2
+                            ),
+                            children: [
+                              Text(
+                                localizations.translate(i18
+                                    .beneficiaryDetails
+                                    .beneficiarysDetailsLabelText),
+                                style: textTheme.headingXl,
+                            ),
+                              DigitTableCard(
+                              element: {
+                                localizations.translate(
+                                  RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
+                                          BeneficiaryType.individual
+                                      ? i18.householdOverView
+                                          .householdOverViewHouseholdHeadLabel
+                                      : i18.common.coreCommonName,
+                                ): RegistrationDeliverySingleton()
+                                            .beneficiaryType !=
+                                        BeneficiaryType.individual
+                                    ? householdMemberWrapper
+                                        .headOfHousehold?.name?.givenName
+                                    : state.selectedIndividual?.name
+                                            ?.givenName ??
+                                        '--',
+                                localizations.translate(
+                                  i18.deliverIntervention.idTypeText,
+                                ): () {
+                                  final identifiers =
                                       RegistrationDeliverySingleton()
                                                   .beneficiaryType !=
                                               BeneficiaryType.individual
-                                          ? i18.householdOverView
-                                              .householdOverViewHouseholdHeadLabel
-                                          : i18.common.coreCommonName,
-                                    ): RegistrationDeliverySingleton()
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold?.name?.givenName
-                                        : state.selectedIndividual?.name
-                                                ?.givenName ??
-                                            '--',
-                                    localizations.translate(
-                                      i18.deliverIntervention.idTypeText,
-                                    ): () {
-                                      final identifiers =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper
-                                                  .headOfHousehold?.identifiers
-                                              : state.selectedIndividual
-                                                  ?.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '--';
-                                      }
+                                          ? householdMemberWrapper
+                                              .headOfHousehold?.identifiers
+                                          : state.selectedIndividual
+                                              ?.identifiers;
+                                  if (identifiers == null ||
+                                      identifiers.isEmpty) {
+                                    return '--';
+                                  }
 
-                                      return localizations.translate(
-                                          identifiers.first.identifierType ??
-                                              '--');
-                                    }(),
-                                    localizations.translate(
-                                      i18.deliverIntervention.idNumberText,
-                                    ): () {
-                                      final identifiers =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper
-                                                  .headOfHousehold?.identifiers
-                                              : state.selectedIndividual
-                                                  ?.identifiers;
-                                      if (identifiers == null ||
-                                          identifiers.isEmpty) {
-                                        return '--';
-                                      }
+                                  return localizations.translate(
+                                      identifiers.first.identifierType ??
+                                          '--');
+                                }(),
+                                localizations.translate(
+                                  i18.deliverIntervention.idNumberText,
+                                ): () {
+                                  final identifiers =
+                                      RegistrationDeliverySingleton()
+                                                  .beneficiaryType !=
+                                              BeneficiaryType.individual
+                                          ? householdMemberWrapper
+                                              .headOfHousehold?.identifiers
+                                          : state.selectedIndividual
+                                              ?.identifiers;
+                                  if (identifiers == null ||
+                                      identifiers.isEmpty) {
+                                    return '--';
+                                  }
 
-                                      return maskString(identifiers
-                                              .first.identifierId
-                                              .toString()) ??
-                                          '--';
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonAge,
-                                    ): () {
-                                      final dob =
-                                          RegistrationDeliverySingleton()
-                                                      .beneficiaryType !=
-                                                  BeneficiaryType.individual
-                                              ? householdMemberWrapper
-                                                  .headOfHousehold?.dateOfBirth
-                                              : state.selectedIndividual
-                                                  ?.dateOfBirth;
-                                      if (dob == null || dob.isEmpty) {
-                                        return '--';
-                                      }
+                                  return maskString(identifiers
+                                          .first.identifierId
+                                          .toString()) ??
+                                      '--';
+                                }(),
+                                localizations.translate(
+                                  i18.common.coreCommonAge,
+                                ): () {
+                                  final dob =
+                                      RegistrationDeliverySingleton()
+                                                  .beneficiaryType !=
+                                              BeneficiaryType.individual
+                                          ? householdMemberWrapper
+                                              .headOfHousehold?.dateOfBirth
+                                          : state.selectedIndividual
+                                              ?.dateOfBirth;
+                                  if (dob == null || dob.isEmpty) {
+                                    return '--';
+                                  }
 
-                                      final int years =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).years;
-                                      final int months =
-                                          DigitDateUtils.calculateAge(
-                                        DigitDateUtils
-                                                .getFormattedDateToDateTime(
-                                              dob,
-                                            ) ??
-                                            DateTime.now(),
-                                      ).months;
+                                  final int years =
+                                      DigitDateUtils.calculateAge(
+                                    DigitDateUtils
+                                            .getFormattedDateToDateTime(
+                                          dob,
+                                        ) ??
+                                        DateTime.now(),
+                                  ).years;
+                                  final int months =
+                                      DigitDateUtils.calculateAge(
+                                    DigitDateUtils
+                                            .getFormattedDateToDateTime(
+                                          dob,
+                                        ) ??
+                                        DateTime.now(),
+                                  ).months;
 
-                                      return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
-                                    }(),
-                                    localizations.translate(
-                                      i18.common.coreCommonGender,
-                                    ): RegistrationDeliverySingleton()
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper.headOfHousehold
-                                            ?.gender?.name.sentenceCase
-                                        : state.selectedIndividual?.gender?.name
-                                                .sentenceCase ??
-                                            '--',
-                                    localizations.translate(
-                                      i18.common.coreCommonMobileNumber,
-                                    ): RegistrationDeliverySingleton()
-                                                .beneficiaryType !=
-                                            BeneficiaryType.individual
-                                        ? householdMemberWrapper
-                                            .headOfHousehold?.mobileNumber
-                                        : state.selectedIndividual
-                                                ?.mobileNumber ??
-                                            '--',
-                                    localizations.translate(i18
-                                        .deliverIntervention
-                                        .dateOfRegistrationLabel): () {
-                                      final date = projectBeneficiary
-                                          ?.first?.dateOfRegistration;
+                                  return "$years ${localizations.translate(i18.memberCard.deliverDetailsYearText)} ${localizations.translate(months.toString().toUpperCase())} ${localizations.translate(i18.memberCard.deliverDetailsMonthsText)}";
+                                }(),
+                                localizations.translate(
+                                  i18.common.coreCommonGender,
+                                ): RegistrationDeliverySingleton()
+                                            .beneficiaryType !=
+                                        BeneficiaryType.individual
+                                    ? householdMemberWrapper.headOfHousehold
+                                        ?.gender?.name.sentenceCase
+                                    : state.selectedIndividual?.gender?.name
+                                            .sentenceCase ??
+                                        '--',
+                                localizations.translate(
+                                  i18.common.coreCommonMobileNumber,
+                                ): RegistrationDeliverySingleton()
+                                            .beneficiaryType !=
+                                        BeneficiaryType.individual
+                                    ? householdMemberWrapper
+                                        .headOfHousehold?.mobileNumber
+                                    : state.selectedIndividual
+                                            ?.mobileNumber ??
+                                        '--',
+                                localizations.translate(i18
+                                    .deliverIntervention
+                                    .dateOfRegistrationLabel): () {
+                                  final date = projectBeneficiary
+                                      ?.first?.dateOfRegistration;
 
-                                      final registrationDate =
-                                          DateTime.fromMillisecondsSinceEpoch(
-                                        date ??
-                                            DateTime.now()
-                                                .millisecondsSinceEpoch,
-                                      );
+                                  final registrationDate =
+                                      DateTime.fromMillisecondsSinceEpoch(
+                                    date ??
+                                        DateTime.now()
+                                            .millisecondsSinceEpoch,
+                                  );
 
-                                      return DateFormat('dd MMMM yyyy')
-                                          .format(registrationDate);
-                                    }(),
-                                  },
-                                ),
-                              ],
+                                  return DateFormat('dd MMMM yyyy')
+                                      .format(registrationDate);
+                                }(),
+                              },
                             ),
+                            ]
                           ),
                           if ((RegistrationDeliverySingleton()
                                       .projectType
@@ -390,9 +382,11 @@ class BeneficiaryDetailsPageState
                                   [])
                               .isNotEmpty)
                             DigitCard(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
+                              margin: const EdgeInsets.only(
+                                top: spacer2,bottom: spacer2
+                              ),
+                              children: [
+                                Column(
                                 children: RegistrationDeliverySingleton()
                                             .projectType
                                             ?.cycles !=
@@ -427,6 +421,7 @@ class BeneficiaryDetailsPageState
                                       ]
                                     : [],
                               ),
+                              ]
                             )
                         ],
                       ),

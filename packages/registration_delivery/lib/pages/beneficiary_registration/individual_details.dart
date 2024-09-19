@@ -5,7 +5,6 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
-import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -359,7 +358,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             i18.individualDetails.checkboxLabelText,
                           ),
                           value: widget.isHeadOfHousehold,
-                          isDisabled: true,
+                          isDisabled: widget.isHeadOfHousehold,
                           onChanged: (_){
 
                           },
@@ -429,9 +428,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       readOnly:
                                       form.control(_idTypeKey).value ==
                                           'DEFAULT',
-                                      initialValue: form.control(_idTypeKey).value,
+                                      initialValue: form.control(_idNumberKey).value,
                                       onChange: (value){
-                                        form.control(_idTypeKey).value=value;
+                                        form.control(_idNumberKey).value=value;
                                       },
                                       errorMessage: field.errorText,
                                     ),
