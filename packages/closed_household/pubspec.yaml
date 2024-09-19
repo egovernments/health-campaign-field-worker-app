@@ -11,7 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: ^1.0.1+1
   digit_ui_components: 0.0.3-beta
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
