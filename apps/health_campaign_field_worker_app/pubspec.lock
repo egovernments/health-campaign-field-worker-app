@@ -544,7 +544,7 @@ packages:
     description:
       path: "flutter/digit-ui-components/digit_components"
       ref: enhancement-branch-flutter
-      resolved-ref: "210999335d0bc7f6a76ef3839132efcaa7e9957a"
+      resolved-ref: f2dc7a513fb8d58353dba027d017d054ffa41113
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+6"
@@ -712,10 +712,10 @@ packages:
     dependency: transitive
     description:
       name: firebase_core_platform_interface
-      sha256: f7d7180c7f99babd4b4c517754d41a09a4943a0f7a69b65c894ca5c68ba66315
+      sha256: e30da58198a6d4b49d5bce4e852f985c32cb10db329ebef9473db2b9f09ce810
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.1"
+    version: "5.3.0"
   firebase_core_web:
     dependency: transitive
     description:
@@ -1198,10 +1198,10 @@ packages:
     dependency: transitive
     description:
       name: hrk_batteries
-      sha256: "437324250c9b157654c9bb6c374170b8fa940f0f11dd9d019833e2731689272b"
+      sha256: "35bc2be10bb64284b04d3cd944c24eecf304747fc64b34e2d27ef1a3ac75ab49"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "2.2.0"
   hrk_flutter_test_batteries:
     dependency: "direct dev"
     description:

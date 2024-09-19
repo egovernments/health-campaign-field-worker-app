@@ -4,7 +4,7 @@ import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
-import 'package:digit_ui_components/widgets/atoms/text_chunk.dart';
+import 'package:digit_ui_components/widgets/atoms/text_block.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -139,12 +139,12 @@ class ClosedHouseholdDetailsPageState
                 SliverToBoxAdapter(
                   child: DigitCard(
                     children: [
-                      TextChunk(
+                      DigitTextBlock(
                         heading: localizations.translate(
                           i18.closeHousehold.closeHouseHoldDetailLabel,
                         ),
                         headingStyle: theme.textTheme.displayMedium,
-                        body: localizations.translate(
+                        description: localizations.translate(
                           i18.closeHousehold.closeHouseHoldDetailDescLabel,
                         ),
                       ),
