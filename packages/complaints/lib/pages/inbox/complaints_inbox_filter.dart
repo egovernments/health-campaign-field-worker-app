@@ -271,7 +271,7 @@ class ComplaintsInboxFilterPageState
                                   },
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: spacer2),
+                                  padding: const EdgeInsets.only(top: spacer2),
                                   child: LabeledField(
                                     label: localizations.translate(
                                       i18.complaints.complaintsTypeHeading,

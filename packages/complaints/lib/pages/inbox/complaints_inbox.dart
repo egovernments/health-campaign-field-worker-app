@@ -209,7 +209,7 @@ class _ComplaintsInboxItem extends StatelessWidget {
     final textTheme = theme.digitTextTheme(context);
 
     return Padding(
-      padding: EdgeInsets.only(top: spacer3),
+      padding: const EdgeInsets.only(top: spacer3),
       child: DigitCard(cardType: CardType.primary, children: [
         Padding(
             padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
