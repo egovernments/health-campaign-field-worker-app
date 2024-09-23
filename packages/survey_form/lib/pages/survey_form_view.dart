@@ -548,7 +548,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
                                                     return null;
                                                   },
-                                                  builder: (field)=> SelectionBox<bool>(
+                                                  builder: (field)=> SelectionCard<bool>(
                                                     errorMessage: field.errorText,
                                                     allowMultipleSelection: false,
                                                     valueMapper: (value) {
@@ -933,7 +933,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
                     return null;
                   },
-                  builder: (field)=>SelectionBox(
+                  builder: (field)=>SelectionCard(
                     errorMessage: field.errorText,
                     allowMultipleSelection: false,
                     valueMapper: (value) {
