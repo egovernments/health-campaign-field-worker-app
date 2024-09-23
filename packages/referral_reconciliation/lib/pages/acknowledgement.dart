@@ -22,8 +22,7 @@ class ReferralReconAcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ReferralReconAcknowledgementPage> createState() =>
-      _AcknowledgementPageState();
+  State<ReferralReconAcknowledgementPage> createState() => _AcknowledgementPageState();
 }
 
 class _AcknowledgementPageState
