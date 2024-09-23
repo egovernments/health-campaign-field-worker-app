@@ -160,7 +160,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             footer: viewOnly
                                 ? const SizedBox.shrink()
                                 : DigitCard(
-                                    margin: EdgeInsets.only(top: 16),
+                                    margin: EdgeInsets.only(top: theme.spacerTheme.spacer4),
                                     children: [
                                         Button(
                                           size: ButtonSize.large,
@@ -233,8 +233,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                               Padding(
                                 padding: EdgeInsets.only(
                                     left: theme.spacerTheme.spacer2 * 2,
-                                    top: 4,
-                                    bottom: 16),
+                                    top: theme.spacerTheme.spacer1,
+                                    bottom: theme.spacerTheme.spacer4),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
