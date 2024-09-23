@@ -28,39 +28,36 @@ class ComplaintsAcknowledgementPageState
     final theme= Theme.of(context);
     final textTheme =theme.digitTextTheme(context);
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(spacer4),
-        child: PanelCard(
-            title: localizations.translate(i18.complaints.acknowledgementLabel),
-            type: PanelType.success,
-            additionalDetails: [
-              Text(localizations.translate(
-                  i18.complaints.acknowledgementSubLabelMain)
-                  ,
-                style: textTheme.bodyS.copyWith(
-                  color: theme.colorTheme.paper.primary
-                ),
+      body: PanelCard(
+          title: localizations.translate(i18.complaints.acknowledgementLabel),
+          type: PanelType.success,
+          additionalDetails: [
+            Text(localizations.translate(
+                i18.complaints.acknowledgementSubLabelMain)
+                ,
+              style: textTheme.bodyS.copyWith(
+                color: theme.colorTheme.paper.primary
               ),
-              Text(localizations.translate(
-                  i18.complaints.acknowledgementSubLabelSub),
-                style: textTheme.bodyS.copyWith(
-                    color: theme.colorTheme.paper.primary
-                ),
-              ),
-            ],
-            description: localizations.translate(
-              i18.complaints.acknowledgementDescription,
             ),
-            actions: [
-              Button(
-                label: localizations.translate(
-                    i18.complaints.acknowledgementAction),
-                onPressed: () => context.router.maybePop(),
-                type: ButtonType.primary,
-                size: ButtonSize.large,
-              )
-            ],
-        ),
+            Text(localizations.translate(
+                i18.complaints.acknowledgementSubLabelSub),
+              style: textTheme.bodyS.copyWith(
+                  color: theme.colorTheme.paper.primary
+              ),
+            ),
+          ],
+          description: localizations.translate(
+            i18.complaints.acknowledgementDescription,
+          ),
+          actions: [
+            Button(
+              label: localizations.translate(
+                  i18.complaints.acknowledgementAction),
+              onPressed: () => context.router.maybePop(),
+              type: ButtonType.primary,
+              size: ButtonSize.large,
+            )
+          ],
       ),
     );
   }
