@@ -26,6 +26,25 @@ class CustomValidator {
   }
 }
 
+abstract mixin class InventoryStockCount {
+  // Singleton instance
+  static InventoryStockCount? _instance;
+
+  // Getter to access the singleton instance
+  static InventoryStockCount get instance => _instance!;
+
+  // Setter to initialize the singleton instance
+  static set instance(InventoryStockCount saveStockCountInstance) {
+    _instance = saveStockCountInstance;
+  }
+
+  // Abstract method to be implemented by subclasses
+  void saveStockCount({required List<Map<String, int>> stockData});
+
+  Future<List<Map<String, int>>> readStockCount(
+      {required List<String> skuList});
+}
+
 // This is a singleton class for inventory operations.
 class InventorySingleton {
   static final InventorySingleton _singleton = InventorySingleton._internal();
@@ -51,6 +70,7 @@ class InventorySingleton {
   List<InventoryTransportTypes>? _transportType = [];
   PersistenceConfiguration _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
+  bool? _validateStockCount;
 
   // Sets the initial data for the inventory.
   void setInitialData({
@@ -60,6 +80,7 @@ class InventorySingleton {
     required bool isWareHouseMgr,
     List<InventoryTransportTypes>? transportTypes,
     UserModel? loggedInUser,
+    bool? validateStockCount,
   }) {
     _projectId = projectId;
     _loggedInUserUuid = loggedInUserUuid;
@@ -68,6 +89,7 @@ class InventorySingleton {
     _isWareHouseMgr = isWareHouseMgr;
     _transportType = transportTypes;
     _loggedInUser = loggedInUser;
+    _validateStockCount = validateStockCount;
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {
@@ -92,4 +114,5 @@ class InventorySingleton {
   get tenantId => _tenantId;
   get persistenceConfiguration => _persistenceConfiguration;
   UserModel? get loggedInUser => _loggedInUser;
+  get validateStockCount => _validateStockCount;
 }

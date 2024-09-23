@@ -51,6 +51,7 @@ class CustomValidator {
         control.value.toString().length < 9) {
       return {'minLength': true};
     }
+    return null;
   }
 }
 
@@ -89,8 +90,8 @@ bool checkIfBeneficiaryRefused(
   List<TaskModel>? tasks,
 ) {
   final isBeneficiaryRefused = (tasks != null &&
-      (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.administeredFailed.toValue());
+      (tasks).isNotEmpty &&
+      tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
 }
@@ -238,7 +239,9 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
       return false;
     }).toList();
 
-    return (filteredCriteria ?? []).isNotEmpty ? filteredCriteria?.first : null;
+    return (filteredCriteria ?? []).isNotEmpty
+        ? filteredCriteria?.firstOrNull
+        : null;
   }
 
   return null;
@@ -325,6 +328,7 @@ class RegistrationDeliverySingleton {
   List<String>? _referralReasons;
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
+  bool? _validateStockCount;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -353,6 +357,7 @@ class RegistrationDeliverySingleton {
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
     required UserModel? loggedInUser,
+    bool? validateStockCount,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -372,6 +377,7 @@ class RegistrationDeliverySingleton {
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
     _loggedInUser = loggedInUser;
+    _validateStockCount = validateStockCount;
   }
 
   void setTenantId(String tenantId) {
@@ -401,6 +407,26 @@ class RegistrationDeliverySingleton {
   List<String>? get houseStructureTypes => _houseStructureTypes;
   List<String>? get refusalReasons => _refusalReasons;
   UserModel? get loggedInUser => _loggedInUser;
+  bool? get validateStockCount => _validateStockCount;
+}
+
+abstract mixin class DeliveryStockCount {
+  // Singleton instance
+  static DeliveryStockCount? _instance;
+
+  // Getter to access the singleton instance
+  static DeliveryStockCount get instance => _instance!;
+
+  // Setter to initialize the singleton instance
+  static set instance(DeliveryStockCount saveStockCountInstance) {
+    _instance = saveStockCountInstance;
+  }
+
+  // Abstract method to be implemented by subclasses
+  void saveStockCount({required List<Map<String, int>> stockData});
+
+  Future<List<Map<String, int>>> readStockCount(
+      {required List<String> skuList});
 }
 
 bool allDosesDelivered(

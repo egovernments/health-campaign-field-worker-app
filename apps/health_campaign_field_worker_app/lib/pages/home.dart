@@ -18,7 +18,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
@@ -32,6 +31,7 @@ import '../blocs/localization/localization.dart';
 import '../blocs/sync/sync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
+import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
 import '../models/entities/roles_type.dart';
 import '../router/app_router.dart';
@@ -643,42 +643,44 @@ void setPackagesSingleton(BuildContext context) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
-          loggedInUser: context.loggedInUserModel,
-          loggedInUserUuid: context.loggedInUserUuid,
-          maxRadius: appConfiguration.maxRadius!,
-          projectId: context.projectId,
-          selectedBeneficiaryType: context.beneficiaryType,
-          projectType: context.selectedProjectType,
-          selectedProject: context.selectedProject,
-          genderOptions:
-              appConfiguration.genderOptions!.map((e) => e.code).toList(),
-          idTypeOptions:
-              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
-          householdDeletionReasonOptions: appConfiguration
-              .householdDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          householdMemberDeletionReasonOptions: appConfiguration
-              .householdMemberDeletionReasonOptions!
-              .map((e) => e.code)
-              .toList(),
-          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
-              .map((e) => e.code)
-              .toList(),
-          symptomsTypes:
-              appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
-          searchHouseHoldFilter: appConfiguration.searchHouseHoldFilters != null
-              ? appConfiguration.searchHouseHoldFilters!
-                  .map((e) => e.code)
-                  .toList()
-              : [],
-          referralReasons:
-              appConfiguration.referralReasons?.map((e) => e.code).toList(),
-          houseStructureTypes:
-              appConfiguration.houseStructureTypes?.map((e) => e.code).toList(),
-          refusalReasons:
-              appConfiguration.refusalReasons?.map((e) => e.code).toList(),
-        );
+            loggedInUser: context.loggedInUserModel,
+            loggedInUserUuid: context.loggedInUserUuid,
+            maxRadius: appConfiguration.maxRadius!,
+            projectId: context.projectId,
+            selectedBeneficiaryType: context.beneficiaryType,
+            projectType: context.selectedProjectType,
+            selectedProject: context.selectedProject,
+            genderOptions:
+                appConfiguration.genderOptions!.map((e) => e.code).toList(),
+            idTypeOptions:
+                appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+            householdDeletionReasonOptions: appConfiguration
+                .householdDeletionReasonOptions!
+                .map((e) => e.code)
+                .toList(),
+            householdMemberDeletionReasonOptions: appConfiguration
+                .householdMemberDeletionReasonOptions!
+                .map((e) => e.code)
+                .toList(),
+            deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+                .map((e) => e.code)
+                .toList(),
+            symptomsTypes:
+                appConfiguration.symptomsTypes?.map((e) => e.code).toList(),
+            searchHouseHoldFilter:
+                appConfiguration.searchHouseHoldFilters != null
+                    ? appConfiguration.searchHouseHoldFilters!
+                        .map((e) => e.code)
+                        .toList()
+                    : [],
+            referralReasons:
+                appConfiguration.referralReasons?.map((e) => e.code).toList(),
+            houseStructureTypes: appConfiguration.houseStructureTypes
+                ?.map((e) => e.code)
+                .toList(),
+            refusalReasons:
+                appConfiguration.refusalReasons?.map((e) => e.code).toList(),
+            validateStockCount: true);
 
         ClosedHouseholdSingleton().setInitialData(
           loggedInUserUuid: context.loggedInUserUuid,
@@ -717,26 +719,26 @@ void setPackagesSingleton(BuildContext context) {
         );
 
         InventorySingleton().setInitialData(
-          isWareHouseMgr: context.loggedInUserRoles
-              .where(
-                  (role) => role.code == RolesType.warehouseManager.toValue())
-              .toList()
-              .isNotEmpty,
-          isDistributor: context.loggedInUserRoles
-              .where(
-                (role) => role.code == RolesType.distributor.toValue(),
-              )
-              .toList()
-              .isNotEmpty,
-          loggedInUser: context.loggedInUserModel,
-          projectId: context.projectId,
-          loggedInUserUuid: context.loggedInUserUuid,
-          transportTypes: appConfiguration.transportTypes
-              ?.map((e) => InventoryTransportTypes()
-                ..name = e.code
-                ..code = e.code)
-              .toList(),
-        );
+            isWareHouseMgr: context.loggedInUserRoles
+                .where(
+                    (role) => role.code == RolesType.warehouseManager.toValue())
+                .toList()
+                .isNotEmpty,
+            isDistributor: context.loggedInUserRoles
+                .where(
+                  (role) => role.code == RolesType.distributor.toValue(),
+                )
+                .toList()
+                .isNotEmpty,
+            loggedInUser: context.loggedInUserModel,
+            projectId: context.projectId,
+            loggedInUserUuid: context.loggedInUserUuid,
+            transportTypes: appConfiguration.transportTypes
+                ?.map((e) => InventoryTransportTypes()
+                  ..name = e.code
+                  ..code = e.code)
+                .toList(),
+            validateStockCount: true);
         DashboardSingleton().setInitialData(
             projectId: context.projectId,
             tenantId: envConfig.variables.tenantId,

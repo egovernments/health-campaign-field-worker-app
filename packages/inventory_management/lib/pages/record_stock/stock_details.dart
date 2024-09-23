@@ -563,6 +563,18 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           );
 
                                           if (submit ?? false) {
+                                            if (InventorySingleton()
+                                                        .validateStockCount !=
+                                                    null &&
+                                                InventorySingleton()
+                                                        .validateStockCount! ==
+                                                    true) {
+                                              InventoryStockCount.instance
+                                                  .saveStockCount(stockData: [
+                                                {productVariant.sku!: quantity}
+                                              ]);
+                                            }
+
                                             bloc.add(
                                               const RecordStockCreateStockEntryEvent(),
                                             );

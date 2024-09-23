@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/blocs/product_variant/product_variant.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_data_model/models/entities/product_variant.dart';
+import 'package:digit_data_model/models/entities/project_resource.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/household_global_seach.dart';
@@ -160,6 +163,15 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
           ),
+          if (RegistrationDeliverySingleton().validateStockCount!)
+            BlocProvider(
+                create: (_) => ProductVariantBloc(
+                      const ProductVariantEmptyState(),
+                      context.repository<ProductVariantModel,
+                          ProductVariantSearchModel>(context),
+                      context.repository<ProjectResourceModel,
+                          ProjectResourceSearchModel>(context),
+                    )),
         ],
         child: const AutoRouter(),
       ),

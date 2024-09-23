@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../models/entities/status.dart';
@@ -60,7 +61,10 @@ class _SearchBeneficiaryPageState
         });
       }
     });
-
+    if (RegistrationDeliverySingleton().validateStockCount != null &&
+        RegistrationDeliverySingleton().validateStockCount! == true) {
+      context.validateStockCount(context);
+    }
     super.initState();
   }
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../models/auth/auth_model.dart';
@@ -223,6 +224,100 @@ class LocalSecureStore {
         return true;
       default:
         return false;
+    }
+  }
+
+  Future<void> setStockCount(List<Map<String, int>> stockData) async {
+    // Read the user object from secure storage
+    final userBody = await storage.read(key: userObjectKey);
+    if (userBody == null) return;
+
+    try {
+      // Parse the user object from JSON
+      final user = UserRequestModel.fromJson(json.decode(userBody));
+
+      // Iterate over the stock data list
+      for (var stockItem in stockData) {
+        // Extract the SKU and quantity from the stockItem map
+        String sku = stockItem.keys.first; // SKU
+        int deltaCount = stockItem.values.first; // Quantity to add or subtract
+
+        // Read the current SKU data from secure storage
+        final skuMapString = await storage.read(key: sku);
+        Map<String, dynamic> skuQMap = {};
+        int currentStockCount =
+            0; // Initialize to zero if no current stock exists
+
+        if (skuMapString != null) {
+          try {
+            skuQMap = jsonDecode(skuMapString);
+
+            // Get the current stock count for the user if it exists
+            currentStockCount =
+                skuQMap.containsKey(user.uuid) ? skuQMap[user.uuid] as int : 0;
+          } catch (e) {
+            // Handle JSON decoding errors if necessary
+            debugPrint('Error decoding SKU map: $e');
+          }
+        }
+
+        // Update the stock count for the current user by adding the delta
+        final newStockCount = currentStockCount + deltaCount;
+
+        // Set the new stock count for the current user
+        skuQMap[user.uuid] = newStockCount;
+
+        // Write the updated SKU quantity map back to secure storage
+        await storage.write(
+          key: sku,
+          value: json.encode(skuQMap),
+        );
+      }
+    } catch (e) {
+      // Handle exceptions during user parsing or stock processing
+      debugPrint('Error setting stock counts: $e');
+    }
+  }
+
+  Future<List<Map<String, int>>> getStockCount(List<String> skuList) async {
+    // Read the user object from secure storage
+    final userBody = await storage.read(key: userObjectKey);
+    if (userBody == null) return [];
+
+    try {
+      // Parse the user object from JSON
+      final user = UserRequestModel.fromJson(json.decode(userBody));
+      final String userId = user.uuid;
+
+      List<Map<String, int>> stockCounts = [];
+
+      // Iterate over the SKU list
+      for (String sku in skuList) {
+        // Read the current SKU data from secure storage
+        final skuMapString = await storage.read(key: sku);
+
+        if (skuMapString != null) {
+          try {
+            // Decode the SKU map
+            Map<String, dynamic> skuQMap = jsonDecode(skuMapString);
+
+            // Check if there's an entry for the current user
+            if (skuQMap.containsKey(userId)) {
+              int userStockCount = skuQMap[userId];
+
+              // Add the stock count for the SKU to the result list
+              stockCounts.add({sku: userStockCount});
+            }
+          } catch (e) {
+            debugPrint('Error decoding SKU map: $e');
+          }
+        }
+      }
+      return stockCounts;
+    } catch (e) {
+      // Handle any errors
+      debugPrint('Error retrieving stock counts: $e');
+      return [];
     }
   }
 }

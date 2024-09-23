@@ -624,7 +624,7 @@ class DeliverInterventionPageState
         }
       }
       bool hasDuplicateProductIdOrNoProductId =
-      deliveredProducts.any((ele) => ele?.productId == null);
+          deliveredProducts.any((ele) => ele?.productId == null);
 
       return hasDuplicateProductIdOrNoProductId;
     }
@@ -805,10 +805,21 @@ class DeliverInterventionPageState
                           ?.cycles![bloc.cycle - 1]
                           .deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)!
-                  .productVariants
-                  ?.length ??
-              0;
+                      overViewbloc.householdMemberWrapper.household) !=
+                  null
+              ? fetchProductVariant(
+                          RegistrationDeliverySingleton()
+                              .selectedProject
+                              ?.additionalDetails
+                              ?.projectType
+                              ?.cycles![bloc.cycle - 1]
+                              .deliveries?[bloc.dose - 1],
+                          overViewbloc.selectedIndividual,
+                          overViewbloc.householdMemberWrapper.household)!
+                      .productVariants
+                      ?.length ??
+                  0
+              : 0;
 
       _controllers.addAll(List.generate(r, (index) => index)
           .mapIndexed((index, element) => index));

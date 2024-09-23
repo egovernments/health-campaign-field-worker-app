@@ -19,12 +19,14 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:inventory_management/utils/utils.dart';
 import 'package:isar/isar.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
+import 'package:registration_delivery/utils/utils.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -445,6 +447,19 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+class SaveStock with InventoryStockCount, DeliveryStockCount {
+  @override
+  saveStockCount({required List<Map<String, int>> stockData}) {
+    LocalSecureStore.instance.setStockCount(stockData);
+  }
+
+  @override
+  Future<List<Map<String, int>>> readStockCount(
+      {required List<String> skuList}) {
+    return LocalSecureStore.instance.getStockCount(skuList);
+  }
 }
 
 class LocalizationParams {

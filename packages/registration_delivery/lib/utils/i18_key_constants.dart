@@ -237,6 +237,10 @@ class BeneficiaryDetails {
   String get totalrecorddownload => 'TOTAL_RECORD_DOWNLOAD';
   String get insufficientStorageContent =>
       'INSUFFICIENT_STORAGE_WARNING_CONTENT';
+
+  String get insufficientStockHeading => 'INSUFFICIENT_STOCK_HEADING';
+  String get insufficientStockMessage => 'INSUFFICIENT_STOCK_MESSAGE';
+
   String get recordCycle => 'BENEFICIARY_DETAILS_RECORD_CYCLE';
   String get householdMemberSingular => 'BENEFICIARY_HOUSEHOLD_MEMBER';
   String get householdMemberPlural => 'BENEFICIARY_HOUSEHOLD_MEMBERS';

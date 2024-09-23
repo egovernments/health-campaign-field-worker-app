@@ -68,7 +68,7 @@ class BeneficiaryDetailsPageState
           final taskData = state.householdMemberWrapper.tasks
               ?.where((element) =>
                   element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary?.first?.clientReferenceId)
+                  projectBeneficiary?.firstOrNull?.clientReferenceId)
               .toList();
           final bloc = context.read<DeliverInterventionBloc>();
           final lastDose = taskData != null && taskData.isNotEmpty
@@ -182,12 +182,13 @@ class BeneficiaryDetailsPageState
                                                           .beneficiaryDetails
                                                           .resourcesTobeDelivered),
                                                   content: buildTableContent(
-                                                    deliverState,
-                                                    context,
-                                                    variant,
-                                                    state.selectedIndividual,
-                                                    state.householdMemberWrapper.household
-                                                  ),
+                                                      deliverState,
+                                                      context,
+                                                      variant,
+                                                      state.selectedIndividual,
+                                                      state
+                                                          .householdMemberWrapper
+                                                          .household),
                                                   barrierDismissible: true,
                                                   primaryAction:
                                                       DigitDialogActions(
@@ -367,7 +368,7 @@ class BeneficiaryDetailsPageState
                                         .deliverIntervention
                                         .dateOfRegistrationLabel): () {
                                       final date = projectBeneficiary
-                                          ?.first?.dateOfRegistration;
+                                          ?.firstOrNull?.dateOfRegistration;
 
                                       final registrationDate =
                                           DateTime.fromMillisecondsSinceEpoch(
