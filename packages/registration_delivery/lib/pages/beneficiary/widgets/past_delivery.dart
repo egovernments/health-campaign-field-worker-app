@@ -67,20 +67,20 @@ Widget buildTableContent(
     width: MediaQuery.of(context).size.width / 1.25,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      // mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        DigitTableCard(
-          topPadding: const EdgeInsets.only(top: 0.0),
-          padding: const EdgeInsets.only(bottom: spacer2 / 2),
-          fraction: 2.5,
-          element: {
-            localizations.translate(
-              i18.beneficiaryDetails.beneficiaryAge,
-            ): fetchProductVariant(item, individualModel, householdModel)?.condition != null
-                ? localizations.translate(
-                fetchProductVariant(item, individualModel, householdModel)!.condition!)
-                : null,
-          },
+        Padding(
+          padding: const EdgeInsets.only(bottom: spacer1),
+          child: DigitTableCard(
+            element: {
+              localizations.translate(
+                i18.beneficiaryDetails.beneficiaryAge,
+              ): fetchProductVariant(item, individualModel, householdModel)?.condition != null
+                  ? localizations.translate(
+                  fetchProductVariant(item, individualModel, householdModel)!.condition!)
+                  : null,
+            },
+          ),
         ),
         const DigitDivider(),
         // Build the DigitTable with the data

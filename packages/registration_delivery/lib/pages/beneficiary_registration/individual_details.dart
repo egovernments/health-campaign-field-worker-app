@@ -375,10 +375,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           ),
                           isRequired: true,
                           child: DigitDropdown<String>(
-                            selectedOption: DropdownItem(
+                            selectedOption: (form.control(_idTypeKey).value!=null)?
+                            DropdownItem(
                                 name: localizations.translate(form.control(_idTypeKey).value),
                                 code: form.control(_idTypeKey).value
-                            ),
+                            ):const DropdownItem(name: '', code: ''),
                             items: RegistrationDeliverySingleton()
                                 .idTypeOptions!
                                 .map(

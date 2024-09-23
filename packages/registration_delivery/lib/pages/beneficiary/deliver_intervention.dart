@@ -381,10 +381,13 @@ class DeliverInterventionPageState
                                               ),
                                             ),
                                           if (numberOfDoses > 1)
-                                          DigitStepper(
-                                            activeIndex: deliveryInterventionState.dose - 1,
-                                            stepperList: steps,
-                                            inverted: true,
+                                          SizedBox(
+                                            height: MediaQuery.sizeOf(context).height*0.08,
+                                            child: DigitStepper(
+                                              activeIndex: deliveryInterventionState.dose - 1,
+                                              stepperList: steps,
+                                              inverted: true,
+                                            ),
                                           ),
 
                                             ReactiveWrapperField(

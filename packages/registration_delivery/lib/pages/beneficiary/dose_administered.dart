@@ -60,10 +60,14 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
       DigitTableColumn(
         header: localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
         cellValue: 'dose',
+        width: MediaQuery.of(context).size.width /
+            2.18,
       ),
       DigitTableColumn(
         header: localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
         cellValue: 'resources',
+        width: MediaQuery.of(context).size.width /
+            2.18,
       ),
     ];
 
@@ -427,13 +431,12 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         thickness: 2.0,
                                       ),
                                       DigitTable(
+                                        enableBorder: true,
+                                        showPagination: false,
                                         columns: headerListResource,
                                         rows: tableDataRows,
-                                        // columnWidth:
-                                        //     MediaQuery.of(context).size.width /
-                                        //         2.18,
-                                        // height:
-                                        //     (tableDataRows.length + 1) * 57.5,
+                                        tableHeight:
+                                            (tableDataRows.length + 1) * 57.5,
                                       ),
                                     ],
                                   );
