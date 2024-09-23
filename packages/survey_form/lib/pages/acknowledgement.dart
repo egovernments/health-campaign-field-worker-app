@@ -30,26 +30,23 @@ class AcknowledgementPageState extends LocalizedState<SurveyFormAcknowledgementP
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(spacer4),
-        child: PanelCard(
-          type: PanelType.success,
-          title: localizations.translate(
-            i18.acknowledgementSuccess.acknowledgementLabelText,
-          ),
-          description: localizations.translate(
-          i18.acknowledgementSuccess.acknowledgementDescriptionText,
+      body: PanelCard(
+        type: PanelType.success,
+        title: localizations.translate(
+          i18.acknowledgementSuccess.acknowledgementLabelText,
         ),
+        description: localizations.translate(
+        i18.acknowledgementSuccess.acknowledgementDescriptionText,
+      ),
 
-          actions: [
-            Button(
-              label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-              onPressed: () => context.router.popUntilRoot(),
-              type: ButtonType.primary,
-              size: ButtonSize.large,
-            )
-          ],
-        ),
+        actions: [
+          Button(
+            label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+            onPressed: () => context.router.popUntilRoot(),
+            type: ButtonType.primary,
+            size: ButtonSize.large,
+          )
+        ],
       ),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
