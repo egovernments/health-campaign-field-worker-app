@@ -33,27 +33,30 @@ extension ContextUtilityExtensions on BuildContext {
             var count = await DeliveryStockCount.instance
                 .readStockCount(skuList: [product]);
             if (count.isNotEmpty) {
-              if (count.first.values.first > 0) {
+              if (count.first.values.first <= 0) {
                 // Show the warning dialog for insufficient stock and stop further checks
-                DigitDialog.show(
-                  context,
-                  options: DigitDialogOptions(
-                    titleIcon: Icon(
-                      Icons.warning,
-                      color: Theme.of(context).colorScheme.error,
+                if (mounted) {
+                  DigitDialog.show(
+                    context,
+                    options: DigitDialogOptions(
+                      titleIcon: Icon(
+                        Icons.warning,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                      titleText:
+                          i18.beneficiaryDetails.insufficientStockHeading,
+                      contentText:
+                          i18.beneficiaryDetails.insufficientStockMessage,
+                      primaryAction: DigitDialogActions(
+                        label: i18.common.corecommonclose,
+                        action: (dialogContext) {
+                          Navigator.of(context, rootNavigator: true).pop();
+                          context.router.maybePop();
+                        },
+                      ),
                     ),
-                    titleText: i18.beneficiaryDetails.insufficientStockHeading,
-                    contentText:
-                        i18.beneficiaryDetails.insufficientStockMessage,
-                    primaryAction: DigitDialogActions(
-                      label: i18.common.corecommonclose,
-                      action: (dialogContext) {
-                        Navigator.of(context, rootNavigator: true).pop();
-                        context.router.maybePop();
-                      },
-                    ),
-                  ),
-                );
+                  );
+                }
                 // Break the loop once a product with insufficient stock is found
                 break;
               }
