@@ -200,7 +200,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                                   );
                                                 }
                                               : () {
-                                                  // context.router.pop();
                                                 },
                                           label: localizations.translate(
                                             (!viewOnly)
@@ -281,8 +280,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                             tableWidth: MediaQuery.of(context)
                                                 .size
                                                 .width,
-                                            stickyHeader: false,
-                                            showSelectedState: false,
                                             showPagination: false,
                                             showRowsPerPage: false,
                                             withColumnDividers: false,
