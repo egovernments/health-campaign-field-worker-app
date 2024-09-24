@@ -174,9 +174,13 @@ class HouseholdOverviewBloc
 
     // Search for tasks associated with project beneficiaries.
     final tasks = await taskDataRepository.search(TaskSearchModel(
-      projectBeneficiaryClientReferenceId:
-          projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
-    ));
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaries.map((e) => e.clientReferenceId).toList()));
+
+    tasks.sort((a, b) =>
+        a.clientAuditDetails?.createdTime
+            .compareTo(b.clientAuditDetails!.createdTime) ??
+        0);
 
     // Search for adverse events associated with tasks.
     final sideEffects =
