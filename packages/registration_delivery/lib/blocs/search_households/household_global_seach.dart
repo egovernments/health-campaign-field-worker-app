@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
@@ -101,6 +102,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
+      taskList.sort((a, b) =>
+          a.clientAuditDetails?.createdTime
+              .compareTo(b.clientAuditDetails!.createdTime) ??
+          0);
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
@@ -166,6 +171,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
+      taskList.sort((a, b) =>
+          a.clientAuditDetails?.createdTime
+              .compareTo(b.clientAuditDetails!.createdTime) ??
+          0);
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
@@ -215,6 +224,10 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
+      taskList.sort((a, b) =>
+          a.clientAuditDetails?.createdTime
+              .compareTo(b.clientAuditDetails!.createdTime) ??
+          0);
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
