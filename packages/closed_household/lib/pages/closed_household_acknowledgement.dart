@@ -40,8 +40,9 @@ class _ClosedHouseholdAcknowledgementPageState
                 label: localizations
                     .translate(i18.acknowledgementSuccess.actionLabelText),
                 onPressed: () {
-                  context.router.popUntilRoot();
-                  context.router.maybePop();
+                  final parent = context.router.parent() as StackRouter;
+                  // Pop twice to navigate back to the previous screen
+                  parent.popUntilRoot();
                 },
                 type: ButtonType.primary,
                 size: ButtonSize.large,

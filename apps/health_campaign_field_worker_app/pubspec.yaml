@@ -19,7 +19,6 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   digit_components: ^1.0.1+1
-  digit_ui_components: 0.0.1+7
   auto_route: ^7.8.4
   flutter_bloc: ^8.1.1
   collection: ^1.16.0

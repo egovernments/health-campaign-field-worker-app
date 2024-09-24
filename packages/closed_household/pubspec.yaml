@@ -64,4 +64,3 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/svg/
-    - assets/animated_json/
