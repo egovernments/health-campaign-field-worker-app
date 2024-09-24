@@ -57,7 +57,6 @@ class ClosedHouseholdSummaryPageState
                 showcaseButton: ShowcaseButton(),
               ),
               footer: DigitCard(
-                // margin: EdgeInsets.fromLTRB(0, theme.spacerTheme.spacer2, 0, 0),
                 padding:
                     EdgeInsets.all(theme.spacerTheme.spacer2),
                 children: [
