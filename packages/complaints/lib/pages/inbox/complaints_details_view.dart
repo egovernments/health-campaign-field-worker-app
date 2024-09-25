@@ -65,37 +65,42 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.only(top: spacer4),
-            child: DigitCard(
-                cardType: CardType.primary,
-                children: [
+            child: DigitCard(cardType: CardType.primary, children: [
               LabelValueList(
-                padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
+                  padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
                   labelFlex: 6,
                   items: [
                     LabelValuePair(
-                        label: localizations.translate(i18.complaints.inboxNumberLabel),
-                        value: complaint.serviceRequestId ??
-                            "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                        valueTextStyle: complaint.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
+                      label: localizations
+                          .translate(i18.complaints.inboxNumberLabel),
+                      value: complaint.serviceRequestId ??
+                          "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+                      valueTextStyle: complaint.serviceRequestId != null
+                          ? textTheme.bodyS.copyWith(
+                              color: theme.colorTheme.primary.primary1)
+                          : null,
                     ),
                     LabelValuePair(
-                        label: localizations.translate(i18.complaints.inboxTypeLabel),
+                        label: localizations
+                            .translate(i18.complaints.inboxTypeLabel),
                         value: localizations.translate(
                           complaint.serviceCode.snakeCase.toUpperCase().trim(),
-                        )
+                        )),
+                    LabelValuePair(
+                      label: localizations
+                          .translate(i18.complaints.inboxDateLabel),
+                      value: complaint.auditDetails?.createdTime.toDateTime
+                              .getFormattedDate() ??
+                          "",
                     ),
                     LabelValuePair(
-                        label: localizations.translate(i18.complaints.inboxDateLabel),
-                        value: complaint.auditDetails?.createdTime.toDateTime
-                            .getFormattedDate() ??
-                            "",
-                    ),
-                    LabelValuePair(
-                      label: localizations.translate(i18.complaints.complainantName),
+                      label: localizations
+                          .translate(i18.complaints.complainantName),
                       value: complaint.user.name ?? "",
                     ),
                     LabelValuePair(
-                      label: localizations.translate(i18.complaints.inboxAreaLabel),
+                      label: localizations
+                          .translate(i18.complaints.inboxAreaLabel),
                       value: complaint.address.locality?.name ?? "",
                     ),
                     LabelValuePair(
@@ -105,7 +110,8 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                       value: complaint.user.mobileNumber ?? "",
                     ),
                     LabelValuePair(
-                      label: localizations.translate(i18.complaints.inboxStatusLabel),
+                      label: localizations
+                          .translate(i18.complaints.inboxStatusLabel),
                       value: localizations.translate(
                         "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
                       ),
@@ -117,8 +123,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
                         complaint.description,
                       ),
                     ),
-                  ]
-              )
+                  ])
             ]),
           ),
         ],

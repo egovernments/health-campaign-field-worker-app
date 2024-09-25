@@ -1,4 +1,3 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
@@ -57,11 +56,11 @@ class ComplaintsInboxSortPageState
                             Padding(
                               padding: EdgeInsets.zero,
                               child: Button(
-                                  label: "",
-                                  onPressed: () => context.router.pop(),
-                                  type: ButtonType.tertiary,
-                                  size: ButtonSize.large,
-                                  prefixIcon: Icons.close,
+                                label: "",
+                                onPressed: () => context.router.pop(),
+                                type: ButtonType.tertiary,
+                                size: ButtonSize.large,
+                                prefixIcon: Icons.close,
                               ),
                             ),
                           ],
@@ -84,54 +83,52 @@ class ComplaintsInboxSortPageState
                       ],
                     ),
                     footer: DigitCard(
-                      cardType: CardType.primary,
-                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                      padding: const EdgeInsets.all(spacer2),
-                      children: [Button(
-                        type: ButtonType.primary,
-                        size: ButtonSize.large,
-                        label: localizations
-                            .translate(i18.complaints.sortCTA),
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () {
-                          formGroup.markAllAsTouched();
+                        cardType: CardType.primary,
+                        margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                        padding: const EdgeInsets.all(spacer2),
+                        children: [
+                          Button(
+                            type: ButtonType.primary,
+                            size: ButtonSize.large,
+                            label:
+                                localizations.translate(i18.complaints.sortCTA),
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              formGroup.markAllAsTouched();
 
-                          var sortOrder =
-                              formGroup.control(_sortOrder).value;
+                              var sortOrder =
+                                  formGroup.control(_sortOrder).value;
 
-                          if (!formGroup.valid || sortOrder == null) {
-                            return;
-                          }
+                              if (!formGroup.valid || sortOrder == null) {
+                                return;
+                              }
 
-                          bloc.add(
-                            ComplaintInboxSortComplaintsEvent(
-                              sortOrder,
-                            ),
-                          );
-                          router.pop();
-                        },
-                      ),]
-                    ),
+                              bloc.add(
+                                ComplaintInboxSortComplaintsEvent(
+                                  sortOrder,
+                                ),
+                              );
+                              router.pop();
+                            },
+                          ),
+                        ]),
                     children: [
-                      BlocBuilder<ComplaintsInboxBloc,
-                          ComplaintInboxState>(
+                      BlocBuilder<ComplaintsInboxBloc, ComplaintInboxState>(
                         builder: (context, state) {
-
                           return Padding(
                             padding: const EdgeInsets.only(top: spacer2),
                             child: RadioList(
                               radioButtons: sortOrders
-                                .asMap()
-                                .entries
-                                .map(
-                                  (item)=>RadioButtonModel(
-                                      code: item.value,
-                                      name: localizations.translate(item.value.trim()),
-                                  )
-                              ).toList(),
+                                  .asMap()
+                                  .entries
+                                  .map((item) => RadioButtonModel(
+                                        code: item.value,
+                                        name: localizations
+                                            .translate(item.value.trim()),
+                                      ))
+                                  .toList(),
                               groupValue:
-                                  formGroup.control(_sortOrder).value ??
-                                      "",
+                                  formGroup.control(_sortOrder).value ?? "",
                               onChanged: (changedValue) {
                                 formGroup.control(_sortOrder).value =
                                     changedValue.code;

@@ -52,11 +52,11 @@ class ComplaintsInboxSearchPageState
                         Padding(
                           padding: EdgeInsets.zero,
                           child: Button(
-                              label: "",
-                              onPressed: () => context.router.pop(),
-                              type: ButtonType.tertiary,
-                              size: ButtonSize.large,
-                              prefixIcon: Icons.close,
+                            label: "",
+                            onPressed: () => context.router.pop(),
+                            type: ButtonType.tertiary,
+                            size: ButtonSize.large,
+                            prefixIcon: Icons.close,
                           ),
                         )
                       ],
@@ -87,8 +87,8 @@ class ComplaintsInboxSearchPageState
                         mainAxisSize: MainAxisSize.max,
                         type: ButtonType.primary,
                         size: ButtonSize.large,
-                        label: localizations
-                            .translate(i18.complaints.searchCTA),
+                        label:
+                            localizations.translate(i18.complaints.searchCTA),
                         onPressed: () {
                           formGroup.markAllAsTouched();
 
@@ -104,12 +104,11 @@ class ComplaintsInboxSearchPageState
                               mobileNumber: mobileNumberValue == ""
                                   ? null
                                   : mobileNumberValue,
-                              complaintNumber:
-                                  complaintNumberValue == ""
-                                      ? null
-                                      : complaintNumberValue,
-                              createdByUserId: ComplaintsSingleton()
-                                  .loggedInUserUuid,
+                              complaintNumber: complaintNumberValue == ""
+                                  ? null
+                                  : complaintNumberValue,
+                              createdByUserId:
+                                  ComplaintsSingleton().loggedInUserUuid,
                             ),
                           );
 
@@ -134,8 +133,10 @@ class ComplaintsInboxSearchPageState
                                           i18.complaints.inboxNumberLabel,
                                         ),
                                         child: DigitTextFormInput(
-                                          onChange: (value){
-                                            formGroup.control(_complaintNumber).value = value;
+                                          onChange: (value) {
+                                            formGroup
+                                                .control(_complaintNumber)
+                                                .value = value;
                                           },
                                           charCount: true,
                                           maxLength: 65,
@@ -144,7 +145,8 @@ class ComplaintsInboxSearchPageState
                                     }),
                                 ReactiveWrapperField<String>(
                                     formControlName: _mobileNumber,
-                                    showErrors: (control) => control.invalid && control.touched,
+                                    showErrors: (control) =>
+                                        control.invalid && control.touched,
                                     validationMessages: {
                                       'mobileNumber': (object) =>
                                           localizations.translate(i18
@@ -163,7 +165,9 @@ class ComplaintsInboxSearchPageState
                                             FilteringTextInputFormatter
                                                 .digitsOnly,
                                           ],
-                                          onChange: (value)=>formGroup.control(_mobileNumber).value=value,
+                                          onChange: (value) => formGroup
+                                              .control(_mobileNumber)
+                                              .value = value,
                                           errorMessage: field.errorText,
                                           maxLength: 10,
                                         ),

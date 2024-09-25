@@ -168,9 +168,8 @@ class ComplaintsLocationPageState
                             child: DigitTextFormInput(
                               errorMessage: field.errorText,
                               initialValue: field.value,
-                              onChange: (value) => form
-                                  .control(_addressLine1Key)
-                                  .value = value,
+                              onChange: (value) =>
+                                  form.control(_addressLine1Key).value = value,
                             ),
                           );
                         }),
@@ -186,9 +185,8 @@ class ComplaintsLocationPageState
                             child: DigitTextFormInput(
                               maxLength: maxLength,
                               initialValue: field.value,
-                              onChange: (value) => form
-                                  .control(_addressLine2Key)
-                                  .value = value,
+                              onChange: (value) =>
+                                  form.control(_addressLine2Key).value = value,
                               errorMessage: field.errorText,
                             ),
                           );
@@ -203,9 +201,8 @@ class ComplaintsLocationPageState
                             padding: const EdgeInsets.only(top: spacer2 / 2),
                             child: DigitTextFormInput(
                               initialValue: field.value,
-                              onChange: (value) => form
-                                  .control(_landmarkKey)
-                                  .value = value,
+                              onChange: (value) =>
+                                  form.control(_landmarkKey).value = value,
                               errorMessage: field.errorText,
                             ),
                           );
@@ -224,9 +221,8 @@ class ComplaintsLocationPageState
                               inputFormatters: [
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
-                              onChange: (value) => form
-                                  .control(_postalCodeKey)
-                                  .value = value,
+                              onChange: (value) =>
+                                  form.control(_postalCodeKey).value = value,
                             ),
                           );
                         }),

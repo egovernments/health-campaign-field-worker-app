@@ -18,14 +18,14 @@ class ComplaintsInboxWrapperPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => ComplaintsInboxBloc(
         const ComplaintInboxState.complaints(),
-        pgrRepository:context.repository<PgrServiceModel, PgrServiceSearchModel>(context),
+        pgrRepository:
+            context.repository<PgrServiceModel, PgrServiceSearchModel>(context),
       )..add(
-        ComplaintInboxLoadComplaintsEvent(
-          createdByUserId: ComplaintsSingleton().loggedInUserUuid,
+          ComplaintInboxLoadComplaintsEvent(
+            createdByUserId: ComplaintsSingleton().loggedInUserUuid,
+          ),
         ),
-      ),
       child: const AutoRouter(),
     );
-
   }
 }

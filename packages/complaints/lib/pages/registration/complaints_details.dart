@@ -267,8 +267,8 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                               radioButtons: complainantRaisedFor
                                   .map((item) => RadioButtonModel(
                                         code: item,
-                                        name:
-                                            localizations.translate(item.trim()),
+                                        name: localizations
+                                            .translate(item.trim()),
                                       ))
                                   .toList(),
                               groupValue:
@@ -280,12 +280,15 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                                 if (changedValue.code ==
                                     i18.complaints.raisedForAnotherUser) {
                                   form.control(_complainantName).value = "";
-                                  form.control(_complainantContactNumber).value =
-                                      "";
+                                  form
+                                      .control(_complainantContactNumber)
+                                      .value = "";
                                 } else {
                                   form.control(_complainantName).value =
                                       ComplaintsSingleton().userName;
-                                  form.control(_complainantContactNumber).value =
+                                  form
+                                          .control(_complainantContactNumber)
+                                          .value =
                                       ComplaintsSingleton().userMobileNumber;
                                 }
 
@@ -336,10 +339,12 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                                 ),
                                 isRequired: true,
                                 child: DigitTextFormInput(
-                                  readOnly:(isRaisedForSelf)?
-                                      (field.value == null || field.value.isEmpty)
+                                  readOnly: (isRaisedForSelf)
+                                      ? (field.value == null ||
+                                              field.value.isEmpty)
                                           ? false
-                                          : true:false,
+                                          : true
+                                      : false,
                                   initialValue: field.value,
                                   isRequired: true,
                                   errorMessage: field.errorText,
@@ -370,11 +375,12 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                                 ),
                                 isRequired: true,
                                 child: DigitTextFormInput(
-                                  readOnly: (isRaisedForSelf)?(field.value ==
-                                              null ||
-                                          field.value.isEmpty)
-                                      ? false
-                                      : true:false,
+                                  readOnly: (isRaisedForSelf)
+                                      ? (field.value == null ||
+                                              field.value.isEmpty)
+                                          ? false
+                                          : true
+                                      : false,
                                   initialValue: field.value,
                                   isRequired: true,
                                   keyboardType: TextInputType.number,
@@ -412,7 +418,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                         }),
                     ReactiveWrapperField<String>(
                         formControlName: _supervisorContactNumber,
-                        showErrors: (control)=>control.touched,
+                        showErrors: (control) => control.touched,
                         validationMessages: {
                           'mobileNumber': (object) => localizations.translate(
                                 i18.individualDetails

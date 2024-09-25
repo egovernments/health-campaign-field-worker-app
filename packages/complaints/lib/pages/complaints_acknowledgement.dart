@@ -5,7 +5,6 @@ import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 
 import 'package:flutter/material.dart';
 
-
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -25,39 +24,36 @@ class ComplaintsAcknowledgementPageState
     extends LocalizedState<ComplaintsAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
-    final theme= Theme.of(context);
-    final textTheme =theme.digitTextTheme(context);
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     return Scaffold(
       body: PanelCard(
-          title: localizations.translate(i18.complaints.acknowledgementLabel),
-          type: PanelType.success,
-          additionalDetails: [
-            Text(localizations.translate(
-                i18.complaints.acknowledgementSubLabelMain)
-                ,
-              style: textTheme.bodyS.copyWith(
-                color: theme.colorTheme.paper.primary
-              ),
-            ),
-            Text(localizations.translate(
-                i18.complaints.acknowledgementSubLabelSub),
-              style: textTheme.bodyS.copyWith(
-                  color: theme.colorTheme.paper.primary
-              ),
-            ),
-          ],
-          description: localizations.translate(
-            i18.complaints.acknowledgementDescription,
+        title: localizations.translate(i18.complaints.acknowledgementLabel),
+        type: PanelType.success,
+        additionalDetails: [
+          Text(
+            localizations.translate(i18.complaints.acknowledgementSubLabelMain),
+            style:
+                textTheme.bodyS.copyWith(color: theme.colorTheme.paper.primary),
           ),
-          actions: [
-            Button(
-              label: localizations.translate(
-                  i18.complaints.acknowledgementAction),
-              onPressed: () => context.router.maybePop(),
-              type: ButtonType.primary,
-              size: ButtonSize.large,
-            )
-          ],
+          Text(
+            localizations.translate(i18.complaints.acknowledgementSubLabelSub),
+            style:
+                textTheme.bodyS.copyWith(color: theme.colorTheme.paper.primary),
+          ),
+        ],
+        description: localizations.translate(
+          i18.complaints.acknowledgementDescription,
+        ),
+        actions: [
+          Button(
+            label:
+                localizations.translate(i18.complaints.acknowledgementAction),
+            onPressed: () => context.router.maybePop(),
+            type: ButtonType.primary,
+            size: ButtonSize.large,
+          )
+        ],
       ),
     );
   }

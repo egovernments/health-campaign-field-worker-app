@@ -6,14 +6,11 @@ import 'package:location/location.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
-
 import '../../models/pgr_complaints.dart';
 import '/blocs/complaints_registration/complaints_registration.dart';
 import '/models/complaints.dart';
 import '/utils/utils.dart';
 import '/widgets/boundary_selection_wrapper.dart';
-
 
 @RoutePage()
 class ComplaintsRegistrationWrapperPage extends StatelessWidget
@@ -27,9 +24,7 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-
     return const BoundarySelectionWrapper(
-
       child: AutoRouter(),
     );
   }
@@ -38,53 +33,52 @@ class ComplaintsRegistrationWrapperPage extends StatelessWidget
   Widget wrappedRoute(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create:  (context) => LocationBloc(location: Location()),),
-        BlocProvider(create: (context) {
-      ComplaintsRegistrationState initialState;
+        BlocProvider(
+          create: (context) => LocationBloc(location: Location()),
+        ),
+        BlocProvider(
+          create: (context) {
+            ComplaintsRegistrationState initialState;
 
-      final pgrItem = pgrServiceModel;
+            final pgrItem = pgrServiceModel;
 
-      if (pgrItem != null) {
-        final additionalDetails = PgrAdditionalDetails.fromJson(
-          jsonDecode(pgrItem.additionalDetail!),
-        );
+            if (pgrItem != null) {
+              final additionalDetails = PgrAdditionalDetails.fromJson(
+                jsonDecode(pgrItem.additionalDetail!),
+              );
 
-        initialState = ComplaintsRegistrationViewState(
-          complaintType: pgrItem.serviceCode,
-          addressModel: pgrItem.address,
-          complaintsDetailsModel: ComplaintsDetailsModel(
-            administrativeArea: pgrItem.address.locality?.name ?? '',
-            complainantContactNumber: pgrItem.user.mobileNumber ?? '',
-            complainantName: pgrItem.user.name ?? '',
-            complaintDescription: pgrItem.description,
-            complaintRaisedFor:
+              initialState = ComplaintsRegistrationViewState(
+                complaintType: pgrItem.serviceCode,
+                addressModel: pgrItem.address,
+                complaintsDetailsModel: ComplaintsDetailsModel(
+                  administrativeArea: pgrItem.address.locality?.name ?? '',
+                  complainantContactNumber: pgrItem.user.mobileNumber ?? '',
+                  complainantName: pgrItem.user.name ?? '',
+                  complaintDescription: pgrItem.description,
+                  complaintRaisedFor: ComplaintsSingleton().userMobileNumber !=
+                          pgrItem.user.mobileNumber
+                      ? 'Another user'
+                      : 'Myself',
+                  dateOfComplaint:
+                      pgrItem.auditDetails?.createdTime.toDateTime ??
+                          DateTime.now(),
+                  supervisorContactNumber:
+                      additionalDetails.supervisorContactNumber ?? '',
+                  supervisorName: additionalDetails.supervisorName ?? '',
+                ),
+              );
+            } else {
+              initialState = const ComplaintsRegistrationCreateState();
+            }
 
-            ComplaintsSingleton().userMobileNumber != pgrItem.user.mobileNumber
-                ? 'Another user'
-                : 'Myself',
-
-            dateOfComplaint: pgrItem.auditDetails?.createdTime.toDateTime ??
-                DateTime.now(),
-            supervisorContactNumber:
-            additionalDetails.supervisorContactNumber ?? '',
-            supervisorName: additionalDetails.supervisorName ?? '',
-          ),
-        );
-      } else {
-        initialState = const ComplaintsRegistrationCreateState();
-      }
-
-      return ComplaintsRegistrationBloc(
-        initialState,
-
-        pgrServiceRepository:
-        context.repository<PgrServiceModel, PgrServiceSearchModel>(context),
-
-      );
-    },
+            return ComplaintsRegistrationBloc(
+              initialState,
+              pgrServiceRepository: context
+                  .repository<PgrServiceModel, PgrServiceSearchModel>(context),
+            );
+          },
         )
       ],
-      
       child: this,
     );
   }

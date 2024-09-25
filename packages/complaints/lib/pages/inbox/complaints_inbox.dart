@@ -218,11 +218,14 @@ class _ComplaintsInboxItem extends StatelessWidget {
               labelFlex: 5,
               items: [
                 LabelValuePair(
-                    label: localizations
-                        .translate(i18.complaints.inboxNumberLabel),
-                    value: item.serviceRequestId ??
-                        "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                  valueTextStyle: item.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
+                  label:
+                      localizations.translate(i18.complaints.inboxNumberLabel),
+                  value: item.serviceRequestId ??
+                      "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+                  valueTextStyle: item.serviceRequestId != null
+                      ? textTheme.bodyS
+                          .copyWith(color: theme.colorTheme.primary.primary1)
+                      : null,
                 ),
                 LabelValuePair(
                   label: localizations.translate(i18.complaints.inboxTypeLabel),

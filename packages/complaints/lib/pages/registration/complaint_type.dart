@@ -64,7 +64,8 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                   children: [
                     Button(
                       mainAxisSize: MainAxisSize.max,
-                      label: localizations.translate(i18.complaints.actionLabel),
+                      label:
+                          localizations.translate(i18.complaints.actionLabel),
                       type: ButtonType.primary,
                       size: ButtonSize.large,
                       onPressed: () async {
@@ -130,19 +131,26 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         i18.complaints.complaintsTypeLabel,
                       ),
                       child: RadioList(
-                        radioButtons: (ComplaintsSingleton().complaintTypes?.isNotEmpty ?? false)
-                            ? ComplaintsSingleton().complaintTypes!
-                            .map<RadioButtonModel>(
-                              (item) => RadioButtonModel(
-                            code: item,
-                            name: localizations.translate(
-                              item.toString().snakeCase.toUpperCase().trim(),
-                            ),
-                          ),
-                        ).toList():
-                        <RadioButtonModel>[],
-                        groupValue:
-                            form.control(_complaintType).value ?? "",
+                        radioButtons:
+                            (ComplaintsSingleton().complaintTypes?.isNotEmpty ??
+                                    false)
+                                ? ComplaintsSingleton()
+                                    .complaintTypes!
+                                    .map<RadioButtonModel>(
+                                      (item) => RadioButtonModel(
+                                        code: item,
+                                        name: localizations.translate(
+                                          item
+                                              .toString()
+                                              .snakeCase
+                                              .toUpperCase()
+                                              .trim(),
+                                        ),
+                                      ),
+                                    )
+                                    .toList()
+                                : <RadioButtonModel>[],
+                        groupValue: form.control(_complaintType).value ?? "",
                         onChanged: (changedValue) {
                           if (form.control(_complaintType).disabled) return;
                           setState(() {
@@ -160,13 +168,16 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                                   i18.complaints.validationRequiredError,
                                 ),
                           },
-                          showErrors: (control)=>control.invalid && control.touched,
+                          showErrors: (control) =>
+                              control.invalid && control.touched,
                           builder: (field) {
                             return DigitTextFormInput(
                               charCount: true,
                               errorMessage: field.errorText,
                               initialValue: field.value,
-                              onChange: (value) => form.control(_otherComplaintType).value=value,
+                              onChange: (value) => form
+                                  .control(_otherComplaintType)
+                                  .value = value,
                             );
                           }),
                     ],
