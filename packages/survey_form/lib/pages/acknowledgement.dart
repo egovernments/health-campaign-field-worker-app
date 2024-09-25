@@ -13,6 +13,7 @@ class SurveyFormAcknowledgementPage extends LocalizedStatefulWidget {
   final String? label;
   final String? description;
   final Map<String, dynamic>? descriptionTableData;
+
   const SurveyFormAcknowledgementPage({
     super.key,
     super.appLocalizations,
@@ -23,10 +24,12 @@ class SurveyFormAcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<SurveyFormAcknowledgementPage> createState() => AcknowledgementPageState();
+  State<SurveyFormAcknowledgementPage> createState() =>
+      AcknowledgementPageState();
 }
 
-class AcknowledgementPageState extends LocalizedState<SurveyFormAcknowledgementPage> {
+class AcknowledgementPageState
+    extends LocalizedState<SurveyFormAcknowledgementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,12 +39,12 @@ class AcknowledgementPageState extends LocalizedState<SurveyFormAcknowledgementP
           i18.acknowledgementSuccess.acknowledgementLabelText,
         ),
         description: localizations.translate(
-        i18.acknowledgementSuccess.acknowledgementDescriptionText,
-      ),
-
+          i18.acknowledgementSuccess.acknowledgementDescriptionText,
+        ),
         actions: [
           Button(
-            label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+            label: localizations
+                .translate(i18.acknowledgementSuccess.actionLabelText),
             onPressed: () => context.router.popUntilRoot(),
             type: ButtonType.primary,
             size: ButtonSize.large,
@@ -54,23 +57,24 @@ class AcknowledgementPageState extends LocalizedState<SurveyFormAcknowledgementP
         child: SizedBox(
           height: 150,
           child: DigitCard(
-            cardType: CardType.primary,
-            margin: const EdgeInsets.only(top: spacer2),
-            padding: const EdgeInsets.all(spacer2),
-            children: [Column(
+              cardType: CardType.primary,
+              margin: const EdgeInsets.only(top: spacer2),
+              padding: const EdgeInsets.all(spacer2),
               children: [
-                Button(
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.goToHome),
-                  type: ButtonType.primary,
-                  size: ButtonSize.large,
-                  onPressed: () {
-                    context.router.maybePop();
-                  },
+                Column(
+                  children: [
+                    Button(
+                      label: localizations
+                          .translate(i18.acknowledgementSuccess.goToHome),
+                      type: ButtonType.primary,
+                      size: ButtonSize.large,
+                      onPressed: () {
+                        context.router.maybePop();
+                      },
+                    ),
+                  ],
                 ),
-              ],
-            ),]
-          ),
+              ]),
         ),
       ),
     );

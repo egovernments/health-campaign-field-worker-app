@@ -351,8 +351,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           padding: const EdgeInsets.only(bottom: spacer2),
                           child: Text(
                             '${localizations.translate(
-                              value.selectedServiceDefinition!.code
-                                  .toString(),
+                              value.selectedServiceDefinition!.code.toString(),
                             )} ${localizations.translate(i18.surveyForm.surveyForm)}',
                             style: textTheme.headingXl,
                           ),
@@ -365,91 +364,98 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             if (e.dataType == 'String' &&
                                 !(e.code ?? '').contains('.')) ...[
                               FormField<String>(
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value){
-                                  if (((controller[index].text == null ||
-                                      controller[index].text == '') &&
-                                      e.required == true)) {
-                                    return localizations.translate(
-                                        "${e.code}_REQUIRED");
-                                  }
-                                  if (e.regex != null) {
-                                    return (RegExp(e.regex!)
-                                        .hasMatch(controller[index].text!))
-                                        ? null
-                                        : localizations.translate(
-                                        "${e.code}_REGEX");
-                                  }
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (((controller[index].text == null ||
+                                            controller[index].text == '') &&
+                                        e.required == true)) {
+                                      return localizations
+                                          .translate("${e.code}_REQUIRED");
+                                    }
+                                    if (e.regex != null) {
+                                      return (RegExp(e.regex!).hasMatch(
+                                              controller[index].text!))
+                                          ? null
+                                          : localizations
+                                              .translate("${e.code}_REGEX");
+                                    }
 
-                                  return null;
-                                },
-                                builder: (field){ return LabeledField(
-                                  label: localizations.translate(
-                                    '${value.selectedServiceDefinition?.code}.${e.code}',
-                                  ),
-                                  isRequired: e.required ?? false,
-                                  child: DigitTextFormInput(
-                                      onChange: (value) {
-                                        field.didChange(value);
-                                        controller[index].text=value;
-                                        surveyFormFormKey.currentState
-                                            ?.validate();
-                                      },
-                                      errorMessage: field.errorText,
-                                      controller: controller[index],
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.allow(
-                                            RegExp(
-                                          "[a-zA-Z0-9]",
-                                        )),
-                                      ],
-                                  )
-                                );}
-                              ),
+                                    return null;
+                                  },
+                                  builder: (field) {
+                                    return LabeledField(
+                                        label: localizations.translate(
+                                          '${value.selectedServiceDefinition?.code}.${e.code}',
+                                        ),
+                                        isRequired: e.required ?? false,
+                                        child: DigitTextFormInput(
+                                          onChange: (value) {
+                                            field.didChange(value);
+                                            controller[index].text = value;
+                                            surveyFormFormKey.currentState
+                                                ?.validate();
+                                          },
+                                          errorMessage: field.errorText,
+                                          controller: controller[index],
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp(
+                                              "[a-zA-Z0-9]",
+                                            )),
+                                          ],
+                                        ));
+                                  }),
                             ] else if (e.dataType == 'Number' &&
                                 !(e.code ?? '').contains('.')) ...[
                               FormField<String>(
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value) {
-                                  if (((controller[index].text == null || controller[index].text == '') &&
-                                      e.required == true)) {
-                                    return localizations.translate(
-                                      i18.common.corecommonRequired,
-                                    );
-                                  }
-                                  if (e.regex != null) {
-                                    return (RegExp(e.regex!)
-                                        .hasMatch(controller[index].text!))
-                                        ? null
-                                        : localizations.translate(
-                                        "${e.code}_REGEX");
-                                  }
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  validator: (value) {
+                                    if (((controller[index].text == null ||
+                                            controller[index].text == '') &&
+                                        e.required == true)) {
+                                      return localizations.translate(
+                                        i18.common.corecommonRequired,
+                                      );
+                                    }
+                                    if (e.regex != null) {
+                                      return (RegExp(e.regex!).hasMatch(
+                                              controller[index].text!))
+                                          ? null
+                                          : localizations
+                                              .translate("${e.code}_REGEX");
+                                    }
 
-                                  return null;
-                                },
-                                builder: (field){return LabeledField(
-                                  label: localizations.translate(
-                                        '${value.selectedServiceDefinition?.code}.${e.code}',
-                                      ).trim(),
-                                  isRequired: e.required ?? false,
-                                  child: DigitTextFormInput(
-                                    onChange: (value) {
-                                      field.didChange(value);
-                                      controller[index].text=value;
-                                      surveyFormFormKey.currentState
-                                          ?.validate();
-                                    },
-                                    errorMessage: field.errorText,
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.allow(RegExp(
-                                        "[0-9]",
-                                      )),
-                                    ],
-                                    controller: controller[index],
-                                  ),
-                                );}
-                              ),
+                                    return null;
+                                  },
+                                  builder: (field) {
+                                    return LabeledField(
+                                      label: localizations
+                                          .translate(
+                                            '${value.selectedServiceDefinition?.code}.${e.code}',
+                                          )
+                                          .trim(),
+                                      isRequired: e.required ?? false,
+                                      child: DigitTextFormInput(
+                                        onChange: (value) {
+                                          field.didChange(value);
+                                          controller[index].text = value;
+                                          surveyFormFormKey.currentState
+                                              ?.validate();
+                                        },
+                                        errorMessage: field.errorText,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp(
+                                            "[0-9]",
+                                          )),
+                                        ],
+                                        controller: controller[index],
+                                      ),
+                                    );
+                                  }),
                             ] else if (e.dataType == 'MultiValueList' &&
                                 !(e.code ?? '').contains('.')) ...[
                               Align(
@@ -460,47 +466,50 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                     label: localizations.translate(
                                       '${value.selectedServiceDefinition?.code}.${e.code}',
                                     ),
-                                    isRequired: e.required??false,
-                                    child: BlocBuilder<ServiceBloc, ServiceState>(
+                                    isRequired: e.required ?? false,
+                                    child:
+                                        BlocBuilder<ServiceBloc, ServiceState>(
                                       builder: (context, state) {
                                         return Column(
                                           children: e.values!
                                               .map((e) => DigitCheckbox(
-                                            label: e,
-                                            value: controller[index]
-                                                .text
-                                                .split('.')
-                                                .contains(e),
-                                            onChanged: (value) {
-                                              context
-                                                  .read<ServiceBloc>()
-                                                  .add(
-                                                ServiceSurveyFormEvent(
-                                                  value: e.toString(),
-                                                  submitTriggered:
-                                                  submitTriggered,
-                                                ),
-                                              );
-                                              final String ele;
-                                              var val = controller[index]
-                                                  .text
-                                                  .split('.');
-                                              if (val.contains(e)) {
-                                                val.remove(e);
-                                                ele = val.join(".");
-                                              } else {
-                                                ele =
-                                                "${controller[index].text}.$e";
-                                              }
-                                              controller[index].value =
-                                                  TextEditingController
-                                                      .fromValue(
-                                                    TextEditingValue(
-                                                      text: ele,
-                                                    ),
-                                                  ).value;
-                                            },
-                                          ))
+                                                    label: e,
+                                                    value: controller[index]
+                                                        .text
+                                                        .split('.')
+                                                        .contains(e),
+                                                    onChanged: (value) {
+                                                      context
+                                                          .read<ServiceBloc>()
+                                                          .add(
+                                                            ServiceSurveyFormEvent(
+                                                              value:
+                                                                  e.toString(),
+                                                              submitTriggered:
+                                                                  submitTriggered,
+                                                            ),
+                                                          );
+                                                      final String ele;
+                                                      var val =
+                                                          controller[index]
+                                                              .text
+                                                              .split('.');
+                                                      if (val.contains(e)) {
+                                                        val.remove(e);
+                                                        ele = val.join(".");
+                                                      } else {
+                                                        ele =
+                                                            "${controller[index].text}.$e";
+                                                      }
+                                                      controller[index].value =
+                                                          TextEditingController
+                                                              .fromValue(
+                                                        TextEditingValue(
+                                                          text: ele,
+                                                        ),
+                                                      ).value;
+                                                    },
+                                                  ))
                                               .toList(),
                                         );
                                       },
@@ -528,55 +537,92 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                       Align(
                                         alignment: Alignment.topLeft,
                                         child: Padding(
-                                          padding: const EdgeInsets.all(spacer2),
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
                                           child: LabeledField(
                                             label: localizations.translate(
                                               '${selectedServiceDefinition?.code}.${e.code}',
                                             ),
-                                            isRequired: e.required??false,
+                                            isRequired: e.required ?? false,
                                             child: BlocBuilder<ServiceBloc,
                                                 ServiceState>(
                                               builder: (context, state) {
                                                 return FormField<bool>(
-                                                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                                                  validator: (value){
-                                                    if (e.required==true && (controller[index].text == null || controller[index].text == '') ){
-                                                      return localizations.translate(
-                                                        i18.common.coreCommonReasonRequired,
+                                                  autovalidateMode:
+                                                      AutovalidateMode
+                                                          .onUserInteraction,
+                                                  validator: (value) {
+                                                    if (e.required == true &&
+                                                        (controller[index]
+                                                                    .text ==
+                                                                null ||
+                                                            controller[index]
+                                                                    .text ==
+                                                                '')) {
+                                                      return localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonReasonRequired,
                                                       );
                                                     }
 
                                                     return null;
                                                   },
-                                                  builder: (field)=> SelectionCard<bool>(
-                                                    errorMessage: field.errorText,
-                                                    allowMultipleSelection: false,
+                                                  builder: (field) =>
+                                                      SelectionCard<bool>(
+                                                    errorMessage:
+                                                        field.errorText,
+                                                    allowMultipleSelection:
+                                                        false,
                                                     valueMapper: (value) {
-                                                      return value ? localizations.translate(
-                                                        i18.common.coreCommonYes,
-                                                      ) : localizations.translate(
-                                                        i18.common.coreCommonNo,
-                                                      );
+                                                      return value
+                                                          ? localizations
+                                                              .translate(
+                                                              i18.common
+                                                                  .coreCommonYes,
+                                                            )
+                                                          : localizations
+                                                              .translate(
+                                                              i18.common
+                                                                  .coreCommonNo,
+                                                            );
                                                     },
-                                                    initialSelection: controller[index].text=='true' ?  [true] : controller[index].text=='false' ?[false] : [],
-                                                    options: const [true, false],
-                                                    onSelectionChanged: (curValue) {
-                                                      field.didChange(curValue.first);
-                                                      if(curValue.isNotEmpty){
+                                                    initialSelection:
+                                                        controller[index]
+                                                                    .text ==
+                                                                'true'
+                                                            ? [true]
+                                                            : controller[index]
+                                                                        .text ==
+                                                                    'false'
+                                                                ? [false]
+                                                                : [],
+                                                    options: const [
+                                                      true,
+                                                      false
+                                                    ],
+                                                    onSelectionChanged:
+                                                        (curValue) {
+                                                      field.didChange(
+                                                          curValue.first);
+                                                      if (curValue.isNotEmpty) {
                                                         context
                                                             .read<ServiceBloc>()
                                                             .add(
-                                                          ServiceSurveyFormEvent(
-                                                            value: curValue.toString(),
-                                                            submitTriggered:
-                                                            submitTriggered,
-                                                          ),
-                                                        );
-                                                        controller[index].value = TextEditingValue(
-                                                          text: curValue.first.toString(),
+                                                              ServiceSurveyFormEvent(
+                                                                value: curValue
+                                                                    .toString(),
+                                                                submitTriggered:
+                                                                    submitTriggered,
+                                                              ),
+                                                            );
+                                                        controller[index]
+                                                                .value =
+                                                            TextEditingValue(
+                                                          text: curValue.first
+                                                              .toString(),
                                                         );
                                                       }
-
                                                     },
                                                   ),
                                                 );
@@ -585,7 +631,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           ),
                                         ),
                                       ),
-
                                     ]),
                             ],
                           ]);
@@ -639,230 +684,243 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return Align(
         alignment: Alignment.topLeft,
         child: Padding(
-          padding: const EdgeInsets.all(spacer4), // Add padding here
-          child: LabeledField(
-              label: localizations.translate(
-                '${selectedServiceDefinition?.code}.${item.code}',
-              ),
-              isRequired: item.required??false,
-              child :
-              Column(
-                  children:[
-                    BlocBuilder<ServiceBloc, ServiceState>(
-                      builder: (context, state) {
-                        return Align(
-                          alignment: Alignment.topLeft,
-                          child: FormField(
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value1) {
-                              if (item.required==true && (controller[index].text == null || controller[index].text == '')) {
-                                return localizations.translate(
-                                  i18.common.coreCommonReasonRequired,
-                                );
-                              }
+            padding: const EdgeInsets.all(spacer4), // Add padding here
+            child: LabeledField(
+                label: localizations.translate(
+                  '${selectedServiceDefinition?.code}.${item.code}',
+                ),
+                isRequired: item.required ?? false,
+                child: Column(children: [
+                  BlocBuilder<ServiceBloc, ServiceState>(
+                    builder: (context, state) {
+                      return Align(
+                        alignment: Alignment.topLeft,
+                        child: FormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value1) {
+                            if (item.required == true &&
+                                (controller[index].text == null ||
+                                    controller[index].text == '')) {
+                              return localizations.translate(
+                                i18.common.coreCommonReasonRequired,
+                              );
+                            }
 
-                              return null;
-                            },
-                            builder: (field)=> RadioList(
-                              radioButtons: item.values != null
-                                  ? item.values!
-                                  .where((e) => e != i18.surveyForm.notSelectedKey)
-                                  .toList()
-                                  .map((item)=>RadioButtonModel(
-                                code: item,
-                                name: localizations.translate(
-                                  'CORE_COMMON_${item.trim().toUpperCase()}',
-                                ),
-                              )).toList():[],
-                              errorMessage: field.errorText,
-                              groupValue: controller[index].text.trim(),
-                              onChanged: (value) {
-                                field.didChange(value);
-                                context.read<ServiceBloc>().add(
-                                  ServiceSurveyFormEvent(
-                                    value: Random().nextInt(100).toString(),
-                                    submitTriggered: submitTriggered,
+                            return null;
+                          },
+                          builder: (field) => RadioList(
+                            radioButtons: item.values != null
+                                ? item.values!
+                                    .where((e) =>
+                                        e != i18.surveyForm.notSelectedKey)
+                                    .toList()
+                                    .map((item) => RadioButtonModel(
+                                          code: item,
+                                          name: localizations.translate(
+                                            'CORE_COMMON_${item.trim().toUpperCase()}',
+                                          ),
+                                        ))
+                                    .toList()
+                                : [],
+                            errorMessage: field.errorText,
+                            groupValue: controller[index].text.trim(),
+                            onChanged: (value) {
+                              field.didChange(value);
+                              context.read<ServiceBloc>().add(
+                                    ServiceSurveyFormEvent(
+                                      value: Random().nextInt(100).toString(),
+                                      submitTriggered: submitTriggered,
+                                    ),
+                                  );
+                              setState(() {
+                                // Clear child controllers and update visibility
+                                for (final matchingChildItem in childItems) {
+                                  final childIndex = initialAttributes
+                                      ?.indexOf(matchingChildItem);
+                                  if (childIndex != null) {
+                                    // controller[childIndex].clear();
+                                    visibleSurveyFormIndexes
+                                        .removeWhere((v) => v == childIndex);
+                                  }
+                                }
+
+                                // Update the current controller's value
+                                controller[index].value =
+                                    TextEditingController.fromValue(
+                                  TextEditingValue(
+                                    text: value!.code,
                                   ),
-                                );
-                                setState(() {
-                                  // Clear child controllers and update visibility
-                                  for (final matchingChildItem in childItems) {
-                                    final childIndex =
-                                    initialAttributes?.indexOf(matchingChildItem);
-                                    if (childIndex != null) {
-                                      // controller[childIndex].clear();
-                                      visibleSurveyFormIndexes
-                                          .removeWhere((v) => v == childIndex);
+                                ).value;
+
+                                if (excludedIndexes.isNotEmpty) {
+                                  for (int i = 0;
+                                      i < excludedIndexes.length;
+                                      i++) {
+                                    // Clear excluded child controllers
+                                    if (item.dataType != 'SingleValueList') {
+                                      // controller[excludedIndexes[i]].value =
+                                      //     TextEditingController.fromValue(
+                                      //   const TextEditingValue(
+                                      //     text: '',
+                                      //   ),
+                                      // ).value;
                                     }
                                   }
+                                }
 
-                                  // Update the current controller's value
-                                  controller[index].value =
-                                      TextEditingController.fromValue(
-                                        TextEditingValue(
-                                          text: value!.code,
-                                        ),
-                                      ).value;
-
-                                  if (excludedIndexes.isNotEmpty) {
-                                    for (int i = 0; i < excludedIndexes.length; i++) {
-                                      // Clear excluded child controllers
-                                      if (item.dataType != 'SingleValueList') {
-                                        // controller[excludedIndexes[i]].value =
-                                        //     TextEditingController.fromValue(
-                                        //   const TextEditingValue(
-                                        //     text: '',
-                                        //   ),
-                                        // ).value;
-                                      }
-                                    }
+                                // Remove corresponding controllers based on the removed attributes
+                              });
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  BlocBuilder<ServiceBloc, ServiceState>(
+                    builder: (context, state) {
+                      return (controller[index].text ==
+                                  item.values?[1].trim() &&
+                              !(isHealthFacilityWorker &&
+                                  widget.referralClientRefId != null))
+                          ? Padding(
+                              padding: const EdgeInsets.only(
+                                left: spacer1,
+                                right: spacer1,
+                                bottom: spacer4,
+                              ),
+                              child: FormField<String>(
+                                autovalidateMode:
+                                    AutovalidateMode.onUserInteraction,
+                                validator: (value1) {
+                                  if (item.required == true &&
+                                      (additionalController[index].text ==
+                                              null ||
+                                          additionalController[index].text ==
+                                              '')) {
+                                    return localizations.translate(
+                                      i18.common.coreCommonReasonRequired,
+                                    );
                                   }
 
-                                  // Remove corresponding controllers based on the removed attributes
-                                });
-                              },
-                            ),
-                          ),
-                        );
-                      },
+                                  return null;
+                                },
+                                builder: (field) {
+                                  return LabeledField(
+                                      label: localizations.translate(
+                                        '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
+                                      ),
+                                      isRequired: item.required ?? false,
+                                      child: DigitTextFormInput(
+                                        onChange: (value) {
+                                          field.didChange(value);
+                                          additionalController[index].text =
+                                              value;
+                                        },
+                                        errorMessage: field.errorText,
+                                        maxLength: 1000,
+                                        charCount: true,
+                                        controller: additionalController[index],
+                                      ));
+                                },
+                              ),
+                            )
+                          : const SizedBox();
+                    },
+                  ),
+                  if (childItems.isNotEmpty &&
+                      controller[index].text.trim().isNotEmpty) ...[
+                    _buildNestedSurveyForm(
+                      item.code.toString(),
+                      index,
+                      controller[index].text.trim(),
+                      context,
                     ),
-                    BlocBuilder<ServiceBloc, ServiceState>(
-                      builder: (context, state) {
-                        return (controller[index].text == item.values?[1].trim() &&
-                            !(isHealthFacilityWorker &&
-                                widget.referralClientRefId != null))
-                            ? Padding(
-                          padding: const EdgeInsets.only(
-                            left: spacer1,
-                            right: spacer1,
-                            bottom: spacer4,
-                          ),
-                          child: FormField<String>(
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value1) {
-                              if (item.required==true && (additionalController[index].text == null || additionalController[index].text == '')) {
-                                return localizations.translate(
-                                  i18.common.coreCommonReasonRequired,
-                                );
-                              }
-
-                              return null;
-                            },
-                            builder: (field){
-                              return LabeledField(
-                                  label: localizations.translate(
-                                    '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
-                                  ),
-                                  isRequired: item.required ?? false,
-                                  child: DigitTextFormInput(
-                                    onChange: (value) {
-                                      field.didChange(value);
-                                      additionalController[index].text=value;
-                                    },
-                                    errorMessage: field.errorText,
-                                    maxLength: 1000,
-                                    charCount: true,
-                                    controller: additionalController[index],
-                                  ));
-                            },
-                          ),
-                        )
-                            : const SizedBox();
-                      },
-                    ),
-
-                    if (childItems.isNotEmpty &&
-                        controller[index].text.trim().isNotEmpty) ...[
-                      _buildNestedSurveyForm(
-                        item.code.toString(),
-                        index,
-                        controller[index].text.trim(),
-                        context,
-                      ),
-                    ],
-                  ]
-              )
-          )
-        ),
+                  ],
+                ]))),
       );
     } else if (item.dataType == 'String') {
       return FormField<String>(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: (value) {
-          if (((controller[index].text == null || controller[index].text == '') &&
-              item.required == true)) {
-            return localizations.translate("${item.code}_REQUIRED");
-          }
-          if (item.regex != null) {
-            return (RegExp(item.regex!).hasMatch(controller[index].text!))
-                ? null
-                : localizations.translate("${item.code}_REGEX");
-          }
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (((controller[index].text == null ||
+                    controller[index].text == '') &&
+                item.required == true)) {
+              return localizations.translate("${item.code}_REQUIRED");
+            }
+            if (item.regex != null) {
+              return (RegExp(item.regex!).hasMatch(controller[index].text!))
+                  ? null
+                  : localizations.translate("${item.code}_REGEX");
+            }
 
-          return null;
-        },
-        builder: (field){return LabeledField(
-          label: localizations.translate(
-            '${selectedServiceDefinition?.code}.${item.code}',
-          ),
-          isRequired: item.required ?? false,
-          child: DigitTextFormInput(
-            maxLength: 1000,
-            charCount: true,
-            onChange: (value) {
-              field.didChange(value);
-              controller[index].text=value;
-            },
-            errorMessage: field.errorText,
-            controller: controller[index],
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(
-                "[a-zA-Z0-9 ]",
-              )),
-            ],
-          ),
-        );}
-      );
+            return null;
+          },
+          builder: (field) {
+            return LabeledField(
+              label: localizations.translate(
+                '${selectedServiceDefinition?.code}.${item.code}',
+              ),
+              isRequired: item.required ?? false,
+              child: DigitTextFormInput(
+                maxLength: 1000,
+                charCount: true,
+                onChange: (value) {
+                  field.didChange(value);
+                  controller[index].text = value;
+                },
+                errorMessage: field.errorText,
+                controller: controller[index],
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(
+                    "[a-zA-Z0-9 ]",
+                  )),
+                ],
+              ),
+            );
+          });
     } else if (item.dataType == 'Number') {
       return FormField<String>(
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        validator: (value) {
-          if (((controller[index].text == null || controller[index].text == '') && item.required == true)) {
-            return localizations.translate(
-              i18.common.corecommonRequired,
-            );
-          }
-          if (item.regex != null) {
-            return (RegExp(item.regex!).hasMatch(controller[index].text!))
-                ? null
-                : localizations.translate("${item.code}_REGEX");
-          }
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          validator: (value) {
+            if (((controller[index].text == null ||
+                    controller[index].text == '') &&
+                item.required == true)) {
+              return localizations.translate(
+                i18.common.corecommonRequired,
+              );
+            }
+            if (item.regex != null) {
+              return (RegExp(item.regex!).hasMatch(controller[index].text!))
+                  ? null
+                  : localizations.translate("${item.code}_REGEX");
+            }
 
-          return null;
-        },
-        builder: (field){return LabeledField(
-          label: localizations
-              .translate(
-                '${selectedServiceDefinition?.code}.${item.code}',
-              )
-              .trim(),
-          isRequired: item.required ?? false,
-          child: DigitTextFormInput(
-            onChange: (value) {
-              field.didChange(value);
-              controller[index].text=value;
-            },
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(
-                "[0-9]",
-              )),
-            ],
-            errorMessage: field.errorText,
-            controller: controller[index],
-          ),
-        );}
-      );
+            return null;
+          },
+          builder: (field) {
+            return LabeledField(
+              label: localizations
+                  .translate(
+                    '${selectedServiceDefinition?.code}.${item.code}',
+                  )
+                  .trim(),
+              isRequired: item.required ?? false,
+              child: DigitTextFormInput(
+                onChange: (value) {
+                  field.didChange(value);
+                  controller[index].text = value;
+                },
+                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(
+                    "[0-9]",
+                  )),
+                ],
+                errorMessage: field.errorText,
+                controller: controller[index],
+              ),
+            );
+          });
     } else if (item.dataType == 'MultiValueList') {
       return Align(
         alignment: Alignment.topLeft,
@@ -872,37 +930,38 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
-            isRequired: item.required??false,
+            isRequired: item.required ?? false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return Column(
                   children: item.values!
                       .map((e) => DigitCheckbox(
-                    label: e,
-                    value: controller[index].text.split('.').contains(e),
-                    onChanged: (value) {
-                      context.read<ServiceBloc>().add(
-                        ServiceSurveyFormEvent(
-                          value: e.toString(),
-                          submitTriggered: submitTriggered,
-                        ),
-                      );
-                      final String ele;
-                      var val = controller[index].text.split('.');
-                      if (val.contains(e)) {
-                        val.remove(e);
-                        ele = val.join(".");
-                      } else {
-                        ele = "${controller[index].text}.$e";
-                      }
-                      controller[index].value =
-                          TextEditingController.fromValue(
-                            TextEditingValue(
-                              text: ele,
-                            ),
-                          ).value;
-                    },
-                  ))
+                            label: e,
+                            value:
+                                controller[index].text.split('.').contains(e),
+                            onChanged: (value) {
+                              context.read<ServiceBloc>().add(
+                                    ServiceSurveyFormEvent(
+                                      value: e.toString(),
+                                      submitTriggered: submitTriggered,
+                                    ),
+                                  );
+                              final String ele;
+                              var val = controller[index].text.split('.');
+                              if (val.contains(e)) {
+                                val.remove(e);
+                                ele = val.join(".");
+                              } else {
+                                ele = "${controller[index].text}.$e";
+                              }
+                              controller[index].value =
+                                  TextEditingController.fromValue(
+                                TextEditingValue(
+                                  text: ele,
+                                ),
+                              ).value;
+                            },
+                          ))
                       .toList(),
                 );
               },
@@ -919,13 +978,15 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
-            isRequired: item.required??false,
+            isRequired: item.required ?? false,
             child: BlocBuilder<ServiceBloc, ServiceState>(
               builder: (context, state) {
                 return FormField<bool>(
                   autovalidateMode: AutovalidateMode.onUserInteraction,
-                  validator: (value){
-                    if (item.required==true && (controller[index].text == null || controller[index].text == '') ){
+                  validator: (value) {
+                    if (item.required == true &&
+                        (controller[index].text == null ||
+                            controller[index].text == '')) {
                       return localizations.translate(
                         i18.common.coreCommonReasonRequired,
                       );
@@ -933,26 +994,28 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
 
                     return null;
                   },
-                  builder: (field)=>SelectionCard(
+                  builder: (field) => SelectionCard(
                     errorMessage: field.errorText,
                     allowMultipleSelection: false,
                     valueMapper: (value) {
-                      return value ? localizations.translate(
-                        i18.common.coreCommonYes,
-                      ) : localizations.translate(
-                        i18.common.coreCommonNo,
-                      );
+                      return value
+                          ? localizations.translate(
+                              i18.common.coreCommonYes,
+                            )
+                          : localizations.translate(
+                              i18.common.coreCommonNo,
+                            );
                     },
                     initialSelection: const [false],
                     options: const [true, false],
                     onSelectionChanged: (value) {
                       field.didChange(value.first);
                       context.read<ServiceBloc>().add(
-                        ServiceSurveyFormEvent(
-                          value: value.toString(),
-                          submitTriggered: submitTriggered,
-                        ),
-                      );
+                            ServiceSurveyFormEvent(
+                              value: value.toString(),
+                              submitTriggered: submitTriggered,
+                            ),
+                          );
                       final String ele;
                       var val = controller[index].text.split('.');
                       if (val.contains(e)) {
@@ -998,16 +1061,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         for (final matchingChildItem in childItems.where((childItem) =>
             childItem.code!.startsWith('$parentCode.$parentControllerValue.')))
           DigitCard(
-            cardType: CardType.primary,
-            margin: const EdgeInsets.only(bottom: spacer2, left: spacer1, right: spacer1),
-            children: [_buildSurveyForm(
-              matchingChildItem,
-              initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
-              // Pass parentIndex here as we're building at the same level
-              selectedServiceDefinition,
-              context,
-            ),]
-          ),
+              cardType: CardType.primary,
+              margin: const EdgeInsets.only(
+                  bottom: spacer2, left: spacer1, right: spacer1),
+              children: [
+                _buildSurveyForm(
+                  matchingChildItem,
+                  initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
+                  // Pass parentIndex here as we're building at the same level
+                  selectedServiceDefinition,
+                  context,
+                ),
+              ]),
       ],
     );
   }

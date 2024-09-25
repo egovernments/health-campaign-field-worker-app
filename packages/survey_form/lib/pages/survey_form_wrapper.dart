@@ -17,10 +17,11 @@ class SurveyFormWrapperPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final serviceDefinition = context
-        .repository<ServiceDefinitionModel, ServiceDefinitionSearchModel>(context);
+    final serviceDefinition = context.repository<ServiceDefinitionModel,
+        ServiceDefinitionSearchModel>(context);
 
-    final service = context.repository<ServiceModel, ServiceSearchModel>(context);
+    final service =
+        context.repository<ServiceModel, ServiceSearchModel>(context);
 
     return MultiBlocProvider(
       providers: [
@@ -37,11 +38,7 @@ class SurveyFormWrapperPage extends StatelessWidget {
             serviceDataRepository: service,
           ),
         ),
-        BlocProvider(
-          create: (_)=>LocationBloc(
-            location: Location()
-          )
-        )
+        BlocProvider(create: (_) => LocationBloc(location: Location()))
       ],
       child: const AutoRouter(),
     );

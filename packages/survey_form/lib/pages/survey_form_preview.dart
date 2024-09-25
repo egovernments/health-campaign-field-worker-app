@@ -77,14 +77,17 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                               ...serviceList
                                   .map((e) => e.serviceDefId != null
                                       ? Padding(
-                                        padding: const EdgeInsets.all(spacer2),
-                                        child: DigitCard(
-                                            cardType: CardType.primary,
-                                            children: [
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: DigitCard(
+                                              cardType: CardType.primary,
+                                              children: [
                                                 Align(
-                                                  alignment: Alignment.centerLeft,
+                                                  alignment:
+                                                      Alignment.centerLeft,
                                                   child: Text(
-                                                    DateFormat(Constants.SurveyFormPreviewDateFormat)
+                                                    DateFormat(Constants
+                                                            .SurveyFormPreviewDateFormat)
                                                         .format(
                                                       DateFormat(Constants
                                                               .defaultDateFormat)
@@ -108,11 +111,13 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                       ),
                                                     ),
                                                     Button(
-                                                      label: localizations.translate(
+                                                      label: localizations
+                                                          .translate(
                                                         i18.searchBeneficiary
                                                             .iconLabel,
                                                       ),
-                                                      type: ButtonType.secondary,
+                                                      type:
+                                                          ButtonType.secondary,
                                                       size: ButtonSize.medium,
                                                       onPressed: () {
                                                         context
@@ -127,7 +132,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                   ],
                                                 ),
                                               ]),
-                                      )
+                                        )
                                       : const Offstage())
                                   .toList(),
                             ],
@@ -152,64 +157,76 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                             item2,
                           ) {
                             return DigitCard(
-                              cardType: CardType.primary,
-                              children: [
-                                Column(
+                                cardType: CardType.primary,
                                 children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(spacer2),
-                                      child: Text(
-                                        localizations.translate(
-                                          item2?.code ?? '',
-                                        ),
-                                        style: textTheme.headingXl,
-                                      ),
-                                    ),
-                                  ),
-                                  ...(selectedService.attributes ?? [])
-                                      .where((a) =>
-                                          a.value !=
-                                              i18.surveyForm
-                                                  .notSelectedKey &&
-                                          a.value != '')
-                                      .map(
-                                        (e) => Padding(
-                                          padding: const EdgeInsets.all(spacer2),
-                                          child: Align(
-                                            alignment: AlignmentDirectional.topStart,
-                                            child: LabelValueList(
-                                                items: [
-                                                  LabelValuePair(
-                                                      label: localizations.translate(
-                                                        "${item2?.code ?? ''}.${e.attributeCode!}",
-                                                      ),
-                                                      value: e.dataType ==
-                                                          'SingleValueList'
-                                                          ? localizations
-                                                          .translate(
-                                                        'CORE_COMMON_${e.value.toString().toUpperCase()}',
-                                                      )
-                                                          : e.value??"",
-                                                      isInline: false,
-                                                  ),
-                                                  if(e.additionalDetails!='' && e.additionalDetails!=null)...[
-                                                    LabelValuePair(
-                                                      label: localizations.translate("${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",),
-                                                      value: localizations.translate(e.additionalDetails,),
-                                                      isInline: false,
-                                                      labelTextStyle: textTheme.bodyL,
-                                                    )
-                                                  ]
-                                                ]
+                                  Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.all(spacer2),
+                                          child: Text(
+                                            localizations.translate(
+                                              item2?.code ?? '',
                                             ),
+                                            style: textTheme.headingXl,
                                           ),
                                         ),
-                                  )
-                                ].toList(),
-                              ),]
-                            );
+                                      ),
+                                      ...(selectedService.attributes ?? [])
+                                          .where((a) =>
+                                              a.value !=
+                                                  i18.surveyForm
+                                                      .notSelectedKey &&
+                                              a.value != '')
+                                          .map(
+                                            (e) => Padding(
+                                              padding:
+                                                  const EdgeInsets.all(spacer2),
+                                              child: Align(
+                                                alignment: AlignmentDirectional
+                                                    .topStart,
+                                                child: LabelValueList(items: [
+                                                  LabelValuePair(
+                                                    label:
+                                                        localizations.translate(
+                                                      "${item2?.code ?? ''}.${e.attributeCode!}",
+                                                    ),
+                                                    value: e.dataType ==
+                                                            'SingleValueList'
+                                                        ? localizations
+                                                            .translate(
+                                                            'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                          )
+                                                        : e.value ?? "",
+                                                    isInline: false,
+                                                  ),
+                                                  if (e.additionalDetails !=
+                                                          '' &&
+                                                      e.additionalDetails !=
+                                                          null) ...[
+                                                    LabelValuePair(
+                                                      label: localizations
+                                                          .translate(
+                                                        "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                      ),
+                                                      value: localizations
+                                                          .translate(
+                                                        e.additionalDetails,
+                                                      ),
+                                                      isInline: false,
+                                                      labelTextStyle:
+                                                          textTheme.bodyL,
+                                                    )
+                                                  ]
+                                                ]),
+                                              ),
+                                            ),
+                                          )
+                                    ].toList(),
+                                  ),
+                                ]);
                           },
                           orElse: () => const Offstage(),
                         );

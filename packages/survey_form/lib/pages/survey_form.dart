@@ -78,12 +78,9 @@ class SurveyFormPageState extends State<SurveyformPage> {
                   return Column(
                     children: values
                         .map((e) => Padding(
-                          padding: const EdgeInsets.only(
-                              left: spacer4,
-                              right: spacer4,
-                              top: spacer4
-                          ),
-                          child: MenuCard(
+                              padding: const EdgeInsets.only(
+                                  left: spacer4, right: spacer4, top: spacer4),
+                              child: MenuCard(
                                 icon: Icons.article,
                                 heading: localizations.translate('${e.code}'),
                                 onTap: () {
@@ -92,11 +89,11 @@ class SurveyFormPageState extends State<SurveyformPage> {
                                       .add(ServiceDefinitionSelectionEvent(
                                         serviceDefinition: e,
                                       ));
-                          
+
                                   showDialog(
                                     context: context,
-                                    builder: (ctx)=>ActionCard(
-                                      onOutsideTap: (){
+                                    builder: (ctx) => ActionCard(
+                                      onOutsideTap: () {
                                         Navigator.of(
                                           context,
                                           rootNavigator: true,
@@ -150,7 +147,7 @@ class SurveyFormPageState extends State<SurveyformPage> {
                                   );
                                 },
                               ),
-                        ))
+                            ))
                         .toList(),
                   );
                 },
