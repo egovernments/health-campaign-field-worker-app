@@ -14,6 +14,7 @@ import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
 import '../../utils/typedefs.dart';
+import '../../utils/utils.dart';
 import '../search_households/search_households.dart';
 
 part 'household_overview.freezed.dart';
@@ -173,14 +174,11 @@ class HouseholdOverviewBloc
     }
 
     // Search for tasks associated with project beneficiaries.
-    final tasks = await taskDataRepository.search(TaskSearchModel(
+    var tasks = await taskDataRepository.search(TaskSearchModel(
         projectBeneficiaryClientReferenceId:
             projectBeneficiaries.map((e) => e.clientReferenceId).toList()));
 
-    tasks.sort((a, b) =>
-        a.clientAuditDetails?.createdTime
-            .compareTo(b.clientAuditDetails!.createdTime) ??
-        0);
+    tasks = sortTasks(tasks);
 
     // Search for adverse events associated with tasks.
     final sideEffects =

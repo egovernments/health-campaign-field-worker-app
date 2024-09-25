@@ -476,3 +476,12 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
 
   return Status.registered.toValue();
 }
+
+List<TaskModel> sortTasks(List<TaskModel> tasks) {
+  tasks.sort((a, b) {
+    return a.clientAuditDetails?.lastModifiedTime
+            ?.compareTo(b.clientAuditDetails!.lastModifiedTime!) ??
+        0;
+  });
+  return tasks;
+}

@@ -102,10 +102,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
-      taskList.sort((a, b) =>
-          a.clientAuditDetails?.createdTime
-              .compareTo(b.clientAuditDetails!.createdTime) ??
-          0);
+      taskList = sortTasks(taskList);
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
@@ -171,10 +168,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
-      taskList.sort((a, b) =>
-          a.clientAuditDetails?.createdTime
-              .compareTo(b.clientAuditDetails!.createdTime) ??
-          0);
+      taskList = sortTasks(taskList);
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
@@ -224,10 +218,8 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
-      taskList.sort((a, b) =>
-          a.clientAuditDetails?.createdTime
-              .compareTo(b.clientAuditDetails!.createdTime) ??
-          0);
+      taskList = sortTasks(taskList);
+
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
