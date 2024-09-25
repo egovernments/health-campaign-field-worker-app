@@ -63,7 +63,6 @@ class _RecordReferralDetailsPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // final router = context.router;
 
     return BlocBuilder<ReferralReconServiceDefinitionBloc,
         ReferralReconServiceDefinitionState>(
@@ -105,8 +104,8 @@ class _RecordReferralDetailsPageState
                           builder: (context, serviceState) {
                             return serviceState.maybeWhen(
                               orElse: () => DigitCard(
-                                  padding: EdgeInsets.all(
-                                      theme.spacerTheme.spacer2),
+                                  padding:
+                                      EdgeInsets.all(theme.spacerTheme.spacer2),
                                   cardType: CardType.primary,
                                   children: [
                                     ValueListenableBuilder(
@@ -201,9 +200,10 @@ class _RecordReferralDetailsPageState
                                                       .isEmpty) {
                                                     Toast.showToast(
                                                       context,
-                                                      message: localizations.translate(i18
-                                                          .referralReconciliation
-                                                          .noChecklistFound),
+                                                      message: localizations
+                                                          .translate(i18
+                                                              .referralReconciliation
+                                                              .noChecklistFound),
                                                       type: ToastType.error,
                                                     );
                                                   } else {
@@ -426,7 +426,8 @@ class _RecordReferralDetailsPageState
                                   ]),
                               serviceSearch: (value1, value2, value3) {
                                 return DigitCard(
-                                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                                    padding: EdgeInsets.all(
+                                        theme.spacerTheme.spacer2),
                                     cardType: CardType.primary,
                                     children: [
                                       ValueListenableBuilder(
@@ -460,7 +461,8 @@ class _RecordReferralDetailsPageState
                                                           .control(_cycleKey)
                                                           .setErrors(
                                                               {'': true});
-                                                    } if (form
+                                                    }
+                                                    if (form
                                                             .control(_genderKey)
                                                             .value ==
                                                         null) {
@@ -541,9 +543,10 @@ class _RecordReferralDetailsPageState
                                                         .isEmpty) {
                                                       Toast.showToast(
                                                         context,
-                                                        message: localizations.translate(i18
-                                                            .referralReconciliation
-                                                            .noChecklistFound),
+                                                        message: localizations
+                                                            .translate(i18
+                                                                .referralReconciliation
+                                                                .noChecklistFound),
                                                         type: ToastType.error,
                                                       );
                                                     } else {
@@ -795,8 +798,8 @@ class _RecordReferralDetailsPageState
                                                 i18.referralReconciliation
                                                     .referralDetails,
                                               ),
-                                              style: theme
-                                                  .textTheme.displayMedium,
+                                              style:
+                                                  theme.textTheme.displayMedium,
                                             ),
                                           ),
                                         ],
@@ -804,9 +807,8 @@ class _RecordReferralDetailsPageState
                                       ReactiveWrapperField<String>(
                                           formControlName: _cycleKey,
                                           validationMessages: {
-                                            '': (_) => localizations
-                                                .translate(i18.common
-                                                    .corecommonRequired),
+                                            '': (_) => localizations.translate(
+                                                i18.common.corecommonRequired),
                                           },
                                           showErrors: (control) =>
                                               control.invalid &&
@@ -815,8 +817,7 @@ class _RecordReferralDetailsPageState
                                           builder: (field) {
                                             return LabeledField(
                                                 isRequired: true,
-                                                label: localizations
-                                                    .translate(
+                                                label: localizations.translate(
                                                   i18.referralReconciliation
                                                       .selectCycle,
                                                 ),
@@ -824,21 +825,19 @@ class _RecordReferralDetailsPageState
                                                   readOnly: viewOnly,
                                                   onSelect: (val) => {
                                                     form
-                                                        .control(
-                                                            _cycleKey)
+                                                        .control(_cycleKey)
                                                         .markAsTouched(),
                                                     form
-                                                        .control(
-                                                            _cycleKey)
+                                                        .control(_cycleKey)
                                                         .value = val.code,
                                                   },
-                                                  selectedOption: widget
-                                                      .cycles
+                                                  selectedOption: widget.cycles
                                                       .map((item) =>
                                                           DropdownItem(
                                                             name:
-                                                                '${localizations.translate(i18.referralReconciliation.cycle) } $item',
-                                                            code: item.toString(),
+                                                                '${localizations.translate(i18.referralReconciliation.cycle)} $item',
+                                                            code:
+                                                                item.toString(),
                                                           ))
                                                       .firstWhere(
                                                         (item) =>
@@ -852,15 +851,13 @@ class _RecordReferralDetailsPageState
                                                                 name: '',
                                                                 code: ''),
                                                       ),
-                                                  errorMessage:
-                                                      field.errorText,
+                                                  errorMessage: field.errorText,
                                                   items: widget.cycles
                                                       .map(
-                                                        (item) =>
-                                                            DropdownItem(
-                                                              name:
-                                                              '${localizations.translate(i18.referralReconciliation.cycle) } $item',
-                                                              code: item.toString(),
+                                                        (item) => DropdownItem(
+                                                          name:
+                                                              '${localizations.translate(i18.referralReconciliation.cycle)} $item',
+                                                          code: item.toString(),
                                                         ),
                                                       )
                                                       .toList(),
@@ -870,12 +867,10 @@ class _RecordReferralDetailsPageState
                                           validationMessages: {
                                             'required': (_) =>
                                                 localizations.translate(
-                                                  i18.common
-                                                      .corecommonRequired,
+                                                  i18.common.corecommonRequired,
                                                 ),
                                           },
-                                          formControlName:
-                                              _nameOfChildKey,
+                                          formControlName: _nameOfChildKey,
                                           showErrors: (control) =>
                                               control.invalid &&
                                               control.touched,
@@ -883,39 +878,32 @@ class _RecordReferralDetailsPageState
                                           builder: (field) {
                                             return LabeledField(
                                               isRequired: true,
-                                              label:
-                                                  localizations.translate(
+                                              label: localizations.translate(
                                                 i18.referralReconciliation
                                                     .nameOfTheChildLabel,
                                               ),
                                               child: DigitTextFormInput(
                                                 onChange: (val) => {
                                                   form
-                                                      .control(
-                                                          _nameOfChildKey)
+                                                      .control(_nameOfChildKey)
                                                       .markAsTouched(),
                                                   form
-                                                      .control(
-                                                          _nameOfChildKey)
+                                                      .control(_nameOfChildKey)
                                                       .value = val,
                                                 },
-                                                errorMessage:
-                                                    field.errorText,
+                                                errorMessage: field.errorText,
                                                 readOnly: viewOnly,
                                                 initialValue: form
-                                                    .control(
-                                                        _nameOfChildKey)
+                                                    .control(_nameOfChildKey)
                                                     .value,
                                               ),
                                             );
                                           }),
                                       ReactiveWrapperField<String>(
-                                          formControlName:
-                                              _beneficiaryIdKey,
+                                          formControlName: _beneficiaryIdKey,
                                           builder: (field) {
                                             return LabeledField(
-                                              label:
-                                                  localizations.translate(
+                                              label: localizations.translate(
                                                 i18.referralReconciliation
                                                     .beneficiaryIdLabel,
                                               ),
@@ -931,37 +919,31 @@ class _RecordReferralDetailsPageState
                                                       .value = val,
                                                 },
                                                 initialValue: form
-                                                    .control(
-                                                        _beneficiaryIdKey)
+                                                    .control(_beneficiaryIdKey)
                                                     .value,
                                                 readOnly: viewOnly,
                                               ),
                                             );
                                           }),
                                       ReactiveWrapperField<String>(
-                                          formControlName:
-                                              _referralCodeKey,
+                                          formControlName: _referralCodeKey,
                                           builder: (field) {
                                             return LabeledField(
-                                              label:
-                                                  localizations.translate(
+                                              label: localizations.translate(
                                                 i18.referralReconciliation
                                                     .referralCodeLabel,
                                               ),
                                               child: DigitTextFormInput(
                                                 onChange: (val) => {
                                                   form
-                                                      .control(
-                                                          _referralCodeKey)
+                                                      .control(_referralCodeKey)
                                                       .markAsTouched(),
                                                   form
-                                                      .control(
-                                                          _referralCodeKey)
+                                                      .control(_referralCodeKey)
                                                       .value = val,
                                                 },
                                                 initialValue: form
-                                                    .control(
-                                                        _referralCodeKey)
+                                                    .control(_referralCodeKey)
                                                     .value,
                                                 readOnly: viewOnly,
                                               ),
@@ -972,8 +954,7 @@ class _RecordReferralDetailsPageState
                                           validationMessages: {
                                             'required': (_) =>
                                                 localizations.translate(
-                                                  i18.common
-                                                      .corecommonRequired,
+                                                  i18.common.corecommonRequired,
                                                 ),
                                             'max': (_) => localizations
                                                 .translate(
@@ -1005,8 +986,7 @@ class _RecordReferralDetailsPageState
                                           builder: (field) {
                                             return LabeledField(
                                               isRequired: true,
-                                              label:
-                                                  localizations.translate(
+                                              label: localizations.translate(
                                                 i18.common.ageInMonths,
                                               ),
                                               child: DigitTextFormInput(
@@ -1014,9 +994,7 @@ class _RecordReferralDetailsPageState
                                                   form
                                                       .control(_ageKey)
                                                       .markAsTouched(),
-                                                  form
-                                                          .control(_ageKey)
-                                                          .value =
+                                                  form.control(_ageKey).value =
                                                       int.tryParse(val),
                                                 },
                                                 keyboardType:
@@ -1029,8 +1007,7 @@ class _RecordReferralDetailsPageState
                                                 ],
                                                 readOnly: viewOnly,
                                                 initialValue: form
-                                                            .control(
-                                                                _ageKey)
+                                                            .control(_ageKey)
                                                             .value ==
                                                         null
                                                     ? ""
@@ -1038,17 +1015,14 @@ class _RecordReferralDetailsPageState
                                                         .control(_ageKey)
                                                         .value
                                                         .toString(),
-                                                errorMessage:
-                                                    field.errorText,
+                                                errorMessage: field.errorText,
                                               ),
                                             );
                                           }),
                                       ReactiveWrapperField<String>(
                                           validationMessages: {
-                                            '': (_) =>
-                                                localizations.translate(
-                                                  i18.common
-                                                      .corecommonRequired,
+                                            '': (_) => localizations.translate(
+                                                  i18.common.corecommonRequired,
                                                 ),
                                           },
                                           formControlName: _genderKey,
@@ -1059,31 +1033,28 @@ class _RecordReferralDetailsPageState
                                           builder: (field) {
                                             return LabeledField(
                                                 isRequired: true,
-                                                label: localizations
-                                                    .translate(
-                                                  i18.common
-                                                      .genderLabelText,
+                                                label: localizations.translate(
+                                                  i18.common.genderLabelText,
                                                 ),
                                                 child: Dropdown(
                                                   readOnly: viewOnly,
                                                   onSelect: (val) => {
                                                     form
-                                                        .control(
-                                                            _genderKey)
+                                                        .control(_genderKey)
                                                         .markAsTouched(),
                                                     form
-                                                        .control(
-                                                            _genderKey)
+                                                        .control(_genderKey)
                                                         .value = val.code,
                                                   },
-                                                  errorMessage:
-                                                      field.errorText,
+                                                  errorMessage: field.errorText,
                                                   selectedOption:
                                                       ReferralReconSingleton()
                                                           .genderOptions
                                                           .map((item) =>
                                                               DropdownItem(
-                                                                name: localizations.translate(item),
+                                                                name: localizations
+                                                                    .translate(
+                                                                        item),
                                                                 code: item
                                                                     .toString(),
                                                               ))
@@ -1096,10 +1067,8 @@ class _RecordReferralDetailsPageState
                                                                     .value,
                                                             orElse: () =>
                                                                 const DropdownItem(
-                                                                    name:
-                                                                        '',
-                                                                    code:
-                                                                        ''),
+                                                                    name: '',
+                                                                    code: ''),
                                                           ),
                                                   items:
                                                       ReferralReconSingleton()
@@ -1107,7 +1076,9 @@ class _RecordReferralDetailsPageState
                                                           .map(
                                                             (item) =>
                                                                 DropdownItem(
-                                                              name: localizations.translate(item),
+                                                              name: localizations
+                                                                  .translate(
+                                                                      item),
                                                               code: item
                                                                   .toString(),
                                                             ),
@@ -1149,7 +1120,8 @@ class _RecordReferralDetailsPageState
                                               builder: (field) {
                                                 return LabeledField(
                                                   isRequired: true,
-                                                  label: localizations.translate(
+                                                  label:
+                                                      localizations.translate(
                                                     i18.referralReconciliation
                                                         .reasonForReferralHeader,
                                                   ),
@@ -1166,18 +1138,25 @@ class _RecordReferralDetailsPageState
                                                           .value = val.code;
                                                     },
                                                     groupValue: form
-                                                        .control(
-                                                        _referralReason)
-                                                        .value ?? "",
-                                                    errorMessage: field.errorText,
+                                                            .control(
+                                                                _referralReason)
+                                                            .value ??
+                                                        "",
+                                                    errorMessage:
+                                                        field.errorText,
                                                     radioButtons:
                                                         ReferralReconSingleton()
                                                             .referralReasons
                                                             .map((r) {
                                                       return RadioButtonModel(
-                                                        code: r.toString().toUpperCase(),
+                                                        code: r
+                                                            .toString()
+                                                            .toUpperCase(),
                                                         // Use the index as the code
-                                                        name: localizations.translate(r.toString().toUpperCase()),
+                                                        name: localizations
+                                                            .translate(r
+                                                                .toString()
+                                                                .toUpperCase()),
                                                       );
                                                     }).toList(),
                                                   ),
@@ -1356,4 +1335,3 @@ class _RecordReferralDetailsPageState
     });
   }
 }
-

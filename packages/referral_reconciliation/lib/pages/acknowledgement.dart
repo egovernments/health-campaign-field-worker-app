@@ -22,7 +22,8 @@ class ReferralReconAcknowledgementPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<ReferralReconAcknowledgementPage> createState() => _AcknowledgementPageState();
+  State<ReferralReconAcknowledgementPage> createState() =>
+      _AcknowledgementPageState();
 }
 
 class _AcknowledgementPageState
@@ -33,27 +34,27 @@ class _AcknowledgementPageState
 
     return Scaffold(
       body: PanelCard(
-      type: PanelType.success,
-      title: widget.label ??
-          localizations.translate(
-            i18.acknowledgementSuccess.acknowledgementLabelText,
-          ),
-      description: widget.description ??
-          localizations.translate(
-            i18.acknowledgementSuccess.acknowledgementDescriptionText,
-          ),
-            actions: [
-              Button(
-                  label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
-                  type: ButtonType.primary,
-                size: ButtonSize.large,
-                mainAxisSize: MainAxisSize.max,
-              )
-            ]
+          type: PanelType.success,
+          title: widget.label ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementLabelText,
               ),
+          description: widget.description ??
+              localizations.translate(
+                i18.acknowledgementSuccess.acknowledgementDescriptionText,
+              ),
+          actions: [
+            Button(
+              label: localizations
+                  .translate(i18.acknowledgementSuccess.actionLabelText),
+              onPressed: () {
+                context.router.popUntilRoot();
+              },
+              type: ButtonType.primary,
+              size: ButtonSize.large,
+              mainAxisSize: MainAxisSize.max,
+            )
+          ]),
       bottomNavigationBar: Offstage(
         offstage: !widget.isDataRecordSuccess,
         // Show the bottom navigation bar if `isDataRecordSuccess` is true
