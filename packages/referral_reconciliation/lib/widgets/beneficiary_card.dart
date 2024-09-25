@@ -39,19 +39,39 @@ class ReferralBeneficiaryCard extends StatelessWidget {
           offstage: status == null,
           child: status == ReferralReconEnums.visited.toValue()
               ? Row(
-              children: [
-              Icon(Icons.check_circle, color: theme.colorTheme.alert.success,),
-              SizedBox(width: theme.spacerTheme.spacer1,),
-              Text(ReferralReconLocalization.of(context)
-                  .translate(status.toString()),style: TextStyle(color: Colors.green,fontSize: theme.spacerTheme.spacer4),)
-              ],
-              )
+                  children: [
+                    Icon(
+                      Icons.check_circle,
+                      color: theme.colorTheme.alert.success,
+                    ),
+                    SizedBox(
+                      width: theme.spacerTheme.spacer1,
+                    ),
+                    Text(
+                      ReferralReconLocalization.of(context)
+                          .translate(status.toString()),
+                      style: TextStyle(
+                          color: Colors.green,
+                          fontSize: theme.spacerTheme.spacer4),
+                    )
+                  ],
+                )
               : Row(
                   children: [
-                    Icon(Icons.info_rounded, color: theme.colorTheme.alert.error,),
-                    SizedBox(width: theme.spacerTheme.spacer1,),
-                    Text(ReferralReconLocalization.of(context)
-                        .translate(status.toString()), style: TextStyle(color: Colors.red,fontSize: theme.spacerTheme.spacer4),)
+                    Icon(
+                      Icons.info_rounded,
+                      color: theme.colorTheme.alert.error,
+                    ),
+                    SizedBox(
+                      width: theme.spacerTheme.spacer1,
+                    ),
+                    Text(
+                      ReferralReconLocalization.of(context)
+                          .translate(status.toString()),
+                      style: TextStyle(
+                          color: Colors.red,
+                          fontSize: theme.spacerTheme.spacer4),
+                    )
                   ],
                 ),
         ),

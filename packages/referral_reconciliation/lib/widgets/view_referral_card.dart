@@ -57,32 +57,31 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
             .value
             .toString() ??
         '');
-    return DigitCard(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 1.8,
-              child: ReferralBeneficiaryCard(
-                description: '',
-                subtitle:
-                    '${localizations.translate(i18.referralReconciliation.dateOfEvaluationLabel)}: ${dateOfEvaluation != null ? DigitDateUtils.getDateFromTimestamp(dateOfEvaluation, dateFormat: defaultDateFormat) : localizations.translate(i18.common.coreCommonNA)}',
-                title: hfReferralModel.name.toString(),
-              ),
+    return DigitCard(children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.8,
+            child: ReferralBeneficiaryCard(
+              description: '',
+              subtitle:
+                  '${localizations.translate(i18.referralReconciliation.dateOfEvaluationLabel)}: ${dateOfEvaluation != null ? DigitDateUtils.getDateFromTimestamp(dateOfEvaluation, dateFormat: defaultDateFormat) : localizations.translate(i18.common.coreCommonNA)}',
+              title: hfReferralModel.name.toString(),
             ),
-            Flexible(
-              child: Button(
-                size: ButtonSize.large,
-                type: ButtonType.secondary,
-                label: localizations
-                    .translate(i18.referralReconciliation.iconLabel),
-                onPressed: widget.onOpenPressed ?? () {},
-              ),
+          ),
+          Flexible(
+            child: Button(
+              size: ButtonSize.large,
+              type: ButtonType.secondary,
+              label:
+                  localizations.translate(i18.referralReconciliation.iconLabel),
+              onPressed: widget.onOpenPressed ?? () {},
             ),
-          ],
-        ),]
-    );
+          ),
+        ],
+      ),
+    ]);
   }
 }

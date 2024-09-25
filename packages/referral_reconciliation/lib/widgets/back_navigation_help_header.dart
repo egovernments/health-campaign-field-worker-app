@@ -26,7 +26,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: EdgeInsets.all(theme.spacerTheme.spacer2/2),
+      padding: EdgeInsets.all(theme.spacerTheme.spacer2 / 2),
       child: Row(
         children: [
           Expanded(
@@ -55,7 +55,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: showHelp ? theme.spacerTheme.spacer2 *2 : 0),
+          SizedBox(width: showHelp ? theme.spacerTheme.spacer2 * 2 : 0),
           if (showHelp)
             TextButton(
               style: TextButton.styleFrom(padding: EdgeInsets.zero),
