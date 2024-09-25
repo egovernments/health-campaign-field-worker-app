@@ -46,11 +46,11 @@ class _SearchReferralReconciliationsPageState
     searchReferralsBloc = SearchReferralsBloc(
       const SearchReferralsState(),
       referralReconDataRepository:
-      context.repository<HFReferralModel, HFReferralSearchModel>(context),
+          context.repository<HFReferralModel, HFReferralSearchModel>(context),
     );
     context.read<DigitScannerBloc>().add(
-      const DigitScannerEvent.handleScanner(),
-    );
+          const DigitScannerEvent.handleScanner(),
+        );
     super.initState();
   }
 
@@ -59,7 +59,7 @@ class _SearchReferralReconciliationsPageState
     final theme = Theme.of(context);
     return KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) => BlocProvider<
-            SearchReferralsBloc>(
+                SearchReferralsBloc>(
             create: (context) => searchReferralsBloc!
               ..add(
                 const SearchReferralsClearEvent(),
@@ -71,16 +71,16 @@ class _SearchReferralReconciliationsPageState
                       context
                           .read<SearchReferralsBloc>()
                           .add(SearchReferralsEvent.searchByTag(
-                        tag: scannerState.qrCodes.last,
-                      ));
+                            tag: scannerState.qrCodes.last,
+                          ));
                     }
                   },
                   child: BlocProvider(
                       create: (_) => ServiceBloc(
-                        const ServiceEmptyState(),
-                        serviceDataRepository: context.repository<
-                            ServiceModel, ServiceSearchModel>(context),
-                      ),
+                            const ServiceEmptyState(),
+                            serviceDataRepository: context.repository<
+                                ServiceModel, ServiceSearchModel>(context),
+                          ),
                       child: BlocBuilder<SearchReferralsBloc,
                           SearchReferralsState>(
                         builder: (context, searchState) {
@@ -91,11 +91,13 @@ class _SearchReferralReconciliationsPageState
                             slivers: [
                               SliverToBoxAdapter(
                                 child: Padding(
-                                  padding:  EdgeInsets.all(theme.spacerTheme.spacer2),
+                                  padding:
+                                      EdgeInsets.all(theme.spacerTheme.spacer2),
                                   child: Column(
                                     children: [
                                       Padding(
-                                        padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                                        padding: EdgeInsets.all(
+                                            theme.spacerTheme.spacer2),
                                         child: Align(
                                           alignment: Alignment.topLeft,
                                           child: Text(
@@ -104,7 +106,7 @@ class _SearchReferralReconciliationsPageState
                                                   .searchReferralsHeader,
                                             ),
                                             style:
-                                            theme.textTheme.displayMedium,
+                                                theme.textTheme.displayMedium,
                                             textAlign: TextAlign.left,
                                           ),
                                         ),
@@ -118,7 +120,7 @@ class _SearchReferralReconciliationsPageState
                                                   .referralSearchHintText,
                                             ),
                                             textCapitalization:
-                                            TextCapitalization.words,
+                                                TextCapitalization.words,
                                             onChanged: (value) {
                                               final bloc = context
                                                   .read<SearchReferralsBloc>();
@@ -131,19 +133,21 @@ class _SearchReferralReconciliationsPageState
                                               } else {
                                                 bloc.add(
                                                     SearchReferralsByNameEvent(
-                                                      searchText: value.trim(),
-                                                    ));
+                                                  searchText: value.trim(),
+                                                ));
                                               }
                                             },
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: theme.spacerTheme.spacer2 * 2),
+                                      SizedBox(
+                                          height:
+                                              theme.spacerTheme.spacer2 * 2),
                                       if (searchState.resultsNotFound)
                                         InfoCard(
-                                          title: localizations.translate(
-                                              i18.referralReconciliation
-                                                  .beneficiaryInfoTitle),
+                                          title: localizations.translate(i18
+                                              .referralReconciliation
+                                              .beneficiaryInfoTitle),
                                           type: InfoType.info,
                                           description: localizations.translate(
                                             i18.referralReconciliation
@@ -156,9 +160,9 @@ class _SearchReferralReconciliationsPageState
                               ),
                               SliverList(
                                 delegate: SliverChildBuilderDelegate(
-                                      (ctx, index) {
+                                  (ctx, index) {
                                     final i =
-                                    searchState.referrals.elementAt(index);
+                                        searchState.referrals.elementAt(index);
 
                                     return Container(
                                       margin: EdgeInsets.only(
@@ -167,21 +171,21 @@ class _SearchReferralReconciliationsPageState
                                         hfReferralModel: i,
                                         onOpenPressed: () {
                                           context.read<ServiceBloc>().add(
-                                            ServiceSearchEvent(
-                                              serviceSearchModel:
-                                              ServiceSearchModel(
-                                                clientId:
-                                                i.clientReferenceId,
-                                              ),
-                                            ),
-                                          );
+                                                ServiceSearchEvent(
+                                                  serviceSearchModel:
+                                                      ServiceSearchModel(
+                                                    clientId:
+                                                        i.clientReferenceId,
+                                                  ),
+                                                ),
+                                              );
                                           context.router.push(
                                             HFCreateReferralWrapperRoute(
                                               viewOnly: true,
                                               referralReconciliation: i,
                                               projectId:
-                                              ReferralReconSingleton()
-                                                  .projectId,
+                                                  ReferralReconSingleton()
+                                                      .projectId,
                                               cycles: ReferralReconSingleton()
                                                   .cycles,
                                             ),
@@ -199,10 +203,8 @@ class _SearchReferralReconciliationsPageState
                       ))),
               bottomNavigationBar: Card(
                 margin: const EdgeInsets.all(0),
-
                 child: Container(
-                  padding:
-                  EdgeInsets.all(theme.spacerTheme.spacer2),
+                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -213,10 +215,8 @@ class _SearchReferralReconciliationsPageState
                           VoidCallback? onPressed;
 
                           onPressed = () {
-                            FocusManager.instance.primaryFocus
-                                ?.unfocus();
-                            final bloc =
-                            context.read<SearchReferralsBloc>();
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            final bloc = context.read<SearchReferralsBloc>();
                             router.push(
                               HFCreateReferralWrapperRoute(
                                 viewOnly: false,
@@ -225,8 +225,7 @@ class _SearchReferralReconciliationsPageState
                                   name: state.searchQuery,
                                   beneficiaryId: state.tag,
                                 ),
-                                projectId:
-                                ReferralReconSingleton().projectId,
+                                projectId: ReferralReconSingleton().projectId,
                                 cycles: ReferralReconSingleton().cycles,
                               ),
                             );
@@ -238,13 +237,13 @@ class _SearchReferralReconciliationsPageState
                           return Button(
                             size: ButtonSize.large,
                             label: localizations.translate(
-                              i18.referralReconciliation
-                                  .createReferralLabel,
+                              i18.referralReconciliation.createReferralLabel,
                             ),
                             mainAxisSize: MainAxisSize.max,
-                            isDisabled: !(searchController.text.isNotEmpty && searchController.text.length>=2),
-                            onPressed:  (){
-                              if(onPressed!=null){
+                            isDisabled: !(searchController.text.isNotEmpty &&
+                                searchController.text.length >= 2),
+                            onPressed: () {
+                              if (onPressed != null) {
                                 onPressed();
                               }
                             },
@@ -252,15 +251,17 @@ class _SearchReferralReconciliationsPageState
                           );
                         },
                       ),
-                      SizedBox(height: theme.spacerTheme.spacer2,),
+                      SizedBox(
+                        height: theme.spacerTheme.spacer2,
+                      ),
                       Button(
                         size: ButtonSize.large,
-                        label: localizations.translate(
-                            i18.referralReconciliation.scannerLabel),
+                        label: localizations
+                            .translate(i18.referralReconciliation.scannerLabel),
                         onPressed: () async {
                           context.read<DigitScannerBloc>().add(
-                            const DigitScannerEvent.handleScanner(),
-                          );
+                                const DigitScannerEvent.handleScanner(),
+                              );
                           context.router.push(DigitScannerRoute(
                             quantity: 1,
                             isGS1code: false,

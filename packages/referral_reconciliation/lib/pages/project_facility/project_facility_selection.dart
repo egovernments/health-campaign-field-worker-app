@@ -79,7 +79,8 @@ class _ReferralReconProjectFacilitySelectionPageState
                         child: Column(
                           children: [
                             Padding(
-                              padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                              padding:
+                                  EdgeInsets.all(theme.spacerTheme.spacer2),
                               child: Align(
                                 alignment: Alignment.topLeft,
                                 child: Text(
@@ -93,18 +94,22 @@ class _ReferralReconProjectFacilitySelectionPageState
                             ),
                             ReactiveWrapperField<String>(
                                 formControlName: _facilityName,
-                                builder: (field){
+                                builder: (field) {
                                   return LabeledField(
                                     label: '',
                                     child: DigitSearchFormInput(
-                                        onChange: (val) => {
-                                          form.control(_facilityName).markAsTouched(),
-                                          form.control(_facilityName).value = val,
-                                        },
-                                        initialValue: form.control(_facilityName).value ?? "",
+                                      onChange: (val) => {
+                                        form
+                                            .control(_facilityName)
+                                            .markAsTouched(),
+                                        form.control(_facilityName).value = val,
+                                      },
+                                      initialValue:
+                                          form.control(_facilityName).value ??
+                                              "",
                                     ),
-                                  );}
-                            ),
+                                  );
+                                }),
                           ],
                         ),
                       ),
@@ -146,9 +151,7 @@ class _ReferralReconProjectFacilitySelectionPageState
                                   right: theme.spacerTheme.spacer2,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  // color:
-                                  //     DigitTheme.instance.colors.alabasterWhite,
+                                  color: DigitTheme.instance.colors.transparent,
                                   border: Border(
                                     bottom: BorderSide(
                                       //                   <--- left side
