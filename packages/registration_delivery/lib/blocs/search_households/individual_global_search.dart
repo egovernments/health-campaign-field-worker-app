@@ -104,8 +104,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
-      taskList = sortTasks(taskList);
-
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
@@ -169,8 +167,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
-      taskList = sortTasks(taskList);
-
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
@@ -219,8 +215,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
 
       taskList = tasksRelated[0];
-      taskList = sortTasks(taskList);
-
       sideEffectsList = tasksRelated[1];
       referralsList = tasksRelated[2];
 
