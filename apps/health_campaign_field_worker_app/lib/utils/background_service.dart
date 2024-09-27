@@ -5,6 +5,7 @@ import 'dart:ui';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,9 @@ import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:recase/recase.dart';
-
+import 'package:path_provider/path_provider.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/local_store/secure_store/secure_store.dart';
@@ -28,6 +30,52 @@ import 'utils.dart';
 final LocalSqlDataStore _sql = LocalSqlDataStore();
 late Dio _dio;
 Future<Isar> isarFuture = Constants().isar;
+
+class LocationData {
+  final double latitude;
+  final double longitude;
+  final bool isSync;
+  final int timestamp;
+
+  LocationData({
+    required this.latitude,
+    required this.longitude,
+    required this.isSync,
+    required this.timestamp,
+  });
+
+  @override
+  String toString() {
+    return 'LocationData(latitude: $latitude, longitude: $longitude, isSync: $isSync, timestamp: $timestamp)';
+  }
+}
+
+List<UserActionModel> parseLocationData(List<String> logs) {
+  List<UserActionModel> locationDataList = [];
+
+  for (var log in logs) {
+    final pattern = RegExp(
+      r'Latitude:\s*(\d+\.\d+),\s*Longitude:\s*(\d+\.\d+)\s*isSync:\s*(\w+),\s*timestamp:\s*(\d+)',
+    );
+
+    final match = pattern.firstMatch(log);
+    if (match != null) {
+      final latitude = double.parse(match.group(1)!);
+      final longitude = double.parse(match.group(2)!);
+      final isSync = match.group(3)!.toLowerCase() == 'true';
+      final timestamp = int.parse(match.group(4)!);
+
+      locationDataList.add(UserActionModel(
+        latitude: latitude,
+        longitude: longitude,
+        isSync: isSync,
+        timestamp: timestamp,
+      ));
+    }
+  }
+
+  return locationDataList;
+}
 
 Future<void> initializeService(dio, isar) async {
   if (Isar.getInstance('HCM') == null) {
@@ -61,6 +109,9 @@ Future<void> initializeService(dio, isar) async {
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
+
+    final _externalDocumentsDirectory = await getDownloadsDirectory();
+    print(_externalDocumentsDirectory?.path);
   }
   requestDisableBatteryOptimization();
   await service.configure(
@@ -97,10 +148,21 @@ Future<bool> onIosBackground(ServiceInstance service) async {
   return true;
 }
 
+Future<String> readLocationFileInBackgroundService() async {
+  // Check and request permission
+
+  // Access the external storage directory (Downloads folder)
+  var directory = await getExternalStorageDirectory();
+
+  directory ??= await getDownloadsDirectory();
+  print(directory!.path);
+// Or use getExternalStorageDirectory()
+  return '${directory.path}/Download/location_data.txt';
+}
+
 @pragma('vm:entry-point')
 void onStart(ServiceInstance service) async {
   // Only available for flutter 3.0.0 and later
-  DartPluginRegistrant.ensureInitialized();
 
   service.on('stopService').listen((event) {
     service.stopSelf();
@@ -121,6 +183,34 @@ void onStart(ServiceInstance service) async {
       appConfiguration.first.backgroundServiceConfig?.serviceInterval;
   final frequencyCount =
       appConfiguration.first.backgroundServiceConfig?.apiConcurrency;
+  var lastModified;
+  if (interval != null) {
+    makePeriodicTimer(const Duration(seconds: 30), (timer) async {
+      final file = File(await readLocationFileInBackgroundService());
+
+      final currentModified = await file.lastModified();
+      if (lastModified == null || currentModified.isAfter(lastModified)) {
+        lastModified = currentModified;
+        final f = await file.readAsString();
+        final logs = f.characters
+            .toString()
+            .split('\n')
+            .where((line) => line.isNotEmpty)
+            .toList();
+        List<UserActionModel> locationList = parseLocationData(logs);
+        final oplog = OpLogEntry(
+          locationList.first,
+          DataOperation.singleCreate,
+          createdAt: DateTime.now(),
+          createdBy: locationList.first.timestamp.toString(),
+          type: DataModelType.location,
+        ).oplog;
+        _isar.writeTxnSync(() {
+          _isar.opLogs.putSync(oplog);
+        });
+      }
+    });
+  }
 
   if (interval != null) {
     int i = 0;

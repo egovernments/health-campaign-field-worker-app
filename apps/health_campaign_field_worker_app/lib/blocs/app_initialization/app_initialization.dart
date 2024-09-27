@@ -54,7 +54,7 @@ class AppInitializationBloc
       emit(AppInitialized(
         appConfiguration: config.appConfigs.firstOrNull!,
         serviceRegistryList: config.serviceRegistryList,
-        dashboardConfigSchema: config.dashboardConfigSchema,
+        dashboardConfigSchema: config?.dashboardConfigSchema,
       ));
     } on AppInitializationException catch (_) {
       emit(const AppUninitialized());

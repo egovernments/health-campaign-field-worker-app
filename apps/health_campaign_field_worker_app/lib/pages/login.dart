@@ -18,9 +18,9 @@ import '../widgets/localized.dart';
 @RoutePage()
 class LoginPage extends LocalizedStatefulWidget {
   const LoginPage({
-    Key? key,
+    super.key,
     super.appLocalizations,
-  }) : super(key: key);
+  });
 
   @override
   State<LoginPage> createState() => _LoginPageState();

@@ -40,7 +40,6 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
       if (!hasPermissions) {
         if (event.retry > 0) {
           await location.requestPermission();
-          location.enableBackgroundMode(enable: true);
           add(RequestLocationPermissionEvent(retry: event.retry - 1));
         } else {
           throw Exception('Location permission request rejected');

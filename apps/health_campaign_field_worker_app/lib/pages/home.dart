@@ -15,6 +15,7 @@ import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_dss/utils/utils.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -327,8 +328,14 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
           label: i18.home.dashboard,
-          onPressed: () {
-            context.router.push(const UserDashboardRoute());
+          onPressed: () async {
+            const platform = MethodChannel('com.digit.hcm/location_service');
+            try {
+              await platform.invokeMethod('startLocationUpdates');
+            } on PlatformException catch (e) {
+              print("Error: $e");
+            }
+            // context.router.push(const UserDashboardRoute());
           },
         ),
       ),
@@ -339,7 +346,15 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
-            await context.router.push(const RegistrationDeliveryWrapperRoute());
+            const platform = MethodChannel('com.digit.hcm/location_service');
+            try {
+              await platform.invokeMethod('startLocationUpdates',
+                  {"interval": 6000, "stopAfterTimestamp": 1727043905});
+              // await platform.invokeMethod('startLocationUpdates');
+            } on PlatformException catch (e) {
+              print("Error: $e");
+            }
+            // context.router.push(const UserDashboardRoute());
           },
         ),
       ),
