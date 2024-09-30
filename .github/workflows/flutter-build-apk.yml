@@ -29,7 +29,7 @@ jobs:
 
       # Run flutter build apk to build the APK
       - name: Build APK
-        run: flutter build apk --release --target=apps/health_campaign_field_worker_app
+        run: flutter build apk --release --target=./apps/health_campaign_field_worker_app
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APK
         uses: actions/upload-artifact@v3
