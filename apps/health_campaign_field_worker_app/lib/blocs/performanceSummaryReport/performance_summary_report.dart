@@ -212,9 +212,9 @@ class PerformannceSummaryReportBloc
         quantityWasted = quantityWasted +
             (value == null || value == "null"
                 ? 0
-                : (value is String && value.contains(".")
-                    ? double.parse(value ?? "0.0").toInt()
-                    : int.parse(value ?? "0")));
+                : (value.toString().contains(".")
+                    ? double.parse(value.toString()).toInt()
+                    : int.parse(value.toString())));
       }
       final quantityUsed = quantityDistributed + quantityWasted;
       resourceVsQuantity.update(
