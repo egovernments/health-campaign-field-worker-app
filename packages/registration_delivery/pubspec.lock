@@ -388,11 +388,9 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "packages/dart_mappable_builder"
-      ref: master
-      resolved-ref: "9b887d24c05459c027a92391869d4c10b440e00f"
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
     version: "4.2.0"
   dart_style:
     dependency: transitive

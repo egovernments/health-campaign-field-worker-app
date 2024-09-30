@@ -1,0 +1,39 @@
+name: Build Flutter APK
+
+on:
+  push:
+    branches:
+      - hcmpre-717-github-actions-build-apk  # This specifies that the workflow will run on any push to the 'main' branch
+  pull_request:
+    branches:
+      - hcmpre-717-github-actions-build-apk  # Optionally, run on pull requests targeting the 'main' branch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the latest code from the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Install Flutter dependencies using the official Flutter GitHub action
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 'stable'
+
+      # Run flutter pub get to fetch dependencies
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Run flutter build apk to build the APK
+      - name: Build APK
+        run: flutter build apk --release
+
+      # Archive the APK as a build artifact so it can be downloaded
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
