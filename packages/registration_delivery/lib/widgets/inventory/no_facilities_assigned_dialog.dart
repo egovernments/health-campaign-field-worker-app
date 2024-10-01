@@ -4,26 +4,30 @@ import 'package:digit_ui_components/theme/digit_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:flutter/material.dart';
+import 'package:registration_delivery/blocs/app_localization.dart';
+
+import '../../utils/i18_key_constants.dart' as i18;
 
 class NoFacilitiesAssignedDialog {
   static Future<void> show(BuildContext context) {
     return showDialog(
       context: context,
-      builder: (ctx)=> Popup(
+      builder: (ctx) => Popup(
         titleIcon: Icon(
           Icons.warning,
           color: DigitTheme.instance.colors.light.alertError,
         ),
-        title: 'No facilities assigned',
-        description: 'Please select another boundary or '
-            'contact the system administrator to assign '
-            'a facility.',
+        title: RegistrationDeliveryLocalization.of(context)
+            .translate(i18.referBeneficiary.noFacilityAssigned),
+        description: RegistrationDeliveryLocalization.of(context)
+            .translate(i18.referBeneficiary.noFacilityAssignedDescription),
         actions: [
           Button(
-            label: 'Close',
+            label: RegistrationDeliveryLocalization.of(context)
+                .translate(i18.common.corecommonclose),
             type: ButtonType.primary,
             size: ButtonSize.large,
-            onPressed: (){
+            onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.maybePop();
             },
