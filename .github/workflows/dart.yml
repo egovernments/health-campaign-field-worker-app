@@ -7,7 +7,7 @@ name: Run analysis and tests
 
 on:
   push:
-    branches: ['develop', 'master', 'qa', 'demo', 'uat']
+    branches: ['develop', 'master', 'qa', 'demo', 'uat','hcmpre-717-github-actions-build-apk']
   pull_request:
     branches: ['develop', 'master', 'qa', 'demo', 'uat']
 
