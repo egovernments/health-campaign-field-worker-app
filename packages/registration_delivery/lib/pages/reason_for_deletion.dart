@@ -16,6 +16,7 @@ import '../widgets/localized.dart';
 @RoutePage()
 class ReasonForDeletionPage extends LocalizedStatefulWidget {
   final bool isHousholdDelete;
+
   const ReasonForDeletionPage({
     super.key,
     super.appLocalizations,
@@ -40,143 +41,141 @@ class ReasonForDeletionPageState extends LocalizedState<ReasonForDeletionPage> {
         builder: (context, form, child) {
           return ScrollableContent(
             footer: DigitCard(
-              margin: const EdgeInsets.only(top: spacer2),
-              padding: const EdgeInsets.all(spacer2),
-              children: [
-                BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
-                builder: (ctx, state) {
-                  if (state.loading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+                margin: const EdgeInsets.only(top: spacer2),
+                padding: const EdgeInsets.all(spacer2),
+                children: [
+                  BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
+                    builder: (ctx, state) {
+                      if (state.loading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                  return Button(
-                    label: localizations
-                        .translate(i18.householdLocation.actionLabel),
-                    type: ButtonType.primary,
-                    size: ButtonSize.large,
-                    mainAxisSize: MainAxisSize.max,
-                    onPressed: () {
-                      if (form.valid) {
-                        !widget.isHousholdDelete
-                            ? context.read<HouseholdOverviewBloc>().add(
-                                  HouseholdOverviewDeleteIndividualEvent(
+                      return Button(
+                        label: localizations
+                            .translate(i18.householdLocation.actionLabel),
+                        type: ButtonType.primary,
+                        size: ButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          if (form.valid) {
+                            !widget.isHousholdDelete
+                                ? context.read<HouseholdOverviewBloc>().add(
+                                      HouseholdOverviewDeleteIndividualEvent(
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId!,
+                                        householdModel: state
+                                            .householdMemberWrapper.household!,
+                                        individualModel:
+                                            state.selectedIndividual!,
+                                        projectBeneficiaryType:
+                                            RegistrationDeliverySingleton()
+                                                .beneficiaryType!,
+                                      ),
+                                    )
+                                : context.read<HouseholdOverviewBloc>().add(
+                                      HouseholdOverviewDeleteHouseholdEvent(
+                                        projectId:
+                                            RegistrationDeliverySingleton()
+                                                .projectId!,
+                                        householdModel: state
+                                            .householdMemberWrapper.household!,
+                                        members: state
+                                            .householdMemberWrapper.members!,
+                                        projectBeneficiaryModel: state
+                                            .householdMemberWrapper
+                                            .projectBeneficiaries!
+                                            .first,
+                                        projectBeneficiaryType:
+                                            RegistrationDeliverySingleton()
+                                                .beneficiaryType!,
+                                      ),
+                                    );
+
+                            // context.router.maybePop();
+                            final parent =
+                                context.router.parent() as StackRouter;
+
+                            if (widget.isHousholdDelete) {
+                              (context.router.parent() as StackRouter)
+                                  .maybePop();
+                            }
+                            parent.popUntil((route) =>
+                                route.settings.name ==
+                                BeneficiaryWrapperRoute.name);
+                            final reloadState =
+                                context.read<HouseholdOverviewBloc>();
+                            Future.delayed(
+                              const Duration(milliseconds: 500),
+                              () {
+                                reloadState.add(
+                                  HouseholdOverviewReloadEvent(
                                     projectId: RegistrationDeliverySingleton()
                                         .projectId!,
-                                    householdModel:
-                                        state.householdMemberWrapper.household!,
-                                    individualModel: state.selectedIndividual!,
-                                    projectBeneficiaryType:
-                                        RegistrationDeliverySingleton()
-                                            .beneficiaryType!,
-                                  ),
-                                )
-                            : context.read<HouseholdOverviewBloc>().add(
-                                  HouseholdOverviewDeleteHouseholdEvent(
-                                    projectId: RegistrationDeliverySingleton()
-                                        .projectId!,
-                                    householdModel:
-                                        state.householdMemberWrapper.household!,
-                                    members:
-                                        state.householdMemberWrapper.members!,
-                                    projectBeneficiaryModel: state
-                                        .householdMemberWrapper
-                                        .projectBeneficiaries!
-                                        .first,
                                     projectBeneficiaryType:
                                         RegistrationDeliverySingleton()
                                             .beneficiaryType!,
                                   ),
                                 );
-
-                        // context.router.maybePop();
-                        final parent = context.router.parent() as StackRouter;
-
-                        if (widget.isHousholdDelete) {
-                          (context.router.parent() as StackRouter).maybePop();
-                        }
-                        parent.popUntil((route) =>
-                            route.settings.name ==
-                            BeneficiaryWrapperRoute.name);
-                        final reloadState =
-                            context.read<HouseholdOverviewBloc>();
-                        Future.delayed(
-                          const Duration(milliseconds: 500),
-                          () {
-                            reloadState.add(
-                              HouseholdOverviewReloadEvent(
-                                projectId:
-                                    RegistrationDeliverySingleton().projectId!,
-                                projectBeneficiaryType:
-                                    RegistrationDeliverySingleton()
-                                        .beneficiaryType!,
+                              },
+                            ).then(
+                              (value) => context.router.push(
+                                HouseholdAcknowledgementRoute(
+                                  enableViewHousehold: true,
+                                ),
                               ),
                             );
-                          },
-                        ).then(
-                          (value) => context.router.push(
-                            HouseholdAcknowledgementRoute(
-                              enableViewHousehold: true,
-                            ),
-                          ),
-                        );
-                        // context.router.push(HouseholdAcknowledgementRoute(
-                        //     enableViewHousehold: true));
-                      } else {
-                        Toast.showToast(
-                            context,
-                            message: localizations
-                                .translate(i18.common.corecommonRequired),
-                            type: ToastType.error
-                        );
-                      }
+                          } else {
+                            Toast.showToast(context,
+                                message: localizations
+                                    .translate(i18.common.corecommonRequired),
+                                type: ToastType.error);
+                          }
+                        },
+                      );
                     },
-                  );
-                },
-              ),
-              ]
-            ),
+                  ),
+                ]),
             header: const Column(children: [
               BackNavigationHelpHeaderWidget(),
             ]),
             children: [
-              DigitCard(
-                children: [
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      localizations.translate(
-                        i18.reasonForDeletion.reasonForDeletionLabel,
-                      ),
-                      style: textTheme.headingXl,
+              DigitCard(children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    localizations.translate(
+                      i18.reasonForDeletion.reasonForDeletionLabel,
                     ),
+                    style: textTheme.headingXl,
                   ),
-                  Column(
-                    children: widget.isHousholdDelete
-                        ? RegistrationDeliverySingleton()
-                            .householdDeletionReasonOptions!
-                            .map((e) => ReactiveRadioListTile(
-                                  title: Text(
-                                    localizations.translate(e),
-                                  ),
-                                  value: e,
-                                  formControlName: _reasonForDeletionKey,
-                                ))
-                            .toList()
-                        : RegistrationDeliverySingleton()
-                            .householdMemberDeletionReasonOptions!
-                            .map((e) => ReactiveRadioListTile(
-                                  title: Text(
-                                    localizations.translate(e),
-                                  ),
-                                  value: e,
-                                  formControlName: _reasonForDeletionKey,
-                                ))
-                            .toList(),
-                  ),
-                ]
-              ),
+                ),
+                Column(
+                  children: widget.isHousholdDelete
+                      ? RegistrationDeliverySingleton()
+                          .householdDeletionReasonOptions!
+                          .map((e) => ReactiveRadioListTile(
+                                title: Text(
+                                  localizations.translate(e),
+                                ),
+                                value: e,
+                                formControlName: _reasonForDeletionKey,
+                              ))
+                          .toList()
+                      : RegistrationDeliverySingleton()
+                          .householdMemberDeletionReasonOptions!
+                          .map((e) => ReactiveRadioListTile(
+                                title: Text(
+                                  localizations.translate(e),
+                                ),
+                                value: e,
+                                formControlName: _reasonForDeletionKey,
+                              ))
+                          .toList(),
+                ),
+              ]),
             ],
           );
         },
