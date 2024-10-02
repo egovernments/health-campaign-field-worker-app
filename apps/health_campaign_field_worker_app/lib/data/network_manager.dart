@@ -4,12 +4,12 @@ import 'dart:convert';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:registration_delivery/registration_delivery.dart';
-import 'repositories/sync/remote_type.dart';
 import 'package:provider/provider.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 
 import '../models/bandwidth/bandwidth_model.dart';
 import 'local_store/secure_store/secure_store.dart';
+import 'repositories/sync/remote_type.dart';
 import 'repositories/sync/sync_down.dart';
 import 'repositories/sync/sync_up.dart';
 
@@ -82,6 +82,7 @@ class NetworkManager {
         remoteRepositories: remoteRepositories.toSet().toList(),
       );
     } catch (e) {
+      print('Sync Up Error: ${e}');
       syncError ??= SyncUpError(e);
       service?.stopSelf();
     }

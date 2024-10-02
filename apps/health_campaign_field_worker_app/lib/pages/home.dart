@@ -9,6 +9,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/user_action.dart';
 import 'package:digit_dss/data/local_store/no_sql/schema/dashboard_config_schema.dart';
 import 'package:digit_dss/models/entities/dashboard_response_model.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
@@ -20,6 +21,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:isar/isar.dart';
+import 'package:location_tracker/bloc/location_tracker_service.dart';
+import 'package:location_tracker/utils/utils.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -203,7 +207,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                     },
                     completedSync: () async {
                       Navigator.of(context, rootNavigator: true).pop();
-                      await localSecureStore.setManualSyncTrigger(true);
+                      await localSecureStore.setManualSyncTrigger(false);
                       if (context.mounted) {
                         DigitSyncDialog.show(
                           context,
@@ -472,7 +476,15 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.table_chart,
           label: i18.home.db,
-          onPressed: () {
+          onPressed: () async {
+            triggerLocationTracker('com.digit.location_tracker',
+                locationUpdateInterval: 60000,
+                stopAfterTimestamp: DateTime.now()
+                    .add(const Duration(hours: 8))
+                    .millisecondsSinceEpoch);
+            Isar isar = await Constants().isar;
+            LocationTrackerService()
+                .processLocationData(30, isar, context.loggedInUserUuid);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
@@ -593,6 +605,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     LocalRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
+                context.read<
+                    LocalRepository<UserActionModel, UserActionSearchModel>>()
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
@@ -624,6 +638,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 context.read<
                     RemoteRepository<AttendanceLogModel,
                         AttendanceLogSearchModel>>(),
+                context.read<
+                    RemoteRepository<UserActionModel, UserActionSearchModel>>(),
               ],
             ),
           );
@@ -749,6 +765,10 @@ void setPackagesSingleton(BuildContext context) {
               action: ApiOperation.search.toValue(),
               entityName: DashboardResponseModel.schemaName,
             ));
+        LocationTrackerSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInUserUuid: context.loggedInUserUuid,
+            loggedInUser: context.loggedInUserModel);
       });
 }
 

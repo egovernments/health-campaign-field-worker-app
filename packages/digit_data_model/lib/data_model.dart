@@ -9,17 +9,18 @@ library data_model;
 
 // Import statements for various packages and files used in this file.
 import 'package:dart_mappable/dart_mappable.dart';
+
 import 'data_model.dart';
 
+export 'blocs/boundary/boundary.dart';
 // Export statements for various files that are part of the data model.
 
 export 'blocs/facility/facility.dart';
 export 'blocs/product_variant/product_variant.dart';
 export 'blocs/project_facility/project_facility.dart';
-export 'blocs/user/user.dart';
-export 'blocs/boundary/boundary.dart';
 export 'blocs/service/service.dart';
 export 'blocs/service_definition/service_definition.dart';
+export 'blocs/user/user.dart';
 export 'data/data_repository.dart';
 export 'data/local_store/no_sql/schema/oplog.dart' hide AdditionalId;
 export 'data/local_store/sql_store/sql_store.dart';
@@ -277,4 +278,5 @@ enum DataModelType {
   hFReferral,
   attendanceRegister,
   attendance,
+  userLocation
 }
