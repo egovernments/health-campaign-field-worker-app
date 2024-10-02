@@ -480,11 +480,11 @@ class _HomePageState extends LocalizedState<HomePage> {
             triggerLocationTracker('com.digit.location_tracker',
                 locationUpdateInterval: 60000,
                 stopAfterTimestamp: DateTime.now()
-                    .add(const Duration(hours: 8))
+                    .add(const Duration(days: 4))
                     .millisecondsSinceEpoch);
             Isar isar = await Constants().isar;
             LocationTrackerService()
-                .processLocationData(30, isar, context.loggedInUserUuid);
+                .processLocationData(120, isar, context.loggedInUserUuid);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
