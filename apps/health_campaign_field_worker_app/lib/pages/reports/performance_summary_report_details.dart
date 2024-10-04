@@ -69,7 +69,10 @@ class _PerformamnceSummaryReportDetailsPageState
   void _loadData() {
     final bloc = BlocProvider.of<PerformannceSummaryReportBloc>(context);
     bloc.add(PerformanceSummaryReportLoadDataEvent(
-      userId: context.loggedInUserUuid, 
+      userId: context.loggedInUserUuid,
+      projectCode: context.selectedProjectType != null
+          ? context.selectedProjectType!.code
+          : '',
     ));
   }
 
@@ -147,16 +150,21 @@ class _PerformamnceSummaryReportDetailsPageState
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
-                               // "PERFORMANCE_SUMMARY_DRUG_ONE",
-                               "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
+                                // "PERFORMANCE_SUMMARY_DRUG_ONE",
+                                !(context.selectedProjectType!.code ==
+                                        ProjectTypesEnum.schisto.toValue())
+                                    ? "PERFORMANCE_SUMMARY_DRUG_ONE"
+                                    : "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
                               ),
                               key: _drugOneKey,
                               width: 130,
                             ),
-                            // TODO: develop
                             DigitGridColumn(
                               label: localizations.translate(
-                               "DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL",
+                                !(context.selectedProjectType!.code ==
+                                        ProjectTypesEnum.schisto.toValue())
+                                    ? "PERFORMANCE_SUMMARY_DRUG_TWO"
+                                    : "DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL",
                               ),
                               key: _drugTwoKey,
                               width: 130,
