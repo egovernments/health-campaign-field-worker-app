@@ -34,11 +34,7 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 
 class _ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
-
   bool show = false;
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +95,7 @@ class _ResourceBeneficiaryCardState
             ),
             minimum: 0,
           ),
-          // TODO:develop
+          // TODO:Solution customization
           // DigitTextFormField(
           //   formControlName: 'quantityWasted.${widget.cardIndex}',
           //   keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -120,9 +116,8 @@ class _ResourceBeneficiaryCardState
           //     },
           //   },
           // ),
-//old
+
           DigitRadioButtonList<KeyValue>(
-            
             labelStyle: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
             labelText: localizations.translate(
               i18.deliverIntervention.wasDrugWasted,
@@ -135,33 +130,11 @@ class _ResourceBeneficiaryCardState
             options: Constants.yesNo,
             errorMessage: '',
             onValueChange: (value) {
-            //  print((widget.form.control("quantityWastedRadio.${widget.cardIndex}").value as KeyValue).key);
-              // widget.form
-              //     .control(
-              //       'quantityWastedRadio.${widget.cardIndex}',
-              //     )
-              //     .value = value;
-
               setState(() {
                 show = value.key;
               });
             },
           ),
-          // RadioGroup<KeyValue>.builder(
-          //   groupValue:  KeyValue('CORE_COMMON_YES', true),
-          //   onChanged: (changedValue) {
-          //     setState(() {
-          //       widget.form
-          //           .control("quantityWastedRadio.${widget.cardIndex}")
-          //           .value = changedValue!;
-          //       show = changedValue.key;
-          //     });
-          //   },
-          //   items: Constants.yesNo,
-          //   itemBuilder: (item) => RadioButtonBuilder(
-          //     localizations.translate(item.label),
-          //   ),
-          // ),
 
           show
               ? DigitIntegerFormPicker(

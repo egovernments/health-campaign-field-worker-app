@@ -319,9 +319,12 @@ class _IneligibilityReasonsPageState
                                               orElse: () => const Offstage(),
                                               initialized:
                                                   (appConfiguration, _) {
+                                                   
                                                 final ineleigibilityReasonOptions =
+                                               ( (context.selectedProjectType!.code== ProjectTypesEnum.schisto.toValue())?
                                                     appConfiguration
-                                                            .ineligibilityReasonsSchisto ??
+                                                            .ineligibilityReasonsSchisto:
+                                                             appConfiguration.ineligibilityReasons) ??
                                                         <IneligibilityReasons>[];
                                                 ineleigibilityReasons =
                                                     ineleigibilityReasonOptions
@@ -333,7 +336,7 @@ class _IneligibilityReasonsPageState
                                                   ineleigibilityReasonValues
                                                       .add(false);
                                                 }
-
+print(ineleigibilityReasonOptions);
                                                 final List<KeyValue>
                                                     ineleigibilityReasonList =
                                                     (ineleigibilityReasonOptions ??
