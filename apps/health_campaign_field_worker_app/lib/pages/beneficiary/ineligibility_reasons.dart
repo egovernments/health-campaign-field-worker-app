@@ -321,7 +321,7 @@ class _IneligibilityReasonsPageState
                                                   (appConfiguration, _) {
                                                 final ineleigibilityReasonOptions =
                                                     appConfiguration
-                                                            .ineligibilityReasons ??
+                                                            .ineligibilityReasonsSchisto ??
                                                         <IneligibilityReasons>[];
                                                 ineleigibilityReasons =
                                                     ineleigibilityReasonOptions

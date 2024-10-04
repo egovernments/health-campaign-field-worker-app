@@ -143,14 +143,20 @@ const AppConfigurationSchema = CollectionSchema(
       type: IsarType.objectList,
       target: r'IneligibilityReasons',
     ),
-    r'referralReasons': PropertySchema(
+    r'ineligibilityReasonsSchisto': PropertySchema(
       id: 22,
+      name: r'ineligibilityReasonsSchisto',
+      type: IsarType.objectList,
+      target: r'IneligibilityReasons',
+    ),
+    r'referralReasons': PropertySchema(
+      id: 23,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -435,6 +441,20 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final list = object.ineligibilityReasonsSchisto;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[IneligibilityReasons]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += IneligibilityReasonsSchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
     final list = object.referralReasons;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -573,14 +593,20 @@ void _appConfigurationSerialize(
     IneligibilityReasonsSchema.serialize,
     object.ineligibilityReasons,
   );
-  writer.writeObjectList<ReferralReasons>(
+  writer.writeObjectList<IneligibilityReasons>(
     offsets[22],
+    allOffsets,
+    IneligibilityReasonsSchema.serialize,
+    object.ineligibilityReasonsSchisto,
+  );
+  writer.writeObjectList<ReferralReasons>(
+    offsets[23],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[23],
+    offsets[24],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -697,14 +723,21 @@ AppConfiguration _appConfigurationDeserialize(
     allOffsets,
     IneligibilityReasons(),
   );
-  object.referralReasons = reader.readObjectList<ReferralReasons>(
+  object.ineligibilityReasonsSchisto =
+      reader.readObjectList<IneligibilityReasons>(
     offsets[22],
+    IneligibilityReasonsSchema.deserialize,
+    allOffsets,
+    IneligibilityReasons(),
+  );
+  object.referralReasons = reader.readObjectList<ReferralReasons>(
+    offsets[23],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[23],
+    offsets[24],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -841,13 +874,20 @@ P _appConfigurationDeserializeProp<P>(
         IneligibilityReasons(),
       )) as P;
     case 22:
+      return (reader.readObjectList<IneligibilityReasons>(
+        offset,
+        IneligibilityReasonsSchema.deserialize,
+        allOffsets,
+        IneligibilityReasons(),
+      )) as P;
+    case 23:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 23:
+    case 24:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3309,6 +3349,113 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'ineligibilityReasonsSchisto',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'ineligibilityReasonsSchisto',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ineligibilityReasonsSchisto',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ineligibilityReasonsSchisto',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ineligibilityReasonsSchisto',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ineligibilityReasonsSchisto',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ineligibilityReasonsSchisto',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'ineligibilityReasonsSchisto',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       referralReasonsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -3636,6 +3783,13 @@ extension AppConfigurationQueryObject
       ineligibilityReasonsElement(FilterQuery<IneligibilityReasons> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'ineligibilityReasons');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      ineligibilityReasonsSchistoElement(FilterQuery<IneligibilityReasons> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'ineligibilityReasonsSchisto');
     });
   }
 
@@ -4049,6 +4203,13 @@ extension AppConfigurationQueryProperty
       ineligibilityReasonsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'ineligibilityReasons');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<IneligibilityReasons>?, QQueryOperations>
+      ineligibilityReasonsSchistoProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'ineligibilityReasonsSchisto');
     });
   }
 
