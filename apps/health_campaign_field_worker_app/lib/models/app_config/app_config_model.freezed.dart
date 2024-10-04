@@ -674,6 +674,9 @@ mixin _$AppConfigPrimaryWrapperModel {
   @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
   IneligibilityReasonsWrapperModel? get ineligibilityReasons =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'HCM-INELIGIBILITY-REASONS-SCHISTO')
+  IneligibilityReasonsWrapperModelSchisto? get ineligibilityReasonsSchisto =>
+      throw _privateConstructorUsedError;
   @JsonKey(name: 'HCM-DISABILITY-TYPES')
   DisabilityTypesWrapperModel? get disabilityTypes =>
       throw _privateConstructorUsedError;
@@ -702,6 +705,8 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
       ReferralReasonsWrapperModel? referralReasons,
       @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
       IneligibilityReasonsWrapperModel? ineligibilityReasons,
+      @JsonKey(name: 'HCM-INELIGIBILITY-REASONS-SCHISTO')
+      IneligibilityReasonsWrapperModelSchisto? ineligibilityReasonsSchisto,
       @JsonKey(name: 'HCM-DISABILITY-TYPES')
       DisabilityTypesWrapperModel? disabilityTypes});
 
@@ -710,6 +715,8 @@ abstract class $AppConfigPrimaryWrapperModelCopyWith<$Res> {
   $SymptomsTypesSecondaryWrapperModelCopyWith<$Res>? get symptomsTypes;
   $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
   $IneligibilityReasonsWrapperModelCopyWith<$Res>? get ineligibilityReasons;
+  $IneligibilityReasonsWrapperModelSchistoCopyWith<$Res>?
+      get ineligibilityReasonsSchisto;
   $DisabilityTypesWrapperModelCopyWith<$Res>? get disabilityTypes;
 }
 
@@ -732,6 +739,7 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
     Object? symptomsTypes = freezed,
     Object? referralReasons = freezed,
     Object? ineligibilityReasons = freezed,
+    Object? ineligibilityReasonsSchisto = freezed,
     Object? disabilityTypes = freezed,
   }) {
     return _then(_value.copyWith(
@@ -755,6 +763,10 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
           ? _value.ineligibilityReasons
           : ineligibilityReasons // ignore: cast_nullable_to_non_nullable
               as IneligibilityReasonsWrapperModel?,
+      ineligibilityReasonsSchisto: freezed == ineligibilityReasonsSchisto
+          ? _value.ineligibilityReasonsSchisto
+          : ineligibilityReasonsSchisto // ignore: cast_nullable_to_non_nullable
+              as IneligibilityReasonsWrapperModelSchisto?,
       disabilityTypes: freezed == disabilityTypes
           ? _value.disabilityTypes
           : disabilityTypes // ignore: cast_nullable_to_non_nullable
@@ -828,6 +840,20 @@ class _$AppConfigPrimaryWrapperModelCopyWithImpl<$Res,
 
   @override
   @pragma('vm:prefer-inline')
+  $IneligibilityReasonsWrapperModelSchistoCopyWith<$Res>?
+      get ineligibilityReasonsSchisto {
+    if (_value.ineligibilityReasonsSchisto == null) {
+      return null;
+    }
+
+    return $IneligibilityReasonsWrapperModelSchistoCopyWith<$Res>(
+        _value.ineligibilityReasonsSchisto!, (value) {
+      return _then(_value.copyWith(ineligibilityReasonsSchisto: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
   $DisabilityTypesWrapperModelCopyWith<$Res>? get disabilityTypes {
     if (_value.disabilityTypes == null) {
       return null;
@@ -859,6 +885,8 @@ abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
       ReferralReasonsWrapperModel? referralReasons,
       @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
       IneligibilityReasonsWrapperModel? ineligibilityReasons,
+      @JsonKey(name: 'HCM-INELIGIBILITY-REASONS-SCHISTO')
+      IneligibilityReasonsWrapperModelSchisto? ineligibilityReasonsSchisto,
       @JsonKey(name: 'HCM-DISABILITY-TYPES')
       DisabilityTypesWrapperModel? disabilityTypes});
 
@@ -872,6 +900,9 @@ abstract class _$$AppConfigPrimaryWrapperModelImplCopyWith<$Res>
   $ReferralReasonsWrapperModelCopyWith<$Res>? get referralReasons;
   @override
   $IneligibilityReasonsWrapperModelCopyWith<$Res>? get ineligibilityReasons;
+  @override
+  $IneligibilityReasonsWrapperModelSchistoCopyWith<$Res>?
+      get ineligibilityReasonsSchisto;
   @override
   $DisabilityTypesWrapperModelCopyWith<$Res>? get disabilityTypes;
 }
@@ -894,6 +925,7 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
     Object? symptomsTypes = freezed,
     Object? referralReasons = freezed,
     Object? ineligibilityReasons = freezed,
+    Object? ineligibilityReasonsSchisto = freezed,
     Object? disabilityTypes = freezed,
   }) {
     return _then(_$AppConfigPrimaryWrapperModelImpl(
@@ -917,6 +949,10 @@ class __$$AppConfigPrimaryWrapperModelImplCopyWithImpl<$Res>
           ? _value.ineligibilityReasons
           : ineligibilityReasons // ignore: cast_nullable_to_non_nullable
               as IneligibilityReasonsWrapperModel?,
+      ineligibilityReasonsSchisto: freezed == ineligibilityReasonsSchisto
+          ? _value.ineligibilityReasonsSchisto
+          : ineligibilityReasonsSchisto // ignore: cast_nullable_to_non_nullable
+              as IneligibilityReasonsWrapperModelSchisto?,
       disabilityTypes: freezed == disabilityTypes
           ? _value.disabilityTypes
           : disabilityTypes // ignore: cast_nullable_to_non_nullable
@@ -935,6 +971,8 @@ class _$AppConfigPrimaryWrapperModelImpl
       @JsonKey(name: 'HCM-SYMPTOMS-TYPES') this.symptomsTypes,
       @JsonKey(name: 'HCM-REFERRAL-REASONS') this.referralReasons,
       @JsonKey(name: 'HCM-INELIGIBILITY-REASONS') this.ineligibilityReasons,
+      @JsonKey(name: 'HCM-INELIGIBILITY-REASONS-SCHISTO')
+      this.ineligibilityReasonsSchisto,
       @JsonKey(name: 'HCM-DISABILITY-TYPES') this.disabilityTypes});
 
   factory _$AppConfigPrimaryWrapperModelImpl.fromJson(
@@ -957,12 +995,15 @@ class _$AppConfigPrimaryWrapperModelImpl
   @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
   final IneligibilityReasonsWrapperModel? ineligibilityReasons;
   @override
+  @JsonKey(name: 'HCM-INELIGIBILITY-REASONS-SCHISTO')
+  final IneligibilityReasonsWrapperModelSchisto? ineligibilityReasonsSchisto;
+  @override
   @JsonKey(name: 'HCM-DISABILITY-TYPES')
   final DisabilityTypesWrapperModel? disabilityTypes;
 
   @override
   String toString() {
-    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes, referralReasons: $referralReasons, ineligibilityReasons: $ineligibilityReasons, disabilityTypes: $disabilityTypes)';
+    return 'AppConfigPrimaryWrapperModel(appConfig: $appConfig, rowVersions: $rowVersions, symptomsTypes: $symptomsTypes, referralReasons: $referralReasons, ineligibilityReasons: $ineligibilityReasons, ineligibilityReasonsSchisto: $ineligibilityReasonsSchisto, disabilityTypes: $disabilityTypes)';
   }
 
   @override
@@ -980,14 +1021,25 @@ class _$AppConfigPrimaryWrapperModelImpl
                 other.referralReasons == referralReasons) &&
             (identical(other.ineligibilityReasons, ineligibilityReasons) ||
                 other.ineligibilityReasons == ineligibilityReasons) &&
+            (identical(other.ineligibilityReasonsSchisto,
+                    ineligibilityReasonsSchisto) ||
+                other.ineligibilityReasonsSchisto ==
+                    ineligibilityReasonsSchisto) &&
             (identical(other.disabilityTypes, disabilityTypes) ||
                 other.disabilityTypes == disabilityTypes));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, appConfig, rowVersions,
-      symptomsTypes, referralReasons, ineligibilityReasons, disabilityTypes);
+  int get hashCode => Object.hash(
+      runtimeType,
+      appConfig,
+      rowVersions,
+      symptomsTypes,
+      referralReasons,
+      ineligibilityReasons,
+      ineligibilityReasonsSchisto,
+      disabilityTypes);
 
   @JsonKey(ignore: true)
   @override
@@ -1018,6 +1070,9 @@ abstract class _AppConfigPrimaryWrapperModel
           final ReferralReasonsWrapperModel? referralReasons,
           @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
           final IneligibilityReasonsWrapperModel? ineligibilityReasons,
+          @JsonKey(name: 'HCM-INELIGIBILITY-REASONS-SCHISTO')
+          final IneligibilityReasonsWrapperModelSchisto?
+              ineligibilityReasonsSchisto,
           @JsonKey(name: 'HCM-DISABILITY-TYPES')
           final DisabilityTypesWrapperModel? disabilityTypes}) =
       _$AppConfigPrimaryWrapperModelImpl;
@@ -1040,6 +1095,9 @@ abstract class _AppConfigPrimaryWrapperModel
   @override
   @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')
   IneligibilityReasonsWrapperModel? get ineligibilityReasons;
+  @override
+  @JsonKey(name: 'HCM-INELIGIBILITY-REASONS-SCHISTO')
+  IneligibilityReasonsWrapperModelSchisto? get ineligibilityReasonsSchisto;
   @override
   @JsonKey(name: 'HCM-DISABILITY-TYPES')
   DisabilityTypesWrapperModel? get disabilityTypes;

@@ -107,6 +107,12 @@ class AppInitializationBloc
                   ],
                 ),
                 const MdmsModuleDetailModel(
+                  moduleName: 'HCM-INELIGIBILITY-REASONS-SCHISTO',
+                  masterDetails: [
+                    MdmsMasterDetailModel('ineligibilityReasonsSchisto'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
                   moduleName: 'HCM-DISABILITY-TYPES',
                   masterDetails: [
                     MdmsMasterDetailModel('disabilityTypes'),

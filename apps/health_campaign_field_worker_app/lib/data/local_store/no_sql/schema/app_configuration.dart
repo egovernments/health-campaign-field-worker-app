@@ -73,6 +73,8 @@ class AppConfiguration {
 
   late List<IneligibilityReasons>? ineligibilityReasons;
 
+  late List<IneligibilityReasons>? ineligibilityReasonsSchisto;
+
   late List<DisabilityTypes>? disabilityTypes;
 }
 
