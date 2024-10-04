@@ -76,18 +76,20 @@ class PerformannceSummaryReportBloc
       variantIdVsProduct[productVariant.sku] = productVariant.id;
     }
 
-    var albendazoleResourceKey = variantIdVsProduct.keys
-        .where((element) => element!
-            .toUpperCase()
-            .contains(BeneficiaryType.albendazole.name.toUpperCase()))
-        .first;
+    var albendazoleResourceKey = variantIdVsProduct.keys.first;
+     //TODO:develop
+    // .where((element) => element!
+    //     .toUpperCase()
+    //     .contains(BeneficiaryType.albendazole.name.toUpperCase()))
+    // .first;
     var albendazoleResourceId = variantIdVsProduct[albendazoleResourceKey];
-    var ivermectinResourceKey = variantIdVsProduct.keys
-        .where((element) => element!
-            .toUpperCase()
-            .contains(BeneficiaryType.ivermectin.name.toUpperCase()))
-        .first;
-    var ivermectinResourceId = variantIdVsProduct[ivermectinResourceKey];
+    //TODO:develop
+    // var ivermectinResourceKey = variantIdVsProduct.keys
+    //     .where((element) => element!
+    //         .toUpperCase()
+    //         .contains(BeneficiaryType.ivermectin.name.toUpperCase()))
+    //     .first;
+    // var ivermectinResourceId = variantIdVsProduct[ivermectinResourceKey];
 
     for (var element in householdList) {
       var dateKey = DigitDateUtils.getDateFromTimestamp(
@@ -119,7 +121,7 @@ class PerformannceSummaryReportBloc
     availableDates.addAll(dayVsTaskListMap.keys.toSet());
 
     Map<String, PerformanceSummary> dayVsDataCount = {};
-    Map<String, Map<String?, int>> dayVsDrugsQuantityMap = {};
+    Map<String, Map<String?, dynamic>> dayVsDrugsQuantityMap = {};
 
     for (var entry in dayVsTaskListMap.entries) {
       var date = entry.key;
@@ -151,17 +153,21 @@ class PerformannceSummaryReportBloc
 
       // denominator is fixed here
       // assumption here is drugOne Albendazole and drugTwo is Ivermectin
-      var drugOne = 0;
-      var drugTwo = 0;
+      double drugOne = 0;
+      double drugTwo = 0;
       if (dayVsDrugsQuantityMap.containsKey(date) &&
           dayVsDrugsQuantityMap[date] != null &&
-          dayVsDrugsQuantityMap[date]!.containsKey(albendazoleResourceId)) {
-        drugOne = dayVsDrugsQuantityMap[date]![albendazoleResourceId] ?? 0;
+          dayVsDrugsQuantityMap[date]!
+              .containsKey("${albendazoleResourceId}used")) {
+        drugOne =
+            dayVsDrugsQuantityMap[date]!["${albendazoleResourceId}used"] ?? 0;
       }
       if (dayVsDrugsQuantityMap.containsKey(date) &&
           dayVsDrugsQuantityMap[date] != null &&
-          dayVsDrugsQuantityMap[date]!.containsKey(ivermectinResourceId)) {
-        drugTwo = dayVsDrugsQuantityMap[date]![ivermectinResourceId] ?? 0;
+          dayVsDrugsQuantityMap[date]!
+              .containsKey("${albendazoleResourceId}wasted")) {
+        drugTwo =
+            dayVsDrugsQuantityMap[date]!["${albendazoleResourceId}wasted"] ?? 0;
       }
       final treatedPercentage = (totalTaskForADay / 75) * 100;
       //Rounded treatedPercentage to 2 degree
@@ -183,10 +189,10 @@ class PerformannceSummaryReportBloc
   void getDrugsVsQuantityMap(
     List<TaskModel> taskList,
     String date,
-    Map<String, Map<String?, int>> dayVsDrugsQuantityMap,
+    Map<String, Map<String?, dynamic>> dayVsDrugsQuantityMap,
   ) {
     const quantityWastedKey = 'quantityWasted';
-    Map<String?, int> resourceVsQuantity = {};
+    Map<String?, double> resourceVsQuantity = {};
     List<TaskResourceModel> taskResourceList = [];
 
     for (var task in taskList) {
@@ -196,14 +202,14 @@ class PerformannceSummaryReportBloc
       taskResourceList.addAll(task.resources!.toList());
     }
     for (var resource in taskResourceList) {
-      var quantityDistributed = 0;
-      var quantityWasted = 0;
+      double quantityDistributed = 0;
+      double quantityWasted = 0;
 
       //todo remove the double and int checks once , data type is finalized
       var resourceId = resource.productVariantId;
       quantityDistributed = quantityDistributed +
           (resource.quantity!.contains(".")
-              ? double.parse(resource.quantity ?? "0.0").toInt()
+              ? double.parse(resource.quantity ?? "0.0")
               : int.parse(resource.quantity ?? "0"));
       if (resource.additionalFields != null) {
         var value = resource.additionalFields!.fields
@@ -213,14 +219,19 @@ class PerformannceSummaryReportBloc
             (value == null || value == "null"
                 ? 0
                 : (value.toString().contains(".")
-                    ? double.parse(value.toString()).toInt()
+                    ? double.parse(value.toString())
                     : int.parse(value.toString())));
       }
       final quantityUsed = quantityDistributed + quantityWasted;
       resourceVsQuantity.update(
-        resourceId,
-        (existingValue) => existingValue + quantityUsed,
-        ifAbsent: () => quantityUsed,
+        "${resourceId}used",
+        (existingValue) => existingValue + quantityDistributed,
+        ifAbsent: () => quantityDistributed,
+      );
+      resourceVsQuantity.update(
+        "${resourceId}wasted",
+        (existingValue) => existingValue + quantityWasted,
+        ifAbsent: () => quantityWasted,
       );
     }
     dayVsDrugsQuantityMap[date] = resourceVsQuantity;

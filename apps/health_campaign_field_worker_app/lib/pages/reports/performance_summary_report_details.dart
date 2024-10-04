@@ -69,7 +69,7 @@ class _PerformamnceSummaryReportDetailsPageState
   void _loadData() {
     final bloc = BlocProvider.of<PerformannceSummaryReportBloc>(context);
     bloc.add(PerformanceSummaryReportLoadDataEvent(
-      userId: context.loggedInUserUuid,
+      userId: context.loggedInUserUuid, 
     ));
   }
 
@@ -147,14 +147,16 @@ class _PerformamnceSummaryReportDetailsPageState
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_DRUG_ONE",
+                               // "PERFORMANCE_SUMMARY_DRUG_ONE",
+                               "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
                               ),
                               key: _drugOneKey,
                               width: 130,
                             ),
+                            // TODO: develop
                             DigitGridColumn(
                               label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_DRUG_TWO",
+                               "DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL",
                               ),
                               key: _drugTwoKey,
                               width: 130,

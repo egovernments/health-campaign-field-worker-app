@@ -1,11 +1,14 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../blocs/product_variant/product_variant.dart';
 import '../../models/data_model.dart';
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../localized.dart';
 
@@ -16,13 +19,13 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
   final int totalItems;
 
   const ResourceBeneficiaryCard({
-    Key? key,
+    super.key,
     super.appLocalizations,
     required this.onDelete,
     required this.cardIndex,
     required this.form,
     required this.totalItems,
-  }) : super(key: key);
+  });
 
   @override
   State<ResourceBeneficiaryCard> createState() =>
@@ -31,8 +34,15 @@ class ResourceBeneficiaryCard extends LocalizedStatefulWidget {
 
 class _ResourceBeneficiaryCardState
     extends LocalizedState<ResourceBeneficiaryCard> {
+
+  bool show = false;
+
+
+
+
   @override
   Widget build(BuildContext context) {
+    // print((widget.form.control("quantityWastedRadio.${widget.cardIndex}").value as KeyValue).key);
     return Container(
       decoration: BoxDecoration(
         color: DigitTheme.instance.colorScheme.surface,
@@ -89,26 +99,82 @@ class _ResourceBeneficiaryCardState
             ),
             minimum: 0,
           ),
-          DigitTextFormField(
-            formControlName: 'quantityWasted.${widget.cardIndex}',
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(
-                RegExp('[0-9]'),
-              ),
-              LengthLimitingTextInputFormatter(3),
-            ],
-            label: localizations.translate(
-              i18.deliverIntervention.quantityWastedLabel,
+          // TODO:develop
+          // DigitTextFormField(
+          //   formControlName: 'quantityWasted.${widget.cardIndex}',
+          //   keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          //   inputFormatters: [
+          //     FilteringTextInputFormatter.allow(
+          //       RegExp('[0-9]'),
+          //     ),
+          //     LengthLimitingTextInputFormatter(3),
+          //   ],
+          //   label: localizations.translate(
+          //     i18.deliverIntervention.quantityWastedLabel,
+          //   ),
+          //   validationMessages: {
+          //     "required": (control) {
+          //       return localizations.translate(
+          //         i18.common.corecommonRequired,
+          //       );
+          //     },
+          //   },
+          // ),
+//old
+          DigitRadioButtonList<KeyValue>(
+            
+            labelStyle: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
+            labelText: localizations.translate(
+              i18.deliverIntervention.wasDrugWasted,
             ),
-            validationMessages: {
-              "required": (control) {
-                return localizations.translate(
-                  i18.common.corecommonRequired,
-                );
-              },
+            isEnabled: true,
+            formControlName: 'quantityWastedRadio.${widget.cardIndex}',
+            valueMapper: (value) {
+              return localizations.translate(value.label);
+            },
+            options: Constants.yesNo,
+            errorMessage: '',
+            onValueChange: (value) {
+            //  print((widget.form.control("quantityWastedRadio.${widget.cardIndex}").value as KeyValue).key);
+              // widget.form
+              //     .control(
+              //       'quantityWastedRadio.${widget.cardIndex}',
+              //     )
+              //     .value = value;
+
+              setState(() {
+                show = value.key;
+              });
             },
           ),
+          // RadioGroup<KeyValue>.builder(
+          //   groupValue:  KeyValue('CORE_COMMON_YES', true),
+          //   onChanged: (changedValue) {
+          //     setState(() {
+          //       widget.form
+          //           .control("quantityWastedRadio.${widget.cardIndex}")
+          //           .value = changedValue!;
+          //       show = changedValue.key;
+          //     });
+          //   },
+          //   items: Constants.yesNo,
+          //   itemBuilder: (item) => RadioButtonBuilder(
+          //     localizations.translate(item.label),
+          //   ),
+          // ),
+
+          show
+              ? DigitIntegerFormPicker(
+                  minimum: 0,
+                  decimal: true,
+                  form: widget.form,
+                  formControlName: 'quantityWasted.${widget.cardIndex}',
+                  label: localizations.translate(
+                    i18.deliverIntervention.enterDrugQTYWasted,
+                  ),
+                  incrementer: true,
+                )
+              : const SizedBox.shrink(),
 
           // Solution customization
           // SizedBox(

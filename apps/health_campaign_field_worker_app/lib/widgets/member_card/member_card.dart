@@ -442,43 +442,44 @@ class MemberCard extends StatelessWidget {
                                   const SizedBox(
                                     height: kPadding * 2,
                                   ),
-                                  DigitOutLineButton(
-                                    label: localizations.translate(
-                                      i18.memberCard.referBeneficiaryLabel,
-                                    ),
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
-                                      ),
-                                      backgroundColor: Colors.white,
-                                      side: BorderSide(
-                                        width: 1.0,
-                                        color: theme.colorScheme.secondary,
-                                      ),
-                                      minimumSize: Size(
-                                        MediaQuery.of(context).size.width /
-                                            1.25,
-                                        50,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop();
-                                      await context.router.push(
-                                        ReferBeneficiaryRoute(
-                                          projectBeneficiaryClientRefId:
-                                              projectBeneficiaryClientReferenceId ??
-                                                  '',
-                                          individual: individual,
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(
-                                    height: kPadding * 2,
-                                  ),
+                                  // TODO: solution customization 
+                                  // DigitOutLineButton(
+                                  //   label: localizations.translate(
+                                  //     i18.memberCard.referBeneficiaryLabel,
+                                  //   ),
+                                  //   buttonStyle: OutlinedButton.styleFrom(
+                                  //     shape: const RoundedRectangleBorder(
+                                  //       borderRadius: BorderRadius.zero,
+                                  //     ),
+                                  //     backgroundColor: Colors.white,
+                                  //     side: BorderSide(
+                                  //       width: 1.0,
+                                  //       color: theme.colorScheme.secondary,
+                                  //     ),
+                                  //     minimumSize: Size(
+                                  //       MediaQuery.of(context).size.width /
+                                  //           1.25,
+                                  //       50,
+                                  //     ),
+                                  //   ),
+                                  //   onPressed: () async {
+                                  //     Navigator.of(
+                                  //       context,
+                                  //       rootNavigator: true,
+                                  //     ).pop();
+                                  //     await context.router.push(
+                                  //       ReferBeneficiaryRoute(
+                                  //         projectBeneficiaryClientRefId:
+                                  //             projectBeneficiaryClientReferenceId ??
+                                  //                 '',
+                                  //         individual: individual,
+                                  //       ),
+                                  //     );
+                                  //   },
+                                  // ),
+                                  // const SizedBox(
+                                  //   height: kPadding * 2,
+                                  // ),
                                   DigitOutLineButton(
                                     label: localizations.translate(
                                       i18.memberCard.markIneligibleLabel,

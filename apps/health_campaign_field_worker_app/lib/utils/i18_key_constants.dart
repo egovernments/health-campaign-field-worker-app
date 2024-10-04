@@ -1224,6 +1224,9 @@ class MemberCard {
 class DeliverIntervention {
   const DeliverIntervention();
 
+  String get wasDrugWasted => 'DELIVER_INTERVENTION_WAS_QUANTITY_WASTED_LABEL';
+  String get enterDrugQTYWasted => 'DELIVER_INTERVENTION_ENTER_QUANTITY_WASTED_LABEL';
+
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
 
   String get deliverInteventionAdministeredLabel =>
