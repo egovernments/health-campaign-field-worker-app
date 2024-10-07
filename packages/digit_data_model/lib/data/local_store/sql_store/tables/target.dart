@@ -1,7 +1,6 @@
 // Generated using mason. Do not modify by hand
 
 import 'package:drift/drift.dart';
-import '../../../../models/entities/beneficiary_type.dart';
 
 class Target extends Table {
   TextColumn get id => text()();
@@ -22,7 +21,7 @@ class Target extends Table {
   BoolColumn get isDeleted =>
       boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-  IntColumn get beneficiaryType => intEnum<BeneficiaryType>().nullable()();
+  TextColumn get beneficiaryType => text().nullable()();
   TextColumn get additionalFields => text().nullable()();
 
   @override
