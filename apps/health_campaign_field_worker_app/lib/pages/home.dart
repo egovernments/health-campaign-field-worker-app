@@ -519,6 +519,8 @@ class _HomePageState extends LocalizedState<HomePage> {
             .contains(element))
         .toList();
 
+       
+
     final showcaseKeys =
         filteredLabels.map((label) => homeItemsShowcaseMap[label]!).toList();
 

@@ -100,3 +100,10 @@ class ProjectTypeAdditionalFields extends AdditionalFields with ProjectTypeAddit
   });
 }
 
+@MappableEnum(caseStyle: CaseStyle.upperCase)
+enum ProjectTypesEnum {
+  @MappableValue("LF") lf,
+  @MappableValue("SMC") smc,
+  @MappableValue("SCHISTO") schisto,
+  ;
+}

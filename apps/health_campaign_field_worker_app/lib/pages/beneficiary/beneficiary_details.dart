@@ -309,20 +309,6 @@ class _BeneficiaryDetailsPageState
                                               .selectedIndividual?.gender?.name
                                               .toUpperCase() ??
                                           '--'),
-                                  localizations.translate(
-                                    i18.common.coreCommonMobileNumber,
-                                  ): context.beneficiaryType !=
-                                          BeneficiaryType.individual
-                                      ? localizations.translate(
-                                          householdMemberWrapper.headOfHousehold
-                                                  .mobileNumber ??
-                                              '--',
-                                        )
-                                      : localizations.translate(
-                                          state.selectedIndividual
-                                                  ?.mobileNumber ??
-                                              '--',
-                                        ),
                                   localizations.translate(i18
                                       .individualDetails.heightLabelText): () {
                                     final height = state.selectedIndividual

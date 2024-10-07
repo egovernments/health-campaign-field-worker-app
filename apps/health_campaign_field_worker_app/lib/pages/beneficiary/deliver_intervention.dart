@@ -46,6 +46,8 @@ class _DeliverInterventionPageState
   static const _deliveryCommentKey = 'deliveryComment';
   static const _doseAdministrationKey = 'doseAdministered';
   static const _dateOfAdministrationKey = 'dateOfAdministration';
+  static const _quantityWastedRadioKey = 'quantityWastedRadio';
+
   final clickedStatus = ValueNotifier<bool>(false);
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -886,22 +888,28 @@ class _DeliverInterventionPageState
               )),
         ],
       ),
-      _quantityDistributedKey: FormArray<int>([
+      _quantityDistributedKey: FormArray<double>([
         ..._controllers.map(
-          (e) => FormControl<int>(
+          (e) => FormControl<double>(
             value: _controllers.indexOf(e) < productVariants.length
                 ? productVariants
                     .elementAt(_controllers.indexOf(e))
                     .quantity!
-                    .toInt()
+                    .toDouble()
                 : 0,
             validators: [Validators.min(1)],
           ),
         ),
       ]),
-      _quantityWastedKey: FormArray<String>([
+      _quantityWastedKey: FormArray<double>([
         ..._controllers.map(
-          (e) => FormControl<String>(),
+          (e) => FormControl<double>(value: 0),
+        ),
+      ]),
+      _quantityWastedRadioKey: FormArray<KeyValue>([
+        ..._controllers.map(
+          (e) =>
+              FormControl<KeyValue>(value: Constants.yesNo[1]),
         ),
       ]),
     });

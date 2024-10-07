@@ -320,8 +320,15 @@ class _IneligibilityReasonsPageState
                                               initialized:
                                                   (appConfiguration, _) {
                                                 final ineleigibilityReasonOptions =
-                                                    appConfiguration
-                                                            .ineligibilityReasonsSchisto ??
+                                                    ((context.selectedProjectType!
+                                                                    .code ==
+                                                                ProjectTypesEnum
+                                                                    .schisto
+                                                                    .toValue())
+                                                            ? appConfiguration
+                                                                .ineligibilityReasonsSchisto
+                                                            : appConfiguration
+                                                                .ineligibilityReasons) ??
                                                         <IneligibilityReasons>[];
                                                 ineleigibilityReasons =
                                                     ineleigibilityReasonOptions

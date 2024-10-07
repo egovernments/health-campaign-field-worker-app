@@ -6,6 +6,56 @@
 
 part of 'project_type.dart';
 
+class ProjectTypesEnumMapper extends EnumMapper<ProjectTypesEnum> {
+  ProjectTypesEnumMapper._();
+
+  static ProjectTypesEnumMapper? _instance;
+  static ProjectTypesEnumMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals.use(_instance = ProjectTypesEnumMapper._());
+    }
+    return _instance!;
+  }
+
+  static ProjectTypesEnum fromValue(dynamic value) {
+    ensureInitialized();
+    return MapperContainer.globals.fromValue(value);
+  }
+
+  @override
+  ProjectTypesEnum decode(dynamic value) {
+    switch (value) {
+      case "LF":
+        return ProjectTypesEnum.lf;
+      case "SMC":
+        return ProjectTypesEnum.smc;
+      case "SCHISTO":
+        return ProjectTypesEnum.schisto;
+      default:
+        throw MapperException.unknownEnumValue(value);
+    }
+  }
+
+  @override
+  dynamic encode(ProjectTypesEnum self) {
+    switch (self) {
+      case ProjectTypesEnum.lf:
+        return "LF";
+      case ProjectTypesEnum.smc:
+        return "SMC";
+      case ProjectTypesEnum.schisto:
+        return "SCHISTO";
+    }
+  }
+}
+
+extension ProjectTypesEnumMapperExtension on ProjectTypesEnum {
+  dynamic toValue() {
+    ProjectTypesEnumMapper.ensureInitialized();
+    return MapperContainer.globals.toValue<ProjectTypesEnum>(this);
+  }
+}
+
 class ProjectTypeSearchModelMapper
     extends SubClassMapperBase<ProjectTypeSearchModel> {
   ProjectTypeSearchModelMapper._();
