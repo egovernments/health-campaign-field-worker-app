@@ -1,3 +1,8 @@
+## 1.0.3+2
+
+* Updated beneficiary type target model and table to string
+* Updated project type beneficiary type model and table to BeneficiaryType enum
+
 ## 1.0.3+1
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
