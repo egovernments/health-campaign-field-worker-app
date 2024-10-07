@@ -129,7 +129,7 @@ class _BoundarySelectionPageState
 
                                   if (labelIndex == labelList.length) {
                                     // Return a SizedBox for whitespace after the last item
-                                    return const SizedBox(height: kPadding*3); // Adjust height as needed
+                                    return const SizedBox(height: kPadding*7); // Adjust height as needed
                                   }
 
                                   final label = labelList.elementAt(labelIndex);
