@@ -501,10 +501,11 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.3+1"
+      name: digit_data_model
+      sha256: "7585f736b100d05f3e64211e89b3d0c4d82b485af103ad6aba522b4f16a2388d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3+2"
   digit_dss:
     dependency: "direct main"
     description:
@@ -1534,17 +1535,19 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      path: "../../packages/referral_reconciliation"
-      relative: true
-    source: path
+      name: referral_reconciliation
+      sha256: "80d5b93164e4f8337fa757fcb75a1e85b88ffbb760e731ca24496a0cae2aef38"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.2+1"
   registration_delivery:
     dependency: "direct main"
     description:
-      path: "../../packages/registration_delivery"
-      relative: true
-    source: path
-    version: "1.0.3+2"
+      name: registration_delivery
+      sha256: a6a88665bbf1fa5dce5b864d66992ff9c885b2a3cd898d37f349f1be03cf4086
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3+1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
