@@ -149,12 +149,14 @@ class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
         text: TextSpan(
           text: '$stepNumber. ',
           style: TextStyle(
+            color: const DigitColors().woodsmokeBlack,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
           children: [
             TextSpan(
               text: localizations.translate(descriptionText),
               style: TextStyle(
+                color: const DigitColors().woodsmokeBlack,
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -166,12 +168,12 @@ class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Column(
+           Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: kPadding / 4,
               ),
-              Icon(Icons.circle, size: kPadding),
+              Icon(Icons.circle, size: kPadding, color: const DigitColors().woodsmokeBlack,),
             ],
           ),
           const SizedBox(width: kPadding),
@@ -180,6 +182,7 @@ class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
               text: TextSpan(
                 text: localizations.translate(descriptionText),
                 style: TextStyle(
+                  color: const DigitColors().woodsmokeBlack,
                   fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
@@ -193,6 +196,7 @@ class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
         localizations.translate(descriptionText),
         textAlign: TextAlign.justify,
         style: TextStyle(
+          color: const DigitColors().woodsmokeBlack,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
         ),
       );
@@ -245,6 +249,7 @@ class SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
         '$stepNumber. ${localizations.translate(subDescriptionText)}',
         textAlign: TextAlign.justify,
         style: TextStyle(
+          color: const DigitColors().woodsmokeBlack,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
         ),
       );
@@ -252,12 +257,12 @@ class SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Column(
+           Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: kPadding / 4,
               ),
-              Icon(Icons.circle, size: kPadding),
+              Icon(Icons.circle, size: kPadding, color: const DigitColors().woodsmokeBlack,),
             ],
           ),
           const SizedBox(width: kPadding),
@@ -266,6 +271,7 @@ class SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
               localizations.translate(subDescriptionText),
               textAlign: TextAlign.justify,
               style: TextStyle(
+                color: const DigitColors().woodsmokeBlack,
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -277,6 +283,7 @@ class SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
         localizations.translate(subDescriptionText),
         textAlign: TextAlign.justify,
         style: TextStyle(
+          color: const DigitColors().woodsmokeBlack,
           fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
         ),
       );
