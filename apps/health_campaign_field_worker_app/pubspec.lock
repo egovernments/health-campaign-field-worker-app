@@ -502,10 +502,10 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "0b81e96636496b56b4f9c5d918690a17d8985d6b131e0ab54968eb5471ee4f54"
+      sha256: "7585f736b100d05f3e64211e89b3d0c4d82b485af103ad6aba522b4f16a2388d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+1"
+    version: "1.0.3+2"
   digit_dss:
     dependency: "direct main"
     description:

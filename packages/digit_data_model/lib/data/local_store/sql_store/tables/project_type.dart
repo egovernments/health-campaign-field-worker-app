@@ -2,17 +2,19 @@
 
 import 'package:drift/drift.dart';
 
+import '../../../../models/entities/beneficiary_type.dart';
 
 class ProjectType extends Table {
   TextColumn get id => text().nullable()();
   TextColumn get name => text().nullable()();
   TextColumn get code => text().nullable()();
   TextColumn get group => text().nullable()();
-  TextColumn get beneficiaryType => text().nullable()();
+  IntColumn get beneficiaryType => intEnum<BeneficiaryType>().nullable()();
   TextColumn get eligibilityCriteria => text().nullable()();
   TextColumn get taskProcedure => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
-  BoolColumn get nonRecoverableError => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get nonRecoverableError =>
+      boolean().nullable().withDefault(const Constant(false))();
   IntColumn get auditCreatedTime => integer().nullable()();
   IntColumn get clientCreatedTime => integer().nullable()();
   TextColumn get clientModifiedBy => text().nullable()();
@@ -22,11 +24,15 @@ class ProjectType extends Table {
   IntColumn get auditModifiedTime => integer().nullable()();
   TextColumn get clientReferenceId => text()();
   TextColumn get tenantId => text().nullable()();
-  BoolColumn get isDeleted => boolean().nullable().withDefault(const Constant(false))();
+  BoolColumn get isDeleted =>
+      boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-  
+
   TextColumn get additionalFields => text().nullable()();
 
   @override
-  Set<Column> get primaryKey => { auditCreatedBy, clientReferenceId,  };
+  Set<Column> get primaryKey => {
+        auditCreatedBy,
+        clientReferenceId,
+      };
 }

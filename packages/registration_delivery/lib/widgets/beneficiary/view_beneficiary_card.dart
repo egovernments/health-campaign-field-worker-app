@@ -167,7 +167,9 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           TableData(
             [
               e.name?.givenName ?? '--',
-              (e.name?.familyName?.trim().isNotEmpty ?? false) ? e.name?.familyName : null,
+              (e.name?.familyName?.trim().isNotEmpty ?? false)
+                  ? e.name?.familyName
+                  : null,
             ].whereNotNull().join(' '),
             cellKey: 'beneficiary',
           ),
@@ -210,7 +212,10 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             cellKey: 'age',
           ),
           TableData(
-            e.gender?.name == null ? '--' : localizations.translate('CORE_COMMON_${ e.gender?.name.toUpperCase()}'),
+            e.gender?.name == null
+                ? '--'
+                : localizations
+                    .translate('CORE_COMMON_${e.gender?.name.toUpperCase()}'),
             cellKey: 'gender',
           ),
         ];
@@ -411,7 +416,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       if (tasks.isEmpty) {
         return Status.registered.toValue();
       } else {
-        return getTaskStatus(tasks).toValue();
+        return getTaskStatus(tasks.toList()).toValue();
       }
     } else {
       return Status.notRegistered.toValue();

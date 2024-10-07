@@ -390,7 +390,7 @@ packages:
     description:
       path: "packages/dart_mappable_builder"
       ref: master
-      resolved-ref: "9b887d24c05459c027a92391869d4c10b440e00f"
+      resolved-ref: e3d8ac43f70568b4a17c200cae5cde285050ef23
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
     version: "4.2.0"
