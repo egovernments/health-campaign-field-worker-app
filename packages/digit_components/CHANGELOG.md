@@ -1,3 +1,7 @@
+## 1.0.2+1
+* fixed description text color issue for privacy policy
+* modify searchable dropdown to take minimum below available height
+
 ## 1.0.2
 * Added privacy notice component
 
