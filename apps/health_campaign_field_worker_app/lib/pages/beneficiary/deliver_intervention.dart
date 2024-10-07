@@ -909,7 +909,7 @@ class _DeliverInterventionPageState
       _quantityWastedRadioKey: FormArray<KeyValue>([
         ..._controllers.map(
           (e) =>
-              FormControl<KeyValue>(value: KeyValue('CORE_COMMON_NO', false)),
+              FormControl<KeyValue>(value: Constants.yesNo[1]),
         ),
       ]),
     });
