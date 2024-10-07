@@ -68,23 +68,7 @@ Widget buildTableContent(
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          // mainAxisSize: MainAxisSize.min,
           children: [
-            // DigitTableCard(
-            //   topPadding: const EdgeInsets.only(top: 0.0),
-            //   padding: const EdgeInsets.only(bottom: kPadding / 2),
-            //   fraction: 2.5,
-            //   element: {
-            //     localizations.translate(
-            //       i18.beneficiaryDetails.beneficiaryAge,
-            //     ): localizations.translate(
-            //       '${getAgeConditionString('${fetchProductVariant(item, individualModel)?.condition}')}',
-            //     ),
-            //   },
-            // ),
-            // const Divider(
-            //   thickness: 1,
-            // ),
             getHeightConditionString(
                       '${fetchProductVariant(item, individualModel)?.condition}',
                     ) !=

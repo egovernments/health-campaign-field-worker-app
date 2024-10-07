@@ -860,8 +860,6 @@ class _DeliverInterventionPageState
     _controllers
         .addAll(productVariants!.map((e) => productVariants.indexOf(e)));
 
-    // _controllers.add(const ProductVariantsModel( productVariantId:_quantityWastedRadioKey));
-
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
         value:
@@ -914,7 +912,6 @@ class _DeliverInterventionPageState
               FormControl<KeyValue>(value: KeyValue('CORE_COMMON_NO', false)),
         ),
       ]),
-       
     });
   }
 }

@@ -38,7 +38,6 @@ class _ResourceBeneficiaryCardState
 
   @override
   Widget build(BuildContext context) {
-    // print((widget.form.control("quantityWastedRadio.${widget.cardIndex}").value as KeyValue).key);
     return Container(
       decoration: BoxDecoration(
         color: DigitTheme.instance.colorScheme.surface,
@@ -95,28 +94,6 @@ class _ResourceBeneficiaryCardState
             ),
             minimum: 0,
           ),
-          // TODO:Solution customization
-          // DigitTextFormField(
-          //   formControlName: 'quantityWasted.${widget.cardIndex}',
-          //   keyboardType: const TextInputType.numberWithOptions(decimal: true),
-          //   inputFormatters: [
-          //     FilteringTextInputFormatter.allow(
-          //       RegExp('[0-9]'),
-          //     ),
-          //     LengthLimitingTextInputFormatter(3),
-          //   ],
-          //   label: localizations.translate(
-          //     i18.deliverIntervention.quantityWastedLabel,
-          //   ),
-          //   validationMessages: {
-          //     "required": (control) {
-          //       return localizations.translate(
-          //         i18.common.corecommonRequired,
-          //       );
-          //     },
-          //   },
-          // ),
-
           DigitRadioButtonList<KeyValue>(
             labelStyle: DigitTheme.instance.mobileTheme.textTheme.bodyLarge,
             labelText: localizations.translate(
@@ -135,7 +112,6 @@ class _ResourceBeneficiaryCardState
               });
             },
           ),
-
           show
               ? DigitIntegerFormPicker(
                   minimum: 0,
@@ -148,57 +124,6 @@ class _ResourceBeneficiaryCardState
                   incrementer: true,
                 )
               : const SizedBox.shrink(),
-
-          // Solution customization
-          // SizedBox(
-          //   child: Align(
-          //     alignment: Alignment.centerLeft,
-          //     child: (widget.cardIndex == widget.totalItems - 1 &&
-          //             widget.totalItems > 1)
-          //         ? DigitIconButton(
-          //             onPressed: () async {
-          //               final submit = await DigitDialog.show<bool>(
-          //                 context,
-          //                 options: DigitDialogOptions(
-          //                   titleText: localizations.translate(
-          //                     i18.deliverIntervention
-          //                         .resourceDeleteBeneficiaryDialogTitle,
-          //                   ),
-          //                   primaryAction: DigitDialogActions(
-          //                     label: localizations.translate(
-          //                       i18.deliverIntervention
-          //                           .resourceDeleteBeneficiaryPrimaryActionLabel,
-          //                     ),
-          //                     action: (context) {
-          //                       Navigator.of(
-          //                         context,
-          //                         rootNavigator: true,
-          //                       ).pop(true);
-          //                     },
-          //                   ),
-          //                   secondaryAction: DigitDialogActions(
-          //                     label: localizations.translate(
-          //                       i18.common.coreCommonCancel,
-          //                     ),
-          //                     action: (context) => Navigator.of(
-          //                       context,
-          //                       rootNavigator: true,
-          //                     ).pop(false),
-          //                   ),
-          //                 ),
-          //               );
-          //               if (submit == true) {
-          //                 widget.onDelete(widget.cardIndex);
-          //               }
-          //             },
-          //             iconText: localizations.translate(
-          //               i18.deliverIntervention.resourceDeleteBeneficiary,
-          //             ),
-          //             icon: Icons.delete,
-          //           )
-          //         : const Offstage(),
-          //   ),
-          // ),
         ],
       ),
     );

@@ -129,32 +129,34 @@ class _PerformamnceSummaryReportDetailsPageState
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST",
+                                i18.deliverIntervention.householdRegistered,
                               ),
                               key: _householdKey,
                               width: 170,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST",
+                                i18.deliverIntervention
+                                    .peoplePercentageTreatedLabel,
                               ),
                               key: _treatedPercentageKey,
                               width: 140,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_TASK_DATA_LIST",
+                                i18.deliverIntervention.peopleTreatedLabel,
                               ),
                               key: _treatedKey,
                               width: 120,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
-                                // "PERFORMANCE_SUMMARY_DRUG_ONE",
                                 !(context.selectedProjectType!.code ==
                                         ProjectTypesEnum.schisto.toValue())
-                                    ? "PERFORMANCE_SUMMARY_DRUG_ONE"
-                                    : "DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL",
+                                    ? i18.deliverIntervention
+                                        .drugOneLabelTableSummary
+                                    : i18.deliverIntervention
+                                        .quantityDistributedLabel,
                               ),
                               key: _drugOneKey,
                               width: 130,
@@ -163,8 +165,10 @@ class _PerformamnceSummaryReportDetailsPageState
                               label: localizations.translate(
                                 !(context.selectedProjectType!.code ==
                                         ProjectTypesEnum.schisto.toValue())
-                                    ? "PERFORMANCE_SUMMARY_DRUG_TWO"
-                                    : "DELIVER_INTERVENTION_QUANTITY_WASTED_LABEL",
+                                    ? i18.deliverIntervention
+                                        .drugTwoLabelTableSummary
+                                    : i18.deliverIntervention
+                                        .quantityWastedLabel,
                               ),
                               key: _drugTwoKey,
                               width: 130,
