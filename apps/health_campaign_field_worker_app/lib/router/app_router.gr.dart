@@ -379,6 +379,18 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SchoolIndividualDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolIndividualDetailsRouteArgs>(
+          orElse: () => const SchoolIndividualDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolIndividualDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isHeadOfHousehold: args.isHeadOfHousehold,
+        ),
+      );
+    },
     HouseholdLocationRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdLocationRouteArgs>(
           orElse: () => const HouseholdLocationRouteArgs());
@@ -824,6 +836,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   SchoolDetailsRoute.name,
                   path: 'school-details',
+                  parent: BeneficiaryRegistrationWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SchoolIndividualDetailsRoute.name,
+                  path: 'school-individual-details',
                   parent: BeneficiaryRegistrationWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -2280,6 +2297,46 @@ class SchoolDetailsRouteArgs {
   @override
   String toString() {
     return 'SchoolDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolIndividualDetailsPage]
+class SchoolIndividualDetailsRoute
+    extends PageRouteInfo<SchoolIndividualDetailsRouteArgs> {
+  SchoolIndividualDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isHeadOfHousehold = false,
+  }) : super(
+          SchoolIndividualDetailsRoute.name,
+          path: 'school-individual-details',
+          args: SchoolIndividualDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isHeadOfHousehold: isHeadOfHousehold,
+          ),
+        );
+
+  static const String name = 'SchoolIndividualDetailsRoute';
+}
+
+class SchoolIndividualDetailsRouteArgs {
+  const SchoolIndividualDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isHeadOfHousehold = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isHeadOfHousehold;
+
+  @override
+  String toString() {
+    return 'SchoolIndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
   }
 }
 
