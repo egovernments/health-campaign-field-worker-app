@@ -321,10 +321,17 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                 orElse: () => const Offstage(),
                                                 initialized:
                                                     (appConfiguration, _) {
-                                                  final symptomTypesOptions =
-                                                      appConfiguration
-                                                              .symptomsTypes ??
-                                                          <SymptomsTypes>[];
+                                                  final symptomTypesOptions = (context
+                                                                  .selectedProjectType!
+                                                                  .code ==
+                                                              ProjectTypesEnum
+                                                                  .schisto
+                                                                  .toValue()
+                                                          ? appConfiguration
+                                                              .symptomsTypesSchisto
+                                                          : appConfiguration
+                                                              .symptomsTypes) ??
+                                                      <SymptomsTypes>[];
                                                   symptomsTypes =
                                                       symptomTypesOptions
                                                           .map((e) => e.code)
