@@ -68,9 +68,7 @@ class FacilityRemoteRepository
         );
       }
 
-      String key = (isSearchResponsePlural || entityName == 'ServiceDefinition')
-          ? entityNamePlural
-          : entityName;
+      String key = (isSearchResponsePlural) ? entityNamePlural : entityName;
 
       //Check whether the response contains valid key and totalCount
       if (!responseMap.containsKey(key) ||
