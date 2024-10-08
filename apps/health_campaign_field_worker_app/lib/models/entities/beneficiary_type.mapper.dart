@@ -27,6 +27,8 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (value) {
       case "INDIVIDUAL":
         return BeneficiaryType.individual;
+      case "SCHOOL":
+        return BeneficiaryType.school;
       case "HOUSEHOLD":
         return BeneficiaryType.household;
       case "PRODUCT":
@@ -51,6 +53,8 @@ class BeneficiaryTypeMapper extends EnumMapper<BeneficiaryType> {
     switch (self) {
       case BeneficiaryType.individual:
         return "INDIVIDUAL";
+      case BeneficiaryType.school:
+        return "SCHOOL";
       case BeneficiaryType.household:
         return "HOUSEHOLD";
       case BeneficiaryType.product:

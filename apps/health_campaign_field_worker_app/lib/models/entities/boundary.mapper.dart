@@ -243,6 +243,9 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
   static String? _$longitude(BoundaryModel v) => v.longitude;
   static const Field<BoundaryModel, String> _f$longitude =
       Field('longitude', _$longitude, opt: true);
+  static String? _$area(BoundaryModel v) => v.area;
+  static const Field<BoundaryModel, String> _f$area =
+      Field('area', _$area, opt: true);
   static String? _$materializedPath(BoundaryModel v) => v.materializedPath;
   static const Field<BoundaryModel, String> _f$materializedPath =
       Field('materializedPath', _$materializedPath, opt: true);
@@ -276,6 +279,7 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
     #label: _f$label,
     #latitude: _f$latitude,
     #longitude: _f$longitude,
+    #area: _f$area,
     #materializedPath: _f$materializedPath,
     #tenantId: _f$tenantId,
     #boundaryNum: _f$boundaryNum,
@@ -295,6 +299,7 @@ class BoundaryModelMapper extends ClassMapperBase<BoundaryModel> {
         label: data.dec(_f$label),
         latitude: data.dec(_f$latitude),
         longitude: data.dec(_f$longitude),
+        area: data.dec(_f$area),
         materializedPath: data.dec(_f$materializedPath),
         tenantId: data.dec(_f$tenantId),
         boundaryNum: data.dec(_f$boundaryNum),
@@ -370,6 +375,7 @@ abstract class BoundaryModelCopyWith<$R, $In extends BoundaryModel, $Out>
       String? label,
       String? latitude,
       String? longitude,
+      String? area,
       String? materializedPath,
       String? tenantId,
       int? boundaryNum,
@@ -403,6 +409,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
           Object? label = $none,
           Object? latitude = $none,
           Object? longitude = $none,
+          Object? area = $none,
           Object? materializedPath = $none,
           Object? tenantId = $none,
           Object? boundaryNum = $none,
@@ -416,6 +423,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
         if (label != $none) #label: label,
         if (latitude != $none) #latitude: latitude,
         if (longitude != $none) #longitude: longitude,
+        if (area != $none) #area: area,
         if (materializedPath != $none) #materializedPath: materializedPath,
         if (tenantId != $none) #tenantId: tenantId,
         if (boundaryNum != $none) #boundaryNum: boundaryNum,
@@ -431,6 +439,7 @@ class _BoundaryModelCopyWithImpl<$R, $Out>
       label: data.get(#label, or: $value.label),
       latitude: data.get(#latitude, or: $value.latitude),
       longitude: data.get(#longitude, or: $value.longitude),
+      area: data.get(#area, or: $value.area),
       materializedPath:
           data.get(#materializedPath, or: $value.materializedPath),
       tenantId: data.get(#tenantId, or: $value.tenantId),

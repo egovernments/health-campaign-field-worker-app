@@ -5,7 +5,6 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
-import 'package:drift/src/runtime/api/runtime_api.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -317,7 +316,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           onPressed: () async {
             final searchBloc = context.read<SearchBlocWrapper>();
             await context.router.push(
-              SearchBeneficiaryRoute(),
+              const SelectBeneficiaryRoute(),
             );
             searchBloc.searchHouseholdsBloc
                 .add(const SearchHouseholdsClearEvent());

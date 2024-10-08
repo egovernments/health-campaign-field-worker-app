@@ -86,6 +86,22 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SelectBeneficiaryRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const SelectBeneficiaryPage(),
+      );
+    },
+    SchoolSelectionRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolSelectionRouteArgs>();
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolSelectionPage(
+          key: args.key,
+          schools: args.schools,
+        ),
+      );
+    },
     QRScannerRoute.name: (routeData) {
       final args = routeData.argsAs<QRScannerRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -753,6 +769,16 @@ class _$AppRouter extends RootStackRouter {
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
+              SelectBeneficiaryRoute.name,
+              path: 'select-beneficiary',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              SchoolSelectionRoute.name,
+              path: 'school-selection',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               QRScannerRoute.name,
               path: 'scanner',
               parent: AuthenticatedRouteWrapper.name,
@@ -1296,6 +1322,52 @@ class SearchBeneficiaryRouteArgs {
   @override
   String toString() {
     return 'SearchBeneficiaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SelectBeneficiaryPage]
+class SelectBeneficiaryRoute extends PageRouteInfo<void> {
+  const SelectBeneficiaryRoute()
+      : super(
+          SelectBeneficiaryRoute.name,
+          path: 'select-beneficiary',
+        );
+
+  static const String name = 'SelectBeneficiaryRoute';
+}
+
+/// generated route for
+/// [SchoolSelectionPage]
+class SchoolSelectionRoute extends PageRouteInfo<SchoolSelectionRouteArgs> {
+  SchoolSelectionRoute({
+    Key? key,
+    required List<String> schools,
+  }) : super(
+          SchoolSelectionRoute.name,
+          path: 'school-selection',
+          args: SchoolSelectionRouteArgs(
+            key: key,
+            schools: schools,
+          ),
+        );
+
+  static const String name = 'SchoolSelectionRoute';
+}
+
+class SchoolSelectionRouteArgs {
+  const SchoolSelectionRouteArgs({
+    this.key,
+    required this.schools,
+  });
+
+  final Key? key;
+
+  final List<String> schools;
+
+  @override
+  String toString() {
+    return 'SchoolSelectionRouteArgs{key: $key, schools: $schools}';
   }
 }
 

@@ -5,6 +5,7 @@ const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
 const searchBeneficiary = SearchBeneficiary();
+const schoolDetails = SchoolDetails();
 const beneficiaryDetails = BeneficiaryDetails();
 const householdLocation = HouseholdLocation();
 const acknowledgementSuccess = AcknowledgementSuccess();
@@ -888,6 +889,8 @@ class Home {
 class SearchBeneficiary {
   const SearchBeneficiary();
 
+  String get selectBeneficiaryType => 'SELECT_BENEFICIARY_TYPE';
+
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
   String get searchIndividualLabelText =>
@@ -915,6 +918,12 @@ class SearchBeneficiary {
   String get monthsAbbr => 'MONTHS_ABBR';
 
   String get proximityLabel => 'PROXIMITY_LABEL';
+}
+
+class SchoolDetails {
+  const SchoolDetails();
+
+  String get selectSchool => 'SELECT_SCHOOL';
 }
 
 class BeneficiaryDetails {

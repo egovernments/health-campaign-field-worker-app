@@ -7,7 +7,8 @@ import '../data_model.dart';
 part 'boundary.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class BoundarySearchModel extends EntitySearchModel with BoundarySearchModelMappable {
+class BoundarySearchModel extends EntitySearchModel
+    with BoundarySearchModelMappable {
   final String? boundaryType;
   final String? tenantId;
   final String? code;
@@ -45,6 +46,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
   final String? latitude;
   final int? boundaryNum;
   final String? longitude;
+  final String? area;
   final String? materializedPath;
   final String? tenantId;
   final int? rowVersion;
@@ -56,6 +58,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
     this.label,
     this.latitude,
     this.longitude,
+    this.area,
     this.materializedPath,
     this.tenantId,
     this.boundaryNum,

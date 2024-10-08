@@ -14,8 +14,11 @@ import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered.dart';
 import '../pages/beneficiary/household_overview.dart';
+import '../pages/beneficiary/ineligibility_reasons.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
 import '../pages/beneficiary/refer_beneficiary.dart';
+import '../pages/beneficiary/school_selection.dart';
+import '../pages/beneficiary/search_beneficiary.dart';
 import '../pages/beneficiary/side_effects.dart';
 import '../pages/beneficiary/widgets/household_acknowledgement.dart';
 import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
@@ -23,7 +26,6 @@ import '../pages/beneficiary_registration/beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
-import '../pages/beneficiary/ineligibility_reasons.dart';
 import '../pages/beneficiary_registration/individual_details.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
@@ -56,9 +58,7 @@ import '../pages/inventory/record_stock/stock_details.dart';
 import '../pages/inventory/record_stock/warehouse_details.dart';
 import '../pages/inventory/reports/report_details.dart';
 import '../pages/inventory/reports/report_selection.dart';
-import '../pages/reports/performance_summary_report_details.dart';
 import '../pages/inventory/stock_reconciliation/stock_reconciliation.dart';
-import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/profile.dart';
 import '../pages/project_selection.dart';
@@ -66,8 +66,9 @@ import '../pages/qr_details_page.dart';
 import '../pages/qr_scanner.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
-import '../pages/search_beneficiary.dart';
+import '../pages/reports/performance_summary_report_details.dart';
 import '../pages/search_referrals.dart';
+import '../pages/select_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
@@ -92,6 +93,8 @@ part 'app_router.gr.dart';
         AutoRoute(page: ProfilePage, path: 'profile'),
         AutoRoute(page: UserQRDetailsPage, path: 'user-qr-code'),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
+        AutoRoute(page: SelectBeneficiaryPage, path: 'select-beneficiary'),
+        AutoRoute(page: SchoolSelectionPage, path: 'school-selection'),
         AutoRoute(page: QRScannerPage, path: 'scanner'),
         // AutoRoute(page: ManageAttendancePage, path: 'manage-attendance'),
         AutoRoute(
