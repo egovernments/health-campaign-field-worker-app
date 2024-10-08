@@ -1145,6 +1145,13 @@ class HouseholdDetails {
 
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+
+
+      String get parentKnownLabel =>
+      'PARENT_KNOWN_LABEL';
+
+       String get nameOfParentLabel =>
+      'NAME_PARENT_LABEL';
 }
 
 class HouseholdOverView {

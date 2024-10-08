@@ -650,13 +650,14 @@ class _SchoolIndividualDetailsPageState
                         ),
 
                         //TODO:
-                        if(isSchool)...[
+                       
                         DigitRadioButtonList<KeyValue>(
                           labelStyle: DigitTheme
                               .instance.mobileTheme.textTheme.bodyLarge,
                           labelText: localizations.translate(
-                              //i18.deliverIntervention.wasDrugWasted,
-                              "Parents Known?"),
+                              i18.householdDetails.parentKnownLabel,
+                             // "Parents Known?"
+                              ),
                           isEnabled: true,
                           formControlName: radioKey,
                           valueMapper: (value) {
@@ -681,14 +682,15 @@ class _SchoolIndividualDetailsPageState
                             // ),
                           ],
                           label: localizations.translate(
-                              // i18.individualDetails.heightLabelText,
-                              "Name of the Parent"),
+                               i18.householdDetails.nameOfParentLabel,
+                              //"Name of the Parent"
+                              ),
                           validationMessages: {
                             'required': (object) => localizations
                                 .translate(i18.common.corecommonRequired),
                           },
                         ),
-                        ],
+                        
                       ],
                     ),
                   ),
