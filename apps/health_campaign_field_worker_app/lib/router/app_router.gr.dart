@@ -368,6 +368,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SchoolDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolDetailsRouteArgs>(
+          orElse: () => const SchoolDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HouseholdLocationRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdLocationRouteArgs>(
           orElse: () => const HouseholdLocationRouteArgs());
@@ -808,6 +819,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   HouseHoldDetailsRoute.name,
                   path: 'household-details',
+                  parent: BeneficiaryRegistrationWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SchoolDetailsRoute.name,
+                  path: 'school-details',
                   parent: BeneficiaryRegistrationWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -2230,6 +2246,40 @@ class HouseHoldDetailsRouteArgs {
   @override
   String toString() {
     return 'HouseHoldDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolDetailsPage]
+class SchoolDetailsRoute extends PageRouteInfo<SchoolDetailsRouteArgs> {
+  SchoolDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolDetailsRoute.name,
+          path: 'school-details',
+          args: SchoolDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolDetailsRoute';
+}
+
+class SchoolDetailsRouteArgs {
+  const SchoolDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

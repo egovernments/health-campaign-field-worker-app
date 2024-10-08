@@ -314,6 +314,10 @@ class HouseholdDetailsShowcase {
   String get numberOfMembersLivingInHousehold {
     return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_HOUSEHOLD';
   }
+
+  String get numberOfStudentsLivingInHousehold {
+    return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_STUDENTS_LIVING_IN_HOUSEHOLD';
+  }
 }
 
 class IndividualDetailsShowcase {
@@ -1127,6 +1131,8 @@ class AcknowledgementSuccess {
 class HouseholdDetails {
   const HouseholdDetails();
 
+  String get schoolDetailsLabel => 'SCHOOL_DETAILS_LABEL';
+
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
@@ -1135,6 +1141,8 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+  String get noOfStudentsCountLabel => 'NO_OF_STUDENTS_COUNT_LABEL';
+
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 }

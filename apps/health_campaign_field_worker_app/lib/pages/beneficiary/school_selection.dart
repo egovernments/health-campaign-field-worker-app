@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -155,24 +154,5 @@ class SchoolSelectionPage extends StatelessWidget {
         validators: [Validators.required],
       ),
     });
-  }
-}
-
-class FacilityValueAccessor
-    extends ControlValueAccessor<FacilityModel, String> {
-  final List<FacilityModel> models;
-
-  FacilityValueAccessor(this.models);
-
-  @override
-  String? modelToViewValue(FacilityModel? modelValue) {
-    return modelValue?.name;
-  }
-
-  @override
-  FacilityModel? viewToModelValue(String? viewValue) {
-    return models.firstWhereOrNull(
-      (element) => element.name == viewValue || element.id == viewValue,
-    );
   }
 }

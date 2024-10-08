@@ -21,4 +21,9 @@ class _HouseholdDetailsShowcaseData {
     messageLocalizationKey:
         i18.householdDetailsShowcase.numberOfMembersLivingInHousehold,
   );
+
+  final numberOfStudentsLivingInHousehold = ShowcaseItemBuilder(
+    messageLocalizationKey:
+        i18.householdDetailsShowcase.numberOfStudentsLivingInHousehold,
+  );
 }

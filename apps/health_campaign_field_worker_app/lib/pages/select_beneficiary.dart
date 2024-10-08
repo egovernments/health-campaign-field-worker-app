@@ -60,10 +60,10 @@ class _SelectBeneficiaryTypeState
             if (selectedSchool != null) {
               context.router.push(
                 BeneficiaryRegistrationWrapperRoute(
-                  initialState: BeneficiaryRegistrationCreateState(
-                    searchQuery: '${context.boundary.code!}',
-                  ),
-                ),
+                    initialState: BeneficiaryRegistrationCreateState(
+                      searchQuery: '$selectedSchool',
+                    ),
+                    children: [SchoolDetailsRoute()]),
               );
             }
           },
@@ -73,7 +73,7 @@ class _SelectBeneficiaryTypeState
           label: BeneficiaryType.household.toValue(),
           onPressed: () async {
             context.router.push(
-              const SelectBeneficiaryRoute(),
+              SearchBeneficiaryRoute(),
             );
           },
         ),

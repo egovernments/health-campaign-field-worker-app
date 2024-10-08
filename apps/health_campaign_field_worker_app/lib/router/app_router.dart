@@ -27,6 +27,7 @@ import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart'
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
 import '../pages/beneficiary_registration/individual_details.dart';
+import '../pages/beneficiary_registration/school/school_details.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';
@@ -109,6 +110,7 @@ part 'app_router.gr.dart';
           children: [
             AutoRoute(page: IndividualDetailsPage, path: 'individual-details'),
             AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
+            AutoRoute(page: SchoolDetailsPage, path: 'school-details'),
             AutoRoute(
               page: HouseholdLocationPage,
               path: 'household-location',
