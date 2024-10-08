@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
+import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,12 @@ class _SchoolIndividualDetailsPageState
   DateTime now = DateTime.now();
   static const _disabilityTypeKey = 'disabilityType';
   static const _heightKey = 'height';
+  static const radioKey = "parentKnown";
   bool isHeadAgeValid = true;
+
+  bool showParent = false;
+
+  bool isSchool=true;
 
   @override
   Widget build(BuildContext context) {
@@ -642,6 +648,47 @@ class _SchoolIndividualDetailsPageState
                             },
                           ),
                         ),
+
+                        //TODO:
+                        if(isSchool)...[
+                        DigitRadioButtonList<KeyValue>(
+                          labelStyle: DigitTheme
+                              .instance.mobileTheme.textTheme.bodyLarge,
+                          labelText: localizations.translate(
+                              //i18.deliverIntervention.wasDrugWasted,
+                              "Parents Known?"),
+                          isEnabled: true,
+                          formControlName: radioKey,
+                          valueMapper: (value) {
+                            return localizations.translate(value.label);
+                          },
+                          options: Constants.yesNo,
+                          errorMessage: '',
+                          onValueChange: (value) {
+                            setState(() {
+                              showParent = value.key;
+                            });
+                          },
+                        ),
+                        DigitTextFormField(
+                          readOnly: !showParent,
+                          keyboardType: TextInputType.text,
+                          isRequired: showParent,
+                          formControlName: _heightKey,
+                          inputFormatters: const [
+                            // FilteringTextInputFormatter.allow(
+                            //   RegExp("[0-9]"),
+                            // ),
+                          ],
+                          label: localizations.translate(
+                              // i18.individualDetails.heightLabelText,
+                              "Name of the Parent"),
+                          validationMessages: {
+                            'required': (object) => localizations
+                                .translate(i18.common.corecommonRequired),
+                          },
+                        ),
+                        ],
                       ],
                     ),
                   ),
@@ -873,6 +920,9 @@ class _SchoolIndividualDetailsPageState
       ]),
       _disabilityTypeKey:
           FormControl<String>(value: disabilityType, validators: [
+        Validators.required,
+      ]),
+      radioKey: FormControl<KeyValue>(validators: [
         Validators.required,
       ]),
     });
