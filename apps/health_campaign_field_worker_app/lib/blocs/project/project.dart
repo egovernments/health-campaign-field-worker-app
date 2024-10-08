@@ -604,15 +604,13 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   FutureOr<int> _getBatchSize() async {
     try {
       final configs = await isar.appConfigurations.where().findAll();
-      List speedArray = [];
 
       final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
         bandWidthCheckModel: null,
       );
-      speedArray.add(speed);
-      double sum = speedArray.fold(0, (p, c) => p + c);
+
       int configuredBatchSize = getBatchSizeToBandwidth(
-        sum / speedArray.length,
+        speed,
         configs,
         isDownSync: true,
       );
