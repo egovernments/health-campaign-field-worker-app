@@ -48,7 +48,7 @@ Future<List<UserActionModel>> parseLocationData(List<String> logs) async {
         isSync: isSync,
         timestamp: timestamp,
         boundaryCode: LocationTrackerSingleton().boundaryName,
-        action: 'CLOSED_HOUSEHOLD',
+        action: 'LOCATION_CAPTURE',
         projectId: LocationTrackerSingleton().projectId,
         rowVersion: 1,
         auditDetails: AuditDetails(
@@ -71,13 +71,15 @@ Future<List<UserActionModel>> parseLocationData(List<String> logs) async {
 }
 
 triggerLocationTracker(String methodChannel,
-    {var locationUpdateInterval, var stopAfterTimestamp}) async {
+    {required var startAfterTimestamp,
+    required var locationUpdateInterval,
+    required var stopAfterTimestamp}) async {
   var platform = MethodChannel(methodChannel);
   try {
     await platform.invokeMethod('startLocationUpdates', {
+      "startAfterTimestamp": startAfterTimestamp,
       "interval": locationUpdateInterval,
-      "stopAfterTimestamp":
-          stopAfterTimestamp.toInt(), // Ensure this is passed as an integer
+      "stopAfterTimestamp": stopAfterTimestamp.toInt(),
     });
   } on PlatformException catch (e) {
     if (kDebugMode) {
@@ -103,7 +105,6 @@ class LocationTrackerSingleton {
 
   // Various properties related to the inventory.
   String _projectId = '';
-  UserModel? _loggedInUser;
   String? _loggedInUserUuid = '';
   String? _boundaryName = '';
   String? _tenantId = '';
@@ -112,11 +113,9 @@ class LocationTrackerSingleton {
   void setInitialData({
     String? loggedInUserUuid,
     required String projectId,
-    UserModel? loggedInUser,
   }) {
     _projectId = projectId;
     _loggedInUserUuid = loggedInUserUuid;
-    _loggedInUser = loggedInUser;
   }
 
   void setBoundaryName({required String boundaryName}) {
@@ -132,5 +131,4 @@ class LocationTrackerSingleton {
   get loggedInUserUuid => _loggedInUserUuid;
   get boundaryName => _boundaryName;
   get tenantId => _tenantId;
-  UserModel? get loggedInUser => _loggedInUser;
 }

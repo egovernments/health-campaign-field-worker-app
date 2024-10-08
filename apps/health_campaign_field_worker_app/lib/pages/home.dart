@@ -21,8 +21,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:isar/isar.dart';
-import 'package:location_tracker/bloc/location_tracker_service.dart';
 import 'package:location_tracker/utils/utils.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
@@ -477,14 +475,6 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.table_chart,
           label: i18.home.db,
           onPressed: () async {
-            triggerLocationTracker('com.digit.location_tracker',
-                locationUpdateInterval: 60000,
-                stopAfterTimestamp: DateTime.now()
-                    .add(const Duration(days: 4))
-                    .millisecondsSinceEpoch);
-            Isar isar = await Constants().isar;
-            LocationTrackerService()
-                .processLocationData(120, isar, context.loggedInUserUuid);
             Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (context) => DriftDbViewer(
@@ -766,9 +756,9 @@ void setPackagesSingleton(BuildContext context) {
               entityName: DashboardResponseModel.schemaName,
             ));
         LocationTrackerSingleton().setInitialData(
-            projectId: context.projectId,
-            loggedInUserUuid: context.loggedInUserUuid,
-            loggedInUser: context.loggedInUserModel);
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+        );
       });
 }
 

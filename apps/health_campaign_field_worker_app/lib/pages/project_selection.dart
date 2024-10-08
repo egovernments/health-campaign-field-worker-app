@@ -2,13 +2,18 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:isar/isar.dart';
+import 'package:location_tracker/location_tracker.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';
+import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
+import '../utils/constants.dart';
+import '../utils/extensions/extensions.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
@@ -141,6 +146,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
+                  // triggerLocationTracking(state.selectedProject!);
                   navigateToBoundary(boundary);
                 } else {
                   DigitToast.show(
@@ -230,12 +236,32 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
     try {
       await boundaryBloc.stream
           .firstWhere((element) => element.boundaryList.isNotEmpty);
-      context.router.replaceAll([
-        HomeRoute(),
-        BoundarySelectionRoute(),
-      ]);
+      if (mounted) {
+        context.router.replaceAll([
+          HomeRoute(),
+          BoundarySelectionRoute(),
+        ]);
+      }
     } catch (e) {
       debugPrint('error $e');
+    }
+  }
+
+  void triggerLocationTracking(ProjectModel project) async {
+    triggerLocationTracker('com.digit.location_tracker',
+        startAfterTimestamp: project.startDate ?? DateTime.now(),
+        locationUpdateInterval: 60000,
+        stopAfterTimestamp:
+            project.endDate ?? DateTime.now().add(const Duration(hours: 8)));
+    Isar isar = await Constants().isar;
+    final appConfiguration = await isar.appConfigurations.where().findAll();
+
+    if (mounted) {
+      LocationTrackerService().processLocationData(
+          interval:
+              appConfiguration.first.backgroundServiceConfig!.serviceInterval!,
+          createdBy: context.loggedInUserUuid,
+          isar: isar);
     }
   }
 }

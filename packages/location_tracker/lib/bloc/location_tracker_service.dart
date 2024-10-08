@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,15 +10,31 @@ import 'package:isar/isar.dart';
 import 'package:location_tracker/utils/utils.dart';
 
 class LocationTrackerService {
-  processLocationData(int? interval, Isar isar, String createdBy) async {
-    var lastModified;
-    try {
-      if (interval != null) {
-        makePeriodicTimer(Duration(seconds: interval), (timer) async {
-          final file = File(await readLocationFileInBackgroundService());
+  // Singleton instance
+  static final LocationTrackerService _instance =
+      LocationTrackerService._internal();
 
+  // Factory constructor
+  factory LocationTrackerService() {
+    return _instance;
+  }
+
+  // Private constructor
+  LocationTrackerService._internal();
+
+  Timer? _timer;
+  DateTime? lastModified;
+
+  void processLocationData(
+      {required int interval,
+      required Isar isar,
+      required String createdBy}) async {
+    try {
+      _timer ??= makePeriodicTimer(Duration(seconds: interval), (timer) async {
+        final file = File(await readLocationFileInBackgroundService());
+        if (file.existsSync()) {
           final currentModified = await file.lastModified();
-          if (lastModified == null || currentModified.isAfter(lastModified)) {
+          if (lastModified == null || currentModified.isAfter(lastModified!)) {
             lastModified = currentModified;
             final f = await file.readAsString();
             final logs = f.characters
@@ -32,22 +49,23 @@ class LocationTrackerService {
 
             List<UserActionModel> locationList = await parseLocationData(logs);
 
-            final oplog = OpLogEntry(
-              locationList.first,
-              DataOperation.create,
-              createdAt: DateTime.now(),
-              createdBy: createdBy,
-              clientReferenceId: IdGen.instance.identifier,
-              type: DataModelType.userLocation,
-            ).oplog;
-
-            isar.writeTxnSync(() {
-              isar.opLogs.putSync(oplog);
-            });
+            for (var location in locationList) {
+              final oplog = OpLogEntry(
+                location,
+                DataOperation.create,
+                createdAt: DateTime.now(),
+                createdBy: createdBy,
+                clientReferenceId: IdGen.instance.identifier,
+                type: DataModelType.userLocation,
+              ).oplog;
+              isar.writeTxnSync(() {
+                isar.opLogs.putSync(oplog);
+              });
+            }
           }
-          await file.delete();
-        });
-      }
+          file.deleteSync();
+        }
+      });
     } catch (e) {
       if (kDebugMode) {
         print('oplog entry error $e');
@@ -69,7 +87,9 @@ class LocationTrackerService {
         // Add the model to the list
         userActionModels.add(model);
       } catch (e) {
-        print('Error parsing log: $log, error: $e');
+        if (kDebugMode) {
+          print('Error parsing log: $log, error: $e');
+        }
       }
     }
 
