@@ -55,8 +55,8 @@ class _SchoolIndividualDetailsPageState
   static const _disabilityTypeKey = 'disabilityType';
   static const _heightKey = 'height';
   static const radioKey = "parentKnown";
-   static const _type = 'type';
-   static const _schoolName = 'schoolName';
+  static const _type = 'type';
+  static const _schoolName = 'schoolName';
 
   static const _parentknownKey = "parentknownKey";
 
@@ -70,7 +70,7 @@ class _SchoolIndividualDetailsPageState
     final router = context.router;
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
- 
+
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
@@ -154,6 +154,7 @@ class _SchoolIndividualDetailsPageState
                                     context,
                                     form: form,
                                     oldIndividual: null,
+                                    schoolName: searchQuery,
                                   );
 
                                   final locationBloc =
@@ -587,74 +588,76 @@ class _SchoolIndividualDetailsPageState
                             ),
                           ],
                         ),
-                          if (!widget.isHeadOfHousehold) ...[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            kPadding / 2,
-                            0,
-                            kPadding / 2,
-                            0,
-                          ),
-                          child: DigitTextFormField(
-                            keyboardType: TextInputType.number,
-                            isRequired: true,
-                            formControlName: _heightKey,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.allow(
-                                RegExp("[0-9]"),
-                              ),
-                            ],
-                            label: localizations.translate(
-                              i18.individualDetails.heightLabelText,
+                        if (!widget.isHeadOfHousehold) ...[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              kPadding / 2,
+                              0,
+                              kPadding / 2,
+                              0,
                             ),
-                            maxLength: 3,
-                            validationMessages: {
-                              'required': (object) => localizations
-                                  .translate(i18.common.corecommonRequired),
-                            },
-                          ),
-                        ),
-                      
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                            kPadding / 2,
-                            0,
-                            kPadding / 2,
-                            0,
-                          ),
-                          child: BlocBuilder<AppInitializationBloc,
-                              AppInitializationState>(
-                            builder: (context, state) {
-                              if (state is! AppInitialized) {
-                                return const Offstage();
-                              }
-
-                              final disabilityTypes =
-                                  state.appConfiguration.disabilityTypes ??
-                                      <DisabilityTypes>[];
-
-                              return DigitReactiveDropdown<String>(
-                                label: localizations.translate(
-                                  i18.deliverIntervention.disabilityLabel,
+                            child: DigitTextFormField(
+                              keyboardType: TextInputType.number,
+                              isRequired: true,
+                              formControlName: _heightKey,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.allow(
+                                  RegExp("[0-9]"),
                                 ),
-                                isRequired: true,
-                                valueMapper: (value) =>
-                                    localizations.translate(value),
-                                initialValue: disabilityTypes.firstOrNull?.code,
-                                menuItems: disabilityTypes.map((e) {
-                                  return e.code;
-                                }).toList(),
-                                formControlName: _disabilityTypeKey,
-                                validationMessages: {
-                                  'required': (object) => localizations
-                                      .translate(i18.common.corecommonRequired),
-                                },
-                              );
-                            },
+                              ],
+                              label: localizations.translate(
+                                i18.individualDetails.heightLabelText,
+                              ),
+                              maxLength: 3,
+                              validationMessages: {
+                                'required': (object) => localizations
+                                    .translate(i18.common.corecommonRequired),
+                              },
+                            ),
                           ),
-                        ),
-                        //TODO:
-                        
+
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                              kPadding / 2,
+                              0,
+                              kPadding / 2,
+                              0,
+                            ),
+                            child: BlocBuilder<AppInitializationBloc,
+                                AppInitializationState>(
+                              builder: (context, state) {
+                                if (state is! AppInitialized) {
+                                  return const Offstage();
+                                }
+
+                                final disabilityTypes =
+                                    state.appConfiguration.disabilityTypes ??
+                                        <DisabilityTypes>[];
+
+                                return DigitReactiveDropdown<String>(
+                                  label: localizations.translate(
+                                    i18.deliverIntervention.disabilityLabel,
+                                  ),
+                                  isRequired: true,
+                                  valueMapper: (value) =>
+                                      localizations.translate(value),
+                                  initialValue:
+                                      disabilityTypes.firstOrNull?.code,
+                                  menuItems: disabilityTypes.map((e) {
+                                    return e.code;
+                                  }).toList(),
+                                  formControlName: _disabilityTypeKey,
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                            i18.common.corecommonRequired),
+                                  },
+                                );
+                              },
+                            ),
+                          ),
+                          //TODO:
+
                           DigitRadioButtonList<KeyValue>(
                             labelStyle: DigitTheme
                                 .instance.mobileTheme.textTheme.bodyLarge,
@@ -711,6 +714,7 @@ class _SchoolIndividualDetailsPageState
     BuildContext context, {
     required FormGroup form,
     IndividualModel? oldIndividual,
+    String? schoolName,
   }) {
     final dob = form.control(_dobKey).value as DateTime?;
     String? dobString;
@@ -778,9 +782,13 @@ class _SchoolIndividualDetailsPageState
       ),
     );
 
-    final disabilityType = !(widget.isHeadOfHousehold)? form.control(_disabilityTypeKey).value:null;
+    final disabilityType = !(widget.isHeadOfHousehold)
+        ? form.control(_disabilityTypeKey).value
+        : null;
 
-    final height = !(widget.isHeadOfHousehold)?form.control(_heightKey).value as String:'';
+    final height = !(widget.isHeadOfHousehold)
+        ? form.control(_heightKey).value as String
+        : '';
 
     individual = individual.copyWith(
       name: name.copyWith(
@@ -816,19 +824,23 @@ class _SchoolIndividualDetailsPageState
                   _type,
                   "SCHOOL",
                 ),
-                 AdditionalField(
-                  _schoolName,
-                  ((form.control(_parentknownKey).value as String)??"").trim(),
+                AdditionalField(
+                  "parentName",
+                  ((form.control(_parentknownKey).value as String) ?? "")
+                      .trim(),
                 ),
               ],
             )
           : IndividualAdditionalFields(
               version: 1,
               fields: [
-               
                 const AdditionalField(
                   _type,
                   "SCHOOL",
+                ),
+                AdditionalField(
+                  _schoolName,
+                  schoolName??"",
                 ),
               ],
             ),
@@ -933,7 +945,7 @@ class _SchoolIndividualDetailsPageState
               },
             ),
       ),
-      
+
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
         CustomValidator.validMobileNumber,
@@ -963,45 +975,42 @@ class _SchoolIndividualDetailsPageState
       //   value: "",
       // ),
 
-     if (!widget.isHeadOfHousehold)
-      ..._buildHouseholdFields(height, disabilityType),
-      
+      if (!widget.isHeadOfHousehold)
+        ..._buildHouseholdFields(height, disabilityType),
     });
-    
   }
 
   Map<String, FormControl<Object?>> _buildHouseholdFields(
-  String? height,
-  String? disabilityType,
-) {
-  return {
+    String? height,
+    String? disabilityType,
+  ) {
+    return {
+      _heightKey: _buildFormControl<String>(
+        value: height,
+        validators: [Validators.required],
+      ),
+      _disabilityTypeKey: _buildFormControl<String>(
+        value: disabilityType,
+        validators: [Validators.required],
+      ),
+      radioKey: _buildFormControl<KeyValue>(
+        value: Constants.yesNo[1],
+        validators: [Validators.required],
+      ),
+      _parentknownKey: _buildFormControl<String>(
+        value: "",
+        validators: [Validators.required],
+      ),
+    };
+  }
 
-    _heightKey: _buildFormControl<String>(
-      value: height,
-      validators: [Validators.required],
-    ),
-    
-    _disabilityTypeKey: _buildFormControl<String>(
-      value: disabilityType,
-      validators: [Validators.required],
-    ),
-    radioKey: _buildFormControl<KeyValue>(
-      value: Constants.yesNo[1],
-      validators: [Validators.required],
-    ),
-    _parentknownKey: _buildFormControl<String>(
-      value: "",
-      validators: [Validators.required],
-    ),
-  };
-}
-FormControl<T> _buildFormControl<T>({
-  required T? value,
-  required List<ValidatorFunction> validators,
-}) {
-  return FormControl<T>(
-    value: value,
-    validators: validators,
-  );
-}
+  FormControl<T> _buildFormControl<T>({
+    required T? value,
+    required List<ValidatorFunction> validators,
+  }) {
+    return FormControl<T>(
+      value: value,
+      validators: validators,
+    );
+  }
 }
