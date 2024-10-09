@@ -78,6 +78,10 @@ _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
           ? null
           : SymptomsTypesSecondaryWrapperModel.fromJson(
               json['HCM-SYMPTOMS-TYPES'] as Map<String, dynamic>),
+      symptomsTypesSchisto: json['HCM-SYMPTOMS-TYPES-SCHISTO'] == null
+          ? null
+          : SymptomsTypesSecondaryWrapperModelSchisto.fromJson(
+              json['HCM-SYMPTOMS-TYPES-SCHISTO'] as Map<String, dynamic>),
       referralReasons: json['HCM-REFERRAL-REASONS'] == null
           ? null
           : ReferralReasonsWrapperModel.fromJson(
@@ -86,6 +90,12 @@ _$AppConfigPrimaryWrapperModelImpl _$$AppConfigPrimaryWrapperModelImplFromJson(
           ? null
           : IneligibilityReasonsWrapperModel.fromJson(
               json['HCM-INELIGIBILITY-REASONS'] as Map<String, dynamic>),
+      ineligibilityReasonsSchisto:
+          json['HCM-INELIGIBILITY-REASONS-SCHISTO'] == null
+              ? null
+              : IneligibilityReasonsWrapperModelSchisto.fromJson(
+                  json['HCM-INELIGIBILITY-REASONS-SCHISTO']
+                      as Map<String, dynamic>),
       disabilityTypes: json['HCM-DISABILITY-TYPES'] == null
           ? null
           : DisabilityTypesWrapperModel.fromJson(
@@ -98,8 +108,10 @@ Map<String, dynamic> _$$AppConfigPrimaryWrapperModelImplToJson(
       'HCM-FIELD-APP-CONFIG': instance.appConfig,
       'module-version': instance.rowVersions,
       'HCM-SYMPTOMS-TYPES': instance.symptomsTypes,
+      'HCM-SYMPTOMS-TYPES-SCHISTO': instance.symptomsTypesSchisto,
       'HCM-REFERRAL-REASONS': instance.referralReasons,
       'HCM-INELIGIBILITY-REASONS': instance.ineligibilityReasons,
+      'HCM-INELIGIBILITY-REASONS-SCHISTO': instance.ineligibilityReasonsSchisto,
       'HCM-DISABILITY-TYPES': instance.disabilityTypes,
     };
 

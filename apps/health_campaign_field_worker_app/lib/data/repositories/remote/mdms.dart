@@ -286,6 +286,16 @@ class MdmsRepository {
       return symptomTypes;
     }).toList();
 
+    appConfiguration.symptomsTypesSchisto =
+        result.symptomsTypesSchisto?.symptomsTypeSchistoList?.map((e) {
+      final symptomTypes = SymptomsTypes()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return symptomTypes;
+    }).toList();
+
     appConfiguration.referralReasons =
         result.referralReasons?.referralReasonList?.map((e) {
       final reasonTypes = ReferralReasons()
@@ -298,6 +308,17 @@ class MdmsRepository {
 
     appConfiguration.ineligibilityReasons =
         result.ineligibilityReasons?.ineligibilityReasonsList?.map((e) {
+      final reasonTypes = IneligibilityReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
+    appConfiguration.ineligibilityReasonsSchisto = result
+        .ineligibilityReasonsSchisto?.ineligibilityReasonsSchistoList
+        ?.map((e) {
       final reasonTypes = IneligibilityReasons()
         ..name = e.name
         ..code = e.code

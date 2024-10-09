@@ -188,6 +188,188 @@ abstract class _IneligibilityReasonsWrapperModel
       get copyWith => throw _privateConstructorUsedError;
 }
 
+IneligibilityReasonsWrapperModelSchisto
+    _$IneligibilityReasonsWrapperModelSchistoFromJson(
+        Map<String, dynamic> json) {
+  return _IneligibilityReasonsWrapperModelSchisto.fromJson(json);
+}
+
+/// @nodoc
+mixin _$IneligibilityReasonsWrapperModelSchisto {
+  @JsonKey(name: 'ineligibilityReasonsSchisto')
+  List<IneligibilityReasonType>? get ineligibilityReasonsSchistoList =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $IneligibilityReasonsWrapperModelSchistoCopyWith<
+          IneligibilityReasonsWrapperModelSchisto>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $IneligibilityReasonsWrapperModelSchistoCopyWith<$Res> {
+  factory $IneligibilityReasonsWrapperModelSchistoCopyWith(
+          IneligibilityReasonsWrapperModelSchisto value,
+          $Res Function(IneligibilityReasonsWrapperModelSchisto) then) =
+      _$IneligibilityReasonsWrapperModelSchistoCopyWithImpl<$Res,
+          IneligibilityReasonsWrapperModelSchisto>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'ineligibilityReasonsSchisto')
+      List<IneligibilityReasonType>? ineligibilityReasonsSchistoList});
+}
+
+/// @nodoc
+class _$IneligibilityReasonsWrapperModelSchistoCopyWithImpl<$Res,
+        $Val extends IneligibilityReasonsWrapperModelSchisto>
+    implements $IneligibilityReasonsWrapperModelSchistoCopyWith<$Res> {
+  _$IneligibilityReasonsWrapperModelSchistoCopyWithImpl(
+      this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ineligibilityReasonsSchistoList = freezed,
+  }) {
+    return _then(_value.copyWith(
+      ineligibilityReasonsSchistoList: freezed ==
+              ineligibilityReasonsSchistoList
+          ? _value.ineligibilityReasonsSchistoList
+          : ineligibilityReasonsSchistoList // ignore: cast_nullable_to_non_nullable
+              as List<IneligibilityReasonType>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$IneligibilityReasonsWrapperModelSchistoImplCopyWith<$Res>
+    implements $IneligibilityReasonsWrapperModelSchistoCopyWith<$Res> {
+  factory _$$IneligibilityReasonsWrapperModelSchistoImplCopyWith(
+          _$IneligibilityReasonsWrapperModelSchistoImpl value,
+          $Res Function(_$IneligibilityReasonsWrapperModelSchistoImpl) then) =
+      __$$IneligibilityReasonsWrapperModelSchistoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'ineligibilityReasonsSchisto')
+      List<IneligibilityReasonType>? ineligibilityReasonsSchistoList});
+}
+
+/// @nodoc
+class __$$IneligibilityReasonsWrapperModelSchistoImplCopyWithImpl<$Res>
+    extends _$IneligibilityReasonsWrapperModelSchistoCopyWithImpl<$Res,
+        _$IneligibilityReasonsWrapperModelSchistoImpl>
+    implements _$$IneligibilityReasonsWrapperModelSchistoImplCopyWith<$Res> {
+  __$$IneligibilityReasonsWrapperModelSchistoImplCopyWithImpl(
+      _$IneligibilityReasonsWrapperModelSchistoImpl _value,
+      $Res Function(_$IneligibilityReasonsWrapperModelSchistoImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? ineligibilityReasonsSchistoList = freezed,
+  }) {
+    return _then(_$IneligibilityReasonsWrapperModelSchistoImpl(
+      ineligibilityReasonsSchistoList: freezed ==
+              ineligibilityReasonsSchistoList
+          ? _value._ineligibilityReasonsSchistoList
+          : ineligibilityReasonsSchistoList // ignore: cast_nullable_to_non_nullable
+              as List<IneligibilityReasonType>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$IneligibilityReasonsWrapperModelSchistoImpl
+    implements _IneligibilityReasonsWrapperModelSchisto {
+  const _$IneligibilityReasonsWrapperModelSchistoImpl(
+      {@JsonKey(name: 'ineligibilityReasonsSchisto')
+      final List<IneligibilityReasonType>? ineligibilityReasonsSchistoList})
+      : _ineligibilityReasonsSchistoList = ineligibilityReasonsSchistoList;
+
+  factory _$IneligibilityReasonsWrapperModelSchistoImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$IneligibilityReasonsWrapperModelSchistoImplFromJson(json);
+
+  final List<IneligibilityReasonType>? _ineligibilityReasonsSchistoList;
+  @override
+  @JsonKey(name: 'ineligibilityReasonsSchisto')
+  List<IneligibilityReasonType>? get ineligibilityReasonsSchistoList {
+    final value = _ineligibilityReasonsSchistoList;
+    if (value == null) return null;
+    if (_ineligibilityReasonsSchistoList is EqualUnmodifiableListView)
+      return _ineligibilityReasonsSchistoList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'IneligibilityReasonsWrapperModelSchisto(ineligibilityReasonsSchistoList: $ineligibilityReasonsSchistoList)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$IneligibilityReasonsWrapperModelSchistoImpl &&
+            const DeepCollectionEquality().equals(
+                other._ineligibilityReasonsSchistoList,
+                _ineligibilityReasonsSchistoList));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_ineligibilityReasonsSchistoList));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$IneligibilityReasonsWrapperModelSchistoImplCopyWith<
+          _$IneligibilityReasonsWrapperModelSchistoImpl>
+      get copyWith =>
+          __$$IneligibilityReasonsWrapperModelSchistoImplCopyWithImpl<
+              _$IneligibilityReasonsWrapperModelSchistoImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$IneligibilityReasonsWrapperModelSchistoImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _IneligibilityReasonsWrapperModelSchisto
+    implements IneligibilityReasonsWrapperModelSchisto {
+  const factory _IneligibilityReasonsWrapperModelSchisto(
+          {@JsonKey(name: 'ineligibilityReasonsSchisto')
+          final List<IneligibilityReasonType>?
+              ineligibilityReasonsSchistoList}) =
+      _$IneligibilityReasonsWrapperModelSchistoImpl;
+
+  factory _IneligibilityReasonsWrapperModelSchisto.fromJson(
+          Map<String, dynamic> json) =
+      _$IneligibilityReasonsWrapperModelSchistoImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'ineligibilityReasonsSchisto')
+  List<IneligibilityReasonType>? get ineligibilityReasonsSchistoList;
+  @override
+  @JsonKey(ignore: true)
+  _$$IneligibilityReasonsWrapperModelSchistoImplCopyWith<
+          _$IneligibilityReasonsWrapperModelSchistoImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 IneligibilityReasonType _$IneligibilityReasonTypeFromJson(
     Map<String, dynamic> json) {
   return _IneligibilityReasonType.fromJson(json);

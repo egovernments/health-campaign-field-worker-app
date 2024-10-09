@@ -95,6 +95,12 @@ class AppInitializationBloc
                   ],
                 ),
                 const MdmsModuleDetailModel(
+                  moduleName: 'HCM-SYMPTOMS-TYPES-SCHISTO',
+                  masterDetails: [
+                    MdmsMasterDetailModel('symptomsTypesSchisto'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
                   moduleName: 'HCM-REFERRAL-REASONS',
                   masterDetails: [
                     MdmsMasterDetailModel('referralReasons'),
@@ -104,6 +110,12 @@ class AppInitializationBloc
                   moduleName: 'HCM-INELIGIBILITY-REASONS',
                   masterDetails: [
                     MdmsMasterDetailModel('ineligibilityReasons'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
+                  moduleName: 'HCM-INELIGIBILITY-REASONS-SCHISTO',
+                  masterDetails: [
+                    MdmsMasterDetailModel('ineligibilityReasonsSchisto'),
                   ],
                 ),
                 const MdmsModuleDetailModel(

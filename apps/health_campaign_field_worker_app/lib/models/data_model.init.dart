@@ -139,6 +139,7 @@ void initializeMappers() {
   p30.ProjectTypeSearchModelMapper.ensureInitialized();
   p30.ProjectTypeModelMapper.ensureInitialized();
   p30.ProjectTypeAdditionalFieldsMapper.ensureInitialized();
+  p30.ProjectTypesEnumMapper.ensureInitialized();
   p31.ReferralSearchModelMapper.ensureInitialized();
   p31.ReferralModelMapper.ensureInitialized();
   p31.ReferralAdditionalFieldsMapper.ensureInitialized();

@@ -76,17 +76,24 @@ class PerformannceSummaryReportBloc
       variantIdVsProduct[productVariant.sku] = productVariant.id;
     }
 
-    var albendazoleResourceKey = variantIdVsProduct.keys
-        .where((element) => element!
-            .toUpperCase()
-            .contains(BeneficiaryType.albendazole.name.toUpperCase()))
-        .first;
+    var albendazoleResourceKey =
+        (event.projectCode == ProjectTypesEnum.schisto.toValue())
+            ? variantIdVsProduct.keys.first
+            : variantIdVsProduct.keys
+                .where((element) => element!
+                    .toUpperCase()
+                    .contains(BeneficiaryType.albendazole.name.toUpperCase()))
+                .first;
     var albendazoleResourceId = variantIdVsProduct[albendazoleResourceKey];
-    var ivermectinResourceKey = variantIdVsProduct.keys
-        .where((element) => element!
-            .toUpperCase()
-            .contains(BeneficiaryType.ivermectin.name.toUpperCase()))
-        .first;
+
+    var ivermectinResourceKey =
+        (event.projectCode == ProjectTypesEnum.schisto.toValue())
+            ? ""
+            : variantIdVsProduct.keys
+                .where((element) => element!
+                    .toUpperCase()
+                    .contains(BeneficiaryType.ivermectin.name.toUpperCase()))
+                .first;
     var ivermectinResourceId = variantIdVsProduct[ivermectinResourceKey];
 
     for (var element in householdList) {
@@ -119,12 +126,13 @@ class PerformannceSummaryReportBloc
     availableDates.addAll(dayVsTaskListMap.keys.toSet());
 
     Map<String, PerformanceSummary> dayVsDataCount = {};
-    Map<String, Map<String?, int>> dayVsDrugsQuantityMap = {};
+    Map<String, Map<String?, dynamic>> dayVsDrugsQuantityMap = {};
 
     for (var entry in dayVsTaskListMap.entries) {
       var date = entry.key;
       var taskListForADate = entry.value;
       getDrugsVsQuantityMap(
+        event.projectCode,
         taskListForADate,
         date,
         dayVsDrugsQuantityMap,
@@ -151,19 +159,37 @@ class PerformannceSummaryReportBloc
 
       // denominator is fixed here
       // assumption here is drugOne Albendazole and drugTwo is Ivermectin
-      var drugOne = 0;
-      var drugTwo = 0;
+      double drugOne = 0;
+      double drugTwo = 0;
       if (dayVsDrugsQuantityMap.containsKey(date) &&
           dayVsDrugsQuantityMap[date] != null &&
-          dayVsDrugsQuantityMap[date]!.containsKey(albendazoleResourceId)) {
-        drugOne = dayVsDrugsQuantityMap[date]![albendazoleResourceId] ?? 0;
+          dayVsDrugsQuantityMap[date]!.containsKey(
+            (event.projectCode == ProjectTypesEnum.schisto.toValue())
+                ? "${albendazoleResourceId}used"
+                : albendazoleResourceId,
+          )) {
+        drugOne = dayVsDrugsQuantityMap[date]![
+                (event.projectCode == ProjectTypesEnum.schisto.toValue())
+                    ? "${albendazoleResourceId}used"
+                    : albendazoleResourceId] ??
+            0;
       }
       if (dayVsDrugsQuantityMap.containsKey(date) &&
           dayVsDrugsQuantityMap[date] != null &&
-          dayVsDrugsQuantityMap[date]!.containsKey(ivermectinResourceId)) {
-        drugTwo = dayVsDrugsQuantityMap[date]![ivermectinResourceId] ?? 0;
+          dayVsDrugsQuantityMap[date]!.containsKey(
+            (event.projectCode == ProjectTypesEnum.schisto.toValue())
+                ? "${albendazoleResourceId}wasted"
+                : ivermectinResourceId,
+          )) {
+        drugTwo = dayVsDrugsQuantityMap[date]![
+                (event.projectCode == ProjectTypesEnum.schisto.toValue())
+                    ? "${albendazoleResourceId}wasted"
+                    : ivermectinResourceId] ??
+            0;
       }
+
       final treatedPercentage = (totalTaskForADay / 75) * 100;
+
       //Rounded treatedPercentage to 2 degree
       PerformanceSummary summary = PerformanceSummary(
         treatedPercentage: double.parse(treatedPercentage.toStringAsFixed(2)),
@@ -181,12 +207,13 @@ class PerformannceSummaryReportBloc
   }
 
   void getDrugsVsQuantityMap(
+    String projectCode,
     List<TaskModel> taskList,
     String date,
-    Map<String, Map<String?, int>> dayVsDrugsQuantityMap,
+    Map<String, Map<String?, dynamic>> dayVsDrugsQuantityMap,
   ) {
     const quantityWastedKey = 'quantityWasted';
-    Map<String?, int> resourceVsQuantity = {};
+    Map<String?, double> resourceVsQuantity = {};
     List<TaskResourceModel> taskResourceList = [];
 
     for (var task in taskList) {
@@ -196,14 +223,16 @@ class PerformannceSummaryReportBloc
       taskResourceList.addAll(task.resources!.toList());
     }
     for (var resource in taskResourceList) {
-      var quantityDistributed = 0;
-      var quantityWasted = 0;
+      double quantityDistributed = 0;
+      double quantityWasted = 0;
 
       //todo remove the double and int checks once , data type is finalized
       var resourceId = resource.productVariantId;
       quantityDistributed = quantityDistributed +
           (resource.quantity!.contains(".")
-              ? double.parse(resource.quantity ?? "0.0").toInt()
+              ? (projectCode == ProjectTypesEnum.schisto.toValue())
+                  ? double.parse(resource.quantity ?? "0.0")
+                  : double.parse(resource.quantity ?? "0.0").toInt()
               : int.parse(resource.quantity ?? "0"));
       if (resource.additionalFields != null) {
         var value = resource.additionalFields!.fields
@@ -213,15 +242,31 @@ class PerformannceSummaryReportBloc
             (value == null || value == "null"
                 ? 0
                 : (value.toString().contains(".")
-                    ? double.parse(value.toString()).toInt()
+                    ? (projectCode == ProjectTypesEnum.schisto.toValue())
+                        ? double.parse(value.toString())
+                        : double.parse(value.toString()).toInt()
                     : int.parse(value.toString())));
       }
       final quantityUsed = quantityDistributed + quantityWasted;
-      resourceVsQuantity.update(
-        resourceId,
-        (existingValue) => existingValue + quantityUsed,
-        ifAbsent: () => quantityUsed,
-      );
+
+      if (!(projectCode == ProjectTypesEnum.schisto.toValue())) {
+        resourceVsQuantity.update(
+          resourceId,
+          (existingValue) => existingValue + quantityUsed,
+          ifAbsent: () => quantityUsed,
+        );
+      } else {
+        resourceVsQuantity.update(
+          "${resourceId}used",
+          (existingValue) => existingValue + quantityDistributed,
+          ifAbsent: () => quantityDistributed,
+        );
+        resourceVsQuantity.update(
+          "${resourceId}wasted",
+          (existingValue) => existingValue + quantityWasted,
+          ifAbsent: () => quantityWasted,
+        );
+      }
     }
     dayVsDrugsQuantityMap[date] = resourceVsQuantity;
   }
@@ -238,6 +283,7 @@ class PerformannceSummaryReportBloc
 class PerformanceSummaryReportEvent with _$PerformanceSummaryReportEvent {
   const factory PerformanceSummaryReportEvent.loadData({
     required String userId,
+    required String projectCode,
   }) = PerformanceSummaryReportLoadDataEvent;
 
   const factory PerformanceSummaryReportEvent.loading() =

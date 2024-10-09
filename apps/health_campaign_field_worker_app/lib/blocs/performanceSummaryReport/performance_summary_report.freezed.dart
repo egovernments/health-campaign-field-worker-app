@@ -18,19 +18,19 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$PerformanceSummaryReportEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String userId) loadData,
+    required TResult Function(String userId, String projectCode) loadData,
     required TResult Function() loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId)? loadData,
+    TResult? Function(String userId, String projectCode)? loadData,
     TResult? Function()? loading,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId)? loadData,
+    TResult Function(String userId, String projectCode)? loadData,
     TResult Function()? loading,
     required TResult orElse(),
   }) =>
@@ -86,7 +86,7 @@ abstract class _$$PerformanceSummaryReportLoadDataEventImplCopyWith<$Res> {
           $Res Function(_$PerformanceSummaryReportLoadDataEventImpl) then) =
       __$$PerformanceSummaryReportLoadDataEventImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({String userId});
+  $Res call({String userId, String projectCode});
 }
 
 /// @nodoc
@@ -103,11 +103,16 @@ class __$$PerformanceSummaryReportLoadDataEventImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? userId = null,
+    Object? projectCode = null,
   }) {
     return _then(_$PerformanceSummaryReportLoadDataEventImpl(
       userId: null == userId
           ? _value.userId
           : userId // ignore: cast_nullable_to_non_nullable
+              as String,
+      projectCode: null == projectCode
+          ? _value.projectCode
+          : projectCode // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -117,14 +122,17 @@ class __$$PerformanceSummaryReportLoadDataEventImplCopyWithImpl<$Res>
 
 class _$PerformanceSummaryReportLoadDataEventImpl
     implements PerformanceSummaryReportLoadDataEvent {
-  const _$PerformanceSummaryReportLoadDataEventImpl({required this.userId});
+  const _$PerformanceSummaryReportLoadDataEventImpl(
+      {required this.userId, required this.projectCode});
 
   @override
   final String userId;
+  @override
+  final String projectCode;
 
   @override
   String toString() {
-    return 'PerformanceSummaryReportEvent.loadData(userId: $userId)';
+    return 'PerformanceSummaryReportEvent.loadData(userId: $userId, projectCode: $projectCode)';
   }
 
   @override
@@ -132,11 +140,13 @@ class _$PerformanceSummaryReportLoadDataEventImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$PerformanceSummaryReportLoadDataEventImpl &&
-            (identical(other.userId, userId) || other.userId == userId));
+            (identical(other.userId, userId) || other.userId == userId) &&
+            (identical(other.projectCode, projectCode) ||
+                other.projectCode == projectCode));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, userId);
+  int get hashCode => Object.hash(runtimeType, userId, projectCode);
 
   @JsonKey(ignore: true)
   @override
@@ -149,30 +159,30 @@ class _$PerformanceSummaryReportLoadDataEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String userId) loadData,
+    required TResult Function(String userId, String projectCode) loadData,
     required TResult Function() loading,
   }) {
-    return loadData(userId);
+    return loadData(userId, projectCode);
   }
 
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId)? loadData,
+    TResult? Function(String userId, String projectCode)? loadData,
     TResult? Function()? loading,
   }) {
-    return loadData?.call(userId);
+    return loadData?.call(userId, projectCode);
   }
 
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId)? loadData,
+    TResult Function(String userId, String projectCode)? loadData,
     TResult Function()? loading,
     required TResult orElse(),
   }) {
     if (loadData != null) {
-      return loadData(userId);
+      return loadData(userId, projectCode);
     }
     return orElse();
   }
@@ -214,10 +224,11 @@ class _$PerformanceSummaryReportLoadDataEventImpl
 abstract class PerformanceSummaryReportLoadDataEvent
     implements PerformanceSummaryReportEvent {
   const factory PerformanceSummaryReportLoadDataEvent(
-          {required final String userId}) =
+          {required final String userId, required final String projectCode}) =
       _$PerformanceSummaryReportLoadDataEventImpl;
 
   String get userId;
+  String get projectCode;
   @JsonKey(ignore: true)
   _$$PerformanceSummaryReportLoadDataEventImplCopyWith<
           _$PerformanceSummaryReportLoadDataEventImpl>
@@ -267,7 +278,7 @@ class _$PerformanceSummaryReportLoadingEventImpl
   @override
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
-    required TResult Function(String userId) loadData,
+    required TResult Function(String userId, String projectCode) loadData,
     required TResult Function() loading,
   }) {
     return loading();
@@ -276,7 +287,7 @@ class _$PerformanceSummaryReportLoadingEventImpl
   @override
   @optionalTypeArgs
   TResult? whenOrNull<TResult extends Object?>({
-    TResult? Function(String userId)? loadData,
+    TResult? Function(String userId, String projectCode)? loadData,
     TResult? Function()? loading,
   }) {
     return loading?.call();
@@ -285,7 +296,7 @@ class _$PerformanceSummaryReportLoadingEventImpl
   @override
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
-    TResult Function(String userId)? loadData,
+    TResult Function(String userId, String projectCode)? loadData,
     TResult Function()? loading,
     required TResult orElse(),
   }) {

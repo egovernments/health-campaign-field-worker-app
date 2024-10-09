@@ -37,6 +37,22 @@ Map<String, dynamic> _$$SymptomsTypesSecondaryWrapperModelImplToJson(
       'symptomsTypes': instance.symptomsTypeList,
     };
 
+_$SymptomsTypesSecondaryWrapperModelSchistoImpl
+    _$$SymptomsTypesSecondaryWrapperModelSchistoImplFromJson(
+            Map<String, dynamic> json) =>
+        _$SymptomsTypesSecondaryWrapperModelSchistoImpl(
+          symptomsTypeSchistoList:
+              (json['symptomsTypesSchisto'] as List<dynamic>?)
+                  ?.map((e) => SymptomsType.fromJson(e as Map<String, dynamic>))
+                  .toList(),
+        );
+
+Map<String, dynamic> _$$SymptomsTypesSecondaryWrapperModelSchistoImplToJson(
+        _$SymptomsTypesSecondaryWrapperModelSchistoImpl instance) =>
+    <String, dynamic>{
+      'symptomsTypesSchisto': instance.symptomsTypeSchistoList,
+    };
+
 _$SymptomsTypeImpl _$$SymptomsTypeImplFromJson(Map<String, dynamic> json) =>
     _$SymptomsTypeImpl(
       code: json['code'] as String,

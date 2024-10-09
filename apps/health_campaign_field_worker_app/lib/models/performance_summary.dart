@@ -6,8 +6,8 @@ class PerformanceSummary extends EntityModel {
   double treatedPercentage;
   int householdCount;
   int taskCount;
-  int drugOne;
-  int drugTwo;
+  dynamic drugOne;
+  dynamic drugTwo;
 
   PerformanceSummary({
     required this.treatedPercentage,
