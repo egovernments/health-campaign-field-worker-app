@@ -261,7 +261,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
       startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
       locationUpdateInterval: 60 * 1000, // TODO: Read from config
       stopAfterTimestamp:
-          project.endDate ?? now.add(const Duration(minutes: 4)),
+          project.endDate ?? now.add(const Duration(minutes: 4)).millisecond,
     );
 
     if (mounted) {
