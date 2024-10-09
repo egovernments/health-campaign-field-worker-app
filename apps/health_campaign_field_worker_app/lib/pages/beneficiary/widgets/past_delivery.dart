@@ -108,7 +108,8 @@ Widget buildTableContent(
                           (element) => element.id == e.productVariantId,
                         )
                         .sku;
-                    final quantity = e.quantity!.toInt();
+                    final quantity =
+                        e.quantity != null ? e.quantity!.toDouble() : 0.0;
 
                     return TableDataRow([
                       // Display the dose information in the first column if it's the first row,
