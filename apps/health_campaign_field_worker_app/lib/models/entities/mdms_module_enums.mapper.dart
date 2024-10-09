@@ -35,6 +35,10 @@ class ModuleEnumsMapper extends EnumMapper<ModuleEnums> {
         return ModuleEnums.moduleVersion;
       case "RAINMAKER-PGR":
         return ModuleEnums.rainmakerPgr;
+      case "HCM-PROJECT-TYPES":
+        return ModuleEnums.hcmProjectTypes;
+      case "projectTypes":
+        return ModuleEnums.projectTypes;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -53,6 +57,10 @@ class ModuleEnumsMapper extends EnumMapper<ModuleEnums> {
         return "module-version";
       case ModuleEnums.rainmakerPgr:
         return "RAINMAKER-PGR";
+      case ModuleEnums.hcmProjectTypes:
+        return "HCM-PROJECT-TYPES";
+      case ModuleEnums.projectTypes:
+        return "projectTypes";
     }
   }
 }
