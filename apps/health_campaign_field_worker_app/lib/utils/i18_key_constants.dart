@@ -1024,6 +1024,7 @@ class IndividualDetails {
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
   String get firstNameLabelText => 'INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+  String get nameOfIndividualLabelText => 'NAME_INDIVIDUAL_LABEL_TEXT';
 
   String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
@@ -1033,6 +1034,7 @@ class IndividualDetails {
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
+   String get headTeachercheckboxLabelText => 'HEAD_OF_TEACHER_LABEL_TEXT';
 
   String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
 

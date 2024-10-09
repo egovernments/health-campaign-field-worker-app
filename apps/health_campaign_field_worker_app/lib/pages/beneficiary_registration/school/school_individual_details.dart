@@ -24,10 +24,8 @@ import '../../../widgets/showcase/showcase_button.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-
 import '../../../router/app_router.dart';
-import '../../../utils//i18_key_constants.dart'as i18 ;
-
+import '../../../utils//i18_key_constants.dart' as i18;
 
 class SchoolIndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
@@ -39,13 +37,14 @@ class SchoolIndividualDetailsPage extends LocalizedStatefulWidget {
   });
 
   @override
-  State<SchoolIndividualDetailsPage> createState() => _SchoolIndividualDetailsPageState();
+  State<SchoolIndividualDetailsPage> createState() =>
+      _SchoolIndividualDetailsPageState();
 }
 
 class _SchoolIndividualDetailsPageState
     extends LocalizedState<SchoolIndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
-  static const _individualLastNameKey = 'individualLastName';
+
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
@@ -60,7 +59,7 @@ class _SchoolIndividualDetailsPageState
 
   bool showParent = false;
 
-  bool isSchool=true;
+  bool isSchool = true;
 
   @override
   Widget build(BuildContext context) {
@@ -414,7 +413,7 @@ class _SchoolIndividualDetailsPageState
                               child: DigitTextFormField(
                                 formControlName: 'individualName',
                                 label: localizations.translate(
-                                  i18.individualDetails.firstNameLabelText,
+                                  i18.individualDetails.nameOfIndividualLabelText,
                                 ),
                                 isRequired: true,
                                 validationMessages: {
@@ -433,38 +432,12 @@ class _SchoolIndividualDetailsPageState
                                 },
                               ),
                             ),
-                            individualDetailsShowcaseData.lastNameOfIndividual
-                                .buildWith(
-                              child: DigitTextFormField(
-                                formControlName: _individualLastNameKey,
-                                label: localizations.translate(
-                                  i18.individualDetails.lastNameLabelText,
-                                ),
-                                maxLength: 200,
-                                isRequired: true,
-                                validationMessages: {
-                                  'required': (object) =>
-                                      localizations.translate(
-                                        i18.individualDetails
-                                            .lastNameIsRequiredError,
-                                      ),
-                                  'min3': (object) => localizations.translate(
-                                        i18.individualDetails
-                                            .lastNameLengthError,
-                                      ),
-                                  'maxLength': (object) =>
-                                      localizations.translate(
-                                        i18.individualDetails
-                                            .lastNameLengthError,
-                                      ),
-                                },
-                              ),
-                            ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
                               child: DigitCheckbox(
                                 label: localizations.translate(
-                                  i18.individualDetails.checkboxLabelText,
+                                  i18.individualDetails
+                                      .headTeachercheckboxLabelText,
                                 ),
                                 value: widget.isHeadOfHousehold,
                               ),
@@ -650,14 +623,14 @@ class _SchoolIndividualDetailsPageState
                         ),
 
                         //TODO:
-                       
+
                         DigitRadioButtonList<KeyValue>(
                           labelStyle: DigitTheme
                               .instance.mobileTheme.textTheme.bodyLarge,
                           labelText: localizations.translate(
-                              i18.householdDetails.parentKnownLabel,
-                             // "Parents Known?"
-                              ),
+                            i18.householdDetails.parentKnownLabel,
+                            // "Parents Known?"
+                          ),
                           isEnabled: true,
                           formControlName: radioKey,
                           valueMapper: (value) {
@@ -682,15 +655,14 @@ class _SchoolIndividualDetailsPageState
                             // ),
                           ],
                           label: localizations.translate(
-                               i18.householdDetails.nameOfParentLabel,
-                              //"Name of the Parent"
-                              ),
+                            i18.householdDetails.nameOfParentLabel,
+                            //"Name of the Parent"
+                          ),
                           validationMessages: {
                             'required': (object) => localizations
                                 .translate(i18.common.corecommonRequired),
                           },
                         ),
-                        
                       ],
                     ),
                   ),
@@ -781,8 +753,7 @@ class _SchoolIndividualDetailsPageState
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: form.control(_individualNameKey).value,
-        familyName:
-            (form.control(_individualLastNameKey).value as String).trim(),
+        familyName: form.control(_individualNameKey).value,
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -879,14 +850,6 @@ class _SchoolIndividualDetailsPageState
           Validators.maxLength(200),
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
-      ),
-      _individualLastNameKey: FormControl<String>(
-        validators: [
-          Validators.required,
-          CustomValidator.requiredMin3,
-          Validators.maxLength(200),
-        ],
-        value: individual?.name?.familyName ?? '',
       ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
