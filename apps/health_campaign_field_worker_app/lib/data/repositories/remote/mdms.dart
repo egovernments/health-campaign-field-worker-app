@@ -306,6 +306,16 @@ class MdmsRepository {
       return reasonTypes;
     }).toList();
 
+    appConfiguration.ineligibilityReasonsSchisto =
+        result.ineligibilityReasonsSchisto?.ineligibilityReasonsSchistoList?.map((e) {
+      final reasonTypes = IneligibilityReasons()
+        ..name = e.name
+        ..code = e.code
+        ..active = e.active;
+
+      return reasonTypes;
+    }).toList();
+
     appConfiguration.disabilityTypes =
         result.disabilityTypes?.disabilityTypesList?.map((e) {
       final reasonTypes = DisabilityTypes()

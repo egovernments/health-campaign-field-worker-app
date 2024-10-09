@@ -1241,6 +1241,10 @@ class MemberCard {
 class DeliverIntervention {
   const DeliverIntervention();
 
+  String get wasDrugWasted => 'DELIVER_INTERVENTION_WAS_QUANTITY_WASTED_LABEL';
+  String get enterDrugQTYWasted =>
+      'DELIVER_INTERVENTION_ENTER_QUANTITY_WASTED_LABEL';
+
   String get deliverInterventionLabel => 'DELIVER_INTERVENTION_LABEL';
 
   String get deliverInteventionAdministeredLabel =>
@@ -1258,6 +1262,11 @@ class DeliverIntervention {
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
+      String get householdRegistered=>"PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST";
+      String get peoplePercentageTreatedLabel=>"PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST";
+      String get peopleTreatedLabel=>"PERFORMANCE_SUMMARY_TASK_DATA_LIST";
+      String get drugOneLabelTableSummary=>"PERFORMANCE_SUMMARY_DRUG_ONE";
+String get drugTwoLabelTableSummary=>"PERFORMANCE_SUMMARY_DRUG_TWO";
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
 
