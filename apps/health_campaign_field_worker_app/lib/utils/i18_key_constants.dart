@@ -926,7 +926,7 @@ class SearchBeneficiary {
 
 class SchoolDetails {
   const SchoolDetails();
-
+  String get noSchoolsMapped => 'NO_SCHOOLS_MAPPED';
   String get selectSchool => 'SELECT_SCHOOL';
 }
 

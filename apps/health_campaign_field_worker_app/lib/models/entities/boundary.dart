@@ -80,6 +80,7 @@ class BoundaryModel extends EntityModel with BoundaryModelMappable {
       boundaryNum: Value(boundaryNum),
       latitude: Value(latitude),
       longitude: Value(longitude),
+      area: Value(area),
       materializedPath: Value(materializedPath),
       tenantId: Value(tenantId),
       isDeleted: Value(isDeleted),

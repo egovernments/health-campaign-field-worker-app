@@ -1,9 +1,9 @@
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:attendance_management/widgets/localized.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:flutter/material.dart';
 
-import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../models/data_model.dart';
 import '../router/app_router.dart';
 import '../utils/extensions/extensions.dart';
@@ -54,16 +54,18 @@ class _SelectBeneficiaryTypeState
           icon: Icons.school,
           label: BeneficiaryType.school.toValue(),
           onPressed: () async {
-            var selectedSchool = await context.router
-                .push(SchoolSelectionRoute(schools: [context.boundary.code!]));
-
-            if (selectedSchool != null) {
-              context.router.push(
-                BeneficiaryRegistrationWrapperRoute(
-                    initialState: BeneficiaryRegistrationCreateState(
-                      searchQuery: '$selectedSchool',
-                    ),
-                    children: [SchoolDetailsRoute()]),
+            if (context.boundary.area != null) {
+              context.router.push(SchoolSelectionRoute(
+                schools: context.boundary.area!.split(',').toList(),
+              ));
+            } else {
+              DigitToast.show(
+                context,
+                options: DigitToastOptions(
+                  localizations.translate(i18.schoolDetails.noSchoolsMapped),
+                  true,
+                  Theme.of(context),
+                ),
               );
             }
           },
