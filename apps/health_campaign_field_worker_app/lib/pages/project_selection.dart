@@ -146,7 +146,7 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
                 final boundary = selectedProject.address?.boundary;
 
                 if (boundary != null) {
-                  // triggerLocationTracking(state.selectedProject!);
+                  triggerLocationTracking(state.selectedProject!);
                   navigateToBoundary(boundary);
                 } else {
                   DigitToast.show(
@@ -248,18 +248,25 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
   }
 
   void triggerLocationTracking(ProjectModel project) async {
-    triggerLocationTracker('com.digit.location_tracker',
-        startAfterTimestamp: project.startDate ?? DateTime.now(),
-        locationUpdateInterval: 60000,
-        stopAfterTimestamp:
-            project.endDate ?? DateTime.now().add(const Duration(hours: 8)));
+    DateTime now = DateTime.now();
+    DateTime startDate =
+        DateTime.fromMillisecondsSinceEpoch(project.startDate!);
+    DateTime startAfterTimestamp = startDate.isBefore(now) ? now : startDate;
+
     Isar isar = await Constants().isar;
     final appConfiguration = await isar.appConfigurations.where().findAll();
 
+    triggerLocationTracker(
+      'com.digit.location_tracker',
+      startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
+      locationUpdateInterval: 60 * 1000, // TODO: Read from config
+      stopAfterTimestamp:
+          project.endDate ?? now.add(const Duration(minutes: 4)),
+    );
+
     if (mounted) {
       LocationTrackerService().processLocationData(
-          interval:
-              appConfiguration.first.backgroundServiceConfig!.serviceInterval!,
+          interval: 120, // TODO: Read from config
           createdBy: context.loggedInUserUuid,
           isar: isar);
     }

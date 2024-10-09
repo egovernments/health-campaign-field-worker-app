@@ -29,7 +29,6 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,7 +37,11 @@ class MainActivity : FlutterActivity() {
                 "startLocationUpdates" -> {
                     val interval = (call.argument<Number>("interval")?.toLong()) ?: 60000L
                     val stopAfterTimestamp = (call.argument<Number>("stopAfterTimestamp")?.toLong()) ?: (System.currentTimeMillis() + 60000L)
-                    startService(interval, stopAfterTimestamp)
+                    if (!isMyServiceRunning(LocationService::class.java)) {
+                        startService(interval, stopAfterTimestamp)
+                    } else {
+                        Toast.makeText(this, "Location service is already running", Toast.LENGTH_SHORT).show()
+                    }
                     result.success(null)
                 }
                 "stopLocationUpdates" -> {
@@ -65,7 +68,6 @@ class MainActivity : FlutterActivity() {
             val serviceIntent = Intent(this, LocationService::class.java).apply {
                 putExtra("interval", locationUpdateInterval) // Pass the interval to the service
                 putExtra("stopAfterTimestamp", stopAfterTimestamp)
-
             }
             startService(serviceIntent)
         } catch (e: Exception) {
@@ -76,9 +78,23 @@ class MainActivity : FlutterActivity() {
     private fun stopService() {
         try {
             val serviceIntent = Intent(this, LocationService::class.java)
+            Toast.makeText(this, "Stopping location service", Toast.LENGTH_SHORT).show()
             stopService(serviceIntent)
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // Check if service is running
+    private fun isMyServiceRunning(serviceClass: Class<*>): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as android.app.ActivityManager
+        for (service in manager.getRunningServices(Int.MAX_VALUE)) {
+            if (serviceClass.name == service.service.className) {
+                Toast.makeText(this, "Location service is already running", Toast.LENGTH_SHORT).show()
+                return true
+            }
+        }
+        Toast.makeText(this, "Location service starting", Toast.LENGTH_SHORT).show()
+        return false
     }
 }

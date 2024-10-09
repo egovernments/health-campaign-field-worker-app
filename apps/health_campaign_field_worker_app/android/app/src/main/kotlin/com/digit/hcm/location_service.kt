@@ -74,6 +74,7 @@ class LocationService : Service() {
 
                     // Check if the stop time has been reached
                     if (System.currentTimeMillis() >= stopAfterTimestamp) {
+                        Log.d("LocationService", "Stop after timestamp reached")
                         stopSelf()
                     }
                 }

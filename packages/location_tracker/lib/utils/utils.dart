@@ -79,7 +79,7 @@ triggerLocationTracker(String methodChannel,
     await platform.invokeMethod('startLocationUpdates', {
       "startAfterTimestamp": startAfterTimestamp,
       "interval": locationUpdateInterval,
-      "stopAfterTimestamp": stopAfterTimestamp.toInt(),
+      "stopAfterTimestamp": stopAfterTimestamp.millisecondsSinceEpoch,
     });
   } on PlatformException catch (e) {
     if (kDebugMode) {
