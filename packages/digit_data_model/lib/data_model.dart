@@ -64,6 +64,7 @@ export 'models/entities/document.dart';
 export 'models/entities/facility.dart';
 export 'models/entities/gender.dart';
 export 'models/entities/identifier.dart';
+export 'models/entities/identifier_types.dart';
 export 'models/entities/individual.dart';
 export 'models/entities/locality.dart';
 export 'models/entities/name.dart';

@@ -14,6 +14,7 @@ import 'models/entities/document.dart' as p7;
 import 'models/entities/facility.dart' as p8;
 import 'models/entities/gender.dart' as p9;
 import 'models/entities/identifier.dart' as p10;
+import 'models/entities/identifier_types.dart' as p27;
 import 'models/entities/individual.dart' as p11;
 import 'models/entities/locality.dart' as p12;
 import 'models/entities/name.dart' as p13;
@@ -110,4 +111,5 @@ void initializeMappers() {
   p26.AdditionalIdMapper.ensureInitialized();
   p26.DataOperationMapper.ensureInitialized();
   p26.ApiOperationMapper.ensureInitialized();
+  p27.IdentifierTypesMapper.ensureInitialized();
 }

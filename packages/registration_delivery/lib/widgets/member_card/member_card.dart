@@ -86,6 +86,39 @@ class MemberCard extends StatelessWidget {
             children: [
               Stack(
                 children: [
+                  individual.identifiers != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(spacer1),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: DigitTheme.instance.colorScheme.primary,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(spacer1),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                spacer1,
+                              ),
+                              child: Text(
+                                individual.identifiers!
+                                        .lastWhere(
+                                          (e) =>
+                                              e.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue(),
+                                        )
+                                        .identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const Offstage(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,7 +146,8 @@ class MemberCard extends StatelessWidget {
                             context: context,
                             builder: (ctx) => DigitActionCard(
                               onOutsideTap: () {
-                                Navigator.of(context, rootNavigator: true).pop();
+                                Navigator.of(context, rootNavigator: true)
+                                    .pop();
                               },
                               actions: [
                                 DigitButton(

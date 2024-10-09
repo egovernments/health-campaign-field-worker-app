@@ -1,9 +1,13 @@
 // Importing necessary packages and modules
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:collection/collection.dart';
+import 'package:crypto/crypto.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -570,4 +574,52 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
   }
 
   return Status.registered.toValue();
+}
+
+class UniqueIdGeneration {
+  Future<Set<String>> generateUniqueId({
+    required String localityCode,
+    required String loggedInUserId,
+    required bool returnCombinedIds,
+  }) async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+    // Get the Android ID
+    String androidId = androidInfo.serialNumber == 'unknown'
+        ? androidInfo.id.replaceAll('.', '')
+        : androidInfo.serialNumber;
+
+    // Get current timestamp
+    int timestamp = DateTime.now().millisecondsSinceEpoch;
+
+    // Combine the Android ID with the timestamp
+    String combinedId = '$loggedInUserId$androidId$localityCode$timestamp';
+
+    // Generate SHA-256 hash
+    List<int> bytes = utf8.encode(combinedId);
+    Digest sha256Hash = sha256.convert(bytes);
+
+    // Convert the hash to a 12-character string and make it uppercase
+    String hashString = sha256Hash.toString();
+    String uniqueId = hashString.substring(0, 12).toUpperCase();
+
+    // Add a hyphen every 4 characters, except the last
+    String formattedUniqueId = uniqueId.replaceAllMapped(
+      RegExp(r'.{1,4}'),
+      (match) => '${match.group(0)}-',
+    );
+
+    // Remove the last hyphen
+    formattedUniqueId =
+        formattedUniqueId.substring(0, formattedUniqueId.length - 1);
+
+    if (kDebugMode) {
+      print('uniqueId : $formattedUniqueId');
+    }
+
+    return returnCombinedIds
+        ? {formattedUniqueId, combinedId}
+        : {formattedUniqueId};
+  }
 }

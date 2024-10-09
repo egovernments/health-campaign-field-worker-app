@@ -26,6 +26,11 @@
 
 * Updated Service model additionalDetails objectType in digit_data_model package
 
+## 1.0.4-dev.1-uniqueId
+
+* Added BeneficiaryInEligible status
+* Added utils function to get unique beneficiary id
+
 ## 1.0.3+2
 
 * Bug Fix -

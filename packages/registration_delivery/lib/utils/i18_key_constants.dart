@@ -188,6 +188,8 @@ class BeneficiaryDetails {
 
   String get beneficiaryAge => 'BENEFICIARY_AGE';
 
+  String get beneficiaryId => 'BENEFICIARY_ID';
+
   String get ctaProceed => 'PROCEED';
 
   String get beneficiaryDoseNo => 'BENEFICIARY_DETAILS_DOSE_NO';
