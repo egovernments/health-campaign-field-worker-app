@@ -44,7 +44,7 @@ class SchoolIndividualDetailsPage extends LocalizedStatefulWidget {
 class _SchoolIndividualDetailsPageState
     extends LocalizedState<SchoolIndividualDetailsPage> {
   static const _individualNameKey = 'individualName';
-
+static const _individualLastNameKey = 'individualLastName';
   static const _dobKey = 'dob';
   static const _genderKey = 'gender';
   static const _mobileNumberKey = 'mobileNumber';
@@ -55,11 +55,12 @@ class _SchoolIndividualDetailsPageState
   static const _disabilityTypeKey = 'disabilityType';
   static const _heightKey = 'height';
   static const radioKey = "parentKnown";
+
+  static const parentknownKey = "parentknownKey";
+
   bool isHeadAgeValid = true;
 
   bool showParent = false;
-
-  bool isSchool = true;
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,8 @@ class _SchoolIndividualDetailsPageState
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
 
-    return Scaffold(
+    
+     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => buildForm(bloc.state),
         builder: (context, form, child) => BlocConsumer<
@@ -413,7 +415,7 @@ class _SchoolIndividualDetailsPageState
                               child: DigitTextFormField(
                                 formControlName: 'individualName',
                                 label: localizations.translate(
-                                  i18.individualDetails.nameOfIndividualLabelText,
+                                  i18.individualDetails.firstNameLabelText,
                                 ),
                                 isRequired: true,
                                 validationMessages: {
@@ -432,12 +434,38 @@ class _SchoolIndividualDetailsPageState
                                 },
                               ),
                             ),
+                            individualDetailsShowcaseData.lastNameOfIndividual
+                                .buildWith(
+                              child: DigitTextFormField(
+                                formControlName: _individualLastNameKey,
+                                label: localizations.translate(
+                                  i18.individualDetails.lastNameLabelText,
+                                ),
+                                maxLength: 200,
+                                isRequired: true,
+                                validationMessages: {
+                                  'required': (object) =>
+                                      localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameIsRequiredError,
+                                      ),
+                                  'min3': (object) => localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameLengthError,
+                                      ),
+                                  'maxLength': (object) =>
+                                      localizations.translate(
+                                        i18.individualDetails
+                                            .lastNameLengthError,
+                                      ),
+                                },
+                              ),
+                            ),
                             Offstage(
                               offstage: !widget.isHeadOfHousehold,
                               child: DigitCheckbox(
                                 label: localizations.translate(
-                                  i18.individualDetails
-                                      .headTeachercheckboxLabelText,
+                                  i18.individualDetails.checkboxLabelText,
                                 ),
                                 value: widget.isHeadOfHousehold,
                               ),
@@ -621,8 +649,7 @@ class _SchoolIndividualDetailsPageState
                             },
                           ),
                         ),
-
-                        //TODO:
+                         //TODO:
 
                         DigitRadioButtonList<KeyValue>(
                           labelStyle: DigitTheme
@@ -663,6 +690,7 @@ class _SchoolIndividualDetailsPageState
                                 .translate(i18.common.corecommonRequired),
                           },
                         ),
+                     
                       ],
                     ),
                   ),
@@ -675,7 +703,7 @@ class _SchoolIndividualDetailsPageState
     );
   }
 
-  IndividualModel _getIndividualModel(
+ IndividualModel _getIndividualModel(
     BuildContext context, {
     required FormGroup form,
     IndividualModel? oldIndividual,
@@ -753,7 +781,8 @@ class _SchoolIndividualDetailsPageState
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: form.control(_individualNameKey).value,
-        familyName: form.control(_individualNameKey).value,
+        familyName:
+            (form.control(_individualLastNameKey).value as String).trim(),
       ),
       gender: form.control(_genderKey).value == null
           ? null
@@ -851,6 +880,14 @@ class _SchoolIndividualDetailsPageState
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
+      _individualLastNameKey: FormControl<String>(
+        validators: [
+          Validators.required,
+          CustomValidator.requiredMin3,
+          Validators.maxLength(200),
+        ],
+        value: individual?.name?.familyName ?? '',
+      ),
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat('dd/MM/yyyy').parse(
@@ -889,7 +926,9 @@ class _SchoolIndividualDetailsPageState
       ]),
       radioKey: FormControl<KeyValue>(validators: [
         Validators.required,
-      ]),
+      ],
+      value: Constants.yesNo[1],
+      ),
     });
   }
 }
