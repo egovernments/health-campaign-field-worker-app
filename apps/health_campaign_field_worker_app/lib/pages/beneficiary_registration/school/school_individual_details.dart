@@ -465,7 +465,7 @@ static const _individualLastNameKey = 'individualLastName';
                               offstage: !widget.isHeadOfHousehold,
                               child: DigitCheckbox(
                                 label: localizations.translate(
-                                  i18.individualDetails.checkboxLabelText,
+                                  i18.individualDetails.headTeachercheckboxLabelText,
                                 ),
                                 value: widget.isHeadOfHousehold,
                               ),
