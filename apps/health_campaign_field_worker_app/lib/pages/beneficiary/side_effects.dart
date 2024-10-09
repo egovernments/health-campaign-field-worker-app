@@ -372,7 +372,11 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                                 (e) => e,
                                                                               );
                                                                               setState(() {
-                                                                                showOtherTextField = symptomsValues[symptomsTypes.indexOf('OTHER')] ? true : false;
+                                                                                showOtherTextField = symptomsTypes.contains('OTHER')
+                                                                                    ? symptomsValues[symptomsTypes.indexOf('OTHER')]
+                                                                                        ? true
+                                                                                        : false
+                                                                                    : false;
                                                                               });
                                                                             },
                                                                           );
