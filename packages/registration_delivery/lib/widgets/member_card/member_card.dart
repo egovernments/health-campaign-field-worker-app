@@ -84,20 +84,57 @@ class MemberCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Column(
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.8,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: kPadding, top: kPadding),
-                      child: Text(
-                        name,
-                        style: theme.textTheme.headlineMedium,
+                  individual.identifiers != null
+                      ? Padding(
+                          padding: const EdgeInsets.all(kPadding),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: DigitTheme.instance.colorScheme.primary,
+                              ),
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(kPadding),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                kPadding,
+                              ),
+                              child: Text(
+                                individual.identifiers!
+                                        .lastWhere(
+                                          (e) =>
+                                              e.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue(),
+                                        )
+                                        .identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
+                              ),
+                            ),
+                          ),
+                        )
+                      : const Offstage(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.8,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: kPadding, top: kPadding),
+                          child: Text(
+                            name,
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
