@@ -56,7 +56,7 @@ static const _individualLastNameKey = 'individualLastName';
   static const _heightKey = 'height';
   static const radioKey = "parentKnown";
 
-  static const parentknownKey = "parentknownKey";
+  static const _parentknownKey = "parentknownKey";
 
   bool isHeadAgeValid = true;
 
@@ -675,7 +675,7 @@ static const _individualLastNameKey = 'individualLastName';
                           readOnly: !showParent,
                           keyboardType: TextInputType.text,
                           isRequired: showParent,
-                          formControlName: _heightKey,
+                          formControlName: _parentknownKey,
                           inputFormatters: const [
                             // FilteringTextInputFormatter.allow(
                             //   RegExp("[0-9]"),
@@ -928,6 +928,12 @@ static const _individualLastNameKey = 'individualLastName';
         Validators.required,
       ],
       value: Constants.yesNo[1],
+      ),
+      _parentknownKey:FormControl<String>(
+        validators: [
+        Validators.required,
+      ],
+      value: "",
       ),
     });
   }
