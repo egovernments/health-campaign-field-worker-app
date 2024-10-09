@@ -114,7 +114,6 @@ class MdmsRepository {
   FutureOr<void> writeToAppConfigDB(
     app_configuration.AppConfigPrimaryWrapperModel result,
     PGRServiceDefinitions pgrServiceDefinitions,
-    // List<ProjectTypeModel> projectTypes,
     Isar isar,
   ) {
     final appConfiguration = AppConfiguration();
@@ -376,8 +375,6 @@ class MdmsRepository {
 
       return reasonTypes;
     }).toList();
-
-    // appConfiguration.projectTypes = projectTypes;
 
     isar.writeTxnSync(() {
       isar.appConfigurations.putSync(appConfiguration);
