@@ -295,7 +295,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<SchoolDetailsPage> {
           ),
         );
         context.router.push(
-          IndividualDetailsRoute(isHeadOfHousehold: true),
+          SchoolIndividualDetailsRoute(isHeadOfHousehold: true),
         );
       },
       editHousehold: (
