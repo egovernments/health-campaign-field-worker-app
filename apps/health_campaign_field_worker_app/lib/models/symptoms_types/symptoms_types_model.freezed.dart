@@ -368,6 +368,185 @@ abstract class _SymptomsTypesSecondaryWrapperModel
       get copyWith => throw _privateConstructorUsedError;
 }
 
+SymptomsTypesSecondaryWrapperModelSchisto
+    _$SymptomsTypesSecondaryWrapperModelSchistoFromJson(
+        Map<String, dynamic> json) {
+  return _SymptomsTypesSecondaryWrapperModelSchisto.fromJson(json);
+}
+
+/// @nodoc
+mixin _$SymptomsTypesSecondaryWrapperModelSchisto {
+  @JsonKey(name: 'symptomsTypesSchisto')
+  List<SymptomsType>? get symptomsTypeSchistoList =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $SymptomsTypesSecondaryWrapperModelSchistoCopyWith<
+          SymptomsTypesSecondaryWrapperModelSchisto>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $SymptomsTypesSecondaryWrapperModelSchistoCopyWith<$Res> {
+  factory $SymptomsTypesSecondaryWrapperModelSchistoCopyWith(
+          SymptomsTypesSecondaryWrapperModelSchisto value,
+          $Res Function(SymptomsTypesSecondaryWrapperModelSchisto) then) =
+      _$SymptomsTypesSecondaryWrapperModelSchistoCopyWithImpl<$Res,
+          SymptomsTypesSecondaryWrapperModelSchisto>;
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'symptomsTypesSchisto')
+      List<SymptomsType>? symptomsTypeSchistoList});
+}
+
+/// @nodoc
+class _$SymptomsTypesSecondaryWrapperModelSchistoCopyWithImpl<$Res,
+        $Val extends SymptomsTypesSecondaryWrapperModelSchisto>
+    implements $SymptomsTypesSecondaryWrapperModelSchistoCopyWith<$Res> {
+  _$SymptomsTypesSecondaryWrapperModelSchistoCopyWithImpl(
+      this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? symptomsTypeSchistoList = freezed,
+  }) {
+    return _then(_value.copyWith(
+      symptomsTypeSchistoList: freezed == symptomsTypeSchistoList
+          ? _value.symptomsTypeSchistoList
+          : symptomsTypeSchistoList // ignore: cast_nullable_to_non_nullable
+              as List<SymptomsType>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWith<$Res>
+    implements $SymptomsTypesSecondaryWrapperModelSchistoCopyWith<$Res> {
+  factory _$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWith(
+          _$SymptomsTypesSecondaryWrapperModelSchistoImpl value,
+          $Res Function(_$SymptomsTypesSecondaryWrapperModelSchistoImpl) then) =
+      __$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {@JsonKey(name: 'symptomsTypesSchisto')
+      List<SymptomsType>? symptomsTypeSchistoList});
+}
+
+/// @nodoc
+class __$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWithImpl<$Res>
+    extends _$SymptomsTypesSecondaryWrapperModelSchistoCopyWithImpl<$Res,
+        _$SymptomsTypesSecondaryWrapperModelSchistoImpl>
+    implements _$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWith<$Res> {
+  __$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWithImpl(
+      _$SymptomsTypesSecondaryWrapperModelSchistoImpl _value,
+      $Res Function(_$SymptomsTypesSecondaryWrapperModelSchistoImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? symptomsTypeSchistoList = freezed,
+  }) {
+    return _then(_$SymptomsTypesSecondaryWrapperModelSchistoImpl(
+      symptomsTypeSchistoList: freezed == symptomsTypeSchistoList
+          ? _value._symptomsTypeSchistoList
+          : symptomsTypeSchistoList // ignore: cast_nullable_to_non_nullable
+              as List<SymptomsType>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$SymptomsTypesSecondaryWrapperModelSchistoImpl
+    implements _SymptomsTypesSecondaryWrapperModelSchisto {
+  const _$SymptomsTypesSecondaryWrapperModelSchistoImpl(
+      {@JsonKey(name: 'symptomsTypesSchisto')
+      final List<SymptomsType>? symptomsTypeSchistoList})
+      : _symptomsTypeSchistoList = symptomsTypeSchistoList;
+
+  factory _$SymptomsTypesSecondaryWrapperModelSchistoImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$SymptomsTypesSecondaryWrapperModelSchistoImplFromJson(json);
+
+  final List<SymptomsType>? _symptomsTypeSchistoList;
+  @override
+  @JsonKey(name: 'symptomsTypesSchisto')
+  List<SymptomsType>? get symptomsTypeSchistoList {
+    final value = _symptomsTypeSchistoList;
+    if (value == null) return null;
+    if (_symptomsTypeSchistoList is EqualUnmodifiableListView)
+      return _symptomsTypeSchistoList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'SymptomsTypesSecondaryWrapperModelSchisto(symptomsTypeSchistoList: $symptomsTypeSchistoList)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$SymptomsTypesSecondaryWrapperModelSchistoImpl &&
+            const DeepCollectionEquality().equals(
+                other._symptomsTypeSchistoList, _symptomsTypeSchistoList));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType,
+      const DeepCollectionEquality().hash(_symptomsTypeSchistoList));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWith<
+          _$SymptomsTypesSecondaryWrapperModelSchistoImpl>
+      get copyWith =>
+          __$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWithImpl<
+                  _$SymptomsTypesSecondaryWrapperModelSchistoImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$SymptomsTypesSecondaryWrapperModelSchistoImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _SymptomsTypesSecondaryWrapperModelSchisto
+    implements SymptomsTypesSecondaryWrapperModelSchisto {
+  const factory _SymptomsTypesSecondaryWrapperModelSchisto(
+          {@JsonKey(name: 'symptomsTypesSchisto')
+          final List<SymptomsType>? symptomsTypeSchistoList}) =
+      _$SymptomsTypesSecondaryWrapperModelSchistoImpl;
+
+  factory _SymptomsTypesSecondaryWrapperModelSchisto.fromJson(
+          Map<String, dynamic> json) =
+      _$SymptomsTypesSecondaryWrapperModelSchistoImpl.fromJson;
+
+  @override
+  @JsonKey(name: 'symptomsTypesSchisto')
+  List<SymptomsType>? get symptomsTypeSchistoList;
+  @override
+  @JsonKey(ignore: true)
+  _$$SymptomsTypesSecondaryWrapperModelSchistoImplCopyWith<
+          _$SymptomsTypesSecondaryWrapperModelSchistoImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
 SymptomsType _$SymptomsTypeFromJson(Map<String, dynamic> json) {
   return _SymptomsType.fromJson(json);
 }

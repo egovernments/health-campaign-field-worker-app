@@ -321,10 +321,17 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                 orElse: () => const Offstage(),
                                                 initialized:
                                                     (appConfiguration, _) {
-                                                  final symptomTypesOptions =
-                                                      appConfiguration
-                                                              .symptomsTypes ??
-                                                          <SymptomsTypes>[];
+                                                  final symptomTypesOptions = (context
+                                                                  .selectedProjectType!
+                                                                  .code ==
+                                                              ProjectTypesEnum
+                                                                  .schisto
+                                                                  .toValue()
+                                                          ? appConfiguration
+                                                              .symptomsTypesSchisto
+                                                          : appConfiguration
+                                                              .symptomsTypes) ??
+                                                      <SymptomsTypes>[];
                                                   symptomsTypes =
                                                       symptomTypesOptions
                                                           .map((e) => e.code)
@@ -365,7 +372,11 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                                 (e) => e,
                                                                               );
                                                                               setState(() {
-                                                                                showOtherTextField = symptomsValues[symptomsTypes.indexOf('OTHER')] ? true : false;
+                                                                                showOtherTextField = symptomsTypes.contains('OTHER')
+                                                                                    ? symptomsValues[symptomsTypes.indexOf('OTHER')]
+                                                                                        ? true
+                                                                                        : false
+                                                                                    : false;
                                                                               });
                                                                             },
                                                                           );

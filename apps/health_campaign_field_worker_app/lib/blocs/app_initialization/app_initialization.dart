@@ -95,6 +95,12 @@ class AppInitializationBloc
                   ],
                 ),
                 const MdmsModuleDetailModel(
+                  moduleName: 'HCM-SYMPTOMS-TYPES-SCHISTO',
+                  masterDetails: [
+                    MdmsMasterDetailModel('symptomsTypesSchisto'),
+                  ],
+                ),
+                const MdmsModuleDetailModel(
                   moduleName: 'HCM-REFERRAL-REASONS',
                   masterDetails: [
                     MdmsMasterDetailModel('referralReasons'),
