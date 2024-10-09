@@ -249,26 +249,27 @@ class _ProjectSelectionPageState extends LocalizedState<ProjectSelectionPage> {
 
   void triggerLocationTracking(ProjectModel project) async {
     DateTime now = DateTime.now();
-    DateTime startDate =
-        DateTime.fromMillisecondsSinceEpoch(project.startDate!);
-    DateTime startAfterTimestamp = startDate.isBefore(now) ? now : startDate;
-
+    DateTime startAfterTimestamp =
+        project.startDateTime!.isBefore(now) ? now : project.startDateTime!;
+    DateTime endAfterTimestamp = project.endDateTime!;
     Isar isar = await Constants().isar;
     final appConfiguration = await isar.appConfigurations.where().findAll();
 
-    triggerLocationTracker(
-      'com.digit.location_tracker',
-      startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
-      locationUpdateInterval: 60 * 1000, // TODO: Read from config
-      stopAfterTimestamp:
-          project.endDate ?? now.add(const Duration(minutes: 4)).millisecond,
-    );
+    if (endAfterTimestamp.isAfter(now)) {
+      triggerLocationTracker(
+        'com.digit.location_tracker',
+        startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
+        locationUpdateInterval: 60 * 1000, // TODO: Read from config
+        stopAfterTimestamp: project.endDate ??
+            now.add(const Duration(hours: 8)).millisecondsSinceEpoch,
+      );
 
-    if (mounted) {
-      LocationTrackerService().processLocationData(
-          interval: 120, // TODO: Read from config
-          createdBy: context.loggedInUserUuid,
-          isar: isar);
+      if (mounted) {
+        LocationTrackerService().processLocationData(
+            interval: 120, // TODO: Read from config
+            createdBy: context.loggedInUserUuid,
+            isar: isar);
+      }
     }
   }
 }
