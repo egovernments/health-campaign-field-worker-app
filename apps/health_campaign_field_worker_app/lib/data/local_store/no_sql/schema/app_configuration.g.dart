@@ -160,6 +160,12 @@ const AppConfigurationSchema = CollectionSchema(
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
+    ),
+    r'symptomsTypesSchisto': PropertySchema(
+      id: 25,
+      name: r'symptomsTypesSchisto',
+      type: IsarType.objectList,
+      target: r'SymptomsTypes',
     )
   },
   estimateSize: _appConfigurationEstimateSize,
@@ -482,6 +488,20 @@ int _appConfigurationEstimateSize(
       }
     }
   }
+  {
+    final list = object.symptomsTypesSchisto;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[SymptomsTypes]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount +=
+              SymptomsTypesSchema.estimateSize(value, offsets, allOffsets);
+        }
+      }
+    }
+  }
   return bytesCount;
 }
 
@@ -611,6 +631,12 @@ void _appConfigurationSerialize(
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
   );
+  writer.writeObjectList<SymptomsTypes>(
+    offsets[25],
+    allOffsets,
+    SymptomsTypesSchema.serialize,
+    object.symptomsTypesSchisto,
+  );
 }
 
 AppConfiguration _appConfigurationDeserialize(
@@ -738,6 +764,12 @@ AppConfiguration _appConfigurationDeserialize(
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
     offsets[24],
+    SymptomsTypesSchema.deserialize,
+    allOffsets,
+    SymptomsTypes(),
+  );
+  object.symptomsTypesSchisto = reader.readObjectList<SymptomsTypes>(
+    offsets[25],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -888,6 +920,13 @@ P _appConfigurationDeserializeProp<P>(
         ReferralReasons(),
       )) as P;
     case 24:
+      return (reader.readObjectList<SymptomsTypes>(
+        offset,
+        SymptomsTypesSchema.deserialize,
+        allOffsets,
+        SymptomsTypes(),
+      )) as P;
+    case 25:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -3668,6 +3707,113 @@ extension AppConfigurationQueryFilter
       );
     });
   }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'symptomsTypesSchisto',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'symptomsTypesSchisto',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'symptomsTypesSchisto',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'symptomsTypesSchisto',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'symptomsTypesSchisto',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'symptomsTypesSchisto',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'symptomsTypesSchisto',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'symptomsTypesSchisto',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
 }
 
 extension AppConfigurationQueryObject
@@ -3804,6 +3950,13 @@ extension AppConfigurationQueryObject
       symptomsTypesElement(FilterQuery<SymptomsTypes> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'symptomsTypes');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      symptomsTypesSchistoElement(FilterQuery<SymptomsTypes> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'symptomsTypesSchisto');
     });
   }
 }
@@ -4224,6 +4377,13 @@ extension AppConfigurationQueryProperty
       symptomsTypesProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'symptomsTypes');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<SymptomsTypes>?, QQueryOperations>
+      symptomsTypesSchistoProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'symptomsTypesSchisto');
     });
   }
 }

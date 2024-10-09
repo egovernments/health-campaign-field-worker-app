@@ -57,6 +57,8 @@ class AppConfigPrimaryWrapperModel with _$AppConfigPrimaryWrapperModel {
     @JsonKey(name: 'module-version') final RowVersionWrapperModel? rowVersions,
     @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
     final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+    @JsonKey(name: 'HCM-SYMPTOMS-TYPES-SCHISTO')
+    final SymptomsTypesSecondaryWrapperModelSchisto? symptomsTypesSchisto,
     @JsonKey(name: 'HCM-REFERRAL-REASONS')
     final ReferralReasonsWrapperModel? referralReasons,
     @JsonKey(name: 'HCM-INELIGIBILITY-REASONS')

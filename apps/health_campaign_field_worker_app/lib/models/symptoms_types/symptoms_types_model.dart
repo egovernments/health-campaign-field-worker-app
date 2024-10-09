@@ -7,7 +7,7 @@ part 'symptoms_types_model.g.dart';
 class SymptomsTypesPrimaryWrapperModel with _$SymptomsTypesPrimaryWrapperModel {
   const factory SymptomsTypesPrimaryWrapperModel({
     @JsonKey(name: 'HCM-SYMPTOMS-TYPES')
-        final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
+    final SymptomsTypesSecondaryWrapperModel? symptomsTypes,
   }) = _SymptomsTypesPrimaryWrapperModel;
 
   factory SymptomsTypesPrimaryWrapperModel.fromJson(
@@ -27,6 +27,20 @@ class SymptomsTypesSecondaryWrapperModel
     Map<String, dynamic> json,
   ) =>
       _$SymptomsTypesSecondaryWrapperModelFromJson(json);
+}
+
+@freezed
+class SymptomsTypesSecondaryWrapperModelSchisto
+    with _$SymptomsTypesSecondaryWrapperModelSchisto {
+  const factory SymptomsTypesSecondaryWrapperModelSchisto({
+    @JsonKey(name: 'symptomsTypesSchisto')
+    List<SymptomsType>? symptomsTypeSchistoList,
+  }) = _SymptomsTypesSecondaryWrapperModelSchisto;
+
+  factory SymptomsTypesSecondaryWrapperModelSchisto.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$SymptomsTypesSecondaryWrapperModelSchistoFromJson(json);
 }
 
 @freezed
