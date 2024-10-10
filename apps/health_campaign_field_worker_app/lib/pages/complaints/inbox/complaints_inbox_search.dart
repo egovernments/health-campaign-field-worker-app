@@ -77,7 +77,8 @@ class _ComplaintsInboxSearchPageState
                 footer: SizedBox(
                   child: DigitCard(
                     margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                    padding:
+                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -142,7 +143,7 @@ class _ComplaintsInboxSearchPageState
                                   label: localizations.translate(
                                     i18.common.coreCommonMobileNumber,
                                   ),
-                                  maxLength: 10,
+                                  maxLength: 11,
                                   keyboardType: TextInputType.number,
                                   validationMessages: {
                                     'mobileNumber': (object) =>

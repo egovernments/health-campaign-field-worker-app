@@ -69,6 +69,7 @@ dependencies:
   attendance_management: ^0.0.1
   formula_parser: 1.0.0
   auto_size_text: ^3.0.0
+  remove_emoji_input_formatter: ^0.0.1
 
 dev_dependencies:
   flutter_test:
