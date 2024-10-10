@@ -89,7 +89,7 @@ class StockLocalRepository
           transactingPartyId: data.transactingPartyId,
           transactingPartyType: data.transactingPartyType,
           quantity: data.quantity,
-          waybillNumber: data.waybillNumber,
+          wayBillNumber: data.waybillNumber,
           clientReferenceId: data.clientReferenceId,
           isDeleted: data.isDeleted,
           rowVersion: data.rowVersion,
