@@ -10,6 +10,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
+import 'package:location_tracker/location_tracker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -144,6 +145,8 @@ class Constants {
         sql,
         HFReferralOpLogManager(isar),
       ),
+      LocationTrackerLocalBaseRepository(
+          sql, LocationTrackerOpLogManager(isar)),
     ];
   }
 
@@ -230,6 +233,8 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userLocation)
+          LocationTrackerRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -269,6 +274,8 @@ class Constants {
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+    LocationTrackerSingleton()
+        .setTenantId(tenantId: envConfig.variables.tenantId);
   }
 }
 

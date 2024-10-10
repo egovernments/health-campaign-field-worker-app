@@ -80,7 +80,7 @@ class DeliverInterventionPageState
                 form: form,
                 oldTask: RegistrationDeliverySingleton().beneficiaryType ==
                         BeneficiaryType.household
-                    ? deliverInterventionState.tasks?.last
+                    ? deliverInterventionState.tasks?.lastOrNull
                     : null,
                 projectBeneficiaryClientReferenceId:
                     projectBeneficiary.clientReferenceId,
@@ -624,7 +624,7 @@ class DeliverInterventionPageState
         }
       }
       bool hasDuplicateProductIdOrNoProductId =
-      deliveredProducts.any((ele) => ele?.productId == null);
+          deliveredProducts.any((ele) => ele?.productId == null);
 
       return hasDuplicateProductIdOrNoProductId;
     }
@@ -824,14 +824,14 @@ class DeliverInterventionPageState
       _deliveryCommentKey: FormControl<String>(
         value: RegistrationDeliverySingleton().beneficiaryType !=
                 BeneficiaryType.individual
-            ? (bloc.tasks?.last.additionalFields?.fields
+            ? (bloc.tasks?.lastOrNull?.additionalFields?.fields
                             .where((a) =>
                                 a.key ==
                                 AdditionalFieldsType.deliveryComment.toValue())
                             .toList() ??
                         [])
                     .isNotEmpty
-                ? bloc.tasks?.last.additionalFields?.fields
+                ? bloc.tasks?.lastOrNull?.additionalFields?.fields
                     .where((a) =>
                         a.key == AdditionalFieldsType.deliveryComment.toValue())
                     .first
@@ -866,7 +866,8 @@ class DeliverInterventionPageState
             value: RegistrationDeliverySingleton().beneficiaryType !=
                     BeneficiaryType.individual
                 ? int.tryParse(
-                    bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
+                    bloc.tasks?.lastOrNull?.resources?.elementAt(i).quantity ??
+                        '0',
                   )
                 : 0,
             validators: [Validators.min(1)],

@@ -122,6 +122,7 @@ abstract class OpLogManager<T extends EntityModel> {
         .where(
           (element) =>
               element.entityType != DataModelType.service &&
+              element.entityType != DataModelType.userLocation &&
               element.entityType != DataModelType.complaints,
           // Added service so that we don't get the response from the server
         )

@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
+import 'package:location_tracker/bloc/location_tracker_service.dart';
+import 'package:location_tracker/utils/utils.dart' as location_tracker_utils;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recase/recase.dart';
 
@@ -115,6 +117,15 @@ void onStart(ServiceInstance service) async {
   final _isar = await isarFuture;
 
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
+  final selectedProject = await LocalSecureStore.instance.selectedProject;
+
+  location_tracker_utils.LocationTrackerSingleton()
+      .setTenantId(tenantId: userRequestModel!.tenantId!);
+  location_tracker_utils.LocationTrackerSingleton().setInitialData(
+      projectId: selectedProject!.id, loggedInUserUuid: userRequestModel.uuid);
+
+  LocationTrackerService().processLocationData(
+      interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
 
   final appConfiguration = await _isar.appConfigurations.where().findAll();
   final interval =
