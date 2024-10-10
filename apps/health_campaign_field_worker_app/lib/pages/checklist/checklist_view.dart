@@ -283,6 +283,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                 'longitude',
                                                 longitude,
                                               ),
+                                              AdditionalField(
+                                                'localityCode',
+                                                context.boundary.code,
+                                              ),
                                             ],
                                           ),
                                           additionalDetails:
