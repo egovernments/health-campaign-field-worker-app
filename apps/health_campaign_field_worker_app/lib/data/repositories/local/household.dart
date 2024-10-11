@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
+import 'package:flutter/material.dart';
 
 import '../../../models/data_model.dart';
 import '../../../utils/utils.dart';
@@ -287,4 +288,79 @@ class HouseholdLocalRepository
 
   @override
   DataModelType get type => DataModelType.household;
+
+  appendCustomQuery(
+    JoinedSelectStatement<HasResultSet, dynamic> selectQuery,
+  ) async {
+    // Construct the SQL query string
+    var query =
+        selectQuery.constructQuery().buffer.toString().replaceAll(';', '');
+    var variables = selectQuery.constructQuery().introducedVariables;
+    var indexesLength = selectQuery.constructQuery().variableIndices;
+
+    try {
+      // Custom query to filter based on additional_fields
+      return await sql
+          .customSelect(
+            'SELECT * FROM ($query), json_each(household.additional_fields) WHERE json_valid(household.additional_fields) = 1 AND json_each.value->>"key" = "schoolName" AND json_each.value->>"value" = "SchoolA"; ',
+          )
+          .get();
+    } catch (e) {
+      debugPrint('Error executing custom query: $e');
+    }
+  }
+}
+
+class CustomHouseHoldRepo extends LocalRepository {
+  CustomHouseHoldRepo(super.sql, super.opLogManager);
+
+  @override
+  FutureOr<List<EntityModel>> search(EntitySearchModel query) {
+    // TODO: implement search
+    throw UnimplementedError();
+  }
+
+  @override
+  // TODO: implement type
+  DataModelType get type => throw UnimplementedError();
+
+  Future<List<HouseholdModel>> customSchoolSearch(
+    String schoolName,
+    String boundaryCode,
+  ) async {
+    var selectQuery = sql.customSelect(
+      r"SELECT * FROM household, json_each(household.additional_fields, '$.fields') "
+      "WHERE json_valid(additional_fields) = 1 "
+      "AND json_each.value->>'key' = 'schoolName' "
+      "AND json_each.value->>'value' = ?;", // Use parameterized query
+      variables: [
+        Variable.withString(schoolName),
+      ], // Pass the school name as a variable
+    );
+    final results = await selectQuery.get();
+
+    // Map the results to a list of HouseholdModel
+    List<HouseholdModel> households = results.map((row) {
+      // Read the necessary fields from QueryRow
+      String? id = row.read<String>('id');
+      int? memberCount = row.read<int>('member_count');
+      String clientReferenceId = row.read<String>('client_reference_id');
+      String? additionalFieldsJson = row.read<String>('additional_fields');
+
+      // Parse the additional fields JSON into an object
+      HouseholdAdditionalFields? additionalFields;
+      additionalFields =
+          HouseholdAdditionalFieldsMapper.fromJson(additionalFieldsJson);
+
+      // Create and return a HouseholdModel instance
+      return HouseholdModel(
+        id: id,
+        memberCount: memberCount,
+        clientReferenceId: clientReferenceId,
+        additionalFields: additionalFields,
+      );
+    }).toList();
+
+    return households;
+  }
 }

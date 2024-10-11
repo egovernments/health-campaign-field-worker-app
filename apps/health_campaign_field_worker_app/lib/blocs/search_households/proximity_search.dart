@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'search_households.dart';
+
 import '../../models/entities/address.dart';
 import '../../models/entities/beneficiary_type.dart';
 import '../../models/entities/household.dart';
@@ -11,6 +11,8 @@ import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/task.dart';
+import '../../utils/utils.dart';
+import 'search_households.dart';
 
 class ProximitySearchBloc extends SearchHouseholdsBloc {
   ProximitySearchBloc({
@@ -50,6 +52,7 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
       offset: event.offset,
       limit: event.limit,
     ));
+    householdList = excludeSchoolHouseholds(householdList);
     // Extract individual IDs from proximity-based individual results.
     final householdClientReferenceIds =
         householdList.map((e) => e.clientReferenceId).toList();

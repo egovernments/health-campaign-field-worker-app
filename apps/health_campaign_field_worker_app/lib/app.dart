@@ -20,9 +20,10 @@ import 'blocs/project/project.dart';
 import 'blocs/scanner/scanner.dart';
 import 'blocs/user/user.dart';
 import 'data/data_repository.dart';
-import 'data/local_store/app_shared_preferences.dart';
 import 'data/local_store/sql_store/sql_store.dart';
 import 'data/network_manager.dart';
+import 'data/repositories/local/household.dart';
+import 'data/repositories/oplog/oplog.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'models/data_model.dart';
@@ -60,6 +61,12 @@ class MainApplicationState extends State<MainApplication>
       providers: [
         RepositoryProvider<LocalSqlDataStore>.value(value: widget.sql),
         RepositoryProvider<Isar>.value(value: widget.isar),
+        RepositoryProvider<CustomHouseHoldRepo>(
+          create: (context) => CustomHouseHoldRepo(
+            widget.sql,
+            HouseholdOpLogManager(widget.isar),
+          ),
+        ),
       ],
       child: BlocProvider(
         create: (context) => AppInitializationBloc(

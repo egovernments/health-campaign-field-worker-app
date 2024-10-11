@@ -14,8 +14,9 @@ import '../blocs/localization/app_localization.dart';
 import '../blocs/search_households/project_beneficiaries_downsync.dart';
 import '../blocs/search_households/proximity_search.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/search_by_head.dart';
+import '../blocs/search_households/search_by_school.dart';
+import '../blocs/search_households/search_households.dart';
 import '../blocs/search_households/tag_by_search.dart';
 import '../blocs/search_referrals/search_referrals.dart';
 import '../blocs/service/service.dart';
@@ -25,6 +26,7 @@ import '../data/local_store/no_sql/schema/oplog.dart';
 import '../data/local_store/sql_store/sql_store.dart';
 import '../data/remote_client.dart';
 import '../data/repositories/local/address.dart';
+import '../data/repositories/local/household.dart';
 import '../data/repositories/oplog/oplog.dart';
 import '../data/repositories/remote/bandwidth_check.dart';
 import '../models/data_model.dart';
@@ -134,6 +136,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                                 SideEffectModel, SideEffectSearchModel>(),
                             referralDataRepository: context.repository<
                                 ReferralModel, ReferralSearchModel>(),
+                            customHouseHoldRepo:
+                                context.read<CustomHouseHoldRepo>(),
                           );
                         },
                       ),
@@ -232,7 +236,39 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                       ),
                       BlocProvider(
                         create: (context) {
+                          final isar = context.read<Isar>();
 
+                          return SearchBySchoolBloc(
+                            beneficiaryType: context.beneficiaryType,
+                            userUid: context.loggedInUserUuid,
+                            projectId: context.projectId,
+                            addressRepository: AddressLocalRepository(
+                              context.read<LocalSqlDataStore>(),
+                              AddressOpLogManager(isar),
+                            ),
+                            projectBeneficiary: context.repository<
+                                ProjectBeneficiaryModel,
+                                ProjectBeneficiarySearchModel>(),
+                            householdMember: context.repository<
+                                HouseholdMemberModel,
+                                HouseholdMemberSearchModel>(),
+                            household: context.repository<HouseholdModel,
+                                HouseholdSearchModel>(),
+                            individual: context.repository<IndividualModel,
+                                IndividualSearchModel>(),
+                            taskDataRepository: context
+                                .repository<TaskModel, TaskSearchModel>(),
+                            sideEffectDataRepository: context.repository<
+                                SideEffectModel, SideEffectSearchModel>(),
+                            referralDataRepository: context.repository<
+                                ReferralModel, ReferralSearchModel>(),
+                            customHouseHoldRepo:
+                                context.read<CustomHouseHoldRepo>(),
+                          );
+                        },
+                      ),
+                      BlocProvider(
+                        create: (context) {
                           return SearchBlocWrapper(
                             searchHouseholdsBloc:
                                 context.read<SearchHouseholdsBloc>(),
@@ -240,6 +276,8 @@ class AuthenticatedPageWrapper extends StatelessWidget {
                             proximitySearchBloc:
                                 context.read<ProximitySearchBloc>(),
                             tagSearchBloc: context.read<TagSearchBloc>(),
+                            searchBySchoolName:
+                                context.read<SearchBySchoolBloc>(),
                           );
                         },
                       ),

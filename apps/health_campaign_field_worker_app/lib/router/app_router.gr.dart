@@ -180,6 +180,18 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SchoolBeneficiaryAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolBeneficiaryAcknowledgementRouteArgs>(
+          orElse: () => const SchoolBeneficiaryAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolBeneficiaryAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewSchool: args.enableViewSchool,
+        ),
+      );
+    },
     AcknowledgementRoute.name: (routeData) {
       final args = routeData.argsAs<AcknowledgementRouteArgs>(
           orElse: () => const AcknowledgementRouteArgs());
@@ -408,6 +420,17 @@ class _$AppRouter extends RootStackRouter {
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: HouseholdOverviewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    SchoolOverviewRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolOverviewRouteArgs>(
+          orElse: () => const SchoolOverviewRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolOverviewPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -868,6 +891,11 @@ class _$AppRouter extends RootStackRouter {
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
+                  SchoolOverviewRoute.name,
+                  path: 'school-overview',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
                   BeneficiaryDetailsRoute.name,
                   path: 'beneficiary-details',
                   parent: BeneficiaryWrapperRoute.name,
@@ -959,6 +987,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               BeneficiaryAcknowledgementRoute.name,
               path: 'beneficiary-acknowledgement',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              SchoolBeneficiaryAcknowledgementRoute.name,
+              path: 'school-beneficiary-acknowledgement',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1657,6 +1690,46 @@ class BeneficiaryAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'BeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [SchoolBeneficiaryAcknowledgementPage]
+class SchoolBeneficiaryAcknowledgementRoute
+    extends PageRouteInfo<SchoolBeneficiaryAcknowledgementRouteArgs> {
+  SchoolBeneficiaryAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewSchool,
+  }) : super(
+          SchoolBeneficiaryAcknowledgementRoute.name,
+          path: 'school-beneficiary-acknowledgement',
+          args: SchoolBeneficiaryAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewSchool: enableViewSchool,
+          ),
+        );
+
+  static const String name = 'SchoolBeneficiaryAcknowledgementRoute';
+}
+
+class SchoolBeneficiaryAcknowledgementRouteArgs {
+  const SchoolBeneficiaryAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewSchool,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewSchool;
+
+  @override
+  String toString() {
+    return 'SchoolBeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewSchool: $enableViewSchool}';
   }
 }
 
@@ -2405,6 +2478,40 @@ class HouseholdOverviewRouteArgs {
   @override
   String toString() {
     return 'HouseholdOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolOverviewPage]
+class SchoolOverviewRoute extends PageRouteInfo<SchoolOverviewRouteArgs> {
+  SchoolOverviewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolOverviewRoute.name,
+          path: 'school-overview',
+          args: SchoolOverviewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolOverviewRoute';
+}
+
+class SchoolOverviewRouteArgs {
+  const SchoolOverviewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

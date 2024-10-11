@@ -8,6 +8,9 @@ import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+
 import '../../../blocs/app_initialization/app_initialization.dart';
 import '../../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../../blocs/scanner/scanner.dart';
@@ -15,17 +18,14 @@ import '../../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../../blocs/search_households/search_households.dart';
 import '../../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../../models/data_model.dart';
+import '../../../router/app_router.dart';
+import '../../../utils//i18_key_constants.dart' as i18;
 import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/showcase/config/showcase_constants.dart';
 import '../../../widgets/showcase/showcase_button.dart';
-import 'package:intl/intl.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-
-import '../../../router/app_router.dart';
-import '../../../utils//i18_key_constants.dart' as i18;
 
 class SchoolIndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
@@ -90,8 +90,8 @@ class _SchoolIndividualDetailsPageState
                           isProximityEnabled: false,
                         ),
                       );
-                  router.push(BeneficiaryAcknowledgementRoute(
-                    enableViewHousehold: true,
+                  router.push(SchoolBeneficiaryAcknowledgementRoute(
+                    enableViewSchool: true,
                   ));
                 }
               },
@@ -615,7 +615,6 @@ class _SchoolIndividualDetailsPageState
                               },
                             ),
                           ),
-
                           Padding(
                             padding: const EdgeInsets.fromLTRB(
                               kPadding / 2,
@@ -650,20 +649,18 @@ class _SchoolIndividualDetailsPageState
                                   validationMessages: {
                                     'required': (object) =>
                                         localizations.translate(
-                                            i18.common.corecommonRequired),
+                                          i18.common.corecommonRequired,
+                                        ),
                                   },
                                 );
                               },
                             ),
                           ),
-                          //TODO:
-
                           DigitRadioButtonList<KeyValue>(
                             labelStyle: DigitTheme
                                 .instance.mobileTheme.textTheme.bodyLarge,
                             labelText: localizations.translate(
                               i18.householdDetails.parentKnownLabel,
-                              // "Parents Known?"
                             ),
                             isEnabled: true,
                             formControlName: radioKey,
@@ -683,14 +680,8 @@ class _SchoolIndividualDetailsPageState
                             keyboardType: TextInputType.text,
                             isRequired: showParent,
                             formControlName: _parentknownKey,
-                            inputFormatters: const [
-                              // FilteringTextInputFormatter.allow(
-                              //   RegExp("[0-9]"),
-                              // ),
-                            ],
                             label: localizations.translate(
                               i18.householdDetails.nameOfParentLabel,
-                              //"Name of the Parent"
                             ),
                             validationMessages: {
                               'required': (object) => localizations
@@ -838,10 +829,6 @@ class _SchoolIndividualDetailsPageState
                   _type,
                   "SCHOOL",
                 ),
-                AdditionalField(
-                  _schoolName,
-                  schoolName??"",
-                ),
               ],
             ),
     );
@@ -911,7 +898,7 @@ class _SchoolIndividualDetailsPageState
           CustomValidator.requiredMin3,
           Validators.maxLength(200),
         ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
+        value: individual?.name?.givenName,
       ),
       _individualLastNameKey: FormControl<String>(
         validators: [
@@ -945,42 +932,16 @@ class _SchoolIndividualDetailsPageState
               },
             ),
       ),
-
       _mobileNumberKey:
           FormControl<String>(value: individual?.mobileNumber, validators: [
         CustomValidator.validMobileNumber,
       ]),
-      // if (!widget.isHeadOfHousehold)
-      // _heightKey: FormControl<String>(
-      //   value: height,
-      //   validators: [Validators.required],
-      // ),
-      // if(!widget.isHeadOfHousehold)
-      // _disabilityTypeKey:
-      //     FormControl<String>(value: disabilityType, validators: [
-      //   Validators.required,
-      // ]),
-      //  if(!widget.isHeadOfHousehold)
-      // radioKey: FormControl<KeyValue>(
-      //   validators: [
-      //     Validators.required,
-      //   ],
-      //   value: Constants.yesNo[1],
-      // ),
-      //  if(!widget.isHeadOfHousehold)
-      // _parentknownKey: FormControl<String>(
-      //   validators:[
-      //     Validators.required,
-      //   ],
-      //   value: "",
-      // ),
-
       if (!widget.isHeadOfHousehold)
-        ..._buildHouseholdFields(height, disabilityType),
+        ..._buildStudentFields(height, disabilityType),
     });
   }
 
-  Map<String, FormControl<Object?>> _buildHouseholdFields(
+  Map<String, FormControl<Object?>> _buildStudentFields(
     String? height,
     String? disabilityType,
   ) {

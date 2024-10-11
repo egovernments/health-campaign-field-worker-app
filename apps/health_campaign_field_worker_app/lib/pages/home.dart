@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:attendance_management/pages/manage_attendance.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift_db_viewer/drift_db_viewer.dart';
 import 'package:flutter/material.dart';
@@ -369,21 +368,28 @@ class _HomePageState extends LocalizedState<HomePage> {
               icon: Icons.sync_alt,
               label: i18.home.syncDataLabel,
               onPressed: () async {
-                if (snapshot.data?['enablesManualSync'] == true) {
-                  if (context.mounted) _attemptSyncUp(context);
-                } else {
-                  if (context.mounted) {
-                    DigitToast.show(
-                      context,
-                      options: DigitToastOptions(
-                        localizations
-                            .translate(i18.common.coreCommonSyncInProgress),
-                        false,
-                        Theme.of(context),
-                      ),
-                    );
-                  }
-                }
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DriftDbViewer(
+                      context.read<LocalSqlDataStore>(),
+                    ),
+                  ),
+                );
+                // if (snapshot.data?['enablesManualSync'] == true) {
+                //   if (context.mounted) _attemptSyncUp(context);
+                // } else {
+                //   if (context.mounted) {
+                //     DigitToast.show(
+                //       context,
+                //       options: DigitToastOptions(
+                //         localizations
+                //             .translate(i18.common.coreCommonSyncInProgress),
+                //         false,
+                //         Theme.of(context),
+                //       ),
+                //     );
+                //   }
+                // }
               },
             );
           },
@@ -517,8 +523,6 @@ class _HomePageState extends LocalizedState<HomePage> {
             .toList()
             .contains(element))
         .toList();
-
-       
 
     final showcaseKeys =
         filteredLabels.map((label) => homeItemsShowcaseMap[label]!).toList();

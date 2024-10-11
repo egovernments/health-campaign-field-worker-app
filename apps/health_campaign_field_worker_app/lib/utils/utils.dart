@@ -8,7 +8,6 @@ import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:drift/drift.dart';
@@ -376,7 +375,8 @@ bool checkEligibilityForAgeAndSideEffect(
     if (true) {
       return currentCycle == null || currentCycle.deliveries == null
           ? false
-          : fetchProductVariant(currentCycle.deliveries!.first, individual) ==
+          : fetchProductVariant(
+                      currentCycle.deliveries!.firstOrNull, individual) ==
                   null
               ? false
               : true;
@@ -601,9 +601,9 @@ DoseCriteriaModel? fetchProductVariant(
                 .isNotEmpty
         ? individualModel.additionalFields?.fields
             .where((element) => element.key == "height")
-            .first
+            .firstOrNull!
             .value
-        : 0);
+        : '0');
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
       final condition = criteria.condition;
       if (condition != null) {
@@ -874,4 +874,38 @@ getSelectedLanguage(AppInitialized state, int index) {
       state.appConfiguration.languages![index].value == selectedLanguage;
 
   return isSelected;
+}
+
+List<HouseholdModel> excludeSchoolHouseholds(
+  List<HouseholdModel> householdModels,
+) {
+  // Create a new list to store the households that are not of type "SCHOOL"
+  List<HouseholdModel> filteredHouseholds = [];
+
+  for (final household in householdModels) {
+    if (household.additionalFields != null) {
+      // Check if the additional fields contain 'type'
+      if (household.additionalFields!.fields
+          .map((e) => e.key)
+          .contains('type')) {
+        // Get the value of 'type'
+        var typeValue = household.additionalFields!.fields
+            .firstWhere((element) => element.key == 'type')
+            .value;
+
+        // Only add the household to the filtered list if the type is not 'SCHOOL'
+        if (typeValue != 'SCHOOL') {
+          filteredHouseholds.add(household);
+        }
+      } else {
+        // Add households that don't have 'type' field as well
+        filteredHouseholds.add(household);
+      }
+    } else {
+      // Add households that don't have additional fields
+      filteredHouseholds.add(household);
+    }
+  }
+
+  return filteredHouseholds;
 }

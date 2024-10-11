@@ -12,6 +12,8 @@ const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
 const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
+const schoolOverView = SchoolOverView();
+
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
 const adverseEvents = AdverseEvents();
@@ -927,7 +929,13 @@ class SearchBeneficiary {
 class SchoolDetails {
   const SchoolDetails();
   String get noSchoolsMapped => 'NO_SCHOOLS_MAPPED';
+  String get notRegistered => 'SCHOOL_NOT_REGISTERED';
+
   String get selectSchool => 'SELECT_SCHOOL';
+
+  String get viewSchoolDetailsAction => 'VIEW_SCHOOL_DETAILS_ACTION';
+
+  String get schoolSelection => 'SCHOOL_SELECTION';
 }
 
 class BeneficiaryDetails {
@@ -1034,7 +1042,7 @@ class IndividualDetails {
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
-   String get headTeachercheckboxLabelText => 'HEAD_OF_TEACHER_LABEL_TEXT';
+  String get headTeachercheckboxLabelText => 'HEAD_OF_TEACHER_LABEL_TEXT';
 
   String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
 
@@ -1148,12 +1156,37 @@ class HouseholdDetails {
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
 
+  String get parentKnownLabel => 'PARENT_KNOWN_LABEL';
 
-      String get parentKnownLabel =>
-      'PARENT_KNOWN_LABEL';
+  String get nameOfParentLabel => 'NAME_PARENT_LABEL';
+}
 
-       String get nameOfParentLabel =>
-      'NAME_PARENT_LABEL';
+class SchoolOverView {
+  const SchoolOverView();
+
+  String get schoolOverViewLabel => 'SCHOOL_OVER_VIEW_LABEL';
+
+  String get schoolName => 'SCHOOL_NAME';
+
+  String get studentsCount => 'STUDENTS_COUNT';
+
+  String get schoolOverViewEditLabel => 'SCHOOL_OVER_VIEW_EDIT_ICON_LABEL';
+
+  String get schoolOverViewEditIconText =>
+      'SCHOOL_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+
+  String get schoolOverViewAddActionText => 'SCHOOL_OVER_VIEW__ADD_ACTION_TEXT';
+
+  String get schoolOverViewHeadNameLabel => 'SCHOOL_OVER_VIEW_HEAD_NAME_LABEL';
+
+  String get schoolOverViewActionCardTitle =>
+      'SCHOOL_OVER_VIEW_ACTION_CARD_TITLE';
+
+  String get schoolOverViewPrimaryActionLabel =>
+      'SCHOOL_OVER_VIEW_PRIMARY_ACTION_LABEL';
+
+  String get schoolOverViewSecondaryActionLabel =>
+      'SCHOOL_OVER_VIEW_SECONDARY_ACTION_LABEL';
 }
 
 class HouseholdOverView {
@@ -1271,11 +1304,12 @@ class DeliverIntervention {
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
-      String get householdRegistered=>"PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST";
-      String get peoplePercentageTreatedLabel=>"PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST";
-      String get peopleTreatedLabel=>"PERFORMANCE_SUMMARY_TASK_DATA_LIST";
-      String get drugOneLabelTableSummary=>"PERFORMANCE_SUMMARY_DRUG_ONE";
-String get drugTwoLabelTableSummary=>"PERFORMANCE_SUMMARY_DRUG_TWO";
+  String get householdRegistered => "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST";
+  String get peoplePercentageTreatedLabel =>
+      "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST";
+  String get peopleTreatedLabel => "PERFORMANCE_SUMMARY_TASK_DATA_LIST";
+  String get drugOneLabelTableSummary => "PERFORMANCE_SUMMARY_DRUG_ONE";
+  String get drugTwoLabelTableSummary => "PERFORMANCE_SUMMARY_DRUG_TWO";
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
 
