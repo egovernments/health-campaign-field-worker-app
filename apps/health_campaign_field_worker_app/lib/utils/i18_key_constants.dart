@@ -1165,6 +1165,7 @@ class SchoolOverView {
   const SchoolOverView();
 
   String get schoolOverViewLabel => 'SCHOOL_OVER_VIEW_LABEL';
+   String get schoolStudentsLabel => 'SCHOOL_STUDENT_LABEL';
 
   String get schoolName => 'SCHOOL_NAME';
 

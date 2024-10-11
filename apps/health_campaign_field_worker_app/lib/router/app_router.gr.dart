@@ -414,6 +414,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SchoolIndividualListRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolIndividualListRouteArgs>(
+          orElse: () => const SchoolIndividualListRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolIndividualListPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HouseholdOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdOverviewRouteArgs>(
           orElse: () => const HouseholdOverviewRouteArgs());
@@ -884,6 +895,11 @@ class _$AppRouter extends RootStackRouter {
                   parent: BeneficiaryWrapperRoute.name,
                   redirectTo: 'overview',
                   fullMatch: true,
+                ),
+                RouteConfig(
+                  SchoolIndividualListRoute.name,
+                  path: 'household-individuallist-details',
+                  parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
                   HouseholdOverviewRoute.name,
@@ -2444,6 +2460,41 @@ class HouseholdLocationRouteArgs {
   @override
   String toString() {
     return 'HouseholdLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolIndividualListPage]
+class SchoolIndividualListRoute
+    extends PageRouteInfo<SchoolIndividualListRouteArgs> {
+  SchoolIndividualListRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolIndividualListRoute.name,
+          path: 'household-individuallist-details',
+          args: SchoolIndividualListRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolIndividualListRoute';
+}
+
+class SchoolIndividualListRouteArgs {
+  const SchoolIndividualListRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolIndividualListRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
