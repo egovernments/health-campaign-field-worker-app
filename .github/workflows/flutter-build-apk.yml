@@ -27,6 +27,9 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      - name: Build debug APK
+        run: bash ./gradlew assembleDebug --stacktrace
+
       # Run flutter build apk to build the APK
       - name: Build APK
         run: flutter build apk --release --target=./apps/health_campaign_field_worker_app/lib/main.dart
