@@ -1,7 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/search_households/search_by_school.dart';
+import 'package:health_campaign_field_worker_app/models/entities/beneficiary_type.dart';
+import 'package:health_campaign_field_worker_app/widgets/member_card/member_card.dart';
 
 import '../../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../../blocs/household_overview/household_overview.dart';
@@ -72,51 +76,33 @@ class _HouseholdOverviewPageState extends LocalizedState<SchoolOverviewPage> {
                           },
                         ),
                         enableFixedButton: true,
-                        footer: Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              kPadding, 0, kPadding, 0),
-                          child: DigitElevatedButton(
-                            onPressed: () async {
-                              final bloc =
-                                  context.read<HouseholdOverviewBloc>();
-
-                              final wrapper = state.householdMemberWrapper;
-                              final address = wrapper.household.address;
-
-                              if (address == null) return;
-
-                              final projectId = context.projectId;
-
-                              context.read<ScannerBloc>().add(
-                                    const ScannerEvent.handleScanner(
-                                      [],
-                                      [],
-                                    ),
-                                  );
-                              await context.router.push(
-                                BeneficiaryRegistrationWrapperRoute(
-                                  initialState:
-                                      BeneficiaryRegistrationAddMemberState(
-                                    addressModel: address,
-                                    householdModel: wrapper.household,
-                                  ),
-                                  children: [
-                                    SchoolIndividualDetailsRoute(),
-                                  ],
-                                ),
-                              );
-                              bloc.add(
-                                HouseholdOverviewReloadEvent(
-                                  projectId: projectId,
-                                  projectBeneficiaryType: beneficiaryType,
-                                ),
-                              );
-                            },
-                            child: Text(
-                              localizations
-                                  .translate(i18.common.coreCommonContinue),
+                        footer: BlocBuilder<SearchBySchoolBloc, SearchHouseholdsState>(
+                          builder: (context, statek) {
+                            
+                          
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(
+                                kPadding, 0, kPadding, 0),
+                            child: DigitElevatedButton(
+                              onPressed: () async {
+                                 context.router.push(
+                        BeneficiaryWrapperRoute(
+                          wrapper: statek.householdMembers.firstOrNull!,
+                          children: [
+                            SchoolIndividualListRoute(),
+                          ],
+                        ),
+                      );
+                                
+                              
+                              },
+                              child: Text(
+                                localizations
+                                    .translate(i18.common.coreCommonContinue),
+                              ),
                             ),
-                          ),
+                          );
+                          },
                         ),
                         slivers: [
                           SliverToBoxAdapter(
@@ -285,9 +271,9 @@ class _HouseholdOverviewPageState extends LocalizedState<SchoolOverviewPage> {
                                       },
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: kPadding,
-                                  ),
+                                
+
+                                 
                                 ],
                               ),
                             ),
