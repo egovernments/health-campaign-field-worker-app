@@ -28,8 +28,7 @@ jobs:
         run: flutter pub get
 
       - name: Build debug APK
-        run: bash ./apps/health_campaign_field_worker_app/android/gradlew assembleDebug --stacktrace
-
+        run: ./tools/generate-apk.sh
       # Run flutter build apk to build the APK
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APK
