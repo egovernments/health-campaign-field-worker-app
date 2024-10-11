@@ -329,35 +329,38 @@ class CustomHouseHoldRepo extends LocalRepository {
     String boundaryCode,
   ) async {
     var selectQuery = sql.customSelect(
-      r"SELECT * FROM household, json_each(household.additional_fields, '$.fields') "
-      "WHERE json_valid(additional_fields) = 1 "
-      "AND json_each.value->>'key' = 'schoolName' "
-      "AND json_each.value->>'value' = ?;", // Use parameterized query
+      r"""
+    SELECT DISTINCT household.*, 
+           locality.code AS locality_code
+    FROM household
+    JOIN address 
+      ON household.client_reference_id = address.related_client_reference_id
+    JOIN locality 
+      ON address.locality_boundary_code = locality.code  -- Joining on locality_boundary_code
+    , json_each(household.additional_fields, '$.fields')
+    WHERE json_valid(household.additional_fields) = 1 
+      AND json_each.value->>'key' = 'schoolName' 
+      AND json_each.value->>'value' = ? 
+      AND locality.code = ?;
+    """,
       variables: [
         Variable.withString(schoolName),
-      ], // Pass the school name as a variable
+        Variable.withString(
+          boundaryCode,
+        ),
+      ],
     );
+
     final results = await selectQuery.get();
 
     // Map the results to a list of HouseholdModel
     List<HouseholdModel> households = results.map((row) {
       // Read the necessary fields from QueryRow
-      String? id = row.read<String>('id');
-      int? memberCount = row.read<int>('member_count');
       String clientReferenceId = row.read<String>('client_reference_id');
-      String? additionalFieldsJson = row.read<String>('additional_fields');
-
-      // Parse the additional fields JSON into an object
-      HouseholdAdditionalFields? additionalFields;
-      additionalFields =
-          HouseholdAdditionalFieldsMapper.fromJson(additionalFieldsJson);
 
       // Create and return a HouseholdModel instance
       return HouseholdModel(
-        id: id,
-        memberCount: memberCount,
         clientReferenceId: clientReferenceId,
-        additionalFields: additionalFields,
       );
     }).toList();
 
