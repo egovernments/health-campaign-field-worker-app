@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dio/dio.dart';
+import '../../../utils/environment_config.dart';
 
 import '../../../utils/utils.dart';
 
@@ -18,6 +19,7 @@ class BandwidthCheckRepository {
       final startTime = DateTime.now();
       await _client.post(
         bandwidthPath,
+        queryParameters: {"tenantId": envConfig.variables.tenantId},
         data: requestData,
         options: Options(headers: headers),
       );
