@@ -46,7 +46,8 @@ class _BeneficiaryAcknowledgementPageState
         secondaryLabel: localizations.translate(
           i18.schoolDetails.viewSchoolDetailsAction,
         ),
-        actionLabel: localizations.translate(i18.schoolDetails.schoolSelection),
+        actionLabel:
+            localizations.translate(i18.schoolDetails.schoolActionLabelText),
         description: localizations.translate(
           i18.acknowledgementSuccess.acknowledgementDescriptionText,
         ),

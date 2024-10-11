@@ -358,6 +358,8 @@ class MemberCard extends StatelessWidget {
                                             )
                                         ? null
                                         : () {
+                                            final reloadState = context
+                                                .read<HouseholdOverviewBloc>();
                                             Navigator.of(
                                               context,
                                               rootNavigator: true,
@@ -407,6 +409,18 @@ class MemberCard extends StatelessWidget {
                                                                 .beneficiaryRefused
                                                                 .toValue(),
                                                           ),
+                                                          isHouseHoldSchool(
+                                                            reloadState.state
+                                                                .householdMemberWrapper,
+                                                          )
+                                                              ? const AdditionalField(
+                                                                  'type',
+                                                                  'SCHOOL',
+                                                                )
+                                                              : const AdditionalField(
+                                                                  'type',
+                                                                  'HOUSEHOLD',
+                                                                ),
                                                         ],
                                                       ),
                                                       address: individual
@@ -416,8 +430,6 @@ class MemberCard extends StatelessWidget {
                                                     context.boundary,
                                                   ),
                                                 );
-                                            final reloadState = context
-                                                .read<HouseholdOverviewBloc>();
                                             Future.delayed(
                                               const Duration(milliseconds: 500),
                                               () {
@@ -431,18 +443,29 @@ class MemberCard extends StatelessWidget {
                                                 );
                                               },
                                             ).then(
-                                              (value) => context.router.push(
-                                                HouseholdAcknowledgementRoute(
-                                                  enableViewHousehold: true,
-                                                ),
-                                              ),
+                                              (value) {
+                                                !isHouseHoldSchool(reloadState
+                                                        .state
+                                                        .householdMemberWrapper)
+                                                    ? context.router.popAndPush(
+                                                        HouseholdAcknowledgementRoute(
+                                                          enableViewHousehold:
+                                                              true,
+                                                        ),
+                                                      )
+                                                    : context.router.popAndPush(
+                                                        SchoolAcknowledgementRoute(
+                                                          enableViewSchool:
+                                                              true,
+                                                        ),
+                                                      );
+                                              },
                                             );
                                           },
                                   ),
                                   const SizedBox(
                                     height: kPadding * 2,
                                   ),
-                                  
                                   DigitOutLineButton(
                                     label: localizations.translate(
                                       i18.memberCard.markIneligibleLabel,
@@ -487,7 +510,6 @@ class MemberCard extends StatelessWidget {
                                             );
                                           },
                                   ),
-                                  
                                 ],
                               ),
                             );

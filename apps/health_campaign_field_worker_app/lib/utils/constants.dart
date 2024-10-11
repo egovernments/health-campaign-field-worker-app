@@ -112,6 +112,10 @@ class Constants {
     }
   }
 
+  static const String houseHoldType = 'HOUSEHOLD';
+  static const String schoolType = 'SCHOOL';
+  static const String schoolNameKey = 'schoolName';
+
   static const String localizationApiPath = 'localization/messages/v1/_search';
   static const String projectSearchApiPath = '/project/v1/_search';
   static const String logoutUserPath = '/user/_logout';

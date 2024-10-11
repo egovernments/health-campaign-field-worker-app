@@ -276,13 +276,10 @@ class _HouseHoldDetailsPageState extends LocalizedState<SchoolDetailsPage> {
                 context.projectId,
               ),
               AdditionalField(
-                'schoolName',
+                Constants.schoolNameKey,
                 searchQuery,
               ),
-              const AdditionalField(
-                'type',
-                "SCHOOL",
-              ),
+              addSchoolAdditionalType(),
             ],
           ),
         );

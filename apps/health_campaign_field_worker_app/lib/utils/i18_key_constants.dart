@@ -936,6 +936,9 @@ class SchoolDetails {
   String get viewSchoolDetailsAction => 'VIEW_SCHOOL_DETAILS_ACTION';
 
   String get schoolSelection => 'SCHOOL_SELECTION';
+
+  String get schoolActionLabelText =>
+      'SCHOOL_ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 }
 
 class BeneficiaryDetails {
@@ -1165,7 +1168,7 @@ class SchoolOverView {
   const SchoolOverView();
 
   String get schoolOverViewLabel => 'SCHOOL_OVER_VIEW_LABEL';
-   String get schoolStudentsLabel => 'SCHOOL_STUDENT_LABEL';
+  String get schoolStudentsLabel => 'SCHOOL_STUDENT_LABEL';
 
   String get schoolName => 'SCHOOL_NAME';
 

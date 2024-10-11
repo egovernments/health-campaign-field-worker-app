@@ -245,13 +245,25 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                         ),
                                                       );
                                                     },
-                                                  ).then((value) =>
-                                                      context.router.push(
-                                                        HouseholdAcknowledgementRoute(
-                                                          enableViewHousehold:
-                                                              true,
-                                                        ),
-                                                      ));
+                                                  ).then((value) {
+                                                    !isHouseHoldSchool(reloadState
+                                                            .state
+                                                            .householdMemberWrapper)
+                                                        ? context.router
+                                                            .popAndPush(
+                                                            HouseholdAcknowledgementRoute(
+                                                              enableViewHousehold:
+                                                                  true,
+                                                            ),
+                                                          )
+                                                        : context.router
+                                                            .popAndPush(
+                                                            SchoolAcknowledgementRoute(
+                                                              enableViewSchool:
+                                                                  true,
+                                                            ),
+                                                          );
+                                                  });
                                                 }
                                               } else {
                                                 setState(() {

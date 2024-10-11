@@ -18,6 +18,7 @@ import '../pages/beneficiary/household_overview.dart';
 import '../pages/beneficiary/ineligibility_reasons.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
 import '../pages/beneficiary/refer_beneficiary.dart';
+import '../pages/beneficiary/school/school_acknowledgement.dart';
 import '../pages/beneficiary/school/school_overview.dart';
 import '../pages/beneficiary/school/school_selection.dart';
 import '../pages/beneficiary/search_beneficiary.dart';
@@ -112,7 +113,6 @@ part 'app_router.gr.dart';
           page: BeneficiaryRegistrationWrapperPage,
           path: 'beneficiary-registration',
           children: [
-            
             AutoRoute(page: IndividualDetailsPage, path: 'individual-details'),
             AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
             AutoRoute(page: SchoolDetailsPage, path: 'school-details'),
@@ -125,14 +125,16 @@ part 'app_router.gr.dart';
               path: 'household-location',
               initial: true,
             ),
-            
           ],
         ),
         AutoRoute(
           page: BeneficiaryWrapperPage,
           path: 'beneficiary',
           children: [
-            AutoRoute(page: SchoolIndividualListPage, path: 'household-individuallist-details',),
+            AutoRoute(
+              page: SchoolIndividualListPage,
+              path: 'household-individuallist-details',
+            ),
             AutoRoute(
               page: HouseholdOverviewPage,
               path: 'overview',
@@ -177,6 +179,10 @@ part 'app_router.gr.dart';
             AutoRoute(
               page: RecordPastDeliveryDetailsPage,
               path: 'record-past-delivery-details',
+            ),
+            AutoRoute(
+              page: SchoolAcknowledgementPage,
+              path: 'school-acknowledgement',
             ),
             AutoRoute(
               page: HouseholdAcknowledgementPage,

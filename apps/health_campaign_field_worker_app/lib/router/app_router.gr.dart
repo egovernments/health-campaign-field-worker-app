@@ -93,13 +93,9 @@ class _$AppRouter extends RootStackRouter {
       );
     },
     SchoolSelectionRoute.name: (routeData) {
-      final args = routeData.argsAs<SchoolSelectionRouteArgs>();
       return MaterialPageX<dynamic>(
         routeData: routeData,
-        child: SchoolSelectionPage(
-          key: args.key,
-          schools: args.schools,
-        ),
+        child: const SchoolSelectionPage(),
       );
     },
     QRScannerRoute.name: (routeData) {
@@ -400,6 +396,7 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           isHeadOfHousehold: args.isHeadOfHousehold,
+          headName: args.headName,
         ),
       );
     },
@@ -553,6 +550,18 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
+        ),
+      );
+    },
+    SchoolAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolAcknowledgementRouteArgs>(
+          orElse: () => const SchoolAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewSchool: args.enableViewSchool,
         ),
       );
     },
@@ -954,6 +963,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   RecordPastDeliveryDetailsRoute.name,
                   path: 'record-past-delivery-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SchoolAcknowledgementRoute.name,
+                  path: 'school-acknowledgement',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -1421,36 +1435,14 @@ class SelectBeneficiaryRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [SchoolSelectionPage]
-class SchoolSelectionRoute extends PageRouteInfo<SchoolSelectionRouteArgs> {
-  SchoolSelectionRoute({
-    Key? key,
-    required List<String> schools,
-  }) : super(
+class SchoolSelectionRoute extends PageRouteInfo<void> {
+  const SchoolSelectionRoute()
+      : super(
           SchoolSelectionRoute.name,
           path: 'school-selection',
-          args: SchoolSelectionRouteArgs(
-            key: key,
-            schools: schools,
-          ),
         );
 
   static const String name = 'SchoolSelectionRoute';
-}
-
-class SchoolSelectionRouteArgs {
-  const SchoolSelectionRouteArgs({
-    this.key,
-    required this.schools,
-  });
-
-  final Key? key;
-
-  final List<String> schools;
-
-  @override
-  String toString() {
-    return 'SchoolSelectionRouteArgs{key: $key, schools: $schools}';
-  }
 }
 
 /// generated route for
@@ -2397,6 +2389,7 @@ class SchoolIndividualDetailsRoute
     Key? key,
     AppLocalizations? appLocalizations,
     bool isHeadOfHousehold = false,
+    String? headName,
   }) : super(
           SchoolIndividualDetailsRoute.name,
           path: 'school-individual-details',
@@ -2404,6 +2397,7 @@ class SchoolIndividualDetailsRoute
             key: key,
             appLocalizations: appLocalizations,
             isHeadOfHousehold: isHeadOfHousehold,
+            headName: headName,
           ),
         );
 
@@ -2415,6 +2409,7 @@ class SchoolIndividualDetailsRouteArgs {
     this.key,
     this.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.headName,
   });
 
   final Key? key;
@@ -2423,9 +2418,11 @@ class SchoolIndividualDetailsRouteArgs {
 
   final bool isHeadOfHousehold;
 
+  final String? headName;
+
   @override
   String toString() {
-    return 'SchoolIndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold}';
+    return 'SchoolIndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, headName: $headName}';
   }
 }
 
@@ -2939,6 +2936,46 @@ class RecordPastDeliveryDetailsRouteArgs {
   @override
   String toString() {
     return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks}';
+  }
+}
+
+/// generated route for
+/// [SchoolAcknowledgementPage]
+class SchoolAcknowledgementRoute
+    extends PageRouteInfo<SchoolAcknowledgementRouteArgs> {
+  SchoolAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewSchool,
+  }) : super(
+          SchoolAcknowledgementRoute.name,
+          path: 'school-acknowledgement',
+          args: SchoolAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewSchool: enableViewSchool,
+          ),
+        );
+
+  static const String name = 'SchoolAcknowledgementRoute';
+}
+
+class SchoolAcknowledgementRouteArgs {
+  const SchoolAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewSchool,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewSchool;
+
+  @override
+  String toString() {
+    return 'SchoolAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewSchool: $enableViewSchool}';
   }
 }
 

@@ -29,11 +29,13 @@ import '../../../widgets/showcase/showcase_button.dart';
 
 class SchoolIndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
+  final String? headName;
 
   const SchoolIndividualDetailsPage({
     super.key,
     super.appLocalizations,
     this.isHeadOfHousehold = false,
+    this.headName,
   });
 
   @override
@@ -56,7 +58,6 @@ class _SchoolIndividualDetailsPageState
   static const _heightKey = 'height';
   static const radioKey = "parentKnown";
   static const _type = 'type';
-  static const _schoolName = 'schoolName';
 
   static const _parentknownKey = "parentknownKey";
 
@@ -67,6 +68,7 @@ class _SchoolIndividualDetailsPageState
   @override
   Widget build(BuildContext context) {
     final bloc = context.read<BeneficiaryRegistrationBloc>();
+
     final router = context.router;
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
@@ -678,7 +680,7 @@ class _SchoolIndividualDetailsPageState
                           DigitTextFormField(
                             readOnly: !showParent,
                             keyboardType: TextInputType.text,
-                            isRequired: showParent,
+                            isRequired: true,
                             formControlName: _parentknownKey,
                             label: localizations.translate(
                               i18.householdDetails.nameOfParentLabel,
@@ -825,10 +827,7 @@ class _SchoolIndividualDetailsPageState
           : IndividualAdditionalFields(
               version: 1,
               fields: [
-                const AdditionalField(
-                  _type,
-                  "SCHOOL",
-                ),
+                addSchoolAdditionalType(),
               ],
             ),
     );
@@ -864,7 +863,17 @@ class _SchoolIndividualDetailsPageState
     return individual;
   }
 
-  FormGroup buildForm(BeneficiaryRegistrationState state) {
+  FormControl<T> _buildFormControl<T>({
+    required T? value,
+    required List<ValidatorFunction> validators,
+  }) {
+    return FormControl<T>(
+      value: value,
+      validators: validators,
+    );
+  }
+
+  buildForm(BeneficiaryRegistrationState state) {
     final individual = state.mapOrNull<IndividualModel>(
       editIndividual: (value) {
         if (value.projectBeneficiaryModel?.tag != null) {
@@ -937,7 +946,10 @@ class _SchoolIndividualDetailsPageState
         CustomValidator.validMobileNumber,
       ]),
       if (!widget.isHeadOfHousehold)
-        ..._buildStudentFields(height, disabilityType),
+        ..._buildStudentFields(
+          height,
+          disabilityType,
+        ),
     });
   }
 
@@ -959,19 +971,9 @@ class _SchoolIndividualDetailsPageState
         validators: [Validators.required],
       ),
       _parentknownKey: _buildFormControl<String>(
-        value: "",
+        value: widget.headName,
         validators: [Validators.required],
       ),
     };
-  }
-
-  FormControl<T> _buildFormControl<T>({
-    required T? value,
-    required List<ValidatorFunction> validators,
-  }) {
-    return FormControl<T>(
-      value: value,
-      validators: validators,
-    );
   }
 }

@@ -96,6 +96,10 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  List<String> get schoolsList {
+    return boundary.area!.split(',').toList();
+  }
+
   BeneficiaryType get beneficiaryType {
     final projectBloc = _get<ProjectBloc>();
 

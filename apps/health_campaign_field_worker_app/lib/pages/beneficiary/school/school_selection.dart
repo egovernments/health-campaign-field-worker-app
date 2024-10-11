@@ -16,11 +16,8 @@ import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 
 class SchoolSelectionPage extends LocalizedStatefulWidget {
-  final List<String> schools;
-
   const SchoolSelectionPage({
     super.key,
-    required this.schools,
   });
 
   @override
@@ -72,7 +69,7 @@ class _SchoolSelectionPageState extends LocalizedState<SchoolSelectionPage> {
             footer: Padding(
               padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
               child: DigitElevatedButton(
-                onPressed: form.valid
+                onPressed: form.valid && !searchHouseholdsState.loading
                     ? () {
                         if (!form.valid) return;
                         final bloc = context.read<SearchBlocWrapper>();
@@ -87,9 +84,11 @@ class _SchoolSelectionPageState extends LocalizedState<SchoolSelectionPage> {
                         ));
                       }
                     : null,
-                child: Text(
-                  localizations.translate(i18.common.coreCommonContinue),
-                ),
+                child: !searchHouseholdsState.loading
+                    ? Text(
+                        localizations.translate(i18.common.coreCommonContinue),
+                      )
+                    : const CircularProgressIndicator(),
               ),
             ),
             children: [
@@ -142,8 +141,8 @@ class _SchoolSelectionPageState extends LocalizedState<SchoolSelectionPage> {
                           ),
                           valueMapper: (value) =>
                               localizations.translate(value),
-                          initialValue: widget.schools.firstOrNull,
-                          menuItems: widget.schools
+                          initialValue: context.schoolsList.firstOrNull,
+                          menuItems: context.schoolsList
                               .map(
                                 (e) => e,
                               )
@@ -175,7 +174,7 @@ class _SchoolSelectionPageState extends LocalizedState<SchoolSelectionPage> {
   FormGroup _form() {
     return fb.group({
       _schoolName: FormControl<String>(
-        value: widget.schools.firstOrNull,
+        value: context.schoolsList.firstOrNull,
         validators: [Validators.required],
       ),
     });

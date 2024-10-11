@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../blocs/app_initialization/app_initialization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../blocs/product_variant/product_variant.dart';
 import '../../blocs/project/project.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../blocs/search_households/search_households.dart';
 import '../../models/data_model.dart';
 import '../../models/project_type/project_type_model.dart';
 import '../../router/app_router.dart';
@@ -68,6 +67,7 @@ class _DeliverInterventionPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final router = context.router;
+    final reloadState = context.read<HouseholdOverviewBloc>();
 
     List<StepsModel> generateSteps(int numberOfDoses) {
       return List.generate(numberOfDoses, (index) {
@@ -325,6 +325,8 @@ class _DeliverInterventionPageState
                                                                           lat,
                                                                       longitude:
                                                                           long,
+                                                                      wrapper:
+                                                                          householdMemberWrapper,
                                                                     ),
                                                                   );
                                                                   DigitDialog
@@ -367,8 +369,6 @@ class _DeliverInterventionPageState
                                                                                     context.boundary,
                                                                                   ),
                                                                                 );
-                                                                            final reloadState =
-                                                                                context.read<HouseholdOverviewBloc>();
                                                                             Future.delayed(
                                                                               const Duration(
                                                                                 milliseconds: 1000,
@@ -383,11 +383,17 @@ class _DeliverInterventionPageState
                                                                               },
                                                                             ).then(
                                                                               (value) {
-                                                                                context.router.popAndPush(
-                                                                                  HouseholdAcknowledgementRoute(
-                                                                                    enableViewHousehold: true,
-                                                                                  ),
-                                                                                );
+                                                                                !isHouseHoldSchool(reloadState.state.householdMemberWrapper)
+                                                                                    ? context.router.popAndPush(
+                                                                                        HouseholdAcknowledgementRoute(
+                                                                                          enableViewHousehold: true,
+                                                                                        ),
+                                                                                      )
+                                                                                    : context.router.popAndPush(
+                                                                                        SchoolAcknowledgementRoute(
+                                                                                          enableViewSchool: true,
+                                                                                        ),
+                                                                                      );
                                                                                 Navigator.pop(ctx);
                                                                               },
                                                                             );
@@ -444,11 +450,17 @@ class _DeliverInterventionPageState
                                                                                 },
                                                                               ).then(
                                                                                 (value) {
-                                                                                  context.router.popAndPush(
-                                                                                    HouseholdAcknowledgementRoute(
-                                                                                      enableViewHousehold: true,
-                                                                                    ),
-                                                                                  );
+                                                                                  !isHouseHoldSchool(reloadState.state.householdMemberWrapper)
+                                                                                      ? context.router.popAndPush(
+                                                                                          HouseholdAcknowledgementRoute(
+                                                                                            enableViewHousehold: true,
+                                                                                          ),
+                                                                                        )
+                                                                                      : context.router.popAndPush(
+                                                                                          SchoolAcknowledgementRoute(
+                                                                                            enableViewSchool: true,
+                                                                                          ),
+                                                                                        );
                                                                                   Navigator.pop(ctx);
                                                                                 },
                                                                               );
@@ -732,6 +744,7 @@ class _DeliverInterventionPageState
     AddressModel? address,
     double? latitude,
     double? longitude,
+    HouseholdMemberWrapper? wrapper,
   }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
@@ -748,6 +761,14 @@ class _DeliverInterventionPageState
       clientAuditDetails: ClientAuditDetails(
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
+      ),
+      additionalFields: TaskAdditionalFields(
+        version: 1,
+        fields: [
+          isHouseHoldSchool(wrapper!)
+              ? addSchoolAdditionalType()
+              : addHouseHoldAdditionalType(),
+        ],
       ),
     );
 
@@ -908,8 +929,7 @@ class _DeliverInterventionPageState
       ]),
       _quantityWastedRadioKey: FormArray<KeyValue>([
         ..._controllers.map(
-          (e) =>
-              FormControl<KeyValue>(value: Constants.yesNo[1]),
+          (e) => FormControl<KeyValue>(value: Constants.yesNo[1]),
         ),
       ]),
     });

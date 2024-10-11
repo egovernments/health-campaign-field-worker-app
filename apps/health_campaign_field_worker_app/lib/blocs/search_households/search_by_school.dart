@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../models/data_model.dart';
 import 'search_households.dart';
@@ -43,10 +44,14 @@ class SearchBySchoolBloc extends SearchHouseholdsBloc {
     emit(state.copyWith(loading: true));
 
     var school = await customHouseHoldRepo?.customSchoolSearch(
-        event.searchText, event.boundaryCode);
-    print('school ${school!}');
+      event.searchText,
+      event.boundaryCode,
+    );
+    if (kDebugMode) {
+      print('school ${school!}');
+    }
 
-    if (school.isNotEmpty) {
+    if (school!.isNotEmpty) {
       householdList = await household.search(HouseholdSearchModel(
         clientReferenceId: [school.firstOrNull!.clientReferenceId],
       ));

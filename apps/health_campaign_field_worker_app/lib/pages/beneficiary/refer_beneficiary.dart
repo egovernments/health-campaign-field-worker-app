@@ -257,11 +257,20 @@ class _ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                           context.beneficiaryType,
                                     ));
                                   },
-                                ).then((value) => context.router.popAndPush(
-                                      HouseholdAcknowledgementRoute(
-                                        enableViewHousehold: true,
-                                      ),
-                                    ));
+                                ).then((value) {
+                                  !isHouseHoldSchool(reloadState
+                                          .state.householdMemberWrapper)
+                                      ? context.router.popAndPush(
+                                          HouseholdAcknowledgementRoute(
+                                            enableViewHousehold: true,
+                                          ),
+                                        )
+                                      : context.router.popAndPush(
+                                          SchoolAcknowledgementRoute(
+                                            enableViewSchool: true,
+                                          ),
+                                        );
+                                });
                               }
                             },
                       child: Center(

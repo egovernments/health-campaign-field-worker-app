@@ -55,9 +55,7 @@ class _SelectBeneficiaryTypeState
           label: BeneficiaryType.school.toValue(),
           onPressed: () async {
             if (context.boundary.area != null) {
-              context.router.push(SchoolSelectionRoute(
-                schools: context.boundary.area!.split(',').toList(),
-              ));
+              context.router.push(const SchoolSelectionRoute());
             } else {
               DigitToast.show(
                 context,

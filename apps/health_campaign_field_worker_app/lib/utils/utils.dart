@@ -909,3 +909,22 @@ List<HouseholdModel> excludeSchoolHouseholds(
 
   return filteredHouseholds;
 }
+
+bool isHouseHoldSchool(HouseholdMemberWrapper wrapper) {
+  bool isSchool = wrapper.household.additionalFields!.fields
+          .where(
+            (element) => element.key == 'type' && element.value == 'SCHOOL',
+          )
+          .firstOrNull !=
+      null;
+
+  return isSchool;
+}
+
+addSchoolAdditionalType() {
+  return const AdditionalField('type', Constants.schoolType);
+}
+
+addHouseHoldAdditionalType() {
+  return const AdditionalField('type', Constants.houseHoldType);
+}
