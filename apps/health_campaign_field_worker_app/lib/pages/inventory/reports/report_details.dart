@@ -92,12 +92,14 @@ class _InventoryReportDetailsPageState
     });
   }
 
-  FormGroup _form() {
+  FormGroup _form(List<ProductVariantModel> productVariants) {
     return fb.group({
       _facilityKey: FormControl<FacilityModel>(
         validators: [Validators.required],
       ),
-      _productVariantKey: FormControl<ProductVariantModel>(),
+      _productVariantKey: FormControl<ProductVariantModel>(
+        value: productVariants.length == 1 ? productVariants.first : null,
+      ),
     });
   }
 
@@ -135,200 +137,223 @@ class _InventoryReportDetailsPageState
             i18.inventoryReportDetails.noFilterMessage,
           );
 
-          return ScrollableContent(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const BackNavigationHelpHeaderWidget(),
-              Container(
-                padding: const EdgeInsets.all(kPadding),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    title,
-                    maxLines: 1,
-                    style: Theme.of(context).textTheme.displayMedium,
+          return FacilityBlocWrapper(
+            child: ProductVariantBlocWrapper(
+              child: BlocProvider(
+                create: (context) => StockReconciliationBloc(
+                  stockRepository:
+                      context.repository<StockModel, StockSearchModel>(),
+                  stockReconciliationRepository: context.repository<
+                      StockReconciliationModel,
+                      StockReconciliationSearchModel>(),
+                  StockReconciliationState(
+                    projectId: context.projectId,
+                    dateOfReconciliation: DateTime.now(),
                   ),
                 ),
-              ),
-              ReactiveFormBuilder(
-                form: _form,
-                builder: (ctx, form, child) {
-                  return SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.65,
-                    child: FacilityBlocWrapper(
-                      child: ProductVariantBlocWrapper(
-                        child: BlocProvider(
-                          create: (context) => StockReconciliationBloc(
-                            stockRepository: context
-                                .repository<StockModel, StockSearchModel>(),
-                            stockReconciliationRepository: context.repository<
-                                StockReconciliationModel,
-                                StockReconciliationSearchModel>(),
-                            StockReconciliationState(
-                              projectId: context.projectId,
-                              dateOfReconciliation: DateTime.now(),
+                child: BlocBuilder<ProductVariantBloc, ProductVariantState>(
+                  builder: (context1, state) {
+                    return state.maybeWhen(
+                      orElse: () => const Offstage(),
+                      fetched: (productVariants) {
+                        return ScrollableContent(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const BackNavigationHelpHeaderWidget(),
+                            Container(
+                              padding: const EdgeInsets.all(kPadding),
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  title,
+                                  maxLines: 1,
+                                  style:
+                                      Theme.of(context).textTheme.displayMedium,
+                                ),
+                              ),
                             ),
-                          ),
-                          child: BlocConsumer<StockReconciliationBloc,
-                              StockReconciliationState>(
-                            listener: (context, stockState) {
-                              if (!stockState.persisted) return;
+                            ReactiveFormBuilder(
+                              form: () => _form(productVariants),
+                              builder: (ctx, form, child) {
+                                return SizedBox(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.65,
+                                  child: BlocConsumer<StockReconciliationBloc,
+                                      StockReconciliationState>(
+                                    listener: (context, stockState) {
+                                      if (!stockState.persisted) return;
 
-                              context.router.replace(AcknowledgementRoute());
-                            },
-                            builder: (context, stockState) {
-                              return Column(
-                                children: [
-                                  DigitCard(
-                                    child: Column(
-                                      children: [
-                                        if (!isDistributor)
-                                          BlocConsumer<FacilityBloc,
-                                              FacilityState>(
-                                            listener: (context, state) =>
-                                                state.whenOrNull(
-                                              empty: () =>
-                                                  NoFacilitiesAssignedDialog
-                                                      .show(
-                                                context,
-                                              ),
-                                            ),
-                                            builder: (context, state) {
-                                              final facilities =
-                                                  state.whenOrNull(
-                                                        fetched: (facilities, _,
-                                                                __) =>
-                                                            facilities,
-                                                      ) ??
-                                                      [];
-
-                                              List<FacilityModel>
-                                                  filteredFacilities = [];
-                                              if (isCommunityDistributor) {
-                                                filteredFacilities = facilities
-                                                    .where(
-                                                      (element) =>
-                                                          element.name ==
-                                                          context.loggedInUser
-                                                              .userName,
-                                                    )
-                                                    .toList();
-                                              }
-
-                                              final allFacilities =
-                                                  state.whenOrNull(
-                                                        fetched: (
-                                                          _,
-                                                          allFacilities,
-                                                          __,
-                                                        ) =>
-                                                            allFacilities,
-                                                      ) ??
-                                                      [];
-                                              for (var element
-                                                  in allFacilities) {
-                                                facilityMap[element.id] =
-                                                    element;
-                                              }
-
-                                              return InkWell(
-                                                onTap: () async {
-                                                  final stockReconciliationBloc =
-                                                      context.read<
-                                                          StockReconciliationBloc>();
-
-                                                  final facility = await context
-                                                      .router
-                                                      .push<FacilityModel>(
-                                                    FacilitySelectionRoute(
-                                                      facilities:
-                                                          isCommunityDistributor &&
-                                                                  filteredFacilities
-                                                                      .isNotEmpty
-                                                              ? filteredFacilities
-                                                              : facilities,
+                                      context.router
+                                          .replace(AcknowledgementRoute());
+                                    },
+                                    builder: (context, stockState) {
+                                      return Column(
+                                        children: [
+                                          DigitCard(
+                                            child: Column(
+                                              children: [
+                                                if (!isDistributor)
+                                                  BlocConsumer<FacilityBloc,
+                                                      FacilityState>(
+                                                    listener:
+                                                        (context, state) =>
+                                                            state.whenOrNull(
+                                                      empty: () =>
+                                                          NoFacilitiesAssignedDialog
+                                                              .show(
+                                                        context,
+                                                      ),
                                                     ),
-                                                  );
+                                                    builder: (context, state) {
+                                                      final facilities =
+                                                          state.whenOrNull(
+                                                                fetched: (facilities,
+                                                                        _,
+                                                                        __) =>
+                                                                    facilities,
+                                                              ) ??
+                                                              [];
 
-                                                  if (facility == null) return;
-                                                  form
-                                                      .control(_facilityKey)
-                                                      .value = facility;
-                                                  stockReconciliationBloc.add(
-                                                    StockReconciliationSelectFacilityEvent(
-                                                      facility,
-                                                    ),
-                                                  );
+                                                      List<FacilityModel>
+                                                          filteredFacilities =
+                                                          [];
+                                                      if (isCommunityDistributor) {
+                                                        filteredFacilities =
+                                                            facilities
+                                                                .where(
+                                                                  (element) =>
+                                                                      element
+                                                                          .name ==
+                                                                      context
+                                                                          .loggedInUser
+                                                                          .userName,
+                                                                )
+                                                                .toList();
+                                                      }
 
-                                                  handleSelection(form);
-                                                },
-                                                child: IgnorePointer(
-                                                  child: DigitTextFormField(
-                                                    valueAccessor:
-                                                        FacilityValueAccessor(
-                                                      facilities,
-                                                    ),
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.stockReconciliationDetails
-                                                          .facilityLabel,
-                                                    ),
-                                                    suffix: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Icon(Icons.search),
-                                                    ),
-                                                    formControlName:
-                                                        _facilityKey,
-                                                    readOnly: false,
-                                                    isRequired: true,
-                                                    onTap: () async {
-                                                      final stockReconciliationBloc =
-                                                          context.read<
-                                                              StockReconciliationBloc>();
+                                                      final allFacilities =
+                                                          state.whenOrNull(
+                                                                fetched: (
+                                                                  _,
+                                                                  allFacilities,
+                                                                  __,
+                                                                ) =>
+                                                                    allFacilities,
+                                                              ) ??
+                                                              [];
+                                                      for (var element
+                                                          in allFacilities) {
+                                                        facilityMap[element
+                                                            .id] = element;
+                                                      }
 
-                                                      final facility =
-                                                          await context.router
-                                                              .push<
-                                                                  FacilityModel>(
-                                                        FacilitySelectionRoute(
-                                                          facilities:
+                                                      return InkWell(
+                                                        onTap: () async {
+                                                          final stockReconciliationBloc =
+                                                              context.read<
+                                                                  StockReconciliationBloc>();
+
+                                                          final facility =
+                                                              await context
+                                                                  .router
+                                                                  .push<
+                                                                      FacilityModel>(
+                                                            FacilitySelectionRoute(
+                                                              facilities: isCommunityDistributor &&
+                                                                      filteredFacilities
+                                                                          .isNotEmpty
+                                                                  ? filteredFacilities
+                                                                  : facilities,
+                                                            ),
+                                                          );
+
+                                                          if (facility == null)
+                                                            return;
+                                                          form
+                                                              .control(
+                                                                  _facilityKey)
+                                                              .value = facility;
+                                                          stockReconciliationBloc
+                                                              .add(
+                                                            StockReconciliationSelectFacilityEvent(
+                                                              facility,
+                                                            ),
+                                                          );
+
+                                                          handleSelection(form);
+                                                        },
+                                                        child: IgnorePointer(
+                                                          child:
+                                                              DigitTextFormField(
+                                                            valueAccessor:
+                                                                FacilityValueAccessor(
                                                               facilities,
+                                                            ),
+                                                            label: localizations
+                                                                .translate(
+                                                              i18.stockReconciliationDetails
+                                                                  .facilityLabel,
+                                                            ),
+                                                            suffix:
+                                                                const Padding(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(8.0),
+                                                              child: Icon(
+                                                                  Icons.search),
+                                                            ),
+                                                            formControlName:
+                                                                _facilityKey,
+                                                            readOnly: false,
+                                                            isRequired: true,
+                                                            onTap: () async {
+                                                              final stockReconciliationBloc =
+                                                                  context.read<
+                                                                      StockReconciliationBloc>();
+
+                                                              final facility =
+                                                                  await context
+                                                                      .router
+                                                                      .push<
+                                                                          FacilityModel>(
+                                                                FacilitySelectionRoute(
+                                                                  facilities:
+                                                                      facilities,
+                                                                ),
+                                                              );
+
+                                                              if (facility ==
+                                                                  null) return;
+                                                              form
+                                                                  .control(
+                                                                      _facilityKey)
+                                                                  .value = facility;
+                                                              stockReconciliationBloc
+                                                                  .add(
+                                                                StockReconciliationSelectFacilityEvent(
+                                                                  facility,
+                                                                ),
+                                                              );
+
+                                                              handleSelection(
+                                                                form,
+                                                              );
+                                                            },
+                                                          ),
                                                         ),
                                                       );
-
-                                                      if (facility == null)
-                                                        return;
-                                                      form
-                                                          .control(_facilityKey)
-                                                          .value = facility;
-                                                      stockReconciliationBloc
-                                                          .add(
-                                                        StockReconciliationSelectFacilityEvent(
-                                                          facility,
-                                                        ),
-                                                      );
-
-                                                      handleSelection(form);
                                                     },
                                                   ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        BlocBuilder<ProductVariantBloc,
-                                            ProductVariantState>(
-                                          builder: (context, state) {
-                                            return state.maybeWhen(
-                                              orElse: () => const Offstage(),
-                                              fetched: (productVariants) {
-                                                return DigitReactiveSearchDropdown<
+                                                DigitReactiveSearchDropdown<
                                                     ProductVariantModel>(
                                                   label:
                                                       localizations.translate(
                                                     i18.stockReconciliationDetails
                                                         .productLabel,
                                                   ),
+                                                  enabled:
+                                                      productVariants.length >
+                                                          1,
                                                   form: form,
                                                   menuItems: productVariants,
                                                   formControlName:
@@ -352,389 +377,355 @@ class _InventoryReportDetailsPageState
                                                       localizations.translate(
                                                     i18.common.noMatchFound,
                                                   ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Align(
-                                      alignment: Alignment.topCenter,
-                                      child: inventoryReportState.when(
-                                        empty: () => _NoReportContent(
-                                          title: title,
-                                          message: noFilterMessage,
-                                        ),
-                                        loading: () {
-                                          return const Center(
-                                            child: CircularProgressIndicator(),
-                                          );
-                                        },
-                                        stock: (data) {
-                                          if (data.isEmpty) {
-                                            return Padding(
-                                              padding: const EdgeInsets.all(
-                                                kPadding * 2,
-                                              ),
-                                              child: _NoReportContent(
-                                                title: title,
-                                                message: noRecordsMessage,
-                                              ),
-                                            );
-                                          }
-
-                                          const dateKey = 'date';
-                                          const waybillKey = 'waybillNumber';
-                                          const quantityKey = 'quantity';
-                                          const transactingPartyKey =
-                                              'transactingParty';
-                                          const batchNumberKey = 'batchNumber';
-                                          const expiryDateKey = 'dateOfExpiry';
-
-                                          return _ReportDetailsContent(
-                                            title: title,
-                                            data: DigitGridData(
-                                              columns: [
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .dateLabel,
-                                                  ),
-                                                  key: dateKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .waybillLabel,
-                                                  ),
-                                                  key: waybillKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label: quantityLabel,
-                                                  key: quantityKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label: transactingPartyLabel,
-                                                  key: transactingPartyKey,
-                                                  width: 200,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.stockDetails
-                                                        .batchNumberLabel,
-                                                  ),
-                                                  key: batchNumberKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.stockDetails
-                                                        .dateOfExpiryLabel,
-                                                  ),
-                                                  key: expiryDateKey,
-                                                  width: 100,
                                                 ),
                                               ],
-                                              rows: [
-                                                for (final entry
-                                                    in data.entries) ...[
-                                                  for (final model
-                                                      in entry.value)
-                                                    DigitGridRow(
-                                                      [
-                                                        DigitGridCell(
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.topCenter,
+                                              child: inventoryReportState.when(
+                                                empty: () => _NoReportContent(
+                                                  title: title,
+                                                  message: noFilterMessage,
+                                                ),
+                                                loading: () {
+                                                  return const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  );
+                                                },
+                                                stock: (data) {
+                                                  if (data.isEmpty) {
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                        kPadding * 2,
+                                                      ),
+                                                      child: _NoReportContent(
+                                                        title: title,
+                                                        message:
+                                                            noRecordsMessage,
+                                                      ),
+                                                    );
+                                                  }
+
+                                                  const dateKey = 'date';
+                                                  const waybillKey =
+                                                      'waybillNumber';
+                                                  const quantityKey =
+                                                      'quantity';
+                                                  const transactingPartyKey =
+                                                      'transactingParty';
+                                                  const batchNumberKey =
+                                                      'batchNumber';
+                                                  const expiryDateKey =
+                                                      'dateOfExpiry';
+
+                                                  return _ReportDetailsContent(
+                                                    title: title,
+                                                    data: DigitGridData(
+                                                      columns: [
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .dateLabel,
+                                                          ),
                                                           key: dateKey,
-                                                          value: entry.key,
+                                                          width: 100,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .waybillLabel,
+                                                          ),
                                                           key: waybillKey,
-                                                          value: model
-                                                                  .waybillNumber ??
-                                                              model
-                                                                  .waybillNumber ??
-                                                              '',
+                                                          width: 100,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: quantityLabel,
                                                           key: quantityKey,
-                                                          value:
-                                                              model.quantity ??
-                                                                  '',
+                                                          width: 100,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label:
+                                                              transactingPartyLabel,
                                                           key:
                                                               transactingPartyKey,
-                                                          // value: widget
-                                                          //                 .reportType ==
-                                                          //             InventoryReportType
-                                                          //                 .receipt ||
-                                                          //         widget.reportType ==
-                                                          //             InventoryReportType
-                                                          //                 .dispatch ||
-                                                          //         widget.reportType ==
-                                                          //             InventoryReportType
-                                                          //                 .loss ||
-                                                          //         widget.reportType ==
-                                                          //             InventoryReportType
-                                                          //                 .damage
-                                                          //     ? model.receiverId ??
-                                                          //         model
-                                                          //             .receiverType ??
-                                                          //         ''
-                                                          //     : model.senderId ??
-                                                          //         model
-                                                          //             .receiverType ??
-                                                          //         '',
-                                                          value: facilityMap[model
-                                                                      .transactingPartyId]
-                                                                  ?.name ??
-                                                              '',
+                                                          width: 200,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.stockDetails
+                                                                .batchNumberLabel,
+                                                          ),
                                                           key: batchNumberKey,
-                                                          value: model
-                                                                  .additionalFields
-                                                                  ?.fields
-                                                                  .firstWhereOrNull(
-                                                                    (element) =>
-                                                                        element
-                                                                            .key ==
-                                                                        batchNumberKey,
-                                                                  )
-                                                                  ?.value ??
-                                                              '',
+                                                          width: 100,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.stockDetails
+                                                                .dateOfExpiryLabel,
+                                                          ),
                                                           key: expiryDateKey,
-                                                          value: model.additionalFields
-                                                                      ?.fields
-                                                                      .firstWhereOrNull(
-                                                                        (element) =>
-                                                                            element.key ==
-                                                                            expiryDateKey,
-                                                                      )
-                                                                      ?.value !=
-                                                                  null
-                                                              ? DateFormat(
-                                                                  'dd MMM yyyy',
-                                                                ).format(DateTime
-                                                                  .fromMillisecondsSinceEpoch(
-                                                                  int.parse(model
+                                                          width: 100,
+                                                        ),
+                                                      ],
+                                                      rows: [
+                                                        for (final entry in data
+                                                            .entries) ...[
+                                                          for (final model
+                                                              in entry.value)
+                                                            DigitGridRow(
+                                                              [
+                                                                DigitGridCell(
+                                                                  key: dateKey,
+                                                                  value:
+                                                                      entry.key,
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      waybillKey,
+                                                                  value: model
+                                                                          .waybillNumber ??
+                                                                      model
+                                                                          .waybillNumber ??
+                                                                      '',
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      quantityKey,
+                                                                  value: model
+                                                                          .quantity ??
+                                                                      '',
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      transactingPartyKey,
+                                                                  value: facilityMap[
+                                                                              model.transactingPartyId]
+                                                                          ?.name ??
+                                                                      '',
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      batchNumberKey,
+                                                                  value: model
                                                                           .additionalFields
                                                                           ?.fields
                                                                           .firstWhereOrNull(
                                                                             (element) =>
                                                                                 element.key ==
-                                                                                expiryDateKey,
+                                                                                batchNumberKey,
                                                                           )
-                                                                          ?.value
-                                                                          .toString() ??
-                                                                      '0'),
-                                                                ))
-                                                              : '',
-                                                        ),
+                                                                          ?.value ??
+                                                                      '',
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      expiryDateKey,
+                                                                  value: model.additionalFields
+                                                                              ?.fields
+                                                                              .firstWhereOrNull(
+                                                                                (element) => element.key == expiryDateKey,
+                                                                              )
+                                                                              ?.value !=
+                                                                          null
+                                                                      ? DateFormat(
+                                                                          'dd MMM yyyy',
+                                                                        ).format(
+                                                                          DateTime
+                                                                              .fromMillisecondsSinceEpoch(
+                                                                          int.parse(model.additionalFields?.fields
+                                                                                  .firstWhereOrNull(
+                                                                                    (element) => element.key == expiryDateKey,
+                                                                                  )
+                                                                                  ?.value
+                                                                                  .toString() ??
+                                                                              '0'),
+                                                                        ))
+                                                                      : '',
+                                                                ),
+                                                              ],
+                                                            ),
+                                                        ],
                                                       ],
                                                     ),
-                                                ],
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                        stockReconciliation: (data) {
-                                          if (data.isEmpty) {
-                                            return Padding(
-                                              padding: const EdgeInsets.all(
-                                                kPadding * 2,
-                                              ),
-                                              child: _NoReportContent(
-                                                title: title,
-                                                message: noRecordsMessage,
-                                              ),
-                                            );
-                                          }
+                                                  );
+                                                },
+                                                stockReconciliation: (data) {
+                                                  if (data.isEmpty) {
+                                                    return Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                        kPadding * 2,
+                                                      ),
+                                                      child: _NoReportContent(
+                                                        title: title,
+                                                        message:
+                                                            noRecordsMessage,
+                                                      ),
+                                                    );
+                                                  }
 
-                                          const dateKey = 'date';
-                                          const receivedKey = 'received';
-                                          const dispatchedKey = 'dispatched';
-                                          const returnedKey = 'returned';
-                                          const damagedKey = 'damaged';
-                                          const lossKey = 'loss';
-                                          const stockInHandKey = 'stockInHand';
-                                          const manualCountKey = 'manualCount';
+                                                  const dateKey = 'date';
+                                                  const receivedKey =
+                                                      'received';
+                                                  const dispatchedKey =
+                                                      'dispatched';
+                                                  const returnedKey =
+                                                      'returned';
+                                                  const damagedKey = 'damaged';
+                                                  const lossKey = 'loss';
+                                                  const stockInHandKey =
+                                                      'stockInHand';
+                                                  const manualCountKey =
+                                                      'manualCount';
 
-                                          return _ReportDetailsContent(
-                                            title: title,
-                                            data: DigitGridData(
-                                              columns: [
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .dateLabel,
-                                                  ),
-                                                  key: dateKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .receivedCountLabel,
-                                                  ),
-                                                  key: receivedKey,
-                                                  width: 110,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .dispatchedCountLabel,
-                                                  ),
-                                                  key: dispatchedKey,
-                                                  width: 100,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .returnedCountLabel,
-                                                  ),
-                                                  key: returnedKey,
-                                                  width: 120,
-                                                ),
-                                                // DigitGridColumn(
-                                                //   label:
-                                                //       localizations.translate(
-                                                //     i18.inventoryReportDetails
-                                                //         .damagedCountLabel,
-                                                //   ),
-                                                //   key: damagedKey,
-                                                //   width: 120,
-                                                // ),
-                                                // DigitGridColumn(
-                                                //   label:
-                                                //       localizations.translate(
-                                                //     i18.inventoryReportDetails
-                                                //         .lostCountLabel,
-                                                //   ),
-                                                //   key: lossKey,
-                                                //   width: 120,
-                                                // ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .stockInHandLabel,
-                                                  ),
-                                                  key: stockInHandKey,
-                                                  width: 150,
-                                                ),
-                                                DigitGridColumn(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.inventoryReportDetails
-                                                        .manualCountLabel,
-                                                  ),
-                                                  key: manualCountKey,
-                                                  width: 150,
-                                                ),
-                                              ],
-                                              rows: [
-                                                for (final entry
-                                                    in data.entries) ...[
-                                                  for (final model
-                                                      in entry.value)
-                                                    DigitGridRow(
-                                                      [
-                                                        DigitGridCell(
+                                                  return _ReportDetailsContent(
+                                                    title: title,
+                                                    data: DigitGridData(
+                                                      columns: [
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .dateLabel,
+                                                          ),
                                                           key: dateKey,
-                                                          value: entry.key,
+                                                          width: 100,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .receivedCountLabel,
+                                                          ),
                                                           key: receivedKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'received',
-                                                          ),
+                                                          width: 110,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .dispatchedCountLabel,
+                                                          ),
                                                           key: dispatchedKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'issued',
-                                                          ),
+                                                          width: 100,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .returnedCountLabel,
+                                                          ),
                                                           key: returnedKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'returned',
-                                                          ),
+                                                          width: 120,
                                                         ),
-                                                        // DigitGridCell(
-                                                        //   key: lossKey,
-                                                        //   value:
-                                                        //       _getCountFromAdditionalDetails(
-                                                        //     model,
-                                                        //     'lost',
-                                                        //   ),
-                                                        // ),
-                                                        // DigitGridCell(
-                                                        //   key: damagedKey,
-                                                        //   value:
-                                                        //       _getCountFromAdditionalDetails(
-                                                        //     model,
-                                                        //     'damaged',
-                                                        //   ),
-                                                        // ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .stockInHandLabel,
+                                                          ),
                                                           key: stockInHandKey,
-                                                          value:
-                                                              _getCountFromAdditionalDetails(
-                                                            model,
-                                                            'inHand',
-                                                          ),
+                                                          width: 150,
                                                         ),
-                                                        DigitGridCell(
+                                                        DigitGridColumn(
+                                                          label: localizations
+                                                              .translate(
+                                                            i18.inventoryReportDetails
+                                                                .manualCountLabel,
+                                                          ),
                                                           key: manualCountKey,
-                                                          value:
-                                                              (model.physicalCount ??
-                                                                      '0')
-                                                                  .toString(),
+                                                          width: 150,
                                                         ),
                                                       ],
+                                                      rows: [
+                                                        for (final entry in data
+                                                            .entries) ...[
+                                                          for (final model
+                                                              in entry.value)
+                                                            DigitGridRow(
+                                                              [
+                                                                DigitGridCell(
+                                                                  key: dateKey,
+                                                                  value:
+                                                                      entry.key,
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      receivedKey,
+                                                                  value:
+                                                                      _getCountFromAdditionalDetails(
+                                                                    model,
+                                                                    'received',
+                                                                  ),
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      dispatchedKey,
+                                                                  value:
+                                                                      _getCountFromAdditionalDetails(
+                                                                    model,
+                                                                    'issued',
+                                                                  ),
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      returnedKey,
+                                                                  value:
+                                                                      _getCountFromAdditionalDetails(
+                                                                    model,
+                                                                    'returned',
+                                                                  ),
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      stockInHandKey,
+                                                                  value:
+                                                                      _getCountFromAdditionalDetails(
+                                                                    model,
+                                                                    'inHand',
+                                                                  ),
+                                                                ),
+                                                                DigitGridCell(
+                                                                  key:
+                                                                      manualCountKey,
+                                                                  value: (model
+                                                                              .physicalCount ??
+                                                                          '0')
+                                                                      .toString(),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                        ],
+                                                      ],
                                                     ),
-                                                ],
-                                              ],
+                                                  );
+                                                },
+                                              ),
                                             ),
-                                          );
-                                        },
-                                      ),
-                                    ),
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
+                                );
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
-            ],
+            ),
           );
         },
       ),

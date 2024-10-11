@@ -1503,6 +1503,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  remove_emoji_input_formatter:
+    dependency: "direct main"
+    description:
+      name: remove_emoji_input_formatter
+      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1+1"
   rxdart:
     dependency: transitive
     description:

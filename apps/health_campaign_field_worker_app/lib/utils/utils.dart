@@ -109,6 +109,23 @@ class CustomValidator {
     return {'mobileNumber': true};
   }
 
+  static Map<String, dynamic>? validWaybillStockCount(
+    AbstractControl<dynamic> control,
+  ) {
+    if (control.value == null || control.value.toString().isEmpty) {
+      return null;
+    }
+
+    var parsed = int.tryParse(control.value.toString()) ?? 0;
+    if (parsed < 0) {
+      return {'min': true};
+    } else if (parsed > 1000000000) {
+      return {'max': true};
+    }
+
+    return null;
+  }
+
   static Map<String, dynamic>? validStockCount(
     AbstractControl<dynamic> control,
   ) {
@@ -119,7 +136,7 @@ class CustomValidator {
     var parsed = int.tryParse(control.value) ?? 0;
     if (parsed < 0) {
       return {'min': true};
-    } else if (parsed > 10000000) {
+    } else if (parsed > 1000000000) {
       return {'max': true};
     }
 
