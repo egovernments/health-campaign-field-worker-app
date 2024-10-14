@@ -1,7 +1,8 @@
 name: digit_firebase_services
-description: A new Flutter package project.
+description: digit_firebase_services is a Flutter package that simplifies the integration of Firebase services into your app. It bundles together commonly used Firebase services like firebase_core and firebase_crashlytics and allows you to enable or disable them with a simple flag. This package is designed to be flexible and configurable, making it easy to manage Firebase services in a unified way.
 version: 0.0.1
-homepage:
+homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_firebase_services
+repository: https://github.com/egovernments/health-campaign-field-worker-app
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
