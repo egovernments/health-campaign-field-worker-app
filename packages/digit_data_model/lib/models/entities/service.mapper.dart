@@ -229,9 +229,8 @@ class ServiceModelMapper extends SubClassMapperBase<ServiceModel> {
   static String? _$accountId(ServiceModel v) => v.accountId;
   static const Field<ServiceModel, String> _f$accountId =
       Field('accountId', _$accountId, opt: true);
-  static Map<String, dynamic>? _$additionalDetails(ServiceModel v) =>
-      v.additionalDetails;
-  static const Field<ServiceModel, Map<String, dynamic>> _f$additionalDetails =
+  static String? _$additionalDetails(ServiceModel v) => v.additionalDetails;
+  static const Field<ServiceModel, String> _f$additionalDetails =
       Field('additionalDetails', _$additionalDetails, opt: true);
   static String? _$createdAt(ServiceModel v) => v.createdAt;
   static const Field<ServiceModel, String> _f$createdAt =
@@ -365,8 +364,6 @@ abstract class ServiceModelCopyWith<$R, $In extends ServiceModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
   ServiceAdditionalFieldsCopyWith<$R, ServiceAdditionalFields,
       ServiceAdditionalFields>? get additionalFields;
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-      get additionalDetails;
   ListCopyWith<
       $R,
       ServiceAttributesModel,
@@ -385,7 +382,7 @@ abstract class ServiceModelCopyWith<$R, $In extends ServiceModel, $Out>
       String? serviceDefId,
       bool? isActive,
       String? accountId,
-      Map<String, dynamic>? additionalDetails,
+      String? additionalDetails,
       String? createdAt,
       bool? nonRecoverableError,
       String? tenantId,
@@ -410,14 +407,6 @@ class _ServiceModelCopyWithImpl<$R, $Out>
           ServiceAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
           .$chain((v) => call(additionalFields: v));
-  @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-      get additionalDetails => $value.additionalDetails != null
-          ? MapCopyWith(
-              $value.additionalDetails!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(additionalDetails: v))
-          : null;
   @override
   ListCopyWith<
       $R,

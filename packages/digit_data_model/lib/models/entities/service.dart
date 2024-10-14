@@ -1,6 +1,4 @@
 // Generated using mason. Do not modify by hand
-import 'dart:convert';
-
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
@@ -52,7 +50,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
   final String? serviceDefId;
   final bool? isActive;
   final String? accountId;
-  final Map<String, dynamic>? additionalDetails;
+  final String? additionalDetails;
   final String? createdAt;
   final bool? nonRecoverableError;
   final String? tenantId;
@@ -95,7 +93,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
       serviceDefId: Value(serviceDefId),
       isActive: Value(isActive),
       accountId: Value(accountId),
-      additionalDetails: Value(jsonEncode(additionalDetails)),
+      additionalDetails: Value(additionalDetails),
       createdAt: Value(createdAt),
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
