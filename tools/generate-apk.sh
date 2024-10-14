@@ -14,15 +14,18 @@ build_apk() {
   fi
 }
 
-# Ask user for environment to build for
-echo "Please select an environment to build for (UAT, DEV, QA or ALL):"
-read env
-env="${env:-ALL}"
-
-# Ask user for build config
-echo "Please select a build config (release or profile):"
-read build_config
-build_config="${build_config:-release}"
+# Get environment and build config from GitHub Actions environment variables
+env="${ENVIRONMENT:-ALL}"
+build_config="${BUILD_CONFIG:-release}"
+## Ask user for environment to build for
+#echo "Please select an environment to build for (UAT, DEV, QA or ALL):"
+#read env
+#env="${env:-ALL}"
+#
+## Ask user for build config
+#echo "Please select a build config (release or profile):"
+#read build_config
+#build_config="${build_config:-release}"
 
 # Build APK for specified environment(s) and build config
 if [ "$env" == "ALL" ]; then
@@ -31,7 +34,7 @@ else
   env_list=("$env")
 fi
 
-./tools/install_bricks.sh
+#./tools/install_bricks.sh
 
 for env_option in "${env_list[@]}"; do
   cd "$APP_DIR" || exit
@@ -52,7 +55,7 @@ for env_option in "${env_list[@]}"; do
   cd ../../ || exit
 
   mkdir -p outputs
-  mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
+#  mv "$APP_DIR/build/app/outputs/flutter-apk/app-$build_config.apk" "outputs/app-$env_option-$build_config.apk"
 done
 
 open outputs
