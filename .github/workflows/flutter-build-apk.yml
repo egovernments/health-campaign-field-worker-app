@@ -58,7 +58,7 @@ jobs:
         run: bash ./tools/generate-apk.sh
 
       # Archive the APK as a build artifact so it can be downloaded
-      - name: Upload APK
+      - name: Upload APKs
         uses: actions/upload-artifact@v3
         with:
           name: app-release-apk
