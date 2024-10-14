@@ -42,6 +42,14 @@ jobs:
           BUILD_CONFIG: release   # or profile depending on your choice
         run: yes 1 | bash ./tools/generate-apk.sh
 
+      # Archive the APK as a build artifact so it can be downloaded
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+
+
 
 #name: Build Flutter APK
 #
