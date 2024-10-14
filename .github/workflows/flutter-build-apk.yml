@@ -36,6 +36,21 @@ jobs:
       - name: Install Dependencies
         run: flutter pub get
 
+      - name: Create .env file
+        run: |
+          echo "BASE_URL=${{ vars.BASE_URL }}" >> apps/health_campaign_field_worker_app/.env
+          echo "MDMS_API_PATH=${{ vars.MDMS_API_PATH }}" >> apps/health_campaign_field_worker_app/.env
+          echo "TENANT_ID=${{ vars.TENANT_ID }}" >> apps/health_campaign_field_worker_app/.env
+          echo "ACTIONS_API_PATH=${{ vars.ACTIONS_API_PATH }}" >> apps/health_campaign_field_worker_app/.env
+          echo "SYNC_DOWN_RETRY_COUNT=${{ vars.SYNC_DOWN_RETRY_COUNT }}" >> apps/health_campaign_field_worker_app/.env
+          echo "RETRY_TIME_INTERVAL=${{ vars.RETRY_TIME_INTERVAL }}" >> apps/health_campaign_field_worker_app/.env
+          echo "CONNECT_TIMEOUT=${{ vars.CONNECT_TIMEOUT }}" >> apps/health_campaign_field_worker_app/.env
+          echo "RECEIVE_TIMEOUT=${{ vars.RECEIVE_TIMEOUT }}" >> apps/health_campaign_field_worker_app/.env
+          echo "SEND_TIMEOUT=${{ vars.SEND_TIMEOUT }}" >> apps/health_campaign_field_worker_app/.env
+          echo "CHECK_BANDWIDTH_API=${{ vars.CHECK_BANDWIDTH_API }}" >> apps/health_campaign_field_worker_app/.env
+          echo "HIERARCHY_TYPE=${{ vars.HIERARCHY_TYPE }}" >> apps/health_campaign_field_worker_app/.env
+          echo "ENV_NAME=${{ vars.ENV_NAME }}" >> apps/health_campaign_field_worker_app/.env
+
       - name: Run APK build script
         env:
           ENVIRONMENT: QA        # or UAT/DEV/ALL depending on your choice
@@ -48,65 +63,3 @@ jobs:
         with:
           name: app-release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
-
-
-
-#name: Build Flutter APK
-#
-#on:
-#  push:
-#    branches:
-#      - hcmpre-717-github-actions-build-apk  # This specifies that the workflow will run on any push to the 'main' branch
-#  pull_request:
-#    branches:
-#      - hcmpre-717-github-actions-build-apk  # Optionally, run on pull requests targeting the 'main' branch
-#
-#jobs:
-#  build:
-#    runs-on: ubuntu-latest
-#
-#    steps:
-#      # Checkout the latest code from the repository
-#      - name: Checkout repository
-#        uses: actions/checkout@v3
-#
-#      - name: Set up JDK 11
-#        uses: actions/setup-java@v1
-#        with:
-#          java-version: '11'
-#
-#      - name: Display working directory
-#        run: pwd
-#
-#      - name: List files
-#        run: ls -R
-#
-#      - name: Build release APK
-#        working-directory: ./apps/health_campaign_field_worker_app/android
-#        run: bash ./gradlew assembleRelease --stacktrace
-#
-#      - name: Build release APK
-#        run: bash ./health_campaign_field_worker_app/android/gradlew assembleRelease --stacktrace
-#
-#      - name: Rename APK
-#        run:
-#          mv "./app/build/outputs/apk/release/app-release.apk" "./app/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk"
-#
-#      - name: Upload release APK
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: ${{ env.OUTPUT_NAME }}
-#          path: app/build/outputs/apk/release/${{ env.OUTPUT_NAME }}.apk
-#
-#      - name: Build release AAB
-#        run: bash ./gradlew bundleRelease --stacktrace
-#
-#      - name: Rename AAB
-#        run:
-#          mv "./app/build/outputs/bundle/release/app-release.aab" "./app/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab"
-#
-#      - name: Upload debug AAB
-#        uses: actions/upload-artifact@v1
-#        with:
-#          name: ${{ env.OUTPUT_NAME }}
-#          path: app/build/outputs/bundle/release/${{ env.OUTPUT_NAME }}.aab
