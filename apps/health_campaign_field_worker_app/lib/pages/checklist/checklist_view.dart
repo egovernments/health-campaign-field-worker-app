@@ -289,8 +289,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                               ),
                                             ],
                                           ),
-                                          additionalDetails:
-                                              context.boundary.code,
+                                          additionalDetails: {
+                                            "boundaryCode":
+                                                context.boundary.code,
+                                            'lat': latitude,
+                                            'lng': longitude,
+                                          },
                                         ),
                                       ),
                                     );
