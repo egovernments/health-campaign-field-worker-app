@@ -55,7 +55,7 @@ jobs:
         env:
           ENVIRONMENT: QA        # or UAT/DEV/ALL depending on your choice
           BUILD_CONFIG: release   # or profile depending on your choice
-        run: yes 1 | bash ./tools/generate-apk.sh
+        run: bash ./tools/generate-apk.sh
 
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APK
