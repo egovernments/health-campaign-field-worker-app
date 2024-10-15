@@ -1,3 +1,6 @@
+## 1.0.3+3
+* Updated Service model additionalDetails objectType in digit_data_model package
+
 ## 1.0.3+2
 
 * Bug Fix -
