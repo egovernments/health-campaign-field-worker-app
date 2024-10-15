@@ -161,11 +161,11 @@ class _SchoolIndividualListPageState
                                             right: kPadding + 1,
                                           ),
                                           child: Text(
-                                            // localizations.translate(i18
-                                            //     .schoolOverView
-                                            //     .schoolStudentsLabel
-                                            //     ),
-                                            "Students",
+                                            localizations.translate(i18
+                                                .schoolDetails
+                                                .studentLabel,
+                                                ),
+                                           
                                             style:
                                                 theme.textTheme.displayMedium,
                                           ),

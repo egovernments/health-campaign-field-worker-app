@@ -152,7 +152,7 @@ class _HouseHoldDetailsPageState extends LocalizedState<SchoolDetailsPage> {
                                           i18.schoolDetails
                                               .errorNoOfStudentsCountZeroLabel,
                                         ),
-                                    'max1000': (object) =>
+                                    'max10000': (object) =>
                                         localizations.translate(
                                           i18.schoolDetails
                                               .errorNoOfStudentsCountMaximumLabel,

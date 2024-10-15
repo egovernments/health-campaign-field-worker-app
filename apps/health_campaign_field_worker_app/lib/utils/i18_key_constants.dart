@@ -928,6 +928,7 @@ class SearchBeneficiary {
 
 class SchoolDetails {
   const SchoolDetails();
+  String get studentLabel => 'STUDENT_LABEL';
   String get studentSearchHintText => 'STUDENT_SEARCH_HINT_TEXT';
   String get errorNoOfStudentsCountMaximumLabel =>
       'ERROR_NUMBER_OF_STUDENT_COUNT_MAXIMUM_SCHOOL';
