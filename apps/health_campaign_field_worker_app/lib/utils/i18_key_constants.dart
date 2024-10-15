@@ -928,11 +928,13 @@ class SearchBeneficiary {
 
 class SchoolDetails {
   const SchoolDetails();
-   String get studentSearchHintText => 'STUDENT_SEARCH_HINT_TEXT';
-  String get errorNoOfStudentsCountMaximumLabel=> 'ERROR_NUMBER_OF_STUDENT_COUNT_MAXIMUM_SCHOOL';
-  String get errorNoOfStudentsCountZeroLabel=> 'ERROR_NUMBER_OF_STUDENT_COUNT_ZERO_SCHOOL';
-   String get errorNoOfStudentsCountLabel=> 'ERROR_NUMBER_OF_STUDENT_SCHOOL';
-   String get addStudent => 'ADD_STUDENT_LABEL';
+  String get studentSearchHintText => 'STUDENT_SEARCH_HINT_TEXT';
+  String get errorNoOfStudentsCountMaximumLabel =>
+      'ERROR_NUMBER_OF_STUDENT_COUNT_MAXIMUM_SCHOOL';
+  String get errorNoOfStudentsCountZeroLabel =>
+      'ERROR_NUMBER_OF_STUDENT_COUNT_ZERO_SCHOOL';
+  String get errorNoOfStudentsCountLabel => 'ERROR_NUMBER_OF_STUDENT_SCHOOL';
+  String get addStudent => 'ADD_STUDENT_LABEL';
   String get noSchoolsMapped => 'NO_SCHOOLS_MAPPED';
   String get notRegistered => 'SCHOOL_NOT_REGISTERED';
 

@@ -96,7 +96,7 @@ class _HouseholdOverviewPageState extends LocalizedState<SchoolOverviewPage> {
                                 },
                                 child: Text(
                                   localizations
-                                      .translate(i18.common.coreCommonContinue),
+                                      .translate(i18.householdDetails.actionLabel),
                                 ),
                               ),
                             );
