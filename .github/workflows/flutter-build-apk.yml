@@ -2,11 +2,9 @@ name: Build APK Workflow
 
 on:
   push:
-    branches:
-      - hcmpre-717-github-actions-build-apk  # This specifies that the workflow will run on any push to the 'main' branch
+    branches: ['develop', 'hcmpre-717-github-actions-build-apk']  # This specifies that the workflow will run on any push to the 'main' branch
   pull_request:
-    branches:
-      - hcmpre-717-github-actions-build-apk  # Optionally, run on pull requests targeting the 'main' branch
+    branches: ['develop', 'hcmpre-717-github-actions-build-apk']  # Optionally, run on pull requests targeting the 'main' branch
 
 jobs:
   build-apk:
@@ -53,10 +51,8 @@ jobs:
 
       - name: Run APK build script
         env:
-          ENVIRONMENT: QA        # or UAT/DEV/ALL depending on your choice
           BUILD_CONFIG: release   # or profile depending on your choice
-#        run: bash ./tools/generate-apk.sh
-        run: cd apps/health_campaign_field_worker_app && flutter build apk --release && cd ../../
+        run: bash ./tools/generate-apk.sh
 
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APKs
