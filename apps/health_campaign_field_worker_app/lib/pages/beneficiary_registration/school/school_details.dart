@@ -1,5 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -125,14 +126,38 @@ class _HouseHoldDetailsPageState extends LocalizedState<SchoolDetailsPage> {
                               householdDetailsShowcaseData
                                   .numberOfStudentsLivingInHousehold
                                   .buildWith(
-                                child: DigitIntegerFormPicker(
-                                  minimum: 1,
-                                  form: form,
+                                child: DigitTextFormField(
+                                  keyboardType: TextInputType.number,
+                                  minLength: 1,
+                                  maxLength: 5,
+
+                                  // form: form,
                                   formControlName: _studentCountKey,
                                   label: localizations.translate(
                                     i18.householdDetails.noOfStudentsCountLabel,
                                   ),
-                                  incrementer: true,
+                                  isRequired: true,
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(
+                                      "[0-9]",
+                                    )),
+                                  ],
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                          i18.schoolDetails
+                                              .errorNoOfStudentsCountLabel,
+                                        ),
+                                    'min1': (object) => localizations.translate(
+                                          i18.schoolDetails
+                                              .errorNoOfStudentsCountZeroLabel,
+                                        ),
+                                    'max10000': (object) =>
+                                        localizations.translate(
+                                          i18.schoolDetails
+                                              .errorNoOfStudentsCountMaximumLabel,
+                                        ),
+                                  },
                                 ),
                               ),
                             ]),
@@ -168,7 +193,14 @@ class _HouseHoldDetailsPageState extends LocalizedState<SchoolDetailsPage> {
     return fb.group(<String, Object>{
       _dateOfRegistrationKey:
           FormControl<DateTime>(value: registrationDate, validators: []),
-      _studentCountKey: FormControl<int>(value: household?.memberCount ?? 1),
+      _studentCountKey: FormControl<int>(
+        value: household?.memberCount ?? 1,
+        validators: [
+          Validators.required,
+          CustomValidator.requiredMinStudentCount,
+          CustomValidator.requiredMaxStudentCount,
+        ],
+      ),
     });
   }
 
@@ -213,6 +245,9 @@ class _HouseHoldDetailsPageState extends LocalizedState<SchoolDetailsPage> {
     BeneficiaryRegistrationState registrationState,
     LocationState locationState,
   ) {
+    form.markAllAsTouched();
+    if (!form.valid) return;
+
     final studentCount = form.control(_studentCountKey).value as int;
 
     final dateOfRegistration =

@@ -1,8 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/atoms/digit_icon_button.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/digit_search_bar.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,9 +126,16 @@ class _SchoolIndividualListPageState
                                 ),
                               );
                             },
-                            child: Text(
-                              localizations
-                                  .translate(i18.common.coreCommonContinue),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Icon(Icons.add),
+                                Text(
+                                  localizations
+                                      .translate(i18.schoolDetails.addStudent),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -134,19 +143,59 @@ class _SchoolIndividualListPageState
                           SliverToBoxAdapter(
                             child: Column(
                               children: [
-                                Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: kPadding - 1,
-                                      right: kPadding + 1,
-                                    ),
-                                    child: Text(
-                                      localizations.translate(i18
-                                          .schoolOverView.schoolStudentsLabel),
-                                      style: theme.textTheme.displayMedium,
-                                    ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0,
                                   ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: kPadding - 1,
+                                            right: kPadding + 1,
+                                          ),
+                                          child: Text(
+                                            localizations.translate(i18
+                                                .schoolDetails
+                                                .studentLabel,
+                                                ),
+                                           
+                                            style:
+                                                theme.textTheme.displayMedium,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: DigitIconButton(
+                                          onPressed: () {
+                                            context.router.push(
+                                              SchoolIndividualSortingRoute(),
+                                            );
+                                          },
+                                          iconText: localizations.translate(
+                                            i18.complaints.sortCTA,
+                                          ),
+                                          icon: Icons.sort_rounded,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                DigitSearchBar(
+                                  //  controller: searchController,
+                                  hintText: localizations.translate(
+                                    i18.schoolDetails
+                                        .studentSearchHintText,
+                                  ),
+                                  textCapitalization: TextCapitalization.words,
+                                  onChanged: (value) {},
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

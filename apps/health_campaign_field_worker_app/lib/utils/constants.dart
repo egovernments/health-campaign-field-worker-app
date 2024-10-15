@@ -293,6 +293,12 @@ class Constants {
     KeyValue('CORE_COMMON_YES', true),
     KeyValue('CORE_COMMON_NO', false),
   ];
+
+  static List<KeyValue> studentSort = [
+    KeyValue('TREATED_LATEST_FIRST', true),
+    KeyValue('NOT_TREATED_LATEST_FIRST', false),
+  ];
+
 }
 
 /// By using this key, we can push pages without context

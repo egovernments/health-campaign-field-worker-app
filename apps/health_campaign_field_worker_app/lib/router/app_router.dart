@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:health_campaign_field_worker_app/pages/beneficiary/school/school_individual_list.dart';
+import 'package:health_campaign_field_worker_app/pages/beneficiary/school/school_sorting.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/inventory_report/inventory_report.dart';
@@ -131,6 +132,10 @@ part 'app_router.gr.dart';
           page: BeneficiaryWrapperPage,
           path: 'beneficiary',
           children: [
+             AutoRoute(
+              page: SchoolIndividualSortingPage,
+              path: 'household-individuallist-sorting-details',
+            ),
             AutoRoute(
               page: SchoolIndividualListPage,
               path: 'household-individuallist-details',

@@ -86,7 +86,7 @@ class _SchoolSelectionPageState extends LocalizedState<SchoolSelectionPage> {
                     : null,
                 child: !searchHouseholdsState.loading
                     ? Text(
-                        localizations.translate(i18.common.coreCommonContinue),
+                        localizations.translate(i18.householdDetails.actionLabel),
                       )
                     : const CircularProgressIndicator(),
               ),

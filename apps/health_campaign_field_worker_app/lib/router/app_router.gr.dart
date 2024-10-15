@@ -411,6 +411,17 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SchoolIndividualSortingRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolIndividualSortingRouteArgs>(
+          orElse: () => const SchoolIndividualSortingRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolIndividualSortingPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     SchoolIndividualListRoute.name: (routeData) {
       final args = routeData.argsAs<SchoolIndividualListRouteArgs>(
           orElse: () => const SchoolIndividualListRouteArgs());
@@ -904,6 +915,11 @@ class _$AppRouter extends RootStackRouter {
                   parent: BeneficiaryWrapperRoute.name,
                   redirectTo: 'overview',
                   fullMatch: true,
+                ),
+                RouteConfig(
+                  SchoolIndividualSortingRoute.name,
+                  path: 'household-individuallist-sorting-details',
+                  parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
                   SchoolIndividualListRoute.name,
@@ -2457,6 +2473,41 @@ class HouseholdLocationRouteArgs {
   @override
   String toString() {
     return 'HouseholdLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolIndividualSortingPage]
+class SchoolIndividualSortingRoute
+    extends PageRouteInfo<SchoolIndividualSortingRouteArgs> {
+  SchoolIndividualSortingRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolIndividualSortingRoute.name,
+          path: 'household-individuallist-sorting-details',
+          args: SchoolIndividualSortingRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolIndividualSortingRoute';
+}
+
+class SchoolIndividualSortingRouteArgs {
+  const SchoolIndividualSortingRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolIndividualSortingRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
