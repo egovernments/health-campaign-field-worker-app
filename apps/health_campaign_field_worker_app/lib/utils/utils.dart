@@ -70,6 +70,25 @@ class IdGen {
 
 class CustomValidator {
   /// Validates that control's value must be `true`
+  static Map<String, dynamic>? requiredMinStudentCount(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            !(control.value.toString()== '0') ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'min1': true};
+  }
+  static Map<String, dynamic>? requiredMaxStudentCount(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+           int.parse( control.value.toString() )<= 10000 ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'max10000': true};
+  }
+
   static Map<String, dynamic>? requiredMin(
     AbstractControl<dynamic> control,
   ) {

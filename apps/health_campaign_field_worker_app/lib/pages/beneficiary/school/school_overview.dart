@@ -76,32 +76,30 @@ class _HouseholdOverviewPageState extends LocalizedState<SchoolOverviewPage> {
                           },
                         ),
                         enableFixedButton: true,
-                        footer: BlocBuilder<SearchBySchoolBloc, SearchHouseholdsState>(
+                        footer: BlocBuilder<SearchBySchoolBloc,
+                            SearchHouseholdsState>(
                           builder: (context, statek) {
-                            
-                          
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(
-                                kPadding, 0, kPadding, 0),
-                            child: DigitElevatedButton(
-                              onPressed: () async {
-                                 context.router.push(
-                        BeneficiaryWrapperRoute(
-                          wrapper: statek.householdMembers.firstOrNull!,
-                          children: [
-                            SchoolIndividualListRoute(),
-                          ],
-                        ),
-                      );
-                                
-                              
-                              },
-                              child: Text(
-                                localizations
-                                    .translate(i18.common.coreCommonContinue),
+                            return Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  kPadding, 0, kPadding, 0),
+                              child: DigitElevatedButton(
+                                onPressed: () async {
+                                  context.router.push(
+                                    BeneficiaryWrapperRoute(
+                                      wrapper:
+                                          statek.householdMembers.firstOrNull!,
+                                      children: [
+                                        SchoolIndividualListRoute(),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  localizations
+                                      .translate(i18.common.coreCommonContinue),
+                                ),
                               ),
-                            ),
-                          );
+                            );
                           },
                         ),
                         slivers: [
@@ -271,9 +269,6 @@ class _HouseholdOverviewPageState extends LocalizedState<SchoolOverviewPage> {
                                       },
                                     ),
                                   ),
-                                
-
-                                 
                                 ],
                               ),
                             ),
