@@ -1,3 +1,6 @@
+## 1.0.2+1
+* Added description field for Labeled Field component
+
 ## 1.0.2
 * Added privacy notice component
 
