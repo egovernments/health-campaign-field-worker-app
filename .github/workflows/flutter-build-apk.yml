@@ -55,7 +55,8 @@ jobs:
         env:
           ENVIRONMENT: QA        # or UAT/DEV/ALL depending on your choice
           BUILD_CONFIG: release   # or profile depending on your choice
-        run: bash ./tools/generate-apk.sh
+#        run: bash ./tools/generate-apk.sh
+        run: cd apps/health_campaign_field_worker_app && flutter build apk --release && cd ../../
 
       # Archive the APK as a build artifact so it can be downloaded
       - name: Upload APKs
