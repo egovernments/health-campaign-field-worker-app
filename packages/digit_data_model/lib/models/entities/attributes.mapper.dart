@@ -242,6 +242,11 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   @override
   final String id = 'AttributesModel';
 
+  static Map<String, dynamic>? _$additionalDetails(AttributesModel v) =>
+      v.additionalDetails;
+  static const Field<AttributesModel, Map<String, dynamic>>
+      _f$additionalDetails =
+      Field('additionalDetails', _$additionalDetails, opt: true);
   static AttributesAdditionalFields? _$additionalFields(AttributesModel v) =>
       v.additionalFields;
   static const Field<AttributesModel, AttributesAdditionalFields>
@@ -285,11 +290,6 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   static int? _$rowVersion(AttributesModel v) => v.rowVersion;
   static const Field<AttributesModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static Map<String, dynamic>? _$additionalDetails(AttributesModel v) =>
-      v.additionalDetails;
-  static const Field<AttributesModel, Map<String, dynamic>>
-      _f$additionalDetails =
-      Field('additionalDetails', _$additionalDetails, opt: true);
   static AuditDetails? _$auditDetails(AttributesModel v) => v.auditDetails;
   static const Field<AttributesModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -304,6 +304,7 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
 
   @override
   final MappableFields<AttributesModel> fields = const {
+    #additionalDetails: _f$additionalDetails,
     #additionalFields: _f$additionalFields,
     #id: _f$id,
     #dataType: _f$dataType,
@@ -317,7 +318,6 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
     #order: _f$order,
     #nonRecoverableError: _f$nonRecoverableError,
     #rowVersion: _f$rowVersion,
-    #additionalDetails: _f$additionalDetails,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -335,6 +335,7 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
 
   static AttributesModel _instantiate(DecodingData data) {
     return AttributesModel(
+        additionalDetails: data.dec(_f$additionalDetails),
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         dataType: data.dec(_f$dataType),
@@ -348,7 +349,6 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
         order: data.dec(_f$order),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         rowVersion: data.dec(_f$rowVersion),
-        additionalDetails: data.dec(_f$additionalDetails),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -409,11 +409,11 @@ extension AttributesModelValueCopy<$R, $Out>
 
 abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails;
   AttributesAdditionalFieldsCopyWith<$R, AttributesAdditionalFields,
       AttributesAdditionalFields>? get additionalFields;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get values;
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-      get additionalDetails;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -421,7 +421,8 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       get clientAuditDetails;
   @override
   $R call(
-      {AttributesAdditionalFields? additionalFields,
+      {Map<String, dynamic>? additionalDetails,
+      AttributesAdditionalFields? additionalFields,
       String? id,
       String? dataType,
       String? referenceId,
@@ -434,7 +435,6 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       int? order,
       bool? nonRecoverableError,
       int? rowVersion,
-      Map<String, dynamic>? additionalDetails,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -451,6 +451,14 @@ class _AttributesModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AttributesModel> $mapper =
       AttributesModelMapper.ensureInitialized();
   @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails => $value.additionalDetails != null
+          ? MapCopyWith(
+              $value.additionalDetails!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(additionalDetails: v))
+          : null;
+  @override
   AttributesAdditionalFieldsCopyWith<$R, AttributesAdditionalFields,
           AttributesAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
@@ -462,14 +470,6 @@ class _AttributesModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(values: v))
           : null;
   @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-      get additionalDetails => $value.additionalDetails != null
-          ? MapCopyWith(
-              $value.additionalDetails!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(additionalDetails: v))
-          : null;
-  @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
@@ -478,7 +478,8 @@ class _AttributesModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? additionalFields = $none,
+          {Object? additionalDetails = $none,
+          Object? additionalFields = $none,
           Object? id = $none,
           Object? dataType = $none,
           Object? referenceId = $none,
@@ -491,11 +492,11 @@ class _AttributesModelCopyWithImpl<$R, $Out>
           Object? order = $none,
           Object? nonRecoverableError = $none,
           Object? rowVersion = $none,
-          Object? additionalDetails = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
+        if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (dataType != $none) #dataType: dataType,
@@ -510,7 +511,6 @@ class _AttributesModelCopyWithImpl<$R, $Out>
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (rowVersion != $none) #rowVersion: rowVersion,
-        if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -518,6 +518,8 @@ class _AttributesModelCopyWithImpl<$R, $Out>
       }));
   @override
   AttributesModel $make(CopyWithData data) => AttributesModel(
+      additionalDetails:
+          data.get(#additionalDetails, or: $value.additionalDetails),
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
@@ -533,8 +535,6 @@ class _AttributesModelCopyWithImpl<$R, $Out>
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
-      additionalDetails:
-          data.get(#additionalDetails, or: $value.additionalDetails),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

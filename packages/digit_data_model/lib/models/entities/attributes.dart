@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:drift/drift.daart';
+import 'package:drift/drift.dart';
 
 part 'attributes.mapper.dart';
 
@@ -69,6 +69,7 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
   final Map<String, dynamic>? additionalDetails;
 
   AttributesModel({
+    this.additionalDetails,
     this.additionalFields,
     this.id,
     this.dataType,
@@ -82,7 +83,6 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
     this.order,
     this.nonRecoverableError = false,
     this.rowVersion,
-    this.additionalDetails,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
