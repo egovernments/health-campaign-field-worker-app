@@ -1,3 +1,6 @@
+## 1.0.4-dev.6-uniqueId
+* Added additionalDetails field to service definition attributes model
+
 ## 1.0.4-dev.5-uniqueId
 * Added identifierType enum entity
 * Added identifierType and id as primary key to identifier table
