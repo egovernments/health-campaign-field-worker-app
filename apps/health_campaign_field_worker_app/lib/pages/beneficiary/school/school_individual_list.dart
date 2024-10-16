@@ -313,6 +313,38 @@ class _SchoolIndividualListPageState
                                           );
 
                                           return MemberCard(
+                                            isAdverseEffect: !recordedSideEffect(
+                                            context.selectedCycle,
+                                            (taskdata != null && taskdata!.isNotEmpty)
+                                                ? taskdata!.lastOrNull
+                                                : null,
+                                            sideEffectData,
+                                          ) &&
+                                          ((taskdata != null && taskdata!.isNotEmpty)
+                                              ? isCurrentTimeBeforeEndTime(
+                                                  taskdata!
+                                                      .last!
+                                                      .clientAuditDetails!
+                                                      .createdTime!,
+                                                  int.parse(
+                                                    (context.selectedProjectType!
+                                                                    .cycles !=
+                                                                null &&
+                                                            context
+                                                                .selectedProjectType!
+                                                                .cycles!
+                                                                .isNotEmpty)
+                                                        ? (context
+                                                                .selectedProjectType!
+                                                                .cycles!
+                                                                .last
+                                                                .mandatoryWaitSinceLastCycleInDays ??
+                                                            "24")
+                                                        : "24".toString(),
+                                                  ),
+                                                 
+                                                )
+                                              : false),
                                             backgroundColorType: DigitTheme
                                                 .instance
                                                 .colorScheme

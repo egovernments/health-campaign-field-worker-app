@@ -34,6 +34,8 @@ class MemberCard extends StatelessWidget {
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
   final Color? backgroundColorType;
+  final bool isAdverseEffect;
+  
 
   const MemberCard({
     super.key,
@@ -55,7 +57,7 @@ class MemberCard extends StatelessWidget {
     this.isBeneficiaryIneligible = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
-    this.backgroundColorType,
+    this.backgroundColorType, required this.isAdverseEffect,
   });
 
   @override
@@ -251,38 +253,7 @@ class MemberCard extends StatelessWidget {
                               // ),
                               onPressed:
                                   //TODO: develop
-                                  !recordedSideEffect(
-                                            context.selectedCycle,
-                                            (tasks != null && tasks!.isNotEmpty)
-                                                ? tasks!.lastOrNull
-                                                : null,
-                                            sideEffects,
-                                          ) &&
-                                          ((tasks != null && tasks!.isNotEmpty)
-                                              ? isCurrentTimeBeforeEndTime(
-                                                  tasks!
-                                                      .last!
-                                                      .clientAuditDetails!
-                                                      .createdTime!,
-                                                  int.parse(
-                                                    (context.selectedProjectType!
-                                                                    .cycles !=
-                                                                null &&
-                                                            context
-                                                                .selectedProjectType!
-                                                                .cycles!
-                                                                .isNotEmpty)
-                                                        ? (context
-                                                                .selectedProjectType!
-                                                                .cycles!
-                                                                .last
-                                                                .mandatoryWaitSinceLastCycleInDays ??
-                                                            "24")
-                                                        : "24".toString(),
-                                                  ),
-                                                 
-                                                )
-                                              : false)
+                                  isAdverseEffect
                                       ? () async {
                                           await context.router.push(
                                             SideEffectsRoute(
@@ -345,40 +316,7 @@ class MemberCard extends StatelessWidget {
                                           )
                                       ?
                                       //TODO:develop
-                                      !recordedSideEffect(
-                                                context.selectedCycle,
-                                                (tasks != null &&
-                                                        tasks!.isNotEmpty)
-                                                    ? tasks!.lastOrNull
-                                                    : null,
-                                                sideEffects,
-                                              ) &&
-                                              ((tasks != null &&
-                                                      tasks!.isNotEmpty)
-                                                  ? isCurrentTimeBeforeEndTime(
-                                                      tasks!
-                                                          .last!
-                                                          .clientAuditDetails!
-                                                          .createdTime!,
-                                                      int.parse(
-                                                        (context.selectedProjectType!
-                                                                        .cycles !=
-                                                                    null &&
-                                                                context
-                                                                    .selectedProjectType!
-                                                                    .cycles!
-                                                                    .isNotEmpty)
-                                                            ? (context
-                                                                    .selectedProjectType!
-                                                                    .cycles!
-                                                                    .last
-                                                                    .mandatoryWaitSinceLastCycleInDays ??
-                                                                "24")
-                                                            : "24".toString(),
-                                                      ),
-                                                      
-                                                    )
-                                                  : false)
+                                      isAdverseEffect
                                           ? localizations.translate(
                                               i18.householdOverView
                                                   .addAdverseEffect,
