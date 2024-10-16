@@ -76,12 +76,9 @@ class _HouseholdOverviewPageState extends LocalizedState<SchoolOverviewPage> {
                               kPadding, 0, kPadding, 0),
                           child: DigitElevatedButton(
                             onPressed: () async {
-                              var bloc = context.read<SearchBlocWrapper>();
-
                               context.router.push(
                                 BeneficiaryWrapperRoute(
-                                  wrapper:
-                                      bloc.state.householdMembers.firstOrNull!,
+                                  wrapper: state.householdMemberWrapper,
                                   children: [
                                     SchoolIndividualListRoute(),
                                   ],
