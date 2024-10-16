@@ -225,4 +225,25 @@ class LocalSecureStore {
         return false;
     }
   }
+
+  Future<ProjectTypeModel?> get selectedProjectType async {
+    final projectBody = await storage.read(key: selectedProjectTypeKey);
+    if (projectBody == null) return null;
+
+    try {
+      final projectType =
+          ProjectTypeModelMapper.fromJson(json.encode(projectBody));
+
+      return projectType;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> setSelectedProjectType(ProjectTypeModel? projectType) async {
+    await storage.write(
+      key: selectedProjectTypeKey,
+      value: json.encode(projectType),
+    );
+  }
 }
