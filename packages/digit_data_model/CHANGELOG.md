@@ -1,3 +1,6 @@
+## 1.0.4-dev.7-uniqueId
+* Modified identifierType of unique beneficiary id
+
 ## 1.0.4-dev.6-uniqueId
 * Added additionalDetails field to service definition attributes model
 

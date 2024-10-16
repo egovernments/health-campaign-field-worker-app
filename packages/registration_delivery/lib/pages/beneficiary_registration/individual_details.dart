@@ -387,9 +387,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             },
                             onSelected: (value) {
                               setState(() {
-                                if (value == 'DEFAULT') {
+                                if (value ==
+                                    IdentifierTypes.defaultID.toValue()) {
                                   form.control(_idNumberKey).value =
                                       IdGen.i.identifier.toString();
+                                } else if (value ==
+                                    IdentifierTypes.uniqueBeneficiaryID
+                                        .toValue()) {
+                                  setUniqueBeneficiaryId(form);
                                 } else {
                                   form.control(_idNumberKey).value = null;
                                 }
@@ -402,7 +407,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             emptyText: localizations
                                 .translate(i18.common.noMatchFound),
                           ),
-                          if (form.control(_idTypeKey).value != 'DEFAULT')
+                          if (form.control(_idTypeKey).value !=
+                                  IdentifierTypes.defaultID.toValue() &&
+                              form.control(_idTypeKey).value !=
+                                  IdentifierTypes.uniqueBeneficiaryID.toValue())
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -411,7 +419,12 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     return DigitTextFormField(
                                       readOnly:
                                           form.control(_idTypeKey).value ==
-                                              'DEFAULT',
+                                                  IdentifierTypes.defaultID
+                                                      .toValue() ||
+                                              form.control(_idTypeKey).value ==
+                                                  IdentifierTypes
+                                                      .uniqueBeneficiaryID
+                                                      .toValue(),
                                       isRequired: form
                                           .control(_idNumberKey)
                                           .validators
@@ -437,7 +450,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 const SizedBox(height: 4),
                               ],
                             ),
-                          if (form.control(_idTypeKey).value == 'DEFAULT')
+                          if (form.control(_idTypeKey).value ==
+                                  IdentifierTypes.defaultID.toValue() ||
+                              form.control(_idTypeKey).value ==
+                                  IdentifierTypes.uniqueBeneficiaryID.toValue())
                             const SizedBox(
                               height: kPadding,
                             ),
@@ -806,5 +822,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     return options?.map((e) => e).firstWhereOrNull(
           (element) => element.toLowerCase() == individual?.gender?.name,
         );
+  }
+
+  void setUniqueBeneficiaryId(FormGroup form) async {
+    var beneficiaryId = await UniqueIdGeneration().generateUniqueId(
+        localityCode: RegistrationDeliverySingleton().boundary!.code!,
+        loggedInUserId: RegistrationDeliverySingleton().loggedInUserUuid!,
+        returnCombinedIds: false);
+
+    form.control(_idNumberKey).value = beneficiaryId.first.toString();
   }
 }
