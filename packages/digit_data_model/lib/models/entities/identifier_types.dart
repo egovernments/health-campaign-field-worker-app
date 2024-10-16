@@ -5,7 +5,7 @@ part 'identifier_types.mapper.dart';
 
 @MappableEnum(caseStyle: CaseStyle.upperCase)
 enum IdentifierTypes {
-  @MappableValue("uniqueBeneficiaryID")
+  @MappableValue("UNIQUE_BENEFICIARY_ID")
   uniqueBeneficiaryID,
   @MappableValue("DEFAULT")
   defaultID,

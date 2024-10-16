@@ -26,6 +26,11 @@
 
 * Updated Service model additionalDetails objectType in digit_data_model package
 
+## 1.0.4-dev.2-uniqueId
+
+* Unique Beneficiary Id link to identifier
+* Updated digit_data_model package
+
 ## 1.0.4-dev.1-uniqueId
 
 * Added BeneficiaryInEligible status

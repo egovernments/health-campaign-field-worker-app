@@ -25,7 +25,7 @@ class IdentifierTypesMapper extends EnumMapper<IdentifierTypes> {
   @override
   IdentifierTypes decode(dynamic value) {
     switch (value) {
-      case "uniqueBeneficiaryID":
+      case "UNIQUE_BENEFICIARY_ID":
         return IdentifierTypes.uniqueBeneficiaryID;
       case "DEFAULT":
         return IdentifierTypes.defaultID;
@@ -38,7 +38,7 @@ class IdentifierTypesMapper extends EnumMapper<IdentifierTypes> {
   dynamic encode(IdentifierTypes self) {
     switch (self) {
       case IdentifierTypes.uniqueBeneficiaryID:
-        return "uniqueBeneficiaryID";
+        return "UNIQUE_BENEFICIARY_ID";
       case IdentifierTypes.defaultID:
         return "DEFAULT";
     }

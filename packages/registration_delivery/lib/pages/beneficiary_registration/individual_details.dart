@@ -412,9 +412,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               onSelect: (value) {
                                 form.control(_idTypeKey).value = value.code;
                                 setState(() {
-                                  if (value.code == 'DEFAULT') {
+                                  if (value ==
+                                      IdentifierTypes.defaultID.toValue()) {
                                     form.control(_idNumberKey).value =
                                         IdGen.i.identifier.toString();
+                                  } else if (value ==
+                                      IdentifierTypes.uniqueBeneficiaryID
+                                          .toValue()) {
+                                    setUniqueBeneficiaryId(form);
                                   } else {
                                     form.control(_idNumberKey).value = null;
                                   }
@@ -430,7 +435,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                             ),
                           ),
                         ),
-                        if (form.control(_idTypeKey).value != 'DEFAULT')
+                        if (form.control(_idTypeKey).value !=
+                                IdentifierTypes.defaultID.toValue() &&
+                            form.control(_idTypeKey).value !=
+                                IdentifierTypes.uniqueBeneficiaryID.toValue())
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -453,9 +461,15 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                           .validators
                                           .isNotEmpty,
                                       child: DigitTextFormInput(
-                                        readOnly:
+                                        readOnly: form
+                                                    .control(_idTypeKey)
+                                                    .value ==
+                                                IdentifierTypes.defaultID
+                                                    .toValue() ||
                                             form.control(_idTypeKey).value ==
-                                                'DEFAULT',
+                                                IdentifierTypes
+                                                    .uniqueBeneficiaryID
+                                                    .toValue(),
                                         initialValue:
                                             form.control(_idNumberKey).value,
                                         onChange: (value) {
@@ -471,7 +485,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               const SizedBox(height: 4),
                             ],
                           ),
-                        if (form.control(_idTypeKey).value == 'DEFAULT')
+                        if (form.control(_idTypeKey).value ==
+                                IdentifierTypes.defaultID.toValue() ||
+                            form.control(_idTypeKey).value ==
+                                IdentifierTypes.uniqueBeneficiaryID.toValue())
                           const SizedBox(
                             height: spacer2,
                           ),
@@ -862,5 +879,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         : null;
 
     return date;
+  }
+
+  void setUniqueBeneficiaryId(FormGroup form) async {
+    var beneficiaryId = await UniqueIdGeneration().generateUniqueId(
+        localityCode: RegistrationDeliverySingleton().boundary!.code!,
+        loggedInUserId: RegistrationDeliverySingleton().loggedInUserUuid!,
+        returnCombinedIds: false);
+
+    form.control(_idNumberKey).value = beneficiaryId.first.toString();
   }
 }

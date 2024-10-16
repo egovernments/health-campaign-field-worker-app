@@ -23,6 +23,12 @@
 * Updated additionalDetails field to service definition attributes model
 * Changed the object type of additionalDetails in Service model from String to Map
 
+## 1.0.4-dev.7-uniqueId
+* Modified identifierType of unique beneficiary id
+
+## 1.0.4-dev.6-uniqueId
+* Added additionalDetails field to service definition attributes model
+
 ## 1.0.4-dev.5-uniqueId
 * Added identifierType enum entity
 * Added identifierType and id as primary key to identifier table
