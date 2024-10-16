@@ -74,16 +74,17 @@ class CustomValidator {
     AbstractControl<dynamic> control,
   ) {
     return control.value == null ||
-            !(control.value.toString()== '0') ||
+            !(control.value.toString() == '0') ||
             control.value.toString().trim().isEmpty
         ? null
         : {'min1': true};
   }
+
   static Map<String, dynamic>? requiredMaxStudentCount(
     AbstractControl<dynamic> control,
   ) {
     return control.value == null ||
-           int.parse( control.value.toString() )<= 10000 ||
+            int.parse(control.value.toString()) <= 10000 ||
             control.value.toString().trim().isEmpty
         ? null
         : {'max10000': true};
@@ -897,6 +898,7 @@ getSelectedLanguage(AppInitialized state, int index) {
 
 List<HouseholdModel> excludeSchoolHouseholds(
   List<HouseholdModel> householdModels,
+  String excludeType,
 ) {
   // Create a new list to store the households that are not of type "SCHOOL"
   List<HouseholdModel> filteredHouseholds = [];
@@ -906,14 +908,16 @@ List<HouseholdModel> excludeSchoolHouseholds(
       // Check if the additional fields contain 'type'
       if (household.additionalFields!.fields
           .map((e) => e.key)
-          .contains('type')) {
+          .contains(Constants.houseHoldBeneficiaryType)) {
         // Get the value of 'type'
         var typeValue = household.additionalFields!.fields
-            .firstWhere((element) => element.key == 'type')
+            .firstWhere(
+              (element) => element.key == Constants.houseHoldBeneficiaryType,
+            )
             .value;
 
         // Only add the household to the filtered list if the type is not 'SCHOOL'
-        if (typeValue != 'SCHOOL') {
+        if (typeValue != excludeType) {
           filteredHouseholds.add(household);
         }
       } else {
@@ -932,7 +936,9 @@ List<HouseholdModel> excludeSchoolHouseholds(
 bool isHouseHoldSchool(HouseholdMemberWrapper wrapper) {
   bool isSchool = wrapper.household.additionalFields!.fields
           .where(
-            (element) => element.key == 'type' && element.value == 'SCHOOL',
+            (element) =>
+                element.key == Constants.houseHoldBeneficiaryType &&
+                element.value == Constants.schoolType,
           )
           .firstOrNull !=
       null;
@@ -941,9 +947,15 @@ bool isHouseHoldSchool(HouseholdMemberWrapper wrapper) {
 }
 
 addSchoolAdditionalType() {
-  return const AdditionalField('type', Constants.schoolType);
+  return const AdditionalField(
+    Constants.houseHoldBeneficiaryType,
+    Constants.schoolType,
+  );
 }
 
 addHouseHoldAdditionalType() {
-  return const AdditionalField('type', Constants.houseHoldType);
+  return const AdditionalField(
+    Constants.houseHoldBeneficiaryType,
+    Constants.houseHoldType,
+  );
 }

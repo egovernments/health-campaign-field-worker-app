@@ -52,7 +52,8 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
       offset: event.offset,
       limit: event.limit,
     ));
-    householdList = excludeSchoolHouseholds(householdList);
+    householdList =
+        excludeSchoolHouseholds(householdList, Constants.schoolType);
     // Extract individual IDs from proximity-based individual results.
     final householdClientReferenceIds =
         householdList.map((e) => e.clientReferenceId).toList();

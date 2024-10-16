@@ -126,7 +126,7 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
       ),
     );
 
-    houseHolds = excludeSchoolHouseholds(houseHolds);
+    houseHolds = excludeSchoolHouseholds(houseHolds, Constants.schoolType);
 
     if (houseHolds.isNotEmpty) {
       final projectBeneficiaries = await fetchProjectBeneficiary(
@@ -257,23 +257,6 @@ class SearchByHeadBloc extends SearchHouseholdsBloc {
       ));
     } else {
       super.emit(state.copyWith(loading: false));
-    }
-  }
-
-  excludeSchoolHouseHolds(
-    List<HouseholdModel> householdModels,
-  ) {
-    for (final household in householdModels) {
-      if (household.additionalFields!.fields
-          .map((e) => e.key)
-          .contains('type')) {
-        if (household.additionalFields!.fields
-                .firstWhere((element) => element.key == 'type')
-                .value ==
-            'SCHOOL') {
-          householdModels.remove(household);
-        }
-      }
     }
   }
 }

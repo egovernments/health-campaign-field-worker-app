@@ -169,48 +169,62 @@ class MemberCard extends StatelessWidget {
             ),
             child: Offstage(
               offstage: beneficiaryType != BeneficiaryType.individual,
-              child: !isDelivered ||
-                      isNotEligible ||
-                      isBeneficiaryRefused ||
-                      isBeneficiaryIneligible ||
-                      isBeneficiaryReferred
+              child: isHead
                   ? Align(
                       alignment: Alignment.centerLeft,
                       child: DigitIconButton(
-                        icon: Icons.info_rounded,
-                        iconSize: 20,
+                        icon: Icons.info,
                         iconText: localizations.translate(
-                          (isNotEligible || isBeneficiaryIneligible)
-                              ? i18.householdOverView
-                                  .householdOverViewNotEligibleIconLabel
-                              : isBeneficiaryReferred
-                                  ? i18.householdOverView
-                                      .householdOverViewBeneficiaryReferredLabel
-                                  : isBeneficiaryRefused
-                                      ? Status.beneficiaryRefused.toValue()
-                                      // [TODO Need to update the localization]
-                                      : i18.householdOverView
-                                          .householdOverViewNotDeliveredIconLabel,
-                        ),
-                        iconTextColor: theme.colorScheme.error,
-                        iconColor: theme.colorScheme.error,
-                      ),
-                    )
-                  : Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.check_circle,
-                        iconText: localizations.translate(
-                          i18.householdOverView
-                              .householdOverViewDeliveredIconLabel,
+                          i18.householdOverView.householdOverViewHeadIconLabel,
                         ),
                         iconSize: 20,
                         iconTextColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                        iconColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
+                            DigitTheme.instance.colorScheme.surfaceTint,
+                        iconColor: DigitTheme.instance.colorScheme.surfaceTint,
                       ),
-                    ),
+                    )
+                  : !isDelivered ||
+                          isNotEligible ||
+                          isBeneficiaryRefused ||
+                          isBeneficiaryIneligible ||
+                          isBeneficiaryReferred
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: DigitIconButton(
+                            icon: Icons.info_rounded,
+                            iconSize: 20,
+                            iconText: localizations.translate(
+                              (isNotEligible || isBeneficiaryIneligible)
+                                  ? i18.householdOverView
+                                      .householdOverViewNotEligibleIconLabel
+                                  : isBeneficiaryReferred
+                                      ? i18.householdOverView
+                                          .householdOverViewBeneficiaryReferredLabel
+                                      : isBeneficiaryRefused
+                                          ? Status.beneficiaryRefused.toValue()
+                                          // [TODO Need to update the localization]
+                                          : i18.householdOverView
+                                              .householdOverViewNotDeliveredIconLabel,
+                            ),
+                            iconTextColor: theme.colorScheme.error,
+                            iconColor: theme.colorScheme.error,
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.centerLeft,
+                          child: DigitIconButton(
+                            icon: Icons.check_circle,
+                            iconText: localizations.translate(
+                              i18.householdOverView
+                                  .householdOverViewDeliveredIconLabel,
+                            ),
+                            iconSize: 20,
+                            iconTextColor: DigitTheme
+                                .instance.colorScheme.onSurfaceVariant,
+                            iconColor: DigitTheme
+                                .instance.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
             ),
           ),
           Offstage(

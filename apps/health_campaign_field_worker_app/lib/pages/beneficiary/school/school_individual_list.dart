@@ -3,7 +3,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_icon_button.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:digit_components/widgets/digit_search_bar.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +83,8 @@ class _SchoolIndividualListPageState
                         ),
                         enableFixedButton: true,
                         footer: Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              kPadding, 0, kPadding, 0),
-                          child: DigitElevatedButton(
+                          padding: const EdgeInsets.all(kPadding),
+                          child: DigitOutLineButton(
                             onPressed: () async {
                               final bloc =
                                   context.read<HouseholdOverviewBloc>();
@@ -126,17 +125,8 @@ class _SchoolIndividualListPageState
                                 ),
                               );
                             },
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(Icons.add),
-                                Text(
-                                  localizations
-                                      .translate(i18.schoolDetails.addStudent),
-                                ),
-                              ],
-                            ),
+                            label: localizations
+                                .translate(i18.schoolDetails.addStudent),
                           ),
                         ),
                         slivers: [
@@ -161,11 +151,9 @@ class _SchoolIndividualListPageState
                                             right: kPadding + 1,
                                           ),
                                           child: Text(
-                                            localizations.translate(i18
-                                                .schoolDetails
-                                                .studentLabel,
-                                                ),
-                                           
+                                            localizations.translate(
+                                              i18.schoolDetails.studentLabel,
+                                            ),
                                             style:
                                                 theme.textTheme.displayMedium,
                                           ),
@@ -191,8 +179,7 @@ class _SchoolIndividualListPageState
                                 DigitSearchBar(
                                   //  controller: searchController,
                                   hintText: localizations.translate(
-                                    i18.schoolDetails
-                                        .studentSearchHintText,
+                                    i18.schoolDetails.studentSearchHintText,
                                   ),
                                   textCapitalization: TextCapitalization.words,
                                   onChanged: (value) {},
