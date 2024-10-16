@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -32,6 +33,7 @@ class MemberCard extends StatelessWidget {
   final bool isBeneficiaryIneligible;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
+  final Color? backgroundColorType;
 
   const MemberCard({
     super.key,
@@ -53,6 +55,7 @@ class MemberCard extends StatelessWidget {
     this.isBeneficiaryIneligible = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
+    this.backgroundColorType,
   });
 
   @override
@@ -62,7 +65,7 @@ class MemberCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: DigitTheme.instance.colorScheme.background,
+        color: backgroundColorType ?? DigitTheme.instance.colorScheme.background,
         border: Border.all(
           color: DigitTheme.instance.colorScheme.outline,
           width: 1,
@@ -232,38 +235,88 @@ class MemberCard extends StatelessWidget {
                               //   left: kPadding / 2,
                               //   right: kPadding / 2,
                               // ),
-                              onPressed: () {
-                                final bloc =
-                                    context.read<HouseholdOverviewBloc>();
+                              onPressed:
+                                  //TODO: develop
+                                  !recordedSideEffect(
+                                            context.selectedCycle,
+                                            (tasks != null && tasks!.isNotEmpty)
+                                                ? tasks!.lastOrNull
+                                                : null,
+                                            sideEffects,
+                                          ) &&
+                                          ((tasks != null && tasks!.isNotEmpty)
+                                              ? isCurrentTimeBeforeEndTime(
+                                                  tasks!
+                                                      .last!
+                                                      .clientAuditDetails!
+                                                      .createdTime!,
+                                                  int.parse(
+                                                    (context.selectedProjectType!
+                                                                    .cycles !=
+                                                                null &&
+                                                            context
+                                                                .selectedProjectType!
+                                                                .cycles!
+                                                                .isNotEmpty)
+                                                        ? (context
+                                                                .selectedProjectType!
+                                                                .cycles!
+                                                                .last
+                                                                .mandatoryWaitSinceLastCycleInDays ??
+                                                            "24")
+                                                        : "24".toString(),
+                                                  ),
+                                                 
+                                                )
+                                              : false)
+                                      ? () async {
+                                          await context.router.push(
+                                            SideEffectsRoute(
+                                              tasks: [
+                                                tasks!.last,
+                                              ],
+                                              fromSurvey: false,
+                                            ),
+                                          );
+                                        }
+                                      :
+                                      // end
 
-                                bloc.add(
-                                  HouseholdOverviewEvent.selectedIndividual(
-                                    individualModel: individual,
-                                  ),
-                                );
-                                bloc.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
-                                  projectBeneficiaryType:
-                                      context.beneficiaryType,
-                                ));
+                                      
+                                      () {
+                                          final bloc = context
+                                              .read<HouseholdOverviewBloc>();
 
-                                final futureTaskList = tasks
-                                    ?.where((task) =>
-                                        task.status ==
-                                        Status.delivered.toValue())
-                                    .toList();
+                                          bloc.add(
+                                            HouseholdOverviewEvent
+                                                .selectedIndividual(
+                                              individualModel: individual,
+                                            ),
+                                          );
+                                          bloc.add(HouseholdOverviewReloadEvent(
+                                            projectId: context.projectId,
+                                            projectBeneficiaryType:
+                                                context.beneficiaryType,
+                                          ));
 
-                                if ((futureTaskList ?? []).isNotEmpty) {
-                                  context.router.push(
-                                    RecordPastDeliveryDetailsRoute(
-                                      tasks: tasks,
-                                    ),
-                                  );
-                                } else {
-                                  context.router
-                                      .push(BeneficiaryDetailsRoute());
-                                }
-                              },
+                                          final futureTaskList = tasks
+                                              ?.where((task) =>
+                                                  task.status ==
+                                                  Status.delivered.toValue())
+                                              .toList();
+
+                                          if ((futureTaskList ?? [])
+                                              .isNotEmpty) {
+                                            context.router.push(
+                                              RecordPastDeliveryDetailsRoute(
+                                                tasks: tasks,
+                                              ),
+                                            );
+                                          } else {
+                                            context.router.push(
+                                                BeneficiaryDetailsRoute());
+                                          }
+                                        },
                               child: Center(
                                 child: Text(
                                   allDosesDelivered(
@@ -276,10 +329,50 @@ class MemberCard extends StatelessWidget {
                                             tasks,
                                             context.selectedCycle,
                                           )
-                                      ? localizations.translate(
-                                          i18.householdOverView
-                                              .viewDeliveryLabel,
-                                        )
+                                      ?
+                                      //TODO:develop
+                                      !recordedSideEffect(
+                                                context.selectedCycle,
+                                                (tasks != null &&
+                                                        tasks!.isNotEmpty)
+                                                    ? tasks!.lastOrNull
+                                                    : null,
+                                                sideEffects,
+                                              ) &&
+                                              ((tasks != null &&
+                                                      tasks!.isNotEmpty)
+                                                  ? isCurrentTimeBeforeEndTime(
+                                                      tasks!
+                                                          .last!
+                                                          .clientAuditDetails!
+                                                          .createdTime!,
+                                                      int.parse(
+                                                        (context.selectedProjectType!
+                                                                        .cycles !=
+                                                                    null &&
+                                                                context
+                                                                    .selectedProjectType!
+                                                                    .cycles!
+                                                                    .isNotEmpty)
+                                                            ? (context
+                                                                    .selectedProjectType!
+                                                                    .cycles!
+                                                                    .last
+                                                                    .mandatoryWaitSinceLastCycleInDays ??
+                                                                "24")
+                                                            : "24".toString(),
+                                                      ),
+                                                      
+                                                    )
+                                                  : false)
+                                          ? localizations.translate(
+                                              i18.householdOverView
+                                                  .addAdverseEffect,
+                                            )
+                                          : localizations.translate(
+                                              i18.householdOverView
+                                                  .viewDeliveryLabel,
+                                            )
                                       : localizations.translate(
                                           i18.householdOverView
                                               .householdOverViewActionText,

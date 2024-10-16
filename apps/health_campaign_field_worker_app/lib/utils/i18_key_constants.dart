@@ -1204,6 +1204,7 @@ class SchoolOverView {
 
 class HouseholdOverView {
   const HouseholdOverView();
+  String get addAdverseEffect => 'ADD_ADVERSE_EFFECT_LABEL';
 
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
 
@@ -1254,6 +1255,7 @@ class HouseholdOverView {
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
+
 }
 
 class MemberCard {
