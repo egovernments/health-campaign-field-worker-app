@@ -1,16 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/blocs/search_households/search_by_school.dart';
-import 'package:health_campaign_field_worker_app/models/entities/beneficiary_type.dart';
-import 'package:health_campaign_field_worker_app/widgets/member_card/member_card.dart';
 
 import '../../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../../blocs/household_overview/household_overview.dart';
 import '../../../blocs/project/project.dart';
-import '../../../blocs/scanner/scanner.dart';
 import '../../../blocs/search_households/search_bloc_common_wrapper.dart';
 import '../../../blocs/search_households/search_households.dart';
 import '../../../router/app_router.dart';
@@ -76,31 +71,29 @@ class _HouseholdOverviewPageState extends LocalizedState<SchoolOverviewPage> {
                           },
                         ),
                         enableFixedButton: true,
-                        footer: BlocBuilder<SearchBySchoolBloc,
-                            SearchHouseholdsState>(
-                          builder: (context, statek) {
-                            return Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  kPadding, 0, kPadding, 0),
-                              child: DigitElevatedButton(
-                                onPressed: () async {
-                                  context.router.push(
-                                    BeneficiaryWrapperRoute(
-                                      wrapper:
-                                          statek.householdMembers.firstOrNull!,
-                                      children: [
-                                        SchoolIndividualListRoute(),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                child: Text(
-                                  localizations
-                                      .translate(i18.householdDetails.actionLabel),
+                        footer: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              kPadding, 0, kPadding, 0),
+                          child: DigitElevatedButton(
+                            onPressed: () async {
+                              var bloc = context.read<SearchBlocWrapper>();
+
+                              context.router.push(
+                                BeneficiaryWrapperRoute(
+                                  wrapper:
+                                      bloc.state.householdMembers.firstOrNull!,
+                                  children: [
+                                    SchoolIndividualListRoute(),
+                                  ],
                                 ),
+                              );
+                            },
+                            child: Text(
+                              localizations.translate(
+                                i18.householdDetails.actionLabel,
                               ),
-                            );
-                          },
+                            ),
+                          ),
                         ),
                         slivers: [
                           SliverToBoxAdapter(

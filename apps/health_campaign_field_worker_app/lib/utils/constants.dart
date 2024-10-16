@@ -112,6 +112,7 @@ class Constants {
     }
   }
 
+  static const houseHoldBeneficiaryType = 'type';
   static const String houseHoldType = 'HOUSEHOLD';
   static const String schoolType = 'SCHOOL';
   static const String schoolNameKey = 'schoolName';
@@ -298,7 +299,6 @@ class Constants {
     KeyValue('TREATED_LATEST_FIRST', true),
     KeyValue('NOT_TREATED_LATEST_FIRST', false),
   ];
-
 }
 
 /// By using this key, we can push pages without context

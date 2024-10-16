@@ -35,10 +35,8 @@ class _BeneficiaryAcknowledgementPageState
 
           context.router.popAndPush(
             BeneficiaryWrapperRoute(
-              wrapper: bloc.state.householdMembers.first,
-              children: [
-                SchoolDetailsRoute(),
-              ],
+              wrapper: bloc.state.householdMembers.firstOrNull!,
+              children: [SchoolOverviewRoute()],
             ),
           );
         },
