@@ -35,7 +35,6 @@ class MemberCard extends StatelessWidget {
   final String? projectBeneficiaryClientReferenceId;
   final Color? backgroundColorType;
   final bool isAdverseEffect;
-  
 
   const MemberCard({
     super.key,
@@ -57,7 +56,8 @@ class MemberCard extends StatelessWidget {
     this.isBeneficiaryIneligible = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
-    this.backgroundColorType, required this.isAdverseEffect,
+    this.backgroundColorType,
+    required this.isAdverseEffect,
   });
 
   @override
@@ -67,7 +67,8 @@ class MemberCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: backgroundColorType ?? DigitTheme.instance.colorScheme.background,
+        color:
+            backgroundColorType ?? DigitTheme.instance.colorScheme.background,
         border: Border.all(
           color: DigitTheme.instance.colorScheme.outline,
           width: 1,
@@ -251,57 +252,50 @@ class MemberCard extends StatelessWidget {
                               //   left: kPadding / 2,
                               //   right: kPadding / 2,
                               // ),
-                              onPressed:
-                                  //TODO: develop
-                                  isAdverseEffect
-                                      ? () async {
-                                          await context.router.push(
-                                            SideEffectsRoute(
-                                              tasks: [
-                                                tasks!.last,
-                                              ],
-                                              fromSurvey: false,
-                                            ),
-                                          );
-                                        }
-                                      :
-                                      // end
+                              onPressed: isAdverseEffect
+                                  ? () async {
+                                      await context.router.push(
+                                        SideEffectsRoute(
+                                          tasks: [
+                                            tasks!.last,
+                                          ],
+                                          fromSurvey: false,
+                                        ),
+                                      );
+                                    }
+                                  : () {
+                                      final bloc =
+                                          context.read<HouseholdOverviewBloc>();
 
-                                      
-                                      () {
-                                          final bloc = context
-                                              .read<HouseholdOverviewBloc>();
+                                      bloc.add(
+                                        HouseholdOverviewEvent
+                                            .selectedIndividual(
+                                          individualModel: individual,
+                                        ),
+                                      );
+                                      bloc.add(HouseholdOverviewReloadEvent(
+                                        projectId: context.projectId,
+                                        projectBeneficiaryType:
+                                            context.beneficiaryType,
+                                      ));
 
-                                          bloc.add(
-                                            HouseholdOverviewEvent
-                                                .selectedIndividual(
-                                              individualModel: individual,
-                                            ),
-                                          );
-                                          bloc.add(HouseholdOverviewReloadEvent(
-                                            projectId: context.projectId,
-                                            projectBeneficiaryType:
-                                                context.beneficiaryType,
-                                          ));
+                                      final futureTaskList = tasks
+                                          ?.where((task) =>
+                                              task.status ==
+                                              Status.delivered.toValue())
+                                          .toList();
 
-                                          final futureTaskList = tasks
-                                              ?.where((task) =>
-                                                  task.status ==
-                                                  Status.delivered.toValue())
-                                              .toList();
-
-                                          if ((futureTaskList ?? [])
-                                              .isNotEmpty) {
-                                            context.router.push(
-                                              RecordPastDeliveryDetailsRoute(
-                                                tasks: tasks,
-                                              ),
-                                            );
-                                          } else {
-                                            context.router.push(
-                                                BeneficiaryDetailsRoute());
-                                          }
-                                        },
+                                      if ((futureTaskList ?? []).isNotEmpty) {
+                                        context.router.push(
+                                          RecordPastDeliveryDetailsRoute(
+                                            tasks: tasks,
+                                          ),
+                                        );
+                                      } else {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
+                                      }
+                                    },
                               child: Center(
                                 child: Text(
                                   allDosesDelivered(
@@ -314,9 +308,7 @@ class MemberCard extends StatelessWidget {
                                             tasks,
                                             context.selectedCycle,
                                           )
-                                      ?
-                                      //TODO:develop
-                                      isAdverseEffect
+                                      ? isAdverseEffect
                                           ? localizations.translate(
                                               i18.householdOverView
                                                   .addAdverseEffect,
