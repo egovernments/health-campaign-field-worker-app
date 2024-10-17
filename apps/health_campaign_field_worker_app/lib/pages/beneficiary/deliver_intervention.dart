@@ -176,7 +176,11 @@ class _DeliverInterventionPageState
                                                   0, kPadding, 0, 0),
                                               padding:
                                                   const EdgeInsets.fromLTRB(
-                                                      kPadding, 0, kPadding, 0),
+                                                kPadding,
+                                                0,
+                                                kPadding,
+                                                0,
+                                              ),
                                               child: ValueListenableBuilder(
                                                 valueListenable: clickedStatus,
                                                 builder: (context,
@@ -234,6 +238,42 @@ class _DeliverInterventionPageState
                                                               final long =
                                                                   locationState
                                                                       .longitude;
+
+
+                                                              List<TaskModel>
+                                                                  taskData = [];
+                                                              taskData.add(
+                                                                _getTaskModel(
+                                                                  context,
+                                                                  form: form,
+                                                                  oldTask: null,
+                                                                  projectBeneficiaryClientReferenceId:
+                                                                      projectBeneficiary
+                                                                          .first
+                                                                          .clientReferenceId,
+                                                                  dose:
+                                                                      deliveryInterventionstate
+                                                                          .dose,
+                                                                  cycle:
+                                                                      deliveryInterventionstate
+                                                                          .cycle,
+                                                                  deliveryStrategy:
+                                                                      DeliverStrategyType
+                                                                          .direct
+                                                                          .toValue(),
+                                                                  address: householdMemberWrapper
+                                                                      .members
+                                                                      .first
+                                                                      .address
+                                                                      ?.first,
+                                                                  latitude: lat,
+                                                                  longitude:
+                                                                      long,
+                                                                  wrapper:
+                                                                      householdMemberWrapper,
+                                                                ),
+                                                              );
+
                                                               final shouldSubmit =
                                                                   await DigitDialog
                                                                       .show<
@@ -265,13 +305,50 @@ class _DeliverInterventionPageState
                                                                       clickedStatus
                                                                               .value =
                                                                           true;
-                                                                      Navigator
-                                                                          .of(
-                                                                        context,
-                                                                        rootNavigator:
-                                                                            true,
-                                                                      ).pop(
-                                                                          true);
+
+                                                                      if (!interventionSubmitted) {
+                                                                        interventionSubmitted =
+                                                                            true;
+                                                                        context
+                                                                            .read<DeliverInterventionBloc>()
+                                                                            .add(
+                                                                              DeliverInterventionSubmitEvent(
+                                                                                taskData.first,
+                                                                                false,
+                                                                                context.boundary,
+                                                                              ),
+                                                                            );
+                                                                        Future
+                                                                            .delayed(
+                                                                          const Duration(
+                                                                            milliseconds:
+                                                                                1000,
+                                                                          ),
+                                                                          () {
+                                                                            reloadState.add(
+                                                                              HouseholdOverviewReloadEvent(
+                                                                                projectId: context.projectId,
+                                                                                projectBeneficiaryType: context.beneficiaryType,
+                                                                              ),
+                                                                            );
+                                                                          },
+                                                                        ).then(
+                                                                          (value) {
+                                                                            !isHouseHoldSchool(reloadState.state.householdMemberWrapper)
+                                                                                ? context.router.popAndPush(
+                                                                                    HouseholdAcknowledgementRoute(
+                                                                                      enableViewHousehold: true,
+                                                                                    ),
+                                                                                  )
+                                                                                : context.router.popAndPush(
+                                                                                    SchoolAcknowledgementRoute(
+                                                                                      enableViewSchool: true,
+                                                                                    ),
+                                                                                  );
+                                                                            Navigator.pop(ctx);
+                                                                          },
+                                                                        );
+                                                                      }
                                                                     },
                                                                   ),
                                                                   secondaryAction:
@@ -291,187 +368,6 @@ class _DeliverInterventionPageState
                                                                   ),
                                                                 ),
                                                               );
-
-                                                              if (shouldSubmit ??
-                                                                  false) {
-                                                                if (context
-                                                                    .mounted) {
-                                                                  List<TaskModel>
-                                                                      taskData =
-                                                                      [];
-                                                                  taskData.add(
-                                                                    _getTaskModel(
-                                                                      context,
-                                                                      form:
-                                                                          form,
-                                                                      oldTask:
-                                                                          null,
-                                                                      projectBeneficiaryClientReferenceId: projectBeneficiary
-                                                                          .first
-                                                                          .clientReferenceId,
-                                                                      dose: deliveryInterventionstate
-                                                                          .dose,
-                                                                      cycle: deliveryInterventionstate
-                                                                          .cycle,
-                                                                      deliveryStrategy: DeliverStrategyType
-                                                                          .direct
-                                                                          .toValue(),
-                                                                      address: householdMemberWrapper
-                                                                          .members
-                                                                          .first
-                                                                          .address
-                                                                          ?.first,
-                                                                      latitude:
-                                                                          lat,
-                                                                      longitude:
-                                                                          long,
-                                                                      wrapper:
-                                                                          householdMemberWrapper,
-                                                                    ),
-                                                                  );
-                                                                  DigitDialog
-                                                                      .show<
-                                                                          bool>(
-                                                                    context,
-                                                                    options:
-                                                                        DigitDialogOptions(
-                                                                      titleText: localizations.translate(i18
-                                                                          .deliverIntervention
-                                                                          .didYouObservePreviousAdvEventsTitle),
-                                                                      barrierDismissible:
-                                                                          false,
-                                                                      enableRecordPast:
-                                                                          true,
-                                                                      dialogPadding:
-                                                                          const EdgeInsets
-                                                                              .fromLTRB(
-                                                                        kPadding,
-                                                                        kPadding,
-                                                                        kPadding,
-                                                                        0,
-                                                                      ),
-                                                                      primaryAction:
-                                                                          DigitDialogActions(
-                                                                        label: localizations
-                                                                            .translate(
-                                                                          i18.common
-                                                                              .coreCommonNo,
-                                                                        ),
-                                                                        action:
-                                                                            (ctx) {
-                                                                          if (!interventionSubmitted) {
-                                                                            interventionSubmitted =
-                                                                                true;
-                                                                            context.read<DeliverInterventionBloc>().add(
-                                                                                  DeliverInterventionSubmitEvent(
-                                                                                    taskData.first,
-                                                                                    false,
-                                                                                    context.boundary,
-                                                                                  ),
-                                                                                );
-                                                                            Future.delayed(
-                                                                              const Duration(
-                                                                                milliseconds: 1000,
-                                                                              ),
-                                                                              () {
-                                                                                reloadState.add(
-                                                                                  HouseholdOverviewReloadEvent(
-                                                                                    projectId: context.projectId,
-                                                                                    projectBeneficiaryType: context.beneficiaryType,
-                                                                                  ),
-                                                                                );
-                                                                              },
-                                                                            ).then(
-                                                                              (value) {
-                                                                                !isHouseHoldSchool(reloadState.state.householdMemberWrapper)
-                                                                                    ? context.router.popAndPush(
-                                                                                        HouseholdAcknowledgementRoute(
-                                                                                          enableViewHousehold: true,
-                                                                                        ),
-                                                                                      )
-                                                                                    : context.router.popAndPush(
-                                                                                        SchoolAcknowledgementRoute(
-                                                                                          enableViewSchool: true,
-                                                                                        ),
-                                                                                      );
-                                                                                Navigator.pop(ctx);
-                                                                              },
-                                                                            );
-                                                                          }
-                                                                        },
-                                                                      ),
-                                                                      secondaryAction:
-                                                                          DigitDialogActions(
-                                                                        label: localizations
-                                                                            .translate(
-                                                                          i18.common
-                                                                              .coreCommonYes,
-                                                                        ),
-                                                                        action:
-                                                                            (ctx) async {
-                                                                          if (!interventionSubmitted) {
-                                                                            interventionSubmitted =
-                                                                                true;
-                                                                            context.read<DeliverInterventionBloc>().add(
-                                                                                  DeliverInterventionSubmitEvent(
-                                                                                    taskData.first,
-                                                                                    false,
-                                                                                    context.boundary,
-                                                                                  ),
-                                                                                );
-                                                                            Navigator.pop(
-                                                                              ctx,
-                                                                            );
-                                                                            final reloadState =
-                                                                                context.read<HouseholdOverviewBloc>();
-                                                                            final response =
-                                                                                await router.push(
-                                                                              SideEffectsRoute(
-                                                                                tasks: [
-                                                                                  (taskData).last,
-                                                                                ],
-                                                                                fromSurvey: true,
-                                                                              ),
-                                                                            );
-
-                                                                            if (response ==
-                                                                                null) {
-                                                                              Future.delayed(
-                                                                                const Duration(
-                                                                                  milliseconds: 1000,
-                                                                                ),
-                                                                                () {
-                                                                                  reloadState.add(
-                                                                                    HouseholdOverviewReloadEvent(
-                                                                                      projectId: context.projectId,
-                                                                                      projectBeneficiaryType: context.beneficiaryType,
-                                                                                    ),
-                                                                                  );
-                                                                                },
-                                                                              ).then(
-                                                                                (value) {
-                                                                                  !isHouseHoldSchool(reloadState.state.householdMemberWrapper)
-                                                                                      ? context.router.popAndPush(
-                                                                                          HouseholdAcknowledgementRoute(
-                                                                                            enableViewHousehold: true,
-                                                                                          ),
-                                                                                        )
-                                                                                      : context.router.popAndPush(
-                                                                                          SchoolAcknowledgementRoute(
-                                                                                            enableViewSchool: true,
-                                                                                          ),
-                                                                                        );
-                                                                                  Navigator.pop(ctx);
-                                                                                },
-                                                                              );
-                                                                            }
-                                                                          }
-                                                                        },
-                                                                      ),
-                                                                    ),
-                                                                  );
-                                                                }
-                                                              }
                                                             }
                                                           },
                                                     child: Center(
