@@ -3,10 +3,10 @@ import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_project_cell.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:isar/isar.dart';
-import 'package:location_tracker/location_tracker.dart';
 
 import '../blocs/auth/auth.dart';
 import '../blocs/project/project.dart';

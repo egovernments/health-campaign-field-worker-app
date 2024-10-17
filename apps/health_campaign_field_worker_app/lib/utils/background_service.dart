@@ -5,14 +5,15 @@ import 'dart:ui';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_location_tracker/bloc/location_tracker_service.dart';
+import 'package:digit_location_tracker/utils/utils.dart'
+    as location_tracker_utils;
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:isar/isar.dart';
-import 'package:location_tracker/bloc/location_tracker_service.dart';
-import 'package:location_tracker/utils/utils.dart' as location_tracker_utils;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:recase/recase.dart';
 

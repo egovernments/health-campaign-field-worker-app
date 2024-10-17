@@ -6,11 +6,11 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
+import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
-import 'package:location_tracker/location_tracker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';

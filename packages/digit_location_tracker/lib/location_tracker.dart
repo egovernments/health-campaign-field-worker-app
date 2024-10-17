@@ -1,4 +1,4 @@
-library location_tracker;
+library digit_location_tracker;
 
 export 'bloc/location_tracker_service.dart';
 export 'data/oplog/oplog.dart';
