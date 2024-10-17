@@ -1,0 +1,228 @@
+{
+  "name": "Test3",
+  "isEnum": false,
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": true,
+      "defaultValue": null
+    },
+    {
+      "name": "relatedClientReferenceId",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "doorNo",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "latitude",
+      "type": "double",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": true,
+      "defaultValue": null
+    },
+    {
+      "name": "longitude",
+      "type": "double",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": true,
+      "defaultValue": null
+    },
+    {
+      "name": "locationAccuracy",
+      "type": "double",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "addressLine1",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "addressLine2",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "landmark",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "city",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "pincode",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "buildingName",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "street",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "boundaryType",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "boundary",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "nonRecoverableError",
+      "type": "bool",
+      "nullable": false,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": false
+    },
+    {
+      "name": "tenantId",
+      "type": "String",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": true,
+      "defaultValue": null
+    },
+    {
+      "name": "rowVersion",
+      "type": "int",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "locality",
+      "type": "LocalityModel",
+      "nullable": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": false,
+      "includeForQuery": false,
+      "defaultValue": null
+    },
+    {
+      "name": "type",
+      "type": "AddressType",
+      "nullable": true,
+      "isEnum": true,
+      "isList": false,
+      "includeForEntity": true,
+      "includeForTable": true,
+      "includeForQuery": false,
+      "defaultValue": null
+    }
+  ],
+  "customAttributes": [],
+  "dateTimeAttributes": [],
+  "enumValues": [
+    {
+      "name": "permanent",
+      "value": "PERMANENT"
+    },
+    {
+      "name": "correspondence",
+      "value": "CORRESPONDENCE"
+    },
+    {
+      "name": "other",
+      "value": "OTHER"
+    },
+    {
+      "name": "string",
+      "value": "string"
+    }
+  ],
+  "persistBoundaryParameters": true
+}

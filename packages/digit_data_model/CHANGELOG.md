@@ -1,3 +1,15 @@
+## 1.0.4-dev.6
+
+* Automation of entity creation
+
+## 1.0.4-dev.5
+
+* Automation of entity creation
+
+## 1.0.4-dev.4
+
+* Sync with 1.0.4-dev.3 changes
+
 ## 1.0.3+1
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
