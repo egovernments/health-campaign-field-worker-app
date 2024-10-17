@@ -1,39 +1,37 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Device Tracking :
+This package is used to capture the device location using device GPS. Based on the GPS detection By given interval and given condition if it returns true then it starts capturing the location and stores in the File. Background service reads the records directly from the file and creates an Oplog. Sync service based on batch size and sends records to the server. If the response is 200 then against those records it will be marked as synced true in Oplog.
 
 ## Features
+Capture the device location using device GPS.
+Configurable time interval, start and end dates
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+To use this package, add the following dependency to your `pubspec.yaml` file:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  digit_location_tracker: ^any
 ```
 
+## Usage
+Digit Location Tracker requires below data to be passed from main app:
+
+LocationTrackerSingleton().setInitialData(
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+        );
+
+
+triggerLocationTracker(
+        'com.digit.location_tracker',
+        startAfterTimestamp: startAfterTimestamp.millisecondsSinceEpoch,
+        locationUpdateInterval: 60 * 1000, // TODO: Read from config
+        stopAfterTimestamp: project.endDate ??
+            now.add(const Duration(hours: 8)).millisecondsSinceEpoch,
+      );
+      
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+Create location service file in your android folder and replace main activity similar to this https://github.com/egovernments/health-campaign-field-worker-app/blob/location_tracker/apps/health_campaign_field_worker_app/android/app/src/main/kotlin/com/digit/hcm/MainActivity.kt and https://github.com/egovernments/health-campaign-field-worker-app/blob/location_tracker/apps/health_campaign_field_worker_app/android/app/src/main/kotlin/com/digit/hcm/location_service.kt
