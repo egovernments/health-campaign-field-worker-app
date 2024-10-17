@@ -1,3 +1,8 @@
+## 1.0.2+2
+
+* Updated digit_components, digit_data_model
+* Service model additionalDetails objectType changes in checklist
+
 ## 1.0.2+1
 
 * Updated digit_scanner package, digit_components, digit_data_model

@@ -138,14 +138,15 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         }
 
                         // Request location from LocationBloc
-                        context.read<LocationBloc>().add(const LocationEvent.load());
+                        context
+                            .read<LocationBloc>()
+                            .add(const LocationEvent.load());
 
                         // Wait for the location to be obtained
                         final locationState =
                             context.read<LocationBloc>().state;
                         double? latitude = locationState.latitude;
                         double? longitude = locationState.longitude;
-
 
                         final shouldSubmit = await DigitDialog.show(
                           context,
@@ -213,19 +214,21 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                     .text
                                                     .toString()
                                             : null,
-                                    additionalFields: ServiceAttributesAdditionalFields(
+                                    additionalFields:
+                                        ServiceAttributesAdditionalFields(
                                       version: 1,
                                       fields: [
                                         AdditionalField(
-                                          'latitude', latitude,
+                                          'latitude',
+                                          latitude,
                                         ),
                                         AdditionalField(
-                                          'longitude', longitude,
+                                          'longitude',
+                                          longitude,
                                         ),
                                       ],
                                     ),
-                                  )
-                                  );
+                                  ));
                                 }
 
                                 context.read<ServiceBloc>().add(
@@ -268,8 +271,30 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             lastModifiedTime: context
                                                 .millisecondsSinceEpoch(),
                                           ),
-                                          additionalDetails:
-                                              context.boundary.code,
+                                          additionalFields:
+                                              ServiceAdditionalFields(
+                                            version: 1,
+                                            fields: [
+                                              AdditionalField(
+                                                'latitude',
+                                                latitude,
+                                              ),
+                                              AdditionalField(
+                                                'longitude',
+                                                longitude,
+                                              ),
+                                              AdditionalField(
+                                                'localityCode',
+                                                context.boundary.code,
+                                              ),
+                                            ],
+                                          ),
+                                          additionalDetails: {
+                                            "boundaryCode":
+                                                context.boundary.code,
+                                            'lat': latitude,
+                                            'lng': longitude,
+                                          },
                                         ),
                                       ),
                                     );
@@ -397,7 +422,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(kPadding * 2),
                                     child: Column(
                                       children: [
                                         Text(
@@ -412,45 +437,89 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 ),
                                 BlocBuilder<ServiceBloc, ServiceState>(
                                   builder: (context, state) {
+                                    // Validation logic to check if required field is empty
+                                    final hasError = (e.required == true &&
+                                        controller[index].text.isEmpty &&
+                                        submitTriggered);
+
                                     return Column(
-                                      children: e.values!
-                                          .map((e) => DigitCheckboxTile(
-                                                label: e,
-                                                value: controller[index]
-                                                    .text
-                                                    .split('.')
-                                                    .contains(e),
-                                                onChanged: (value) {
-                                                  context
-                                                      .read<ServiceBloc>()
-                                                      .add(
-                                                        ServiceChecklistEvent(
-                                                          value: e.toString(),
-                                                          submitTriggered:
-                                                              submitTriggered,
-                                                        ),
-                                                      );
-                                                  final String ele;
-                                                  var val = controller[index]
-                                                      .text
-                                                      .split('.');
-                                                  if (val.contains(e)) {
-                                                    val.remove(e);
-                                                    ele = val.join(".");
-                                                  } else {
-                                                    ele =
-                                                        "${controller[index].text}.$e";
-                                                  }
-                                                  controller[index].value =
-                                                      TextEditingController
-                                                          .fromValue(
-                                                    TextEditingValue(
-                                                      text: ele,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Checkbox options
+                                        Column(
+                                          children: e.values!
+                                              .map((item) => Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: kPadding * 2),
+                                                    child: DigitCheckboxTile(
+                                                      label: item,
+                                                      value: controller[index]
+                                                          .text
+                                                          .split('.')
+                                                          .contains(item),
+                                                      onChanged: (value) {
+                                                        context
+                                                            .read<ServiceBloc>()
+                                                            .add(
+                                                              ServiceChecklistEvent(
+                                                                value: item
+                                                                    .toString(),
+                                                                submitTriggered:
+                                                                    submitTriggered,
+                                                              ),
+                                                            );
+
+                                                        var val =
+                                                            controller[index]
+                                                                .text
+                                                                .split('.');
+                                                        if (val
+                                                            .contains(item)) {
+                                                          val.remove(item);
+                                                        } else {
+                                                          val.add(item);
+                                                        }
+
+                                                        // Update the controller with the selected values
+                                                        controller[index]
+                                                                .value =
+                                                            TextEditingController
+                                                                .fromValue(
+                                                          TextEditingValue(
+                                                            text: val.join('.'),
+                                                          ),
+                                                        ).value;
+
+                                                        // If the field is required and no option is selected, trigger validation
+                                                        if (e.required ==
+                                                                true &&
+                                                            val.isEmpty) {
+                                                          submitTriggered =
+                                                              true;
+                                                        }
+                                                      },
                                                     ),
-                                                  ).value;
-                                                },
-                                              ))
-                                          .toList(),
+                                                  ))
+                                              .toList(),
+                                        ),
+                                        // Error message display if validation fails
+                                        Offstage(
+                                          offstage: !hasError,
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              localizations.translate(
+                                                i18.common.corecommonRequired,
+                                              ),
+                                              style: TextStyle(
+                                                color: theme.colorScheme.error,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   },
                                 ),
@@ -464,7 +533,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                       context,
                                     ),
                                   ),
-                              ]else if (e.dataType == 'Boolean') ...[
+                              ] else if (e.dataType == 'Boolean') ...[
                                 if (!(e.code ?? '').contains('.'))
                                   DigitCard(
                                     child: Column(
@@ -479,7 +548,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                   '${localizations.translate(
                                                     '${selectedServiceDefinition?.code}.${e.code}',
                                                   )} ${e.required == true ? '*' : ''}',
-                                                  style: theme.textTheme.headlineSmall,
+                                                  style: theme
+                                                      .textTheme.headlineSmall,
                                                 ),
                                               ],
                                             ),
@@ -492,30 +562,46 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                               allowMultipleSelection: false,
                                               width: 110,
                                               valueMapper: (value) {
-                                                return value ? localizations.translate(
-                                                  i18.common.coreCommonYes,
-                                                ) : localizations.translate(
-                                                  i18.common.coreCommonNo,
-                                                );
+                                                return value
+                                                    ? localizations.translate(
+                                                        i18.common
+                                                            .coreCommonYes,
+                                                      )
+                                                    : localizations.translate(
+                                                        i18.common.coreCommonNo,
+                                                      );
                                               },
-                                              initialSelection: controller[index].text=='true' ?  [true] : controller[index].text=='false' ?[false] : [],
-                                              options: const [true, false], // TODO: need to update
+                                              initialSelection:
+                                                  controller[index].text ==
+                                                          'true'
+                                                      ? [true]
+                                                      : controller[index]
+                                                                  .text ==
+                                                              'false'
+                                                          ? [false]
+                                                          : [],
+                                              options: const [
+                                                true,
+                                                false
+                                              ], // TODO: need to update
                                               onSelectionChanged: (curValue) {
-                                                if(curValue.isNotEmpty){
+                                                if (curValue.isNotEmpty) {
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                    ServiceChecklistEvent(
-                                                      value: curValue.toString(),
-                                                      submitTriggered:
-                                                      submitTriggered,
-                                                    ),
-                                                  );
-                                                  controller[index].value = TextEditingValue(
-                                                    text: curValue.first.toString(),
+                                                        ServiceChecklistEvent(
+                                                          value: curValue
+                                                              .toString(),
+                                                          submitTriggered:
+                                                              submitTriggered,
+                                                        ),
+                                                      );
+                                                  controller[index].value =
+                                                      TextEditingValue(
+                                                    text: curValue.first
+                                                        .toString(),
                                                   );
                                                 }
-
                                               },
                                             );
                                           },
@@ -645,7 +731,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         : [],
                     itemBuilder: (item) => RadioButtonBuilder(
                       localizations.translate(
-                        'CORE_COMMON_${item.trim().toUpperCase()}',
+                        item.trim().toUpperCase(),
                       ),
                     ),
                   );

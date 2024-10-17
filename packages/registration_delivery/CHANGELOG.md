@@ -1,3 +1,12 @@
+## 1.0.3+3
+* Updated Service model additionalDetails objectType in digit_data_model package
+
+## 1.0.3+2
+
+* Bug Fix -
+  * fixed wrong status map of beneficiaryRefused in utils
+* Sorting tasks based on createTime
+
 ## 1.0.3+1
 
 * Bug Fixes -
