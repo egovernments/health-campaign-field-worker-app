@@ -1,3 +1,6 @@
+## 1.0.2+4
+* Fix for boundaryCode in attendance logs
+
 ## 1.0.2+3
 * Updated Attendance Singleton to add boundary
 

@@ -65,7 +65,7 @@ dependencies:
   disk_space: ^0.2.1
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
-  attendance_management: ^1.0.2+3
+  attendance_management: ^1.0.2+4
   digit_scanner: ^1.0.3+1
   inventory_management: ^1.0.3+4
   referral_reconciliation: ^1.0.2+2
