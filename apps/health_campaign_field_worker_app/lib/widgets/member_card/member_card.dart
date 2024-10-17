@@ -256,9 +256,9 @@ class MemberCard extends StatelessWidget {
                                   ? () async {
                                       await context.router.push(
                                         SideEffectsRoute(
-                                          tasks: [
-                                            tasks!.last,
-                                          ],
+                                          tasks: tasks != null
+                                              ? [tasks!.last]
+                                              : [],
                                           fromSurvey: false,
                                         ),
                                       );
