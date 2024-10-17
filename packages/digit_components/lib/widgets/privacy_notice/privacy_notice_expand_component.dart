@@ -1,11 +1,11 @@
-import 'package:closed_household/widgets/showcase/showcase_wrappers.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:flutter/material.dart';
-import '../../data/local_store/no_sql/schema/app_configuration.dart';
+import '../../models/privacy_notice/privacy_notice_model.dart';
+import '../../theme/digit_theme.dart';
 import '../localized.dart';
 
 class ExpandableSection extends LocalizedStatefulWidget {
-  final Content content;
+  final ContentNoticeModel content;
 
   const ExpandableSection({
     super.key,
@@ -14,10 +14,10 @@ class ExpandableSection extends LocalizedStatefulWidget {
   });
 
   @override
-  _ExpandableSectionState createState() => _ExpandableSectionState();
+  ExpandableSectionState createState() => ExpandableSectionState();
 }
 
-class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
+class ExpandableSectionState extends LocalizedState<ExpandableSection> {
   bool _isExpanded = false;
 
   @override
@@ -75,7 +75,7 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
                 children:
                     widget.content.descriptions!.asMap().entries.map((entry) {
                   int index = entry.key;
-                  Description desc = entry.value;
+                  DescriptionNoticeModel desc = entry.value;
                   int? stepNumber = desc.type == 'step' ? index + 1 : null;
                   return DescriptionWidget(
                     description: desc,
@@ -91,7 +91,7 @@ class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
 }
 
 class DescriptionWidget extends LocalizedStatefulWidget {
-  final Description description;
+  final DescriptionNoticeModel description;
   final int? stepNumber;
 
   const DescriptionWidget({
@@ -102,10 +102,10 @@ class DescriptionWidget extends LocalizedStatefulWidget {
   });
 
   @override
-  _DescriptionWidgetState createState() => _DescriptionWidgetState();
+  DescriptionWidgetState createState() => DescriptionWidgetState();
 }
 
-class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
+class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
   @override
   Widget build(BuildContext context) {
     final descriptionText = widget.description.text ?? '';
@@ -201,7 +201,7 @@ class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
 }
 
 class SubDescriptionWidget extends LocalizedStatefulWidget {
-  final SubDescription subDescription;
+  final SubDescriptionNoticeModel subDescription;
   final int? stepNumber;
 
   const SubDescriptionWidget({
@@ -212,10 +212,10 @@ class SubDescriptionWidget extends LocalizedStatefulWidget {
   });
 
   @override
-  _SubDescriptionWidgetState createState() => _SubDescriptionWidgetState();
+  SubDescriptionWidgetState createState() => SubDescriptionWidgetState();
 }
 
-class _SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
+class SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
   @override
   Widget build(BuildContext context) {
     final subDescriptionText = widget.subDescription.text ?? '';

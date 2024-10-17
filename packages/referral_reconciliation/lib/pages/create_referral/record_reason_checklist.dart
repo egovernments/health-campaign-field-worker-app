@@ -181,10 +181,12 @@ class _ReferralReasonChecklistPageState
                                           rowVersion: 1,
                                           accountId: ReferralReconSingleton()
                                               .projectId,
-                                          additionalDetails:
-                                              ReferralReconSingleton()
-                                                  .boundary
-                                                  ?.code,
+                                          additionalDetails: {
+                                            "boundaryCode":
+                                                ReferralReconSingleton()
+                                                    .boundary
+                                                    ?.code
+                                          },
                                         ),
                                       ),
                                     );
@@ -494,7 +496,7 @@ class _ReferralReasonChecklistPageState
                         : [],
                     itemBuilder: (item) => RadioButtonBuilder(
                       localizations.translate(
-                        'CORE_COMMON_${item.trim().toUpperCase()}',
+                        item.trim().toUpperCase(),
                       ),
                     ),
                   );

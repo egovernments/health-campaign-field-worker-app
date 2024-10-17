@@ -1,6 +1,6 @@
 name: registration_delivery
 description: This package enables health facility workers to register a household and individual members and deliver the resources.
-version: 1.0.3+1
+version: 1.0.3+3
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/registration_delivery
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_components: ^1.0.1+1
+  digit_components: ^1.0.2+1
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
@@ -32,7 +32,7 @@ dependencies:
   digit_scanner: ^1.0.3+1
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
-  digit_data_model: ^1.0.3+1
+  digit_data_model: ^1.0.3+3
   package_info_plus: ^5.0.1
   digit_showcase: ^1.0.0
   collection: ^1.16.0
