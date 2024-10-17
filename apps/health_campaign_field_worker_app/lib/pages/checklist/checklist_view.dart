@@ -731,7 +731,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         : [],
                     itemBuilder: (item) => RadioButtonBuilder(
                       localizations.translate(
-                        'CORE_COMMON_${item.trim().toUpperCase()}',
+                        item.trim().toUpperCase(),
                       ),
                     ),
                   );

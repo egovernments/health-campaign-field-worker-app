@@ -25,6 +25,7 @@ class AttendanceSingleton {
     required String loggedInIndividualId,
     required String loggedInUserUuid,
     required String appVersion,
+    required BoundaryModel boundary,
   }) {
     _projectId = projectId;
     _loggedInIndividualId = loggedInIndividualId;
