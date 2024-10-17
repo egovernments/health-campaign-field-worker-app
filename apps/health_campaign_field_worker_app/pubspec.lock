@@ -494,17 +494,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: dcdab9542149022cb66241c3c379ca96916f8b6116e585f4799748d859a2ca49
+      sha256: "07b585e5d8010639366da72a4a8b215ce9b8790c75b2162b66af3cea57ca35d9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.2+1"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.3+1"
+      name: digit_data_model
+      sha256: "560b806cbb9f760ed956ecf2d01a8e5ea5640d8fca9ec1332ee15b34998d2e15"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3+3"
   digit_dss:
     dependency: "direct main"
     description:
@@ -689,34 +690,34 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_background_service
-      sha256: d32f078ec57647c9cfd6e1a8da9297f7d8f021d4dcc204a35aaad2cdbfe255f0
+      sha256: "94d9a143852729140e17254a53769383b03738cd92b6e588a8762003e6cd9dd9"
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.10"
+    version: "5.0.5"
   flutter_background_service_android:
     dependency: transitive
     description:
       name: flutter_background_service_android
-      sha256: "39da42dddf877beeef82bc2583130d8bedb4d0765e99ca9e7b4a32e8c6abd239"
+      sha256: "30863ebafd8214b8e76d5e5c9f27887dc5cc303fcf3e89f71534f621fc486782"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.7"
+    version: "6.2.2"
   flutter_background_service_ios:
     dependency: transitive
     description:
       name: flutter_background_service_ios
-      sha256: "6037ffd45c4d019dab0975c7feb1d31012dd697e25edc05505a4a9b0c7dc9fba"
+      sha256: ab73657535876e16abc89e40f924df3e92ad3dee83f64d187081417e824709ed
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.3"
+    version: "5.0.0"
   flutter_background_service_platform_interface:
     dependency: transitive
     description:
       name: flutter_background_service_platform_interface
-      sha256: ca74aa95789a8304f4d3f57f07ba404faa86bed6e415f83e8edea6ad8b904a41
+      sha256: cd5720ff5b051d551a4734fae16683aace779bd0425e8d3f15d84a0cdcc2d8d9
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.2"
+    version: "5.0.0"
   flutter_bloc:
     dependency: "direct main"
     description:
@@ -1203,13 +1204,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.2"
-  location_tracker:
-    dependency: "direct main"
-    description:
-      path: "../../packages/location_tracker"
-      relative: true
-    source: path
-    version: "0.0.1"
   location_web:
     dependency: transitive
     description:
@@ -1410,54 +1404,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
-  permission_handler:
-    dependency: "direct main"
-    description:
-      name: permission_handler
-      sha256: "18bf33f7fefbd812f37e72091a15575e72d5318854877e0e4035a24ac1113ecb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "11.3.1"
-  permission_handler_android:
-    dependency: transitive
-    description:
-      name: permission_handler_android
-      sha256: "76e4ab092c1b240d31177bb64d2b0bea43f43d0e23541ec866151b9f7b2490fa"
-      url: "https://pub.dev"
-    source: hosted
-    version: "12.0.12"
-  permission_handler_apple:
-    dependency: transitive
-    description:
-      name: permission_handler_apple
-      sha256: e6f6d73b12438ef13e648c4ae56bd106ec60d17e90a59c4545db6781229082a0
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.4.5"
-  permission_handler_html:
-    dependency: transitive
-    description:
-      name: permission_handler_html
-      sha256: "54bf176b90f6eddd4ece307e2c06cf977fb3973719c35a93b85cc7093eb6070d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.1"
-  permission_handler_platform_interface:
-    dependency: transitive
-    description:
-      name: permission_handler_platform_interface
-      sha256: e9c8eadee926c4532d0305dff94b85bf961f16759c3af791486613152af4b4f9
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
-  permission_handler_windows:
-    dependency: transitive
-    description:
-      name: permission_handler_windows
-      sha256: "1a790728016f79a41216d88672dbc5df30e686e811ad4e698bfc51f76ad91f1e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.2.1"
   petitparser:
     dependency: transitive
     description:
@@ -1590,18 +1536,18 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: "80d5b93164e4f8337fa757fcb75a1e85b88ffbb760e731ca24496a0cae2aef38"
+      sha256: "8aa550fe43e59b9d61ca958a50d9bb90860081807314e376b93f34c879e96569"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2+1"
+    version: "1.0.2+2"
   registration_delivery:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: a6a88665bbf1fa5dce5b864d66992ff9c885b2a3cd898d37f349f1be03cf4086
+      sha256: b7074bf7115e375b9df2ad2937891139fea163024a35958ff177af137574c047
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+1"
+    version: "1.0.3+3"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

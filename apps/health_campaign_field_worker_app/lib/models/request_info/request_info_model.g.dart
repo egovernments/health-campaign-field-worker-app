@@ -35,6 +35,7 @@ _$RequestInfoModelImpl _$$RequestInfoModelImplFromJson(
       userInfo: json['userInfo'] == null
           ? null
           : UserRequestModel.fromJson(json['userInfo'] as Map<String, dynamic>),
+      tenantId: json['tenantId'] as String?,
     );
 
 Map<String, dynamic> _$$RequestInfoModelImplToJson(
@@ -56,5 +57,6 @@ Map<String, dynamic> _$$RequestInfoModelImplToJson(
   writeNotNull('msgId', instance.msgId);
   writeNotNull('authToken', instance.authToken);
   writeNotNull('userInfo', instance.userInfo);
+  writeNotNull('tenantId', instance.tenantId);
   return val;
 }
