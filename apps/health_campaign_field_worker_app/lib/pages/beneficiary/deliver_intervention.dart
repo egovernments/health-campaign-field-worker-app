@@ -239,7 +239,6 @@ class _DeliverInterventionPageState
                                                                   locationState
                                                                       .longitude;
 
-
                                                               List<TaskModel>
                                                                   taskData = [];
                                                               taskData.add(
@@ -658,14 +657,6 @@ class _DeliverInterventionPageState
         createdBy: context.loggedInUserUuid,
         createdTime: context.millisecondsSinceEpoch(),
       ),
-      additionalFields: TaskAdditionalFields(
-        version: 1,
-        fields: [
-          isHouseHoldSchool(wrapper!)
-              ? addSchoolAdditionalType()
-              : addHouseHoldAdditionalType(),
-        ],
-      ),
     );
 
     // Extract productvariantList from the form
@@ -756,6 +747,9 @@ class _DeliverInterventionPageState
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
             ),
+          isHouseHoldSchool(wrapper!)
+              ? addSchoolAdditionalType()
+              : addHouseHoldAdditionalType(),
         ],
       ),
     );
