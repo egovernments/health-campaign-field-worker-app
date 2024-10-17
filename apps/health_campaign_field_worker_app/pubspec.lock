@@ -494,18 +494,18 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: dcdab9542149022cb66241c3c379ca96916f8b6116e585f4799748d859a2ca49
+      sha256: "07b585e5d8010639366da72a4a8b215ce9b8790c75b2162b66af3cea57ca35d9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2"
+    version: "1.0.2+1"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "7585f736b100d05f3e64211e89b3d0c4d82b485af103ad6aba522b4f16a2388d"
+      sha256: "560b806cbb9f760ed956ecf2d01a8e5ea5640d8fca9ec1332ee15b34998d2e15"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+2"
+    version: "1.0.3+3"
   digit_dss:
     dependency: "direct main"
     description:
@@ -517,10 +517,9 @@ packages:
   digit_firebase_services:
     dependency: "direct main"
     description:
-      name: digit_firebase_services
-      sha256: ce76521d797e123b6fc95c9dfad7d4a918a93b97f57aecd0e1d517b46190909d
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_firebase_services"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_scanner:
     dependency: "direct main"
@@ -1537,18 +1536,18 @@ packages:
     dependency: "direct main"
     description:
       name: referral_reconciliation
-      sha256: "80d5b93164e4f8337fa757fcb75a1e85b88ffbb760e731ca24496a0cae2aef38"
+      sha256: "8aa550fe43e59b9d61ca958a50d9bb90860081807314e376b93f34c879e96569"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.2+1"
+    version: "1.0.2+2"
   registration_delivery:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: a6a88665bbf1fa5dce5b864d66992ff9c885b2a3cd898d37f349f1be03cf4086
+      sha256: b7074bf7115e375b9df2ad2937891139fea163024a35958ff177af137574c047
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.3+1"
+    version: "1.0.3+3"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
