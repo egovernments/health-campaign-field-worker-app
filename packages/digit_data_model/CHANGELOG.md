@@ -1,3 +1,7 @@
+## 1.0.4
+
+* Added user_action entity for digit_location_tracker package
+
 ## 1.0.3+3
 
 * Added tenant id to query params and RequestInfo for security gateway fixes
