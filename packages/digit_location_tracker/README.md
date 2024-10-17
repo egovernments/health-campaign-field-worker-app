@@ -5,6 +5,8 @@ This package is used to capture the device location using device GPS. Based on t
 Capture the device location using device GPS.
 Configurable time interval, start and end dates
 
+![Device Tracker](https://github.com/user-attachments/assets/fbcec14f-a1be-4ff9-9ec1-9383532927c4)
+
 
 ## Getting started
 
