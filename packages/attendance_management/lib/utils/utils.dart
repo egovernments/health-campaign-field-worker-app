@@ -25,6 +25,7 @@ class AttendanceSingleton {
     required String loggedInIndividualId,
     required String loggedInUserUuid,
     required String appVersion,
+    required BoundaryModel boundary,
   }) {
     _projectId = projectId;
     _loggedInIndividualId = loggedInIndividualId;
@@ -42,10 +43,6 @@ class AttendanceSingleton {
 
   void setTenantId(String tenantId) {
     _tenantId = tenantId;
-  }
-
-  void setBoundary({required BoundaryModel boundary}) {
-    _boundaryModel = boundary;
   }
 
   void setPersistenceConfiguration(PersistenceConfiguration configuration) {

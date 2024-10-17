@@ -691,6 +691,7 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+          boundary: context.boundary,
         );
 
         ReferralReconSingleton().setInitialData(
