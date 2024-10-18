@@ -567,8 +567,13 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 ),
                                 BlocBuilder<ServiceBloc, ServiceState>(
                                   builder: (context, state) {
+                                    visibleChecklistIndexes.add(index);
+
                                     return Column(
                                       children: e.values!
+                                          .where((e) =>
+                                              e != i18.checklist.notSelectedKey)
+                                          .toList()
                                           .map((e) => Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
@@ -973,6 +978,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
             : null,
       );
     } else if (item.dataType == 'MultiValueList') {
+      visibleChecklistIndexes.add(index);
+
       return Column(
         children: [
           Align(
@@ -1004,6 +1011,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
             builder: (context, state) {
               return Column(
                 children: item.values!
+                    .where((e) => e != i18.checklist.notSelectedKey)
+                    .toList()
                     .map((e) => DigitCheckboxTile(
                           label: localizations.translate('CORE_COMMON_$e'),
                           value: controller[index]
