@@ -9,17 +9,18 @@ class GlobalSearchParameters {
   final int? limit;
   final List<String>? filter;
   final int? totalCount;
+  final String? identifierId;
 
-  GlobalSearchParameters({
-    required this.isProximityEnabled,
-    required this.latitude,
-    required this.longitude,
-    required this.maxRadius,
-    required this.nameSearch,
-    required this.offset,
-    required this.limit,
-    required this.filter,
-    this.totalCount,
-    this.projectId
-  });
+  GlobalSearchParameters(
+      {required this.isProximityEnabled,
+      required this.latitude,
+      required this.longitude,
+      required this.maxRadius,
+      required this.nameSearch,
+      required this.offset,
+      required this.limit,
+      required this.filter,
+      required this.identifierId,
+      this.totalCount,
+      this.projectId});
 }

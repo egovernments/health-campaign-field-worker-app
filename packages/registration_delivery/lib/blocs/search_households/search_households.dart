@@ -283,6 +283,7 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
     @Default(10) int limit,
     @Default(false) bool loading,
     String? searchQuery,
+    String? beneficiaryIdQuery,
     String? tag,
     @Default([]) List<HouseholdMemberWrapper> householdMembers,
     @Default(0) int totalResults,
@@ -291,7 +292,9 @@ class SearchHouseholdsState with _$SearchHouseholdsState {
   bool get resultsNotFound {
     if (loading) return false;
 
-    if (searchQuery?.isEmpty ?? true && tag == null) return false;
+    if (searchQuery?.isEmpty ??
+        beneficiaryIdQuery?.isEmpty ??
+        true && tag == null) return false;
 
     return householdMembers.isEmpty;
   }

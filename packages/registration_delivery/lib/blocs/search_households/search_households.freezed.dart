@@ -2406,6 +2406,7 @@ mixin _$SearchHouseholdsState {
   int get limit => throw _privateConstructorUsedError;
   bool get loading => throw _privateConstructorUsedError;
   String? get searchQuery => throw _privateConstructorUsedError;
+  String? get beneficiaryIdQuery => throw _privateConstructorUsedError;
   String? get tag => throw _privateConstructorUsedError;
   List<HouseholdMemberWrapper> get householdMembers =>
       throw _privateConstructorUsedError;
@@ -2427,6 +2428,7 @@ abstract class $SearchHouseholdsStateCopyWith<$Res> {
       int limit,
       bool loading,
       String? searchQuery,
+      String? beneficiaryIdQuery,
       String? tag,
       List<HouseholdMemberWrapper> householdMembers,
       int totalResults});
@@ -2450,6 +2452,7 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
     Object? limit = null,
     Object? loading = null,
     Object? searchQuery = freezed,
+    Object? beneficiaryIdQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
     Object? totalResults = null,
@@ -2470,6 +2473,10 @@ class _$SearchHouseholdsStateCopyWithImpl<$Res,
       searchQuery: freezed == searchQuery
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+      beneficiaryIdQuery: freezed == beneficiaryIdQuery
+          ? _value.beneficiaryIdQuery
+          : beneficiaryIdQuery // ignore: cast_nullable_to_non_nullable
               as String?,
       tag: freezed == tag
           ? _value.tag
@@ -2501,6 +2508,7 @@ abstract class _$$SearchHouseholdsStateImplCopyWith<$Res>
       int limit,
       bool loading,
       String? searchQuery,
+      String? beneficiaryIdQuery,
       String? tag,
       List<HouseholdMemberWrapper> householdMembers,
       int totalResults});
@@ -2522,6 +2530,7 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
     Object? limit = null,
     Object? loading = null,
     Object? searchQuery = freezed,
+    Object? beneficiaryIdQuery = freezed,
     Object? tag = freezed,
     Object? householdMembers = null,
     Object? totalResults = null,
@@ -2542,6 +2551,10 @@ class __$$SearchHouseholdsStateImplCopyWithImpl<$Res>
       searchQuery: freezed == searchQuery
           ? _value.searchQuery
           : searchQuery // ignore: cast_nullable_to_non_nullable
+              as String?,
+      beneficiaryIdQuery: freezed == beneficiaryIdQuery
+          ? _value.beneficiaryIdQuery
+          : beneficiaryIdQuery // ignore: cast_nullable_to_non_nullable
               as String?,
       tag: freezed == tag
           ? _value.tag
@@ -2567,6 +2580,7 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
       this.limit = 10,
       this.loading = false,
       this.searchQuery,
+      this.beneficiaryIdQuery,
       this.tag,
       final List<HouseholdMemberWrapper> householdMembers = const [],
       this.totalResults = 0})
@@ -2585,6 +2599,8 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
   @override
   final String? searchQuery;
   @override
+  final String? beneficiaryIdQuery;
+  @override
   final String? tag;
   final List<HouseholdMemberWrapper> _householdMembers;
   @override
@@ -2602,7 +2618,7 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
 
   @override
   String toString() {
-    return 'SearchHouseholdsState(offset: $offset, limit: $limit, loading: $loading, searchQuery: $searchQuery, tag: $tag, householdMembers: $householdMembers, totalResults: $totalResults)';
+    return 'SearchHouseholdsState(offset: $offset, limit: $limit, loading: $loading, searchQuery: $searchQuery, beneficiaryIdQuery: $beneficiaryIdQuery, tag: $tag, householdMembers: $householdMembers, totalResults: $totalResults)';
   }
 
   @override
@@ -2615,6 +2631,8 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
             (identical(other.loading, loading) || other.loading == loading) &&
             (identical(other.searchQuery, searchQuery) ||
                 other.searchQuery == searchQuery) &&
+            (identical(other.beneficiaryIdQuery, beneficiaryIdQuery) ||
+                other.beneficiaryIdQuery == beneficiaryIdQuery) &&
             (identical(other.tag, tag) || other.tag == tag) &&
             const DeepCollectionEquality()
                 .equals(other._householdMembers, _householdMembers) &&
@@ -2629,6 +2647,7 @@ class _$SearchHouseholdsStateImpl extends _SearchHouseholdsState {
       limit,
       loading,
       searchQuery,
+      beneficiaryIdQuery,
       tag,
       const DeepCollectionEquality().hash(_householdMembers),
       totalResults);
@@ -2647,6 +2666,7 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
       final int limit,
       final bool loading,
       final String? searchQuery,
+      final String? beneficiaryIdQuery,
       final String? tag,
       final List<HouseholdMemberWrapper> householdMembers,
       final int totalResults}) = _$SearchHouseholdsStateImpl;
@@ -2660,6 +2680,8 @@ abstract class _SearchHouseholdsState extends SearchHouseholdsState {
   bool get loading;
   @override
   String? get searchQuery;
+  @override
+  String? get beneficiaryIdQuery;
   @override
   String? get tag;
   @override

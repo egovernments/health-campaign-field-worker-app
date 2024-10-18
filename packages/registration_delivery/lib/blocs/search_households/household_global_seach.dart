@@ -60,7 +60,8 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
           filter: event.globalSearchParams.filter,
           offset: event.globalSearchParams.offset,
           limit: event.globalSearchParams.limit,
-          totalCount: state.totalResults),
+          totalCount: state.totalResults,
+          identifierId: event.globalSearchParams.identifierId),
     );
 
     var totalCount = results['total_count'];
@@ -236,6 +237,7 @@ class HouseHoldGlobalSearchBloc extends SearchHouseholdsBloc {
       householdMembers: containers,
       loading: false,
       searchQuery: event.globalSearchParams.nameSearch,
+      beneficiaryIdQuery: event.globalSearchParams.identifierId,
       offset:
           event.globalSearchParams.offset! + event.globalSearchParams.limit!,
       limit: event.globalSearchParams.limit!,

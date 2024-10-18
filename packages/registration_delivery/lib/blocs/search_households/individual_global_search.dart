@@ -51,17 +51,17 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
     final results =
         await individualGlobalSearchRepository.individualGlobalSearch(
       GlobalSearchParameters(
-        projectId: event.globalSearchParams.projectId,
-        isProximityEnabled: event.globalSearchParams.isProximityEnabled,
-        latitude: event.globalSearchParams.latitude,
-        longitude: event.globalSearchParams.longitude,
-        maxRadius: event.globalSearchParams.maxRadius,
-        nameSearch: event.globalSearchParams.nameSearch,
-        filter: event.globalSearchParams.filter,
-        offset: event.globalSearchParams.offset,
-        limit: event.globalSearchParams.limit,
-        totalCount: state.totalResults,
-      ),
+          projectId: event.globalSearchParams.projectId,
+          isProximityEnabled: event.globalSearchParams.isProximityEnabled,
+          latitude: event.globalSearchParams.latitude,
+          longitude: event.globalSearchParams.longitude,
+          maxRadius: event.globalSearchParams.maxRadius,
+          nameSearch: event.globalSearchParams.nameSearch,
+          filter: event.globalSearchParams.filter,
+          offset: event.globalSearchParams.offset,
+          limit: event.globalSearchParams.limit,
+          totalCount: state.totalResults,
+          identifierId: event.globalSearchParams.identifierId),
     );
 
     var totalCount = results['total_count'];
@@ -233,6 +233,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       householdMembers: containers,
       loading: false,
       searchQuery: event.globalSearchParams.nameSearch,
+      beneficiaryIdQuery: event.globalSearchParams.identifierId,
       offset:
           event.globalSearchParams.offset! + event.globalSearchParams.limit!,
       limit: event.globalSearchParams.limit!,
