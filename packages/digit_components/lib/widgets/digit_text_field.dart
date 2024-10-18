@@ -5,13 +5,14 @@ import 'package:flutter/services.dart';
 
 class DigitTextField extends StatelessWidget {
   final String label;
+  final String? description;
   final TextEditingController? controller;
   final String prefixText;
   final int? maxLength;
   final int? maxLines;
   final bool isRequired;
   final ValueChanged<String>? onChange;
-  final List<FilteringTextInputFormatter>? inputFormatter;
+  final List<TextInputFormatter>? inputFormatter;
   final FocusNode? focusNode;
   final TextInputType? textInputType;
   final String? pattern;
@@ -26,11 +27,12 @@ class DigitTextField extends StatelessWidget {
   final Widget? suffixIcon;
   final Widget? prefixIcon;
   final TextStyle? textStyle;
-  final String? hintText;
+  final TextStyle? descriptionStyle;
 
   const DigitTextField({
     super.key,
     required this.label,
+    this.description,
     this.prefixText = '',
     this.maxLength,
     this.controller,
@@ -52,7 +54,7 @@ class DigitTextField extends StatelessWidget {
     this.suffixIcon,
     this.prefixIcon,
     this.textStyle,
-    this.hintText,
+    this.descriptionStyle,
   });
 
   @override
@@ -60,7 +62,9 @@ class DigitTextField extends StatelessWidget {
     ValueNotifier<String?> errorNotifier = ValueNotifier<String?>(null);
 
     return LabeledField(
-      labelStyle: Theme.of(context).textTheme.bodyLarge,
+      labelStyle: Theme.of(context).textTheme.headlineSmall,
+      description: description,
+      descriptionStyle: descriptionStyle,
       label: isRequired ? "$label *" : label,
       textStyle: textStyle,
       child: TextFormField(
@@ -88,7 +92,6 @@ class DigitTextField extends StatelessWidget {
         readOnly: readOnly,
         validator: (value) => validator?.call(value),
         decoration: InputDecoration(
-          hintText: hintText,
           suffixIconConstraints: const BoxConstraints(
             maxHeight: 48,
             maxWidth: 48,

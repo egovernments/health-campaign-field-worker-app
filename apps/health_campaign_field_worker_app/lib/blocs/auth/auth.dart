@@ -101,18 +101,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       await localSecureStore.setBoundaryRefetch(true);
 
       await localSecureStore.setRoleActions(actionsWrapper);
-      if (result.userRequestModel.roles
-          .where((role) => role.code == RolesType.districtSupervisor.toValue())
-          .toList()
-          .isNotEmpty) {
-        final loggedInIndividual = await individualRemoteRepository.search(
-          IndividualSearchModel(
-            userUuid: [result.userRequestModel.uuid],
-          ),
-        );
-        await localSecureStore
-            .setSelectedIndividual(loggedInIndividual.first.id);
-      }
 
       emit(
         AuthAuthenticatedState(

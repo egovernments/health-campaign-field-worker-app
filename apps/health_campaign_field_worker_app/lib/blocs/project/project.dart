@@ -214,54 +214,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
       List<ProjectModel> staffProjects;
       try {
-        if (context.loggedInUserRoles
-            .where(
-              (role) => role.code == RolesType.districtSupervisor.toValue(),
-            )
-            .toList()
-            .isNotEmpty) {
-          final individual = await individualRemoteRepository.search(
-            IndividualSearchModel(
-              userUuid: [projectStaff.userId.toString()],
-            ),
-          );
-          final attendanceRegisters = await attendanceRemoteRepository.search(
-            HCMAttendanceSearchModel(
-              staffId: individual.first.id,
-              referenceId: projectStaff.projectId,
-            ),
-          );
-          await attendanceLocalRepository.bulkCreate(attendanceRegisters);
-
-          for (final register in attendanceRegisters) {
-            if (register.attendanceRegister.attendees != null &&
-                (register.attendanceRegister.attendees ?? []).isNotEmpty) {
-              try {
-                final individuals = await individualRemoteRepository.search(
-                  IndividualSearchModel(
-                    id: register.attendanceRegister.attendees!
-                        .map((e) => e.individualId!)
-                        .toList(),
-                  ),
-                );
-                await individualLocalRepository.bulkCreate(individuals);
-                final logs = await attendanceLogRemoteRepository.search(
-                  HCMAttendanceLogSearchModel(
-                    registerId: register.attendanceRegister.id,
-                  ),
-                );
-                await attendanceLogLocalRepository.bulkCreate(logs);
-              } catch (_) {
-                emit(state.copyWith(
-                  loading: false,
-                  syncError: ProjectSyncErrorType.project,
-                ));
-
-                return;
-              }
-            }
-          }
-        }
         staffProjects = await projectRemoteRepository.search(
           ProjectSearchModel(
             id: projectStaff.projectId,

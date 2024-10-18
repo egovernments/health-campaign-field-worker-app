@@ -148,6 +148,9 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+  String get loading => 'CORE_COMMON_LOADING';
+  String get locationCapturing => 'CAPTURING_LOCATION';
+  String get coreCommonOthersRequired => 'CORE_COMMON_OTHERS_REQUIRED';
 }
 
 class HomeShowcase {
