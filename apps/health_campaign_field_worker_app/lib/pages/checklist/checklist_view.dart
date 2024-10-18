@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +13,7 @@ import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
 import '../../models/data_model.dart';
 import '../../router/app_router.dart';
+import '../../utils/digit_components_utils.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
@@ -38,6 +41,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   bool isControllersInitialized = false;
   List<int> visibleChecklistIndexes = [];
   GlobalKey<FormState> checklistFormKey = GlobalKey<FormState>();
+  String othersText = "OTHERS";
+  String yesText = "dummy";
+  String multiSelectionSeparator = "^";
+  String helpText = "helpText";
+  String secDesc = "secDesc";
+  bool triggerLocalization = false;
 
   @override
   void initState() {
@@ -54,16 +63,12 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    bool isHealthFacilityWorker = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
-        .toList()
-        .isNotEmpty;
-
     return WillPopScope(
-      onWillPop: isHealthFacilityWorker && widget.referralClientRefId != null
+      onWillPop: context.isHealthFacilitySupervisor &&
+              widget.referralClientRefId != null
           ? () async => false
           : () async => _onBackPressed(context),
-        child: Scaffold(
+      child: Scaffold(
         body: BlocBuilder<ServiceDefinitionBloc, ServiceDefinitionState>(
           builder: (context, state) {
             state.mapOrNull(
@@ -73,10 +78,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                 if (!isControllersInitialized) {
                   initialAttributes?.forEach((e) {
                     controller.add(TextEditingController());
-                    if (!(isHealthFacilityWorker &&
-                        widget.referralClientRefId != null)) {
-                      additionalController.add(TextEditingController());
-                    }
+                    additionalController.add(TextEditingController());
                   });
 
                   // Set the flag to true after initializing controllers
@@ -90,49 +92,21 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
                   header: Column(children: [
-                    if (!(isHealthFacilityWorker &&
+                    if (!(context.isHealthFacilitySupervisor &&
                         widget.referralClientRefId != null))
                       const BackNavigationHelpHeaderWidget(),
                   ]),
                   enableFixedButton: true,
-                  footer: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: DigitElevatedButton(
-                      onPressed: () async {
+                  footer: BlocListener<LocationBloc, LocationState>(
+                    listener: (context, state) async {
+                      if (state.accuracy != null && triggerLocalization) {
+                        triggerLocalization = false;
+                        DigitComponentsUtils().hideDialog(context);
                         final router = context.router;
-                        submitTriggered = true;
-
-                        context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
-                                value: '',
-                                submitTriggered: true,
-                              ),
-                            );
-                        final isValid =
-                            checklistFormKey.currentState?.validate();
-                        if (!isValid!) {
-                          return;
-                        }
-                        final itemsAttributes = initialAttributes;
-
-                        for (int i = 0; i < controller.length; i++) {
-                          if (itemsAttributes?[i].required == true &&
-                              ((itemsAttributes?[i].dataType ==
-                                          'SingleValueList' &&
-                                      visibleChecklistIndexes
-                                          .any((e) => e == i) &&
-                                      (controller[i].text == '')) ||
-                                  (itemsAttributes?[i].dataType !=
-                                          'SingleValueList' &&
-                                      (controller[i].text == '' &&
-                                          !(isHealthFacilityWorker &&
-                                              widget.referralClientRefId !=
-                                                  null))))) {
-                            return;
-                          }
-                        }
+                        final locationState =
+                            context.read<LocationBloc>().state;
+                        double? latitude = locationState.latitude;
+                        double? longitude = locationState.longitude;
 
                         final shouldSubmit = await DigitDialog.show(
                           context,
@@ -152,55 +126,125 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 List<ServiceAttributesModel> attributes = [];
                                 for (int i = 0; i < controller.length; i++) {
                                   final attribute = initialAttributes;
-                                  attributes.add(ServiceAttributesModel(
-                                    auditDetails: AuditDetails(
-                                      createdBy: context.loggedInUserUuid,
-                                      createdTime:
-                                          context.millisecondsSinceEpoch(),
+
+                                  String? additionalDetailValue = context
+                                              .isHealthFacilitySupervisor &&
+                                          widget.referralClientRefId != null
+                                      ? null
+                                      : ((attribute?[i]
+                                                          .values
+                                                          ?.firstWhereOrNull(
+                                                            (element) =>
+                                                                element ==
+                                                                yesText,
+                                                          ) !=
+                                                      null &&
+                                                  controller[i].text ==
+                                                      attribute?[i]
+                                                          .values?[1]
+                                                          .trim()) ||
+                                              (attribute?[i]
+                                                          .values
+                                                          ?.firstWhereOrNull(
+                                                            (element) =>
+                                                                element
+                                                                    .toUpperCase() ==
+                                                                othersText,
+                                                          ) !=
+                                                      null &&
+                                                  controller[i]
+                                                          .text
+                                                          .split(
+                                                            multiSelectionSeparator,
+                                                          )
+                                                          .firstWhereOrNull(
+                                                            (element) =>
+                                                                element
+                                                                    .toUpperCase() ==
+                                                                othersText,
+                                                          ) !=
+                                                      null))
+                                          ? additionalController[i]
+                                                  .text
+                                                  .toString()
+                                                  .isEmpty
+                                              ? null
+                                              : additionalController[i]
+                                                  .text
+                                                  .toString()
+                                          : null;
+                                  attributes.add(
+                                    ServiceAttributesModel(
+                                      auditDetails: AuditDetails(
+                                        createdBy: context.loggedInUserUuid,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      attributeCode: '${attribute?[i].code}',
+                                      dataType: attribute?[i].dataType,
+                                      clientReferenceId: IdGen.i.identifier,
+                                      referenceId: context
+                                                  .isHealthFacilitySupervisor &&
+                                              widget.referralClientRefId != null
+                                          ? widget.referralClientRefId
+                                          : referenceId,
+                                      value: attribute?[i].dataType ==
+                                              'MultiValueList'
+                                          ? controller[i]
+                                                  .text
+                                                  .toString()
+                                                  .isNotEmpty
+                                              ? controller[i]
+                                                  .text
+                                                  .toString()
+                                                  .substring(1)
+                                              : null
+                                          : attribute?[i].dataType !=
+                                                  'SingleValueList'
+                                              ? controller[i]
+                                                      .text
+                                                      .toString()
+                                                      .trim()
+                                                      .isNotEmpty
+                                                  ? controller[i]
+                                                      .text
+                                                      .toString()
+                                                  : (attribute?[i].dataType !=
+                                                          'Number'
+                                                      ? i18.checklist
+                                                          .notSelectedKey
+                                                      : '0')
+                                              : visibleChecklistIndexes
+                                                      .contains(i)
+                                                  ? controller[i]
+                                                      .text
+                                                      .toString()
+                                                  : i18
+                                                      .checklist.notSelectedKey,
+                                      rowVersion: 1,
+                                      tenantId: attribute?[i].tenantId,
+                                      additionalDetails: additionalDetailValue,
+                                      additionalFields:
+                                          ServiceAttributesAdditionalFields(
+                                        version: 1,
+                                        fields: [
+                                          AdditionalField(
+                                            'latitude',
+                                            latitude,
+                                          ),
+                                          AdditionalField(
+                                            'longitude',
+                                            longitude,
+                                          ),
+                                          if (additionalDetailValue != null)
+                                            AdditionalField(
+                                              'reason',
+                                              additionalDetailValue,
+                                            ),
+                                        ],
+                                      ),
                                     ),
-                                    attributeCode: '${attribute?[i].code}',
-                                    dataType: attribute?[i].dataType,
-                                    clientReferenceId: IdGen.i.identifier,
-                                    referenceId: isHealthFacilityWorker &&
-                                            widget.referralClientRefId != null
-                                        ? widget.referralClientRefId
-                                        : referenceId,
-                                    value: attribute?[i].dataType !=
-                                            'SingleValueList'
-                                        ? controller[i]
-                                                .text
-                                                .toString()
-                                                .trim()
-                                                .isNotEmpty
-                                            ? controller[i].text.toString()
-                                            : ''
-                                        : visibleChecklistIndexes.contains(i)
-                                            ? controller[i].text.toString()
-                                            : i18.checklist.notSelectedKey,
-                                    rowVersion: 1,
-                                    tenantId: attribute?[i].tenantId,
-                                    additionalDetails: isHealthFacilityWorker &&
-                                            widget.referralClientRefId != null
-                                        ? null
-                                        : ((attribute?[i].values?.length == 2 ||
-                                                    attribute?[i]
-                                                            .values
-                                                            ?.length ==
-                                                        3) &&
-                                                controller[i].text ==
-                                                    attribute?[i]
-                                                        .values?[1]
-                                                        .trim())
-                                            ? additionalController[i]
-                                                    .text
-                                                    .toString()
-                                                    .isEmpty
-                                                ? null
-                                                : additionalController[i]
-                                                    .text
-                                                    .toString()
-                                            : null,
-                                  ));
+                                  );
                                 }
 
                                 context.read<ServiceBloc>().add(
@@ -216,7 +260,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                           tenantId: value
                                               .selectedServiceDefinition!
                                               .tenantId,
-                                          clientId: isHealthFacilityWorker &&
+                                          clientId: context
+                                                      .isHealthFacilitySupervisor &&
                                                   widget.referralClientRefId !=
                                                       null
                                               ? widget.referralClientRefId
@@ -268,7 +313,8 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                         );
                         if (shouldSubmit ?? false) {
-                          if (isHealthFacilityWorker &&
+                          if (context.mounted &&
+                              context.isHealthFacilitySupervisor &&
                               widget.referralClientRefId != null) {
                             router.navigate(SearchReferralsRoute());
                           } else {
@@ -276,9 +322,74 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           }
                           router.push(AcknowledgementRoute());
                         }
-                      },
-                      child: Text(
-                        localizations.translate(i18.common.coreCommonSubmit),
+                      }
+                    },
+                    child: DigitCard(
+                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                      child: DigitElevatedButton(
+                        onPressed: () async {
+                          final router = context.router;
+                          submitTriggered = true;
+
+                          context.read<ServiceBloc>().add(
+                                const ServiceChecklistEvent(
+                                  value: '',
+                                  submitTriggered: true,
+                                ),
+                              );
+                          final isValid =
+                              checklistFormKey.currentState?.validate();
+                          if (!isValid!) {
+                            return;
+                          }
+                          final itemsAttributes = initialAttributes;
+
+                          // for (int i = 0; i < controller.length; i++) {
+                          //   if (itemsAttributes?[i].required == true &&
+                          //       ((itemsAttributes?[i].dataType ==
+                          //                   'SingleValueList' &&
+                          //               visibleChecklistIndexes
+                          //                   .any((e) => e == i) &&
+                          //               (controller[i].text == '')) ||
+                          //           (itemsAttributes?[i].dataType !=
+                          //                   'SingleValueList' &&
+                          //               (controller[i].text == '' &&
+                          //                   !(context
+                          //                           .isHealthFacilitySupervisor &&
+                          //                       widget.referralClientRefId !=
+                          //                           null))))) {
+                          //     return;
+                          //   }
+                          // }
+
+                          for (int i = 0; i < controller.length; i++) {
+                            if (itemsAttributes?[i].required == true &&
+                                visibleChecklistIndexes.any((e) => e == i) &&
+                                controller[i].text == '') {
+                              return;
+                            }
+                          }
+                          triggerLocalization = true;
+
+                          // Request location from LocationBloc
+                          context
+                              .read<LocationBloc>()
+                              .add(const LocationEvent.load());
+
+                          DigitComponentsUtils().showLocationCapturingDialog(
+                            context,
+                            localizations
+                                .translate(i18.common.locationCapturing),
+                            DigitSyncDialogType.inProgress,
+                          );
+
+                          // Wait for the location to be obtained
+                        },
+                        child: Text(
+                          localizations.translate(i18.common.coreCommonSubmit),
+                        ),
                       ),
                     ),
                   ),
@@ -301,139 +412,293 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ...initialAttributes!.map((
                             e,
                           ) {
+                            String code = e.code ?? '';
+                            String? description = e.additionalDetails?.entries
+                                .firstWhereOrNull((a) => a.key == helpText)
+                                ?.value;
                             int index = (initialAttributes ?? []).indexOf(e);
 
                             return Column(children: [
+                              if (e.additionalDetails != null &&
+                                  (e.additionalDetails ?? {})
+                                      .keys
+                                      .contains(secDesc))
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(8, 12, 0, 0),
+                                  child: Text(
+                                    localizations.translate(
+                                      '${selectedServiceDefinition?.code}.${e.additionalDetails?.entries.where((a) => a.key == secDesc).first.value}',
+                                    ),
+                                    style:
+                                        theme.textTheme.headlineLarge?.copyWith(
+                                      fontWeight: FontWeight.w400,
+                                      color: DigitTheme
+                                          .instance.colorScheme.shadow,
+                                    ),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
                               if (e.dataType == 'String' &&
-                                  !(e.code ?? '').contains('.')) ...[
-                                DigitTextField(
-                                  onChange: (value) {
-                                    checklistFormKey.currentState?.validate();
-                                  },
-                                  isRequired: false,
-                                  controller: controller[index],
-                                  inputFormatter: [
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[a-zA-Z0-9]",
-                                    )),
-                                  ],
-                                  validator: (value) {
-                                    if (((value == null || value == '') &&
-                                        e.required == true)) {
-                                      return localizations
-                                          .translate("${e.code}_REQUIRED");
-                                    }
-                                    if (e.regex != null) {
-                                      return (RegExp(e.regex!).hasMatch(value!))
-                                          ? null
-                                          : localizations
-                                              .translate("${e.code}_REGEX");
-                                    }
+                                  !(code).contains('.')) ...[
+                                Padding(
+                                  padding: const EdgeInsets.all(kPadding),
+                                  child: Column(
+                                    children: [
+                                      DigitTextField(
+                                        autoValidation:
+                                            AutovalidateMode.onUserInteraction,
+                                        textStyle:
+                                            theme.textTheme.headlineMedium,
+                                        isRequired: true,
+                                        controller: controller[index],
+                                        // inputFormatter: [
+                                        //   FilteringTextInputFormatter.allow(RegExp(
+                                        //     "[a-zA-Z0-9]",
+                                        //   )),
+                                        // ],
+                                        validator: (value) {
+                                          if (((value == null || value == '') &&
+                                              e.required == true)) {
+                                            return localizations.translate(
+                                              i18.common.corecommonRequired,
+                                            );
+                                          }
+                                          if (e.regex != null) {
+                                            return (RegExp(e.regex!)
+                                                    .hasMatch(value!))
+                                                ? null
+                                                : localizations
+                                                    .translate("${code}_REGEX");
+                                          }
 
-                                    return null;
-                                  },
-                                  label: localizations.translate(
-                                    '${value.selectedServiceDefinition?.code}.${e.code}',
+                                          return null;
+                                        },
+                                        label: localizations.translate(
+                                          '${value.selectedServiceDefinition?.code}.$code',
+                                        ),
+                                        description: description != null
+                                            ? localizations.translate(
+                                                '${value.selectedServiceDefinition?.code}.$description',
+                                              )
+                                            : null,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ] else if (e.dataType == 'Number' &&
-                                  !(e.code ?? '').contains('.')) ...[
-                                DigitTextField(
-                                  onChange: (value) {
-                                    checklistFormKey.currentState?.validate();
-                                  },
-                                  textStyle: theme.textTheme.headlineMedium,
-                                  textInputType: TextInputType.number,
-                                  inputFormatter: [
-                                    FilteringTextInputFormatter.allow(RegExp(
-                                      "[0-9]",
-                                    )),
-                                  ],
-                                  validator: (value) {
-                                    if (((value == null || value == '') &&
-                                        e.required == true)) {
-                                      return localizations.translate(
-                                        i18.common.corecommonRequired,
-                                      );
-                                    }
-                                    if (e.regex != null) {
-                                      return (RegExp(e.regex!).hasMatch(value!))
-                                          ? null
-                                          : localizations
-                                              .translate("${e.code}_REGEX");
-                                    }
+                                  !(code).contains('.')) ...[
+                                Padding(
+                                  padding: const EdgeInsets.all(kPadding),
+                                  child: Column(
+                                    children: [
+                                      DigitTextField(
+                                        autoValidation:
+                                            AutovalidateMode.onUserInteraction,
+                                        textStyle:
+                                            theme.textTheme.headlineMedium,
+                                        textInputType: TextInputType.number,
+                                        inputFormatter: [
+                                          FilteringTextInputFormatter.allow(
+                                            RegExp(r'[0-9]'),
+                                          ),
+                                          LengthLimitingTextInputFormatter(11),
+                                        ],
+                                        validator: (value) {
+                                          if (((value == null || value == '') &&
+                                              e.required == true)) {
+                                            return localizations.translate(
+                                              i18.common.corecommonRequired,
+                                            );
+                                          }
+                                          if (e.regex != null) {
+                                            return (RegExp(e.regex!)
+                                                    .hasMatch(value!))
+                                                ? null
+                                                : localizations
+                                                    .translate("${code}_REGEX");
+                                          }
 
-                                    return null;
-                                  },
-                                  controller: controller[index],
-                                  label: '${localizations.translate(
-                                        '${value.selectedServiceDefinition?.code}.${e.code}',
-                                      ).trim()} ${e.required == true ? '*' : ''}',
+                                          return null;
+                                        },
+                                        controller: controller[index],
+                                        label: '${localizations.translate(
+                                              '${value.selectedServiceDefinition?.code}.$code',
+                                            ).trim()} ${e.required == true ? '*' : ''}',
+                                        description: description != null
+                                            ? localizations.translate(
+                                                '${value.selectedServiceDefinition?.code}.$description',
+                                              )
+                                            : description,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ] else if (e.dataType == 'MultiValueList' &&
-                                  !(e.code ?? '').contains('.')) ...[
+                                  !(code).contains('.')) ...[
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(16),
                                     child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           '${localizations.translate(
-                                            '${value.selectedServiceDefinition?.code}.${e.code}',
+                                            '${value.selectedServiceDefinition?.code}.$code',
                                           )} ${e.required == true ? '*' : ''}',
                                           style: theme.textTheme.headlineSmall,
                                         ),
+                                        if (description != null)
+                                          Text(
+                                            '${localizations.translate(
+                                              '${value.selectedServiceDefinition?.code}.$description',
+                                            )} ${e.required == true ? '*' : ''}',
+                                            style: theme.textTheme.bodyMedium
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.w100,
+                                            ),
+                                            textAlign: TextAlign.left,
+                                          ),
                                       ],
                                     ),
                                   ),
                                 ),
                                 BlocBuilder<ServiceBloc, ServiceState>(
                                   builder: (context, state) {
+                                    visibleChecklistIndexes.add(index);
+
                                     return Column(
                                       children: e.values!
-                                          .map((e) => DigitCheckboxTile(
-                                                label: e,
-                                                value: controller[index]
-                                                    .text
-                                                    .split('.')
-                                                    .contains(e),
-                                                onChanged: (value) {
-                                                  context
-                                                      .read<ServiceBloc>()
-                                                      .add(
-                                                        ServiceChecklistEvent(
-                                                          value: e.toString(),
-                                                          submitTriggered:
-                                                              submitTriggered,
-                                                        ),
-                                                      );
-                                                  final String ele;
-                                                  var val = controller[index]
+                                          .where((e) =>
+                                              e != i18.checklist.notSelectedKey)
+                                          .toList()
+                                          .map((e) => Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                  kPadding * 4,
+                                                  0,
+                                                  kPadding,
+                                                  0,
+                                                ),
+                                                child: DigitCheckboxTile(
+                                                  label:
+                                                      localizations.translate(
+                                                    'CORE_COMMON_$e',
+                                                  ),
+                                                  value: controller[index]
                                                       .text
-                                                      .split('.');
-                                                  if (val.contains(e)) {
-                                                    val.remove(e);
-                                                    ele = val.join(".");
-                                                  } else {
-                                                    ele =
-                                                        "${controller[index].text}.$e";
-                                                  }
-                                                  controller[index].value =
-                                                      TextEditingController
-                                                          .fromValue(
-                                                    TextEditingValue(
-                                                      text: ele,
-                                                    ),
-                                                  ).value;
-                                                },
+                                                      .split(
+                                                        multiSelectionSeparator,
+                                                      )
+                                                      .contains(e),
+                                                  onChanged: (value) {
+                                                    context
+                                                        .read<ServiceBloc>()
+                                                        .add(
+                                                          ServiceChecklistEvent(
+                                                            value: e.toString(),
+                                                            submitTriggered:
+                                                                submitTriggered,
+                                                          ),
+                                                        );
+                                                    final String ele;
+                                                    var val = controller[index]
+                                                        .text
+                                                        .split(
+                                                          multiSelectionSeparator,
+                                                        );
+                                                    if (val.contains(e)) {
+                                                      val.remove(e);
+                                                      ele = val.join(
+                                                        multiSelectionSeparator,
+                                                      );
+                                                    } else {
+                                                      ele =
+                                                          "${controller[index].text}$multiSelectionSeparator$e";
+                                                    }
+                                                    setState(() {
+                                                      controller[index].value =
+                                                          TextEditingController
+                                                              .fromValue(
+                                                        TextEditingValue(
+                                                          text: ele,
+                                                        ),
+                                                      ).value;
+                                                    });
+                                                  },
+                                                ),
                                               ))
                                           .toList(),
                                     );
                                   },
                                 ),
+                                BlocBuilder<ServiceBloc, ServiceState>(
+                                  builder: (context, state) {
+                                    return (e.values?.firstWhereOrNull(
+                                                  (element) =>
+                                                      element.toUpperCase() ==
+                                                      othersText,
+                                                ) !=
+                                                null &&
+                                            controller[index]
+                                                .text
+                                                .contains(othersText))
+                                        ? Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 4.0,
+                                              right: 4.0,
+                                              bottom: 16,
+                                            ),
+                                            child: DigitTextField(
+                                              maxLength: 1000,
+                                              controller:
+                                                  additionalController[index],
+                                              label: '${localizations.translate(
+                                                '${selectedServiceDefinition?.code}.${e.code}.ADDITIONAL_FIELD',
+                                              )}*',
+                                              validator: (value1) {
+                                                if (value1 == null ||
+                                                    value1 == '') {
+                                                  return localizations
+                                                      .translate(
+                                                    i18.common
+                                                        .coreCommonOthersRequired,
+                                                  );
+                                                }
+
+                                                return null;
+                                              },
+                                            ),
+                                          )
+                                        : const SizedBox();
+                                  },
+                                ),
+                                BlocBuilder<ServiceBloc, ServiceState>(
+                                  builder: (context, state) {
+                                    final hasError = (e.required == true &&
+                                        controller[index].text.isEmpty &&
+                                        submitTriggered);
+
+                                    return Offstage(
+                                      offstage: !hasError,
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Text(
+                                          localizations.translate(
+                                            i18.common.corecommonRequired,
+                                          ),
+                                          style: TextStyle(
+                                            color: theme.colorScheme.error,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ] else if (e.dataType == 'SingleValueList') ...[
-                                if (!(e.code ?? '').contains('.'))
+                                if (!(code).contains('.'))
                                   DigitCard(
                                     child: _buildChecklist(
                                       e,
@@ -467,11 +732,10 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
     ServiceDefinitionModel? selectedServiceDefinition,
     BuildContext context,
   ) {
-    bool isHealthFacilityWorker = context.loggedInUserRoles
-        .where((role) => role.code == RolesType.healthFacilityWorker.toValue())
-        .toList()
-        .isNotEmpty;
     final theme = Theme.of(context);
+    String? itemDescription = item.additionalDetails?.entries
+        .firstWhereOrNull((a) => a.key == helpText)
+        ?.value;
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
       final childItems = getNextQuestions(
@@ -499,11 +763,30 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
             alignment: Alignment.topLeft,
             child: Padding(
               padding: const EdgeInsets.all(16.0), // Add padding here
-              child: Text(
-                '${localizations.translate(
-                  '${selectedServiceDefinition?.code}.${item.code}',
-                )} ${item.required == true ? '*' : ''}',
-                style: theme.textTheme.headlineSmall,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${localizations.translate(
+                      '${selectedServiceDefinition?.code}.${item.code}',
+                    )} ${item.required == true ? '*' : ''}',
+                    style: theme.textTheme.headlineSmall,
+                    textAlign: TextAlign.left,
+                  ),
+                  if (item.additionalDetails != null &&
+                      (item.additionalDetails ?? {}).keys.contains(helpText))
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        localizations.translate(
+                          '${selectedServiceDefinition?.code}.${item.additionalDetails?.entries.where((a) => a.key == helpText).first.value}',
+                        ),
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w100),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -526,7 +809,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           final childIndex =
                               initialAttributes?.indexOf(matchingChildItem);
                           if (childIndex != null) {
-                            // controller[childIndex].clear();
                             visibleChecklistIndexes
                                 .removeWhere((v) => v == childIndex);
                           }
@@ -539,20 +821,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                             text: value!,
                           ),
                         ).value;
-
-                        if (excludedIndexes.isNotEmpty) {
-                          for (int i = 0; i < excludedIndexes.length; i++) {
-                            // Clear excluded child controllers
-                            if (item.dataType != 'SingleValueList') {
-                              // controller[excludedIndexes[i]].value =
-                              //     TextEditingController.fromValue(
-                              //   const TextEditingValue(
-                              //     text: '',
-                              //   ),
-                              // ).value;
-                            }
-                          }
-                        }
 
                         // Remove corresponding controllers based on the removed attributes
                       });
@@ -572,8 +840,13 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
-                  return (controller[index].text == item.values?[1].trim() &&
-                          !(isHealthFacilityWorker &&
+                  return ((item.values?.firstWhereOrNull(
+                                    (element) => element == yesText,
+                                  ) !=
+                                  null &&
+                              controller[index].text ==
+                                  item.values?[1].trim()) &&
+                          !(context.isHealthFacilitySupervisor &&
                               widget.referralClientRefId != null))
                       ? Padding(
                           padding: const EdgeInsets.only(
@@ -583,7 +856,6 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                           ),
                           child: DigitTextField(
                             maxLength: 1000,
-                            isRequired: true,
                             controller: additionalController[index],
                             label: '${localizations.translate(
                               '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
@@ -616,7 +888,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         localizations.translate(
                           i18.common.corecommonRequired,
                         ),
-                        style: TextStyle(
+                        style: theme.textTheme.bodySmall?.apply(
                           color: theme.colorScheme.error,
                         ),
                       ),
@@ -641,16 +913,13 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: DigitTextField(
-          onChange: (value) {
-            checklistFormKey.currentState?.validate();
-          },
+          // onChange: (value) {
+          //   checklistFormKey.currentState?.validate();
+          // },
+          autoValidation: AutovalidateMode.onUserInteraction,
+          textStyle: theme.textTheme.headlineMedium,
           isRequired: item.required ?? true,
           controller: controller[index],
-          inputFormatter: [
-            FilteringTextInputFormatter.allow(RegExp(
-              "[a-zA-Z0-9 ]",
-            )),
-          ],
           validator: (value) {
             if (((value == null || value == '') && item.required == true)) {
               return localizations.translate("${item.code}_REQUIRED");
@@ -666,19 +935,23 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
           label: localizations.translate(
             '${selectedServiceDefinition?.code}.${item.code}',
           ),
+          description: itemDescription != null
+              ? localizations.translate(
+                  '${selectedServiceDefinition?.code}.$itemDescription',
+                )
+              : null,
         ),
       );
     } else if (item.dataType == 'Number') {
       return DigitTextField(
-        onChange: (value) {
-          checklistFormKey.currentState?.validate();
-        },
+        autoValidation: AutovalidateMode.onUserInteraction,
         textStyle: theme.textTheme.headlineMedium,
         textInputType: TextInputType.number,
         inputFormatter: [
-          FilteringTextInputFormatter.allow(RegExp(
-            "[0-9]",
-          )),
+          FilteringTextInputFormatter.allow(
+            RegExp(r'[0-9]'),
+          ),
+          LengthLimitingTextInputFormatter(11),
         ],
         validator: (value) {
           if (((value == null || value == '') && item.required == true)) {
@@ -698,8 +971,15 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
         label: '${localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ).trim()} ${item.required == true ? '*' : ''}',
+        description: itemDescription != null
+            ? localizations.translate(
+                '${selectedServiceDefinition?.code}.$itemDescription',
+              )
+            : null,
       );
     } else if (item.dataType == 'MultiValueList') {
+      visibleChecklistIndexes.add(index);
+
       return Column(
         children: [
           Align(
@@ -714,6 +994,15 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                     )} ${item.required == true ? '*' : ''}',
                     style: theme.textTheme.headlineSmall,
                   ),
+                  if (item.additionalDetails != null &&
+                      (item.additionalDetails ?? {}).keys.contains(helpText))
+                    Text(
+                      '${localizations.translate(
+                        '${selectedServiceDefinition?.code}.${item.additionalDetails?.entries.where((a) => a.key == helpText).first.value}',
+                      )} ${item.required == true ? '*' : ''}',
+                      style: theme.textTheme.headlineSmall,
+                      textAlign: TextAlign.left,
+                    ),
                 ],
               ),
             ),
@@ -722,9 +1011,14 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
             builder: (context, state) {
               return Column(
                 children: item.values!
+                    .where((e) => e != i18.checklist.notSelectedKey)
+                    .toList()
                     .map((e) => DigitCheckboxTile(
-                          label: e,
-                          value: controller[index].text.split('.').contains(e),
+                          label: localizations.translate('CORE_COMMON_$e'),
+                          value: controller[index]
+                              .text
+                              .split(multiSelectionSeparator)
+                              .contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
                                   ServiceChecklistEvent(
@@ -733,22 +1027,82 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                   ),
                                 );
                             final String ele;
-                            var val = controller[index].text.split('.');
+                            var val = controller[index]
+                                .text
+                                .split(multiSelectionSeparator);
                             if (val.contains(e)) {
                               val.remove(e);
-                              ele = val.join(".");
+                              ele = val.join(multiSelectionSeparator);
                             } else {
-                              ele = "${controller[index].text}.$e";
+                              ele =
+                                  "${controller[index].text}$multiSelectionSeparator$e";
                             }
-                            controller[index].value =
-                                TextEditingController.fromValue(
-                              TextEditingValue(
-                                text: ele,
-                              ),
-                            ).value;
+                            setState(() {
+                              controller[index].value =
+                                  TextEditingController.fromValue(
+                                TextEditingValue(
+                                  text: ele,
+                                ),
+                              ).value;
+                            });
                           },
                         ))
                     .toList(),
+              );
+            },
+          ),
+          BlocBuilder<ServiceBloc, ServiceState>(
+            builder: (context, state) {
+              return item.values?.firstWhereOrNull(
+                            (element) => element.toUpperCase() == othersText,
+                          ) !=
+                          null &&
+                      controller[index].text.contains(othersText)
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        left: 4.0,
+                        right: 4.0,
+                        bottom: 16,
+                      ),
+                      child: DigitTextField(
+                        maxLength: 1000,
+                        controller: additionalController[index],
+                        label: '${localizations.translate(
+                          '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
+                        )}*',
+                        validator: (value1) {
+                          if (value1 == null || value1 == '') {
+                            return localizations.translate(
+                              i18.common.coreCommonOthersRequired,
+                            );
+                          }
+
+                          return null;
+                        },
+                      ),
+                    )
+                  : const SizedBox();
+            },
+          ),
+          BlocBuilder<ServiceBloc, ServiceState>(
+            builder: (context, state) {
+              final hasError = (item.required == true &&
+                  controller[index].text.isEmpty &&
+                  submitTriggered);
+
+              return Offstage(
+                offstage: !hasError,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    localizations.translate(
+                      i18.common.corecommonRequired,
+                    ),
+                    style: TextStyle(
+                      color: theme.colorScheme.error,
+                    ),
+                  ),
+                ),
               );
             },
           ),

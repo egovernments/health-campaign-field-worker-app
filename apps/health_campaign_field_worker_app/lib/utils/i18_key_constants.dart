@@ -145,6 +145,9 @@ class Common {
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';
   String get ageInMonths => 'AGE_IN_MONTHS_LABEL';
+  String get loading => 'CORE_COMMON_LOADING';
+  String get locationCapturing => 'CAPTURING_LOCATION';
+  String get coreCommonOthersRequired => 'CORE_COMMON_OTHERS_REQUIRED';
 }
 
 class HomeShowcase {
@@ -1245,11 +1248,12 @@ class DeliverIntervention {
   String get resourceDeliveredError =>
       'DELIVER_INTERVENTION_RESOURCE_DELIVERED_ERROR';
 
-      String get householdRegistered=>"PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST";
-      String get peoplePercentageTreatedLabel=>"PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST";
-      String get peopleTreatedLabel=>"PERFORMANCE_SUMMARY_TASK_DATA_LIST";
-      String get drugOneLabelTableSummary=>"PERFORMANCE_SUMMARY_DRUG_ONE";
-String get drugTwoLabelTableSummary=>"PERFORMANCE_SUMMARY_DRUG_TWO";
+  String get householdRegistered => "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST";
+  String get peoplePercentageTreatedLabel =>
+      "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST";
+  String get peopleTreatedLabel => "PERFORMANCE_SUMMARY_TASK_DATA_LIST";
+  String get drugOneLabelTableSummary => "PERFORMANCE_SUMMARY_DRUG_ONE";
+  String get drugTwoLabelTableSummary => "PERFORMANCE_SUMMARY_DRUG_TWO";
   String get quantityDistributedLabel =>
       'DELIVER_INTERVENTION_QUANTITY_DISTRIBUTED_LABEL';
 
