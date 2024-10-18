@@ -96,6 +96,19 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  BoundaryModel? get healthFacilityBoundary {
+    final boundaryBloc = _get<BoundaryBloc>();
+    final boundaryState = boundaryBloc.state;
+
+    final selectedBoundary = boundaryState.selectedBoundaryMap.entries
+        .where((element) =>
+            element.value != null && element.key == 'Health Facility')
+        .lastOrNull
+        ?.value;
+
+    return selectedBoundary;
+  }
+
   List<String> get schoolsList {
     return boundary.area!.split(',').toList();
   }
@@ -142,11 +155,27 @@ extension ContextUtilityExtensions on BuildContext {
     try {
       bool isCommunityDistributor = loggedInUserRoles
           .where(
-              (role) => role.code == RolesType.communityDistributor.toValue())
+            (role) => role.code == RolesType.communityDistributor.toValue(),
+          )
           .toList()
           .isNotEmpty;
 
       return isCommunityDistributor;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  bool get isHealthFacilitySupervisor {
+    try {
+      bool isDownSyncEnabled = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.healthFacilitySupervisor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return isDownSyncEnabled;
     } catch (_) {
       return false;
     }
