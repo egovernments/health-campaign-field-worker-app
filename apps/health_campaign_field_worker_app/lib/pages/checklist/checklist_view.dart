@@ -103,6 +103,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                   footer: BlocListener<LocationBloc, LocationState>(
                     listener: (context, state) async {
                       if(state.accuracy != null && triggerLocalization){
+                        if (!mounted) return;
                         triggerLocalization = false;
                         final router = context.router;
                         // close the location capturing `dialog`
