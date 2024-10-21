@@ -251,13 +251,7 @@ class _IneligibilityReasonsPageState
                                                       },
                                                     ).then(
                                                       (value) {
-                                                        // context.router
-                                                        //     .popAndPush(
-                                                        //   HouseholdAcknowledgementRoute(
-                                                        //     enableViewHousehold:
-                                                        //         true,
-                                                        //   ),
-                                                        // );
+                                                       
                                                         !isHouseHoldSchool(
                                                                 reloadState
                                                                     .state
