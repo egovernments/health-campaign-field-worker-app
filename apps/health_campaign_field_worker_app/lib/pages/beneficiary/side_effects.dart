@@ -505,6 +505,17 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
             )
             .firstOrNull!
             .value,
+      ];
+    } else if (task.additionalFields!.fields
+        .where((element) => element.key == Constants.schoolType)
+        .isNotEmpty) {
+      return [
+        task.additionalFields!.fields
+            .where(
+              (element) => element.key == Constants.schoolType,
+            )
+            .firstOrNull!
+            .value,
         task.additionalFields!.fields
             .where((element) => element.key == Constants.schoolNameKey)
             .firstOrNull!
