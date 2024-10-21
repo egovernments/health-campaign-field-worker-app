@@ -251,13 +251,25 @@ class _IneligibilityReasonsPageState
                                                       },
                                                     ).then(
                                                       (value) {
-                                                        context.router
-                                                            .popAndPush(
-                                                          HouseholdAcknowledgementRoute(
-                                                            enableViewHousehold:
-                                                                true,
-                                                          ),
-                                                        );
+                                                       
+                                                        !isHouseHoldSchool(
+                                                                reloadState
+                                                                    .state
+                                                                    .householdMemberWrapper,)
+                                                            ? context.router
+                                                                .popAndPush(
+                                                                HouseholdAcknowledgementRoute(
+                                                                  enableViewHousehold:
+                                                                      true,
+                                                                ),
+                                                              )
+                                                            : context.router
+                                                                .popAndPush(
+                                                                SchoolAcknowledgementRoute(
+                                                                  enableViewSchool:
+                                                                      true,
+                                                                ),
+                                                              );
                                                         Navigator.pop(context);
                                                       },
                                                     );
