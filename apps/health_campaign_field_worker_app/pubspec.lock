@@ -361,6 +361,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  complaints:
+    dependency: "direct main"
+    description:
+      path: "../../packages/complaints"
+      relative: true
+    source: path
+    version: "0.0.1-dev.1"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -493,10 +500,9 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: dcdab9542149022cb66241c3c379ca96916f8b6116e585f4799748d859a2ca49
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_components"
+      relative: true
+    source: path
     version: "1.0.2"
   digit_data_model:
     dependency: "direct main"
@@ -1533,18 +1539,16 @@ packages:
   referral_reconciliation:
     dependency: "direct main"
     description:
-      name: referral_reconciliation
-      sha256: "80d5b93164e4f8337fa757fcb75a1e85b88ffbb760e731ca24496a0cae2aef38"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/referral_reconciliation"
+      relative: true
+    source: path
     version: "1.0.2+1"
   registration_delivery:
     dependency: "direct main"
     description:
-      name: registration_delivery
-      sha256: a6a88665bbf1fa5dce5b864d66992ff9c885b2a3cd898d37f349f1be03cf4086
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/registration_delivery"
+      relative: true
+    source: path
     version: "1.0.3+1"
   remove_emoji_input_formatter:
     dependency: transitive
@@ -1775,6 +1779,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  survey_form:
+    dependency: "direct main"
+    description:
+      path: "../../packages/survey_form"
+      relative: true
+    source: path
+    version: "0.0.1-dev.1"
   sync_http:
     dependency: transitive
     description:

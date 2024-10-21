@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _ReferralReasonChecklistPageState
   @override
   void initState() {
     context.read<ServiceBloc>().add(
-          ServiceChecklistEvent(
+          ServiceSurveyFormEvent(
             value: Random().nextInt(100).toString(),
             submitTriggered: true,
           ),
@@ -93,7 +94,7 @@ class _ReferralReasonChecklistPageState
                         submitTriggered = true;
 
                         context.read<ServiceBloc>().add(
-                              const ServiceChecklistEvent(
+                              const ServiceSurveyFormEvent(
                                 value: '',
                                 submitTriggered: true,
                               ),
@@ -338,7 +339,7 @@ class _ReferralReasonChecklistPageState
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                        ServiceChecklistEvent(
+                                                        ServiceSurveyFormEvent(
                                                           value: e.toString(),
                                                           submitTriggered:
                                                               submitTriggered,
@@ -447,7 +448,7 @@ class _ReferralReasonChecklistPageState
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
                       context.read<ServiceBloc>().add(
-                            ServiceChecklistEvent(
+                        ServiceSurveyFormEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -625,7 +626,7 @@ class _ReferralReasonChecklistPageState
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                                  ServiceChecklistEvent(
+                              ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),
