@@ -46,7 +46,7 @@ class HouseholdAcknowledgementPageState
                     label: localizations.translate(
                       i18.householdDetails.viewHouseHoldDetailsAction,
                     ),
-                    isDisabled: (widget.enableViewHousehold==true)?false:true,
+                    isDisabled: !(widget.enableViewHousehold ?? false),
                     onPressed: () {
                       final wrapper = context
                           .read<HouseholdOverviewBloc>()
@@ -58,21 +58,20 @@ class HouseholdAcknowledgementPageState
                       );
                     },
                     type: ButtonType.primary,
-                    size: ButtonSize.large
-                ),
+                    size: ButtonSize.large),
                 Button(
                     label: localizations
                         .translate(i18.acknowledgementSuccess.actionLabelText),
                     onPressed: () {
                       context
-                          .read<SearchHouseholdsBloc>().add(const SearchHouseholdsEvent.clear());
+                          .read<SearchHouseholdsBloc>()
+                          .add(const SearchHouseholdsEvent.clear());
                       final parent = context.router.parent() as StackRouter;
                       // Pop twice to navigate back to the previous screen
                       parent.popUntilRoot();
                     },
                     type: ButtonType.secondary,
-                    size: ButtonSize.large
-                ),
+                    size: ButtonSize.large),
               ],
             );
           },
