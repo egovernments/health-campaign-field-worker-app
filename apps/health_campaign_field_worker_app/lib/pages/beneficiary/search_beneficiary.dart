@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
-import '../blocs/app_initialization/app_initialization.dart';
-import '../blocs/beneficiary_registration/beneficiary_registration.dart';
-import '../blocs/scanner/scanner.dart';
-import '../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../blocs/search_households/search_households.dart';
-import '../models/data_model.dart';
-import '../router/app_router.dart';
-import '../utils/i18_key_constants.dart' as i18;
-import '../utils/utils.dart';
-import '../widgets/beneficiary/view_beneficiary_card.dart';
-import '../widgets/header/back_navigation_help_header.dart';
-import '../widgets/localized.dart';
+import '../../blocs/app_initialization/app_initialization.dart';
+import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
+import '../../blocs/scanner/scanner.dart';
+import '../../blocs/search_households/search_bloc_common_wrapper.dart';
+import '../../blocs/search_households/search_households.dart';
+import '../../models/data_model.dart';
+import '../../router/app_router.dart';
+import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
+import '../../widgets/beneficiary/view_beneficiary_card.dart';
+import '../../widgets/header/back_navigation_help_header.dart';
+import '../../widgets/localized.dart';
 
 class SearchBeneficiaryPage extends LocalizedStatefulWidget {
   const SearchBeneficiaryPage({

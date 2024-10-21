@@ -52,6 +52,7 @@ class BoundaryModel with _$BoundaryModel {
     @JsonKey(name: 'localname') required String localName,
     String? longitude,
     String? latitude,
+    String? area,
     required String label,
     required String code,
     @JsonKey(includeIfNull: false) List<BoundaryModel>? children,

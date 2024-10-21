@@ -5,12 +5,15 @@ const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
 const searchBeneficiary = SearchBeneficiary();
+const schoolDetails = SchoolDetails();
 const beneficiaryDetails = BeneficiaryDetails();
 const householdLocation = HouseholdLocation();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const householdDetails = HouseholdDetails();
 const individualDetails = IndividualDetails();
 const householdOverView = HouseholdOverView();
+const schoolOverView = SchoolOverView();
+
 const memberCard = MemberCard();
 const deliverIntervention = DeliverIntervention();
 const adverseEvents = AdverseEvents();
@@ -315,6 +318,10 @@ class HouseholdDetailsShowcase {
 
   String get numberOfMembersLivingInHousehold {
     return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_MEMBERS_LIVING_IN_HOUSEHOLD';
+  }
+
+  String get numberOfStudentsLivingInHousehold {
+    return 'HOUSEHOLD_DETAILS_SHOWCASE_NUMBER_OF_STUDENTS_LIVING_IN_HOUSEHOLD';
   }
 }
 
@@ -891,6 +898,8 @@ class Home {
 class SearchBeneficiary {
   const SearchBeneficiary();
 
+  String get selectBeneficiaryType => 'SELECT_BENEFICIARY_TYPE';
+
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
   String get searchIndividualLabelText =>
@@ -918,6 +927,29 @@ class SearchBeneficiary {
   String get monthsAbbr => 'MONTHS_ABBR';
 
   String get proximityLabel => 'PROXIMITY_LABEL';
+}
+
+class SchoolDetails {
+  const SchoolDetails();
+  String get studentLabel => 'STUDENT_LABEL';
+  String get studentSearchHintText => 'STUDENT_SEARCH_HINT_TEXT';
+  String get errorNoOfStudentsCountMaximumLabel =>
+      'ERROR_NUMBER_OF_STUDENT_COUNT_MAXIMUM_SCHOOL';
+  String get errorNoOfStudentsCountZeroLabel =>
+      'ERROR_NUMBER_OF_STUDENT_COUNT_ZERO_SCHOOL';
+  String get errorNoOfStudentsCountLabel => 'ERROR_NUMBER_OF_STUDENT_SCHOOL';
+  String get addStudent => 'ADD_STUDENT_LABEL';
+  String get noSchoolsMapped => 'NO_SCHOOLS_MAPPED';
+  String get notRegistered => 'SCHOOL_NOT_REGISTERED';
+
+  String get selectSchool => 'SELECT_SCHOOL';
+
+  String get viewSchoolDetailsAction => 'VIEW_SCHOOL_DETAILS_ACTION';
+
+  String get schoolSelection => 'SCHOOL_SELECTION';
+
+  String get schoolActionLabelText =>
+      'SCHOOL_ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT';
 }
 
 class BeneficiaryDetails {
@@ -1014,6 +1046,7 @@ class IndividualDetails {
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
 
   String get firstNameLabelText => 'INDIVIDUAL_FIRST_NAME_LABEL_TEXT';
+  String get nameOfIndividualLabelText => 'NAME_INDIVIDUAL_LABEL_TEXT';
 
   String get lastNameLabelText => 'INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
@@ -1023,6 +1056,7 @@ class IndividualDetails {
   String get childLastNameLabelText => 'CHILD_INDIVIDUAL_LAST_NAME_LABEL_TEXT';
 
   String get checkboxLabelText => 'HEAD_OF_HOUSEHOLD_LABEL_TEXT';
+  String get headTeachercheckboxLabelText => 'HEAD_OF_TEACHER_LABEL_TEXT';
 
   String get idTypeLabelText => 'ID_TYPE_LABEL_TEXT';
 
@@ -1121,6 +1155,8 @@ class AcknowledgementSuccess {
 class HouseholdDetails {
   const HouseholdDetails();
 
+  String get schoolDetailsLabel => 'SCHOOL_DETAILS_LABEL';
+
   String get householdDetailsLabel => 'HOUSEHOLD_DETAILS_LABEL';
 
   String get actionLabel => 'HOUSEHOLD_ACTION_LABEL';
@@ -1129,12 +1165,49 @@ class HouseholdDetails {
       'HOUSEHOLD_DETAILS_DATE_OF_REGISTRATION_LABEL';
 
   String get noOfMembersCountLabel => 'NO_OF_MEMBERS_COUNT_LABEL';
+  String get noOfStudentsCountLabel => 'NO_OF_STUDENTS_COUNT_LABEL';
+
   String get viewHouseHoldDetailsAction =>
       'VIEW_HOUSEHOLD_DETAILS_ACTION_LABEL';
+
+  String get parentKnownLabel => 'PARENT_KNOWN_LABEL';
+
+  String get nameOfParentLabel => 'NAME_PARENT_LABEL';
+  String get sortByLabel => 'SORT_BY_LABEL';
+}
+
+class SchoolOverView {
+  const SchoolOverView();
+
+  String get schoolOverViewLabel => 'SCHOOL_OVER_VIEW_LABEL';
+  String get schoolStudentsLabel => 'SCHOOL_STUDENT_LABEL';
+
+  String get schoolName => 'SCHOOL_NAME';
+
+  String get studentsCount => 'STUDENTS_COUNT';
+
+  String get schoolOverViewEditLabel => 'SCHOOL_OVER_VIEW_EDIT_ICON_LABEL';
+
+  String get schoolOverViewEditIconText =>
+      'SCHOOL_OVER_VIEW_EDIT_ICON_LABEL_TEXT';
+
+  String get schoolOverViewAddActionText => 'SCHOOL_OVER_VIEW__ADD_ACTION_TEXT';
+
+  String get schoolOverViewHeadNameLabel => 'SCHOOL_OVER_VIEW_HEAD_NAME_LABEL';
+
+  String get schoolOverViewActionCardTitle =>
+      'SCHOOL_OVER_VIEW_ACTION_CARD_TITLE';
+
+  String get schoolOverViewPrimaryActionLabel =>
+      'SCHOOL_OVER_VIEW_PRIMARY_ACTION_LABEL';
+
+  String get schoolOverViewSecondaryActionLabel =>
+      'SCHOOL_OVER_VIEW_SECONDARY_ACTION_LABEL';
 }
 
 class HouseholdOverView {
   const HouseholdOverView();
+  String get addAdverseEffect => 'ADD_ADVERSE_EFFECT_LABEL';
 
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
 
@@ -1162,6 +1235,9 @@ class HouseholdOverView {
   String get householdOverViewDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_DELIVERED_ICON_LABEL';
 
+  String get householdOverViewHeadIconLabel =>
+      'HOUSEHOLD_OVER_VIEW_HEAD_ICON_LABEL';
+
   String get householdOverViewNotDeliveredIconLabel =>
       'HOUSEHOLD_OVER_VIEW_NOT_DELIVERED_ICON_LABEL';
 
@@ -1185,6 +1261,7 @@ class HouseholdOverView {
 
   String get householdOverViewAddActionText =>
       'HOUSEHOLD_OVER_VIEW__ADD_ACTION_TEXT';
+
 }
 
 class MemberCard {

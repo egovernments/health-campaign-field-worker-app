@@ -3,9 +3,7 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:health_campaign_field_worker_app/pages/beneficiary/widgets/past_delivery.dart';
 import 'package:intl/intl.dart';
-import 'package:recase/recase.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -19,6 +17,7 @@ import '../../utils/utils.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
+import 'widgets/past_delivery.dart';
 import 'widgets/record_delivery_cycle.dart';
 
 class BeneficiaryDetailsPage extends LocalizedStatefulWidget {

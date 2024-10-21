@@ -2,22 +2,26 @@ import 'dart:async';
 
 import 'package:async/async.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'tag_by_search.dart';
+import 'package:health_campaign_field_worker_app/blocs/search_households/search_by_school.dart';
+
 import 'proximity_search.dart';
-import 'search_households.dart';
 import 'search_by_head.dart';
+import 'search_households.dart';
+import 'tag_by_search.dart';
 
 class SearchBlocWrapper implements StateStreamableSource<Object?> {
   final SearchHouseholdsBloc searchHouseholdsBloc;
   final SearchByHeadBloc searchByHeadBloc;
   final ProximitySearchBloc proximitySearchBloc;
   final TagSearchBloc tagSearchBloc;
+  final SearchBySchoolBloc searchBySchoolName;
 
   SearchBlocWrapper({
     required this.searchHouseholdsBloc,
     required this.searchByHeadBloc,
     required this.proximitySearchBloc,
     required this.tagSearchBloc,
+    required this.searchBySchoolName,
   });
 
   Stream<SearchHouseholdsState> get stateChanges =>
@@ -26,6 +30,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
         searchByHeadBloc.stream,
         proximitySearchBloc.stream,
         tagSearchBloc.stream,
+        searchBySchoolName.stream,
       ]);
 
   void dispatch(SearchHouseholdsEvent event) {
@@ -35,6 +40,8 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
       searchByHeadBloc.add(event);
     } else if (event is SearchHouseholdsByTagEvent) {
       tagSearchBloc.add(event);
+    } else if (event is SearchHouseholdsSearchBySchoolNameEvent) {
+      searchBySchoolName.add(event);
     } else {
       searchHouseholdsBloc.add(event);
     }
@@ -45,6 +52,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
     searchByHeadBloc.add(const SearchHouseholdsEvent.clear());
     tagSearchBloc.add(const SearchHouseholdsEvent.clear());
     searchHouseholdsBloc.add(const SearchHouseholdsEvent.clear());
+    searchBySchoolName.add(const SearchHouseholdsEvent.clear());
   }
 
   @override
@@ -59,6 +67,7 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
     searchByHeadBloc.close();
     proximitySearchBloc.close();
     tagSearchBloc.close();
+    searchBySchoolName.close();
   }
 
   @override
@@ -66,5 +75,6 @@ class SearchBlocWrapper implements StateStreamableSource<Object?> {
       searchHouseholdsBloc.isClosed &&
       searchByHeadBloc.isClosed &&
       proximitySearchBloc.isClosed &&
-      tagSearchBloc.isClosed;
+      tagSearchBloc.isClosed &&
+      searchBySchoolName.isClosed;
 }

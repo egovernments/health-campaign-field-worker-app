@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:health_campaign_field_worker_app/pages/beneficiary/school/school_individual_list.dart';
+import 'package:health_campaign_field_worker_app/pages/beneficiary/school/school_sorting.dart';
 
 import '../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../blocs/inventory_report/inventory_report.dart';
@@ -14,8 +16,13 @@ import '../pages/beneficiary/beneficiary_wrapper.dart';
 import '../pages/beneficiary/deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered.dart';
 import '../pages/beneficiary/household_overview.dart';
+import '../pages/beneficiary/ineligibility_reasons.dart';
 import '../pages/beneficiary/record_past_delivery_details.dart';
 import '../pages/beneficiary/refer_beneficiary.dart';
+import '../pages/beneficiary/school/school_acknowledgement.dart';
+import '../pages/beneficiary/school/school_overview.dart';
+import '../pages/beneficiary/school/school_selection.dart';
+import '../pages/beneficiary/search_beneficiary.dart';
 import '../pages/beneficiary/side_effects.dart';
 import '../pages/beneficiary/widgets/household_acknowledgement.dart';
 import '../pages/beneficiary/widgets/splash_acknowledgement.dart';
@@ -23,8 +30,10 @@ import '../pages/beneficiary_registration/beneficiary_acknowledgement.dart';
 import '../pages/beneficiary_registration/beneficiary_registration_wrapper.dart';
 import '../pages/beneficiary_registration/household_details.dart';
 import '../pages/beneficiary_registration/household_location.dart';
-import '../pages/beneficiary/ineligibility_reasons.dart';
 import '../pages/beneficiary_registration/individual_details.dart';
+import '../pages/beneficiary_registration/school/school_beneficiary_acknowledgement.dart';
+import '../pages/beneficiary_registration/school/school_details.dart';
+import '../pages/beneficiary_registration/school/school_individual_details.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/checklist/checklist.dart';
 import '../pages/checklist/checklist_boundary_view.dart';
@@ -56,9 +65,7 @@ import '../pages/inventory/record_stock/stock_details.dart';
 import '../pages/inventory/record_stock/warehouse_details.dart';
 import '../pages/inventory/reports/report_details.dart';
 import '../pages/inventory/reports/report_selection.dart';
-import '../pages/reports/performance_summary_report_details.dart';
 import '../pages/inventory/stock_reconciliation/stock_reconciliation.dart';
-import '../pages/language_selection.dart';
 import '../pages/login.dart';
 import '../pages/profile.dart';
 import '../pages/project_selection.dart';
@@ -66,8 +73,9 @@ import '../pages/qr_details_page.dart';
 import '../pages/qr_scanner.dart';
 import '../pages/reason_for_deletion.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
-import '../pages/search_beneficiary.dart';
+import '../pages/reports/performance_summary_report_details.dart';
 import '../pages/search_referrals.dart';
+import '../pages/select_beneficiary.dart';
 import '../pages/unauthenticated.dart';
 
 export 'package:auto_route/auto_route.dart';
@@ -92,6 +100,8 @@ part 'app_router.gr.dart';
         AutoRoute(page: ProfilePage, path: 'profile'),
         AutoRoute(page: UserQRDetailsPage, path: 'user-qr-code'),
         AutoRoute(page: SearchBeneficiaryPage, path: 'search-beneficiary'),
+        AutoRoute(page: SelectBeneficiaryPage, path: 'select-beneficiary'),
+        AutoRoute(page: SchoolSelectionPage, path: 'school-selection'),
         AutoRoute(page: QRScannerPage, path: 'scanner'),
         // AutoRoute(page: ManageAttendancePage, path: 'manage-attendance'),
         AutoRoute(
@@ -106,6 +116,11 @@ part 'app_router.gr.dart';
           children: [
             AutoRoute(page: IndividualDetailsPage, path: 'individual-details'),
             AutoRoute(page: HouseHoldDetailsPage, path: 'household-details'),
+            AutoRoute(page: SchoolDetailsPage, path: 'school-details'),
+            AutoRoute(
+              page: SchoolIndividualDetailsPage,
+              path: 'school-individual-details',
+            ),
             AutoRoute(
               page: HouseholdLocationPage,
               path: 'household-location',
@@ -117,10 +132,22 @@ part 'app_router.gr.dart';
           page: BeneficiaryWrapperPage,
           path: 'beneficiary',
           children: [
+             AutoRoute(
+              page: SchoolIndividualSortingPage,
+              path: 'household-individuallist-sorting-details',
+            ),
+            AutoRoute(
+              page: SchoolIndividualListPage,
+              path: 'household-individuallist-details',
+            ),
             AutoRoute(
               page: HouseholdOverviewPage,
               path: 'overview',
               initial: true,
+            ),
+            AutoRoute(
+              page: SchoolOverviewPage,
+              path: 'school-overview',
             ),
             AutoRoute(
               page: BeneficiaryDetailsPage,
@@ -159,6 +186,10 @@ part 'app_router.gr.dart';
               path: 'record-past-delivery-details',
             ),
             AutoRoute(
+              page: SchoolAcknowledgementPage,
+              path: 'school-acknowledgement',
+            ),
+            AutoRoute(
               page: HouseholdAcknowledgementPage,
               path: 'household-acknowledgement',
             ),
@@ -182,6 +213,10 @@ part 'app_router.gr.dart';
         AutoRoute(
           page: BeneficiaryAcknowledgementPage,
           path: 'beneficiary-acknowledgement',
+        ),
+        AutoRoute(
+          page: SchoolBeneficiaryAcknowledgementPage,
+          path: 'school-beneficiary-acknowledgement',
         ),
         AutoRoute(page: AcknowledgementPage, path: 'acknowledgement'),
         AutoRoute(

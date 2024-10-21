@@ -72,6 +72,7 @@ _$BoundaryModelImpl _$$BoundaryModelImplFromJson(Map<String, dynamic> json) =>
       localName: json['localname'] as String,
       longitude: json['longitude'] as String?,
       latitude: json['latitude'] as String?,
+      area: json['area'] as String?,
       label: json['label'] as String,
       code: json['code'] as String,
       children: (json['children'] as List<dynamic>?)
@@ -87,6 +88,7 @@ Map<String, dynamic> _$$BoundaryModelImplToJson(_$BoundaryModelImpl instance) {
     'localname': instance.localName,
     'longitude': instance.longitude,
     'latitude': instance.latitude,
+    'area': instance.area,
     'label': instance.label,
     'code': instance.code,
   };

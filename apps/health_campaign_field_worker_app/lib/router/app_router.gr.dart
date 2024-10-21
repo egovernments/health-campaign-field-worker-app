@@ -86,6 +86,18 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SelectBeneficiaryRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const SelectBeneficiaryPage(),
+      );
+    },
+    SchoolSelectionRoute.name: (routeData) {
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: const SchoolSelectionPage(),
+      );
+    },
     QRScannerRoute.name: (routeData) {
       final args = routeData.argsAs<QRScannerRouteArgs>();
       return MaterialPageX<dynamic>(
@@ -161,6 +173,18 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
+    SchoolBeneficiaryAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolBeneficiaryAcknowledgementRouteArgs>(
+          orElse: () => const SchoolBeneficiaryAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolBeneficiaryAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewSchool: args.enableViewSchool,
         ),
       );
     },
@@ -352,6 +376,30 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SchoolDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolDetailsRouteArgs>(
+          orElse: () => const SchoolDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    SchoolIndividualDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolIndividualDetailsRouteArgs>(
+          orElse: () => const SchoolIndividualDetailsRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolIndividualDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isHeadOfHousehold: args.isHeadOfHousehold,
+          headName: args.headName,
+        ),
+      );
+    },
     HouseholdLocationRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdLocationRouteArgs>(
           orElse: () => const HouseholdLocationRouteArgs());
@@ -363,12 +411,45 @@ class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    SchoolIndividualSortingRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolIndividualSortingRouteArgs>(
+          orElse: () => const SchoolIndividualSortingRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolIndividualSortingPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    SchoolIndividualListRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolIndividualListRouteArgs>(
+          orElse: () => const SchoolIndividualListRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolIndividualListPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HouseholdOverviewRoute.name: (routeData) {
       final args = routeData.argsAs<HouseholdOverviewRouteArgs>(
           orElse: () => const HouseholdOverviewRouteArgs());
       return MaterialPageX<dynamic>(
         routeData: routeData,
         child: HouseholdOverviewPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    SchoolOverviewRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolOverviewRouteArgs>(
+          orElse: () => const SchoolOverviewRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolOverviewPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -480,6 +561,18 @@ class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
           tasks: args.tasks,
+        ),
+      );
+    },
+    SchoolAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<SchoolAcknowledgementRouteArgs>(
+          orElse: () => const SchoolAcknowledgementRouteArgs());
+      return MaterialPageX<dynamic>(
+        routeData: routeData,
+        child: SchoolAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewSchool: args.enableViewSchool,
         ),
       );
     },
@@ -753,6 +846,16 @@ class _$AppRouter extends RootStackRouter {
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
+              SelectBeneficiaryRoute.name,
+              path: 'select-beneficiary',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              SchoolSelectionRoute.name,
+              path: 'school-selection',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
               QRScannerRoute.name,
               path: 'scanner',
               parent: AuthenticatedRouteWrapper.name,
@@ -785,6 +888,16 @@ class _$AppRouter extends RootStackRouter {
                   parent: BeneficiaryRegistrationWrapperRoute.name,
                 ),
                 RouteConfig(
+                  SchoolDetailsRoute.name,
+                  path: 'school-details',
+                  parent: BeneficiaryRegistrationWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SchoolIndividualDetailsRoute.name,
+                  path: 'school-individual-details',
+                  parent: BeneficiaryRegistrationWrapperRoute.name,
+                ),
+                RouteConfig(
                   HouseholdLocationRoute.name,
                   path: 'household-location',
                   parent: BeneficiaryRegistrationWrapperRoute.name,
@@ -804,8 +917,23 @@ class _$AppRouter extends RootStackRouter {
                   fullMatch: true,
                 ),
                 RouteConfig(
+                  SchoolIndividualSortingRoute.name,
+                  path: 'household-individuallist-sorting-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SchoolIndividualListRoute.name,
+                  path: 'household-individuallist-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
                   HouseholdOverviewRoute.name,
                   path: 'overview',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SchoolOverviewRoute.name,
+                  path: 'school-overview',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -851,6 +979,11 @@ class _$AppRouter extends RootStackRouter {
                 RouteConfig(
                   RecordPastDeliveryDetailsRoute.name,
                   path: 'record-past-delivery-details',
+                  parent: BeneficiaryWrapperRoute.name,
+                ),
+                RouteConfig(
+                  SchoolAcknowledgementRoute.name,
+                  path: 'school-acknowledgement',
                   parent: BeneficiaryWrapperRoute.name,
                 ),
                 RouteConfig(
@@ -900,6 +1033,11 @@ class _$AppRouter extends RootStackRouter {
             RouteConfig(
               BeneficiaryAcknowledgementRoute.name,
               path: 'beneficiary-acknowledgement',
+              parent: AuthenticatedRouteWrapper.name,
+            ),
+            RouteConfig(
+              SchoolBeneficiaryAcknowledgementRoute.name,
+              path: 'school-beneficiary-acknowledgement',
               parent: AuthenticatedRouteWrapper.name,
             ),
             RouteConfig(
@@ -1300,6 +1438,30 @@ class SearchBeneficiaryRouteArgs {
 }
 
 /// generated route for
+/// [SelectBeneficiaryPage]
+class SelectBeneficiaryRoute extends PageRouteInfo<void> {
+  const SelectBeneficiaryRoute()
+      : super(
+          SelectBeneficiaryRoute.name,
+          path: 'select-beneficiary',
+        );
+
+  static const String name = 'SelectBeneficiaryRoute';
+}
+
+/// generated route for
+/// [SchoolSelectionPage]
+class SchoolSelectionRoute extends PageRouteInfo<void> {
+  const SchoolSelectionRoute()
+      : super(
+          SchoolSelectionRoute.name,
+          path: 'school-selection',
+        );
+
+  static const String name = 'SchoolSelectionRoute';
+}
+
+/// generated route for
 /// [QRScannerPage]
 class QRScannerRoute extends PageRouteInfo<QRScannerRouteArgs> {
   QRScannerRoute({
@@ -1552,6 +1714,46 @@ class BeneficiaryAcknowledgementRouteArgs {
   @override
   String toString() {
     return 'BeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
+  }
+}
+
+/// generated route for
+/// [SchoolBeneficiaryAcknowledgementPage]
+class SchoolBeneficiaryAcknowledgementRoute
+    extends PageRouteInfo<SchoolBeneficiaryAcknowledgementRouteArgs> {
+  SchoolBeneficiaryAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewSchool,
+  }) : super(
+          SchoolBeneficiaryAcknowledgementRoute.name,
+          path: 'school-beneficiary-acknowledgement',
+          args: SchoolBeneficiaryAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewSchool: enableViewSchool,
+          ),
+        );
+
+  static const String name = 'SchoolBeneficiaryAcknowledgementRoute';
+}
+
+class SchoolBeneficiaryAcknowledgementRouteArgs {
+  const SchoolBeneficiaryAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewSchool,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewSchool;
+
+  @override
+  String toString() {
+    return 'SchoolBeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewSchool: $enableViewSchool}';
   }
 }
 
@@ -2162,6 +2364,85 @@ class HouseHoldDetailsRouteArgs {
 }
 
 /// generated route for
+/// [SchoolDetailsPage]
+class SchoolDetailsRoute extends PageRouteInfo<SchoolDetailsRouteArgs> {
+  SchoolDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolDetailsRoute.name,
+          path: 'school-details',
+          args: SchoolDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolDetailsRoute';
+}
+
+class SchoolDetailsRouteArgs {
+  const SchoolDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolIndividualDetailsPage]
+class SchoolIndividualDetailsRoute
+    extends PageRouteInfo<SchoolIndividualDetailsRouteArgs> {
+  SchoolIndividualDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isHeadOfHousehold = false,
+    String? headName,
+  }) : super(
+          SchoolIndividualDetailsRoute.name,
+          path: 'school-individual-details',
+          args: SchoolIndividualDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isHeadOfHousehold: isHeadOfHousehold,
+            headName: headName,
+          ),
+        );
+
+  static const String name = 'SchoolIndividualDetailsRoute';
+}
+
+class SchoolIndividualDetailsRouteArgs {
+  const SchoolIndividualDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isHeadOfHousehold = false,
+    this.headName,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isHeadOfHousehold;
+
+  final String? headName;
+
+  @override
+  String toString() {
+    return 'SchoolIndividualDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, isHeadOfHousehold: $isHeadOfHousehold, headName: $headName}';
+  }
+}
+
+/// generated route for
 /// [HouseholdLocationPage]
 class HouseholdLocationRoute extends PageRouteInfo<HouseholdLocationRouteArgs> {
   HouseholdLocationRoute({
@@ -2196,6 +2477,76 @@ class HouseholdLocationRouteArgs {
 }
 
 /// generated route for
+/// [SchoolIndividualSortingPage]
+class SchoolIndividualSortingRoute
+    extends PageRouteInfo<SchoolIndividualSortingRouteArgs> {
+  SchoolIndividualSortingRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolIndividualSortingRoute.name,
+          path: 'household-individuallist-sorting-details',
+          args: SchoolIndividualSortingRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolIndividualSortingRoute';
+}
+
+class SchoolIndividualSortingRouteArgs {
+  const SchoolIndividualSortingRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolIndividualSortingRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolIndividualListPage]
+class SchoolIndividualListRoute
+    extends PageRouteInfo<SchoolIndividualListRouteArgs> {
+  SchoolIndividualListRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolIndividualListRoute.name,
+          path: 'household-individuallist-details',
+          args: SchoolIndividualListRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolIndividualListRoute';
+}
+
+class SchoolIndividualListRouteArgs {
+  const SchoolIndividualListRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolIndividualListRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [HouseholdOverviewPage]
 class HouseholdOverviewRoute extends PageRouteInfo<HouseholdOverviewRouteArgs> {
   HouseholdOverviewRoute({
@@ -2226,6 +2577,40 @@ class HouseholdOverviewRouteArgs {
   @override
   String toString() {
     return 'HouseholdOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [SchoolOverviewPage]
+class SchoolOverviewRoute extends PageRouteInfo<SchoolOverviewRouteArgs> {
+  SchoolOverviewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+  }) : super(
+          SchoolOverviewRoute.name,
+          path: 'school-overview',
+          args: SchoolOverviewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+        );
+
+  static const String name = 'SchoolOverviewRoute';
+}
+
+class SchoolOverviewRouteArgs {
+  const SchoolOverviewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'SchoolOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
@@ -2602,6 +2987,46 @@ class RecordPastDeliveryDetailsRouteArgs {
   @override
   String toString() {
     return 'RecordPastDeliveryDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations, tasks: $tasks}';
+  }
+}
+
+/// generated route for
+/// [SchoolAcknowledgementPage]
+class SchoolAcknowledgementRoute
+    extends PageRouteInfo<SchoolAcknowledgementRouteArgs> {
+  SchoolAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewSchool,
+  }) : super(
+          SchoolAcknowledgementRoute.name,
+          path: 'school-acknowledgement',
+          args: SchoolAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewSchool: enableViewSchool,
+          ),
+        );
+
+  static const String name = 'SchoolAcknowledgementRoute';
+}
+
+class SchoolAcknowledgementRouteArgs {
+  const SchoolAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewSchool,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewSchool;
+
+  @override
+  String toString() {
+    return 'SchoolAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewSchool: $enableViewSchool}';
   }
 }
 

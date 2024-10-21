@@ -47,17 +47,18 @@ class HouseholdSearchModelMapper
   static String? _$tenantId(HouseholdSearchModel v) => v.tenantId;
   static const Field<HouseholdSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static HouseholdAdditionalFields? _$additionalFields(
+          HouseholdSearchModel v) =>
+      v.additionalFields;
+  static const Field<HouseholdSearchModel, HouseholdAdditionalFields>
+      _f$additionalFields =
+      Field('additionalFields', _$additionalFields, opt: true);
   static String? _$boundaryCode(HouseholdSearchModel v) => v.boundaryCode;
   static const Field<HouseholdSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
   static AuditDetails? _$auditDetails(HouseholdSearchModel v) => v.auditDetails;
   static const Field<HouseholdSearchModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, mode: FieldMode.member);
-  static AdditionalFields? _$additionalFields(HouseholdSearchModel v) =>
-      v.additionalFields;
-  static const Field<HouseholdSearchModel, AdditionalFields>
-      _f$additionalFields =
-      Field('additionalFields', _$additionalFields, mode: FieldMode.member);
 
   @override
   final MappableFields<HouseholdSearchModel> fields = const {
@@ -69,9 +70,9 @@ class HouseholdSearchModelMapper
     #isProximityEnabled: _f$isProximityEnabled,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
+    #additionalFields: _f$additionalFields,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
-    #additionalFields: _f$additionalFields,
   };
   @override
   final bool ignoreNull = true;
@@ -94,6 +95,7 @@ class HouseholdSearchModelMapper
         isProximityEnabled: data.dec(_f$isProximityEnabled),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
+        additionalFields: data.dec(_f$additionalFields),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -158,6 +160,8 @@ abstract class HouseholdSearchModelCopyWith<
     $Out> implements EntitySearchModelCopyWith<$R, $In, $Out> {
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>?
       get clientReferenceId;
+  HouseholdAdditionalFieldsCopyWith<$R, HouseholdAdditionalFields,
+      HouseholdAdditionalFields>? get additionalFields;
   @override
   $R call(
       {String? id,
@@ -168,6 +172,7 @@ abstract class HouseholdSearchModelCopyWith<
       bool? isProximityEnabled,
       List<String>? clientReferenceId,
       String? tenantId,
+      covariant HouseholdAdditionalFields? additionalFields,
       String? boundaryCode});
   HouseholdSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -190,6 +195,11 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
               (v) => call(clientReferenceId: v))
           : null;
   @override
+  HouseholdAdditionalFieldsCopyWith<$R, HouseholdAdditionalFields,
+          HouseholdAdditionalFields>?
+      get additionalFields => $value.additionalFields?.copyWith
+          .$chain((v) => call(additionalFields: v));
+  @override
   $R call(
           {Object? id = $none,
           Object? memberCount = $none,
@@ -199,6 +209,7 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
           Object? isProximityEnabled = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
+          Object? additionalFields = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -210,6 +221,7 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
           #isProximityEnabled: isProximityEnabled,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (additionalFields != $none) #additionalFields: additionalFields,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -225,12 +237,169 @@ class _HouseholdSearchModelCopyWithImpl<$R, $Out>
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          additionalFields:
+              data.get(#additionalFields, or: $value.additionalFields),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override
   HouseholdSearchModelCopyWith<$R2, HouseholdSearchModel, $Out2>
       $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
           _HouseholdSearchModelCopyWithImpl($value, $cast, t);
+}
+
+class HouseholdAdditionalFieldsMapper
+    extends SubClassMapperBase<HouseholdAdditionalFields> {
+  HouseholdAdditionalFieldsMapper._();
+
+  static HouseholdAdditionalFieldsMapper? _instance;
+  static HouseholdAdditionalFieldsMapper ensureInitialized() {
+    if (_instance == null) {
+      MapperContainer.globals
+          .use(_instance = HouseholdAdditionalFieldsMapper._());
+    }
+    return _instance!;
+  }
+
+  @override
+  final String id = 'HouseholdAdditionalFields';
+
+  static String _$schema(HouseholdAdditionalFields v) => v.schema;
+  static const Field<HouseholdAdditionalFields, String> _f$schema =
+      Field('schema', _$schema, opt: true, def: 'Household');
+  static int _$version(HouseholdAdditionalFields v) => v.version;
+  static const Field<HouseholdAdditionalFields, int> _f$version =
+      Field('version', _$version);
+  static List<AdditionalField> _$fields(HouseholdAdditionalFields v) =>
+      v.fields;
+  static const Field<HouseholdAdditionalFields, List<AdditionalField>>
+      _f$fields = Field('fields', _$fields, opt: true, def: const []);
+
+  @override
+  final MappableFields<HouseholdAdditionalFields> fields = const {
+    #schema: _f$schema,
+    #version: _f$version,
+    #fields: _f$fields,
+  };
+  @override
+  final bool ignoreNull = true;
+
+  @override
+  final String discriminatorKey = 'type';
+  @override
+  final dynamic discriminatorValue = MappableClass.useAsDefault;
+  @override
+  late final ClassMapperBase superMapper =
+      AdditionalFieldsMapper.ensureInitialized();
+
+  static HouseholdAdditionalFields _instantiate(DecodingData data) {
+    return HouseholdAdditionalFields(
+        schema: data.dec(_f$schema),
+        version: data.dec(_f$version),
+        fields: data.dec(_f$fields));
+  }
+
+  @override
+  final Function instantiate = _instantiate;
+
+  static HouseholdAdditionalFields fromMap(Map<String, dynamic> map) {
+    return ensureInitialized().decodeMap<HouseholdAdditionalFields>(map);
+  }
+
+  static HouseholdAdditionalFields fromJson(String json) {
+    return ensureInitialized().decodeJson<HouseholdAdditionalFields>(json);
+  }
+}
+
+mixin HouseholdAdditionalFieldsMappable {
+  String toJson() {
+    return HouseholdAdditionalFieldsMapper.ensureInitialized()
+        .encodeJson<HouseholdAdditionalFields>(
+            this as HouseholdAdditionalFields);
+  }
+
+  Map<String, dynamic> toMap() {
+    return HouseholdAdditionalFieldsMapper.ensureInitialized()
+        .encodeMap<HouseholdAdditionalFields>(
+            this as HouseholdAdditionalFields);
+  }
+
+  HouseholdAdditionalFieldsCopyWith<HouseholdAdditionalFields,
+          HouseholdAdditionalFields, HouseholdAdditionalFields>
+      get copyWith => _HouseholdAdditionalFieldsCopyWithImpl(
+          this as HouseholdAdditionalFields, $identity, $identity);
+  @override
+  String toString() {
+    return HouseholdAdditionalFieldsMapper.ensureInitialized()
+        .stringifyValue(this as HouseholdAdditionalFields);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (runtimeType == other.runtimeType &&
+            HouseholdAdditionalFieldsMapper.ensureInitialized()
+                .isValueEqual(this as HouseholdAdditionalFields, other));
+  }
+
+  @override
+  int get hashCode {
+    return HouseholdAdditionalFieldsMapper.ensureInitialized()
+        .hashValue(this as HouseholdAdditionalFields);
+  }
+}
+
+extension HouseholdAdditionalFieldsValueCopy<$R, $Out>
+    on ObjectCopyWith<$R, HouseholdAdditionalFields, $Out> {
+  HouseholdAdditionalFieldsCopyWith<$R, HouseholdAdditionalFields, $Out>
+      get $asHouseholdAdditionalFields => $base
+          .as((v, t, t2) => _HouseholdAdditionalFieldsCopyWithImpl(v, t, t2));
+}
+
+abstract class HouseholdAdditionalFieldsCopyWith<
+    $R,
+    $In extends HouseholdAdditionalFields,
+    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
+  @override
+  ListCopyWith<$R, AdditionalField,
+      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields});
+  HouseholdAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
+      Then<$Out2, $R2> t);
+}
+
+class _HouseholdAdditionalFieldsCopyWithImpl<$R, $Out>
+    extends ClassCopyWithBase<$R, HouseholdAdditionalFields, $Out>
+    implements
+        HouseholdAdditionalFieldsCopyWith<$R, HouseholdAdditionalFields, $Out> {
+  _HouseholdAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
+
+  @override
+  late final ClassMapperBase<HouseholdAdditionalFields> $mapper =
+      HouseholdAdditionalFieldsMapper.ensureInitialized();
+  @override
+  ListCopyWith<$R, AdditionalField,
+          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
+      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
+          (v) => call(fields: v));
+  @override
+  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
+      $apply(FieldCopyWithData({
+        if (schema != null) #schema: schema,
+        if (version != null) #version: version,
+        if (fields != null) #fields: fields
+      }));
+  @override
+  HouseholdAdditionalFields $make(CopyWithData data) =>
+      HouseholdAdditionalFields(
+          schema: data.get(#schema, or: $value.schema),
+          version: data.get(#version, or: $value.version),
+          fields: data.get(#fields, or: $value.fields));
+
+  @override
+  HouseholdAdditionalFieldsCopyWith<$R2, HouseholdAdditionalFields, $Out2>
+      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
+          _HouseholdAdditionalFieldsCopyWithImpl($value, $cast, t);
 }
 
 class HouseholdModelMapper extends SubClassMapperBase<HouseholdModel> {
@@ -496,159 +665,4 @@ class _HouseholdModelCopyWithImpl<$R, $Out>
   HouseholdModelCopyWith<$R2, HouseholdModel, $Out2> $chain<$R2, $Out2>(
           Then<$Out2, $R2> t) =>
       _HouseholdModelCopyWithImpl($value, $cast, t);
-}
-
-class HouseholdAdditionalFieldsMapper
-    extends SubClassMapperBase<HouseholdAdditionalFields> {
-  HouseholdAdditionalFieldsMapper._();
-
-  static HouseholdAdditionalFieldsMapper? _instance;
-  static HouseholdAdditionalFieldsMapper ensureInitialized() {
-    if (_instance == null) {
-      MapperContainer.globals
-          .use(_instance = HouseholdAdditionalFieldsMapper._());
-    }
-    return _instance!;
-  }
-
-  @override
-  final String id = 'HouseholdAdditionalFields';
-
-  static String _$schema(HouseholdAdditionalFields v) => v.schema;
-  static const Field<HouseholdAdditionalFields, String> _f$schema =
-      Field('schema', _$schema, opt: true, def: 'Household');
-  static int _$version(HouseholdAdditionalFields v) => v.version;
-  static const Field<HouseholdAdditionalFields, int> _f$version =
-      Field('version', _$version);
-  static List<AdditionalField> _$fields(HouseholdAdditionalFields v) =>
-      v.fields;
-  static const Field<HouseholdAdditionalFields, List<AdditionalField>>
-      _f$fields = Field('fields', _$fields, opt: true, def: const []);
-
-  @override
-  final MappableFields<HouseholdAdditionalFields> fields = const {
-    #schema: _f$schema,
-    #version: _f$version,
-    #fields: _f$fields,
-  };
-  @override
-  final bool ignoreNull = true;
-
-  @override
-  final String discriminatorKey = 'type';
-  @override
-  final dynamic discriminatorValue = MappableClass.useAsDefault;
-  @override
-  late final ClassMapperBase superMapper =
-      AdditionalFieldsMapper.ensureInitialized();
-
-  static HouseholdAdditionalFields _instantiate(DecodingData data) {
-    return HouseholdAdditionalFields(
-        schema: data.dec(_f$schema),
-        version: data.dec(_f$version),
-        fields: data.dec(_f$fields));
-  }
-
-  @override
-  final Function instantiate = _instantiate;
-
-  static HouseholdAdditionalFields fromMap(Map<String, dynamic> map) {
-    return ensureInitialized().decodeMap<HouseholdAdditionalFields>(map);
-  }
-
-  static HouseholdAdditionalFields fromJson(String json) {
-    return ensureInitialized().decodeJson<HouseholdAdditionalFields>(json);
-  }
-}
-
-mixin HouseholdAdditionalFieldsMappable {
-  String toJson() {
-    return HouseholdAdditionalFieldsMapper.ensureInitialized()
-        .encodeJson<HouseholdAdditionalFields>(
-            this as HouseholdAdditionalFields);
-  }
-
-  Map<String, dynamic> toMap() {
-    return HouseholdAdditionalFieldsMapper.ensureInitialized()
-        .encodeMap<HouseholdAdditionalFields>(
-            this as HouseholdAdditionalFields);
-  }
-
-  HouseholdAdditionalFieldsCopyWith<HouseholdAdditionalFields,
-          HouseholdAdditionalFields, HouseholdAdditionalFields>
-      get copyWith => _HouseholdAdditionalFieldsCopyWithImpl(
-          this as HouseholdAdditionalFields, $identity, $identity);
-  @override
-  String toString() {
-    return HouseholdAdditionalFieldsMapper.ensureInitialized()
-        .stringifyValue(this as HouseholdAdditionalFields);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            HouseholdAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as HouseholdAdditionalFields, other));
-  }
-
-  @override
-  int get hashCode {
-    return HouseholdAdditionalFieldsMapper.ensureInitialized()
-        .hashValue(this as HouseholdAdditionalFields);
-  }
-}
-
-extension HouseholdAdditionalFieldsValueCopy<$R, $Out>
-    on ObjectCopyWith<$R, HouseholdAdditionalFields, $Out> {
-  HouseholdAdditionalFieldsCopyWith<$R, HouseholdAdditionalFields, $Out>
-      get $asHouseholdAdditionalFields => $base
-          .as((v, t, t2) => _HouseholdAdditionalFieldsCopyWithImpl(v, t, t2));
-}
-
-abstract class HouseholdAdditionalFieldsCopyWith<
-    $R,
-    $In extends HouseholdAdditionalFields,
-    $Out> implements AdditionalFieldsCopyWith<$R, $In, $Out> {
-  @override
-  ListCopyWith<$R, AdditionalField,
-      AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>> get fields;
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields});
-  HouseholdAdditionalFieldsCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
-      Then<$Out2, $R2> t);
-}
-
-class _HouseholdAdditionalFieldsCopyWithImpl<$R, $Out>
-    extends ClassCopyWithBase<$R, HouseholdAdditionalFields, $Out>
-    implements
-        HouseholdAdditionalFieldsCopyWith<$R, HouseholdAdditionalFields, $Out> {
-  _HouseholdAdditionalFieldsCopyWithImpl(super.value, super.then, super.then2);
-
-  @override
-  late final ClassMapperBase<HouseholdAdditionalFields> $mapper =
-      HouseholdAdditionalFieldsMapper.ensureInitialized();
-  @override
-  ListCopyWith<$R, AdditionalField,
-          AdditionalFieldCopyWith<$R, AdditionalField, AdditionalField>>
-      get fields => ListCopyWith($value.fields, (v, t) => v.copyWith.$chain(t),
-          (v) => call(fields: v));
-  @override
-  $R call({String? schema, int? version, List<AdditionalField>? fields}) =>
-      $apply(FieldCopyWithData({
-        if (schema != null) #schema: schema,
-        if (version != null) #version: version,
-        if (fields != null) #fields: fields
-      }));
-  @override
-  HouseholdAdditionalFields $make(CopyWithData data) =>
-      HouseholdAdditionalFields(
-          schema: data.get(#schema, or: $value.schema),
-          version: data.get(#version, or: $value.version),
-          fields: data.get(#fields, or: $value.fields));
-
-  @override
-  HouseholdAdditionalFieldsCopyWith<$R2, HouseholdAdditionalFields, $Out2>
-      $chain<$R2, $Out2>(Then<$Out2, $R2> t) =>
-          _HouseholdAdditionalFieldsCopyWithImpl($value, $cast, t);
 }

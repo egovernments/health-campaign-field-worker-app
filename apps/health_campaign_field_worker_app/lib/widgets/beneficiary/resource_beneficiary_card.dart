@@ -114,7 +114,7 @@ class _ResourceBeneficiaryCardState
           ),
           show
               ? DigitIntegerFormPicker(
-                  minimum: 0,
+                  minimum: 0.5,
                   decimal: true,
                   form: widget.form,
                   formControlName: 'quantityWasted.${widget.cardIndex}',

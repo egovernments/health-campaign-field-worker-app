@@ -7,6 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:stream_transform/stream_transform.dart';
 
 import '../../data/repositories/local/address.dart';
+import '../../data/repositories/local/household.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 
@@ -31,6 +32,7 @@ class SearchHouseholdsBloc
   final TaskDataRepository taskDataRepository;
   final SideEffectDataRepository sideEffectDataRepository;
   final ReferralDataRepository referralDataRepository;
+  final CustomHouseHoldRepo? customHouseHoldRepo;
 
   SearchHouseholdsBloc({
     required this.userUid,
@@ -44,6 +46,7 @@ class SearchHouseholdsBloc
     required this.sideEffectDataRepository,
     required this.addressRepository,
     required this.referralDataRepository,
+    this.customHouseHoldRepo,
   }) : super(const SearchHouseholdsState()) {
     on(_handleClear);
     on(_handleSearchByHousehold);
@@ -234,6 +237,15 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required int offset,
     required int limit,
   }) = SearchHouseholdsSearchByHouseholdHeadEvent;
+
+  const factory SearchHouseholdsEvent.searchBySchool({
+    required String searchText,
+    required String projectId,
+    required String boundaryCode,
+    String? tag,
+    required int offset,
+    required int limit,
+  }) = SearchHouseholdsSearchBySchoolNameEvent;
 
   const factory SearchHouseholdsEvent.searchByProximity({
     required double latitude,

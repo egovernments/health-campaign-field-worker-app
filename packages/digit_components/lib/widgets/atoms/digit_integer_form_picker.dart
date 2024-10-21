@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 class DigitIntegerFormPicker extends StatelessWidget {
-  final int? minimum;
-  final int? maximum;
+  final double? minimum;
+  final double? maximum;
   final bool incrementer;
   final String? hint;
   final String label;

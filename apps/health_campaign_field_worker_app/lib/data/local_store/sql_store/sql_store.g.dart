@@ -5248,6 +5248,11 @@ class $BoundaryTable extends Boundary
   late final GeneratedColumn<String> longitude = GeneratedColumn<String>(
       'longitude', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _areaMeta = const VerificationMeta('area');
+  @override
+  late final GeneratedColumn<String> area = GeneratedColumn<String>(
+      'area', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _materializedPathMeta =
       const VerificationMeta('materializedPath');
   @override
@@ -5312,6 +5317,7 @@ class $BoundaryTable extends Boundary
         label,
         latitude,
         longitude,
+        area,
         materializedPath,
         auditCreatedBy,
         boundaryNum,
@@ -5351,6 +5357,10 @@ class $BoundaryTable extends Boundary
     if (data.containsKey('longitude')) {
       context.handle(_longitudeMeta,
           longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta));
+    }
+    if (data.containsKey('area')) {
+      context.handle(
+          _areaMeta, area.isAcceptableOrUnknown(data['area']!, _areaMeta));
     }
     if (data.containsKey('materialized_path')) {
       context.handle(
@@ -5421,6 +5431,8 @@ class $BoundaryTable extends Boundary
           .read(DriftSqlType.string, data['${effectivePrefix}latitude']),
       longitude: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}longitude']),
+      area: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}area']),
       materializedPath: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}materialized_path']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
@@ -5454,6 +5466,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
   final String? label;
   final String? latitude;
   final String? longitude;
+  final String? area;
   final String? materializedPath;
   final String? auditCreatedBy;
   final int? boundaryNum;
@@ -5469,6 +5482,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
       this.label,
       this.latitude,
       this.longitude,
+      this.area,
       this.materializedPath,
       this.auditCreatedBy,
       this.boundaryNum,
@@ -5495,6 +5509,9 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
     }
     if (!nullToAbsent || longitude != null) {
       map['longitude'] = Variable<String>(longitude);
+    }
+    if (!nullToAbsent || area != null) {
+      map['area'] = Variable<String>(area);
     }
     if (!nullToAbsent || materializedPath != null) {
       map['materialized_path'] = Variable<String>(materializedPath);
@@ -5538,6 +5555,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
       longitude: longitude == null && nullToAbsent
           ? const Value.absent()
           : Value(longitude),
+      area: area == null && nullToAbsent ? const Value.absent() : Value(area),
       materializedPath: materializedPath == null && nullToAbsent
           ? const Value.absent()
           : Value(materializedPath),
@@ -5577,6 +5595,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
       label: serializer.fromJson<String?>(json['label']),
       latitude: serializer.fromJson<String?>(json['latitude']),
       longitude: serializer.fromJson<String?>(json['longitude']),
+      area: serializer.fromJson<String?>(json['area']),
       materializedPath: serializer.fromJson<String?>(json['materializedPath']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       boundaryNum: serializer.fromJson<int?>(json['boundaryNum']),
@@ -5597,6 +5616,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
       'label': serializer.toJson<String?>(label),
       'latitude': serializer.toJson<String?>(latitude),
       'longitude': serializer.toJson<String?>(longitude),
+      'area': serializer.toJson<String?>(area),
       'materializedPath': serializer.toJson<String?>(materializedPath),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'boundaryNum': serializer.toJson<int?>(boundaryNum),
@@ -5615,6 +5635,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
           Value<String?> label = const Value.absent(),
           Value<String?> latitude = const Value.absent(),
           Value<String?> longitude = const Value.absent(),
+          Value<String?> area = const Value.absent(),
           Value<String?> materializedPath = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<int?> boundaryNum = const Value.absent(),
@@ -5630,6 +5651,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
         label: label.present ? label.value : this.label,
         latitude: latitude.present ? latitude.value : this.latitude,
         longitude: longitude.present ? longitude.value : this.longitude,
+        area: area.present ? area.value : this.area,
         materializedPath: materializedPath.present
             ? materializedPath.value
             : this.materializedPath,
@@ -5657,6 +5679,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
           ..write('label: $label, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('area: $area, ')
           ..write('materializedPath: $materializedPath, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('boundaryNum: $boundaryNum, ')
@@ -5677,6 +5700,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
       label,
       latitude,
       longitude,
+      area,
       materializedPath,
       auditCreatedBy,
       boundaryNum,
@@ -5695,6 +5719,7 @@ class BoundaryData extends DataClass implements Insertable<BoundaryData> {
           other.label == this.label &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
+          other.area == this.area &&
           other.materializedPath == this.materializedPath &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.boundaryNum == this.boundaryNum &&
@@ -5712,6 +5737,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
   final Value<String?> label;
   final Value<String?> latitude;
   final Value<String?> longitude;
+  final Value<String?> area;
   final Value<String?> materializedPath;
   final Value<String?> auditCreatedBy;
   final Value<int?> boundaryNum;
@@ -5728,6 +5754,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
     this.label = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.area = const Value.absent(),
     this.materializedPath = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.boundaryNum = const Value.absent(),
@@ -5745,6 +5772,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
     this.label = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.area = const Value.absent(),
     this.materializedPath = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.boundaryNum = const Value.absent(),
@@ -5762,6 +5790,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
     Expression<String>? label,
     Expression<String>? latitude,
     Expression<String>? longitude,
+    Expression<String>? area,
     Expression<String>? materializedPath,
     Expression<String>? auditCreatedBy,
     Expression<int>? boundaryNum,
@@ -5779,6 +5808,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
       if (label != null) 'label': label,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
+      if (area != null) 'area': area,
       if (materializedPath != null) 'materialized_path': materializedPath,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (boundaryNum != null) 'boundary_num': boundaryNum,
@@ -5798,6 +5828,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
       Value<String?>? label,
       Value<String?>? latitude,
       Value<String?>? longitude,
+      Value<String?>? area,
       Value<String?>? materializedPath,
       Value<String?>? auditCreatedBy,
       Value<int?>? boundaryNum,
@@ -5814,6 +5845,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
       label: label ?? this.label,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      area: area ?? this.area,
       materializedPath: materializedPath ?? this.materializedPath,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       boundaryNum: boundaryNum ?? this.boundaryNum,
@@ -5844,6 +5876,9 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
     }
     if (longitude.present) {
       map['longitude'] = Variable<String>(longitude.value);
+    }
+    if (area.present) {
+      map['area'] = Variable<String>(area.value);
     }
     if (materializedPath.present) {
       map['materialized_path'] = Variable<String>(materializedPath.value);
@@ -5886,6 +5921,7 @@ class BoundaryCompanion extends UpdateCompanion<BoundaryData> {
           ..write('label: $label, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('area: $area, ')
           ..write('materializedPath: $materializedPath, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('boundaryNum: $boundaryNum, ')

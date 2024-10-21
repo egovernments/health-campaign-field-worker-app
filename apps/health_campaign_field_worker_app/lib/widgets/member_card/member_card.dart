@@ -1,6 +1,7 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:isar/isar.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -32,6 +33,8 @@ class MemberCard extends StatelessWidget {
   final bool isBeneficiaryIneligible;
   final bool isBeneficiaryReferred;
   final String? projectBeneficiaryClientReferenceId;
+  final Color? backgroundColorType;
+  final bool isAdverseEffect;
 
   const MemberCard({
     super.key,
@@ -53,6 +56,8 @@ class MemberCard extends StatelessWidget {
     this.isBeneficiaryIneligible = false,
     this.isBeneficiaryReferred = false,
     this.sideEffects,
+    this.backgroundColorType,
+    required this.isAdverseEffect,
   });
 
   @override
@@ -62,7 +67,8 @@ class MemberCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: DigitTheme.instance.colorScheme.background,
+        color:
+            backgroundColorType ?? DigitTheme.instance.colorScheme.background,
         border: Border.all(
           color: DigitTheme.instance.colorScheme.outline,
           width: 1,
@@ -169,48 +175,62 @@ class MemberCard extends StatelessWidget {
             ),
             child: Offstage(
               offstage: beneficiaryType != BeneficiaryType.individual,
-              child: !isDelivered ||
-                      isNotEligible ||
-                      isBeneficiaryRefused ||
-                      isBeneficiaryIneligible ||
-                      isBeneficiaryReferred
+              child: isHead
                   ? Align(
                       alignment: Alignment.centerLeft,
                       child: DigitIconButton(
-                        icon: Icons.info_rounded,
-                        iconSize: 20,
+                        icon: Icons.info,
                         iconText: localizations.translate(
-                          (isNotEligible || isBeneficiaryIneligible)
-                              ? i18.householdOverView
-                                  .householdOverViewNotEligibleIconLabel
-                              : isBeneficiaryReferred
-                                  ? i18.householdOverView
-                                      .householdOverViewBeneficiaryReferredLabel
-                                  : isBeneficiaryRefused
-                                      ? Status.beneficiaryRefused.toValue()
-                                      // [TODO Need to update the localization]
-                                      : i18.householdOverView
-                                          .householdOverViewNotDeliveredIconLabel,
-                        ),
-                        iconTextColor: theme.colorScheme.error,
-                        iconColor: theme.colorScheme.error,
-                      ),
-                    )
-                  : Align(
-                      alignment: Alignment.centerLeft,
-                      child: DigitIconButton(
-                        icon: Icons.check_circle,
-                        iconText: localizations.translate(
-                          i18.householdOverView
-                              .householdOverViewDeliveredIconLabel,
+                          i18.householdOverView.householdOverViewHeadIconLabel,
                         ),
                         iconSize: 20,
                         iconTextColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
-                        iconColor:
-                            DigitTheme.instance.colorScheme.onSurfaceVariant,
+                            DigitTheme.instance.colorScheme.surfaceTint,
+                        iconColor: DigitTheme.instance.colorScheme.surfaceTint,
                       ),
-                    ),
+                    )
+                  : !isDelivered ||
+                          isNotEligible ||
+                          isBeneficiaryRefused ||
+                          isBeneficiaryIneligible ||
+                          isBeneficiaryReferred
+                      ? Align(
+                          alignment: Alignment.centerLeft,
+                          child: DigitIconButton(
+                            icon: Icons.info_rounded,
+                            iconSize: 20,
+                            iconText: localizations.translate(
+                              (isNotEligible || isBeneficiaryIneligible)
+                                  ? i18.householdOverView
+                                      .householdOverViewNotEligibleIconLabel
+                                  : isBeneficiaryReferred
+                                      ? i18.householdOverView
+                                          .householdOverViewBeneficiaryReferredLabel
+                                      : isBeneficiaryRefused
+                                          ? Status.beneficiaryRefused.toValue()
+                                          // [TODO Need to update the localization]
+                                          : i18.householdOverView
+                                              .householdOverViewNotDeliveredIconLabel,
+                            ),
+                            iconTextColor: theme.colorScheme.error,
+                            iconColor: theme.colorScheme.error,
+                          ),
+                        )
+                      : Align(
+                          alignment: Alignment.centerLeft,
+                          child: DigitIconButton(
+                            icon: Icons.check_circle,
+                            iconText: localizations.translate(
+                              i18.householdOverView
+                                  .householdOverViewDeliveredIconLabel,
+                            ),
+                            iconSize: 20,
+                            iconTextColor: DigitTheme
+                                .instance.colorScheme.onSurfaceVariant,
+                            iconColor: DigitTheme
+                                .instance.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
             ),
           ),
           Offstage(
@@ -232,38 +252,50 @@ class MemberCard extends StatelessWidget {
                               //   left: kPadding / 2,
                               //   right: kPadding / 2,
                               // ),
-                              onPressed: () {
-                                final bloc =
-                                    context.read<HouseholdOverviewBloc>();
+                              onPressed: isAdverseEffect
+                                  ? () async {
+                                      await context.router.push(
+                                        SideEffectsRoute(
+                                          tasks: tasks != null
+                                              ? [tasks!.last]
+                                              : [],
+                                          fromSurvey: false,
+                                        ),
+                                      );
+                                    }
+                                  : () {
+                                      final bloc =
+                                          context.read<HouseholdOverviewBloc>();
 
-                                bloc.add(
-                                  HouseholdOverviewEvent.selectedIndividual(
-                                    individualModel: individual,
-                                  ),
-                                );
-                                bloc.add(HouseholdOverviewReloadEvent(
-                                  projectId: context.projectId,
-                                  projectBeneficiaryType:
-                                      context.beneficiaryType,
-                                ));
+                                      bloc.add(
+                                        HouseholdOverviewEvent
+                                            .selectedIndividual(
+                                          individualModel: individual,
+                                        ),
+                                      );
+                                      bloc.add(HouseholdOverviewReloadEvent(
+                                        projectId: context.projectId,
+                                        projectBeneficiaryType:
+                                            context.beneficiaryType,
+                                      ));
 
-                                final futureTaskList = tasks
-                                    ?.where((task) =>
-                                        task.status ==
-                                        Status.delivered.toValue())
-                                    .toList();
+                                      final futureTaskList = tasks
+                                          ?.where((task) =>
+                                              task.status ==
+                                              Status.delivered.toValue())
+                                          .toList();
 
-                                if ((futureTaskList ?? []).isNotEmpty) {
-                                  context.router.push(
-                                    RecordPastDeliveryDetailsRoute(
-                                      tasks: tasks,
-                                    ),
-                                  );
-                                } else {
-                                  context.router
-                                      .push(BeneficiaryDetailsRoute());
-                                }
-                              },
+                                      if ((futureTaskList ?? []).isNotEmpty) {
+                                        context.router.push(
+                                          RecordPastDeliveryDetailsRoute(
+                                            tasks: tasks,
+                                          ),
+                                        );
+                                      } else {
+                                        context.router
+                                            .push(BeneficiaryDetailsRoute());
+                                      }
+                                    },
                               child: Center(
                                 child: Text(
                                   allDosesDelivered(
@@ -276,10 +308,15 @@ class MemberCard extends StatelessWidget {
                                             tasks,
                                             context.selectedCycle,
                                           )
-                                      ? localizations.translate(
-                                          i18.householdOverView
-                                              .viewDeliveryLabel,
-                                        )
+                                      ? isAdverseEffect
+                                          ? localizations.translate(
+                                              i18.householdOverView
+                                                  .addAdverseEffect,
+                                            )
+                                          : localizations.translate(
+                                              i18.householdOverView
+                                                  .viewDeliveryLabel,
+                                            )
                                       : localizations.translate(
                                           i18.householdOverView
                                               .householdOverViewActionText,
@@ -358,6 +395,8 @@ class MemberCard extends StatelessWidget {
                                             )
                                         ? null
                                         : () {
+                                            final reloadState = context
+                                                .read<HouseholdOverviewBloc>();
                                             Navigator.of(
                                               context,
                                               rootNavigator: true,
@@ -407,6 +446,18 @@ class MemberCard extends StatelessWidget {
                                                                 .beneficiaryRefused
                                                                 .toValue(),
                                                           ),
+                                                          isHouseHoldSchool(
+                                                            reloadState.state
+                                                                .householdMemberWrapper,
+                                                          )
+                                                              ? const AdditionalField(
+                                                                  'type',
+                                                                  'SCHOOL',
+                                                                )
+                                                              : const AdditionalField(
+                                                                  'type',
+                                                                  'HOUSEHOLD',
+                                                                ),
                                                         ],
                                                       ),
                                                       address: individual
@@ -416,8 +467,6 @@ class MemberCard extends StatelessWidget {
                                                     context.boundary,
                                                   ),
                                                 );
-                                            final reloadState = context
-                                                .read<HouseholdOverviewBloc>();
                                             Future.delayed(
                                               const Duration(milliseconds: 500),
                                               () {
@@ -431,18 +480,29 @@ class MemberCard extends StatelessWidget {
                                                 );
                                               },
                                             ).then(
-                                              (value) => context.router.push(
-                                                HouseholdAcknowledgementRoute(
-                                                  enableViewHousehold: true,
-                                                ),
-                                              ),
+                                              (value) {
+                                                !isHouseHoldSchool(reloadState
+                                                        .state
+                                                        .householdMemberWrapper)
+                                                    ? context.router.popAndPush(
+                                                        HouseholdAcknowledgementRoute(
+                                                          enableViewHousehold:
+                                                              true,
+                                                        ),
+                                                      )
+                                                    : context.router.popAndPush(
+                                                        SchoolAcknowledgementRoute(
+                                                          enableViewSchool:
+                                                              true,
+                                                        ),
+                                                      );
+                                              },
                                             );
                                           },
                                   ),
                                   const SizedBox(
                                     height: kPadding * 2,
                                   ),
-                                  
                                   DigitOutLineButton(
                                     label: localizations.translate(
                                       i18.memberCard.markIneligibleLabel,
@@ -487,7 +547,6 @@ class MemberCard extends StatelessWidget {
                                             );
                                           },
                                   ),
-                                  
                                 ],
                               ),
                             );

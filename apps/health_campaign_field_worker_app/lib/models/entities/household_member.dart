@@ -2,13 +2,14 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import '../data_model.dart';
 
 part 'household_member.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class HouseholdMemberSearchModel extends EntitySearchModel with HouseholdMemberSearchModelMappable {
+class HouseholdMemberSearchModel extends EntitySearchModel
+    with HouseholdMemberSearchModelMappable {
   final String? id;
   final List<String>? individualClientReferenceIds;
   final List<String>? householdClientReferenceIds;
@@ -19,7 +20,7 @@ class HouseholdMemberSearchModel extends EntitySearchModel with HouseholdMemberS
   final bool? isHeadOfHousehold;
   final List<String>? clientReferenceId;
   final String? tenantId;
-  
+
   HouseholdMemberSearchModel({
     this.id,
     this.individualClientReferenceIds,
@@ -33,7 +34,7 @@ class HouseholdMemberSearchModel extends EntitySearchModel with HouseholdMemberS
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   HouseholdMemberSearchModel.ignoreDeleted({
@@ -48,12 +49,12 @@ class HouseholdMemberSearchModel extends EntitySearchModel with HouseholdMemberS
     this.clientReferenceId,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class HouseholdMemberModel extends EntityModel with HouseholdMemberModelMappable {
-
+class HouseholdMemberModel extends EntityModel
+    with HouseholdMemberModelMappable {
   static const schemaName = 'HouseholdMember';
 
   final String? id;
@@ -80,9 +81,10 @@ class HouseholdMemberModel extends EntityModel with HouseholdMemberModelMappable
     required this.clientReferenceId,
     this.tenantId,
     this.rowVersion,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   HouseholdMemberCompanion get companion {
     return HouseholdMemberCompanion(
@@ -106,16 +108,16 @@ class HouseholdMemberModel extends EntityModel with HouseholdMemberModelMappable
       clientReferenceId: Value(clientReferenceId),
       tenantId: Value(tenantId),
       rowVersion: Value(rowVersion),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class HouseholdMemberAdditionalFields extends AdditionalFields with HouseholdMemberAdditionalFieldsMappable {
+class HouseholdMemberAdditionalFields extends AdditionalFields
+    with HouseholdMemberAdditionalFieldsMappable {
   HouseholdMemberAdditionalFields({
     super.schema = 'HouseholdMember',
     required super.version,
     super.fields,
   });
 }
-
