@@ -540,8 +540,7 @@ bool recordedSideEffect(
   if (selectedCycle != null &&
       selectedCycle.startDate != null &&
       selectedCycle.endDate != null) {
-    // if task status is beneficiar refused
-    // we are allowing to deliver
+    
     if ((task != null) && task.status == Status.beneficiaryRefused.toValue()) {
       return true;
     }
