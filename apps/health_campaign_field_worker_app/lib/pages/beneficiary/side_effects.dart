@@ -199,6 +199,16 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                           context
                                                                               .millisecondsSinceEpoch(),
                                                                     ),
+                                                                    additionalFields:
+                                                                        SideEffectAdditionalFields(
+                                                                      version:
+                                                                          1,
+                                                                      fields: [
+                                                                        checkIfTaskHouseHoldType(widget
+                                                                            .tasks
+                                                                            .lastOrNull!),
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                   false,
                                                                 ),
@@ -482,5 +492,24 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
     );
 
     return shouldNavigateBack ?? false;
+  }
+
+  checkIfTaskHouseHoldType(TaskModel task) {
+    if (task.additionalFields!.fields
+        .where((element) => element.key == Constants.houseHoldBeneficiaryType)
+        .isNotEmpty) {
+      return [
+        task.additionalFields!.fields
+            .where(
+              (element) => element.key == Constants.houseHoldBeneficiaryType,
+            )
+            .firstOrNull!
+            .value,
+        task.additionalFields!.fields
+            .where((element) => element.key == Constants.schoolNameKey)
+            .firstOrNull!
+            .value,
+      ];
+    }
   }
 }
