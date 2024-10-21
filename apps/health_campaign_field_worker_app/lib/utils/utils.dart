@@ -540,6 +540,12 @@ bool recordedSideEffect(
   if (selectedCycle != null &&
       selectedCycle.startDate != null &&
       selectedCycle.endDate != null) {
+    // if task status is beneficiar refused
+    // we are allowing to deliver
+    if ((task != null) && task.status == Status.beneficiaryRefused.toValue()) {
+      return true;
+    }
+
     if ((task != null) && (sideEffects ?? []).isNotEmpty) {
       final lastTaskCreatedTime =
           task.clientReferenceId == sideEffects?.last.taskClientReferenceId
@@ -555,22 +561,19 @@ bool recordedSideEffect(
   return false;
 }
 
-
-
 bool isCurrentTimeBeforeEndTime(int startEpochMillis, int hoursToAdd) {
   // Convert the epoch time to a DateTime object
   DateTime startTime = DateTime.fromMillisecondsSinceEpoch(startEpochMillis);
-  
+
   // Add the given hours to the start time
   DateTime endTime = startTime.add(Duration(hours: hoursToAdd));
-  
+
   // Get the current time
   DateTime currentTime = DateTime.now();
-  
+
   // Return true if current time is before end time, otherwise false
   return currentTime.isBefore(endTime);
 }
-
 
 bool allDosesDelivered(
   List<TaskModel>? tasks,
