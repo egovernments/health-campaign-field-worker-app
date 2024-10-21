@@ -96,6 +96,10 @@ extension ContextUtilityExtensions on BuildContext {
     return selectedBoundary;
   }
 
+  List<String> get schoolsList {
+    return boundary.area!.split(',').toList();
+  }
+
   BoundaryModel? get healthFacilityBoundary {
     final boundaryBloc = _get<BoundaryBloc>();
     final boundaryState = boundaryBloc.state;
@@ -107,10 +111,6 @@ extension ContextUtilityExtensions on BuildContext {
         ?.value;
 
     return selectedBoundary;
-  }
-
-  List<String> get schoolsList {
-    return boundary.area!.split(',').toList();
   }
 
   BeneficiaryType get beneficiaryType {
