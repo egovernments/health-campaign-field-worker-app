@@ -540,7 +540,6 @@ bool recordedSideEffect(
   if (selectedCycle != null &&
       selectedCycle.startDate != null &&
       selectedCycle.endDate != null) {
-    
     if ((task != null) && task.status == Status.beneficiaryRefused.toValue()) {
       return true;
     }

@@ -203,11 +203,9 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                         SideEffectAdditionalFields(
                                                                       version:
                                                                           1,
-                                                                      fields: [
-                                                                        checkIfTaskHouseHoldType(widget
-                                                                            .tasks
-                                                                            .lastOrNull!),
-                                                                      ],
+                                                                      fields: checkIfTaskHouseHoldType(widget
+                                                                          .tasks
+                                                                          .lastOrNull!),
                                                                     ),
                                                                   ),
                                                                   false,
@@ -496,19 +494,31 @@ class _SideEffectsPageState extends LocalizedState<SideEffectsPage> {
 
   checkIfTaskHouseHoldType(TaskModel task) {
     if (task.additionalFields!.fields
-        .where((element) => element.key == Constants.houseHoldBeneficiaryType)
+        .where((element) =>
+            element.key == Constants.houseHoldBeneficiaryType &&
+            element.value == Constants.houseHoldType)
         .isNotEmpty) {
       return [
         task.additionalFields!.fields
             .where(
               (element) => element.key == Constants.houseHoldBeneficiaryType,
             )
-            .firstOrNull!
-            .value,
+            .firstOrNull!,
+      ];
+    } else if (task.additionalFields!.fields
+        .where((element) =>
+            element.key == Constants.houseHoldBeneficiaryType &&
+            element.value == Constants.schoolType)
+        .isNotEmpty) {
+      return [
+        task.additionalFields!.fields
+            .where(
+              (element) => element.value == Constants.schoolType,
+            )
+            .firstOrNull!,
         task.additionalFields!.fields
             .where((element) => element.key == Constants.schoolNameKey)
-            .firstOrNull!
-            .value,
+            .firstOrNull!,
       ];
     }
   }
