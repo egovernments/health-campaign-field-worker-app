@@ -1,7 +1,6 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:isar/isar.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -450,14 +449,8 @@ class MemberCard extends StatelessWidget {
                                                             reloadState.state
                                                                 .householdMemberWrapper,
                                                           )
-                                                              ? const AdditionalField(
-                                                                  'type',
-                                                                  'SCHOOL',
-                                                                )
-                                                              : const AdditionalField(
-                                                                  'type',
-                                                                  'HOUSEHOLD',
-                                                                ),
+                                                              ? addSchoolAdditionalType()
+                                                              : addHouseHoldAdditionalType(),
                                                         ],
                                                       ),
                                                       address: individual

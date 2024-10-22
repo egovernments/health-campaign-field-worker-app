@@ -750,7 +750,7 @@ class _DeliverInterventionPageState
           isHouseHoldSchool(wrapper!)
               ? addSchoolAdditionalType()
               : addHouseHoldAdditionalType(),
-          isHouseHoldSchool(wrapper) ? addSchoolName(wrapper) : null,
+          if (isHouseHoldSchool(wrapper)) addSchoolName(wrapper),
         ],
       ),
     );
