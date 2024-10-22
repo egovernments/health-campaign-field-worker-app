@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:digit_data_model/mason_templates/script.dart';
+import 'package:digit_data_model/entityGenerator.dart';
 
 void main() async {
   String folderPath = 'jsonFiles';
@@ -22,7 +22,6 @@ void main() async {
   }
 
   MasonEntityGenerator generator = new MasonEntityGenerator();
-  print(generator.directoryPath());
 
   // Iterate over each JSON file
   for (final jsonFile in jsonFiles) {
@@ -30,8 +29,8 @@ void main() async {
     try {
       final jsonString = await jsonFile.readAsString();
 
-      // print(jsonString);
       await generator.generateEntity(jsonString);
+
     }  catch (e, stackTrace) {
       print('Error processing file ${jsonFile.path}: $e');
       print(stackTrace); // To log the stack trace for debugging

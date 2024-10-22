@@ -12,7 +12,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'data_model.dart';
 
 // Export statements for various files that are part of the data model.
-
 export 'blocs/facility/facility.dart';
 export 'blocs/product_variant/product_variant.dart';
 export 'blocs/project_facility/project_facility.dart';
@@ -98,6 +97,7 @@ export 'models/pgr_complaints/pgr_address.dart';
 export 'models/pgr_complaints/pgr_complaints.dart';
 export 'models/pgr_complaints/pgr_complaints_response.dart';
 export 'models/project_type/project_type_model.dart';
+export 'models/entities/address_type.dart';
 export 'utils/constants.dart' hide EntityPlurals;
 export 'utils/utils.dart';
 
@@ -245,6 +245,7 @@ class ModelProviderRegistry {
 
 /// The `DataModelType` enum represents the different types of data models in the project.
 enum DataModelType {
+  // DataModelType enum for different types of data models
   user,
   facility,
   address,

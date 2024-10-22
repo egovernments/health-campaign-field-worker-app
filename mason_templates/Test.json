@@ -1,5 +1,5 @@
 {
-  "name": "Test3",
+  "name": "Test",
   "isEnum": false,
   "attributes": [
     {
@@ -194,7 +194,7 @@
     },
     {
       "name": "type",
-      "type": "AddressType",
+      "type": "TestType",
       "nullable": true,
       "isEnum": true,
       "isList": false,
@@ -204,7 +204,17 @@
       "defaultValue": null
     }
   ],
-  "customAttributes": [],
+  "customAttributes": [
+    {
+      "name": "type",
+      "type": "TestType",
+      "isEnum": true
+    },
+    {
+      "name": "locality",
+      "type": "locality"
+    }
+  ],
   "dateTimeAttributes": [],
   "enumValues": [
     {

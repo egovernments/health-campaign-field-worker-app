@@ -224,6 +224,7 @@ void run(HookContext context) {
       referenceAttributes: references,
     );
     context.vars = updateModel.toMap();
+    print(context.vars);
   } catch (e) {
     print(e);
   }

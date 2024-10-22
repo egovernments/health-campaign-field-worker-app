@@ -1,0 +1,14 @@
+{
+  "name": "testtype",
+  "persistBoundaryParameters": true,
+  "attributes": [
+    {
+      "name": "id",
+      "type": "String",
+      "includeForQuery": true,
+      "nullable": true
+    }
+  ],
+  "customAttributes": [],
+  "isEnum": false
+}

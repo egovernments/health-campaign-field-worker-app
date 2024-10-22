@@ -1,3 +1,7 @@
+## 1.0.4-dev.7
+
+* Automation of entity creation
+
 ## 1.0.4-dev.6
 
 * Automation of entity creation
