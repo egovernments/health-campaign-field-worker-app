@@ -322,8 +322,6 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     return selectQuery.where(buildAnd([
       if (params.identifierId != null)
         buildOr([
-          sql.identifier.identifierType
-              .contains(IdentifierTypes.uniqueBeneficiaryID.name),
           sql.identifier.identifierId.contains(
             params.identifierId!,
           ),
