@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:collection/collection.dart';
 
 import '../../blocs/app_localization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -97,8 +98,28 @@ class MemberCard extends StatelessWidget {
                             border: Border.all(
                               color: DigitTheme.instance.colorScheme.primary,
                             ),
+
+                            child: Padding(
+                              padding: const EdgeInsets.all(
+                                kPadding,
+                              ),
+                              child: Text(
+                                individual.identifiers
+                                        ?.lastWhereOrNull(
+                                          (e) =>
+                                              e.identifierType ==
+                                              IdentifierTypes
+                                                  .uniqueBeneficiaryID
+                                                  .toValue(),
+                                        )
+                                        ?.identifierId ??
+                                    localizations
+                                        .translate(i18.common.noResultsFound),
+                              ),
+
                             borderRadius: const BorderRadius.all(
                               Radius.circular(kPadding),
+
                             ),
                           ),
                           child: Padding(
