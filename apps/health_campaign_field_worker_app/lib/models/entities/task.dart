@@ -2,8 +2,8 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:drift/drift.dart';
 
-import '../data_model.dart';
 import '../../data/local_store/sql_store/sql_store.dart';
+import '../data_model.dart';
 
 part 'task.mapper.dart';
 
@@ -21,7 +21,10 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
   final DateTime? plannedEndDateTime;
   final DateTime? actualStartDateTime;
   final DateTime? actualEndDateTime;
-  
+  final String? sortBy;
+  final int? limit;
+  final int? offset;
+
   TaskSearchModel({
     this.id,
     this.projectId,
@@ -31,25 +34,28 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
     this.status,
     this.clientReferenceId,
     this.tenantId,
+    this.sortBy,
+    this.limit,
+    this.offset,
     int? plannedStartDate,
     int? plannedEndDate,
     int? actualStartDate,
     int? actualEndDate,
     super.boundaryCode,
     super.isDeleted,
-  }): plannedStartDateTime = plannedStartDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
-  plannedEndDateTime = plannedEndDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
-  actualStartDateTime = actualStartDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
-  actualEndDateTime = actualEndDate == null
-      ? null
-      : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
-   super();
+  })  : plannedStartDateTime = plannedStartDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
+        plannedEndDateTime = plannedEndDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
+        actualStartDateTime = actualStartDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
+        actualEndDateTime = actualEndDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
+        super();
 
   @MappableConstructor()
   TaskSearchModel.ignoreDeleted({
@@ -61,41 +67,39 @@ class TaskSearchModel extends EntitySearchModel with TaskSearchModelMappable {
     this.status,
     this.clientReferenceId,
     this.tenantId,
+    this.sortBy,
+    this.offset,
+    this.limit,
     int? plannedStartDate,
     int? plannedEndDate,
     int? actualStartDate,
     int? actualEndDate,
     super.boundaryCode,
-  }): plannedStartDateTime = plannedStartDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
-  plannedEndDateTime = plannedEndDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
-  actualStartDateTime = actualStartDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
-  actualEndDateTime = actualEndDate == null
-  ? null
-      : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
-   super(isDeleted: false);
+  })  : plannedStartDateTime = plannedStartDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
+        plannedEndDateTime = plannedEndDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
+        actualStartDateTime = actualStartDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
+        actualEndDateTime = actualEndDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
+        super(isDeleted: false);
 
   int? get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
-  
 
   int? get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
-  
 
   int? get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
-  
 
   int? get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
-  
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class TaskModel extends EntityModel with TaskModelMappable {
-
   static const schemaName = 'Task';
 
   final String? id;
@@ -136,39 +140,35 @@ class TaskModel extends EntityModel with TaskModelMappable {
     int? actualStartDate,
     int? actualEndDate,
     int? createdDate,
-    super.auditDetails,super.clientAuditDetails,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): plannedStartDateTime = plannedStartDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
-      plannedEndDateTime = plannedEndDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
-      actualStartDateTime = actualStartDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
-      actualEndDateTime = actualEndDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
-      createdDateTime = createdDate == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(createdDate),
-      super();
+  })  : plannedStartDateTime = plannedStartDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(plannedStartDate),
+        plannedEndDateTime = plannedEndDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(plannedEndDate),
+        actualStartDateTime = actualStartDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(actualStartDate),
+        actualEndDateTime = actualEndDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(actualEndDate),
+        createdDateTime = createdDate == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(createdDate),
+        super();
 
-  int?  get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
-  
+  int? get plannedStartDate => plannedStartDateTime?.millisecondsSinceEpoch;
 
-  int?  get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
-  
+  int? get plannedEndDate => plannedEndDateTime?.millisecondsSinceEpoch;
 
-  int?  get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
-  
+  int? get actualStartDate => actualStartDateTime?.millisecondsSinceEpoch;
 
-  int?  get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
-  
+  int? get actualEndDate => actualEndDateTime?.millisecondsSinceEpoch;
 
-  int?  get createdDate => createdDateTime?.millisecondsSinceEpoch;
-  
+  int? get createdDate => createdDateTime?.millisecondsSinceEpoch;
 
   TaskCompanion get companion {
     return TaskCompanion(
@@ -185,7 +185,8 @@ class TaskModel extends EntityModel with TaskModelMappable {
       id: Value(id),
       projectId: Value(projectId),
       projectBeneficiaryId: Value(projectBeneficiaryId),
-      projectBeneficiaryClientReferenceId: Value(projectBeneficiaryClientReferenceId),
+      projectBeneficiaryClientReferenceId:
+          Value(projectBeneficiaryClientReferenceId),
       createdBy: Value(createdBy),
       status: Value(status),
       nonRecoverableError: Value(nonRecoverableError),
@@ -197,16 +198,16 @@ class TaskModel extends EntityModel with TaskModelMappable {
       actualStartDate: Value(actualStartDate),
       actualEndDate: Value(actualEndDate),
       createdDate: Value(createdDate),
-      );
+    );
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class TaskAdditionalFields extends AdditionalFields with TaskAdditionalFieldsMappable {
+class TaskAdditionalFields extends AdditionalFields
+    with TaskAdditionalFieldsMappable {
   TaskAdditionalFields({
     super.schema = 'Task',
     required super.version,
     super.fields,
   });
 }
-

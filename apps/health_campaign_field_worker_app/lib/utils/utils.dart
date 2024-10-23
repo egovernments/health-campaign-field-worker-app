@@ -914,7 +914,7 @@ getSelectedLanguage(AppInitialized state, int index) {
   return isSelected;
 }
 
-List<HouseholdModel> excludeSchoolHouseholds(
+List<HouseholdModel> excludeHouseholdType(
   List<HouseholdModel> householdModels,
   String excludeType,
 ) {

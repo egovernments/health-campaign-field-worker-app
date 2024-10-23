@@ -74,7 +74,6 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           sql.task.clientReferenceId,
         ),
       ),
-      // TODO :[Need to change this to taskclient reference Id]
       leftOuterJoin(
         sql.taskResource,
         sql.taskResource.taskclientReferenceId.equalsExp(
@@ -83,24 +82,54 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       ),
     ]);
 
+// Determine the sorting behavior based on query.sortBy
+    final isAdministered =
+        sql.task.status.equals(Status.administeredSuccess.toValue());
+
+    if (query.sortBy != null) {
+      if (query.sortBy == Constants.studentTasksSort[0]) {
+        // TREATED_LATEST_FIRST: Administered tasks come first, latest first
+        selectQuery.orderBy([
+          OrderingTerm(
+            expression:
+                isAdministered.cast<int>(), // 1 for administered, 0 otherwise
+            mode: OrderingMode.desc, // Administered (1) tasks first
+          ),
+          OrderingTerm(
+            expression: sql.task.clientCreatedTime, // Latest first
+            mode: OrderingMode.desc,
+          ),
+        ]);
+      } else if (query.sortBy == Constants.studentTasksSort[1]) {
+        // NOT_TREATED_LATEST_FIRST: Non-administered tasks come first, latest first
+        selectQuery.orderBy([
+          OrderingTerm(
+            expression:
+                isAdministered.cast<int>(), // 0 for non-administered first
+            mode: OrderingMode.asc, // Non-administered (0) tasks first
+          ),
+          OrderingTerm(
+            expression: sql.task.clientCreatedTime, // Latest first
+            mode: OrderingMode.desc,
+          ),
+        ]);
+      }
+    }
+
+    if (query.limit != null && query.offset != null) {
+      selectQuery.limit(query.limit!, offset: query.offset);
+    }
+
     final results = await (selectQuery
           ..where(buildAnd([
             if (query.clientReferenceId != null)
-              sql.task.clientReferenceId.isIn(
-                query.clientReferenceId!,
-              ),
+              sql.task.clientReferenceId.isIn(query.clientReferenceId!),
             if (query.projectBeneficiaryClientReferenceId != null)
               sql.task.projectBeneficiaryClientReferenceId.isIn(
                 query.projectBeneficiaryClientReferenceId!,
               ),
-            if (userId != null)
-              sql.task.auditCreatedBy.equals(
-                userId,
-              ),
-            if (query.status != null)
-              sql.task.status.equals(
-                query.status!,
-              ),
+            if (userId != null) sql.task.auditCreatedBy.equals(userId),
+            if (query.status != null) sql.task.status.equals(query.status!),
           ])))
         .get();
 
@@ -113,9 +142,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
 
       if (task == null) continue;
 
-      // Check if the task is already in the map
       if (tasksMap.containsKey(task.clientReferenceId)) {
-        // If it is, add the resource to the existing task's resources
         tasksMap[task.clientReferenceId]!.resources?.add(
               TaskResourceModel(
                 taskclientReferenceId: task.clientReferenceId,
@@ -142,7 +169,6 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
               ),
             );
       } else {
-        // If it's not, create a new task and add it to the map
         tasksMap[task.clientReferenceId] = TaskModel(
           id: task.id,
           createdBy: task.createdBy,
@@ -252,10 +278,35 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
       }
     }
 
-    // Convert the map values to a list of tasks
-    final uniqueTasks = tasksMap.values.toList();
+    var finalResults = query.sortBy != null
+        ? removeDuplicateTasksByBeneficiary(tasksMap.values.toList())
+        : tasksMap.values.toList();
 
-    return uniqueTasks.where((element) => element.isDeleted != true).toList();
+    return finalResults;
+  }
+
+  List<TaskModel> removeDuplicateTasksByBeneficiary(List<TaskModel> tasks) {
+    final Map<String, TaskModel> uniqueTasks = {};
+
+    for (final task in tasks) {
+      final beneficiaryId = task.projectBeneficiaryClientReferenceId;
+
+      if (beneficiaryId != null) {
+        // Check if a task already exists for the same beneficiaryId
+        if (!uniqueTasks.containsKey(beneficiaryId) ||
+            (task.clientAuditDetails != null &&
+                uniqueTasks[beneficiaryId]!.clientAuditDetails != null &&
+                task.clientAuditDetails!.createdTime >
+                    uniqueTasks[beneficiaryId]!
+                        .clientAuditDetails!
+                        .createdTime)) {
+          // Store the latest task based on `clientAuditDetails.createdTime`
+          uniqueTasks[beneficiaryId] = task;
+        }
+      }
+    }
+
+    return uniqueTasks.values.toList();
   }
 
   @override

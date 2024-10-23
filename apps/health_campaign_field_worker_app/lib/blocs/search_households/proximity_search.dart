@@ -47,13 +47,12 @@ class ProximitySearchBloc extends SearchHouseholdsBloc {
     householdList =
         await addressRepository.searchHouseHoldbyAddress(AddressSearchModel(
       latitude: event.latitude,
-      longitude: event.longititude,
+      longitude: event.longitude,
       maxRadius: event.maxRadius,
       offset: event.offset,
       limit: event.limit,
     ));
-    householdList =
-        excludeSchoolHouseholds(householdList, Constants.schoolType);
+    householdList = excludeHouseholdType(householdList, Constants.schoolType);
     // Extract individual IDs from proximity-based individual results.
     final householdClientReferenceIds =
         householdList.map((e) => e.clientReferenceId).toList();

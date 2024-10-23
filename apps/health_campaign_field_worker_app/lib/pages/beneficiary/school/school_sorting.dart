@@ -2,12 +2,11 @@ import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
 import '../../../router/app_router.dart';
 import '../../../utils/constants.dart';
-
-import '../../../widgets/header/back_navigation_help_header.dart';
-import '../../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../widgets/localized.dart';
 
 class SchoolIndividualSortingPage extends LocalizedStatefulWidget {
   const SchoolIndividualSortingPage({super.key, super.appLocalizations});
@@ -59,7 +58,8 @@ class _SchoolIndividualSortingPageState
                   onPressed: () async {
                     form.markAllAsTouched();
                     if (!form.valid) return;
-                    bool selectedOption = form.control(_schoolSorting).value;
+                    String selectedOption = form.control(_schoolSorting).value;
+                    Navigator.of(context).pop(selectedOption);
                   },
                   child: Text(
                     localizations.translate(
@@ -72,10 +72,9 @@ class _SchoolIndividualSortingPageState
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
-                      //
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: DigitRadioButtonList<KeyValue>(
+                        child: DigitRadioButtonList<String>(
                           labelStyle: DigitTheme
                               .instance.mobileTheme.textTheme.bodyLarge,
                           labelText: "${localizations.translate(
@@ -84,9 +83,9 @@ class _SchoolIndividualSortingPageState
                           isEnabled: true,
                           formControlName: _schoolSorting,
                           valueMapper: (value) {
-                            return localizations.translate(value.label);
+                            return localizations.translate(value);
                           },
-                          options: Constants.studentSort,
+                          options: Constants.studentTasksSort,
                           errorMessage: '',
                           onValueChange: (value) {},
                         ),
@@ -104,7 +103,7 @@ class _SchoolIndividualSortingPageState
 
   FormGroup buildForm() {
     return fb.group(<String, Object>{
-      _schoolSorting: FormControl<KeyValue>(value: Constants.studentSort[1]),
+      _schoolSorting: FormControl<String>(value: Constants.studentTasksSort[1]),
     });
   }
 }

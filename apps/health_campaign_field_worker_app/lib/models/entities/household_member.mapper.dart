@@ -69,6 +69,12 @@ class HouseholdMemberSearchModelMapper
   static String? _$tenantId(HouseholdMemberSearchModel v) => v.tenantId;
   static const Field<HouseholdMemberSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static int? _$limit(HouseholdMemberSearchModel v) => v.limit;
+  static const Field<HouseholdMemberSearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
+  static int? _$offset(HouseholdMemberSearchModel v) => v.offset;
+  static const Field<HouseholdMemberSearchModel, int> _f$offset =
+      Field('offset', _$offset, opt: true);
   static String? _$boundaryCode(HouseholdMemberSearchModel v) => v.boundaryCode;
   static const Field<HouseholdMemberSearchModel, String> _f$boundaryCode =
       Field('boundaryCode', _$boundaryCode, opt: true);
@@ -94,6 +100,8 @@ class HouseholdMemberSearchModelMapper
     #isHeadOfHousehold: _f$isHeadOfHousehold,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
+    #limit: _f$limit,
+    #offset: _f$offset,
     #boundaryCode: _f$boundaryCode,
     #auditDetails: _f$auditDetails,
     #additionalFields: _f$additionalFields,
@@ -121,6 +129,8 @@ class HouseholdMemberSearchModelMapper
         isHeadOfHousehold: data.dec(_f$isHeadOfHousehold),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
+        limit: data.dec(_f$limit),
+        offset: data.dec(_f$offset),
         boundaryCode: data.dec(_f$boundaryCode));
   }
 
@@ -203,6 +213,8 @@ abstract class HouseholdMemberSearchModelCopyWith<
       bool? isHeadOfHousehold,
       List<String>? clientReferenceId,
       String? tenantId,
+      int? limit,
+      int? offset,
       String? boundaryCode});
   HouseholdMemberSearchModelCopyWith<$R2, $In, $Out2> $chain<$R2, $Out2>(
       Then<$Out2, $R2> t);
@@ -256,6 +268,8 @@ class _HouseholdMemberSearchModelCopyWithImpl<$R, $Out>
           Object? isHeadOfHousehold = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
+          Object? limit = $none,
+          Object? offset = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
         if (id != $none) #id: id,
@@ -272,6 +286,8 @@ class _HouseholdMemberSearchModelCopyWithImpl<$R, $Out>
         if (isHeadOfHousehold != $none) #isHeadOfHousehold: isHeadOfHousehold,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (limit != $none) #limit: limit,
+        if (offset != $none) #offset: offset,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
       }));
   @override
@@ -293,6 +309,8 @@ class _HouseholdMemberSearchModelCopyWithImpl<$R, $Out>
           clientReferenceId:
               data.get(#clientReferenceId, or: $value.clientReferenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          limit: data.get(#limit, or: $value.limit),
+          offset: data.get(#offset, or: $value.offset),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));
 
   @override

@@ -230,6 +230,7 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required String searchText,
     required String projectId,
     required final bool isProximityEnabled,
+    String? excludeHouseholdType,
     double? latitude,
     double? longitude,
     double? maxRadius,
@@ -247,9 +248,20 @@ class SearchHouseholdsEvent with _$SearchHouseholdsEvent {
     required int limit,
   }) = SearchHouseholdsSearchBySchoolNameEvent;
 
+  const factory SearchHouseholdsEvent.searchIndividual({
+    required String searchText,
+    required List<HouseholdMemberWrapper> householdMembers,
+    required int offset,
+    required int limit,
+  }) = SearchIndividualNameEvent;
+
+  const factory SearchHouseholdsEvent.clearIndividualNameSearch({
+    required List<HouseholdMemberWrapper> householdMembers,
+  }) = ClearIndividualNameSearchEvent;
+
   const factory SearchHouseholdsEvent.searchByProximity({
     required double latitude,
-    required double longititude,
+    required double longitude,
     required String projectId,
     required double maxRadius,
     required int offset,

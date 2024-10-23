@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../models/data_model.dart';
 import 'search_households.dart';
@@ -23,9 +22,6 @@ class SearchBySchoolBloc extends SearchHouseholdsBloc {
   }) {
     on<SearchHouseholdsSearchBySchoolNameEvent>(
       _handleSearchBySchool,
-      transformer: debounce<SearchHouseholdsSearchBySchoolNameEvent>(
-        const Duration(milliseconds: 100),
-      ),
     );
   }
 
@@ -47,9 +43,6 @@ class SearchBySchoolBloc extends SearchHouseholdsBloc {
       event.searchText,
       event.boundaryCode,
     );
-    if (kDebugMode) {
-      print('school ${school!}');
-    }
 
     if (school!.isNotEmpty) {
       householdList = await household.search(HouseholdSearchModel(

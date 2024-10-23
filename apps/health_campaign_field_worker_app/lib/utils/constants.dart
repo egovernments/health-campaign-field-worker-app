@@ -295,9 +295,9 @@ class Constants {
     KeyValue('CORE_COMMON_NO', false),
   ];
 
-  static List<KeyValue> studentSort = [
-    KeyValue('TREATED_LATEST_FIRST', true),
-    KeyValue('NOT_TREATED_LATEST_FIRST', false),
+  static List<String> studentTasksSort = [
+    'TREATED_LATEST_FIRST',
+    'NOT_TREATED_LATEST_FIRST',
   ];
 }
 

@@ -94,7 +94,7 @@ class _SearchBeneficiaryPageState
                     blocWrapper.proximitySearchBloc
                         .add(SearchHouseholdsEvent.searchByProximity(
                       latitude: lat,
-                      longititude: long,
+                      longitude: long,
                       projectId: context.projectId,
                       maxRadius: appConfig.maxRadius!,
                       offset: offset + limit,
@@ -111,6 +111,7 @@ class _SearchBeneficiaryPageState
                       searchText: searchController.text,
                       projectId: context.projectId,
                       isProximityEnabled: isProximityEnabled,
+                      excludeHouseholdType: Constants.schoolType,
                       offset: offset + limit,
                       limit: limit,
                     ));
@@ -180,7 +181,7 @@ class _SearchBeneficiaryPageState
                                           SearchHouseholdsEvent
                                               .searchByProximity(
                                             latitude: locationState.latitude!,
-                                            longititude:
+                                            longitude:
                                                 locationState.longitude!,
                                             projectId: context.projectId,
                                             maxRadius: appConfig.maxRadius!,
@@ -196,6 +197,8 @@ class _SearchBeneficiaryPageState
                                             projectId: context.projectId,
                                             isProximityEnabled:
                                                 isProximityEnabled,
+                                            excludeHouseholdType:
+                                                Constants.schoolType,
                                             latitude: locationState.latitude,
                                             longitude: locationState.longitude,
                                             maxRadius: appConfig.maxRadius,
@@ -240,7 +243,7 @@ class _SearchBeneficiaryPageState
                                                         .searchByProximity(
                                                       latitude: locationState
                                                           .latitude!,
-                                                      longititude: locationState
+                                                      longitude: locationState
                                                           .longitude!,
                                                       projectId:
                                                           context.projectId,

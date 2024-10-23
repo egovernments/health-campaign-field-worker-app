@@ -20,6 +20,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel
   final bool? isHeadOfHousehold;
   final List<String>? clientReferenceId;
   final String? tenantId;
+  final int? limit;
+  final int? offset;
 
   HouseholdMemberSearchModel({
     this.id,
@@ -32,6 +34,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel
     this.isHeadOfHousehold,
     this.clientReferenceId,
     this.tenantId,
+    this.limit,
+    this.offset,
     super.boundaryCode,
     super.isDeleted,
   }) : super();
@@ -48,6 +52,8 @@ class HouseholdMemberSearchModel extends EntitySearchModel
     this.isHeadOfHousehold,
     this.clientReferenceId,
     this.tenantId,
+    this.limit,
+    this.offset,
     super.boundaryCode,
   }) : super(isDeleted: false);
 }

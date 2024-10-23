@@ -51,6 +51,15 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
   static String? _$tenantId(TaskSearchModel v) => v.tenantId;
   static const Field<TaskSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static String? _$sortBy(TaskSearchModel v) => v.sortBy;
+  static const Field<TaskSearchModel, String> _f$sortBy =
+      Field('sortBy', _$sortBy, opt: true);
+  static int? _$offset(TaskSearchModel v) => v.offset;
+  static const Field<TaskSearchModel, int> _f$offset =
+      Field('offset', _$offset, opt: true);
+  static int? _$limit(TaskSearchModel v) => v.limit;
+  static const Field<TaskSearchModel, int> _f$limit =
+      Field('limit', _$limit, opt: true);
   static int? _$plannedStartDate(TaskSearchModel v) => v.plannedStartDate;
   static const Field<TaskSearchModel, int> _f$plannedStartDate =
       Field('plannedStartDate', _$plannedStartDate, opt: true);
@@ -103,6 +112,9 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
     #status: _f$status,
     #clientReferenceId: _f$clientReferenceId,
     #tenantId: _f$tenantId,
+    #sortBy: _f$sortBy,
+    #offset: _f$offset,
+    #limit: _f$limit,
     #plannedStartDate: _f$plannedStartDate,
     #plannedEndDate: _f$plannedEndDate,
     #actualStartDate: _f$actualStartDate,
@@ -137,6 +149,9 @@ class TaskSearchModelMapper extends SubClassMapperBase<TaskSearchModel> {
         status: data.dec(_f$status),
         clientReferenceId: data.dec(_f$clientReferenceId),
         tenantId: data.dec(_f$tenantId),
+        sortBy: data.dec(_f$sortBy),
+        offset: data.dec(_f$offset),
+        limit: data.dec(_f$limit),
         plannedStartDate: data.dec(_f$plannedStartDate),
         plannedEndDate: data.dec(_f$plannedEndDate),
         actualStartDate: data.dec(_f$actualStartDate),
@@ -213,6 +228,9 @@ abstract class TaskSearchModelCopyWith<$R, $In extends TaskSearchModel, $Out>
       String? status,
       List<String>? clientReferenceId,
       String? tenantId,
+      String? sortBy,
+      int? offset,
+      int? limit,
       int? plannedStartDate,
       int? plannedEndDate,
       int? actualStartDate,
@@ -257,6 +275,9 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
           Object? status = $none,
           Object? clientReferenceId = $none,
           Object? tenantId = $none,
+          Object? sortBy = $none,
+          Object? offset = $none,
+          Object? limit = $none,
           Object? plannedStartDate = $none,
           Object? plannedEndDate = $none,
           Object? actualStartDate = $none,
@@ -274,6 +295,9 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
         if (status != $none) #status: status,
         if (clientReferenceId != $none) #clientReferenceId: clientReferenceId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (sortBy != $none) #sortBy: sortBy,
+        if (offset != $none) #offset: offset,
+        if (limit != $none) #limit: limit,
         if (plannedStartDate != $none) #plannedStartDate: plannedStartDate,
         if (plannedEndDate != $none) #plannedEndDate: plannedEndDate,
         if (actualStartDate != $none) #actualStartDate: actualStartDate,
@@ -294,6 +318,9 @@ class _TaskSearchModelCopyWithImpl<$R, $Out>
       clientReferenceId:
           data.get(#clientReferenceId, or: $value.clientReferenceId),
       tenantId: data.get(#tenantId, or: $value.tenantId),
+      sortBy: data.get(#sortBy, or: $value.sortBy),
+      offset: data.get(#offset, or: $value.offset),
+      limit: data.get(#limit, or: $value.limit),
       plannedStartDate:
           data.get(#plannedStartDate, or: $value.plannedStartDate),
       plannedEndDate: data.get(#plannedEndDate, or: $value.plannedEndDate),

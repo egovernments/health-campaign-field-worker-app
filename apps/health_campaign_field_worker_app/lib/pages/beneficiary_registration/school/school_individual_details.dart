@@ -813,10 +813,7 @@ class _SchoolIndividualDetailsPageState
                   _heightKey,
                   height.length == 1 ? '0$height' : height,
                 ),
-                const AdditionalField(
-                  _type,
-                  "SCHOOL",
-                ),
+                addSchoolAdditionalType(),
                 AdditionalField(
                   "parentName",
                   ((form.control(_parentknownKey).value as String) ?? "")
