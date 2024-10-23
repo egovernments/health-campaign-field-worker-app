@@ -136,9 +136,12 @@ bool checkEligibilityForAgeAndSideEffect(
               : false
           : false;
     } else {
-      return totalAgeMonths >= projectType!.validMinAge! &&
-              totalAgeMonths <= projectType.validMaxAge!
-          ? true
+      return (projectType?.validMinAge != null &&
+              projectType?.validMaxAge != null)
+          ? totalAgeMonths >= projectType!.validMinAge! &&
+                  totalAgeMonths <= projectType.validMaxAge!
+              ? true
+              : false
           : false;
     }
   }
