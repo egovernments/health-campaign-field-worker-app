@@ -1,11 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
-import 'package:collection/collection.dart';
 
 import '../../blocs/app_localization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
@@ -87,39 +87,42 @@ class MemberCard extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  individual.identifiers != null
-                      ? Padding(
-                          padding: const EdgeInsets.all(kPadding),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: DigitTheme.instance.colorScheme.primary,
-                              ),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(kPadding),
-                              ),
+                  if (individual.identifiers != null)
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: DigitTheme.instance.colorScheme.primary,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(
-                                kPadding,
-                              ),
-                              child: Text(
-                                individual.identifiers
-                                        ?.lastWhereOrNull(
-                                          (e) =>
-                                              e.identifierType ==
-                                              IdentifierTypes
-                                                  .uniqueBeneficiaryID
-                                                  .toValue(),
-                                        )
-                                        ?.identifierId ??
-                                    localizations
-                                        .translate(i18.common.noResultsFound),
-                              ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(kPadding),
                             ),
                           ),
-                        )
-                      : const Offstage(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              kPadding,
+                            ),
+                            child: Text(
+                              individual.identifiers
+                                      ?.lastWhereOrNull(
+                                        (e) =>
+                                            e.identifierType ==
+                                            IdentifierTypes.uniqueBeneficiaryID
+                                                .toValue(),
+                                      )
+                                      ?.identifierId ??
+                                  localizations
+                                      .translate(i18.common.noResultsFound),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    const Offstage(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
