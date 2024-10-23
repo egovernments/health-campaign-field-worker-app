@@ -77,7 +77,7 @@ class BeneficiaryAcknowledgementPageState
                   (e) =>
                       e.identifierType ==
                       IdentifierTypes.uniqueBeneficiaryID.toValue(),
-                )!.identifierId ?? localizations.translate(i18.common.noResultsFound)}'
+                )?.identifierId ?? localizations.translate(i18.common.noResultsFound)}'
         : '';
   }
 }
