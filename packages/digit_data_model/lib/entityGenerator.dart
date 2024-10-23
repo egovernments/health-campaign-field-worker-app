@@ -19,7 +19,7 @@ class MasonEntityGenerator {
     final persistBoundaryParameters = config['persistBoundaryParameters'];
 
     // Directory.current = '../packages/digit_data_model/mason_templates';
-    Directory.current = Directory('/home/admin1/.pub-cache/hosted/pub.dev/digit_data_model-1.0.4-dev.7/mason_templates');
+    Directory.current = Directory('/home/admin1/.pub-cache/hosted/pub.dev/digit_data_model-1.0.4-dev.8/mason_templates');
 
     final file = File('../lib/data/local_store/sql_store/tables/${name.toString().snakeCase}.dart');
 
