@@ -1,4 +1,3 @@
-import 'tables/testtype.dart';
 // Importing necessary packages and files.
 import 'dart:io';
 
@@ -60,7 +59,6 @@ part 'sql_store.g.dart';
 /// It is annotated with `@DriftDatabase` to indicate that it is a Drift database.
 /// The `tables` parameter of the `@DriftDatabase` annotation lists all the tables in the database.
 @DriftDatabase(tables: [
-  Testtype,
   AttendanceRegister,
   Attendance,
   Attendee,

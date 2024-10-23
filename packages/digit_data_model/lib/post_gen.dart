@@ -394,7 +394,7 @@ class Postgen {
     }
 
     classCode.writeln('''});
-  TesttypeCompanion.insert({''');
+  ${className.pascalCase}Companion.insert({''');
 
     for (var attribute in json['attributes']) {
       if(attribute['includeForTable'] == false) continue;
@@ -407,7 +407,7 @@ class Postgen {
     }
 
     classCode.writeln('''}) : clientReferenceId = Value(clientReferenceId);
-  static Insertable<TesttypeData> custom({''');
+  static Insertable<${className.pascalCase}Data> custom({''');
 
     for (var attribute in json['attributes']) {
       if(attribute['includeForTable'] == false) continue;
@@ -425,7 +425,7 @@ class Postgen {
     classCode.writeln(''' });
   }
 
-  TesttypeCompanion copyWith({''');
+  ${className.pascalCase}Companion copyWith({''');
 
     for (var attribute in json['attributes']) {
       if(attribute['includeForTable'] == false) continue;
@@ -433,7 +433,7 @@ class Postgen {
     }
 
     classCode.writeln('''}) {
-    return TesttypeCompanion(''');
+    return ${className.pascalCase}Companion(''');
 
     for (var attribute in json['attributes']) {
       if(attribute['includeForTable'] == false) continue;
@@ -461,7 +461,7 @@ class Postgen {
 
   @override
   String toString() {
-    return (StringBuffer('TesttypeCompanion(')''');
+    return (StringBuffer('${className.pascalCase}Companion(')''');
 
     for (var attribute in json['attributes']) {
       if (attribute['includeForTable'] == false) continue;
