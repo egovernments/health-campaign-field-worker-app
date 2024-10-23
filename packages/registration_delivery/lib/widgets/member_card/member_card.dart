@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -87,18 +88,17 @@ class MemberCard extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  individual.identifiers != null
-                      ? Padding(
-                          padding: const EdgeInsets.all(kPadding),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: DigitTheme.instance.colorScheme.primary,
-                              ),
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(kPadding),
-                              ),
+                  if (individual.identifiers != null)
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: DigitTheme.instance.colorScheme.primary,
                             ),
+
                             child: Padding(
                               padding: const EdgeInsets.all(
                                 kPadding,
@@ -116,10 +116,34 @@ class MemberCard extends StatelessWidget {
                                     localizations
                                         .translate(i18.common.noResultsFound),
                               ),
+
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(kPadding),
+
                             ),
                           ),
-                        )
-                      : const Offstage(),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              kPadding,
+                            ),
+                            child: Text(
+                              individual.identifiers
+                                      ?.lastWhereOrNull(
+                                        (e) =>
+                                            e.identifierType ==
+                                            IdentifierTypes.uniqueBeneficiaryID
+                                                .toValue(),
+                                      )
+                                      ?.identifierId ??
+                                  localizations
+                                      .translate(i18.common.noResultsFound),
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  else
+                    const Offstage(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,3 +1,8 @@
+## 1.0.4-dev.3-search-fix
+
+* Bug Fix -
+  * Individual, Household search for child query fix
+
 ## 1.0.4-dev.2-uniqueId
 
 * Unique Beneficiary Id link to identifier
