@@ -7,6 +7,7 @@ import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/household_overview/household_overview.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
@@ -73,6 +74,7 @@ class _IndividualDetailsPageState
                   (router.parent() as StackRouter).pop();
                 } else {
                   (router.parent() as StackRouter).pop();
+
                   context.read<SearchBlocWrapper>().searchHouseholdsBloc.add(
                         SearchHouseholdsEvent.searchByHousehold(
                           householdModel: value.householdModel,
@@ -80,6 +82,7 @@ class _IndividualDetailsPageState
                           isProximityEnabled: false,
                         ),
                       );
+
                   router.push(BeneficiaryAcknowledgementRoute(
                     enableViewHousehold: true,
                   ));
