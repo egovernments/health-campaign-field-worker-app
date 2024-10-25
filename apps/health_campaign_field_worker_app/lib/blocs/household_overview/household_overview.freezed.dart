@@ -45,7 +45,8 @@ mixin _$HouseholdOverviewEvent {
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)
+            String? taskSortOrder,
+            String? searchQuery)
         reload,
   }) =>
       throw _privateConstructorUsedError;
@@ -77,7 +78,8 @@ mixin _$HouseholdOverviewEvent {
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
   }) =>
       throw _privateConstructorUsedError;
@@ -109,7 +111,8 @@ mixin _$HouseholdOverviewEvent {
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
     required TResult orElse(),
   }) =>
@@ -329,7 +332,8 @@ class _$HouseholdOverviewDeleteHouseholdEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)
+            String? taskSortOrder,
+            String? searchQuery)
         reload,
   }) {
     return deleteHousehold(projectId, householdModel, members,
@@ -365,7 +369,8 @@ class _$HouseholdOverviewDeleteHouseholdEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
   }) {
     return deleteHousehold?.call(projectId, householdModel, members,
@@ -401,7 +406,8 @@ class _$HouseholdOverviewDeleteHouseholdEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
     required TResult orElse(),
   }) {
@@ -618,7 +624,8 @@ class _$HouseholdOverviewDeleteIndividualEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)
+            String? taskSortOrder,
+            String? searchQuery)
         reload,
   }) {
     return deleteIndividual(
@@ -654,7 +661,8 @@ class _$HouseholdOverviewDeleteIndividualEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
   }) {
     return deleteIndividual?.call(
@@ -690,7 +698,8 @@ class _$HouseholdOverviewDeleteIndividualEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
     required TResult orElse(),
   }) {
@@ -904,7 +913,8 @@ class _$HouseholdOverviewSetAsHeadEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)
+            String? taskSortOrder,
+            String? searchQuery)
         reload,
   }) {
     return setAsHead(
@@ -940,7 +950,8 @@ class _$HouseholdOverviewSetAsHeadEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
   }) {
     return setAsHead?.call(
@@ -976,7 +987,8 @@ class _$HouseholdOverviewSetAsHeadEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
     required TResult orElse(),
   }) {
@@ -1156,7 +1168,8 @@ class _$HouseholdOverviewSelectIndividualEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)
+            String? taskSortOrder,
+            String? searchQuery)
         reload,
   }) {
     return selectedIndividual(individualModel);
@@ -1191,7 +1204,8 @@ class _$HouseholdOverviewSelectIndividualEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
   }) {
     return selectedIndividual?.call(individualModel);
@@ -1226,7 +1240,8 @@ class _$HouseholdOverviewSelectIndividualEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
     required TResult orElse(),
   }) {
@@ -1312,7 +1327,8 @@ abstract class _$$HouseholdOverviewReloadEventImplCopyWith<$Res> {
       HouseholdMemberWrapper? householdMemberWrapper,
       int? limit,
       int? offset,
-      String? taskSortOrder});
+      String? taskSortOrder,
+      String? searchQuery});
 
   $HouseholdMemberWrapperCopyWith<$Res>? get householdMemberWrapper;
 }
@@ -1336,6 +1352,7 @@ class __$$HouseholdOverviewReloadEventImplCopyWithImpl<$Res>
     Object? limit = freezed,
     Object? offset = freezed,
     Object? taskSortOrder = freezed,
+    Object? searchQuery = freezed,
   }) {
     return _then(_$HouseholdOverviewReloadEventImpl(
       projectId: null == projectId
@@ -1361,6 +1378,10 @@ class __$$HouseholdOverviewReloadEventImplCopyWithImpl<$Res>
       taskSortOrder: freezed == taskSortOrder
           ? _value.taskSortOrder
           : taskSortOrder // ignore: cast_nullable_to_non_nullable
+              as String?,
+      searchQuery: freezed == searchQuery
+          ? _value.searchQuery
+          : searchQuery // ignore: cast_nullable_to_non_nullable
               as String?,
     ));
   }
@@ -1389,7 +1410,8 @@ class _$HouseholdOverviewReloadEventImpl
       this.householdMemberWrapper,
       this.limit,
       this.offset,
-      this.taskSortOrder});
+      this.taskSortOrder,
+      this.searchQuery});
 
   @override
   final String projectId;
@@ -1403,10 +1425,12 @@ class _$HouseholdOverviewReloadEventImpl
   final int? offset;
   @override
   final String? taskSortOrder;
+  @override
+  final String? searchQuery;
 
   @override
   String toString() {
-    return 'HouseholdOverviewEvent.reload(projectId: $projectId, projectBeneficiaryType: $projectBeneficiaryType, householdMemberWrapper: $householdMemberWrapper, limit: $limit, offset: $offset, taskSortOrder: $taskSortOrder)';
+    return 'HouseholdOverviewEvent.reload(projectId: $projectId, projectBeneficiaryType: $projectBeneficiaryType, householdMemberWrapper: $householdMemberWrapper, limit: $limit, offset: $offset, taskSortOrder: $taskSortOrder, searchQuery: $searchQuery)';
   }
 
   @override
@@ -1423,7 +1447,9 @@ class _$HouseholdOverviewReloadEventImpl
             (identical(other.limit, limit) || other.limit == limit) &&
             (identical(other.offset, offset) || other.offset == offset) &&
             (identical(other.taskSortOrder, taskSortOrder) ||
-                other.taskSortOrder == taskSortOrder));
+                other.taskSortOrder == taskSortOrder) &&
+            (identical(other.searchQuery, searchQuery) ||
+                other.searchQuery == searchQuery));
   }
 
   @override
@@ -1434,7 +1460,8 @@ class _$HouseholdOverviewReloadEventImpl
       householdMemberWrapper,
       limit,
       offset,
-      taskSortOrder);
+      taskSortOrder,
+      searchQuery);
 
   @JsonKey(ignore: true)
   @override
@@ -1474,11 +1501,12 @@ class _$HouseholdOverviewReloadEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)
+            String? taskSortOrder,
+            String? searchQuery)
         reload,
   }) {
     return reload(projectId, projectBeneficiaryType, householdMemberWrapper,
-        limit, offset, taskSortOrder);
+        limit, offset, taskSortOrder, searchQuery);
   }
 
   @override
@@ -1510,11 +1538,12 @@ class _$HouseholdOverviewReloadEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
   }) {
     return reload?.call(projectId, projectBeneficiaryType,
-        householdMemberWrapper, limit, offset, taskSortOrder);
+        householdMemberWrapper, limit, offset, taskSortOrder, searchQuery);
   }
 
   @override
@@ -1546,13 +1575,14 @@ class _$HouseholdOverviewReloadEventImpl
             HouseholdMemberWrapper? householdMemberWrapper,
             int? limit,
             int? offset,
-            String? taskSortOrder)?
+            String? taskSortOrder,
+            String? searchQuery)?
         reload,
     required TResult orElse(),
   }) {
     if (reload != null) {
       return reload(projectId, projectBeneficiaryType, householdMemberWrapper,
-          limit, offset, taskSortOrder);
+          limit, offset, taskSortOrder, searchQuery);
     }
     return orElse();
   }
@@ -1614,7 +1644,8 @@ abstract class HouseholdOverviewReloadEvent implements HouseholdOverviewEvent {
       final HouseholdMemberWrapper? householdMemberWrapper,
       final int? limit,
       final int? offset,
-      final String? taskSortOrder}) = _$HouseholdOverviewReloadEventImpl;
+      final String? taskSortOrder,
+      final String? searchQuery}) = _$HouseholdOverviewReloadEventImpl;
 
   String get projectId;
   BeneficiaryType get projectBeneficiaryType;
@@ -1622,6 +1653,7 @@ abstract class HouseholdOverviewReloadEvent implements HouseholdOverviewEvent {
   int? get limit;
   int? get offset;
   String? get taskSortOrder;
+  String? get searchQuery;
   @JsonKey(ignore: true)
   _$$HouseholdOverviewReloadEventImplCopyWith<
           _$HouseholdOverviewReloadEventImpl>

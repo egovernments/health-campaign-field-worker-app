@@ -110,7 +110,7 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
           ),
           OrderingTerm(
             expression: sql.task.clientCreatedTime, // Latest first
-            mode: OrderingMode.desc,
+            mode: OrderingMode.asc,
           ),
         ]);
       }
@@ -279,33 +279,37 @@ class TaskLocalRepository extends LocalRepository<TaskModel, TaskSearchModel> {
     }
 
     var finalResults = query.sortBy != null
-        ? removeDuplicateTasksByBeneficiary(tasksMap.values.toList())
+        ? removeDuplicateTasksByBeneficiary(
+            tasksMap.values.toList(),
+          )
         : tasksMap.values.toList();
 
     return finalResults;
   }
 
-  List<TaskModel> removeDuplicateTasksByBeneficiary(List<TaskModel> tasks) {
+  List<TaskModel> removeDuplicateTasksByBeneficiary(
+    List<TaskModel> tasks,
+  ) {
     final Map<String, TaskModel> uniqueTasks = {};
 
+    // Iterate through the tasks list, which should already be sorted
     for (final task in tasks) {
       final beneficiaryId = task.projectBeneficiaryClientReferenceId;
 
       if (beneficiaryId != null) {
-        // Check if a task already exists for the same beneficiaryId
-        if (!uniqueTasks.containsKey(beneficiaryId) ||
+        // Check if the task is newer than the existing one for this beneficiary
+        final existingTask = uniqueTasks[beneficiaryId];
+        if (existingTask == null ||
             (task.clientAuditDetails != null &&
-                uniqueTasks[beneficiaryId]!.clientAuditDetails != null &&
+                existingTask.clientAuditDetails != null &&
                 task.clientAuditDetails!.createdTime >
-                    uniqueTasks[beneficiaryId]!
-                        .clientAuditDetails!
-                        .createdTime)) {
-          // Store the latest task based on `clientAuditDetails.createdTime`
-          uniqueTasks[beneficiaryId] = task;
+                    existingTask.clientAuditDetails!.createdTime)) {
+          uniqueTasks[beneficiaryId] = task; // Update with the latest task
         }
       }
     }
 
+    // Return only the latest tasks for each beneficiary
     return uniqueTasks.values.toList();
   }
 

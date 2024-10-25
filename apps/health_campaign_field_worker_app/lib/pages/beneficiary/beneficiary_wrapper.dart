@@ -10,6 +10,7 @@ import '../../blocs/search_households/search_households.dart';
 import '../../blocs/service/service.dart';
 import '../../blocs/service_definition/service_definition.dart';
 import '../../blocs/side_effects/side_effects.dart';
+import '../../data/repositories/local/students_search.dart';
 import '../../models/data_model.dart';
 import '../../utils/extensions/extensions.dart';
 
@@ -88,6 +89,7 @@ class BeneficiaryWrapperPage extends StatelessWidget {
             taskDataRepository: task,
             sideEffectDataRepository: sideEffect,
             referralDataRepository: referral,
+            sortRepository: context.read<StudentsSearchRepository>(),
           ),
         ),
         BlocProvider(

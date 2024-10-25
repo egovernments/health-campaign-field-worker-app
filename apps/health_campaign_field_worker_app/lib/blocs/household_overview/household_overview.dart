@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../data/repositories/local/students_search.dart';
 import '../../models/data_model.dart';
 import '../../utils/typedefs.dart';
 import '../search_households/search_households.dart';
@@ -22,6 +23,7 @@ class HouseholdOverviewBloc
   final TaskDataRepository taskDataRepository;
   final SideEffectDataRepository sideEffectDataRepository;
   final ReferralDataRepository referralDataRepository;
+  final StudentsSearchRepository sortRepository;
 
   HouseholdOverviewBloc(
     super.initialState, {
@@ -32,6 +34,7 @@ class HouseholdOverviewBloc
     required this.taskDataRepository,
     required this.sideEffectDataRepository,
     required this.referralDataRepository,
+    required this.sortRepository,
   }) {
     on(_handleDeleteHousehold);
     on(_handleDeleteIndividual);
@@ -56,82 +59,8 @@ class HouseholdOverviewBloc
   ) async {
     // Set the loading state to indicate that data is being loaded.
     emit(state.copyWith(loading: true));
-    if (event.taskSortOrder != null) {
-      // Search for tasks associated with project beneficiaries.
-      final tasks = await taskDataRepository.search(TaskSearchModel(
-        projectBeneficiaryClientReferenceId: event
-            .householdMemberWrapper!.projectBeneficiaries
-            .map((e) => e.clientReferenceId)
-            .toList(),
-        projectId: event.projectId,
-        sortBy: event.taskSortOrder,
-        offset: event.offset,
-        limit: event.limit,
-      ));
 
-      if (tasks.isEmpty) {
-        emit(state.copyWith(
-          loading: false,
-          householdMemberWrapper: event.householdMemberWrapper!,
-        ));
-      } else {
-        final projectBeneficiariesIds =
-            tasks.map((e) => e.projectBeneficiaryClientReferenceId!).toList();
-
-        // Search for project beneficiaries based on specified criteria.
-        final projectBeneficiaries = await projectBeneficiaryRepository.search(
-          ProjectBeneficiarySearchModel(
-            clientReferenceId: projectBeneficiariesIds,
-            projectId: event.projectId,
-          ),
-        );
-
-        final individualIds = projectBeneficiaries
-            .map((e) => e.beneficiaryClientReferenceId!)
-            .toList();
-
-        // Search for individuals based on their client reference IDs.
-        final individuals = await individualRepository.search(
-          IndividualSearchModel(clientReferenceId: individualIds),
-        );
-
-        // Search for adverse events associated with tasks.
-        final sideEffects =
-            await sideEffectDataRepository.search(SideEffectSearchModel(
-          taskClientReferenceId:
-              tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
-        ));
-
-        final referrals =
-            await referralDataRepository.search(ReferralSearchModel(
-          projectBeneficiaryClientReferenceId: projectBeneficiaries
-              .map((e) => e.clientReferenceId)
-              .whereNotNull()
-              .toList(),
-        ));
-
-        emit(state.copyWith(
-          loading: false,
-          householdMemberWrapper: state.householdMemberWrapper.copyWith(
-            members: [
-              ...individuals,
-            ],
-            projectBeneficiaries: [
-              ...projectBeneficiaries,
-            ],
-            tasks: [
-              ...tasks,
-            ],
-            sideEffects: [
-              ...sideEffects,
-            ],
-            referrals: [
-              ...referrals,
-            ],
-          ),
-        ));
-      }
-    } else {
+    if (event.searchQuery == null && event.taskSortOrder == null) {
       // Retrieve household members based on certain criteria.
       final List<HouseholdMemberModel> members;
       members = event.limit != null
@@ -221,7 +150,7 @@ class HouseholdOverviewBloc
       }
 
       // Search for tasks associated with project beneficiaries.
-      final tasks = await taskDataRepository.search(TaskSearchModel(
+      var tasks = await taskDataRepository.search(TaskSearchModel(
         projectBeneficiaryClientReferenceId:
             projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
       ));
@@ -287,6 +216,87 @@ class HouseholdOverviewBloc
           loading: false,
         ),
       );
+    } else {
+      Map<String, dynamic> results = {};
+      if (event.taskSortOrder != null) {
+        results = await sortRepository.studentsSearchQuery(
+          sortBy: event.taskSortOrder,
+          houseId: state.householdMemberWrapper.household.clientReferenceId,
+          limit: event.limit!,
+          offset: event.offset!,
+        );
+      } else if (event.searchQuery != null && event.searchQuery!.isNotEmpty) {
+        results = await sortRepository.studentsSearchQuery(
+          nameQuery: event.searchQuery,
+          houseId: state.householdMemberWrapper.household.clientReferenceId,
+          limit: event.limit!,
+          offset: event.offset!,
+        );
+      } else if (event.searchQuery != null &&
+          event.searchQuery!.isEmpty &&
+          event.taskSortOrder != null) {
+        results = await sortRepository.studentsSearchQuery(
+          sortBy: event.taskSortOrder,
+          nameQuery: event.searchQuery,
+          houseId: state.householdMemberWrapper.household.clientReferenceId,
+          limit: event.limit!,
+          offset: event.offset!,
+        );
+      }
+
+      List<IndividualModel> individuals = results['individuals'];
+      List<TaskModel> tasks = results['tasks'];
+      List<ProjectBeneficiaryModel> projectBeneficiaries =
+          results['projectBeneficiaries'];
+
+      // Search for adverse events associated with tasks.
+      final sideEffects =
+          await sideEffectDataRepository.search(SideEffectSearchModel(
+        taskClientReferenceId:
+            tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
+      ));
+
+      final referrals = await referralDataRepository.search(ReferralSearchModel(
+        projectBeneficiaryClientReferenceId: projectBeneficiaries
+            .map((e) => e.clientReferenceId)
+            .whereNotNull()
+            .toList(),
+      ));
+
+      emit(state.copyWith(
+        loading: false,
+        householdMemberWrapper: state.householdMemberWrapper.copyWith(
+          members: event.offset == 0
+              ? individuals
+              : [
+                  ...state.householdMemberWrapper.members ?? [],
+                  ...individuals,
+                ],
+          projectBeneficiaries: event.offset == 0
+              ? projectBeneficiaries
+              : [
+                  ...state.householdMemberWrapper.projectBeneficiaries ?? [],
+                  ...projectBeneficiaries,
+                ],
+          tasks: event.offset == 0
+              ? tasks
+              : [...?state.householdMemberWrapper.tasks, ...tasks],
+          sideEffects: event.offset == 0
+              ? sideEffects
+              : [
+                  ...?state.householdMemberWrapper.sideEffects,
+                  ...sideEffects,
+                ],
+          referrals: event.offset == 0
+              ? referrals
+              : [
+                  ...?state.householdMemberWrapper.referrals,
+                  ...referrals,
+                ],
+        ),
+        limit: event.limit,
+        offset: event.offset! + event.limit!,
+      ));
     }
   }
 
@@ -579,6 +589,7 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     int? limit,
     int? offset,
     String? taskSortOrder,
+    String? searchQuery,
   }) = HouseholdOverviewReloadEvent;
 }
 

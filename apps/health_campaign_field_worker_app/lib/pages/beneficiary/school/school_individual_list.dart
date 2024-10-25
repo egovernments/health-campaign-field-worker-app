@@ -42,14 +42,9 @@ class _SchoolIndividualListPageState
 
   @override
   void initState() {
-    final bloc = context.read<HouseholdOverviewBloc>();
-    bloc.add(
-      HouseholdOverviewReloadEvent(
-        projectId: context.projectId,
-        projectBeneficiaryType: context.beneficiaryType,
-        offset: offset,
-        limit: limit,
-      ),
+    callReloadEvent(
+      offset: offset,
+      limit: limit,
     );
     blocWrapper = context.read<SearchBlocWrapper>();
 
@@ -68,7 +63,6 @@ class _SchoolIndividualListPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final beneficiaryType = context.beneficiaryType;
-    final bloc = context.read<HouseholdOverviewBloc>();
 
     return PopScope(
       onPopInvoked: (didPop) async {
@@ -85,38 +79,15 @@ class _SchoolIndividualListPageState
                 ? const Center(child: CircularProgressIndicator())
                 : NotificationListener(
                     onNotification: (scrollNotification) {
-                      final bloc = context.read<HouseholdOverviewBloc>();
                       if (scrollNotification is ScrollUpdateNotification) {
                         final metrics = scrollNotification.metrics;
-                        if (metrics.atEdge &&
-                            searchController.text.isEmpty &&
-                            metrics.pixels != 0) {
+                        if (metrics.atEdge && metrics.pixels != 0) {
                           setState(() {
                             offset = (offset + limit);
                           });
-                          bloc.add(
-                            HouseholdOverviewReloadEvent(
-                              projectId: context.projectId,
-                              projectBeneficiaryType: beneficiaryType,
-                              offset: offset,
-                              limit: limit,
-                            ),
-                          );
-                        } else if (metrics.atEdge &&
-                            searchController.text.isNotEmpty &&
-                            metrics.pixels != 0) {
-                          setState(() {
-                            offset = (offset + limit);
-                          });
-                          blocWrapper.searchByHeadBloc.add(
-                            SearchHouseholdsEvent.searchIndividual(
-                              searchText: searchController.text,
-                              householdMembers: [
-                                state.householdMemberWrapper,
-                              ],
-                              offset: offset,
-                              limit: limit,
-                            ),
+                          callReloadEvent(
+                            offset: offset,
+                            limit: limit,
                           );
                         }
                       }
@@ -174,13 +145,9 @@ class _SchoolIndividualListPageState
                                 ],
                               ),
                             );
-                            bloc.add(
-                              HouseholdOverviewReloadEvent(
-                                projectId: projectId,
-                                projectBeneficiaryType: beneficiaryType,
-                                offset: offset,
-                                limit: limit,
-                              ),
+                            callReloadEvent(
+                              offset: 0,
+                              limit: 10,
                             );
                           },
                           label: localizations
@@ -232,21 +199,9 @@ class _SchoolIndividualListPageState
                                                       treatedFirst;
                                                 });
                                                 if (mounted) {
-                                                  bloc.add(
-                                                    HouseholdOverviewReloadEvent(
-                                                      householdMemberWrapper: bloc
-                                                          .state
-                                                          .householdMemberWrapper,
-                                                      projectId: context
-                                                          .projectId
-                                                          .toString(),
-                                                      projectBeneficiaryType:
-                                                          beneficiaryType,
-                                                      offset: 0,
-                                                      limit: 10,
-                                                      taskSortOrder:
-                                                          treatedFirst,
-                                                    ),
+                                                  callReloadEvent(
+                                                    limit: 10,
+                                                    offset: 0,
                                                   );
                                                 }
                                               }
@@ -267,14 +222,9 @@ class _SchoolIndividualListPageState
                                                         selectedSortOrder =
                                                             null;
                                                       });
-                                                      bloc.add(
-                                                        HouseholdOverviewReloadEvent(
-                                                          projectId: context
-                                                              .projectId
-                                                              .toString(),
-                                                          projectBeneficiaryType:
-                                                              beneficiaryType,
-                                                        ),
+                                                      callReloadEvent(
+                                                        offset: 0,
+                                                        limit: 10,
                                                       );
                                                     }
                                                   },
@@ -299,25 +249,15 @@ class _SchoolIndividualListPageState
                                 textCapitalization: TextCapitalization.words,
                                 onChanged: (value) {
                                   if (value.length >= 3) {
-                                    blocWrapper.searchByHeadBloc.add(
-                                      SearchHouseholdsEvent.searchIndividual(
-                                        searchText: value,
-                                        householdMembers: [
-                                          state.householdMemberWrapper,
-                                        ],
-                                        offset: offset,
-                                        limit: limit,
-                                      ),
+                                    callReloadEvent(
+                                      offset: 0,
+                                      limit: 10,
                                     );
                                   } else if (searchController
                                       .value.text.isEmpty) {
-                                    blocWrapper.searchByHeadBloc.add(
-                                      SearchHouseholdsEvent
-                                          .clearIndividualNameSearch(
-                                        householdMembers: [
-                                          state.householdMemberWrapper,
-                                        ],
-                                      ),
+                                    callReloadEvent(
+                                      offset: offset,
+                                      limit: limit,
                                     );
                                   }
                                 },
@@ -328,8 +268,8 @@ class _SchoolIndividualListPageState
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisSize: MainAxisSize.max,
-                                    children: searchController.text.isEmpty &&
-                                            searchController.text.length < 3
+                                    children: state.householdMemberWrapper
+                                            .members.isNotEmpty
                                         ? state.householdMemberWrapper.members
                                             .map(
                                             (e) {
@@ -560,12 +500,9 @@ class _SchoolIndividualListPageState
                                                       ),
                                                     );
 
-                                                    bloc.add(
-                                                      HouseholdOverviewReloadEvent(
-                                                        projectId: projectId,
-                                                        projectBeneficiaryType:
-                                                            beneficiaryType,
-                                                      ),
+                                                    callReloadEvent(
+                                                      limit: 10,
+                                                      offset: 0,
                                                     );
                                                   },
                                                   setAsHeadAction: () {
@@ -735,10 +672,19 @@ class _SchoolIndividualListPageState
                                               );
                                             },
                                           ).toList()
-                                        : renderSearchResults(
-                                            beneficiaryType,
-                                            projectState,
-                                          ),
+                                        : [
+                                            DigitInfoCard(
+                                              description:
+                                                  localizations.translate(
+                                                i18.searchBeneficiary
+                                                    .beneficiaryInfoDescription,
+                                              ),
+                                              title: localizations.translate(
+                                                i18.searchBeneficiary
+                                                    .beneficiaryInfoTitle,
+                                              ),
+                                            ),
+                                          ],
                                   );
                                 },
                               ),
@@ -754,265 +700,25 @@ class _SchoolIndividualListPageState
     );
   }
 
-  renderSearchResults(
-    BeneficiaryType beneficiaryType,
-    ProjectState projectState,
-  ) {
-    return searchHouseholdsState.householdMembers.lastOrNull!.members.map((e) {
-      final projectBeneficiary = beneficiaryType != BeneficiaryType.individual
-          ? [
-              searchHouseholdsState
-                  .householdMembers.lastOrNull!.projectBeneficiaries.first,
-            ]
-          : searchHouseholdsState
-              .householdMembers.lastOrNull!.projectBeneficiaries
-              .where(
-                (element) =>
-                    element.beneficiaryClientReferenceId == e.clientReferenceId,
-              )
-              .toList();
+  void callReloadEvent({
+    required int offset,
+    required int limit,
+  }) {
+    if (mounted) {
+      final bloc = context.read<HouseholdOverviewBloc>();
 
-      final taskdata = projectBeneficiary.isNotEmpty
-          ? searchHouseholdsState.householdMembers.lastOrNull!.tasks
-              ?.where((element) =>
-                  element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary.first.clientReferenceId)
-              .toList()
-          : null;
-      final referralData = projectBeneficiary.isNotEmpty
-          ? searchHouseholdsState.householdMembers.lastOrNull!.referrals
-              ?.where((element) =>
-                  element.projectBeneficiaryClientReferenceId ==
-                  projectBeneficiary.first.clientReferenceId)
-              .toList()
-          : null;
-      final sideEffectData = taskdata != null && taskdata.isNotEmpty
-          ? searchHouseholdsState.householdMembers.lastOrNull!.sideEffects
-              ?.where((element) =>
-                  element.taskClientReferenceId ==
-                  taskdata.last.clientReferenceId)
-              .toList()
-          : null;
-      // final ageInYears =
-      //     DigitDateUtils.calculateAge(
-      //   DigitDateUtils
-      //           .getFormattedDateToDateTime(
-      //         e.dateOfBirth!,
-      //       ) ??
-      //       DateTime.now(),
-      // ).years;
-      // final ageInMonths =
-      //     DigitDateUtils.calculateAge(
-      //   DigitDateUtils
-      //           .getFormattedDateToDateTime(
-      //         e.dateOfBirth!,
-      //       ) ??
-      //       DateTime.now(),
-      // ).months;
-      final currentCycle = projectState.projectType?.cycles?.firstWhereOrNull(
-        (e) =>
-            (e.startDate!) < DateTime.now().millisecondsSinceEpoch &&
-            (e.endDate!) > DateTime.now().millisecondsSinceEpoch,
-        // Return null when no matching cycle is found
-      );
-
-      final isBeneficiaryRefused = checkIfBeneficiaryRefused(
-        taskdata,
-      );
-
-      final isBeneficiaryIneligible = checkIfBeneficiaryIneligible(
-        taskdata,
-      );
-
-      final isBeneficiaryReferred = checkIfBeneficiaryReferred(
-        taskdata,
-      );
-      final isHead = searchHouseholdsState
-              .householdMembers.lastOrNull!.headOfHousehold.clientReferenceId ==
-          e.clientReferenceId;
-
-      return DigitCard(
-        child: MemberCard(
-          backgroundColorType: DigitTheme.instance.colorScheme.onSecondary,
-          individual: e,
-          isHead: isHead,
-          name: '${e.name?.givenName ?? ' - '} ${e.name?.familyName ?? ' - '}',
-          years: (e.dateOfBirth == null
-                  ? null
-                  : DigitDateUtils.calculateAge(
-                      DigitDateUtils.getFormattedDateToDateTime(
-                            e.dateOfBirth!,
-                          ) ??
-                          DateTime.now(),
-                    ).years) ??
-              0,
-          months: (e.dateOfBirth == null
-                  ? null
-                  : DigitDateUtils.calculateAge(
-                      DigitDateUtils.getFormattedDateToDateTime(
-                            e.dateOfBirth!,
-                          ) ??
-                          DateTime.now(),
-                    ).months) ??
-              0,
-          gender: e.gender?.name,
-          localizations: localizations,
-          isDelivered: false,
-          editMemberAction: () async {
-            final scannerbloc = context.read<ScannerBloc>();
-
-            scannerbloc.add(
-              const ScannerEvent.handleScanner([], []),
-            );
-
-            final bloc = context.read<HouseholdOverviewBloc>();
-
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop();
-
-            final address = e.address;
-            if (address == null || address.isEmpty) {
-              return;
-            }
-
-            final projectId = context.projectId;
-
-            await context.router.root.push(
-              BeneficiaryRegistrationWrapperRoute(
-                initialState: BeneficiaryRegistrationEditIndividualState(
-                  individualModel: e,
-                  householdModel: searchHouseholdsState
-                      .householdMembers.lastOrNull!.household,
-                  addressModel: address.first,
-                  projectBeneficiaryModel: searchHouseholdsState
-                      .householdMembers.lastOrNull!.projectBeneficiaries
-                      .firstWhereOrNull(
-                    (element) =>
-                        element.beneficiaryClientReferenceId ==
-                        (context.beneficiaryType == BeneficiaryType.individual
-                            ? e.clientReferenceId
-                            : searchHouseholdsState.householdMembers.lastOrNull!
-                                .household.clientReferenceId),
-                  ),
-                ),
-                children: [
-                  SchoolIndividualDetailsRoute(
-                    isHeadOfHousehold: isHead,
-                    headName: searchHouseholdsState.householdMembers.lastOrNull!
-                        .headOfHousehold.name!.givenName!,
-                  ),
-                ],
-              ),
-            );
-
-            bloc.add(
-              HouseholdOverviewReloadEvent(
-                projectId: projectId,
-                projectBeneficiaryType: beneficiaryType,
-              ),
-            );
-          },
-          setAsHeadAction: () {
-            context.read<HouseholdOverviewBloc>().add(
-                  HouseholdOverviewSetAsHeadEvent(
-                    individualModel: e,
-                    projectId: context.projectId,
-                    householdModel: searchHouseholdsState
-                        .householdMembers.lastOrNull!.household,
-                    projectBeneficiaryType: beneficiaryType,
-                  ),
-                );
-
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop();
-          },
-          deleteMemberAction: () {
-            DigitDialog.show(
-              context,
-              options: DigitDialogOptions(
-                titlePadding: const EdgeInsets.fromLTRB(
-                  kPadding * 2,
-                  kPadding * 2,
-                  kPadding * 2,
-                  kPadding / 2,
-                ),
-                titleText: localizations.translate(
-                  i18.householdOverView.householdOverViewActionCardTitle,
-                ),
-                primaryAction: DigitDialogActions(
-                  label: localizations.translate(i18
-                      .householdOverView.householdOverViewPrimaryActionLabel),
-                  action: (ctx) {
-                    Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    )
-                      ..pop()
-                      ..pop();
-                    context.read<HouseholdOverviewBloc>().add(
-                          HouseholdOverviewEvent.selectedIndividual(
-                            individualModel: e,
-                          ),
-                        );
-
-                    context.router.popUntilRouteWithName(
-                      SearchBeneficiaryRoute.name,
-                    );
-                    context.router.push(
-                      ReasonForDeletionRoute(
-                        isHousholdDelete: false,
-                      ),
-                    );
-                  },
-                ),
-                secondaryAction: DigitDialogActions(
-                  label: localizations.translate(i18
-                      .householdOverView.householdOverViewSecondaryActionLabel),
-                  action: (context) {
-                    Navigator.of(
-                      context,
-                      rootNavigator: true,
-                    ).pop();
-                  },
-                ),
-              ),
-            );
-          },
-          isNotEligible: projectState.projectType?.cycles != null
-              ? !checkEligibilityForAgeAndSideEffect(
-                  projectState.projectType,
-                  (taskdata ?? []).isNotEmpty ? taskdata?.last : null,
-                  sideEffectData,
-                  e,
-                )
-              : false,
-          sideEffects: sideEffectData,
-          isAdverseEffect: !recordedSideEffect(
-                context.selectedCycle,
-                (taskdata != null && taskdata!.isNotEmpty)
-                    ? taskdata!.lastOrNull
-                    : null,
-                sideEffectData,
-              ) &&
-              ((taskdata != null && taskdata!.isNotEmpty)
-                  ? isCurrentTimeBeforeEndTime(
-                      taskdata!.last!.clientAuditDetails!.createdTime!,
-                      int.parse(
-                        (context.selectedProjectType!.cycles != null &&
-                                context.selectedProjectType!.cycles!.isNotEmpty)
-                            ? (context.selectedProjectType!.cycles!.last
-                                    .mandatoryWaitSinceLastCycleInDays ??
-                                "24")
-                            : "24".toString(),
-                      ),
-                    )
-                  : false),
+      bloc.add(
+        HouseholdOverviewReloadEvent(
+          householdMemberWrapper: bloc.state.householdMemberWrapper,
+          projectId: context.projectId.toString(),
+          projectBeneficiaryType: context.beneficiaryType,
+          offset: offset,
+          limit: limit,
+          searchQuery:
+              searchController.text.isNotEmpty ? searchController.text : null,
+          taskSortOrder: selectedSortOrder,
         ),
       );
-    }).toList();
+    }
   }
 }
