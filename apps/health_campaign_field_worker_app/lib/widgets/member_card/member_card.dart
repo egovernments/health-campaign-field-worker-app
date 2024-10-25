@@ -1,6 +1,8 @@
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:health_campaign_field_worker_app/blocs/search_households/search_bloc_common_wrapper.dart';
+import 'package:health_campaign_field_worker_app/blocs/search_households/search_households.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -400,6 +402,7 @@ class MemberCard extends StatelessWidget {
                                               context,
                                               rootNavigator: true,
                                             ).pop();
+
                                             context
                                                 .read<DeliverInterventionBloc>()
                                                 .add(
@@ -460,8 +463,11 @@ class MemberCard extends StatelessWidget {
                                                     context.boundary,
                                                   ),
                                                 );
+                                            
                                             Future.delayed(
-                                              const Duration(milliseconds: 500),
+                                              const Duration(
+                                                milliseconds: 1000,
+                                              ),
                                               () {
                                                 reloadState.add(
                                                   HouseholdOverviewReloadEvent(
@@ -474,16 +480,17 @@ class MemberCard extends StatelessWidget {
                                               },
                                             ).then(
                                               (value) {
+                                               
                                                 !isHouseHoldSchool(reloadState
                                                         .state
                                                         .householdMemberWrapper)
-                                                    ? context.router.popAndPush(
+                                                    ? context.router.push(
                                                         HouseholdAcknowledgementRoute(
                                                           enableViewHousehold:
                                                               true,
                                                         ),
                                                       )
-                                                    : context.router.popAndPush(
+                                                    : context.router.push(
                                                         SchoolAcknowledgementRoute(
                                                           enableViewSchool:
                                                               true,
