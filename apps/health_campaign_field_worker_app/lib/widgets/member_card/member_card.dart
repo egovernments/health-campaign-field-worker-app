@@ -463,7 +463,7 @@ class MemberCard extends StatelessWidget {
                                                     context.boundary,
                                                   ),
                                                 );
-                                            
+
                                             Future.delayed(
                                               const Duration(
                                                 milliseconds: 1000,
@@ -480,7 +480,6 @@ class MemberCard extends StatelessWidget {
                                               },
                                             ).then(
                                               (value) {
-                                               
                                                 !isHouseHoldSchool(reloadState
                                                         .state
                                                         .householdMemberWrapper)
