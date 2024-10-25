@@ -6,8 +6,6 @@ import '../../../router/app_router.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../../../widgets/localized.dart';
 import '../../blocs/search_households/search_bloc_common_wrapper.dart';
-import '../../blocs/search_households/search_households.dart';
-import '../../blocs/search_households/search_by_head.dart';
 
 class BeneficiaryAcknowledgementPage extends LocalizedStatefulWidget {
   final bool? enableViewHousehold;
@@ -30,6 +28,8 @@ class _BeneficiaryAcknowledgementPageState
     return Scaffold(
       body: DigitAcknowledgement.success(
         action: () {
+          final bloc = context.read<SearchBlocWrapper>();
+          bloc.clearEvent();
           context.router.pop();
         },
         secondaryAction: () {
