@@ -570,6 +570,7 @@ class PerformSyncDown {
                     .whereNotNull()
                     .toList(),
               ),
+              limit: bandwidthModel.batchSize,
             );
 
             for (var element in operationGroupedEntity.value) {

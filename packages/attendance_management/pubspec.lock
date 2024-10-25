@@ -315,18 +315,16 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "9cca4d9a546037080afe02b6ade82fdf01574e11f5656ad12120fd6966578616"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1+1"
+      path: "../digit_components"
+      relative: true
+    source: path
+    version: "1.0.2"
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "0b81e96636496b56b4f9c5d918690a17d8985d6b131e0ab54968eb5471ee4f54"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_data_model"
+      relative: true
+    source: path
     version: "1.0.3+1"
   dio:
     dependency: "direct main"
@@ -1261,5 +1259,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <3.9.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"

@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -21,10 +24,12 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:health_campaign_field_worker_app/data/local_store/no_sql/schema/service_registry.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -189,7 +194,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                   state.maybeWhen(
                     orElse: () => null,
                     syncInProgress: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
+                      await localSecureStore.setManualSyncTrigger(false);
                       if (context.mounted) {
                         DigitSyncDialog.show(
                           context,
@@ -323,6 +328,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.fileComplaint:
+          homeShowcaseData.distributorFileComplaint.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.fileComplaint,
+          onPressed: () =>
+              context.router.push(const ComplaintsInboxWrapperRoute()),
+        ),
+      ),
+
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
@@ -384,24 +399,16 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
-          customIcon: myChecklistSvg,
+          customIcon: mySurveyFormSvg,
           icon: Icons.checklist,
-          label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          label: i18.home.mySurveyForm,
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
-        ),
-      ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -502,7 +509,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -523,7 +530,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
-      i18.home.myCheckList,
+      i18.home.mySurveyForm,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
@@ -565,6 +572,9 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 // INFO : Need to add local repo of package Here
+                context.read<
+                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
+
                 context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context.read<
@@ -642,6 +652,16 @@ void setPackagesSingleton(BuildContext context) {
       ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
+
         RegistrationDeliverySingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
@@ -691,6 +711,22 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+        );
+
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          isHealthFacilityWorker: context.loggedInUserRoles.where((role) => role.code == RolesType.healthFacilityWorker.toValue()).toList().isNotEmpty,
+          roles: context.read<AuthBloc>().state.maybeMap(
+            orElse: () => const Offstage(),
+            authenticated: (res) {
+              return res.userModel.roles
+                  .map((e) => e.code.snakeCase.toUpperCase())
+                  .toList();
+            }),
         );
 
         ReferralReconSingleton().setInitialData(

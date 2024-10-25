@@ -359,6 +359,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.18.0"
+  complaints:
+    dependency: "direct main"
+    description:
+      path: "../../packages/complaints"
+      relative: true
+    source: path
+    version: "0.0.1-dev.1"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -426,9 +433,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: e3d8ac43f70568b4a17c200cae5cde285050ef23
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -492,14 +501,13 @@ packages:
       path: "../../packages/digit_components"
       relative: true
     source: path
-    version: "1.0.1+1"
+    version: "1.0.2"
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "0b81e96636496b56b4f9c5d918690a17d8985d6b131e0ab54968eb5471ee4f54"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_data_model"
+      relative: true
+    source: path
     version: "1.0.3+1"
   digit_dss:
     dependency: "direct main"
@@ -1122,7 +1130,7 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
-    version: "1.0.3+2"
+    version: "1.0.3+4"
   io:
     dependency: transitive
     description:
@@ -1774,6 +1782,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  survey_form:
+    dependency: "direct main"
+    description:
+      path: "../../packages/survey_form"
+      relative: true
+    source: path
+    version: "0.0.1-dev.1"
   sync_http:
     dependency: transitive
     description:
