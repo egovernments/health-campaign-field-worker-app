@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:digit_data_model/post_gen.dart';
 import 'package:mason/mason.dart';
+
 import 'pre_gen.dart';
 
 class MasonEntityGenerator {
@@ -18,14 +20,29 @@ class MasonEntityGenerator {
     final customAttributes = config['customAttributes'];
     final persistBoundaryParameters = config['persistBoundaryParameters'];
 
-    // Directory.current = '../packages/digit_data_model/mason_templates';
-    Directory.current = Directory('/home/admin1/.pub-cache/hosted/pub.dev/digit_data_model-1.0.4-dev.8/mason_templates');
+    final homeDirectory = Platform.isWindows
+        ? Platform.environment['USERPROFILE']
+        : Platform.environment['HOME'];
 
-    final file = File('../lib/data/local_store/sql_store/tables/${name.toString().snakeCase}.dart');
+    // Construct the path to the .pub-cache directory
+    final pubCachePath = Directory(
+      '$homeDirectory/.pub-cache/hosted/pub.dev/digit_data_model-1.0.4-dev.7/mason_templates',
+    );
+
+    // Set the current directory to the constructed path
+    Directory.current = pubCachePath;
+
+    print('Current directory set to: ${Directory.current.path}');
+
+    var appDir = Directory.current.path;
+    print('appDir: $appDir');
+
+    final file = File(
+        '../lib/data/local_store/sql_store/tables/${name.toString().snakeCase}.dart');
 
     if (!await file.exists()) {
       // Load the Mason brick for entity generation
-      final brick = Brick.path("digit_entity");  // Path to the Mason brick
+      final brick = Brick.path("digit_entity"); // Path to the Mason brick
       final generator = await MasonGenerator.fromBrick(brick);
 
       // Specify the path where the code should be generated
@@ -44,7 +61,7 @@ class MasonEntityGenerator {
         "persistBoundaryParameters": persistBoundaryParameters
       };
 
-      PreGen preGen = new PreGen();
+      PreGen preGen = PreGen();
 
       vars = preGen.run(vars);
 
@@ -53,11 +70,10 @@ class MasonEntityGenerator {
 
       Directory.current = '../lib';
 
-      Postgen postGen = new Postgen();
+      Postgen postGen = Postgen();
 
       postGen.run(vars);
-    }
-    else {
+    } else {
       print("Table with the name ${name} already exists");
     }
   }

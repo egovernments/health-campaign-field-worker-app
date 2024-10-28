@@ -1,13 +1,15 @@
 import 'dart:io';
+
 import 'package:digit_data_model/entityGenerator.dart';
 
 // Run this script in tools directory
 void main() async {
   // Get the current script URI
   Uri scriptUri = Platform.script;
+  var appDir = Directory.current.path;
 
   // Convert it to a Directory (typically project root is the parent of 'bin' or 'lib' or wherever this script is)
-  Directory.current = Directory(scriptUri.resolve('../tools').toFilePath());
+  Directory.current = appDir + '/tools';
 
   String folderPath = 'jsonFiles';
   final directory = Directory(folderPath);
@@ -36,7 +38,7 @@ void main() async {
     scriptUri = Platform.script;
 
     // Convert it to a Directory (typically project root is the parent of 'bin' or 'lib' or wherever this script is)
-    Directory.current = Directory(scriptUri.resolve('../tools').toFilePath());
+    Directory.current = appDir + '/tools';
 
     print(Directory.current);
 
@@ -46,8 +48,7 @@ void main() async {
 
       // Process the JSON file
       await generator.generateEntity(jsonString);
-
-    }  catch (e, stackTrace) {
+    } catch (e, stackTrace) {
       print('Error processing file ${jsonFile.path}: $e');
       print(stackTrace); // To log the stack trace for debugging
     }

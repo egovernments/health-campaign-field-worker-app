@@ -501,10 +501,11 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.3+1"
+      name: digit_data_model
+      sha256: "90e8f7a313df7be8a44d2ec3572532b1dd279d9da9744c71bfbbfc8523f3b2ce"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4-dev.7"
   digit_dss:
     dependency: "direct main"
     description:
@@ -516,9 +517,10 @@ packages:
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_firebase_services"
-      relative: true
-    source: path
+      name: digit_firebase_services
+      sha256: ce76521d797e123b6fc95c9dfad7d4a918a93b97f57aecd0e1d517b46190909d
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1"
   digit_scanner:
     dependency: "direct main"
@@ -1118,9 +1120,10 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
+      name: inventory_management
+      sha256: "1d0dd4f7811941092653426a86548a31d475237d318eee71505b21a57ebc310b"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3+4"
   io:
     dependency: transitive
@@ -1226,6 +1229,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.7.0"
+  mason:
+    dependency: transitive
+    description:
+      name: mason
+      sha256: f4ea713a0f4142e20abb3a5b1352c0475c04cb880a1e33e2028793d60c83fd5c
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0-dev.52"
+  mason_logger:
+    dependency: transitive
+    description:
+      name: mason_logger
+      sha256: "0a6170fdabc2d12762af5029e4f62a82dff86755a878fb15ab485f59ffba111b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.14"
   matcher:
     dependency: transitive
     description:
@@ -1274,6 +1293,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3"
+  mustache_template:
+    dependency: transitive
+    description:
+      name: mustache_template
+      sha256: a46e26f91445bfb0b60519be280555b06792460b27b19e2b19ad5b9740df5d1c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   nested:
     dependency: "direct main"
     description:
