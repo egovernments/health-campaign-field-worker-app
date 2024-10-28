@@ -1,3 +1,7 @@
+## 1.0.4
+* Bug Fix -
+    * Updated query search for beneficiary referred status
+
 ## 1.0.4-dev.3-search-fix
 
 * Bug Fix -
