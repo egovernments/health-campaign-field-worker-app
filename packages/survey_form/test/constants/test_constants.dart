@@ -1,7 +1,7 @@
 import 'package:digit_data_model/data_model.dart';
 import 'package:survey_form/models/entities/service.dart';
-import 'package:survey_form/models/entities/service_definition.dart';
 import 'package:survey_form/models/entities/service_attributes.dart';
+import 'package:survey_form/models/entities/service_definition.dart';
 
 class ServiceTestConstants {
   static const testTenantId = 'mz';
@@ -26,9 +26,7 @@ class ServiceTestConstants {
     attributeCode: 'ATTR2',
     value: 'NO',
     dataType: testDataType,
-    additionalDetails: {
-      "value": "kmlkml"
-    },
+    additionalDetails: {"value": "kmlkml"},
   );
 
   static final mockServiceModel = ServiceModel(
@@ -36,12 +34,11 @@ class ServiceTestConstants {
     serviceDefId: testServiceDefId,
     isActive: true,
     accountId: testAccountId,
-    additionalDetails: 'ADMIN_MO_06_05_03_01_04_SHERRIKEN',
+    additionalDetails: {'locality': 'ADMIN_MO_06_05_03_01_04_SHERRIKEN'},
     createdAt: DateTime.utc(2024, 8, 16).toString(),
     tenantId: testTenantId,
     attributes: [mockServiceAttributesModel1, mockServiceAttributesModel2],
   );
-
 
   static final mockAttributesModel1 = AttributesModel(
     tenantId: testTenantId,

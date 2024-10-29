@@ -96,6 +96,8 @@ class Common {
 
   String get coreCommonDownloadFailed => 'CORE_COMMON_DOWNLOAD_FAILED';
 
+  String get locationCapturing => 'CAPTURING_LOCATION';
+
   String get noMatchFound => 'CORE_COMMON_NO_MATCH_FOUND';
 
   String get scanBales => 'CORE_COMMON_SCAN_BALES';

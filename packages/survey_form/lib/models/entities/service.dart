@@ -1,5 +1,6 @@
 // Generated using mason. Do not modify by hand
 import 'dart:convert';
+
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
@@ -75,7 +76,6 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
     super.clientAuditDetails,
     super.isDeleted = false,
   }) : super();
-
 
   //Helper object to represents the data you want to insert or update in a table
   ServiceCompanion get companion {

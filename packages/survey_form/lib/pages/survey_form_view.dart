@@ -1,32 +1,32 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:survey_form/survey_form.dart';
-import 'package:survey_form/utils/extensions/context_utility.dart';
 import 'package:digit_components/blocs/location/location.dart';
 import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
+import 'package:digit_components/utils/utils.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_checkbox_tile.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/digit_text_field.dart';
 import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:group_radio_button/group_radio_button.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:group_radio_button/group_radio_button.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:survey_form/utils/extensions/context_utility.dart';
 
 import '../router/survey_form_router.gm.dart';
 import '../utils/constants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class SurveyFormViewPage extends LocalizedStatefulWidget {
@@ -52,7 +52,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   ServiceDefinitionModel? selectedServiceDefinition;
   bool isControllersInitialized = false;
   List<int> visibleSurveyFormIndexes = [];
-  GlobalKey<FormState> surveyFormFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> surveyFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -108,20 +108,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   enableFixedButton: true,
                   footer: BlocListener<LocationBloc, LocationState>(
                     listener: (context, state) async {
-                      if(state.accuracy != null && triggerLocalization){
+                      if (state.accuracy != null && triggerLocalization) {
                         if (!mounted) return;
                         triggerLocalization = false;
                         final router = context.router;
                         // close the location capturing `dialog`
                         DigitComponentsUtils().hideDialog(context);
 
-
                         // Wait for the location to be obtained
                         final locationState =
                             context.read<LocationBloc>().state;
                         double? latitude = locationState.latitude;
                         double? longitude = locationState.longitude;
-
 
                         final shouldSubmit = await DigitDialog.show(
                           context,
@@ -143,54 +141,55 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   final attribute = initialAttributes;
                                   attributes.add(ServiceAttributesModel(
                                     auditDetails: AuditDetails(
-                                      createdBy: SurveyFormSingleton().loggedInUserUuid,
+                                      createdBy: SurveyFormSingleton()
+                                          .loggedInUserUuid,
                                       createdTime:
-                                      context.millisecondsSinceEpoch(),
+                                          context.millisecondsSinceEpoch(),
                                     ),
                                     attributeCode: '${attribute?[i].code}',
                                     dataType: attribute?[i].dataType,
                                     clientReferenceId: IdGen.i.identifier,
                                     referenceId: isHealthFacilityWorker &&
-                                        widget.referralClientRefId != null
+                                            widget.referralClientRefId != null
                                         ? widget.referralClientRefId
                                         : referenceId,
                                     value: attribute?[i].dataType !=
-                                        'SingleValueList'
+                                            'SingleValueList'
                                         ? controller[i]
-                                        .text
-                                        .toString()
-                                        .trim()
-                                        .isNotEmpty
-                                        ? controller[i].text.toString()
-                                        : ''
+                                                .text
+                                                .toString()
+                                                .trim()
+                                                .isNotEmpty
+                                            ? controller[i].text.toString()
+                                            : ''
                                         : visibleSurveyFormIndexes.contains(i)
-                                        ? controller[i].text.toString()
-                                        : i18.surveyForm.notSelectedKey,
+                                            ? controller[i].text.toString()
+                                            : i18.surveyForm.notSelectedKey,
                                     rowVersion: 1,
                                     tenantId: attribute?[i].tenantId,
                                     additionalDetails: isHealthFacilityWorker &&
-                                        widget.referralClientRefId != null
+                                            widget.referralClientRefId != null
                                         ? null
                                         : ((attribute?[i].values?.length == 2 ||
-                                        attribute?[i]
-                                            .values
-                                            ?.length ==
-                                            3) &&
-                                        controller[i].text ==
-                                            attribute?[i]
-                                                .values?[1]
-                                                .trim())
-                                        ? additionalController[i]
-                                        .text
-                                        .toString()
-                                        .isEmpty
-                                        ? null
-                                        : additionalController[i]
-                                        .text
-                                        .toString()
-                                        : null,
+                                                    attribute?[i]
+                                                            .values
+                                                            ?.length ==
+                                                        3) &&
+                                                controller[i].text ==
+                                                    attribute?[i]
+                                                        .values?[1]
+                                                        .trim())
+                                            ? additionalController[i]
+                                                    .text
+                                                    .toString()
+                                                    .isEmpty
+                                                ? null
+                                                : additionalController[i]
+                                                    .text
+                                                    .toString()
+                                            : null,
                                     additionalFields:
-                                    ServiceAttributesAdditionalFields(
+                                        ServiceAttributesAdditionalFields(
                                       version: 1,
                                       fields: [
                                         AdditionalField(
@@ -207,72 +206,80 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                 }
 
                                 context.read<ServiceBloc>().add(
-                                  ServiceCreateEvent(
-                                    serviceModel: ServiceModel(
-                                      createdAt: DigitDateUtils
-                                          .getDateFromTimestamp(
-                                        DateTime.now()
-                                            .toLocal()
-                                            .millisecondsSinceEpoch,
-                                        dateFormat: Constants
-                                            .SurveyFormViewDateFormat,
-                                      ),
-                                      tenantId: value
-                                          .selectedServiceDefinition!
-                                          .tenantId,
-                                      clientId: isHealthFacilityWorker &&
-                                          widget.referralClientRefId !=
-                                              null
-                                          ? widget.referralClientRefId
-                                          .toString()
-                                          : referenceId,
-                                      serviceDefId: value
-                                          .selectedServiceDefinition?.id,
-                                      attributes: attributes,
-                                      rowVersion: 1,
-                                      accountId: SurveyFormSingleton().projectId,
-                                      auditDetails: AuditDetails(
-                                        createdBy: SurveyFormSingleton().loggedInUserUuid,
-                                        createdTime: DateTime.now()
-                                            .millisecondsSinceEpoch,
-                                      ),
-                                      clientAuditDetails:
-                                      ClientAuditDetails(
-                                        createdBy: SurveyFormSingleton().loggedInUserUuid,
-                                        createdTime: context
-                                            .millisecondsSinceEpoch(),
-                                        lastModifiedBy:
-                                        SurveyFormSingleton().loggedInUserUuid,
-                                        lastModifiedTime: context
-                                            .millisecondsSinceEpoch(),
-                                      ),
-                                      additionalFields:
-                                      ServiceAdditionalFields(
-                                        version: 1,
-                                        fields: [
-                                          AdditionalField(
-                                            'latitude',
-                                            latitude,
+                                      ServiceCreateEvent(
+                                        serviceModel: ServiceModel(
+                                          createdAt: DigitDateUtils
+                                              .getDateFromTimestamp(
+                                            DateTime.now()
+                                                .toLocal()
+                                                .millisecondsSinceEpoch,
+                                            dateFormat: Constants
+                                                .SurveyFormViewDateFormat,
                                           ),
-                                          AdditionalField(
-                                            'longitude',
-                                            longitude,
+                                          tenantId: value
+                                              .selectedServiceDefinition!
+                                              .tenantId,
+                                          clientId: isHealthFacilityWorker &&
+                                                  widget.referralClientRefId !=
+                                                      null
+                                              ? widget.referralClientRefId
+                                                  .toString()
+                                              : referenceId,
+                                          serviceDefId: value
+                                              .selectedServiceDefinition?.id,
+                                          attributes: attributes,
+                                          rowVersion: 1,
+                                          accountId:
+                                              SurveyFormSingleton().projectId,
+                                          auditDetails: AuditDetails(
+                                            createdBy: SurveyFormSingleton()
+                                                .loggedInUserUuid,
+                                            createdTime: DateTime.now()
+                                                .millisecondsSinceEpoch,
                                           ),
-                                          AdditionalField(
-                                            'localityCode',
-                                            SurveyFormSingleton().boundary?.code,
+                                          clientAuditDetails:
+                                              ClientAuditDetails(
+                                            createdBy: SurveyFormSingleton()
+                                                .loggedInUserUuid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                                SurveyFormSingleton()
+                                                    .loggedInUserUuid,
+                                            lastModifiedTime: context
+                                                .millisecondsSinceEpoch(),
                                           ),
-                                        ],
+                                          additionalFields:
+                                              ServiceAdditionalFields(
+                                            version: 1,
+                                            fields: [
+                                              AdditionalField(
+                                                'latitude',
+                                                latitude,
+                                              ),
+                                              AdditionalField(
+                                                'longitude',
+                                                longitude,
+                                              ),
+                                              AdditionalField(
+                                                'localityCode',
+                                                SurveyFormSingleton()
+                                                    .boundary
+                                                    ?.code,
+                                              ),
+                                            ],
+                                          ),
+                                          additionalDetails: {
+                                            "boundaryCode":
+                                                SurveyFormSingleton()
+                                                    .boundary
+                                                    ?.code,
+                                            'lat': latitude,
+                                            'lng': longitude,
+                                          },
+                                        ),
                                       ),
-                                      additionalDetails: {
-                                        "boundaryCode":
-                                        context.boundary.code,
-                                        'lat': latitude,
-                                        'lng': longitude,
-                                      },
-                                    ),
-                                  ),
-                                );
+                                    );
 
                                 Navigator.of(
                                   context,
@@ -308,13 +315,13 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           submitTriggered = true;
 
                           context.read<ServiceBloc>().add(
-                            const ServiceChecklistEvent(
-                              value: '',
-                              submitTriggered: true,
-                            ),
-                          );
+                                const ServiceSurveyFormEvent(
+                                  value: '',
+                                  submitTriggered: true,
+                                ),
+                              );
                           final isValid =
-                          checklistFormKey.currentState?.validate();
+                              surveyFormKey.currentState?.validate();
                           if (!isValid!) {
                             return;
                           }
@@ -323,12 +330,12 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           for (int i = 0; i < controller.length; i++) {
                             if (itemsAttributes?[i].required == true &&
                                 ((itemsAttributes?[i].dataType ==
-                                    'SingleValueList' &&
-                                    visibleChecklistIndexes
-                                        .any((e) => e == i) &&
-                                    (controller[i].text == '')) ||
+                                            'SingleValueList' &&
+                                        visibleSurveyFormIndexes
+                                            .any((e) => e == i) &&
+                                        (controller[i].text == '')) ||
                                     (itemsAttributes?[i].dataType !=
-                                        'SingleValueList' &&
+                                            'SingleValueList' &&
                                         (controller[i].text == '' &&
                                             !(isHealthFacilityWorker &&
                                                 widget.referralClientRefId !=
@@ -340,14 +347,15 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           triggerLocalization = true;
 
                           // Request location from LocationBloc
-                          context.read<LocationBloc>().add(const LocationEvent.load());
+                          context
+                              .read<LocationBloc>()
+                              .add(const LocationEvent.load());
                           DigitComponentsUtils().showLocationCapturingDialog(
                             context,
-                            localizations.translate(i18.common.locationCapturing),
+                            localizations
+                                .translate(i18.common.locationCapturing),
                             DigitSyncDialogType.inProgress,
                           );
-
-
                         },
                         child: Text(
                           localizations.translate(i18.common.coreCommonSubmit),
@@ -355,10 +363,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                       ),
                     ),
                   ),
-
                   children: [
                     Form(
-                      key: surveyFormFormKey, //assigning key to form
+                      key: surveyFormKey, //assigning key to form
                       child: DigitCard(
                         child: Column(children: [
                           Padding(
@@ -381,7 +388,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   !(e.code ?? '').contains('.')) ...[
                                 DigitTextField(
                                   onChange: (value) {
-                                    surveyFormFormKey.currentState?.validate();
+                                    surveyFormKey.currentState?.validate();
                                   },
                                   isRequired: false,
                                   controller: controller[index],
@@ -413,7 +420,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   !(e.code ?? '').contains('.')) ...[
                                 DigitTextField(
                                   onChange: (value) {
-                                    surveyFormFormKey.currentState?.validate();
+                                    surveyFormKey.currentState?.validate();
                                   },
                                   textStyle: theme.textTheme.headlineMedium,
                                   textInputType: TextInputType.number,
@@ -498,7 +505,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                             );
 
                                                         // Split the controller text into a list of values
-                                                        var val = controller[index].text.split('.').where((v) => v.trim().isNotEmpty).toList();
+                                                        var val =
+                                                            controller[index]
+                                                                .text
+                                                                .split('.')
+                                                                .where((v) => v
+                                                                    .trim()
+                                                                    .isNotEmpty)
+                                                                .toList();
                                                         if (val
                                                             .contains(item)) {
                                                           val.remove(item);
@@ -547,8 +561,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                     );
                                   },
                                 ),
-                              ]
-                              else if (e.dataType == 'SingleValueList') ...[
+                              ] else if (e.dataType == 'SingleValueList') ...[
                                 if (!(e.code ?? '').contains('.'))
                                   DigitCard(
                                     child: _buildSurveyForm(
@@ -833,7 +846,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
         child: DigitTextField(
           maxLength: 1000,
           onChange: (value) {
-            surveyFormFormKey.currentState?.validate();
+            surveyFormKey.currentState?.validate();
           },
           isRequired: item.required ?? true,
           controller: controller[index],
@@ -862,7 +875,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
     } else if (item.dataType == 'Number') {
       return DigitTextField(
         onChange: (value) {
-          surveyFormFormKey.currentState?.validate();
+          surveyFormKey.currentState?.validate();
         },
         textStyle: theme.textTheme.headlineMedium,
         textInputType: TextInputType.number,

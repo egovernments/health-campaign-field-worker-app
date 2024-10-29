@@ -28,7 +28,8 @@ import 'models/entities/project_staff.dart' as p21;
 import 'models/entities/project_type.dart' as p22;
 import 'models/entities/target.dart' as p23;
 import 'models/entities/user.dart' as p24;
-import 'models/oplog/oplog_entry.dart' as p25;
+import 'models/entities/user_action.dart' as p25;
+import 'models/oplog/oplog_entry.dart' as p26;
 
 void initializeMappers() {
   p0.EntityModelMapper.ensureInitialized();
@@ -102,8 +103,11 @@ void initializeMappers() {
   p24.UserSearchModelMapper.ensureInitialized();
   p24.UserModelMapper.ensureInitialized();
   p24.UserAdditionalFieldsMapper.ensureInitialized();
-  p25.OpLogEntryMapper.ensureInitialized();
-  p25.AdditionalIdMapper.ensureInitialized();
-  p25.DataOperationMapper.ensureInitialized();
-  p25.ApiOperationMapper.ensureInitialized();
+  p25.UserActionSearchModelMapper.ensureInitialized();
+  p25.UserActionModelMapper.ensureInitialized();
+  p25.UserActionAdditionalFieldsMapper.ensureInitialized();
+  p26.OpLogEntryMapper.ensureInitialized();
+  p26.AdditionalIdMapper.ensureInitialized();
+  p26.DataOperationMapper.ensureInitialized();
+  p26.ApiOperationMapper.ensureInitialized();
 }
