@@ -1,14 +1,16 @@
 // Generated using mason. Do not modify by hand
+import 'dart:convert';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 
-import 'package:digit_data_model/data_model.dart';
 import '../entities/service_attributes.dart';
 
 part 'service.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceSearchModel extends EntitySearchModel with ServiceSearchModelMappable {
+class ServiceSearchModel extends EntitySearchModel
+    with ServiceSearchModelMappable {
   final String? id;
   final String? clientId;
   final String? serviceDefId;
@@ -25,7 +27,7 @@ class ServiceSearchModel extends EntitySearchModel with ServiceSearchModelMappab
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   ServiceSearchModel.ignoreDeleted({
@@ -36,12 +38,11 @@ class ServiceSearchModel extends EntitySearchModel with ServiceSearchModelMappab
     this.createdAt,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class ServiceModel extends EntityModel with ServiceModelMappable {
-
   static const schemaName = 'Service';
 
   final String? id;
@@ -49,7 +50,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
   final String? serviceDefId;
   final bool? isActive;
   final String? accountId;
-  final String? additionalDetails;
+  final Map<String, dynamic>? additionalDetails;
   final String? createdAt;
   final bool? nonRecoverableError;
   final String? tenantId;
@@ -73,7 +74,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
 
   //Helper object to represents the data you want to insert or update in a table
@@ -94,7 +95,7 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
       serviceDefId: Value(serviceDefId),
       isActive: Value(isActive),
       accountId: Value(accountId),
-      additionalDetails: Value(additionalDetails),
+      additionalDetails: Value(jsonEncode(additionalDetails)),
       createdAt: Value(createdAt),
       nonRecoverableError: Value(nonRecoverableError),
       tenantId: Value(tenantId),
@@ -104,11 +105,11 @@ class ServiceModel extends EntityModel with ServiceModelMappable {
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class ServiceAdditionalFields extends AdditionalFields with ServiceAdditionalFieldsMappable {
+class ServiceAdditionalFields extends AdditionalFields
+    with ServiceAdditionalFieldsMappable {
   ServiceAdditionalFields({
     super.schema = 'Service',
     required super.version,
     super.fields,
   });
 }
-

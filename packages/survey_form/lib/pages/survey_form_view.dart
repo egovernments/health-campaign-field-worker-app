@@ -8,6 +8,7 @@ import 'package:digit_components/theme/colors.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
+import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_checkbox_tile.dart';
 import 'package:digit_components/widgets/digit_dialog.dart';
@@ -44,6 +45,7 @@ class SurveyFormViewPage extends LocalizedStatefulWidget {
 class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   String isStateChanged = '';
   var submitTriggered = false;
+  bool triggerLocalization = false;
   List<TextEditingController> controller = [];
   List<TextEditingController> additionalController = [];
   List<AttributesModel>? initialAttributes;
@@ -104,47 +106,15 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                       const BackNavigationHelpHeaderWidget(),
                   ]),
                   enableFixedButton: true,
-                  footer: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                    padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: DigitElevatedButton(
-                      onPressed: () async {
+                  footer: BlocListener<LocationBloc, LocationState>(
+                    listener: (context, state) async {
+                      if(state.accuracy != null && triggerLocalization){
+                        if (!mounted) return;
+                        triggerLocalization = false;
                         final router = context.router;
-                        submitTriggered = true;
+                        // close the location capturing `dialog`
+                        DigitComponentsUtils().hideDialog(context);
 
-                        context.read<ServiceBloc>().add(
-                              const ServiceSurveyFormEvent(
-                                value: '',
-                                submitTriggered: true,
-                              ),
-                            );
-                        final isValid =
-                            surveyFormFormKey.currentState?.validate();
-                        if (!isValid!) {
-                          return;
-                        }
-                        final itemsAttributes = initialAttributes;
-
-                        for (int i = 0; i < controller.length; i++) {
-                          if (itemsAttributes?[i].required == true &&
-                              ((itemsAttributes?[i].dataType ==
-                                          'SingleValueList' &&
-                                      visibleSurveyFormIndexes
-                                          .any((e) => e == i) &&
-                                      (controller[i].text == '')) ||
-                                  (itemsAttributes?[i].dataType !=
-                                          'SingleValueList' &&
-                                      (controller[i].text == '' &&
-                                          !(isHealthFacilityWorker &&
-                                              widget.referralClientRefId !=
-                                                  null))))) {
-                            return;
-                          }
-                        }
-
-                        // Request location from LocationBloc
-                        context.read<LocationBloc>().add(const LocationEvent.load());
 
                         // Wait for the location to be obtained
                         final locationState =
@@ -175,110 +145,134 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                     auditDetails: AuditDetails(
                                       createdBy: SurveyFormSingleton().loggedInUserUuid,
                                       createdTime:
-                                          context.millisecondsSinceEpoch(),
+                                      context.millisecondsSinceEpoch(),
                                     ),
                                     attributeCode: '${attribute?[i].code}',
                                     dataType: attribute?[i].dataType,
                                     clientReferenceId: IdGen.i.identifier,
                                     referenceId: isHealthFacilityWorker &&
-                                            widget.referralClientRefId != null
+                                        widget.referralClientRefId != null
                                         ? widget.referralClientRefId
                                         : referenceId,
                                     value: attribute?[i].dataType !=
-                                            'SingleValueList'
+                                        'SingleValueList'
                                         ? controller[i]
-                                                .text
-                                                .toString()
-                                                .trim()
-                                                .isNotEmpty
-                                            ? controller[i].text.toString()
-                                            : ''
+                                        .text
+                                        .toString()
+                                        .trim()
+                                        .isNotEmpty
+                                        ? controller[i].text.toString()
+                                        : ''
                                         : visibleSurveyFormIndexes.contains(i)
-                                            ? controller[i].text.toString()
-                                            : i18.surveyForm.notSelectedKey,
+                                        ? controller[i].text.toString()
+                                        : i18.surveyForm.notSelectedKey,
                                     rowVersion: 1,
                                     tenantId: attribute?[i].tenantId,
                                     additionalDetails: isHealthFacilityWorker &&
-                                            widget.referralClientRefId != null
+                                        widget.referralClientRefId != null
                                         ? null
                                         : ((attribute?[i].values?.length == 2 ||
-                                                    attribute?[i]
-                                                            .values
-                                                            ?.length ==
-                                                        3) &&
-                                                controller[i].text ==
-                                                    attribute?[i]
-                                                        .values?[1]
-                                                        .trim())
-                                            ? additionalController[i]
-                                                    .text
-                                                    .toString()
-                                                    .isEmpty
-                                                ? null
-                                                : additionalController[i]
-                                                    .text
-                                                    .toString()
-                                            : null,
-                                    additionalFields: ServiceAttributesAdditionalFields(
+                                        attribute?[i]
+                                            .values
+                                            ?.length ==
+                                            3) &&
+                                        controller[i].text ==
+                                            attribute?[i]
+                                                .values?[1]
+                                                .trim())
+                                        ? additionalController[i]
+                                        .text
+                                        .toString()
+                                        .isEmpty
+                                        ? null
+                                        : additionalController[i]
+                                        .text
+                                        .toString()
+                                        : null,
+                                    additionalFields:
+                                    ServiceAttributesAdditionalFields(
                                       version: 1,
                                       fields: [
                                         AdditionalField(
-                                          'latitude', latitude,
+                                          'latitude',
+                                          latitude,
                                         ),
                                         AdditionalField(
-                                          'longitude', longitude,
+                                          'longitude',
+                                          longitude,
                                         ),
                                       ],
                                     ),
-                                  )
-                                  );
+                                  ));
                                 }
 
                                 context.read<ServiceBloc>().add(
-                                      ServiceCreateEvent(
-                                        serviceModel: ServiceModel(
-                                          createdAt: DigitDateUtils
-                                              .getDateFromTimestamp(
-                                            DateTime.now()
-                                                .toLocal()
-                                                .millisecondsSinceEpoch,
-                                            dateFormat: Constants
-                                                .SurveyFormViewDateFormat,
-                                          ),
-                                          tenantId: value
-                                              .selectedServiceDefinition!
-                                              .tenantId,
-                                          clientId: isHealthFacilityWorker &&
-                                                  widget.referralClientRefId !=
-                                                      null
-                                              ? widget.referralClientRefId
-                                                  .toString()
-                                              : referenceId,
-                                          serviceDefId: value
-                                              .selectedServiceDefinition?.id,
-                                          attributes: attributes,
-                                          rowVersion: 1,
-                                          accountId: SurveyFormSingleton().projectId,
-                                          auditDetails: AuditDetails(
-                                            createdBy: SurveyFormSingleton().loggedInUserUuid,
-                                            createdTime: DateTime.now()
-                                                .millisecondsSinceEpoch,
-                                          ),
-                                          clientAuditDetails:
-                                              ClientAuditDetails(
-                                            createdBy: SurveyFormSingleton().loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                                SurveyFormSingleton().loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          additionalDetails:
-                                              SurveyFormSingleton().boundary?.code,
-                                        ),
+                                  ServiceCreateEvent(
+                                    serviceModel: ServiceModel(
+                                      createdAt: DigitDateUtils
+                                          .getDateFromTimestamp(
+                                        DateTime.now()
+                                            .toLocal()
+                                            .millisecondsSinceEpoch,
+                                        dateFormat: Constants
+                                            .SurveyFormViewDateFormat,
                                       ),
-                                    );
+                                      tenantId: value
+                                          .selectedServiceDefinition!
+                                          .tenantId,
+                                      clientId: isHealthFacilityWorker &&
+                                          widget.referralClientRefId !=
+                                              null
+                                          ? widget.referralClientRefId
+                                          .toString()
+                                          : referenceId,
+                                      serviceDefId: value
+                                          .selectedServiceDefinition?.id,
+                                      attributes: attributes,
+                                      rowVersion: 1,
+                                      accountId: SurveyFormSingleton().projectId,
+                                      auditDetails: AuditDetails(
+                                        createdBy: SurveyFormSingleton().loggedInUserUuid,
+                                        createdTime: DateTime.now()
+                                            .millisecondsSinceEpoch,
+                                      ),
+                                      clientAuditDetails:
+                                      ClientAuditDetails(
+                                        createdBy: SurveyFormSingleton().loggedInUserUuid,
+                                        createdTime: context
+                                            .millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                        SurveyFormSingleton().loggedInUserUuid,
+                                        lastModifiedTime: context
+                                            .millisecondsSinceEpoch(),
+                                      ),
+                                      additionalFields:
+                                      ServiceAdditionalFields(
+                                        version: 1,
+                                        fields: [
+                                          AdditionalField(
+                                            'latitude',
+                                            latitude,
+                                          ),
+                                          AdditionalField(
+                                            'longitude',
+                                            longitude,
+                                          ),
+                                          AdditionalField(
+                                            'localityCode',
+                                            SurveyFormSingleton().boundary?.code,
+                                          ),
+                                        ],
+                                      ),
+                                      additionalDetails: {
+                                        "boundaryCode":
+                                        context.boundary.code,
+                                        'lat': latitude,
+                                        'lng': longitude,
+                                      },
+                                    ),
+                                  ),
+                                );
 
                                 Navigator.of(
                                   context,
@@ -303,9 +297,61 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           router.navigate(SurveyformRoute());
                           router.push(SurveyFormAcknowledgementRoute());
                         }
-                      },
-                      child: Text(
-                        localizations.translate(i18.common.coreCommonSubmit),
+                      }
+                    },
+                    child: DigitCard(
+                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      padding:
+                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+                      child: DigitElevatedButton(
+                        onPressed: () async {
+                          submitTriggered = true;
+
+                          context.read<ServiceBloc>().add(
+                            const ServiceChecklistEvent(
+                              value: '',
+                              submitTriggered: true,
+                            ),
+                          );
+                          final isValid =
+                          checklistFormKey.currentState?.validate();
+                          if (!isValid!) {
+                            return;
+                          }
+                          final itemsAttributes = initialAttributes;
+
+                          for (int i = 0; i < controller.length; i++) {
+                            if (itemsAttributes?[i].required == true &&
+                                ((itemsAttributes?[i].dataType ==
+                                    'SingleValueList' &&
+                                    visibleChecklistIndexes
+                                        .any((e) => e == i) &&
+                                    (controller[i].text == '')) ||
+                                    (itemsAttributes?[i].dataType !=
+                                        'SingleValueList' &&
+                                        (controller[i].text == '' &&
+                                            !(isHealthFacilityWorker &&
+                                                widget.referralClientRefId !=
+                                                    null))))) {
+                              return;
+                            }
+                          }
+
+                          triggerLocalization = true;
+
+                          // Request location from LocationBloc
+                          context.read<LocationBloc>().add(const LocationEvent.load());
+                          DigitComponentsUtils().showLocationCapturingDialog(
+                            context,
+                            localizations.translate(i18.common.locationCapturing),
+                            DigitSyncDialogType.inProgress,
+                          );
+
+
+                        },
+                        child: Text(
+                          localizations.translate(i18.common.coreCommonSubmit),
+                        ),
                       ),
                     ),
                   ),
@@ -402,7 +448,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Padding(
-                                    padding: const EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(kPadding * 2),
                                     child: Column(
                                       children: [
                                         Text(
@@ -417,45 +463,87 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                 ),
                                 BlocBuilder<ServiceBloc, ServiceState>(
                                   builder: (context, state) {
+                                    // Validation logic to check if required field is empty
+                                    final hasError = (e.required == true &&
+                                        controller[index].text.isEmpty &&
+                                        submitTriggered);
+
                                     return Column(
-                                      children: e.values!
-                                          .map((e) => DigitCheckboxTile(
-                                                label: e,
-                                                value: controller[index]
-                                                    .text
-                                                    .split('.')
-                                                    .contains(e),
-                                                onChanged: (value) {
-                                                  context
-                                                      .read<ServiceBloc>()
-                                                      .add(
-                                                        ServiceSurveyFormEvent(
-                                                          value: e.toString(),
-                                                          submitTriggered:
-                                                              submitTriggered,
-                                                        ),
-                                                      );
-                                                  final String ele;
-                                                  var val = controller[index]
-                                                      .text
-                                                      .split('.');
-                                                  if (val.contains(e)) {
-                                                    val.remove(e);
-                                                    ele = val.join(".");
-                                                  } else {
-                                                    ele =
-                                                        "${controller[index].text}.$e";
-                                                  }
-                                                  controller[index].value =
-                                                      TextEditingController
-                                                          .fromValue(
-                                                    TextEditingValue(
-                                                      text: ele,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Checkbox options
+                                        Column(
+                                          children: e.values!
+                                              .map((item) => Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            left: kPadding * 2),
+                                                    child: DigitCheckboxTile(
+                                                      label: item,
+                                                      value: controller[index]
+                                                          .text
+                                                          .split('.')
+                                                          .contains(item),
+                                                      onChanged: (value) {
+                                                        context
+                                                            .read<ServiceBloc>()
+                                                            .add(
+                                                              ServiceSurveyFormEvent(
+                                                                value: item
+                                                                    .toString(),
+                                                                submitTriggered:
+                                                                    submitTriggered,
+                                                              ),
+                                                            );
+
+                                                        // Split the controller text into a list of values
+                                                        var val = controller[index].text.split('.').where((v) => v.trim().isNotEmpty).toList();
+                                                        if (val
+                                                            .contains(item)) {
+                                                          val.remove(item);
+                                                        } else {
+                                                          val.add(item);
+                                                        }
+
+                                                        // Update the controller with the selected values
+                                                        controller[index]
+                                                                .value =
+                                                            TextEditingController
+                                                                .fromValue(
+                                                          TextEditingValue(
+                                                            text: val.join('.'),
+                                                          ),
+                                                        ).value;
+
+                                                        // If the field is required and no option is selected, trigger validation
+                                                        if (e.required ==
+                                                                true &&
+                                                            val.isEmpty) {
+                                                          submitTriggered =
+                                                              true;
+                                                        }
+                                                      },
                                                     ),
-                                                  ).value;
-                                                },
-                                              ))
-                                          .toList(),
+                                                  ))
+                                              .toList(),
+                                        ),
+                                        // Error message display if validation fails
+                                        Offstage(
+                                          offstage: !hasError,
+                                          child: Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              localizations.translate(
+                                                i18.common.corecommonRequired,
+                                              ),
+                                              style: TextStyle(
+                                                color: theme.colorScheme.error,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   },
                                 ),
@@ -470,7 +558,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                       context,
                                     ),
                                   ),
-                              ]else if (e.dataType == 'Boolean') ...[
+                              ] else if (e.dataType == 'Boolean') ...[
                                 if (!(e.code ?? '').contains('.'))
                                   DigitCard(
                                     child: Column(
@@ -485,7 +573,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                   '${localizations.translate(
                                                     '${selectedServiceDefinition?.code}.${e.code}',
                                                   )} ${e.required == true ? '*' : ''}',
-                                                  style: theme.textTheme.headlineSmall,
+                                                  style: theme
+                                                      .textTheme.headlineSmall,
                                                 ),
                                               ],
                                             ),
@@ -498,30 +587,46 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                               allowMultipleSelection: false,
                                               width: 110,
                                               valueMapper: (value) {
-                                                return value ? localizations.translate(
-                                                  i18.common.coreCommonYes,
-                                                ) : localizations.translate(
-                                                  i18.common.coreCommonNo,
-                                                );
+                                                return value
+                                                    ? localizations.translate(
+                                                        i18.common
+                                                            .coreCommonYes,
+                                                      )
+                                                    : localizations.translate(
+                                                        i18.common.coreCommonNo,
+                                                      );
                                               },
-                                              initialSelection: controller[index].text=='true' ?  [true] : controller[index].text=='false' ?[false] : [],
-                                              options: const [true, false], // TODO: need to update
+                                              initialSelection:
+                                                  controller[index].text ==
+                                                          'true'
+                                                      ? [true]
+                                                      : controller[index]
+                                                                  .text ==
+                                                              'false'
+                                                          ? [false]
+                                                          : [],
+                                              options: const [
+                                                true,
+                                                false
+                                              ], // TODO: need to update
                                               onSelectionChanged: (curValue) {
-                                                if(curValue.isNotEmpty){
+                                                if (curValue.isNotEmpty) {
                                                   context
                                                       .read<ServiceBloc>()
                                                       .add(
-                                                    ServiceSurveyFormEvent(
-                                                      value: curValue.toString(),
-                                                      submitTriggered:
-                                                      submitTriggered,
-                                                    ),
-                                                  );
-                                                  controller[index].value = TextEditingValue(
-                                                    text: curValue.first.toString(),
+                                                        ServiceSurveyFormEvent(
+                                                          value: curValue
+                                                              .toString(),
+                                                          submitTriggered:
+                                                              submitTriggered,
+                                                        ),
+                                                      );
+                                                  controller[index].value =
+                                                      TextEditingValue(
+                                                    text: curValue.first
+                                                        .toString(),
                                                   );
                                                 }
-
                                               },
                                             );
                                           },
@@ -649,7 +754,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                         : [],
                     itemBuilder: (item) => RadioButtonBuilder(
                       localizations.translate(
-                        'CORE_COMMON_${item.trim().toUpperCase()}',
+                        item.trim().toUpperCase(),
                       ),
                     ),
                   );

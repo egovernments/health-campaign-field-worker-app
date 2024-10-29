@@ -1893,7 +1893,7 @@ mixin _$CommonMastersWrapperModel {
   @JsonKey(name: 'StateInfo')
   List<StateInfoModel> get stateInfo => throw _privateConstructorUsedError;
   @JsonKey(name: 'PrivacyPolicy')
-  List<PrivacyPolicyModel> get privacyPolicyConfig =>
+  List<PrivacyPolicyModel>? get privacyPolicyConfig =>
       throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1912,7 +1912,7 @@ abstract class $CommonMastersWrapperModelCopyWith<$Res> {
       {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
       @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,
       @JsonKey(name: 'PrivacyPolicy')
-      List<PrivacyPolicyModel> privacyPolicyConfig});
+      List<PrivacyPolicyModel>? privacyPolicyConfig});
 }
 
 /// @nodoc
@@ -1931,7 +1931,7 @@ class _$CommonMastersWrapperModelCopyWithImpl<$Res,
   $Res call({
     Object? genderType = null,
     Object? stateInfo = null,
-    Object? privacyPolicyConfig = null,
+    Object? privacyPolicyConfig = freezed,
   }) {
     return _then(_value.copyWith(
       genderType: null == genderType
@@ -1942,10 +1942,10 @@ class _$CommonMastersWrapperModelCopyWithImpl<$Res,
           ? _value.stateInfo
           : stateInfo // ignore: cast_nullable_to_non_nullable
               as List<StateInfoModel>,
-      privacyPolicyConfig: null == privacyPolicyConfig
+      privacyPolicyConfig: freezed == privacyPolicyConfig
           ? _value.privacyPolicyConfig
           : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
-              as List<PrivacyPolicyModel>,
+              as List<PrivacyPolicyModel>?,
     ) as $Val);
   }
 }
@@ -1963,7 +1963,7 @@ abstract class _$$CommonMastersWrapperModelImplCopyWith<$Res>
       {@JsonKey(name: 'GenderType') List<CommonMasterModel> genderType,
       @JsonKey(name: 'StateInfo') List<StateInfoModel> stateInfo,
       @JsonKey(name: 'PrivacyPolicy')
-      List<PrivacyPolicyModel> privacyPolicyConfig});
+      List<PrivacyPolicyModel>? privacyPolicyConfig});
 }
 
 /// @nodoc
@@ -1981,7 +1981,7 @@ class __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>
   $Res call({
     Object? genderType = null,
     Object? stateInfo = null,
-    Object? privacyPolicyConfig = null,
+    Object? privacyPolicyConfig = freezed,
   }) {
     return _then(_$CommonMastersWrapperModelImpl(
       genderType: null == genderType
@@ -1992,10 +1992,10 @@ class __$$CommonMastersWrapperModelImplCopyWithImpl<$Res>
           ? _value._stateInfo
           : stateInfo // ignore: cast_nullable_to_non_nullable
               as List<StateInfoModel>,
-      privacyPolicyConfig: null == privacyPolicyConfig
+      privacyPolicyConfig: freezed == privacyPolicyConfig
           ? _value._privacyPolicyConfig
           : privacyPolicyConfig // ignore: cast_nullable_to_non_nullable
-              as List<PrivacyPolicyModel>,
+              as List<PrivacyPolicyModel>?,
     ));
   }
 }
@@ -2008,7 +2008,7 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
       required final List<CommonMasterModel> genderType,
       @JsonKey(name: 'StateInfo') required final List<StateInfoModel> stateInfo,
       @JsonKey(name: 'PrivacyPolicy')
-      required final List<PrivacyPolicyModel> privacyPolicyConfig})
+      final List<PrivacyPolicyModel>? privacyPolicyConfig})
       : _genderType = genderType,
         _stateInfo = stateInfo,
         _privacyPolicyConfig = privacyPolicyConfig;
@@ -2034,14 +2034,16 @@ class _$CommonMastersWrapperModelImpl implements _CommonMastersWrapperModel {
     return EqualUnmodifiableListView(_stateInfo);
   }
 
-  final List<PrivacyPolicyModel> _privacyPolicyConfig;
+  final List<PrivacyPolicyModel>? _privacyPolicyConfig;
   @override
   @JsonKey(name: 'PrivacyPolicy')
-  List<PrivacyPolicyModel> get privacyPolicyConfig {
+  List<PrivacyPolicyModel>? get privacyPolicyConfig {
+    final value = _privacyPolicyConfig;
+    if (value == null) return null;
     if (_privacyPolicyConfig is EqualUnmodifiableListView)
       return _privacyPolicyConfig;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_privacyPolicyConfig);
+    return EqualUnmodifiableListView(value);
   }
 
   @override
@@ -2091,7 +2093,7 @@ abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
       required final List<CommonMasterModel> genderType,
       @JsonKey(name: 'StateInfo') required final List<StateInfoModel> stateInfo,
       @JsonKey(name: 'PrivacyPolicy')
-      required final List<PrivacyPolicyModel>
+      final List<PrivacyPolicyModel>?
           privacyPolicyConfig}) = _$CommonMastersWrapperModelImpl;
 
   factory _CommonMastersWrapperModel.fromJson(Map<String, dynamic> json) =
@@ -2105,7 +2107,7 @@ abstract class _CommonMastersWrapperModel implements CommonMastersWrapperModel {
   List<StateInfoModel> get stateInfo;
   @override
   @JsonKey(name: 'PrivacyPolicy')
-  List<PrivacyPolicyModel> get privacyPolicyConfig;
+  List<PrivacyPolicyModel>? get privacyPolicyConfig;
   @override
   @JsonKey(ignore: true)
   _$$CommonMastersWrapperModelImplCopyWith<_$CommonMastersWrapperModelImpl>

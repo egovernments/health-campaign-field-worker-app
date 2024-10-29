@@ -8,6 +8,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_firebase_services/digit_firebase_services.dart'
     as firebase_services;
+import 'package:digit_location_tracker/location_tracker.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/inventory_management.dart';
@@ -142,11 +143,12 @@ class Constants {
         sql,
         HFReferralOpLogManager(isar),
       ),
-
       PgrServiceLocalRepository(
         sql,
         PgrServiceOpLogManager(isar),
       ),
+      LocationTrackerLocalBaseRepository(
+          sql, LocationTrackerOpLogManager(isar)),
     ];
   }
 
@@ -231,9 +233,10 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
-
         if (value == DataModelType.complaints)
           PgrServiceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.userLocation)
+          LocationTrackerRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -273,6 +276,8 @@ class Constants {
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
     ReferralReconSingleton().setTenantId(envConfig.variables.tenantId);
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+    LocationTrackerSingleton()
+        .setTenantId(tenantId: envConfig.variables.tenantId);
   }
 }
 
