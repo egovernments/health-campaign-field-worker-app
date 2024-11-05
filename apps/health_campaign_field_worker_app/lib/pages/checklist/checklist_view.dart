@@ -234,46 +234,48 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 context.read<ServiceBloc>().add(
                                       ServiceCreateEvent(
                                         serviceModel: ServiceModel(
-                                          createdAt: DigitDateUtils
-                                              .getDateFromTimestamp(
-                                            DateTime.now()
-                                                .toLocal()
-                                                .millisecondsSinceEpoch,
-                                            dateFormat: Constants
-                                                .checklistViewDateFormat,
-                                          ),
-                                          tenantId: value
-                                              .selectedServiceDefinition!
-                                              .tenantId,
-                                          clientId: isHealthFacilityWorker &&
-                                                  widget.referralClientRefId !=
-                                                      null
-                                              ? widget.referralClientRefId
-                                                  .toString()
-                                              : referenceId,
-                                          serviceDefId: value
-                                              .selectedServiceDefinition?.id,
-                                          attributes: attributes,
-                                          rowVersion: 1,
-                                          accountId: context.projectId,
-                                          auditDetails: AuditDetails(
-                                            createdBy: context.loggedInUserUuid,
-                                            createdTime: DateTime.now()
-                                                .millisecondsSinceEpoch,
-                                          ),
-                                          clientAuditDetails:
-                                              ClientAuditDetails(
-                                            createdBy: context.loggedInUserUuid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                                context.loggedInUserUuid,
-                                            lastModifiedTime: context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          additionalDetails:
-                                              context.boundary.code,
-                                        ),
+                                            createdAt: DigitDateUtils
+                                                .getDateFromTimestamp(
+                                              DateTime.now()
+                                                  .toLocal()
+                                                  .millisecondsSinceEpoch,
+                                              dateFormat: Constants
+                                                  .checklistViewDateFormat,
+                                            ),
+                                            tenantId: value
+                                                .selectedServiceDefinition!
+                                                .tenantId,
+                                            clientId: isHealthFacilityWorker &&
+                                                    widget.referralClientRefId !=
+                                                        null
+                                                ? widget.referralClientRefId.toString()
+                                                : referenceId,
+                                            serviceDefId: value.selectedServiceDefinition?.id,
+                                            attributes: attributes,
+                                            rowVersion: 1,
+                                            accountId: context.projectId,
+                                            auditDetails: AuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: DateTime.now()
+                                                  .millisecondsSinceEpoch,
+                                            ),
+                                            clientAuditDetails: ClientAuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                              lastModifiedBy:
+                                                  context.loggedInUserUuid,
+                                              lastModifiedTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            additionalDetails: {
+                                              "boundaryCode":
+                                                  context.boundary.code,
+                                              "lat": latitude,
+                                              "lng": longitude
+                                            }),
                                       ),
                                     );
 

@@ -1,3 +1,6 @@
+## 1.0.4-dev.8-uniqueId
+* Changed additionalDetails of ServiceModel to Map<String, dynamic>
+
 ## 1.0.4-dev.7-uniqueId
 * Modified identifierType of unique beneficiary id
 

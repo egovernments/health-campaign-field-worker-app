@@ -388,11 +388,9 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "packages/dart_mappable_builder"
-      ref: master
-      resolved-ref: e3d8ac43f70568b4a17c200cae5cde285050ef23
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -437,34 +435,31 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: dcdab9542149022cb66241c3c379ca96916f8b6116e585f4799748d859a2ca49
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_components"
+      relative: true
+    source: path
     version: "1.0.2"
   digit_data_model:
     dependency: "direct main"
     description:
       name: digit_data_model
-      sha256: "084c234a939b299387ccdebb2bd64e2390a8ea82b62a4d6772fbc4db2987ab5d"
+      sha256: "0d201c866dc68652cdc5c632193179e14b06fdf5e112e837f0c998dd02440bff"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.7-uniqueId"
+    version: "1.0.4-dev.8-uniqueId"
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: "9862c4885465bb1942e36dc9b42596c201648db9b0f5ffb8ad768e2409fc2742"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_scanner"
+      relative: true
+    source: path
     version: "1.0.3+1"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_showcase"
+      relative: true
+    source: path
     version: "1.0.0"
   dio:
     dependency: transitive
@@ -1495,5 +1490,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <3.9.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"
