@@ -1534,10 +1534,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: ee49a921731ae51eaf06f31567ddafd71d157ad548a2b37a6bddc9fa75303c40
+      sha256: "86024b07a5c5e51e0717d60e5d2970102167fc0f7f2c253554351cd881f3fe97"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.3-search-fix"
+    version: "1.0.4-dev.4-search-fix"
   remove_emoji_input_formatter:
     dependency: transitive
     description:

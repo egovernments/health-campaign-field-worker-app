@@ -1,3 +1,6 @@
+## 1.0.4-dev.4-search-fix
+* Changed additionalDetails of ServiceModel to Map<String, dynamic>
+
 ## 1.0.4
 * Bug Fix -
     * Updated query search for beneficiary referred status
