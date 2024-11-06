@@ -16,8 +16,9 @@ class FacilitySearchModel extends EntitySearchModel
   final String? usage;
   final int? storageCapacity;
   final String? tenantId;
-
+  final String? name;
   FacilitySearchModel({
+    this.name,
     this.id,
     this.isPermanent,
     this.usage,
@@ -29,6 +30,7 @@ class FacilitySearchModel extends EntitySearchModel
 
   @MappableConstructor()
   FacilitySearchModel.ignoreDeleted({
+    this.name,
     this.id,
     this.isPermanent,
     this.usage,
