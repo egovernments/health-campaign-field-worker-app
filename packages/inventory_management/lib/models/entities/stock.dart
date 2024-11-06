@@ -22,6 +22,7 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
   final List<String>? clientReferenceId;
   final List<String>? transactionType;
   final List<String>? transactionReason;
+  final DateTime? dateOfEntryTime;
 
   StockSearchModel({
     this.id,
@@ -39,9 +40,13 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    int? dateOfEntry,
     super.boundaryCode,
     super.isDeleted,
-  }) : super();
+  })  : dateOfEntryTime = dateOfEntry == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(dateOfEntry),
+        super();
 
   @MappableConstructor()
   StockSearchModel.ignoreDeleted({
@@ -60,8 +65,14 @@ class StockSearchModel extends EntitySearchModel with StockSearchModelMappable {
     this.clientReferenceId,
     this.transactionType,
     this.transactionReason,
+    int? dateOfEntry,
     super.boundaryCode,
-  }) : super(isDeleted: false);
+  })  : dateOfEntryTime = dateOfEntry == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(dateOfEntry),
+        super(isDeleted: false);
+
+  int? get dateOfEntry => dateOfEntryTime?.millisecondsSinceEpoch;
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
@@ -88,10 +99,10 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactionType;
   final String? transactionReason;
   final StockAdditionalFields? additionalFields;
-  final String? dateOfEntry;
+  final DateTime? dateOfEntryTime;
 
   StockModel({
-    this.dateOfEntry,
+    int? dateOfEntry,
     this.additionalFields,
     this.id,
     this.tenantId,
@@ -115,40 +126,46 @@ class StockModel extends EntityModel with StockModelMappable {
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,
-  }) : super();
+  })  : dateOfEntryTime = dateOfEntry == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(dateOfEntry),
+        super();
+
+  int? get dateOfEntry => dateOfEntryTime?.millisecondsSinceEpoch;
 
   StockCompanion get companion {
     return StockCompanion(
-        auditCreatedBy: Value(auditDetails?.createdBy),
-        auditCreatedTime: Value(auditDetails?.createdTime),
-        auditModifiedBy: Value(auditDetails?.lastModifiedBy),
-        clientCreatedTime: Value(clientAuditDetails?.createdTime),
-        clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
-        clientCreatedBy: Value(clientAuditDetails?.createdBy),
-        clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
-        auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-        additionalFields: Value(additionalFields?.toJson()),
-        isDeleted: Value(isDeleted),
-        id: Value(id),
-        tenantId: Value(tenantId),
-        facilityId: Value(facilityId),
-        productVariantId: Value(productVariantId),
-        referenceId: Value(referenceId),
-        referenceIdType: Value(referenceIdType),
-        transactingPartyId: Value(transactingPartyId),
-        transactingPartyType: Value(transactingPartyType),
-        quantity: Value(quantity),
-        waybillNumber: Value(wayBillNumber),
-        receiverId: Value(receiverId),
-        receiverType: Value(receiverType),
-        senderId: Value(senderId),
-        senderType: Value(senderType),
-        nonRecoverableError: Value(nonRecoverableError),
-        clientReferenceId: Value(clientReferenceId),
-        rowVersion: Value(rowVersion),
-        transactionType: Value(transactionType),
-        transactionReason: Value(transactionReason),
-        dateOfEntry: Value(dateOfEntry));
+      auditCreatedBy: Value(auditDetails?.createdBy),
+      auditCreatedTime: Value(auditDetails?.createdTime),
+      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+      clientCreatedTime: Value(clientAuditDetails?.createdTime),
+      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+      clientCreatedBy: Value(clientAuditDetails?.createdBy),
+      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+      additionalFields: Value(additionalFields?.toJson()),
+      isDeleted: Value(isDeleted),
+      id: Value(id),
+      tenantId: Value(tenantId),
+      facilityId: Value(facilityId),
+      productVariantId: Value(productVariantId),
+      referenceId: Value(referenceId),
+      referenceIdType: Value(referenceIdType),
+      transactingPartyId: Value(transactingPartyId),
+      transactingPartyType: Value(transactingPartyType),
+      quantity: Value(quantity),
+      waybillNumber: Value(wayBillNumber),
+      receiverId: Value(receiverId),
+      receiverType: Value(receiverType),
+      senderId: Value(senderId),
+      senderType: Value(senderType),
+      nonRecoverableError: Value(nonRecoverableError),
+      clientReferenceId: Value(clientReferenceId),
+      rowVersion: Value(rowVersion),
+      transactionType: Value(transactionType),
+      transactionReason: Value(transactionReason),
+      dateOfEntry: Value(dateOfEntry),
+    );
   }
 }
 
