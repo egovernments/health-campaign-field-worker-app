@@ -331,6 +331,9 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
   @override
   final String id = 'StockModel';
 
+  static String? _$dateOfEntry(StockModel v) => v.dateOfEntry;
+  static const Field<StockModel, String> _f$dateOfEntry =
+      Field('dateOfEntry', _$dateOfEntry, opt: true);
   static StockAdditionalFields? _$additionalFields(StockModel v) =>
       v.additionalFields;
   static const Field<StockModel, StockAdditionalFields> _f$additionalFields =
@@ -405,6 +408,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
 
   @override
   final MappableFields<StockModel> fields = const {
+    #dateOfEntry: _f$dateOfEntry,
     #additionalFields: _f$additionalFields,
     #id: _f$id,
     #tenantId: _f$tenantId,
@@ -442,6 +446,7 @@ class StockModelMapper extends SubClassMapperBase<StockModel> {
 
   static StockModel _instantiate(DecodingData data) {
     return StockModel(
+        dateOfEntry: data.dec(_f$dateOfEntry),
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         tenantId: data.dec(_f$tenantId),
@@ -529,7 +534,8 @@ abstract class StockModelCopyWith<$R, $In extends StockModel, $Out>
       get clientAuditDetails;
   @override
   $R call(
-      {StockAdditionalFields? additionalFields,
+      {String? dateOfEntry,
+      StockAdditionalFields? additionalFields,
       String? id,
       String? tenantId,
       String? facilityId,
@@ -577,7 +583,8 @@ class _StockModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? additionalFields = $none,
+          {Object? dateOfEntry = $none,
+          Object? additionalFields = $none,
           Object? id = $none,
           Object? tenantId = $none,
           Object? facilityId = $none,
@@ -601,6 +608,7 @@ class _StockModelCopyWithImpl<$R, $Out>
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
+        if (dateOfEntry != $none) #dateOfEntry: dateOfEntry,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (tenantId != $none) #tenantId: tenantId,
@@ -631,6 +639,7 @@ class _StockModelCopyWithImpl<$R, $Out>
       }));
   @override
   StockModel $make(CopyWithData data) => StockModel(
+      dateOfEntry: data.get(#dateOfEntry, or: $value.dateOfEntry),
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),

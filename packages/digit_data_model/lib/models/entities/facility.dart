@@ -9,13 +9,14 @@ import '../../data/local_store/sql_store/sql_store.dart';
 part 'facility.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMappable {
+class FacilitySearchModel extends EntitySearchModel
+    with FacilitySearchModelMappable {
   final List<String>? id;
   final bool? isPermanent;
   final String? usage;
   final int? storageCapacity;
   final String? tenantId;
-  
+
   FacilitySearchModel({
     this.id,
     this.isPermanent,
@@ -24,7 +25,7 @@ class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMapp
     this.tenantId,
     super.boundaryCode,
     super.isDeleted,
-  }):  super();
+  }) : super();
 
   @MappableConstructor()
   FacilitySearchModel.ignoreDeleted({
@@ -34,12 +35,11 @@ class FacilitySearchModel extends EntitySearchModel with FacilitySearchModelMapp
     this.storageCapacity,
     this.tenantId,
     super.boundaryCode,
-  }):  super(isDeleted: false);
+  }) : super(isDeleted: false);
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class FacilityModel extends EntityModel with FacilityModelMappable {
-
   static const schemaName = 'Facility';
 
   final String id;
@@ -51,6 +51,7 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
   final int? rowVersion;
   final AddressModel? address;
   final FacilityAdditionalFields? additionalFields;
+  final String? name;
 
   FacilityModel({
     this.additionalFields,
@@ -62,39 +63,41 @@ class FacilityModel extends EntityModel with FacilityModelMappable {
     this.tenantId,
     this.rowVersion,
     this.address,
-    super.auditDetails,super.clientAuditDetails,
+    this.name,
+    super.auditDetails,
+    super.clientAuditDetails,
     super.isDeleted = false,
-  }): super();
+  }) : super();
 
   FacilityCompanion get companion {
     return FacilityCompanion(
-      auditCreatedBy: Value(auditDetails?.createdBy),
-      auditCreatedTime: Value(auditDetails?.createdTime),
-      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
-      clientCreatedTime: Value(clientAuditDetails?.createdTime),
-      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
-      clientCreatedBy: Value(clientAuditDetails?.createdBy),
-      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
-      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
-      id: Value(id),
-      isPermanent: Value(isPermanent),
-      usage: Value(usage),
-      storageCapacity: Value(storageCapacity),
-      nonRecoverableError: Value(nonRecoverableError),
-      tenantId: Value(tenantId),
-      rowVersion: Value(rowVersion),
-      );
+        auditCreatedBy: Value(auditDetails?.createdBy),
+        auditCreatedTime: Value(auditDetails?.createdTime),
+        auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+        clientCreatedTime: Value(clientAuditDetails?.createdTime),
+        clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+        clientCreatedBy: Value(clientAuditDetails?.createdBy),
+        clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+        auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+        additionalFields: Value(additionalFields?.toJson()),
+        isDeleted: Value(isDeleted),
+        id: Value(id),
+        isPermanent: Value(isPermanent),
+        usage: Value(usage),
+        storageCapacity: Value(storageCapacity),
+        nonRecoverableError: Value(nonRecoverableError),
+        tenantId: Value(tenantId),
+        rowVersion: Value(rowVersion),
+        name: Value(name));
   }
 }
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
-class FacilityAdditionalFields extends AdditionalFields with FacilityAdditionalFieldsMappable {
+class FacilityAdditionalFields extends AdditionalFields
+    with FacilityAdditionalFieldsMappable {
   FacilityAdditionalFields({
     super.schema = 'Facility',
     required super.version,
     super.fields,
   });
 }
-

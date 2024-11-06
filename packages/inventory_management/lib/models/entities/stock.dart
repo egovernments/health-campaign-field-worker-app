@@ -88,8 +88,10 @@ class StockModel extends EntityModel with StockModelMappable {
   final String? transactionType;
   final String? transactionReason;
   final StockAdditionalFields? additionalFields;
+  final String? dateOfEntry;
 
   StockModel({
+    this.dateOfEntry,
     this.additionalFields,
     this.id,
     this.tenantId,
@@ -117,36 +119,36 @@ class StockModel extends EntityModel with StockModelMappable {
 
   StockCompanion get companion {
     return StockCompanion(
-      auditCreatedBy: Value(auditDetails?.createdBy),
-      auditCreatedTime: Value(auditDetails?.createdTime),
-      auditModifiedBy: Value(auditDetails?.lastModifiedBy),
-      clientCreatedTime: Value(clientAuditDetails?.createdTime),
-      clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
-      clientCreatedBy: Value(clientAuditDetails?.createdBy),
-      clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
-      auditModifiedTime: Value(auditDetails?.lastModifiedTime),
-      additionalFields: Value(additionalFields?.toJson()),
-      isDeleted: Value(isDeleted),
-      id: Value(id),
-      tenantId: Value(tenantId),
-      facilityId: Value(facilityId),
-      productVariantId: Value(productVariantId),
-      referenceId: Value(referenceId),
-      referenceIdType: Value(referenceIdType),
-      transactingPartyId: Value(transactingPartyId),
-      transactingPartyType: Value(transactingPartyType),
-      quantity: Value(quantity),
-      waybillNumber: Value(wayBillNumber),
-      receiverId: Value(receiverId),
-      receiverType: Value(receiverType),
-      senderId: Value(senderId),
-      senderType: Value(senderType),
-      nonRecoverableError: Value(nonRecoverableError),
-      clientReferenceId: Value(clientReferenceId),
-      rowVersion: Value(rowVersion),
-      transactionType: Value(transactionType),
-      transactionReason: Value(transactionReason),
-    );
+        auditCreatedBy: Value(auditDetails?.createdBy),
+        auditCreatedTime: Value(auditDetails?.createdTime),
+        auditModifiedBy: Value(auditDetails?.lastModifiedBy),
+        clientCreatedTime: Value(clientAuditDetails?.createdTime),
+        clientModifiedTime: Value(clientAuditDetails?.lastModifiedTime),
+        clientCreatedBy: Value(clientAuditDetails?.createdBy),
+        clientModifiedBy: Value(clientAuditDetails?.lastModifiedBy),
+        auditModifiedTime: Value(auditDetails?.lastModifiedTime),
+        additionalFields: Value(additionalFields?.toJson()),
+        isDeleted: Value(isDeleted),
+        id: Value(id),
+        tenantId: Value(tenantId),
+        facilityId: Value(facilityId),
+        productVariantId: Value(productVariantId),
+        referenceId: Value(referenceId),
+        referenceIdType: Value(referenceIdType),
+        transactingPartyId: Value(transactingPartyId),
+        transactingPartyType: Value(transactingPartyType),
+        quantity: Value(quantity),
+        waybillNumber: Value(wayBillNumber),
+        receiverId: Value(receiverId),
+        receiverType: Value(receiverType),
+        senderId: Value(senderId),
+        senderType: Value(senderType),
+        nonRecoverableError: Value(nonRecoverableError),
+        clientReferenceId: Value(clientReferenceId),
+        rowVersion: Value(rowVersion),
+        transactionType: Value(transactionType),
+        transactionReason: Value(transactionReason),
+        dateOfEntry: Value(dateOfEntry));
   }
 }
 

@@ -20,6 +20,7 @@ class Stock extends Table {
   TextColumn get receiverType => text().nullable()();
   TextColumn get senderId => text().nullable()();
   TextColumn get senderType => text().nullable()();
+  TextColumn get dateOfEntry => text().nullable()();
   TextColumn get auditCreatedBy => text().nullable()();
   BoolColumn get nonRecoverableError =>
       boolean().nullable().withDefault(const Constant(false))();
