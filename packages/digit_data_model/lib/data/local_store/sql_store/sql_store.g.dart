@@ -18064,9 +18064,9 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   static const VerificationMeta _dateOfEntryMeta =
       const VerificationMeta('dateOfEntry');
   @override
-  late final GeneratedColumn<String> dateOfEntry = GeneratedColumn<String>(
+  late final GeneratedColumn<int> dateOfEntry = GeneratedColumn<int>(
       'date_of_entry', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
   @override
@@ -18418,7 +18418,7 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
       senderType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sender_type']),
       dateOfEntry: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}date_of_entry']),
+          .read(DriftSqlType.int, data['${effectivePrefix}date_of_entry']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
       nonRecoverableError: attachedDatabase.typeMapping.read(
@@ -18473,7 +18473,7 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
-  final String? dateOfEntry;
+  final int? dateOfEntry;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
   final int? auditCreatedTime;
@@ -18566,7 +18566,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       map['sender_type'] = Variable<String>(senderType);
     }
     if (!nullToAbsent || dateOfEntry != null) {
-      map['date_of_entry'] = Variable<String>(dateOfEntry);
+      map['date_of_entry'] = Variable<int>(dateOfEntry);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String>(auditCreatedBy);
@@ -18725,7 +18725,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       receiverType: serializer.fromJson<String?>(json['receiverType']),
       senderId: serializer.fromJson<String?>(json['senderId']),
       senderType: serializer.fromJson<String?>(json['senderType']),
-      dateOfEntry: serializer.fromJson<String?>(json['dateOfEntry']),
+      dateOfEntry: serializer.fromJson<int?>(json['dateOfEntry']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
           serializer.fromJson<bool?>(json['nonRecoverableError']),
@@ -18763,7 +18763,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       'receiverType': serializer.toJson<String?>(receiverType),
       'senderId': serializer.toJson<String?>(senderId),
       'senderType': serializer.toJson<String?>(senderType),
-      'dateOfEntry': serializer.toJson<String?>(dateOfEntry),
+      'dateOfEntry': serializer.toJson<int?>(dateOfEntry),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
@@ -18797,7 +18797,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           Value<String?> receiverType = const Value.absent(),
           Value<String?> senderId = const Value.absent(),
           Value<String?> senderType = const Value.absent(),
-          Value<String?> dateOfEntry = const Value.absent(),
+          Value<int?> dateOfEntry = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> nonRecoverableError = const Value.absent(),
           Value<int?> auditCreatedTime = const Value.absent(),
@@ -18999,7 +18999,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> receiverType;
   final Value<String?> senderId;
   final Value<String?> senderType;
-  final Value<String?> dateOfEntry;
+  final Value<int?> dateOfEntry;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
   final Value<int?> auditCreatedTime;
@@ -19097,7 +19097,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String>? receiverType,
     Expression<String>? senderId,
     Expression<String>? senderType,
-    Expression<String>? dateOfEntry,
+    Expression<int>? dateOfEntry,
     Expression<String>? auditCreatedBy,
     Expression<bool>? nonRecoverableError,
     Expression<int>? auditCreatedTime,
@@ -19169,7 +19169,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? receiverType,
       Value<String?>? senderId,
       Value<String?>? senderType,
-      Value<String?>? dateOfEntry,
+      Value<int?>? dateOfEntry,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
       Value<int?>? auditCreatedTime,
@@ -19268,7 +19268,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       map['sender_type'] = Variable<String>(senderType.value);
     }
     if (dateOfEntry.present) {
-      map['date_of_entry'] = Variable<String>(dateOfEntry.value);
+      map['date_of_entry'] = Variable<int>(dateOfEntry.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
