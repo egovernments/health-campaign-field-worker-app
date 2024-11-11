@@ -93,6 +93,7 @@ class StockLocalRepository
           clientReferenceId: data.clientReferenceId,
           isDeleted: data.isDeleted,
           rowVersion: data.rowVersion,
+          dateOfEntry: data.dateOfEntry,
           auditDetails: createdTime == null || createdBy == null
               ? null
               : AuditDetails(createdTime: createdTime, createdBy: createdBy),

@@ -115,6 +115,7 @@ class RecordStockBloc extends Bloc<RecordStockEvent, RecordStockState> {
               facilityId: facilityModel.id,
               rowVersion: 1,
               tenantId: InventorySingleton().tenantId,
+              dateOfEntry: dateOfRecord.millisecondsSinceEpoch,
             ),
           );
 
@@ -180,7 +181,7 @@ class RecordStockState with _$RecordStockState {
     String? primaryId,
     StockModel? stockModel,
   }) = RecordStockPersistedState;
-  }
+}
 
 class InvalidRecordStockStateException implements Exception {
   final String? message;
