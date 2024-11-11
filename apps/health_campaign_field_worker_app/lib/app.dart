@@ -1,4 +1,5 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
@@ -25,6 +26,8 @@ import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
+import 'data/remote_client.dart';
+import 'data/repositories/remote/bandwidth_check.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -201,6 +204,11 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            bandwidthCheckRepository: BandwidthCheckRepository(
+                              DioClient().dio,
+                              bandwidthPath:
+                                  envConfig.variables.checkBandwidthApiPath,
+                            ),
                             mdmsRepository: MdmsRepository(widget.client),
                             dashboardRemoteRepository:
                                 DashboardRemoteRepository(widget.client),

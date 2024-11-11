@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
+import 'package:complaints/complaints.dart';
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart';
@@ -14,6 +15,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/entity_mapper.dart';
@@ -75,11 +77,11 @@ class Constants {
   }
 
   static const String localizationApiPath = 'localization/messages/v1/_search';
-  static const String checklistPreviewDateFormat = 'dd MMMM yyyy';
+  static const String surveyFormPreviewDateFormat = 'dd MMMM yyyy';
   static const String defaultDateFormat = 'dd/MM/yyyy';
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
-  static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
-  static const String healthFacilityChecklistPrefix = 'HF_RF';
+  static const String surveyFormViewDateFormat = 'dd/MM/yyyy hh:mm a';
+  static const String healthFacilitySurveyFormPrefix = 'HF_RF';
 
   static const String boundaryLocalizationPath = 'rainmaker-boundary-admin';
 
@@ -113,10 +115,6 @@ class Constants {
         sql,
         BoundaryOpLogManager(isar),
       ),
-      PgrServiceLocalRepository(
-        sql,
-        PgrServiceOpLogManager(isar),
-      ),
       HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
       HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
       ProjectBeneficiaryLocalRepository(
@@ -144,6 +142,10 @@ class Constants {
       HFReferralLocalRepository(
         sql,
         HFReferralOpLogManager(isar),
+      ),
+      PgrServiceLocalRepository(
+        sql,
+        PgrServiceOpLogManager(isar),
       ),
       LocationTrackerLocalBaseRepository(
           sql, LocationTrackerOpLogManager(isar)),
@@ -189,8 +191,6 @@ class Constants {
       remoteRepositories.addAll([
         if (value == DataModelType.facility)
           FacilityRemoteRepository(dio, actionMap: actions),
-        if (value == DataModelType.complaints)
-          PgrServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.productVariant)
           ProductVariantRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.boundary)
@@ -233,6 +233,8 @@ class Constants {
           AttendanceLogRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.hFReferral)
           HFReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.complaints)
+          PgrServiceRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.userLocation)
           LocationTrackerRemoteRepository(dio, actionMap: actions),
       ]);
@@ -311,7 +313,7 @@ class Modules {
 }
 
 const String noResultSvg = 'assets/icons/svg/no_result.svg';
-const String myChecklistSvg = 'assets/icons/svg/mychecklist.svg';
+const String mySurveyFormSvg = 'assets/icons/svg/mychecklist.svg';
 
 enum DigitProgressDialogType {
   inProgress,
