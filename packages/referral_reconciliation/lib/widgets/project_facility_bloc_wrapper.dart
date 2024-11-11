@@ -16,11 +16,14 @@ class ProjectFacilityBlocWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final facilityRepository =
+        context.read<LocalRepository<FacilityModel, FacilitySearchModel>>();
     return BlocProvider<ProjectFacilityBloc>(
       create: (_) => ProjectFacilityBloc(
         const ProjectFacilityEmptyState(),
         projectFacilityDataRepository: context.repository<ProjectFacilityModel,
             ProjectFacilitySearchModel>(context),
+        facilityDataRepository: facilityRepository,
       )..add(ProjectFacilityLoadEvent(
           query: ProjectFacilitySearchModel(
               projectId: [ReferralReconSingleton().projectId]))),

@@ -429,10 +429,9 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "0e5a1f8c5f0548e573af9c0279942f2dbc332042865614e0b89fe5952002ef1f"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_data_model"
+      relative: true
+    source: path
     version: "1.0.4"
   digit_scanner:
     dependency: "direct main"
