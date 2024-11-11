@@ -15,13 +15,11 @@ import '../../widgets/back_navigation_help_header.dart';
 class ReferralReconProjectFacilitySelectionPage
     extends LocalizedStatefulWidget {
   final List<ProjectFacilityModel> projectFacilities;
-  final Map<String, String> facilityMap;
 
   const ReferralReconProjectFacilitySelectionPage({
     super.key,
     super.appLocalizations,
     required this.projectFacilities,
-    required this.facilityMap,
   });
 
   @override
@@ -159,9 +157,9 @@ class _ReferralReconProjectFacilitySelectionPageState
                                     top: kPadding * 2,
                                   ),
                                   child: Text(projectFacility != null
-                                      ? widget.facilityMap[
-                                              projectFacility.facilityId] ??
-                                          ''
+                                      ? localizations.translate(
+                                          '$projectFacilityPrefix${projectFacility.id}',
+                                        )
                                       : ''),
                                 ),
                               ),
@@ -196,19 +194,16 @@ class _ReferralReconProjectFacilitySelectionPageState
 class ProjectFacilityValueAccessor
     extends ControlValueAccessor<ProjectFacilityModel, String> {
   final List<ProjectFacilityModel> models;
-  final Map<String, String> facilityMap;
 
-  ProjectFacilityValueAccessor(this.models, this.facilityMap);
+  ProjectFacilityValueAccessor(this.models);
 
   @override
   String? modelToViewValue(ProjectFacilityModel? modelValue) {
-    return facilityMap[modelValue?.facilityId];
+    return modelValue?.id;
   }
 
   @override
   ProjectFacilityModel? viewToModelValue(String? viewValue) {
-    return models.firstWhereOrNull(
-      (element) => facilityMap[element.facilityId] == viewValue,
-    );
+    return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }

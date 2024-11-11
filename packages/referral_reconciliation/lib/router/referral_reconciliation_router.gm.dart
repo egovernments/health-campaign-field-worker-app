@@ -118,7 +118,6 @@ abstract class $ReferralReconciliationRoute extends _i9.AutoRouterModule {
           key: args.key,
           appLocalizations: args.appLocalizations,
           projectFacilities: args.projectFacilities,
-          facilityMap: args.facilityMap,
         ),
       );
     },
@@ -438,7 +437,6 @@ class ReferralReconProjectFacilitySelectionRoute
     _i10.Key? key,
     _i12.ReferralReconLocalization? appLocalizations,
     required List<_i13.ProjectFacilityModel> projectFacilities,
-    required Map<String, String> facilityMap,
     List<_i9.PageRouteInfo>? children,
   }) : super(
           ReferralReconProjectFacilitySelectionRoute.name,
@@ -446,7 +444,6 @@ class ReferralReconProjectFacilitySelectionRoute
             key: key,
             appLocalizations: appLocalizations,
             projectFacilities: projectFacilities,
-            facilityMap: facilityMap,
           ),
           initialChildren: children,
         );
@@ -462,7 +459,6 @@ class ReferralReconProjectFacilitySelectionRouteArgs {
     this.key,
     this.appLocalizations,
     required this.projectFacilities,
-    required this.facilityMap,
   });
 
   final _i10.Key? key;
@@ -471,11 +467,9 @@ class ReferralReconProjectFacilitySelectionRouteArgs {
 
   final List<_i13.ProjectFacilityModel> projectFacilities;
 
-  final Map<String, String> facilityMap;
-
   @override
   String toString() {
-    return 'ReferralReconProjectFacilitySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations, projectFacilities: $projectFacilities, facilityMap: $facilityMap}';
+    return 'ReferralReconProjectFacilitySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations, projectFacilities: $projectFacilities}';
   }
 }
 
