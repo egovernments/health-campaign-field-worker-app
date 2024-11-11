@@ -529,7 +529,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 context,
                                 rootNavigator: true,
                               ).pop(false);
-                              // Navigator.of(context).pop();
                             },
                           )
                         ],
