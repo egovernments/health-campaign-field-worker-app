@@ -251,8 +251,6 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                           ReferralReconProjectFacilitySelectionPage(
                                                         projectFacilities:
                                                             facilities,
-                                                        facilityMap:
-                                                            facilityMap,
                                                       ),
                                                     ),
                                                   );
@@ -304,8 +302,6 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                               ReferralReconProjectFacilitySelectionPage(
                                                             projectFacilities:
                                                                 facilities,
-                                                            facilityMap:
-                                                                facilityMap,
                                                           ),
                                                         ),
                                                       );
