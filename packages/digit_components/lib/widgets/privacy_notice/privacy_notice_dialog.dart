@@ -25,10 +25,10 @@ class FullPageDialog extends LocalizedStatefulWidget {
   });
 
   @override
-  _FullPageDialogState createState() => _FullPageDialogState();
+  FullPageDialogState createState() => FullPageDialogState();
 }
 
-class _FullPageDialogState extends LocalizedState<FullPageDialog> {
+class FullPageDialogState extends LocalizedState<FullPageDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog.fullscreen(
@@ -45,20 +45,24 @@ class _FullPageDialogState extends LocalizedState<FullPageDialog> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: const EdgeInsets.only(top: kPadding*3, left: 0),
-                            child: Text(
-                              localizations.translate(widget.privacyPolicy.header ?? ''),
-                              maxLines: 3,
-                              style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                                color: const DigitColors().woodsmokeBlack,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width*.7,
+                              child: Text(
+                                localizations.translate(widget.privacyPolicy.header ?? ''),
+                                maxLines: 3,
+                                style: Theme.of(context).textTheme.displayMedium?.copyWith(
+                                  color: const DigitColors().woodsmokeBlack,
+                                ),
                               ),
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.zero,
+                            padding: const EdgeInsets.only(top: kPadding),
                             child: InkWell(
                               onTap: () {
                                 Navigator.of(context).pop();

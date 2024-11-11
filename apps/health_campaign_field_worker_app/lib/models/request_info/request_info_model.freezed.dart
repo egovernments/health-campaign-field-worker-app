@@ -190,6 +190,7 @@ mixin _$RequestInfoModel {
   String? get msgId => throw _privateConstructorUsedError;
   String? get authToken => throw _privateConstructorUsedError;
   UserRequestModel? get userInfo => throw _privateConstructorUsedError;
+  String? get tenantId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -212,7 +213,8 @@ abstract class $RequestInfoModelCopyWith<$Res> {
       String? key,
       String? msgId,
       String? authToken,
-      UserRequestModel? userInfo});
+      UserRequestModel? userInfo,
+      String? tenantId});
 
   $UserRequestModelCopyWith<$Res>? get userInfo;
 }
@@ -239,6 +241,7 @@ class _$RequestInfoModelCopyWithImpl<$Res, $Val extends RequestInfoModel>
     Object? msgId = freezed,
     Object? authToken = freezed,
     Object? userInfo = freezed,
+    Object? tenantId = freezed,
   }) {
     return _then(_value.copyWith(
       apiId: freezed == apiId
@@ -277,6 +280,10 @@ class _$RequestInfoModelCopyWithImpl<$Res, $Val extends RequestInfoModel>
           ? _value.userInfo
           : userInfo // ignore: cast_nullable_to_non_nullable
               as UserRequestModel?,
+      tenantId: freezed == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 
@@ -310,7 +317,8 @@ abstract class _$$RequestInfoModelImplCopyWith<$Res>
       String? key,
       String? msgId,
       String? authToken,
-      UserRequestModel? userInfo});
+      UserRequestModel? userInfo,
+      String? tenantId});
 
   @override
   $UserRequestModelCopyWith<$Res>? get userInfo;
@@ -336,6 +344,7 @@ class __$$RequestInfoModelImplCopyWithImpl<$Res>
     Object? msgId = freezed,
     Object? authToken = freezed,
     Object? userInfo = freezed,
+    Object? tenantId = freezed,
   }) {
     return _then(_$RequestInfoModelImpl(
       apiId: freezed == apiId
@@ -374,6 +383,10 @@ class __$$RequestInfoModelImplCopyWithImpl<$Res>
           ? _value.userInfo
           : userInfo // ignore: cast_nullable_to_non_nullable
               as UserRequestModel?,
+      tenantId: freezed == tenantId
+          ? _value.tenantId
+          : tenantId // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -391,7 +404,8 @@ class _$RequestInfoModelImpl implements _RequestInfoModel {
       this.key,
       this.msgId,
       this.authToken,
-      this.userInfo});
+      this.userInfo,
+      this.tenantId});
 
   factory _$RequestInfoModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$RequestInfoModelImplFromJson(json);
@@ -414,10 +428,12 @@ class _$RequestInfoModelImpl implements _RequestInfoModel {
   final String? authToken;
   @override
   final UserRequestModel? userInfo;
+  @override
+  final String? tenantId;
 
   @override
   String toString() {
-    return 'RequestInfoModel(apiId: $apiId, ver: $ver, ts: $ts, action: $action, did: $did, key: $key, msgId: $msgId, authToken: $authToken, userInfo: $userInfo)';
+    return 'RequestInfoModel(apiId: $apiId, ver: $ver, ts: $ts, action: $action, did: $did, key: $key, msgId: $msgId, authToken: $authToken, userInfo: $userInfo, tenantId: $tenantId)';
   }
 
   @override
@@ -435,13 +451,15 @@ class _$RequestInfoModelImpl implements _RequestInfoModel {
             (identical(other.authToken, authToken) ||
                 other.authToken == authToken) &&
             (identical(other.userInfo, userInfo) ||
-                other.userInfo == userInfo));
+                other.userInfo == userInfo) &&
+            (identical(other.tenantId, tenantId) ||
+                other.tenantId == tenantId));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, apiId, ver, ts, action, did, key,
-      msgId, authToken, userInfo);
+      msgId, authToken, userInfo, tenantId);
 
   @JsonKey(ignore: true)
   @override
@@ -468,7 +486,8 @@ abstract class _RequestInfoModel implements RequestInfoModel {
       final String? key,
       final String? msgId,
       final String? authToken,
-      final UserRequestModel? userInfo}) = _$RequestInfoModelImpl;
+      final UserRequestModel? userInfo,
+      final String? tenantId}) = _$RequestInfoModelImpl;
 
   factory _RequestInfoModel.fromJson(Map<String, dynamic> json) =
       _$RequestInfoModelImpl.fromJson;
@@ -491,6 +510,8 @@ abstract class _RequestInfoModel implements RequestInfoModel {
   String? get authToken;
   @override
   UserRequestModel? get userInfo;
+  @override
+  String? get tenantId;
   @override
   @JsonKey(ignore: true)
   _$$RequestInfoModelImplCopyWith<_$RequestInfoModelImpl> get copyWith =>

@@ -1,3 +1,5 @@
+import 'package:complaints/complaints.dart';
+
 import 'dart:async';
 
 import 'package:collection/collection.dart';
@@ -213,6 +215,7 @@ class PerformSyncUp {
             final entities = getEntityModel(sublist, local);
             if (operationGroupedEntity.key == DataOperation.create) {
               switch (typeGroupedEntity.key) {
+
                 case DataModelType.complaints:
                   for (final entity in entities) {
                     if (remote is PgrServiceRemoteRepository &&
@@ -284,6 +287,7 @@ class PerformSyncUp {
                     }
                   }
                   break;
+
                 default:
                   await remote.bulkCreate(entities);
               }

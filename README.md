@@ -566,7 +566,7 @@ class _ChecklistDataShowcaseData {
 import '../../../utils/i18_key_constants.dart' as i18;
 import '../showcase_wrappers.dart';
 
-part 'checklist_data.dart';
+part 'survey_form_data.dart';
 
 final checklistDataShowcaseData = _ChecklistDataShowcaseData();
 ```
