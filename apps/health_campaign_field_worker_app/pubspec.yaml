@@ -18,7 +18,6 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
-  digit_ui_components: 0.0.3-beta
   digit_components: ^1.0.2
   auto_route: ^7.8.4
   flutter_bloc: ^8.1.1
