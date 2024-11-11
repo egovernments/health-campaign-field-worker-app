@@ -553,7 +553,7 @@ packages:
     source: path
     version: "1.0.0"
   digit_ui_components:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: digit_ui_components
       sha256: e38f163515aa6a6c5283754e741b21f33fb3a6c0a1fc171a1e4e6620510d46ae
@@ -1816,7 +1816,7 @@ packages:
       path: "../../packages/referral_reconciliation"
       relative: true
     source: path
-    version: "1.0.3-dev.1"
+    version: "1.0.2"
   registration_delivery:
     dependency: "direct main"
     description:
