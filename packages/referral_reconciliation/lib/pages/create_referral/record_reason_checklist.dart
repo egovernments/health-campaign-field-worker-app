@@ -1,19 +1,18 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
-import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../utils/date_utils.dart';
@@ -90,7 +89,6 @@ class _ReferralReasonChecklistPageState
                   enableFixedButton: true,
                   footer: DigitCard(
                       cardType: CardType.primary,
-                      margin: EdgeInsets.all(theme.spacerTheme.spacer2),
                       padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                       children: [
                         Button(
@@ -142,12 +140,6 @@ class _ReferralReasonChecklistPageState
                                     description: localizations.translate(
                                       i18.checklist.checklistDialogDescription,
                                     ),
-                                    onCrossTap: () {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop(false);
-                                    },
                                     actions: [
                                       Button(
                                         label: localizations.translate(
@@ -223,12 +215,10 @@ class _ReferralReasonChecklistPageState
                                                     accountId:
                                                         ReferralReconSingleton()
                                                             .projectId,
-                                                    additionalDetails: {
-                                                      "boundaryCode":
-                                                          ReferralReconSingleton()
-                                                              .boundary
-                                                              ?.code
-                                                    },
+                                                    additionalDetails:
+                                                        ReferralReconSingleton()
+                                                            .boundary
+                                                            ?.code,
                                                   ),
                                                 ),
                                               );
@@ -506,58 +496,63 @@ class _ReferralReasonChecklistPageState
             children: [
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
-                  return RadioGroup<String>.builder(
-                    groupValue: controller[index].text.trim(),
-                    onChanged: (value) {
-                      context.read<ServiceBloc>().add(
-                            ServiceSurveyFormEvent(
-                              value: Random().nextInt(100).toString(),
-                              submitTriggered: submitTriggered,
-                            ),
-                          );
-                      setState(() {
-                        // Clear child controllers and update visibility
-                        for (final matchingChildItem in childItems) {
-                          final childIndex =
-                              initialAttributes?.indexOf(matchingChildItem);
-                          if (childIndex != null) {
-                            controller[childIndex].clear();
-                            visibleChecklistIndexes
-                                .removeWhere((v) => v == childIndex);
-                          }
-                        }
+                  return Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: EdgeInsets.only(left: theme.spacerTheme.spacer2),
+                      child: RadioList(
+                        radioButtons: item.values != null
+                            ? item.values!
+                                .where((e) => e != i18.checklist.notSelectedKey)
+                                .map((e) => RadioButtonModel(
+                                      code: e,
+                                      name: localizations.translate(
+                                          'CORE_COMMON_${e.trim().toUpperCase()}'),
+                                    ))
+                                .toList()
+                            : [],
+                        groupValue: controller[index].text.trim(),
+                        onChanged: (selectedValue) {
+                          context.read<ServiceBloc>().add(
+                                ServiceSurveyFormEvent(
+                                  value: Random().nextInt(100).toString(),
+                                  submitTriggered: submitTriggered,
+                                ),
+                              );
+                          setState(() {
+                            // Clear child controllers and update visibility
+                            for (final matchingChildItem in childItems) {
+                              final childIndex =
+                                  initialAttributes?.indexOf(matchingChildItem);
+                              if (childIndex != null) {
+                                controller[childIndex].clear();
+                                visibleChecklistIndexes
+                                    .removeWhere((v) => v == childIndex);
+                              }
+                            }
 
-                        // Update the current controller's value
-                        controller[index].value =
-                            TextEditingController.fromValue(
-                          TextEditingValue(
-                            text: value!,
-                          ),
-                        ).value;
-
-                        if (excludedIndexes.isNotEmpty) {
-                          for (int i = 0; i < excludedIndexes.length; i++) {
-                            // Clear excluded child controllers
-                            controller[excludedIndexes[i]].value =
+                            // Update the current controller's value
+                            controller[index].value =
                                 TextEditingController.fromValue(
-                              const TextEditingValue(
-                                text: '',
+                              TextEditingValue(
+                                text: selectedValue.code,
                               ),
                             ).value;
-                          }
-                        }
 
-                        // Remove corresponding controllers based on the removed attributes
-                      });
-                    },
-                    items: item.values != null
-                        ? item.values!
-                            .where((e) => e != i18.checklist.notSelectedKey)
-                            .toList()
-                        : [],
-                    itemBuilder: (item) => RadioButtonBuilder(
-                      localizations.translate(
-                        'CORE_COMMON_${item.trim().toUpperCase()}',
+                            if (excludedIndexes.isNotEmpty) {
+                              for (int i = 0; i < excludedIndexes.length; i++) {
+                                // Clear excluded child controllers
+                                controller[excludedIndexes[i]].value =
+                                    TextEditingController.fromValue(
+                                  const TextEditingValue(
+                                    text: '',
+                                  ),
+                                ).value;
+                              }
+                            }
+                          });
+                        },
+                        isDisabled: false, // Set this based on your logic
                       ),
                     ),
                   );
@@ -573,12 +568,17 @@ class _ReferralReasonChecklistPageState
                     offstage: !hasError,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        localizations.translate(
-                          i18.common.corecommonRequired,
-                        ),
-                        style: TextStyle(
-                          color: theme.colorScheme.error,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                            left: theme.spacerTheme.spacer4,
+                            bottom: theme.spacerTheme.spacer3),
+                        child: Text(
+                          localizations.translate(
+                            i18.common.corecommonRequired,
+                          ),
+                          style: TextStyle(
+                            color: theme.colorScheme.error,
+                          ),
                         ),
                       ),
                     ),
@@ -603,6 +603,8 @@ class _ReferralReasonChecklistPageState
         padding: const EdgeInsets.all(8.0),
         child: FormField<String>(
           validator: (value) {
+            print(value);
+            print(controller[index].text);
             // Custom validation logic
             if (((controller[index].text == '') && item.required == true)) {
               return localizations.translate("${item.code}_REQUIRED");
