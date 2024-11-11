@@ -419,26 +419,23 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "9cca4d9a546037080afe02b6ade82fdf01574e11f5656ad12120fd6966578616"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1+1"
+      path: "../digit_components"
+      relative: true
+    source: path
+    version: "1.0.2+1"
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "0b81e96636496b56b4f9c5d918690a17d8985d6b131e0ab54968eb5471ee4f54"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.3+1"
+      path: "../digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.4"
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: "9862c4885465bb1942e36dc9b42596c201648db9b0f5ffb8ad768e2409fc2742"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_scanner"
+      relative: true
+    source: path
     version: "1.0.3+1"
   dio:
     dependency: transitive
@@ -1276,6 +1273,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
+  survey_form:
+    dependency: "direct main"
+    description:
+      path: "../survey_form"
+      relative: true
+    source: path
+    version: "0.0.1-dev.1"
   synchronized:
     dependency: transitive
     description:
