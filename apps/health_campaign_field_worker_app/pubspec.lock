@@ -441,9 +441,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: "8011a4c367094dfb018fce701d700a582ba862bb"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -521,15 +523,13 @@ packages:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "1.0.1"
+    version: "1.0.2"
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "packages/digit_firebase_services"
-      ref: checklist-tanishi
-      resolved-ref: a4fd63e10e76cec82675332689e344e309246e65
-      url: "https://github.com/egovernments/health-campaign-field-worker-app"
-    source: git
+      path: "../../packages/digit_firebase_services"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_location_tracker:
     dependency: "direct main"
@@ -2397,5 +2397,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.0 <=3.9.0"
   flutter: ">=3.16.0"

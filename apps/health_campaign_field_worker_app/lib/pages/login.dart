@@ -271,27 +271,3 @@ PrivacyNoticeModel? convertToPrivacyPolicyModel(PrivacyPolicy? privacyPolicy) {
         .toList(),
   );
 }
-
-
-// convert to privacy notice model
-PrivacyNoticeModel? convertToPrivacyPolicyModel(PrivacyPolicy? privacyPolicy) {
-  return PrivacyNoticeModel(
-    header: privacyPolicy?.header ?? '',
-    module: privacyPolicy?.module ?? '',
-    active: privacyPolicy?.active,
-    contents: privacyPolicy?.contents?.map((content) => ContentNoticeModel(
-      header: content.header,
-      descriptions: content.descriptions?.map((description) => DescriptionNoticeModel(
-        text: description.text,
-        type: description.type,
-        isBold: description.isBold,
-        subDescriptions: description.subDescriptions?.map((subDescription) => SubDescriptionNoticeModel(
-          text: subDescription.text,
-          type: subDescription.type,
-          isBold: subDescription.isBold,
-          isSpaceRequired: subDescription.isSpaceRequired,
-        )).toList(),
-      )).toList(),
-    )).toList(),
-  );
-}
