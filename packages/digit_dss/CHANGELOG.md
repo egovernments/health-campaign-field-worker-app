@@ -1,3 +1,8 @@
+## 1.0.2
+* Bug fixes
+  * Added last sync time 
+* Added amount enum
+
 ## 1.0.1
 * Bug fixes
 * Added enums for dss charts

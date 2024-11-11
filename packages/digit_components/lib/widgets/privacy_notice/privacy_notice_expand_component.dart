@@ -15,10 +15,10 @@ class ExpandableSection extends LocalizedStatefulWidget {
   });
 
   @override
-  _ExpandableSectionState createState() => _ExpandableSectionState();
+  ExpandableSectionState createState() => ExpandableSectionState();
 }
 
-class _ExpandableSectionState extends LocalizedState<ExpandableSection> {
+class ExpandableSectionState extends LocalizedState<ExpandableSection> {
   bool _isExpanded = false;
 
   @override
@@ -103,10 +103,10 @@ class DescriptionWidget extends LocalizedStatefulWidget {
   });
 
   @override
-  _DescriptionWidgetState createState() => _DescriptionWidgetState();
+  DescriptionWidgetState createState() => DescriptionWidgetState();
 }
 
-class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
+class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
   @override
   Widget build(BuildContext context) {
     final descriptionText = widget.description.text ?? '';
@@ -150,12 +150,14 @@ class _DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
         text: TextSpan(
           text: '$stepNumber. ',
           style: TextStyle(
+            color: const DigitColors().woodsmokeBlack,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
           children: [
             TextSpan(
               text: localizations.translate(descriptionText),
               style: TextStyle(
+                color: const DigitColors().woodsmokeBlack,
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -213,10 +215,10 @@ class SubDescriptionWidget extends LocalizedStatefulWidget {
   });
 
   @override
-  _SubDescriptionWidgetState createState() => _SubDescriptionWidgetState();
+  SubDescriptionWidgetState createState() => SubDescriptionWidgetState();
 }
 
-class _SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
+class SubDescriptionWidgetState extends LocalizedState<SubDescriptionWidget> {
   @override
   Widget build(BuildContext context) {
     final subDescriptionText = widget.subDescription.text ?? '';

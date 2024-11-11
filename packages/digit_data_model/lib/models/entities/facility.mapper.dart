@@ -240,6 +240,9 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
   static AddressModel? _$address(FacilityModel v) => v.address;
   static const Field<FacilityModel, AddressModel> _f$address =
       Field('address', _$address, opt: true);
+  static String? _$name(FacilityModel v) => v.name;
+  static const Field<FacilityModel, String> _f$name =
+      Field('name', _$name, opt: true);
   static AuditDetails? _$auditDetails(FacilityModel v) => v.auditDetails;
   static const Field<FacilityModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -262,6 +265,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
     #tenantId: _f$tenantId,
     #rowVersion: _f$rowVersion,
     #address: _f$address,
+    #name: _f$name,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -288,6 +292,7 @@ class FacilityModelMapper extends SubClassMapperBase<FacilityModel> {
         tenantId: data.dec(_f$tenantId),
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
+        name: data.dec(_f$name),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -367,6 +372,7 @@ abstract class FacilityModelCopyWith<$R, $In extends FacilityModel, $Out>
       String? tenantId,
       int? rowVersion,
       AddressModel? address,
+      String? name,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -407,6 +413,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
           Object? tenantId = $none,
           Object? rowVersion = $none,
           Object? address = $none,
+          Object? name = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -421,6 +428,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
         if (tenantId != $none) #tenantId: tenantId,
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (address != $none) #address: address,
+        if (name != $none) #name: name,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -439,6 +447,7 @@ class _FacilityModelCopyWithImpl<$R, $Out>
       tenantId: data.get(#tenantId, or: $value.tenantId),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       address: data.get(#address, or: $value.address),
+      name: data.get(#name, or: $value.name),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),
