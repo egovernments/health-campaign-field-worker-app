@@ -65,6 +65,7 @@ class StockReconciliationBloc
 
     final productVariantId = state.productVariantId;
     final facilityId = state.facilityModel?.id;
+    final dateOfReconciliation = state.dateOfReconciliation;
 
     if ((productVariantId == null) ||
         (!event.isDistributor && facilityId == null)) return;
@@ -93,10 +94,23 @@ class StockReconciliationBloc
                 InventorySingleton().loggedInUserUuid)
         .toList();
 
+    final stocks = [...receivedStocks, ...sentStocks];
+    final dateFilteredStocks = stocks
+        .where(
+          (e) =>
+              e.dateOfEntryTime!.year < dateOfReconciliation.year ||
+              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                  e.dateOfEntryTime!.month < dateOfReconciliation.month ||
+              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                  e.dateOfEntryTime!.month == dateOfReconciliation.month &&
+                  e.dateOfEntryTime!.day <= dateOfReconciliation.day,
+        )
+        .toList();
+
     // Emitting the state with the fetched stock reconciliation details
     emit(state.copyWith(
       loading: false,
-      stockModels: [...receivedStocks, ...sentStocks],
+      stockModels: dateFilteredStocks,
     ));
   }
 
