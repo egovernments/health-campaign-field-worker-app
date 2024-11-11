@@ -1,18 +1,18 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:survey_form/survey_form.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../utils/date_utils.dart';
@@ -215,10 +215,12 @@ class _ReferralReasonChecklistPageState
                                                     accountId:
                                                         ReferralReconSingleton()
                                                             .projectId,
-                                                    additionalDetails:
-                                                        ReferralReconSingleton()
-                                                            .boundary
-                                                            ?.code,
+                                                    additionalDetails: {
+                                                      "boundaryCode":
+                                                          ReferralReconSingleton()
+                                                              .boundary
+                                                              ?.code
+                                                    },
                                                   ),
                                                 ),
                                               );
