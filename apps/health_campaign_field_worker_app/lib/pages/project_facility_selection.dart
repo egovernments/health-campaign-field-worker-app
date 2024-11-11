@@ -12,12 +12,10 @@ import '../widgets/header/back_navigation_help_header.dart';
 @RoutePage()
 class ProjectFacilitySelectionPage extends StatelessWidget {
   final List<ProjectFacilityModel> projectFacilities;
-  final Map<String, String> facilityMap;
 
   const ProjectFacilitySelectionPage({
     Key? key,
     required this.projectFacilities,
-    required this.facilityMap,
   }) : super(key: key);
 
   static const _facilityName = 'facilityKey';
@@ -150,9 +148,9 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
                                     top: kPadding * 2,
                                   ),
                                   child: Text(projectFacility != null
-                                      ? facilityMap[
-                                              projectFacility.facilityId] ??
-                                          ''
+                                      ? localizations.translate(
+                                          'PJ_FAC_${projectFacility.id}',
+                                        )
                                       : ''),
                                 ),
                               ),
@@ -187,18 +185,16 @@ class ProjectFacilitySelectionPage extends StatelessWidget {
 class ProjectFacilityValueAccessor
     extends ControlValueAccessor<ProjectFacilityModel, String> {
   final List<ProjectFacilityModel> models;
-  final Map<String, String> facilityMap;
-  ProjectFacilityValueAccessor(this.models, this.facilityMap);
+
+  ProjectFacilityValueAccessor(this.models);
 
   @override
   String? modelToViewValue(ProjectFacilityModel? modelValue) {
-    return facilityMap[modelValue?.facilityId];
+    return modelValue?.id;
   }
 
   @override
   ProjectFacilityModel? viewToModelValue(String? viewValue) {
-    return models.firstWhereOrNull(
-      (element) => facilityMap[element.facilityId] == viewValue,
-    );
+    return models.firstWhereOrNull((element) => element.id == viewValue);
   }
 }
