@@ -72,7 +72,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
       builder: (ctx, facilityState) {
         return facilityState.maybeWhen(
           orElse: () => const SizedBox.shrink(),
-          fetched: (facilities) {
+          fetched: (facilities, facilityMap) {
             final projectFacilities = facilities
                 .where((e) => e.id != 'N/A' && e.id != 'Delivery Team')
                 .toList();
@@ -251,6 +251,8 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                           ReferralReconProjectFacilitySelectionPage(
                                                         projectFacilities:
                                                             facilities,
+                                                        facilityMap:
+                                                            facilityMap,
                                                       ),
                                                     ),
                                                   );
@@ -302,12 +304,15 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                               ReferralReconProjectFacilitySelectionPage(
                                                             projectFacilities:
                                                                 facilities,
+                                                            facilityMap:
+                                                                facilityMap,
                                                           ),
                                                         ),
                                                       );
 
-                                                      if (facility == null)
+                                                      if (facility == null) {
                                                         return;
+                                                      }
                                                       form
                                                               .control(
                                                                 _evaluationFacilityKey,
