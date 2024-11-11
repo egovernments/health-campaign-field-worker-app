@@ -149,12 +149,14 @@ class DescriptionWidgetState extends LocalizedState<DescriptionWidget> {
         text: TextSpan(
           text: '$stepNumber. ',
           style: TextStyle(
+            color: const DigitColors().woodsmokeBlack,
             fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
           ),
           children: [
             TextSpan(
               text: localizations.translate(descriptionText),
               style: TextStyle(
+                color: const DigitColors().woodsmokeBlack,
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
               ),
             ),
