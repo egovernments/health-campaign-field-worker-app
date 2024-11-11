@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:dio/dio.dart';

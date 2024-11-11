@@ -76,6 +76,8 @@ dependencies:
   closed_household: ^1.0.1+1
   digit_location_tracker: ^0.0.1-dev.1
   permission_handler: ^11.3.1
+  survey_form: ^0.0.1-dev.1
+  complaints: ^0.0.1-dev.1
 
 dev_dependencies:
   flutter_test:
@@ -112,7 +114,7 @@ flutter:
   assets:
     - ./
     - assets/icons/svg/
-    
+
   fonts:
     - family: Roboto
       fonts:
