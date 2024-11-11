@@ -164,7 +164,6 @@ class StockModel extends EntityModel with StockModelMappable {
       rowVersion: Value(rowVersion),
       transactionType: Value(transactionType),
       transactionReason: Value(transactionReason),
-      dateOfEntry: Value(dateOfEntry),
     );
   }
 }

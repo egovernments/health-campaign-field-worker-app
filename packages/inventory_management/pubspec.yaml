@@ -32,7 +32,8 @@ dependencies:
   digit_scanner: ^1.0.3+1
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
-  digit_data_model: ^1.0.3+3
+  digit_data_model: 
+    path: ../../packages/digit_data_model
   collection: ^1.16.0
 
 dev_dependencies:
