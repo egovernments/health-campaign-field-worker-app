@@ -13,6 +13,7 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../router/registration_delivery_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/models/widget_config_model.dart';
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -21,10 +22,39 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseholdLocationPage extends LocalizedStatefulWidget {
-  const HouseholdLocationPage({
+  final Map<String, Map<String, dynamic>> widgetConfig;
+
+  HouseholdLocationPage({
+    Map<String, Map<String, dynamic>>? widgetConfig,
     super.key,
     super.appLocalizations,
-  });
+  }) : widgetConfig = widgetConfig ??
+            {
+              'administrationArea': {
+                'isEnabled': false,
+                'readOnly': true,
+                'isRequired': false,
+                'order': 3,
+              },
+              'accuracy': {
+                'isEnabled': true,
+                'readOnly': true,
+                'isRequired': true,
+                'order': 2,
+              },
+              'addressLine1': {
+                'isEnabled': true,
+                'readOnly': false,
+                'isRequired': false,
+                'order': 1,
+              },
+              'postalCode': {
+                'isEnabled': true,
+                'readOnly': false,
+                'isRequired': false,
+                'order': 1,
+              }
+            };
 
   @override
   State<HouseholdLocationPage> createState() => HouseholdLocationPageState();
@@ -60,6 +90,156 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
           return true;
         });
     super.initState();
+  }
+
+  List<Widget> buildWidgetsFromConfig(WidgetConfigModel model) {
+    List<Widget> widgets = [];
+
+    // Sort the config keys by the 'order' key
+    var sortedKeys = model.config.keys.toList();
+    sortedKeys.sort(
+        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
+
+    for (var key in sortedKeys) {
+      var fieldConfig = model.config[key];
+
+      if (fieldConfig['isEnabled'] == true) {
+        Widget widget;
+
+        // Generate the widget based on the fieldConfig['type'] using a switch case
+        switch (key) {
+          case _administrationAreaKey:
+            widget = householdLocationShowcaseData.administrativeArea.buildWith(
+                child: DigitTextFormField(
+              formControlName: _administrationAreaKey,
+              label: localizations.translate(
+                i18.householdLocation.administrationAreaFormLabel,
+              ),
+              isRequired: fieldConfig['isRequired'] ?? false,
+              readOnly: fieldConfig['readOnly'] ?? false,
+              validationMessages: {
+                'required': (_) => localizations.translate(
+                      i18.householdLocation
+                          .administrationAreaRequiredValidation,
+                    ),
+              },
+            ));
+            break;
+          case _accuracyKey:
+            widget = householdLocationShowcaseData.gpsAccuracy.buildWith(
+              child: DigitTextFormField(
+                key: const Key(_accuracyKey),
+                formControlName: _accuracyKey,
+                label: localizations.translate(
+                  i18.householdLocation.gpsAccuracyLabel,
+                ),
+                readOnly: fieldConfig['readOnly'] ?? false,
+                isRequired: fieldConfig['isRequired'] ?? false,
+                validationMessages: {
+                  'required': (_) => localizations.translate(
+                        i18.common.corecommonRequired,
+                      ),
+                },
+              ),
+            );
+            break;
+          case _addressLine1Key:
+            widget = householdLocationShowcaseData.addressLine1.buildWith(
+              child: DigitTextFormField(
+                formControlName: _addressLine1Key,
+                label: localizations.translate(
+                  i18.householdLocation.householdAddressLine1LabelText,
+                ),
+                readOnly: fieldConfig['readOnly'] ?? false,
+                isRequired: fieldConfig['isRequired'] ?? false,
+                validationMessages: {
+                  'required': (_) => localizations.translate(
+                        i18.common.min2CharsRequired,
+                      ),
+                  'maxLength': (object) => localizations
+                      .translate(i18.common.maxCharsRequired)
+                      .replaceAll('{}', maxLength.toString()),
+                },
+              ),
+            );
+            break;
+          case _addressLine2Key:
+            widget = householdLocationShowcaseData.addressLine2.buildWith(
+              child: DigitTextFormField(
+                formControlName: _addressLine2Key,
+                label: localizations.translate(
+                  i18.householdLocation.householdAddressLine2LabelText,
+                ),
+                readOnly: fieldConfig['readOnly'] ?? false,
+                isRequired: fieldConfig['isRequired'] ?? false,
+                validationMessages: {
+                  'required': (_) => localizations.translate(
+                        i18.common.min2CharsRequired,
+                      ),
+                  'maxLength': (object) => localizations
+                      .translate(i18.common.maxCharsRequired)
+                      .replaceAll('{}', maxLength.toString()),
+                },
+              ),
+            );
+            break;
+          case _landmarkKey:
+            widget = householdLocationShowcaseData.postalCode.buildWith(
+              child: DigitTextFormField(
+                keyboardType: TextInputType.text,
+                formControlName: _postalCodeKey,
+                label: localizations.translate(
+                  i18.householdLocation.postalCodeFormLabel,
+                ),
+                readOnly: fieldConfig['readOnly'] ?? false,
+                isRequired: fieldConfig['isRequired'] ?? false,
+                validationMessages: {
+                  'required': (_) => localizations.translate(
+                        i18.common.min2CharsRequired,
+                      ),
+                  'maxLength': (object) => localizations
+                      .translate(i18.common.maxCharsRequired)
+                      .replaceAll('{}', '6'),
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+              ),
+            );
+            break;
+          case _postalCodeKey:
+            widget = householdLocationShowcaseData.postalCode.buildWith(
+              child: DigitTextFormField(
+                keyboardType: TextInputType.text,
+                formControlName: _postalCodeKey,
+                label: localizations.translate(
+                  i18.householdLocation.postalCodeFormLabel,
+                ),
+                readOnly: fieldConfig['readOnly'] ?? false,
+                isRequired: fieldConfig['isRequired'] ?? false,
+                validationMessages: {
+                  'required': (_) => localizations.translate(
+                        i18.common.min2CharsRequired,
+                      ),
+                  'maxLength': (object) => localizations
+                      .translate(i18.common.maxCharsRequired)
+                      .replaceAll('{}', '6'),
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+              ),
+            );
+            break;
+          default:
+            throw Exception("Unsupported widget type: ${key}");
+        }
+
+        widgets.add(widget);
+      }
+    }
+
+    return widgets;
   }
 
   @override
@@ -277,109 +457,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               i18.householdLocation
                                   .householdLocationDescriptionText,
                             )),
-                        Column(children: [
-                          householdLocationShowcaseData.administrativeArea
-                              .buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _administrationAreaKey,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .administrationAreaFormLabel,
-                              ),
-                              readOnly: true,
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.householdLocation
-                                          .administrationAreaRequiredValidation,
-                                    ),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.gpsAccuracy.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _accuracyKey,
-                              label: localizations.translate(
-                                i18.householdLocation.gpsAccuracyLabel,
-                              ),
-                              readOnly: true,
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.corecommonRequired,
-                                    ),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.addressLine1.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _addressLine1Key,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .householdAddressLine1LabelText,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.addressLine2.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _addressLine2Key,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .householdAddressLine2LabelText,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.landmark.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _landmarkKey,
-                              label: localizations.translate(
-                                i18.householdLocation.landmarkFormLabel,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.postalCode.buildWith(
-                            child: DigitTextFormField(
-                              keyboardType: TextInputType.text,
-                              formControlName: _postalCodeKey,
-                              label: localizations.translate(
-                                i18.householdLocation.postalCodeFormLabel,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', '6'),
-                              },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                            ),
-                          ),
-                        ]),
+                        Column(
+                            children: buildWidgetsFromConfig(WidgetConfigModel(
+                                config: widget.widgetConfig, form: form)))
                       ],
                     ),
                   ),
@@ -397,17 +477,19 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       editHousehold: (value) => value.addressModel,
     );
 
-    return fb.group(<String, Object>{
+    final formGroup = fb.group(<String, Object>{
       _administrationAreaKey: FormControl<String>(
-        value: localizations.translate(
-            RegistrationDeliverySingleton().boundary!.code ?? ''),
+        value: localizations
+            .translate(RegistrationDeliverySingleton().boundary!.code ?? ''),
         validators: [Validators.required],
       ),
-      _addressLine1Key:
-          FormControl<String>(value: addressModel?.addressLine1, validators: [
-        CustomValidator.requiredMin,
-        Validators.maxLength(64),
-      ]),
+      _addressLine1Key: FormControl<String>(
+          value: addressModel?.addressLine1,
+          validators: [
+            CustomValidator.requiredMin,
+            Validators.maxLength(64),
+            Validators.required
+          ]),
       _addressLine2Key: FormControl<String>(
         value: addressModel?.addressLine2,
         validators: [
@@ -435,5 +517,33 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
         value: addressModel?.locationAccuracy,
       ),
     });
+
+    widget.widgetConfig.forEach((key, fieldConfig) {
+      final formControl = formGroup.control(key);
+
+      // Get current validators
+      final currentValidators = formControl.validators;
+
+      dynamic updatedValidators = currentValidators.where((validator) {
+        // Check if the validator is of the same type as Validators.required
+        return validator.runtimeType != Validators.required.runtimeType;
+      }).toList();
+
+      if (fieldConfig['isRequired'] == true) {
+        // Add the new validator to the list
+        updatedValidators = [
+          ...currentValidators,
+          Validators.required // Example new validator
+        ];
+      }
+
+      // Set the updated validators back to the form control
+      formControl.setValidators(updatedValidators);
+
+      // Re-run validation with the new validators
+      formControl.updateValueAndValidity();
+    });
+
+    return formGroup;
   }
 }

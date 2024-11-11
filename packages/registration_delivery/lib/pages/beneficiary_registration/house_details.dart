@@ -10,7 +10,11 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../models/entities/additional_fields_type.dart';
+import '../../utils/formController.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/models/widget_config_model.dart';
+import '../../utils/utils.dart';
+import '../../utils/widgetfactory.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
@@ -18,10 +22,27 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseDetailsPage extends LocalizedStatefulWidget {
-  const HouseDetailsPage({
+  final Map<String, Map<String, dynamic>> widgetConfig;
+
+  HouseDetailsPage({
+    Map<String, Map<String, dynamic>>? widgetConfig,
     super.key,
     super.appLocalizations,
-  });
+  }) : widgetConfig = widgetConfig ??
+            {
+              'householdStructure': {
+                'isEnabled': true,
+                'readOnly': false,
+                'isRequired': true,
+                'order': 1,
+              },
+              'noOfRooms': {
+                'isEnabled': true,
+                'readOnly': false,
+                'isRequired': true,
+                'order': 2,
+              }
+            };
 
   @override
   State<HouseDetailsPage> createState() => HouseDetailsPageState();
@@ -37,6 +58,106 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
     final registrationState = context.read<BeneficiaryRegistrationBloc>().state;
 
     super.initState();
+  }
+
+  List<Widget> buildWidgetsFromConfig(WidgetConfigModel model) {
+    List<Widget> widgets = [];
+
+    // Sort the config keys by the 'order' key
+    var sortedKeys = model.config.keys.toList();
+    sortedKeys.sort(
+        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
+
+    for (var key in sortedKeys) {
+      var fieldConfig = model.config[key];
+
+      if (fieldConfig['isEnabled'] == true) {
+        Widget widget;
+
+        // Generate the widget based on the fieldConfig['type'] using a switch case
+        switch (key) {
+          case _householdStructureKey:
+            widget = houseShowcaseData.typeOfStructure.buildWith(
+              child: AbsorbPointer(
+                absorbing: fieldConfig['readOnly'] ?? false,
+                child: Opacity(
+                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                  child: SelectionBox<String>(
+                    title:
+                        '${localizations.translate(i18.householdDetails.typeOfStructure)}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                    equalWidthOptions: true,
+                    allowMultipleSelection: false,
+                    options:
+                        RegistrationDeliverySingleton().houseStructureTypes ??
+                            [],
+                    initialSelection: model.form
+                                .control(_householdStructureKey)
+                                .value !=
+                            null
+                        ? [...model.form.control(_householdStructureKey).value]
+                        : [],
+                    onSelectionChanged: (values) {
+                      model.form
+                          .control(_householdStructureKey)
+                          .markAsTouched();
+                      if (values.isEmpty) {
+                        model.form.control(_householdStructureKey).value = null;
+                        setState(() {
+                          model.form
+                              .control(_householdStructureKey)
+                              .setErrors({'': true});
+                        });
+                      } else {
+                        setState(() {
+                          model.form.control(_householdStructureKey).value =
+                              values;
+                        });
+                      }
+                    },
+                    valueMapper: (value) {
+                      return localizations.translate(value.toString());
+                    },
+                    errorMessage: model.form
+                                .control(_householdStructureKey)
+                                .hasErrors &&
+                            model.form.control(_householdStructureKey).touched
+                        ? localizations.translate(
+                            i18.householdDetails.selectStructureTypeError)
+                        : null,
+                  ),
+                ),
+              ),
+            );
+            break;
+          case _noOfRoomsKey:
+            widget = houseShowcaseData.noOfRooms.buildWith(
+              child: AbsorbPointer(
+                absorbing: fieldConfig['readOnly'],
+                child: Opacity(
+                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                  child: DigitIntegerFormPicker(
+                    minimum: 1,
+                    maximum: 20,
+                    form: model.form,
+                    formControlName: _noOfRoomsKey,
+                    label: '${localizations.translate(
+                      i18.householdDetails.noOfRoomsLabel,
+                    )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                    incrementer: true,
+                  ),
+                ),
+              ),
+            );
+            break;
+          default:
+            throw Exception("Unsupported widget type: ${key}");
+        }
+
+        widgets.add(widget);
+      }
+    }
+
+    return widgets;
   }
 
   @override
@@ -69,7 +190,10 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                         onPressed: () {
                           form.markAllAsTouched();
                           if (form.control(_householdStructureKey).value ==
-                              null) {
+                                  null &&
+                              (widget.widgetConfig[_householdStructureKey]
+                                      ?['isRequired'] ??
+                                  false)) {
                             setState(() {
                               form
                                   .control(_householdStructureKey)
@@ -227,68 +351,11 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   style: theme.textTheme.displayMedium,
                                 ),
                               ),
-                              Column(children: [
-                                houseShowcaseData.typeOfStructure.buildWith(
-                                  child: SelectionBox<String>(
-                                    isRequired: true,
-                                    title: localizations.translate(
-                                        i18.householdDetails.typeOfStructure),
-                                    equalWidthOptions: true,
-                                    allowMultipleSelection: false,
-                                    options: RegistrationDeliverySingleton()
-                                            .houseStructureTypes ??
-                                        [],
-                                    initialSelection: form.control(_householdStructureKey).value!= null ? [...form.control(_householdStructureKey).value ] : [],
-                                    onSelectionChanged: (values) {
-                                      form
-                                          .control(_householdStructureKey)
-                                          .markAsTouched();
-                                      if (values.isEmpty) {
-                                        form
-                                            .control(_householdStructureKey)
-                                            .value = null;
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .setErrors({'': true});
-                                        });
-                                      } else {
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .value = values;
-                                        });
-                                      }
-                                    },
-                                    valueMapper: (value) {
-                                      return localizations
-                                          .translate(value.toString());
-                                    },
-                                    errorMessage: form
-                                                .control(_householdStructureKey)
-                                                .hasErrors &&
-                                            form
-                                                .control(_householdStructureKey)
-                                                .touched
-                                        ? localizations.translate(i18
-                                            .householdDetails
-                                            .selectStructureTypeError)
-                                        : null,
-                                  ),
-                                ),
-                                houseShowcaseData.noOfRooms.buildWith(
-                                  child: DigitIntegerFormPicker(
-                                    minimum: 1,
-                                    maximum: 20,
-                                    form: form,
-                                    formControlName: _noOfRoomsKey,
-                                    label: localizations.translate(
-                                      i18.householdDetails.noOfRoomsLabel,
-                                    ),
-                                    incrementer: true,
-                                  ),
-                                ),
-                              ]),
+                              Column(
+                                  children: buildWidgetsFromConfig(
+                                      WidgetConfigModel(
+                                          config: widget.widgetConfig,
+                                          form: form)))
                             ],
                           ),
                         ),
@@ -301,7 +368,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
   }
 
   FormGroup buildForm(BeneficiaryRegistrationState state) {
-    return fb.group(<String, Object>{
+    final formGroup = fb.group(<String, Object>{
       _noOfRoomsKey: FormControl<int>(
           value: state.householdModel?.additionalFields?.fields
                       .where((h) =>
@@ -327,5 +394,33 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
             .split("|"),
       )
     });
+
+    widget.widgetConfig.forEach((key, fieldConfig) {
+      final formControl = formGroup.control(key);
+
+      // Get current validators
+      final currentValidators = formControl.validators;
+
+      dynamic updatedValidators = currentValidators.where((validator) {
+        // Check if the validator is of the same type as Validators.required
+        return validator.runtimeType != Validators.required.runtimeType;
+      }).toList();
+
+      if (fieldConfig['isRequired'] == true) {
+        // Add the new validator to the list
+        updatedValidators = [
+          ...currentValidators,
+          Validators.required // Example new validator
+        ];
+      }
+
+      // Set the updated validators back to the form control
+      formControl.setValidators(updatedValidators);
+
+      // Re-run validation with the new validators
+      formControl.updateValueAndValidity();
+    });
+
+    return formGroup;
   }
 }
