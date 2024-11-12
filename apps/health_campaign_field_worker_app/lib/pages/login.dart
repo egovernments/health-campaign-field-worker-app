@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -134,6 +136,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                                 (AppConfiguration appConfiguration, _, __) =>
                                     appConfiguration.privacyPolicyConfig,
                             orElse: () => null);
+
                         if (privacyPolicyJson?.active == false) {
                           return const SizedBox.shrink();
                         }
