@@ -31,6 +31,17 @@ class StockReconciliationBloc
     on(_handleSelectProduct);
     on(_handleCalculate);
     on(_handleCreate);
+    on(_handleSetDateOfReconciliation);
+  }
+
+  // Event handler for selecting dateOfReconciliation
+  FutureOr<void> _handleSetDateOfReconciliation(
+    StockReconciliationSetDateOfReconciliationEvent event,
+    StockReconciliationEmitter emit,
+  ) async {
+    // Emitting the state with the selected dateOfReconciliation
+    emit(state.copyWith(dateOfReconciliation: event.dateOfReconciliation));
+    add(const StockReconciliationCalculateEvent());
   }
 
   // Event handler for selecting a facility
@@ -98,12 +109,13 @@ class StockReconciliationBloc
     final dateFilteredStocks = stocks
         .where(
           (e) =>
-              e.dateOfEntryTime!.year < dateOfReconciliation.year ||
-              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
-                  e.dateOfEntryTime!.month < dateOfReconciliation.month ||
-              e.dateOfEntryTime!.year == dateOfReconciliation.year &&
-                  e.dateOfEntryTime!.month == dateOfReconciliation.month &&
-                  e.dateOfEntryTime!.day <= dateOfReconciliation.day,
+              e.dateOfEntryTime == null ||
+              (e.dateOfEntryTime!.year < dateOfReconciliation.year ||
+                  e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                      e.dateOfEntryTime!.month < dateOfReconciliation.month ||
+                  e.dateOfEntryTime!.year == dateOfReconciliation.year &&
+                      e.dateOfEntryTime!.month == dateOfReconciliation.month &&
+                      e.dateOfEntryTime!.day <= dateOfReconciliation.day),
         )
         .toList();
 
@@ -175,6 +187,12 @@ class StockReconciliationEvent with _$StockReconciliationEvent {
   const factory StockReconciliationEvent.create(
     StockReconciliationModel stockReconciliationModel,
   ) = StockReconciliationCreateEvent;
+
+  //Event For setting dateOfReconciliation
+  const factory StockReconciliationEvent.setDateOfReconciliation(
+    DateTime dateOfReconciliation, {
+    @Default(false) bool isDistributor,
+  }) = StockReconciliationSetDateOfReconciliationEvent;
 }
 
 // Freezed union class for stock reconciliation states
