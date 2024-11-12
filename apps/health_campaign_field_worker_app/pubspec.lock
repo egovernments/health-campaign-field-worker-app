@@ -362,9 +362,10 @@ packages:
   complaints:
     dependency: "direct main"
     description:
-      path: "../../packages/complaints"
-      relative: true
-    source: path
+      name: complaints
+      sha256: "6e38cfdc9dd463b1fbe4c73913f011685453675583225a890370abee5f6a43a9"
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1-dev.1"
   connectivity_plus:
     dependency: "direct main"
@@ -441,11 +442,9 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "packages/dart_mappable_builder"
-      ref: master
-      resolved-ref: "8011a4c367094dfb018fce701d700a582ba862bb"
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -527,9 +526,11 @@ packages:
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_firebase_services"
-      relative: true
-    source: path
+      path: "packages/digit_firebase_services"
+      ref: checklist-tanishi
+      resolved-ref: a4fd63e10e76cec82675332689e344e309246e65
+      url: "https://github.com/egovernments/health-campaign-field-worker-app"
+    source: git
     version: "0.0.1"
   digit_location_tracker:
     dependency: "direct main"
@@ -548,9 +549,10 @@ packages:
   digit_showcase:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_showcase"
-      relative: true
-    source: path
+      name: digit_showcase
+      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.0"
   digit_ui_components:
     dependency: transitive
@@ -1350,9 +1352,10 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      path: "../../packages/inventory_management"
-      relative: true
-    source: path
+      name: inventory_management
+      sha256: c3f0162035ce56ea2b9482ab702e82a5aca5d30101bfe35f542c453fedbdbc45
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3+5"
   io:
     dependency: transitive
