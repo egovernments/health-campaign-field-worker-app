@@ -414,6 +414,23 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
         ];
       }
 
+      // If JSON config has regex, add it as a validator
+      if (fieldConfig.containsKey('regex') && fieldConfig['regex'] is List) {
+        List<String> regexList = fieldConfig['regex'];
+        String errorMessages = fieldConfig['errorMessage'];
+
+        regexList.asMap().forEach((index, regexPattern) {
+          updatedValidators.add((control) {
+            final value = control.value;
+            if (value != null && value.isNotEmpty && !RegExp(regexPattern).hasMatch(value)) {
+              // Ensure there's a matching error message for this index
+              return {'customError': errorMessages};
+            }
+            return null;
+          });
+        });
+      }
+
       // Set the updated validators back to the form control
       formControl.setValidators(updatedValidators);
 

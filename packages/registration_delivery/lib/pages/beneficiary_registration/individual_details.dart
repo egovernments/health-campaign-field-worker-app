@@ -49,13 +49,15 @@ class IndividualDetailsPage extends LocalizedStatefulWidget {
               'idType': {
                 'isEnabled': true,
                 'readOnly': false,
-                // 'isRequired': false,
+                'isRequired': true,
                 'order': 2,
               },
               'idNumber': {
                 'isEnabled': true,
                 'readOnly': false,
                 'isRequired': true,
+                'regex': ["^\\d+\$"],
+                "errorMessage": "Invalid input",
                 'order': 3,
               },
               'dob': {
@@ -130,6 +132,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                 'maxLength': (object) => localizations
                     .translate(i18.common.maxCharsRequired)
                     .replaceAll('{}', maxLength.toString()),
+                'customError': (object) => localizations.translate(
+                      fieldConfig['errorMessage'] ?? '',
+                    )
               },
             );
             if (isHeadOfHousehold) {
@@ -199,6 +204,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                               'required': (object) => localizations.translate(
                                     '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
                                   ),
+                              'customError': (object) => localizations.translate(
+                                fieldConfig['errorMessage'] ?? '',
+                              )
                             },
                             padding: const EdgeInsets.only(
                               top: kPadding * 2,
@@ -325,6 +333,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                       .individualDetails.mobileNumberLengthValidationMessage),
                   'minLength': (object) => localizations.translate(i18
                       .individualDetails.mobileNumberLengthValidationMessage),
+                  'customError': (object) => localizations.translate(
+                    fieldConfig['errorMessage'] ?? '',
+                  )
                 },
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
@@ -908,6 +919,25 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           ...currentValidators,
           Validators.required // Example new validator
         ];
+      }
+
+      // If JSON config has regex, add it as a validator
+      if (fieldConfig.containsKey('regex') && fieldConfig['regex'] is List) {
+        List<String> regexList = fieldConfig['regex'];
+        String errorMessages = fieldConfig['errorMessage'];
+
+        regexList.asMap().forEach((index, regexPattern) {
+          updatedValidators.add((control) {
+            final value = control.value;
+            if (value != null &&
+                value.isNotEmpty &&
+                !RegExp(regexPattern).hasMatch(value)) {
+              // Ensure there's a matching error message for this index
+              return {'customError': errorMessages};
+            }
+            return null;
+          });
+        });
       }
 
       // Set the updated validators back to the form control

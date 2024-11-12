@@ -122,6 +122,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                       i18.householdLocation
                           .administrationAreaRequiredValidation,
                     ),
+                'customError': (object) => localizations.translate(
+                  fieldConfig['errorMessage'] ?? '',
+                )
               },
             ));
             break;
@@ -139,6 +142,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   'required': (_) => localizations.translate(
                         i18.common.corecommonRequired,
                       ),
+                  'customError': (object) => localizations.translate(
+                    fieldConfig['errorMessage'] ?? '',
+                  )
                 },
               ),
             );
@@ -159,6 +165,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   'maxLength': (object) => localizations
                       .translate(i18.common.maxCharsRequired)
                       .replaceAll('{}', maxLength.toString()),
+                  'customError': (object) => localizations.translate(
+                    fieldConfig['errorMessage'] ?? '',
+                  )
                 },
               ),
             );
@@ -179,6 +188,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   'maxLength': (object) => localizations
                       .translate(i18.common.maxCharsRequired)
                       .replaceAll('{}', maxLength.toString()),
+                  'customError': (object) => localizations.translate(
+                    fieldConfig['errorMessage'] ?? '',
+                  )
                 },
               ),
             );
@@ -200,17 +212,20 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   'maxLength': (object) => localizations
                       .translate(i18.common.maxCharsRequired)
                       .replaceAll('{}', '6'),
+                  'customError': (object) => localizations.translate(
+                    fieldConfig['errorMessage'] ?? '',
+                  )
                 },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
+                // inputFormatters: [
+                //   FilteringTextInputFormatter.digitsOnly,
+                // ],
               ),
             );
             break;
           case _postalCodeKey:
             widget = householdLocationShowcaseData.postalCode.buildWith(
               child: DigitTextFormField(
-                keyboardType: TextInputType.text,
+                keyboardType: TextInputType.number,
                 formControlName: _postalCodeKey,
                 label: localizations.translate(
                   i18.householdLocation.postalCodeFormLabel,
@@ -224,6 +239,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   'maxLength': (object) => localizations
                       .translate(i18.common.maxCharsRequired)
                       .replaceAll('{}', '6'),
+                  'customError': (object) => localizations.translate(
+                        fieldConfig['errorMessage'] ?? '',
+                  )
                 },
                 inputFormatters: [
                   FilteringTextInputFormatter.digitsOnly,
@@ -535,6 +553,24 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
           ...currentValidators,
           Validators.required // Example new validator
         ];
+      }
+
+
+      // If JSON config has regex, add it as a validator
+      if (fieldConfig.containsKey('regex') && fieldConfig['regex'] is List) {
+        List<String> regexList = fieldConfig['regex'];
+        String errorMessages = fieldConfig['errorMessage'];
+
+        regexList.asMap().forEach((index, regexPattern) {
+          updatedValidators.add((control) {
+            final value = control.value;
+            if (value != null && value.isNotEmpty && !RegExp(regexPattern).hasMatch(value)) {
+              // Ensure there's a matching error message for this index
+              return {'customError': errorMessages};
+            }
+            return null;
+          });
+        });
       }
 
       // Set the updated validators back to the form control

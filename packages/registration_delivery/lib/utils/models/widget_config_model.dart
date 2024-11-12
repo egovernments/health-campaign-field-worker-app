@@ -12,11 +12,3 @@ class WidgetConfigModel {
   });
 }
 
-
-class WidgetConfig {
-  final String type;
-
-  WidgetConfig({
-    required this.type,
-  });
-}

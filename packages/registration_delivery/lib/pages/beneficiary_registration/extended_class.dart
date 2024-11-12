@@ -1,10 +1,5 @@
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-
-import '../../utils/models/widget_config_model.dart';
-import '../../utils/utils.dart';
-import 'household_details.dart';
 import 'household_location.dart';
 
 @RoutePage()
@@ -35,6 +30,8 @@ class ExtendedFormPage extends HouseholdLocationPage {
               'isEnabled': true,
               'readOnly': false,
               'isRequired': false,
+              'regex':  ["^\\d+\$"],
+              "errorMessage": "Invalid input",
               'order': 1,
             },
           },
@@ -56,5 +53,7 @@ class _ExtendedFormPageState extends HouseholdLocationPageState {
     return super.build(context);
   }
 }
+
+
 
 // HouseHold LOcation
