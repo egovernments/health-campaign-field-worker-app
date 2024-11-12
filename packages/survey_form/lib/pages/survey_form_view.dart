@@ -40,6 +40,7 @@ class SurveyFormViewPage extends LocalizedStatefulWidget {
 class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   String isStateChanged = '';
   var submitTriggered = false;
+  bool triggerLocalization = false;
   List<TextEditingController> controller = [];
   List<TextEditingController> additionalController = [];
   List<AttributesModel>? initialAttributes;
@@ -310,10 +311,14 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                     lastModifiedTime: context
                                                         .millisecondsSinceEpoch(),
                                                   ),
-                                                  additionalDetails:
-                                                      SurveyFormSingleton()
-                                                          .boundary
-                                                          ?.code,
+                                                  additionalDetails: {
+                                                    "boundaryCode":
+                                                        SurveyFormSingleton()
+                                                            .boundary
+                                                            ?.code,
+                                                    'lat': latitude,
+                                                    'lng': longitude,
+                                                  },
                                                 ),
                                               ),
                                             );
