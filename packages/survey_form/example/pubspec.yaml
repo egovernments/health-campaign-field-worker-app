@@ -29,11 +29,10 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   digit_components: ^1.0.0+2
+  digit_data_model:
+    path: ../../digit_data_model
   survey_form:
-    git:
-      url: https://github.com/egovernments/health-campaign-field-worker-app
-      ref: develop
-      path: ./packages/survey_form
+    path: ../
 
   flutter:
     sdk: flutter
