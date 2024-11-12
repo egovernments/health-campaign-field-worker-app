@@ -203,8 +203,8 @@ _$CommonMastersWrapperModelImpl _$$CommonMastersWrapperModelImplFromJson(
       stateInfo: (json['StateInfo'] as List<dynamic>)
           .map((e) => StateInfoModel.fromJson(e as Map<String, dynamic>))
           .toList(),
-      privacyPolicyConfig: (json['PrivacyPolicy'] as List<dynamic>)
-          .map((e) => PrivacyPolicyModel.fromJson(e as Map<String, dynamic>))
+      privacyPolicyConfig: (json['PrivacyPolicy'] as List<dynamic>?)
+          ?.map((e) => PrivacyPolicyModel.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

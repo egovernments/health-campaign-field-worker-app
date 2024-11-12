@@ -126,37 +126,38 @@ class _SearchBeneficiaryPageState
                             children: [
                               locationState.latitude != null
                                   ? Padding(
-                                    padding: const EdgeInsets.all(spacer2),
-                                    child: CustomSwitch(
-                                      mainAxisAlignment: MainAxisAlignment.start,
-                                      label: localizations.translate(i18.searchBeneficiary.proximityLabel,),
-                                      value: isProximityEnabled,
-                                      onChanged: (value) {
-                                        searchController.clear();
-                                        setState(() {
-                                          isProximityEnabled = value;
-                                          lat = locationState.latitude!;
-                                          long = locationState.longitude!;
-                                        });
+                                      padding: const EdgeInsets.all(spacer2),
+                                      child: CustomSwitch(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        label: localizations.translate(
+                                          i18.searchBeneficiary.proximityLabel,
+                                        ),
+                                        value: isProximityEnabled,
+                                        onChanged: (value) {
+                                          searchController.clear();
+                                          setState(() {
+                                            isProximityEnabled = value;
+                                            lat = locationState.latitude!;
+                                            long = locationState.longitude!;
+                                          });
 
-                                        if (locationState.hasPermissions &&
-                                            value &&
-                                            locationState.latitude !=
-                                                null &&
-                                            locationState.longitude !=
-                                                null &&
-                                            RegistrationDeliverySingleton()
-                                                    .maxRadius !=
-                                                null &&
-                                            isProximityEnabled) {
-                                          triggerGlobalSearchEvent();
-                                        } else {
-                                          blocWrapper.clearEvent();
-                                          triggerGlobalSearchEvent();
-                                        }
-                                      },
-                                    ),
-                                  )
+                                          if (locationState.hasPermissions &&
+                                              value &&
+                                              locationState.latitude != null &&
+                                              locationState.longitude != null &&
+                                              RegistrationDeliverySingleton()
+                                                      .maxRadius !=
+                                                  null &&
+                                              isProximityEnabled) {
+                                            triggerGlobalSearchEvent();
+                                          } else {
+                                            blocWrapper.clearEvent();
+                                            triggerGlobalSearchEvent();
+                                          }
+                                        },
+                                      ),
+                                    )
                                   : const Offstage(),
                               Padding(
                                 padding: const EdgeInsets.all(spacer2),
@@ -189,7 +190,8 @@ class _SearchBeneficiaryPageState
                                           label: getFilterIconNLabel()['label'],
                                           size: ButtonSize.medium,
                                           type: ButtonType.tertiary,
-                                          suffixIcon: getFilterIconNLabel()['icon'],
+                                          suffixIcon:
+                                              getFilterIconNLabel()['icon'],
                                           onPressed: () => showFilterDialog(),
                                         ),
                                       ),
@@ -198,31 +200,34 @@ class _SearchBeneficiaryPageState
                               selectedFilters.isNotEmpty
                                   ? Align(
                                       alignment: Alignment.topLeft,
-                                      child : SizedBox(
-                                          height: MediaQuery.of(context).size.height * 0.06,
+                                      child: SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.06,
                                         child: ListView.builder(
                                             shrinkWrap: true,
                                             scrollDirection: Axis.horizontal,
                                             itemCount: selectedFilters.length,
                                             itemBuilder: (context, index) {
                                               return Padding(
-                                                  padding: const EdgeInsets.all(spacer1),
-                                                  child: DigitChip(
-                                                    label: '${localizations.translate(getStatus(selectedFilters[index]))}'
-                                                    ' (${searchHouseholdsState.totalResults})',
-                                                    onItemDelete: (){
-                                                      setState(() {
-                                                        selectedFilters.remove(
-                                                          selectedFilters[index]
-                                                        );
-                                                      });
-                                                      blocWrapper.clearEvent();
-                                                      triggerGlobalSearchEvent();
-                                                    },
-                                                  ),
+                                                padding: const EdgeInsets.all(
+                                                    spacer1),
+                                                child: DigitChip(
+                                                  label:
+                                                      '${localizations.translate(getStatus(selectedFilters[index]))}'
+                                                      ' (${searchHouseholdsState.totalResults})',
+                                                  onItemDelete: () {
+                                                    setState(() {
+                                                      selectedFilters.remove(
+                                                          selectedFilters[
+                                                              index]);
+                                                    });
+                                                    blocWrapper.clearEvent();
+                                                    triggerGlobalSearchEvent();
+                                                  },
+                                                ),
                                               );
-                                            }
-                                        ),
+                                            }),
                                       ),
                                     )
                                   : const Offstage(),
@@ -230,7 +235,6 @@ class _SearchBeneficiaryPageState
                           );
                         },
                       ),
-
                       if (searchHouseholdsState.resultsNotFound &&
                           !searchHouseholdsState.loading)
                         InfoCard(
@@ -291,16 +295,16 @@ class _SearchBeneficiaryPageState
                               householdMember: i,
                               onOpenPressed: () async {
                                 final scannerBloc =
-                                context.read<DigitScannerBloc>();
+                                    context.read<DigitScannerBloc>();
 
                                 scannerBloc.add(
                                   const DigitScannerEvent.handleScanner(),
                                 );
 
                                 if ((i.tasks != null &&
-                                    i.tasks?.last.status ==
-                                        Status.closeHousehold.toValue() &&
-                                    (i.tasks ?? []).isNotEmpty) ||
+                                        i.tasks?.lastOrNull!.status ==
+                                            Status.closeHousehold.toValue() &&
+                                        (i.tasks ?? []).isNotEmpty) ||
                                     (i.projectBeneficiaries ?? []).isEmpty) {
                                   setState(() {
                                     selectedFilters = [];
@@ -310,19 +314,19 @@ class _SearchBeneficiaryPageState
                                     BeneficiaryRegistrationWrapperRoute(
                                       initialState: BeneficiaryRegistrationState
                                           .editHousehold(
-                                          householdModel: i.household!,
-                                          individualModel: i.members!,
-                                          registrationDate: DateTime.now(),
-                                          projectBeneficiaryModel:
-                                          (i.projectBeneficiaries ?? [])
-                                              .isNotEmpty
-                                              ? i.projectBeneficiaries
-                                              ?.last
-                                              : null,
-                                          addressModel: i.headOfHousehold!
-                                              .address!.last,
-                                          headOfHousehold:
-                                          i.headOfHousehold),
+                                              householdModel: i.household!,
+                                              individualModel: i.members!,
+                                              registrationDate: DateTime.now(),
+                                              projectBeneficiaryModel:
+                                                  (i.projectBeneficiaries ?? [])
+                                                          .isNotEmpty
+                                                      ? i.projectBeneficiaries
+                                                          ?.lastOrNull
+                                                      : null,
+                                              addressModel: i.headOfHousehold!
+                                                  .address!.lastOrNull,
+                                              headOfHousehold:
+                                                  i.headOfHousehold),
                                     ),
                                   );
                                 } else {
@@ -353,58 +357,60 @@ class _SearchBeneficiaryPageState
           ),
         ),
         bottomNavigationBar: DigitCard(
-          margin: const EdgeInsets.only(top: spacer2),
-          padding: const EdgeInsets.all(spacer2),
-          children: [Button(
-            label: localizations.translate(
-              i18.searchBeneficiary.beneficiaryAddActionLabel,
-            ),
-            mainAxisSize: MainAxisSize.max,
-            type: ButtonType.primary,
-            size: ButtonSize.large,
-            isDisabled: searchHouseholdsState.searchQuery != null &&
-                searchHouseholdsState.searchQuery!.isNotEmpty?false:true,
-            onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    context.read<DigitScannerBloc>().add(
-                          const DigitScannerEvent.handleScanner(),
-                        );
-                    context.router
-                        .push(BeneficiaryRegistrationWrapperRoute(
-                      initialState: BeneficiaryRegistrationCreateState(
-                        searchQuery: searchHouseholdsState.searchQuery,
-                      ),
-                    ));
-                    searchController.clear();
-                    selectedFilters = [];
-                    blocWrapper.clearEvent();
-                  },
-          ),
-          Button(
-            type: ButtonType.secondary,
-            size: ButtonSize.large,
-            mainAxisSize: MainAxisSize.max,
-            onPressed: () {
-              blocWrapper.clearEvent();
-              selectedFilters = [];
-              searchController.clear();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const DigitScannerPage(
-                    quantity: 1,
-                    isGS1code: false,
-                    singleValue: true,
-                  ),
-                  settings: const RouteSettings(name: '/qr-scanner'),
+            margin: const EdgeInsets.only(top: spacer2),
+            padding: const EdgeInsets.all(spacer2),
+            children: [
+              Button(
+                label: localizations.translate(
+                  i18.searchBeneficiary.beneficiaryAddActionLabel,
                 ),
-              );
-            },
-            prefixIcon: Icons.qr_code,
-            label: localizations.translate(
-              i18.deliverIntervention.scannerLabel,
-            ),
-          ),]
-        ),
+                mainAxisSize: MainAxisSize.max,
+                type: ButtonType.primary,
+                size: ButtonSize.large,
+                isDisabled: searchHouseholdsState.searchQuery != null &&
+                        searchHouseholdsState.searchQuery!.isNotEmpty
+                    ? false
+                    : true,
+                onPressed: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  context.read<DigitScannerBloc>().add(
+                        const DigitScannerEvent.handleScanner(),
+                      );
+                  context.router.push(BeneficiaryRegistrationWrapperRoute(
+                    initialState: BeneficiaryRegistrationCreateState(
+                      searchQuery: searchHouseholdsState.searchQuery,
+                    ),
+                  ));
+                  searchController.clear();
+                  selectedFilters = [];
+                  blocWrapper.clearEvent();
+                },
+              ),
+              Button(
+                type: ButtonType.secondary,
+                size: ButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+                onPressed: () {
+                  blocWrapper.clearEvent();
+                  selectedFilters = [];
+                  searchController.clear();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const DigitScannerPage(
+                        quantity: 1,
+                        isGS1code: false,
+                        singleValue: true,
+                      ),
+                      settings: const RouteSettings(name: '/qr-scanner'),
+                    ),
+                  );
+                },
+                prefixIcon: Icons.qr_code,
+                label: localizations.translate(
+                  i18.deliverIntervention.scannerLabel,
+                ),
+              ),
+            ]),
       ),
     );
   }
@@ -421,22 +427,23 @@ class _SearchBeneficiaryPageState
   showFilterDialog() async {
     var filters = await showDialog(
         context: context,
-        builder: (ctx)=> Popup(
-          title: getFilterIconNLabel()['label'],
-          titleIcon: Icon(getFilterIconNLabel()['icon'],
-              color: DigitTheme.instance.colorScheme.primary,
-          ),
-          onCrossTap: (){
-            Navigator.of(
-              context,
-              rootNavigator: true,
-            ).pop();
-          },
-          additionalWidgets: [
-            StatusFilter(
-              selectedFilters: selectedFilters,
-          ),]
-        ));
+        builder: (ctx) => Popup(
+                title: getFilterIconNLabel()['label'],
+                titleIcon: Icon(
+                  getFilterIconNLabel()['icon'],
+                  color: DigitTheme.instance.colorScheme.primary,
+                ),
+                onCrossTap: () {
+                  Navigator.of(
+                    context,
+                    rootNavigator: true,
+                  ).pop();
+                },
+                additionalWidgets: [
+                  StatusFilter(
+                    selectedFilters: selectedFilters,
+                  ),
+                ]));
 
     if (filters != null && filters.isNotEmpty) {
       setState(() {

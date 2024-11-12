@@ -39,7 +39,8 @@ class BeneficiaryCard extends StatelessWidget {
           offstage: status == null,
           child: status == Status.visited.toValue() ||
                   status == Status.registered.toValue() ||
-                  status == Status.administeredSuccess.toValue()
+                  status == Status.administeredSuccess.toValue() ||
+                  status == Status.delivered.toValue()
               ? Button(
                   prefixIcon: Icons.check_circle,
                   label: RegistrationDeliveryLocalization.of(context)
@@ -47,7 +48,7 @@ class BeneficiaryCard extends StatelessWidget {
                   textColor: theme.colorScheme.onSurfaceVariant,
                   iconColor: theme.colorScheme.onSurfaceVariant,
                   isDisabled: true,
-                  onPressed: (){},
+                  onPressed: () {},
                   type: ButtonType.tertiary,
                   size: ButtonSize.medium,
                 )
@@ -60,7 +61,7 @@ class BeneficiaryCard extends StatelessWidget {
                   type: ButtonType.tertiary,
                   size: ButtonSize.medium,
                   isDisabled: true,
-                  onPressed: (){},
+                  onPressed: () {},
                 ),
         ),
         if (subtitle != null)

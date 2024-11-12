@@ -61,7 +61,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
 
     final headerList = [
       DigitTableColumn(
-        header: localizations.translate(i18.beneficiaryDetails.beneficiaryHeader),
+        header:
+            localizations.translate(i18.beneficiaryDetails.beneficiaryHeader),
         cellValue: 'beneficiary',
         isFrozen: true,
       ),
@@ -78,23 +79,25 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         cellValue: 'gender',
       ),
     ];
-    final filteredHeaderList = RegistrationDeliverySingleton()
-        .beneficiaryType !=
-        BeneficiaryType.individual
-        ? headerList.where((element) => element.cellValue != 'delivery').toList()
-        : headerList;
+    final filteredHeaderList =
+        RegistrationDeliverySingleton().beneficiaryType !=
+                BeneficiaryType.individual
+            ? headerList
+                .where((element) => element.cellValue != 'delivery')
+                .toList()
+            : headerList;
     final currentCycle =
-    RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(
-          (e) =>
-      (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
-          (e.endDate) > DateTime.now().millisecondsSinceEpoch,
-      // Return null when no matching cycle is found
-    );
+        RegistrationDeliverySingleton().projectType?.cycles?.firstWhereOrNull(
+              (e) =>
+                  (e.startDate) < DateTime.now().millisecondsSinceEpoch &&
+                  (e.endDate) > DateTime.now().millisecondsSinceEpoch,
+              // Return null when no matching cycle is found
+            );
 
     final tableData = householdMember.members?.map(
-          (e) {
+      (e) {
         final projectBeneficiary =
-        householdMember.projectBeneficiaries?.where((element) {
+            householdMember.projectBeneficiaries?.where((element) {
           if (RegistrationDeliverySingleton().beneficiaryType ==
               BeneficiaryType.individual) {
             return element.beneficiaryClientReferenceId == e.clientReferenceId;
@@ -105,45 +108,44 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         }).toList();
 
         final taskData = (projectBeneficiary ?? []).isNotEmpty &&
-            householdMember.tasks != null
+                householdMember.tasks != null
             ? householdMember.tasks
-            ?.where((element) =>
-        element.projectBeneficiaryClientReferenceId ==
-            projectBeneficiary?.first.clientReferenceId)
-            .toList()
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary?.first.clientReferenceId)
+                .toList()
             : null;
         final referralData = (projectBeneficiary ?? []).isNotEmpty
             ? householdMember.referrals
-            ?.where((element) =>
-        element.projectBeneficiaryClientReferenceId ==
-            projectBeneficiary?.first.clientReferenceId)
-            .toList()
+                ?.where((element) =>
+                    element.projectBeneficiaryClientReferenceId ==
+                    projectBeneficiary?.first.clientReferenceId)
+                .toList()
             : null;
         final sideEffects = taskData != null && taskData.isNotEmpty
             ? householdMember.sideEffects
-            ?.where((element) =>
-        element.taskClientReferenceId ==
-            taskData.last.clientReferenceId)
-            .toList()
+                ?.where((element) =>
+                    element.taskClientReferenceId ==
+                    taskData.last.clientReferenceId)
+                .toList()
             : null;
 
         final ageInYears = DigitDateUtils.calculateAge(
           e.dateOfBirth != null
               ? DigitDateUtils.getFormattedDateToDateTime(
-            e.dateOfBirth!,
-          ) ??
-              DateTime.now()
+                    e.dateOfBirth!,
+                  ) ??
+                  DateTime.now()
               : DateTime.now(),
         ).years;
         final ageInMonths = DigitDateUtils.calculateAge(
           e.dateOfBirth != null
               ? DigitDateUtils.getFormattedDateToDateTime(
-            e.dateOfBirth!,
-          ) ??
-              DateTime.now()
+                    e.dateOfBirth!,
+                  ) ??
+                  DateTime.now()
               : DateTime.now(),
         ).months;
-
 
         final isNotEligible = !checkEligibilityForAgeAndSideEffect(
           DigitDOBAgeConvertor(
@@ -171,7 +173,9 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           DigitTableData(
             [
               e.name?.givenName ?? '--',
-              (e.name?.familyName?.trim().isNotEmpty ?? false) ? e.name?.familyName : null,
+              (e.name?.familyName?.trim().isNotEmpty ?? false)
+                  ? e.name?.familyName
+                  : null,
             ].whereNotNull().join(' '),
             cellKey: 'beneficiary',
           ),
@@ -191,7 +195,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 isNotEligible: isNotEligible,
                 taskdata: taskData,
                 isBeneficiaryRefused:
-                isBeneficiaryRefused || isBeneficiaryReferred,
+                    isBeneficiaryRefused || isBeneficiaryReferred,
                 isStatusReset: isStatusReset,
                 theme: theme,
               ),
@@ -201,31 +205,34 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
             e.dateOfBirth == null
                 ? '--'
                 : '${DigitDateUtils.calculateAge(
-              DigitDateUtils.getFormattedDateToDateTime(
-                e.dateOfBirth!,
-              ) ??
-                  DateTime.now(),
-            ).years} ${localizations.translate(i18.searchBeneficiary.yearsAbbr)} ${DigitDateUtils.calculateAge(
-              DigitDateUtils.getFormattedDateToDateTime(
-                e.dateOfBirth!,
-              ) ??
-                  DateTime.now(),
-            ).months} ${localizations.translate(i18.searchBeneficiary.monthsAbbr)}',
+                    DigitDateUtils.getFormattedDateToDateTime(
+                          e.dateOfBirth!,
+                        ) ??
+                        DateTime.now(),
+                  ).years} ${localizations.translate(i18.searchBeneficiary.yearsAbbr)} ${DigitDateUtils.calculateAge(
+                    DigitDateUtils.getFormattedDateToDateTime(
+                          e.dateOfBirth!,
+                        ) ??
+                        DateTime.now(),
+                  ).months} ${localizations.translate(i18.searchBeneficiary.monthsAbbr)}',
             cellKey: 'age',
           ),
           DigitTableData(
-            e.gender?.name == null ? '--' : localizations.translate('CORE_COMMON_${ e.gender?.name.toUpperCase()}'),
+            e.gender?.name == null
+                ? '--'
+                : localizations
+                    .translate('CORE_COMMON_${e.gender?.name.toUpperCase()}'),
             cellKey: 'gender',
           ),
         ];
 
-        return DigitTableRow(tableRow:
-        RegistrationDeliverySingleton().beneficiaryType !=
-            BeneficiaryType.individual
-            ? rowTableData
-            .where((element) => element.cellKey != 'delivery')
-            .toList()
-            : rowTableData,
+        return DigitTableRow(
+          tableRow: RegistrationDeliverySingleton().beneficiaryType !=
+                  BeneficiaryType.individual
+              ? rowTableData
+                  .where((element) => element.cellKey != 'delivery')
+                  .toList()
+              : rowTableData,
         );
         // rowTableData
       },
@@ -234,20 +241,19 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     final ageInYears = DigitDateUtils.calculateAge(
       householdMember.headOfHousehold?.dateOfBirth != null
           ? DigitDateUtils.getFormattedDateToDateTime(
-        householdMember.headOfHousehold!.dateOfBirth!,
-      ) ??
-          DateTime.now()
+                householdMember.headOfHousehold!.dateOfBirth!,
+              ) ??
+              DateTime.now()
           : DateTime.now(),
     ).years;
     final ageInMonths = DigitDateUtils.calculateAge(
       householdMember.headOfHousehold?.dateOfBirth != null
           ? DigitDateUtils.getFormattedDateToDateTime(
-        householdMember.headOfHousehold!.dateOfBirth!,
-      ) ??
-          DateTime.now()
+                householdMember.headOfHousehold!.dateOfBirth!,
+              ) ??
+              DateTime.now()
           : DateTime.now(),
     ).months;
-
 
     final isNotEligible = !checkEligibilityForAgeAndSideEffect(
       DigitDOBAgeConvertor(
@@ -263,9 +269,8 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           : null,
     );
 
-
     final isBeneficiaryRefused =
-    checkIfBeneficiaryRefused(householdMember.tasks);
+        checkIfBeneficiaryRefused(householdMember.tasks);
     final projectBeneficiary = householdMember.projectBeneficiaries?.where((p) {
       if (RegistrationDeliverySingleton().beneficiaryType ==
           BeneficiaryType.individual) {
@@ -278,57 +283,56 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     }).firstOrNull;
 
     final tasks = householdMember.tasks?.where((t) =>
-    t.projectBeneficiaryClientReferenceId ==
+        t.projectBeneficiaryClientReferenceId ==
         projectBeneficiary?.clientReferenceId);
 
     return DigitCard(
-        margin: const EdgeInsets.only(
-            top: spacer2, bottom: spacer2
-        ),
-        children: [Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width / 1.8,
-              child: BeneficiaryCard(
-                description: [
-                  householdMember.household?.address?.doorNo,
-                  householdMember.household?.address?.addressLine1,
-                  householdMember.household?.address?.addressLine2,
-                  householdMember.household?.address?.landmark,
-                  householdMember.household?.address?.city,
-                  householdMember.household?.address?.pincode,
-                ].whereNotNull().take(2).join(' '),
-                subtitle: widget.distance != null
-                    ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                    : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
-                status: getStatus(
-                    tasks ?? [],
-                    householdMember.projectBeneficiaries ?? [],
-                    RegistrationDeliverySingleton().beneficiaryType ==
-                        BeneficiaryType.individual
-                        ? isNotEligible
-                        : false,
-                    isBeneficiaryRefused),
-                title: [
-                  householdMember.headOfHousehold?.name?.givenName ??
-                      localizations.translate(i18.common.coreCommonNA),
-                  householdMember.headOfHousehold?.name?.familyName,
-                ].whereNotNull().join(''),
+        margin: const EdgeInsets.only(top: spacer2, bottom: spacer2),
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width / 1.8,
+                child: BeneficiaryCard(
+                  description: [
+                    householdMember.household?.address?.doorNo,
+                    householdMember.household?.address?.addressLine1,
+                    householdMember.household?.address?.addressLine2,
+                    householdMember.household?.address?.landmark,
+                    householdMember.household?.address?.city,
+                    householdMember.household?.address?.pincode,
+                  ].whereNotNull().take(2).join(' '),
+                  subtitle: widget.distance != null
+                      ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                      : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
+                  status: getStatus(
+                      tasks ?? [],
+                      householdMember.projectBeneficiaries ?? [],
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                              BeneficiaryType.individual
+                          ? isNotEligible
+                          : false,
+                      isBeneficiaryRefused),
+                  title: [
+                    householdMember.headOfHousehold?.name?.givenName ??
+                        localizations.translate(i18.common.coreCommonNA),
+                    householdMember.headOfHousehold?.name?.familyName,
+                  ].whereNotNull().join(''),
+                ),
               ),
-            ),
-            Flexible(
-              child: Button(
-                label:
-                localizations.translate(i18.searchBeneficiary.iconLabel),
-                onPressed: widget.onOpenPressed,
-                type: ButtonType.secondary,
-                size: ButtonSize.medium,
+              Flexible(
+                child: Button(
+                  label:
+                      localizations.translate(i18.searchBeneficiary.iconLabel),
+                  onPressed: widget.onOpenPressed,
+                  type: ButtonType.secondary,
+                  size: ButtonSize.medium,
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
           Offstage(
             offstage: !isCardExpanded,
             child: DigitTable(
@@ -353,14 +357,14 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 onPressed: () => isCardExpanded = !isCardExpanded,
               ),
             ),
-          ),]
-    );
+          ),
+        ]);
   }
 
   String getTableCellText(
-      StatusKeys statusKeys,
-      List<TaskModel>? taskData,
-      ) {
+    StatusKeys statusKeys,
+    List<TaskModel>? taskData,
+  ) {
     if (statusKeys.isNotEligible) {
       return localizations.translate(
           i18.householdOverView.householdOverViewNotEligibleIconLabel);
@@ -390,10 +394,10 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
     required ThemeData theme,
   }) {
     return taskdata != null &&
-        taskdata.isNotEmpty &&
-        !isBeneficiaryRefused &&
-        !isNotEligible &&
-        !isStatusReset
+            taskdata.isNotEmpty &&
+            !isBeneficiaryRefused &&
+            !isNotEligible &&
+            !isStatusReset
         ? theme.colorScheme.onSurfaceVariant
         : theme.colorScheme.error;
   }
@@ -407,7 +411,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       if (tasks.isEmpty) {
         return Status.registered.toValue();
       } else {
-        return getTaskStatus(tasks).toValue();
+        return getTaskStatus(tasks.toList()).toValue();
       }
     } else {
       return Status.notRegistered.toValue();

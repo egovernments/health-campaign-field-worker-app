@@ -1,11 +1,44 @@
+## 1.0.4
+
+* Added user_action entity for digit_location_tracker package
+
+## 1.0.3+3
+
+* Added tenant id to query params and RequestInfo for security gateway fixes
+* Updated additionalDetails field to service definition attributes model
+* Changed the object type of additionalDetails in Service model from String to Map
+
+## 1.0.3+2
+
+* Updated beneficiary type target model and table to string
+* Updated project type beneficiary type model and table to BeneficiaryType enum
+
+## 1.0.4-dev.5
+
+* Merged pgr and checklist changes
+
 ## 1.0.3+1
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
+
+## 1.0.4-dev.4
+
+* synced with 1.0.4-dev.3 changes
 
 ## 1.0.4-dev.3
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
 * Same change in 1.0.3-hotfix, 1.0.4-dev.3
+
+## 1.0.4-dev.2
+
+* Removed Service and Service Definition models
+    - Removed Service repositories and Service blocs to integrate in checklist package
+
+## 1.0.4-dev.1
+
+* Separated PGR Package 
+* Moved Models, Bloc, Repositories related to PGR Package
 
 ## 1.0.3
 

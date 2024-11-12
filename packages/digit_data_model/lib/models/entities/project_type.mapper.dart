@@ -43,8 +43,9 @@ class ProjectTypeModelMapper extends SubClassMapperBase<ProjectTypeModel> {
   static int? _$validMaxAge(ProjectTypeModel v) => v.validMaxAge;
   static const Field<ProjectTypeModel, int> _f$validMaxAge =
       Field('validMaxAge', _$validMaxAge, opt: true);
-  static String? _$beneficiaryType(ProjectTypeModel v) => v.beneficiaryType;
-  static const Field<ProjectTypeModel, String> _f$beneficiaryType =
+  static BeneficiaryType? _$beneficiaryType(ProjectTypeModel v) =>
+      v.beneficiaryType;
+  static const Field<ProjectTypeModel, BeneficiaryType> _f$beneficiaryType =
       Field('beneficiaryType', _$beneficiaryType, opt: true);
   static List<String>? _$eligibilityCriteria(ProjectTypeModel v) =>
       v.eligibilityCriteria;
@@ -220,7 +221,7 @@ abstract class ProjectTypeModelCopyWith<$R, $In extends ProjectTypeModel, $Out>
       String? group,
       int? validMinAge,
       int? validMaxAge,
-      String? beneficiaryType,
+      BeneficiaryType? beneficiaryType,
       List<String>? eligibilityCriteria,
       List<ProjectCycle>? cycles,
       List<String>? taskProcedure,
