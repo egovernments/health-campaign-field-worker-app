@@ -29,7 +29,7 @@ class BandwidthCheckRepository {
       final speed = (((800 / timeconsumed) / 1000));
 
       return speed;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       rethrow;
     }
   }
