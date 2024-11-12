@@ -90,7 +90,7 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks ?? []).isNotEmpty &&
-      tasks.last.status == Status.administeredFailed.toValue());
+      tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
 }
@@ -470,7 +470,8 @@ Status getTaskStatus(Iterable<TaskModel> tasks) {
   if (tasks.isEmpty) {
     return Status.registered.toValue();
   } else {
-    final mappedStatus = statusMap[tasks.last.status ?? Status.registered];
+    final mappedStatus =
+        statusMap[tasks.lastOrNull!.status ?? Status.registered];
     if (mappedStatus != null) {
       return mappedStatus;
     }

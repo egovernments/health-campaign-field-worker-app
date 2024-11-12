@@ -196,8 +196,11 @@ class AttendanceIndividualBloc
                             ? {
                                 EnumValues.latitude.toValue(): event.latitude,
                                 EnumValues.longitude.toValue(): event.longitude,
+                                EnumValues.boundaryCode.toValue(): AttendanceSingleton().boundary?.code,
                               }
-                            : null)
+                            : {
+                          EnumValues.boundaryCode.toValue(): AttendanceSingleton().boundary?.code,
+                        })
               ]);
             }
           });

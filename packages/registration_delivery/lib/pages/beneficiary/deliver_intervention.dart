@@ -77,32 +77,32 @@ class DeliverInterventionPageState
     final lat = locationState.latitude;
     final long = locationState.longitude;
     context.read<DeliverInterventionBloc>().add(
-      DeliverInterventionSubmitEvent(
-          task: _getTaskModel(
-            context,
-            form: form,
-            oldTask: RegistrationDeliverySingleton().beneficiaryType ==
-                BeneficiaryType.household
-                ? deliverInterventionState.tasks?.last
-                : null,
-            projectBeneficiaryClientReferenceId:
-            projectBeneficiary.clientReferenceId,
-            dose: deliverInterventionState.dose,
-            cycle: deliverInterventionState.cycle,
-            deliveryStrategy: DeliverStrategyType.direct.toValue(),
-            address: householdMember.members?.first.address?.first,
-            latitude: lat,
-            longitude: long,
-          ),
-          isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
-              RegistrationDeliverySingleton().beneficiaryType ==
-                  BeneficiaryType.household
-              ? true
-              : false,
-          boundaryModel: RegistrationDeliverySingleton().boundary!,
-          navigateToSummary: true,
-          householdMemberWrapper: householdMember),
-    );
+          DeliverInterventionSubmitEvent(
+              task: _getTaskModel(
+                context,
+                form: form,
+                oldTask: RegistrationDeliverySingleton().beneficiaryType ==
+                        BeneficiaryType.household
+                    ? deliverInterventionState.tasks?.lastOrNull
+                    : null,
+                projectBeneficiaryClientReferenceId:
+                    projectBeneficiary.clientReferenceId,
+                dose: deliverInterventionState.dose,
+                cycle: deliverInterventionState.cycle,
+                deliveryStrategy: DeliverStrategyType.direct.toValue(),
+                address: householdMember.members?.first.address?.first,
+                latitude: lat,
+                longitude: long,
+              ),
+              isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
+                      RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.household
+                  ? true
+                  : false,
+              boundaryModel: RegistrationDeliverySingleton().boundary!,
+              navigateToSummary: true,
+              householdMemberWrapper: householdMember),
+        );
     context.router.push(DeliverySummaryRoute());
   }
 
@@ -143,7 +143,7 @@ class DeliverInterventionPageState
       return List.generate(numberOfDoses, (index) {
         return StepperData(
           title:
-          '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
+              '${localizations.translate(i18.deliverIntervention.dose)}${index + 1}',
         );
       });
     }
@@ -154,376 +154,424 @@ class DeliverInterventionPageState
           final householdMemberWrapper = state.householdMemberWrapper;
 
           final projectBeneficiary =
-          RegistrationDeliverySingleton().beneficiaryType !=
-              BeneficiaryType.individual
-              ? [householdMemberWrapper.projectBeneficiaries!.first]
-              : householdMemberWrapper.projectBeneficiaries
-              ?.where(
-                (element) =>
-            element.beneficiaryClientReferenceId ==
-                state.selectedIndividual?.clientReferenceId,
-          )
-              .toList();
+              RegistrationDeliverySingleton().beneficiaryType !=
+                      BeneficiaryType.individual
+                  ? [householdMemberWrapper.projectBeneficiaries!.first]
+                  : householdMemberWrapper.projectBeneficiaries
+                      ?.where(
+                        (element) =>
+                            element.beneficiaryClientReferenceId ==
+                            state.selectedIndividual?.clientReferenceId,
+                      )
+                      .toList();
 
           return Scaffold(
             body: state.loading
                 ? const Center(child: CircularProgressIndicator())
                 : BlocBuilder<DeliverInterventionBloc,
-                DeliverInterventionState>(
-              builder: (context, deliveryInterventionState) {
-                List<DeliveryProductVariant>? productVariants =
-                RegistrationDeliverySingleton()
-                    .selectedProject
-                    ?.additionalDetails
-                    ?.projectType
-                    ?.cycles
-                    ?.isNotEmpty ==
-                    true
-                    ? (fetchProductVariant(
-                    RegistrationDeliverySingleton()
-                        .selectedProject
-                        ?.additionalDetails
-                        ?.projectType
-                        ?.cycles![
-                    deliveryInterventionState
-                        .cycle -
-                        1]
-                        .deliveries?[
-                    deliveryInterventionState.dose - 1],
-                    state.selectedIndividual,
-                    state.householdMemberWrapper.household)
-                    ?.productVariants)
-                    : RegistrationDeliverySingleton()
-                    .selectedProject
-                    ?.additionalDetails
-                    ?.projectType
-                    ?.resources
-                    ?.map((r) => DeliveryProductVariant(
-                    productVariantId: r.productVariantId))
-                    .toList();
+                    DeliverInterventionState>(
+                    builder: (context, deliveryInterventionState) {
+                      List<DeliveryProductVariant>? productVariants =
+                          RegistrationDeliverySingleton()
+                                      .selectedProject
+                                      ?.additionalDetails
+                                      ?.projectType
+                                      ?.cycles
+                                      ?.isNotEmpty ==
+                                  true
+                              ? (fetchProductVariant(
+                                      RegistrationDeliverySingleton()
+                                              .selectedProject
+                                              ?.additionalDetails
+                                              ?.projectType
+                                              ?.cycles![
+                                                  deliveryInterventionState
+                                                          .cycle -
+                                                      1]
+                                              .deliveries?[
+                                          deliveryInterventionState.dose - 1],
+                                      state.selectedIndividual,
+                                      state.householdMemberWrapper.household)
+                                  ?.productVariants)
+                              : RegistrationDeliverySingleton()
+                                  .selectedProject
+                                  ?.additionalDetails
+                                  ?.projectType
+                                  ?.resources
+                                  ?.map((r) => DeliveryProductVariant(
+                                      productVariantId: r.productVariantId))
+                                  .toList();
 
-                final int numberOfDoses = (RegistrationDeliverySingleton()
-                    .projectType
-                    ?.cycles
-                    ?.isNotEmpty ==
-                    true)
-                    ? (RegistrationDeliverySingleton()
-                    .projectType
-                    ?.cycles?[deliveryInterventionState.cycle - 1]
-                    .deliveries
-                    ?.length) ??
-                    0
-                    : 0;
+                      final int numberOfDoses = (RegistrationDeliverySingleton()
+                                  .projectType
+                                  ?.cycles
+                                  ?.isNotEmpty ==
+                              true)
+                          ? (RegistrationDeliverySingleton()
+                                  .projectType
+                                  ?.cycles?[deliveryInterventionState.cycle - 1]
+                                  .deliveries
+                                  ?.length) ??
+                              0
+                          : 0;
 
-                final steps = generateSteps(numberOfDoses);
-                if ((productVariants ?? []).isEmpty && context.mounted) {
-                  SchedulerBinding.instance.addPostFrameCallback((_) {
-                    Toast.showToast(
-                        context,
-                        message: localizations.translate(
-                          i18.deliverIntervention
-                              .checkForProductVariantsConfig,
-                        ),
-                        type: ToastType.error
-                    );
-                  });
-                }
-
-                return BlocBuilder<ProductVariantBloc,
-                    ProductVariantState>(
-                  builder: (context, productState) {
-                    return productState.maybeWhen(
-                      orElse: () => const Offstage(),
-                      fetched: (productVariantsValue) {
-                        final variant = productState.whenOrNull(
-                          fetched: (productVariants) {
-                            return productVariants;
-                          },
-                        );
-
-                        return ReactiveFormBuilder(
-                          form: () => buildForm(
-                            context,
-                            productVariants,
-                            variant,
-                          ),
-                          builder: (context, form, child) {
-                            return ScrollableContent(
-                              enableFixedButton: true,
-                              footer: BlocBuilder<DeliverInterventionBloc,
-                                  DeliverInterventionState>(
-                                builder: (context, state) {
-                                  return DigitCard(
-                                      margin: const EdgeInsets.only(top: spacer2),
-                                      padding: const EdgeInsets.all(spacer2),
-                                      children: [
-                                        ValueListenableBuilder(
-                                          valueListenable: clickedStatus,
-                                          builder:
-                                              (context, bool isClicked, _) {
-                                            return BlocBuilder<LocationBloc,
-                                                LocationState>(
-                                                builder:
-                                                    (context, locationState) {
-                                                  return Button(
-                                                    label: localizations.translate(
-                                                      i18.common
-                                                          .coreCommonSubmit,
-                                                    ),
-                                                    type: ButtonType.primary,
-                                                    size: ButtonSize.large,
-                                                    mainAxisSize: MainAxisSize.max,
-                                                    isDisabled: isClicked,
-                                                    onPressed: () async {
-                                                      final deliveredProducts =
-                                                      ((form.control(_resourceDeliveredKey)
-                                                      as FormArray)
-                                                          .value
-                                                      as List<
-                                                          ProductVariantModel?>);
-                                                      final hasEmptyResources =
-                                                      hasEmptyOrNullResources(
-                                                          deliveredProducts);
-                                                      final hasZeroQuantity =
-                                                      hasEmptyOrZeroQuantity(
-                                                          form);
-                                                      final hasDuplicates =
-                                                      hasDuplicateResources(
-                                                          deliveredProducts,
-                                                          form);
-
-                                                      if (hasEmptyResources) {
-                                                        Toast.showToast(
-                                                            context,
-                                                            message: localizations
-                                                                .translate(i18
-                                                                .deliverIntervention
-                                                                .resourceDeliveredValidation),
-                                                            type: ToastType.error
-                                                        );
-                                                      } else if (hasDuplicates) {
-                                                        Toast.showToast(
-                                                            context,
-                                                            message: localizations
-                                                                .translate(i18
-                                                                .deliverIntervention
-                                                                .resourceDuplicateValidation),
-                                                            type: ToastType.error
-                                                        );
-                                                      } else if (hasZeroQuantity) {
-                                                        Toast.showToast(
-                                                            context,
-                                                            message: localizations
-                                                                .translate(i18
-                                                                .deliverIntervention
-                                                                .resourceCannotBeZero),
-                                                            type: ToastType.error
-                                                        );
-                                                      } else {
-                                                        context
-                                                            .read<
-                                                            LocationBloc>()
-                                                            .add(
-                                                            const LoadLocationEvent());
-                                                        handleLocationState(
-                                                          locationState,
-                                                          context,
-                                                          deliveryInterventionState,
-                                                          form,
-                                                          householdMemberWrapper,
-                                                          projectBeneficiary!
-                                                              .first,
-                                                        );
-                                                      }
-                                                    },
-                                                  );
-                                                });
-                                          },
-                                        ),
-                                      ]
-                                  );
-                                },
+                      final steps = generateSteps(numberOfDoses);
+                      if ((productVariants ?? []).isEmpty && context.mounted) {
+                        SchedulerBinding.instance.addPostFrameCallback((_) {
+                          Toast.showToast(context,
+                              message: localizations.translate(
+                                i18.deliverIntervention
+                                    .checkForProductVariantsConfig,
                               ),
-                              header: const Column(children: [
-                                BackNavigationHelpHeaderWidget(
-                                  showHelp: false,
-                                ),
-                              ]),
-                              children: [
-                                Column(
-                                  children: [
-                                    DigitCard(
-                                        margin: const EdgeInsets.all(spacer2),
-                                        children: [Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention
-                                                .deliverInterventionLabel,
-                                          ),
-                                          style: textTheme.headingXl,
-                                        ),
-                                          if (RegistrationDeliverySingleton()
-                                              .beneficiaryType ==
-                                              BeneficiaryType.individual)
-                                            ReactiveWrapperField(
-                                              formControlName:
-                                              _doseAdministrationKey,
-                                              builder: (field)=> LabeledField(
-                                                label: localizations
-                                                    .translate(i18
-                                                    .deliverIntervention
-                                                    .currentCycle),
-                                                child: DigitTextFormInput(
-                                                  readOnly: true,
-                                                  keyboardType:
-                                                  TextInputType.number,
-                                                  initialValue: form.control(_doseAdministrationKey).value,
-                                                ),
-                                              ),
-                                            ),
-                                          if (numberOfDoses > 1)
-                                          SizedBox(
-                                            height: MediaQuery.sizeOf(context).height*0.08,
-                                            child: DigitStepper(
-                                              activeIndex: deliveryInterventionState.dose - 1,
-                                              stepperList: steps,
-                                              inverted: true,
-                                            ),
-                                          ),
+                              type: ToastType.error);
+                        });
+                      }
 
-                                            ReactiveWrapperField(
-                                              formControlName:
-                                              _dateOfAdministrationKey,
-                                              builder: (field)=> LabeledField(
-                                                label:
-                                                localizations.translate(
-                                                  i18.householdDetails
-                                                      .dateOfRegistrationLabel,
-                                                ),
-                                                child: DigitDateFormInput(
-                                                  readOnly: true,
-                                                  initialValue: DateFormat('dd MMM yyyy')
-                                                      .format(form.control(_dateOfAdministrationKey).value).toString(),
-                                                  confirmText:
-                                                  localizations.translate(
-                                                    i18.common.coreCommonOk,
-                                                  ),
-                                                  cancelText:
-                                                  localizations.translate(
-                                                    i18.common.coreCommonCancel,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),]
-                                    ),
-                                    DigitCard(
-                                        margin: const EdgeInsets.all(spacer2),
-                                        children: [Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention
-                                                .deliverInterventionResourceLabel,
-                                          ),
-                                          style: textTheme.headingXl,
-                                        ),
-                                          ..._controllers.map((e) =>
-                                              ResourceBeneficiaryCard(
-                                                form: form,
-                                                cardIndex: _controllers
-                                                    .indexOf(e),
-                                                totalItems:
-                                                _controllers.length,
-                                                onDelete: (index) {
-                                                  (form.control(
-                                                    _resourceDeliveredKey,
-                                                  ) as FormArray)
-                                                      .removeAt(
-                                                    index,
-                                                  );
-                                                  (form.control(
-                                                    _quantityDistributedKey,
-                                                  ) as FormArray)
-                                                      .removeAt(
-                                                    index,
-                                                  );
-                                                  _controllers.removeAt(
-                                                    index,
-                                                  );
-                                                  setState(() {
-                                                    _controllers;
+                      return BlocBuilder<ProductVariantBloc,
+                          ProductVariantState>(
+                        builder: (context, productState) {
+                          return productState.maybeWhen(
+                            orElse: () => const Offstage(),
+                            fetched: (productVariantsValue) {
+                              final variant = productState.whenOrNull(
+                                fetched: (productVariants) {
+                                  return productVariants;
+                                },
+                              );
+
+                              return ReactiveFormBuilder(
+                                form: () => buildForm(
+                                  context,
+                                  productVariants,
+                                  variant,
+                                ),
+                                builder: (context, form, child) {
+                                  return ScrollableContent(
+                                    enableFixedButton: true,
+                                    footer: BlocBuilder<DeliverInterventionBloc,
+                                        DeliverInterventionState>(
+                                      builder: (context, state) {
+                                        return DigitCard(
+                                            margin: const EdgeInsets.only(
+                                                top: spacer2),
+                                            padding:
+                                                const EdgeInsets.all(spacer2),
+                                            children: [
+                                              ValueListenableBuilder(
+                                                valueListenable: clickedStatus,
+                                                builder: (context,
+                                                    bool isClicked, _) {
+                                                  return BlocBuilder<
+                                                          LocationBloc,
+                                                          LocationState>(
+                                                      builder: (context,
+                                                          locationState) {
+                                                    return Button(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonSubmit,
+                                                      ),
+                                                      type: ButtonType.primary,
+                                                      size: ButtonSize.large,
+                                                      mainAxisSize:
+                                                          MainAxisSize.max,
+                                                      isDisabled: isClicked,
+                                                      onPressed: () async {
+                                                        final deliveredProducts =
+                                                            ((form.control(_resourceDeliveredKey)
+                                                                        as FormArray)
+                                                                    .value
+                                                                as List<
+                                                                    ProductVariantModel?>);
+                                                        final hasEmptyResources =
+                                                            hasEmptyOrNullResources(
+                                                                deliveredProducts);
+                                                        final hasZeroQuantity =
+                                                            hasEmptyOrZeroQuantity(
+                                                                form);
+                                                        final hasDuplicates =
+                                                            hasDuplicateResources(
+                                                                deliveredProducts,
+                                                                form);
+
+                                                        if (hasEmptyResources) {
+                                                          Toast.showToast(
+                                                              context,
+                                                              message: localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceDeliveredValidation),
+                                                              type: ToastType
+                                                                  .error);
+                                                        } else if (hasDuplicates) {
+                                                          Toast.showToast(
+                                                              context,
+                                                              message: localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceDuplicateValidation),
+                                                              type: ToastType
+                                                                  .error);
+                                                        } else if (hasZeroQuantity) {
+                                                          Toast.showToast(
+                                                              context,
+                                                              message: localizations
+                                                                  .translate(i18
+                                                                      .deliverIntervention
+                                                                      .resourceCannotBeZero),
+                                                              type: ToastType
+                                                                  .error);
+                                                        } else {
+                                                          context
+                                                              .read<
+                                                                  LocationBloc>()
+                                                              .add(
+                                                                  const LoadLocationEvent());
+                                                          handleLocationState(
+                                                            locationState,
+                                                            context,
+                                                            deliveryInterventionState,
+                                                            form,
+                                                            householdMemberWrapper,
+                                                            projectBeneficiary!
+                                                                .first,
+                                                          );
+                                                        }
+                                                      },
+                                                    );
                                                   });
                                                 },
-                                              )),
-                                          Center(
-                                            child: Button(
-                                              label: localizations.translate(
-                                                i18.deliverIntervention
-                                                    .resourceAddBeneficiary,
                                               ),
-                                              type: ButtonType.tertiary,
-                                              size: ButtonSize.medium,
-                                              isDisabled: ((form.control(_resourceDeliveredKey)as FormArray).value ??
-                                                  []).length <(productVariants ??[]).length ? false : true,
-                                              onPressed: () async {
-                                                addController(form);
-                                                setState(() {
-                                                  _controllers.add(
-                                                    _controllers
-                                                        .length,
-                                                  );
-                                                });
-                                              },
-                                              prefixIcon: Icons.add_circle,
-                                            ),
-                                          ),]
+                                            ]);
+                                      },
                                     ),
-                                    DigitCard(
-                                        margin: const EdgeInsets.all(spacer2),
+                                    header: const Column(children: [
+                                      BackNavigationHelpHeaderWidget(
+                                        showHelp: false,
+                                      ),
+                                    ]),
+                                    children: [
+                                      Column(
                                         children: [
-                                          Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention
-                                                .deliveryCommentHeading,
-                                          ),
-                                          style: textTheme.headingXl,
-                                        ),
-                                          ReactiveWrapperField(
-                                            formControlName: _deliveryCommentKey,
-                                            builder: (field)=> LabeledField(
-                                              label: localizations.translate(
-                                                i18.deliverIntervention
-                                                    .deliveryCommentLabel,
-                                              ),
-                                              child: DigitDropdown<String>(
-                                                items:
-                                                RegistrationDeliverySingleton()
-                                                    .deliveryCommentOptions!
-                                                    .map((e) =>
-                                                    DropdownItem(
-                                                      name: localizations
-                                                          .translate(e),
-                                                      code: e,
-                                                    )
-                                                ).toList()
-                                                  ..sort((a, b) => a.code.compareTo(b.code)),
-                                                emptyItemText: localizations.translate(i18.common.noMatchFound),
-                                                onChange: (value){
-                                                  form.control(_deliveryCommentKey).value=value;
-                                                },
-                                              ),
-                                            ),
-                                          ),]
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
+                                          DigitCard(
+                                              margin:
+                                                  const EdgeInsets.all(spacer2),
+                                              children: [
+                                                Text(
+                                                  localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .deliverInterventionLabel,
+                                                  ),
+                                                  style: textTheme.headingXl,
+                                                ),
+                                                if (RegistrationDeliverySingleton()
+                                                        .beneficiaryType ==
+                                                    BeneficiaryType.individual)
+                                                  ReactiveWrapperField(
+                                                    formControlName:
+                                                        _doseAdministrationKey,
+                                                    builder: (field) =>
+                                                        LabeledField(
+                                                      label: localizations
+                                                          .translate(i18
+                                                              .deliverIntervention
+                                                              .currentCycle),
+                                                      child: DigitTextFormInput(
+                                                        readOnly: true,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        initialValue: form
+                                                            .control(
+                                                                _doseAdministrationKey)
+                                                            .value,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                if (numberOfDoses > 1)
+                                                  SizedBox(
+                                                    height: MediaQuery.sizeOf(
+                                                                context)
+                                                            .height *
+                                                        0.08,
+                                                    child: DigitStepper(
+                                                      activeIndex:
+                                                          deliveryInterventionState
+                                                                  .dose -
+                                                              1,
+                                                      stepperList: steps,
+                                                      inverted: true,
+                                                    ),
+                                                  ),
+                                                ReactiveWrapperField(
+                                                  formControlName:
+                                                      _dateOfAdministrationKey,
+                                                  builder: (field) =>
+                                                      LabeledField(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.householdDetails
+                                                          .dateOfRegistrationLabel,
+                                                    ),
+                                                    child: DigitDateFormInput(
+                                                      readOnly: true,
+                                                      initialValue: DateFormat(
+                                                              'dd MMM yyyy')
+                                                          .format(form
+                                                              .control(
+                                                                  _dateOfAdministrationKey)
+                                                              .value)
+                                                          .toString(),
+                                                      confirmText: localizations
+                                                          .translate(
+                                                        i18.common.coreCommonOk,
+                                                      ),
+                                                      cancelText: localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonCancel,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]),
+                                          DigitCard(
+                                              margin:
+                                                  const EdgeInsets.all(spacer2),
+                                              children: [
+                                                Text(
+                                                  localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .deliverInterventionResourceLabel,
+                                                  ),
+                                                  style: textTheme.headingXl,
+                                                ),
+                                                ..._controllers.map((e) =>
+                                                    ResourceBeneficiaryCard(
+                                                      form: form,
+                                                      cardIndex: _controllers
+                                                          .indexOf(e),
+                                                      totalItems:
+                                                          _controllers.length,
+                                                      onDelete: (index) {
+                                                        (form.control(
+                                                          _resourceDeliveredKey,
+                                                        ) as FormArray)
+                                                            .removeAt(
+                                                          index,
+                                                        );
+                                                        (form.control(
+                                                          _quantityDistributedKey,
+                                                        ) as FormArray)
+                                                            .removeAt(
+                                                          index,
+                                                        );
+                                                        _controllers.removeAt(
+                                                          index,
+                                                        );
+                                                        setState(() {
+                                                          _controllers;
+                                                        });
+                                                      },
+                                                    )),
+                                                Center(
+                                                  child: Button(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .resourceAddBeneficiary,
+                                                    ),
+                                                    type: ButtonType.tertiary,
+                                                    size: ButtonSize.medium,
+                                                    isDisabled: ((form.control(_resourceDeliveredKey)
+                                                                            as FormArray)
+                                                                        .value ??
+                                                                    [])
+                                                                .length <
+                                                            (productVariants ??
+                                                                    [])
+                                                                .length
+                                                        ? false
+                                                        : true,
+                                                    onPressed: () async {
+                                                      addController(form);
+                                                      setState(() {
+                                                        _controllers.add(
+                                                          _controllers.length,
+                                                        );
+                                                      });
+                                                    },
+                                                    prefixIcon:
+                                                        Icons.add_circle,
+                                                  ),
+                                                ),
+                                              ]),
+                                          DigitCard(
+                                              margin:
+                                                  const EdgeInsets.all(spacer2),
+                                              children: [
+                                                Text(
+                                                  localizations.translate(
+                                                    i18.deliverIntervention
+                                                        .deliveryCommentHeading,
+                                                  ),
+                                                  style: textTheme.headingXl,
+                                                ),
+                                                ReactiveWrapperField(
+                                                  formControlName:
+                                                      _deliveryCommentKey,
+                                                  builder: (field) =>
+                                                      LabeledField(
+                                                    label:
+                                                        localizations.translate(
+                                                      i18.deliverIntervention
+                                                          .deliveryCommentLabel,
+                                                    ),
+                                                    child:
+                                                        DigitDropdown<String>(
+                                                      items:
+                                                          RegistrationDeliverySingleton()
+                                                              .deliveryCommentOptions!
+                                                              .map((e) =>
+                                                                  DropdownItem(
+                                                                    name: localizations
+                                                                        .translate(
+                                                                            e),
+                                                                    code: e,
+                                                                  ))
+                                                              .toList()
+                                                            ..sort((a, b) => a
+                                                                .code
+                                                                .compareTo(
+                                                                    b.code)),
+                                                      emptyItemText:
+                                                          localizations
+                                                              .translate(i18
+                                                                  .common
+                                                                  .noMatchFound),
+                                                      onChange: (value) {
+                                                        form
+                                                            .control(
+                                                                _deliveryCommentKey)
+                                                            .value = value;
+                                                      },
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]),
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        },
+                      );
+                    },
+                  ),
           );
         },
       ),
@@ -539,7 +587,7 @@ class DeliverInterventionPageState
 
   bool hasEmptyOrZeroQuantity(FormGroup form) {
     final quantityDistributedArray =
-    form.control(_quantityDistributedKey) as FormArray;
+        form.control(_quantityDistributedKey) as FormArray;
 
     // Check if any quantity is zero or null
     return quantityDistributedArray.value?.any((e) => e == 0 || e == null) ??
@@ -557,7 +605,7 @@ class DeliverInterventionPageState
         }
       }
       bool hasDuplicateProductIdOrNoProductId =
-      deliveredProducts.any((ele) => ele?.productId == null);
+          deliveredProducts.any((ele) => ele?.productId == null);
 
       return hasDuplicateProductIdOrNoProductId;
     }
@@ -568,7 +616,7 @@ class DeliverInterventionPageState
   bool hasDuplicateResources(
       List<ProductVariantModel?> deliveredProducts, FormGroup form) {
     final resourceDeliveredArray =
-    form.control(_resourceDeliveredKey) as FormArray;
+        form.control(_resourceDeliveredKey) as FormArray;
     final Set<String?> uniqueProductIds = {};
 
     for (int i = 0; i < resourceDeliveredArray.value!.length; i++) {
@@ -587,17 +635,17 @@ class DeliverInterventionPageState
 
   // ignore: long-parameter-list
   TaskModel _getTaskModel(
-      BuildContext context, {
-        required FormGroup form,
-        TaskModel? oldTask,
-        int? cycle,
-        int? dose,
-        String? deliveryStrategy,
-        String? projectBeneficiaryClientReferenceId,
-        AddressModel? address,
-        double? latitude,
-        double? longitude,
-      }) {
+    BuildContext context, {
+    required FormGroup form,
+    TaskModel? oldTask,
+    int? cycle,
+    int? dose,
+    String? deliveryStrategy,
+    String? projectBeneficiaryClientReferenceId,
+    AddressModel? address,
+    double? latitude,
+    double? longitude,
+  }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
     var clientReferenceId = task?.clientReferenceId ?? IdGen.i.identifier;
@@ -621,33 +669,33 @@ class DeliverInterventionPageState
 
     // Extract productvariantList from the form
     final productvariantList =
-    ((form.control(_resourceDeliveredKey) as FormArray).value
-    as List<ProductVariantModel?>);
+        ((form.control(_resourceDeliveredKey) as FormArray).value
+            as List<ProductVariantModel?>);
     final deliveryComment = form.control(_deliveryCommentKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
       resources: productvariantList
           .map((e) => TaskResourceModel(
-        taskclientReferenceId: clientReferenceId,
-        clientReferenceId: IdGen.i.identifier,
-        productVariantId: e?.id,
-        isDelivered: true,
-        taskId: task?.id,
-        tenantId: RegistrationDeliverySingleton().tenantId,
-        rowVersion: oldTask?.rowVersion ?? 1,
-        quantity: (((form.control(_quantityDistributedKey) as FormArray)
-            .value)?[productvariantList.indexOf(e)])
-            .toString(),
-        clientAuditDetails: ClientAuditDetails(
-          createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
-          createdTime: context.millisecondsSinceEpoch(),
-        ),
-        auditDetails: AuditDetails(
-          createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
-          createdTime: context.millisecondsSinceEpoch(),
-        ),
-      ))
+                taskclientReferenceId: clientReferenceId,
+                clientReferenceId: IdGen.i.identifier,
+                productVariantId: e?.id,
+                isDelivered: true,
+                taskId: task?.id,
+                tenantId: RegistrationDeliverySingleton().tenantId,
+                rowVersion: oldTask?.rowVersion ?? 1,
+                quantity: (((form.control(_quantityDistributedKey) as FormArray)
+                        .value)?[productvariantList.indexOf(e)])
+                    .toString(),
+                clientAuditDetails: ClientAuditDetails(
+                  createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                  createdTime: context.millisecondsSinceEpoch(),
+                ),
+                auditDetails: AuditDetails(
+                  createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
+                  createdTime: context.millisecondsSinceEpoch(),
+                ),
+              ))
           .toList(),
       address: address?.copyWith(
         relatedClientReferenceId: clientReferenceId,
@@ -711,10 +759,10 @@ class DeliverInterventionPageState
 // This method builds a form used for delivering interventions.
 
   FormGroup buildForm(
-      BuildContext context,
-      List<DeliveryProductVariant>? productVariants,
-      List<ProductVariantModel>? variants,
-      ) {
+    BuildContext context,
+    List<DeliveryProductVariant>? productVariants,
+    List<ProductVariantModel>? variants,
+  ) {
     final bloc = context.read<DeliverInterventionBloc>().state;
     final overViewbloc = context.read<HouseholdOverviewBloc>().state;
     _controllers.forEachIndexed((index, element) {
@@ -724,24 +772,24 @@ class DeliverInterventionPageState
     // Add controllers for each product variant to the _controllers list.
     if (_controllers.isEmpty) {
       final int r = RegistrationDeliverySingleton()
-          .selectedProject
-          ?.additionalDetails
-          ?.projectType
-          ?.cycles ==
-          null
+                  .selectedProject
+                  ?.additionalDetails
+                  ?.projectType
+                  ?.cycles ==
+              null
           ? 1
           : fetchProductVariant(
-          RegistrationDeliverySingleton()
-              .selectedProject
-              ?.additionalDetails
-              ?.projectType
-              ?.cycles![bloc.cycle - 1]
-              .deliveries?[bloc.dose - 1],
-          overViewbloc.selectedIndividual,
-          overViewbloc.householdMemberWrapper.household)!
-          .productVariants
-          ?.length ??
-          0;
+                      RegistrationDeliverySingleton()
+                          .selectedProject
+                          ?.additionalDetails
+                          ?.projectType
+                          ?.cycles![bloc.cycle - 1]
+                          .deliveries?[bloc.dose - 1],
+                      overViewbloc.selectedIndividual,
+                      overViewbloc.householdMemberWrapper.household)!
+                  .productVariants
+                  ?.length ??
+              0;
 
       _controllers.addAll(List.generate(r, (index) => index)
           .mapIndexed((index, element) => index));
@@ -750,57 +798,58 @@ class DeliverInterventionPageState
     return fb.group(<String, Object>{
       _doseAdministrationKey: FormControl<String>(
         value:
-        '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
-            .toString(),
+            '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
+                .toString(),
         validators: [],
       ),
       _deliveryCommentKey: FormControl<String>(
         value: RegistrationDeliverySingleton().beneficiaryType !=
-            BeneficiaryType.individual
-            ? (bloc.tasks?.last.additionalFields?.fields
-            .where((a) =>
-        a.key ==
-            AdditionalFieldsType.deliveryComment.toValue())
-            .toList() ??
-            [])
-            .isNotEmpty
-            ? bloc.tasks?.last.additionalFields?.fields
-            .where((a) =>
-        a.key == AdditionalFieldsType.deliveryComment.toValue())
-            .first
-            .value
-            : ''
+                BeneficiaryType.individual
+            ? (bloc.tasks?.lastOrNull?.additionalFields?.fields
+                            .where((a) =>
+                                a.key ==
+                                AdditionalFieldsType.deliveryComment.toValue())
+                            .toList() ??
+                        [])
+                    .isNotEmpty
+                ? bloc.tasks?.lastOrNull?.additionalFields?.fields
+                    .where((a) =>
+                        a.key == AdditionalFieldsType.deliveryComment.toValue())
+                    .first
+                    .value
+                : ''
             : null,
         validators: [],
       ),
       _dateOfAdministrationKey:
-      FormControl<DateTime>(value: DateTime.now(), validators: []),
+          FormControl<DateTime>(value: DateTime.now(), validators: []),
       _resourceDeliveredKey: FormArray<ProductVariantModel>(
         [
           ..._controllers.map((e) => FormControl<ProductVariantModel>(
-            value: variants != null && variants.length < _controllers.length
-                ? variants.last
-                : (variants != null &&
-                _controllers.indexOf(e) < variants.length
-                ? variants.firstWhereOrNull(
-                  (element) =>
-              element.id ==
-                  productVariants
-                      ?.elementAt(_controllers.indexOf(e))
-                      .productVariantId,
-            )
-                : null),
-          )),
+                value: variants != null && variants.length < _controllers.length
+                    ? variants.last
+                    : (variants != null &&
+                            _controllers.indexOf(e) < variants.length
+                        ? variants.firstWhereOrNull(
+                            (element) =>
+                                element.id ==
+                                productVariants
+                                    ?.elementAt(_controllers.indexOf(e))
+                                    .productVariantId,
+                          )
+                        : null),
+              )),
         ],
       ),
       _quantityDistributedKey: FormArray<int>([
         ..._controllers.mapIndexed(
-              (i, e) => FormControl<int>(
+          (i, e) => FormControl<int>(
             value: RegistrationDeliverySingleton().beneficiaryType !=
-                BeneficiaryType.individual
+                    BeneficiaryType.individual
                 ? int.tryParse(
-              bloc.tasks?.last.resources?.elementAt(i).quantity ?? '0',
-            )
+                    bloc.tasks?.lastOrNull?.resources?.elementAt(i).quantity ??
+                        '0',
+                  )
                 : 0,
             validators: [Validators.min(1)],
           ),

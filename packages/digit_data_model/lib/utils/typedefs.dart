@@ -6,8 +6,6 @@ import '../models/entities/individual.dart';
 import '../models/entities/product_variant.dart';
 import '../models/entities/project_facility.dart';
 import '../models/entities/project_resource.dart';
-import '../models/entities/service.dart';
-import '../models/entities/service_definition.dart';
 
 /// `FacilityDataRepository` is a type alias for a `DataRepository` that works with `FacilityModel` and `FacilitySearchModel`.
 typedef FacilityDataRepository
@@ -33,7 +31,3 @@ typedef ProductVariantDataRepository
 typedef BoundaryDataRepository
     = DataRepository<BoundaryModel, BoundarySearchModel>;
 
-typedef ServiceDataRepository
-    = DataRepository<ServiceModel, ServiceSearchModel>;
-typedef ServiceDefinitionDataRepository
-    = DataRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>;

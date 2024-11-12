@@ -12,6 +12,7 @@ import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';

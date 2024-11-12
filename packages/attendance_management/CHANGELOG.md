@@ -1,3 +1,13 @@
+## 1.0.2+4
+* Fix for boundaryCode in attendance logs
+
+## 1.0.2+3
+* Updated Attendance Singleton to add boundary
+
+## 1.0.2+2
+* Updated digit_components, digit_data_model
+* Added boundaryCode to additionalDetails of attendanceLogs
+
 ## 1.0.2+1
 * Updated Digit_components
 

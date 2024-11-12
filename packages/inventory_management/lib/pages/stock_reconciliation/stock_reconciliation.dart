@@ -176,6 +176,24 @@ class StockReconciliationPageState
                                                     calculatedCount,
                                                   ) ??
                                                   0,
+                                              auditDetails: AuditDetails(
+                                                createdBy: InventorySingleton()
+                                                    .loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
+                                              clientAuditDetails:
+                                                  ClientAuditDetails(
+                                                createdBy: InventorySingleton()
+                                                    .loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
+                                                lastModifiedBy:
+                                                    InventorySingleton()
+                                                        .loggedInUserUuid,
+                                                lastModifiedTime: context
+                                                    .millisecondsSinceEpoch(),
+                                              ),
                                             );
 
                                             final submit =
