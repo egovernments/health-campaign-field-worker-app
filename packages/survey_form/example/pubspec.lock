@@ -197,10 +197,10 @@ packages:
     dependency: transitive
     description:
       name: dart_mappable
-      sha256: "47269caf2060533c29b823ff7fa9706502355ffcb61e7f2a374e3a0fb2f2c3f0"
+      sha256: f69a961ae8589724ebb542e588f228ae844c5f78028899cbe2cc718977c1b382
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.2"
+    version: "4.3.0"
   dart_style:
     dependency: transitive
     description:
@@ -221,26 +221,26 @@ packages:
     dependency: "direct main"
     description:
       name: digit_components
-      sha256: "01320d4c72829045e789d1a56e23ff2bd85dad6a1831d27bd507a1acaceae17e"
+      sha256: "07b585e5d8010639366da72a4a8b215ce9b8790c75b2162b66af3cea57ca35d9"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2+1"
   digit_data_model:
     dependency: transitive
     description:
       name: digit_data_model
-      sha256: "058168c32c198f7c76ff8765f56827812f9c71cd269d5cb792afd77302b766ab"
+      sha256: "0e5a1f8c5f0548e573af9c0279942f2dbc332042865614e0b89fe5952002ef1f"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.4-dev.3"
+    version: "1.0.4"
   dio:
     dependency: transitive
     description:
       name: dio
-      sha256: "0dfb6b6a1979dac1c1245e17cef824d7b452ea29bd33d3467269f9bef3715fb0"
+      sha256: "5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260"
       url: "https://pub.dev"
     source: hosted
-    version: "5.6.0"
+    version: "5.7.0"
   dio_web_adapter:
     dependency: transitive
     description:
@@ -293,18 +293,18 @@ packages:
     dependency: transitive
     description:
       name: file
-      sha256: "5fc22d7c25582e38ad9a8515372cd9a93834027aacf1801cf01164dac0ffa08c"
+      sha256: a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "7.0.1"
   fixnum:
     dependency: transitive
     description:
       name: fixnum
-      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
+      sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -756,10 +756,10 @@ packages:
     dependency: transitive
     description:
       name: platform
-      sha256: "9b71283fc13df574056616011fb138fd3b793ea47cc509c189a6c3fa5f8a1a65"
+      sha256: "5d6b1b0036a5f331ebc77c850ebc8506cbc1e9416c27e59b439f917a902a4984"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.5"
+    version: "3.1.6"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -881,10 +881,10 @@ packages:
     dependency: transitive
     description:
       name: sqlite3_flutter_libs
-      sha256: "62bbb4073edbcdf53f40c80775f33eea01d301b7b81417e5b3fb7395416258c1"
+      sha256: "7ae52b23366e5295005022e62fa093f64bfe190810223ea0ebf733a4cd140bce"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.24"
+    version: "0.5.26"
   stack_trace:
     dependency: transitive
     description:
@@ -921,8 +921,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/survey_form"
-      ref: checklist-package
-      resolved-ref: bbac302cdb35f380fb369faf3bc778ee0cbf1bbf
+      ref: develop
+      resolved-ref: fafde86e07aecb77bbfa48ed1f1f7e67c77d986d
       url: "https://github.com/egovernments/health-campaign-field-worker-app"
     source: git
     version: "0.0.1-dev.1"

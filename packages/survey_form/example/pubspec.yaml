@@ -32,7 +32,7 @@ dependencies:
   survey_form:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app
-      ref: checklist-package
+      ref: develop
       path: ./packages/survey_form
 
   flutter:
