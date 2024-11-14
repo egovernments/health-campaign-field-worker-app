@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:group_radio_button/group_radio_button.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -140,55 +140,58 @@ class _ReferralReasonChecklistPageState
                                 for (int i = 0; i < controller.length; i++) {
                                   final attribute = initialAttributes;
                                   attributes.add(ServiceAttributesModel(
-                                      attributeCode: '${attribute?[i].code}',
-                                      dataType: attribute?[i].dataType,
-                                      clientReferenceId: IdGen.i.identifier,
-                                      referenceId: widget.referralClientRefId,
-                                      value: attribute?[i].dataType !=
-                                              'SingleValueList'
-                                          ? controller[i]
-                                                  .text
-                                                  .toString()
-                                                  .trim()
-                                                  .isNotEmpty
-                                              ? controller[i].text.toString()
-                                              : ''
-                                          : visibleChecklistIndexes.contains(i)
-                                              ? controller[i].text.toString()
-                                              : i18.checklist.notSelectedKey,
-                                      rowVersion: 1,
-                                      tenantId: attribute?[i].tenantId,
-                                      additionalDetails: null));
+                                    attributeCode: '${attribute?[i].code}',
+                                    dataType: attribute?[i].dataType,
+                                    clientReferenceId: IdGen.i.identifier,
+                                    referenceId: widget.referralClientRefId,
+                                    value: attribute?[i].dataType !=
+                                            'SingleValueList'
+                                        ? controller[i]
+                                                .text
+                                                .toString()
+                                                .trim()
+                                                .isNotEmpty
+                                            ? controller[i].text.toString()
+                                            : ''
+                                        : visibleChecklistIndexes.contains(i)
+                                            ? controller[i].text.toString()
+                                            : i18.checklist.notSelectedKey,
+                                    rowVersion: 1,
+                                    tenantId: attribute?[i].tenantId,
+                                  ));
                                 }
 
                                 context.read<ServiceBloc>().add(
                                       ServiceCreateEvent(
                                         serviceModel: ServiceModel(
-                                          createdAt: DigitDateUtils
-                                              .getDateFromTimestamp(
-                                            DateTime.now()
-                                                .toLocal()
-                                                .millisecondsSinceEpoch,
-                                            dateFormat: defaultDateTimeFormat,
-                                          ),
-                                          tenantId: value
-                                              .selectedServiceDefinition!
-                                              .tenantId,
-                                          clientId: widget.referralClientRefId
-                                              .toString(),
-                                          serviceDefId: value
-                                              .selectedServiceDefinition?.id,
-                                          attributes: attributes,
-                                          rowVersion: 1,
-                                          accountId: ReferralReconSingleton()
-                                              .projectId,
-                                          additionalDetails: {
-                                            "boundaryCode":
-                                                ReferralReconSingleton()
-                                                    .boundary
-                                                    ?.code
-                                          },
-                                        ),
+                                            createdAt: DigitDateUtils
+                                                .getDateFromTimestamp(
+                                              DateTime.now()
+                                                  .toLocal()
+                                                  .millisecondsSinceEpoch,
+                                              dateFormat: defaultDateTimeFormat,
+                                            ),
+                                            tenantId: value
+                                                .selectedServiceDefinition!
+                                                .tenantId,
+                                            clientId: widget.referralClientRefId
+                                                .toString(),
+                                            serviceDefId: value
+                                                .selectedServiceDefinition?.id,
+                                            attributes: attributes,
+                                            rowVersion: 1,
+                                            accountId: ReferralReconSingleton()
+                                                .projectId,
+                                            additionalFields:
+                                                ServiceAdditionalFields(
+                                                    version: 1,
+                                                    fields: [
+                                                  AdditionalField(
+                                                      'localityCode',
+                                                      ReferralReconSingleton()
+                                                          .boundary
+                                                          ?.code),
+                                                ])),
                                       ),
                                     );
 
@@ -450,7 +453,7 @@ class _ReferralReasonChecklistPageState
                     groupValue: controller[index].text.trim(),
                     onChanged: (value) {
                       context.read<ServiceBloc>().add(
-                        ServiceSurveyFormEvent(
+                            ServiceSurveyFormEvent(
                               value: Random().nextInt(100).toString(),
                               submitTriggered: submitTriggered,
                             ),
@@ -628,7 +631,7 @@ class _ReferralReasonChecklistPageState
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
-                              ServiceSurveyFormEvent(
+                                  ServiceSurveyFormEvent(
                                     value: e.toString(),
                                     submitTriggered: submitTriggered,
                                   ),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
-import 'package:survey_form/survey_form.dart';
+import 'package:collection/collection.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -14,6 +14,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:isar/isar.dart';
 import 'package:recase/recase.dart';
+import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../../models/app_config/app_config_model.dart' as app_configuration;
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -296,7 +298,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
-
       // INFO : Need to add project load functions
 
       try {
@@ -390,30 +391,39 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadServiceDefinition(List<ProjectModel> projects) async {
-    final configs = await isar.appConfigurations.where().findAll();
-    final userObject = await localSecureStore.userRequestModel;
-    List<String> codes = [];
-    for (UserRoleModel elements in userObject!.roles) {
-      configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
-        for (final project in projects) {
-          codes.add(
-            '${project.name}.$element.${elements.code.snakeCase.toUpperCase()}',
-          );
+    try {
+      final configs = await isar.appConfigurations.where().findAll();
+      final userObject = await localSecureStore.userRequestModel;
+      List<String> codes = [];
+      for (UserRoleModel elements in userObject!.roles) {
+        configs.first.checklistTypes?.map((e) => e.code).forEach((element) {
+          for (final project in projects) {
+            codes.add(
+              '${project.name}.$element.${elements.code.snakeCase.toUpperCase()}',
+            );
+          }
+        });
+      }
+      List<String> finalCodes = [];
+      for (var element in codes) {
+        if (element.contains(RegistrationDeliveryEnums.eligibility.toValue())) {
+          finalCodes.add(element);
         }
-      });
-    }
+      }
+      final serviceDefinition = await serviceDefinitionRemoteRepository
+          .search(ServiceDefinitionSearchModel(
+        tenantId: envConfig.variables.tenantId,
+        code: finalCodes,
+      ));
 
-    final serviceDefinition = await serviceDefinitionRemoteRepository
-        .search(ServiceDefinitionSearchModel(
-      tenantId: envConfig.variables.tenantId,
-      code: codes,
-    ));
-
-    for (var element in serviceDefinition) {
-      await serviceDefinitionLocalRepository.create(
-        element,
-        createOpLog: false,
-      );
+      for (var element in serviceDefinition) {
+        await serviceDefinitionLocalRepository.create(
+          element,
+          createOpLog: false,
+        );
+      }
+    } catch (e) {
+      print(e);
     }
   }
 

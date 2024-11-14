@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:survey_form/blocs/service_definition.dart';
 
 import '../../blocs/app_localization.dart';
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
+import '../../models/entities/registration_delivery_enums.dart';
 import '../../models/entities/side_effect.dart';
 import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
@@ -237,6 +239,9 @@ class MemberCard extends StatelessWidget {
                                   : () {
                                       final bloc =
                                           context.read<HouseholdOverviewBloc>();
+                                      final serviceDefinitionBloc = context
+                                          .read<ServiceDefinitionBloc>()
+                                          .state;
 
                                       bloc.add(
                                         HouseholdOverviewEvent
@@ -267,8 +272,29 @@ class MemberCard extends StatelessWidget {
                                           ),
                                         );
                                       } else {
-                                        context.router
-                                            .push(BeneficiaryDetailsRoute());
+                                        serviceDefinitionBloc.when(
+                                            empty: () {},
+                                            isloading: () {},
+                                            serviceDefinitionFetch:
+                                                (value, model) {
+                                              if (value
+                                                  .where((element) => element
+                                                      .code
+                                                      .toString()
+                                                      .contains(
+                                                          '${RegistrationDeliverySingleton().selectedProject!.name}.${RegistrationDeliveryEnums.eligibility.toValue()}'))
+                                                  .toList()
+                                                  .isEmpty) {
+                                                context.router.push(
+                                                  DeliverInterventionRoute(),
+                                                );
+                                              } else {
+                                                navigateToChecklist(
+                                                    context,
+                                                    individual
+                                                        .clientReferenceId);
+                                              }
+                                            });
                                       }
                                     },
                               child: Center(
@@ -542,5 +568,10 @@ class MemberCard extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void navigateToChecklist(BuildContext context, clientReferenceId) async {
+    await context.router.push(
+        BeneficiaryChecklistRoute(beneficiaryClientRefId: clientReferenceId));
   }
 }

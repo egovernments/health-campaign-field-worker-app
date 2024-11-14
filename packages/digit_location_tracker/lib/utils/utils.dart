@@ -42,7 +42,7 @@ Future<List<UserActionModel>> parseLocationData(List<String> logs) async {
       locationDataList.add(UserActionModel(
         latitude: latitude,
         longitude: longitude,
-        locationAccuracy: 1.3,
+        locationAccuracy: 0,
         tenantId: LocationTrackerSingleton().tenantId,
         clientReferenceId: IdGen.instance.identifier,
         isSync: isSync,
