@@ -184,11 +184,11 @@ class _BeneficiaryChecklistPageState
                                   rowVersion: 1,
                                   accountId:
                                       RegistrationDeliverySingleton().projectId,
-                                  additionalDetails:
-                                  {
-                                   "boundaryCode": RegistrationDeliverySingleton()
-                                        .boundary
-                                        ?.code
+                                  additionalDetails: {
+                                    "boundaryCode":
+                                        RegistrationDeliverySingleton()
+                                            .boundary
+                                            ?.code
                                   },
                                   auditDetails: AuditDetails(
                                     createdBy: RegistrationDeliverySingleton()

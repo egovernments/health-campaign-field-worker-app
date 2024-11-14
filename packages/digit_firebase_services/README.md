@@ -1,39 +1,28 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+# digit_firebase_services
+digit_firebase_services is a Flutter package that simplifies the integration of Firebase services into your app. It bundles together commonly used Firebase services like firebase_core and firebase_crashlytics and allows you to enable or disable them with a simple flag. This package is designed to be flexible and configurable, making it easy to manage Firebase services in a unified way.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Unified integration of Firebase Core and Firebase Crashlytics.
+- Simple API to set up Firebase services.
 
 ## Getting started
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+```dart
+dependencies:
+  digit_firebase_services: latest_version
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
+
+firebase_services.initialize(
+options: DefaultFirebaseOptions.currentPlatform,
+onErrorMessage: (value) {
+AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+},
+);
 ```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
