@@ -320,16 +320,16 @@ class AppRouter extends _$AppRouter {
 
         // Attendance Route
         AutoRoute(
+            page: MarkAttendanceRoute.page,
+            path: 'mark-attendance',
+        ),
+        AutoRoute(
           page: ManageAttendanceRoute.page,
           path: 'manage-attendance',
         ),
         AutoRoute(
           page: AttendanceDateSessionSelectionRoute.page,
           path: 'attendance-date-session-selection',
-        ),
-        AutoRoute(
-          page: MarkAttendanceRoute.page,
-          path: 'mark-attendance',
         ),
         AutoRoute(
           page: AttendanceAcknowledgementRoute.page,

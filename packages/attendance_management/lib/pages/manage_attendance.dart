@@ -2,15 +2,17 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../router/attendance_router.gm.dart';
+import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 import '../widgets/no_result_card.dart';
@@ -57,6 +59,7 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     var localization = AttendanceLocalization.of(context);
     return BlocProvider<AttendanceBloc>(
       create: (context) =>
@@ -87,12 +90,12 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                           register.attendees?.length ?? 0,
                       localization.translate(i18.attendance.startDateLabel):
                           register.startDate != null
-                              ? DigitDateUtils.getDateFromTimestamp(
+                              ? AttendanceDateTimeManagement.getDateFromTimestamp(
                                   register.startDate!)
                               : localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.endDateLabel):
                           register.endDate != null
-                              ? DigitDateUtils.getDateFromTimestamp(
+                              ? AttendanceDateTimeManagement.getDateFromTimestamp(
                                   register.endDate!)
                               : localization.translate(i18.common.coreCommonNA),
                       localization.translate(i18.attendance.statusLabel):
@@ -171,16 +174,16 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                             children: [
                               Padding(
                                 padding:
-                                    const EdgeInsets.all(kPadding).copyWith(
+                                    EdgeInsets.all(theme.spacerTheme.spacer2).copyWith(
                                   top: 2,
-                                  left: kPadding * 2,
+                                  left: theme.spacerTheme.spacer2 * 2,
                                 ),
                                 child: Text(
                                   AttendanceLocalization.of(context).translate(
                                       i18.attendance.attendanceRegistarLabel),
                                   style: DigitTheme.instance.mobileTheme
                                       .textTheme.displayMedium
-                                      ?.apply(color: const DigitColors().black),
+                                      ?.apply(color: Colors.black),
                                   textAlign: TextAlign.left,
                                 ),
                               ),
@@ -263,58 +266,57 @@ class RegisterCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     var localization = AttendanceLocalization.of(context);
 
     return DigitCard(
-      padding: const EdgeInsets.all(kPadding),
-      child: Column(
-        children: [
-          DigitTableCard(
-            element: data,
-          ),
-          show
-              ? DigitElevatedButton(
-                  child: Text(
-                    AttendanceLocalization.of(context)
-                        .translate(i18.attendance.openRegister),
-                  ),
-                  onPressed: () async {
-                    if (noOfAttendees == 0) {
-                      DigitToast.show(
-                        context,
-                        options: DigitToastOptions(
-                          localization.translate(
-                              i18.attendance.noAttendeesEnrolledMessage),
-                          true,
-                          DigitTheme.instance.mobileTheme,
-                        ),
-                      );
-                    } else if (startDate != null &&
-                        startDate!.millisecondsSinceEpoch >
-                            DateTime.now().millisecondsSinceEpoch) {
-                      DigitToast.show(
-                        context,
-                        options: DigitToastOptions(
-                          localization
-                              .translate(i18.attendance.registerNotStarted),
-                          true,
-                          DigitTheme.instance.mobileTheme,
-                        ),
-                      );
-                    } else {
-                      await context.router.push(
-                        AttendanceDateSessionSelectionRoute(
-                          registers: registers,
-                          registerID: registerId,
-                        ),
-                      );
-                      attendanceBloc.add(const AttendanceEvents.initial());
-                    }
-                  },
-                )
-              : const Offstage(),
-        ],
-      ),
+      padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+      margin: EdgeInsets.all(theme.spacerTheme.spacer2),
+      children: [
+        LabelValueList(
+          labelFlex: theme.spacerTheme.spacer3.toInt(),
+          padding: EdgeInsets.all(theme.spacerTheme.spacer3),
+          items: data.keys.map((e) {
+            return LabelValuePair(label: e, value: data[e]?.toString() ?? '');
+          }).toList(),
+        ),
+        show
+            ? Button(
+                size: ButtonSize.large,
+                type: ButtonType.primary,
+                mainAxisSize: MainAxisSize.max,
+                label:
+                  AttendanceLocalization.of(context)
+                      .translate(i18.attendance.openRegister),
+                onPressed: () async {
+                  if (noOfAttendees == 0) {
+                    Toast.showToast(
+                      context,
+                      message: localization.translate(
+                          i18.attendance.noAttendeesEnrolledMessage),
+                      type: ToastType.error,
+                    );
+                  } else if (startDate != null &&
+                      startDate!.millisecondsSinceEpoch >
+                          DateTime.now().millisecondsSinceEpoch) {
+                    Toast.showToast(
+                      context,
+                      message: localization
+                          .translate(i18.attendance.registerNotStarted),
+                      type: ToastType.error,
+                    );
+                  } else {
+                    await context.router.push(
+                      AttendanceDateSessionSelectionRoute(
+                        registers: registers,
+                        registerID: registerId,
+                      ),
+                    );
+                    attendanceBloc.add(const AttendanceEvents.initial());
+                  }
+                },
+              )
+            : const Offstage(),]
     );
   }
 }
