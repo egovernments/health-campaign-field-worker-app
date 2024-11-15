@@ -215,7 +215,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                                   'SingleValueList'
                                                               ? localizations
                                                                   .translate(
-                                                                  'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                                  e.value.toString().toUpperCase(),
                                                                 )
                                                               : e.value ?? "",
                                                         ),

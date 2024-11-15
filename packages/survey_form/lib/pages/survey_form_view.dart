@@ -379,7 +379,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                               textAlign: TextAlign.left,
                             ),
                           ),
-                          ...initialAttributes!.map((
+                          ...initialAttributes!.where((att) => att.isActive.toString() == 'true').map((
                             e,
                           ) {
                             int index = (initialAttributes ?? []).indexOf(e);
@@ -766,43 +766,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             .toList()
                         : [],
                     itemBuilder: (item) => RadioButtonBuilder(
-                      localizations.translate(
-                        item.trim().toUpperCase(),
-                      ),
+                        localizations.translate(
+                          '${selectedServiceDefinition?.code}.${item.trim()}',
+                        )
                     ),
                   );
-                },
-              ),
-              BlocBuilder<ServiceBloc, ServiceState>(
-                builder: (context, state) {
-                  return (controller[index].text == item.values?[1].trim() &&
-                          !(isHealthFacilityWorker &&
-                              widget.referralClientRefId != null))
-                      ? Padding(
-                          padding: const EdgeInsets.only(
-                            left: 4.0,
-                            right: 4.0,
-                            bottom: 16,
-                          ),
-                          child: DigitTextField(
-                            maxLength: 1000,
-                            isRequired: true,
-                            controller: additionalController[index],
-                            label: localizations.translate(
-                              '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
-                            ),
-                            validator: (value1) {
-                              if (value1 == null || value1 == '') {
-                                return localizations.translate(
-                                  i18.common.coreCommonReasonRequired,
-                                );
-                              }
-
-                              return null;
-                            },
-                          ),
-                        )
-                      : const SizedBox();
                 },
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
