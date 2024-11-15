@@ -299,11 +299,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "14ebea5f17921081025963b379efd5e16d155dd920d5a42ab2f2f392afb649de"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4-dev.1"
+      path: "../../digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.4"
   digit_ui_components:
     dependency: transitive
     description:
