@@ -215,7 +215,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                                   'SingleValueList'
                                                               ? localizations
                                                                   .translate(
-                                                                  e.value.toString().toUpperCase(),
+                                                                  '${item2?.code ?? ''}.${e.value.toString().toUpperCase()}',
                                                                 )
                                                               : e.value ?? "",
                                                         ),

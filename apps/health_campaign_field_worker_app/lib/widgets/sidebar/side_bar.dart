@@ -33,222 +33,215 @@ class SideBar extends StatelessWidget {
         : false;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      return Stack(children: [
-        SingleChildScrollView(
-          child: Column(children: [
-            Container(
-              color: theme.colorScheme.secondary.withOpacity(0.12),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: state.maybeMap(
-                  authenticated: (value) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      Text(
-                        value.userModel.name.toString(),
-                        style: theme.textTheme.displayMedium,
-                      ),
-                      Text(
-                        value.userModel.mobileNumber.toString(),
-                        style: theme.textTheme.labelSmall,
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.of(context, rootNavigator: true).pop();
-                          context.router.push(UserQRDetailsRoute());
-                        },
-                        child: Container(
-                          height: 155,
-                          width: 155,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                              color: DigitTheme.instance.colorScheme.secondary,
-                            ),
-                          ),
-                          child: QrImageView(
-                            data: context.loggedInUserUuid,
-                            version: QrVersions.auto,
-                            size: 150.0,
+      return SingleChildScrollView(
+        child: Column(children: [
+          Container(
+            color: theme.colorScheme.secondary.withOpacity(0.12),
+            child: SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: state.maybeMap(
+                authenticated: (value) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    Text(
+                      value.userModel.name.toString(),
+                      style: theme.textTheme.displayMedium,
+                    ),
+                    Text(
+                      value.userModel.mobileNumber.toString(),
+                      style: theme.textTheme.labelSmall,
+                    ),
+                    const SizedBox(
+                      height: 16.0,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context, rootNavigator: true).pop();
+                        context.router.push(UserQRDetailsRoute());
+                      },
+                      child: Container(
+                        height: 155,
+                        width: 155,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 2,
+                            color: DigitTheme.instance.colorScheme.secondary,
                           ),
                         ),
+                        child: QrImageView(
+                          data: context.loggedInUserUuid,
+                          version: QrVersions.auto,
+                          size: 150.0,
+                        ),
                       ),
-                    ],
-                  ),
-                  orElse: () => const Offstage(),
-                ),
-              ),
-            ),
-            DigitIconTile(
-              title: AppLocalizations.of(context).translate(
-                i18.common.coreCommonHome,
-              ),
-              icon: Icons.home,
-              onPressed: () {
-                Navigator.of(context, rootNavigator: true).pop();
-                context.router.replaceAll([HomeRoute()]);
-              },
-            ),
-            BlocBuilder<AppInitializationBloc, AppInitializationState>(
-              builder: (context, state) {
-                if (state is! AppInitialized) return const Offstage();
-
-                final appConfig = state.appConfiguration;
-                final languages = state.appConfiguration.languages;
-                final localizationModulesList =
-                    state.appConfiguration.backendInterface;
-
-                return DigitIconTile(
-                  title: AppLocalizations.of(context).translate(
-                    i18.common.coreCommonlanguage,
-                  ),
-                  icon: Icons.language,
-                  onPressed: () {},
-                  content: Offstage(
-                    offstage: languages == null,
-                    child: BlocBuilder<LocalizationBloc, LocalizationState>(
-                      builder: (context, localizationState) {
-                        return localizationModulesList != null
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: DigitRowCard(
-                                  onChanged: (value) {
-                                    int index = languages.indexWhere(
-                                      (ele) =>
-                                          ele.value.toString() ==
-                                          value.value.toString(),
-                                    );
-                                    context.read<LocalizationBloc>().add(
-                                            LocalizationEvent
-                                                .onLoadLocalization(
-                                          module: localizationModulesList
-                                              .interfaces
-                                              .where((element) =>
-                                                  element.type ==
-                                                  Modules.localizationModule)
-                                              .map((e) => e.name.toString())
-                                              .join(',')
-                                              .toString(),
-                                          tenantId:
-                                              appConfig.tenantId ?? "default",
-                                          locale: value.value.toString(),
-                                          path: Constants.localizationApiPath,
-                                        ));
-
-                                    context.read<LocalizationBloc>().add(
-                                          OnUpdateLocalizationIndexEvent(
-                                            index: index,
-                                            code: value.value.toString(),
-                                          ),
-                                        );
-                                  },
-                                  rowItems: languages!.map((e) {
-                                    var index = languages.indexOf(e);
-
-                                    return DigitRowCardModel(
-                                      label: e.label,
-                                      value: e.value,
-                                      isSelected: getSelectedLanguage(
-                                        state,
-                                        index,
-                                      ),
-                                    );
-                                  }).toList(),
-                                  width: (MediaQuery.of(context).size.width *
-                                          0.56 /
-                                          languages.length) -
-                                      (4 * languages.length),
-                                ),
-                              )
-                            : const Offstage();
-                      },
                     ),
-                  ),
-                );
-              },
+                  ],
+                ),
+                orElse: () => const Offstage(),
+              ),
             ),
-            BlocBuilder<UserBloc, UserState>(builder: (ctx, state) {
+          ),
+          DigitIconTile(
+            title: AppLocalizations.of(context).translate(
+              i18.common.coreCommonHome,
+            ),
+            icon: Icons.home,
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pop();
+              context.router.replaceAll([HomeRoute()]);
+            },
+          ),
+          BlocBuilder<AppInitializationBloc, AppInitializationState>(
+            builder: (context, state) {
+              if (state is! AppInitialized) return const Offstage();
+
+              final appConfig = state.appConfiguration;
+              final languages = state.appConfiguration.languages;
+              final localizationModulesList =
+                  state.appConfiguration.backendInterface;
+
               return DigitIconTile(
                 title: AppLocalizations.of(context).translate(
-                  i18.common.coreCommonProfile,
+                  i18.common.coreCommonlanguage,
                 ),
-                icon: Icons.person,
-                onPressed: () async {
-                  final connectivityResult =
-                      await (Connectivity().checkConnectivity());
-                  final isOnline =
-                      connectivityResult == ConnectivityResult.wifi ||
-                          connectivityResult == ConnectivityResult.mobile;
+                icon: Icons.language,
+                onPressed: () {},
+                content: Offstage(
+                  offstage: languages == null,
+                  child: BlocBuilder<LocalizationBloc, LocalizationState>(
+                    builder: (context, localizationState) {
+                      return localizationModulesList != null
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: DigitRowCard(
+                                onChanged: (value) {
+                                  int index = languages.indexWhere(
+                                    (ele) =>
+                                        ele.value.toString() ==
+                                        value.value.toString(),
+                                  );
+                                  context.read<LocalizationBloc>().add(
+                                          LocalizationEvent
+                                              .onLoadLocalization(
+                                        module: localizationModulesList
+                                            .interfaces
+                                            .where((element) =>
+                                                element.type ==
+                                                Modules.localizationModule)
+                                            .map((e) => e.name.toString())
+                                            .join(',')
+                                            .toString(),
+                                        tenantId:
+                                            appConfig.tenantId ?? "default",
+                                        locale: value.value.toString(),
+                                        path: Constants.localizationApiPath,
+                                      ));
 
-                  if (isOnline) {
-                    if (context.mounted) {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.router.push(ProfileRoute());
-                    }
-                  } else {
-                    if (context.mounted) {
-                      DigitDialog.show(
-                        context,
-                        options: DigitDialogOptions(
-                          titleText: AppLocalizations.of(context).translate(
-                            i18.common.connectionLabel,
-                          ),
-                          contentText: AppLocalizations.of(context).translate(
-                            i18.common.connectionContent,
-                          ),
-                          primaryAction: DigitDialogActions(
-                            label: AppLocalizations.of(context).translate(
-                              i18.common.coreCommonOk,
-                            ),
-                            action: (ctx) =>
-                                Navigator.of(context, rootNavigator: true)
-                                    .pop(),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-              );
-            }),
-            if (isDistributor)
-              DigitIconTile(
-                title: AppLocalizations.of(context).translate(
-                  i18.common.coreCommonViewDownloadedData,
+                                  context.read<LocalizationBloc>().add(
+                                        OnUpdateLocalizationIndexEvent(
+                                          index: index,
+                                          code: value.value.toString(),
+                                        ),
+                                      );
+                                },
+                                rowItems: languages!.map((e) {
+                                  var index = languages.indexOf(e);
+
+                                  return DigitRowCardModel(
+                                    label: e.label,
+                                    value: e.value,
+                                    isSelected: getSelectedLanguage(
+                                      state,
+                                      index,
+                                    ),
+                                  );
+                                }).toList(),
+                                width: (MediaQuery.of(context).size.width *
+                                        0.56 /
+                                        languages.length) -
+                                    (4 * languages.length),
+                              ),
+                            )
+                          : const Offstage();
+                    },
+                  ),
                 ),
-                icon: Icons.download,
-                onPressed: () {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.router.push(const BeneficiariesReportRoute());
-                },
+              );
+            },
+          ),
+          BlocBuilder<UserBloc, UserState>(builder: (ctx, state) {
+            return DigitIconTile(
+              title: AppLocalizations.of(context).translate(
+                i18.common.coreCommonProfile,
               ),
-            DigitIconTile(
-              title: AppLocalizations.of(context)
-                  .translate(i18.common.coreCommonLogout),
-              icon: Icons.logout,
-              onPressed: () {
-                context.read<BoundaryBloc>().add(const BoundaryResetEvent());
-                context.read<AuthBloc>().add(const AuthLogoutEvent());
+              icon: Icons.person,
+              onPressed: () async {
+                final connectivityResult =
+                    await (Connectivity().checkConnectivity());
+                final isOnline =
+                    connectivityResult == ConnectivityResult.wifi ||
+                        connectivityResult == ConnectivityResult.mobile;
+
+                if (isOnline) {
+                  if (context.mounted) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.push(ProfileRoute());
+                  }
+                } else {
+                  if (context.mounted) {
+                    DigitDialog.show(
+                      context,
+                      options: DigitDialogOptions(
+                        titleText: AppLocalizations.of(context).translate(
+                          i18.common.connectionLabel,
+                        ),
+                        contentText: AppLocalizations.of(context).translate(
+                          i18.common.connectionContent,
+                        ),
+                        primaryAction: DigitDialogActions(
+                          label: AppLocalizations.of(context).translate(
+                            i18.common.coreCommonOk,
+                          ),
+                          action: (ctx) =>
+                              Navigator.of(context, rootNavigator: true)
+                                  .pop(),
+                        ),
+                      ),
+                    );
+                  }
+                }
               },
-            )
-          ]),
-        ),
-        Positioned(
-          bottom: 20,
-          left: 0,
-          right: 0,
-          child: PoweredByDigit(
+            );
+          }),
+          if (isDistributor)
+            DigitIconTile(
+              title: AppLocalizations.of(context).translate(
+                i18.common.coreCommonViewDownloadedData,
+              ),
+              icon: Icons.download,
+              onPressed: () {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.router.push(const BeneficiariesReportRoute());
+              },
+            ),
+          DigitIconTile(
+            title: AppLocalizations.of(context)
+                .translate(i18.common.coreCommonLogout),
+            icon: Icons.logout,
+            onPressed: () {
+              context.read<BoundaryBloc>().add(const BoundaryResetEvent());
+              context.read<AuthBloc>().add(const AuthLogoutEvent());
+            },
+          ),
+          PoweredByDigit(
             version: Constants().version,
           ),
-        ),
-      ]);
+        ]),
+      );
     });
   }
 }
