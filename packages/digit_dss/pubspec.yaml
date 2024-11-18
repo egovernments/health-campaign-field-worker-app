@@ -5,7 +5,7 @@ homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
+  sdk: '>=3.2.0 <4.0.0'
   flutter: ">=1.17.0"
 
 dependencies:
@@ -32,7 +32,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
-  dart_code_metrics: ^5.7.6
   freezed: ^2.1.0+1
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
