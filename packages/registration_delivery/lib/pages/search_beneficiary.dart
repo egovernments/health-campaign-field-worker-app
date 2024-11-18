@@ -324,7 +324,7 @@ class _SearchBeneficiaryPageState
                                                           ?.lastOrNull
                                                       : null,
                                               addressModel: i.headOfHousehold!
-                                                  .address!.lastOrNull,
+                                                  .address!.lastOrNull!,
                                               headOfHousehold:
                                                   i.headOfHousehold),
                                     ),

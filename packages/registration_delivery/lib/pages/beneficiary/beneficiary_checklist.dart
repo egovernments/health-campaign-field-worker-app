@@ -427,7 +427,6 @@ class _BeneficiaryChecklistPageState
                                       return Align(
                                         alignment: Alignment.topLeft,
                                         child: SelectionCard<bool>(
-                                          // label: e,
                                           title: localizations.translate(
                                             '${selectedServiceDefinition?.code}.${e.code}',
                                           ),
