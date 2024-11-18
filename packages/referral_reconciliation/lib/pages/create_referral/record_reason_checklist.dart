@@ -163,6 +163,7 @@ class _ReferralReasonChecklistPageState
                                 context.read<ServiceBloc>().add(
                                       ServiceCreateEvent(
                                         serviceModel: ServiceModel(
+<<<<<<< HEAD
                                           createdAt: DigitDateUtils
                                               .getDateFromTimestamp(
                                             DateTime.now()
@@ -188,6 +189,32 @@ class _ReferralReasonChecklistPageState
                                                     ?.code
                                           },
                                         ),
+=======
+                                            createdAt: DigitDateUtils
+                                                .getDateFromTimestamp(
+                                              DateTime.now()
+                                                  .toLocal()
+                                                  .millisecondsSinceEpoch,
+                                              dateFormat: defaultDateTimeFormat,
+                                            ),
+                                            tenantId: value
+                                                .selectedServiceDefinition!
+                                                .tenantId,
+                                            clientId: widget.referralClientRefId
+                                                .toString(),
+                                            serviceDefId: value
+                                                .selectedServiceDefinition?.id,
+                                            attributes: attributes,
+                                            rowVersion: 1,
+                                            accountId: ReferralReconSingleton()
+                                                .projectId,
+                                            additionalDetails: {
+                                              "boundaryCode":
+                                                  ReferralReconSingleton()
+                                                      .boundary!
+                                                      .code,
+                                            }),
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
                                       ),
                                     );
 

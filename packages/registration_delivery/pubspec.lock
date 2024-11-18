@@ -338,7 +338,7 @@ packages:
     source: hosted
     version: "0.3.3+8"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
@@ -390,7 +390,11 @@ packages:
     description:
       path: "packages/dart_mappable_builder"
       ref: master
+<<<<<<< HEAD
       resolved-ref: e3d8ac43f70568b4a17c200cae5cde285050ef23
+=======
+      resolved-ref: "8011a4c367094dfb018fce701d700a582ba862bb"
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
     version: "4.2.0"
@@ -410,6 +414,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  device_info_plus:
+    dependency: "direct main"
+    description:
+      name: device_info_plus
+      sha256: "77f757b789ff68e4eaf9c56d1752309bd9f7ad557cb105b938a7f8eb89e59110"
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.1.2"
+  device_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: device_info_plus_platform_interface
+      sha256: "282d3cf731045a2feb66abfe61bbc40870ae50a3ed10a4d3d217556c35c8c2ba"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.1"
   diff_match_patch:
     dependency: transitive
     description:
@@ -430,10 +450,17 @@ packages:
     dependency: "direct main"
     description:
       name: digit_data_model
+<<<<<<< HEAD
       sha256: "560b806cbb9f760ed956ecf2d01a8e5ea5640d8fca9ec1332ee15b34998d2e15"
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3+3"
+=======
+      sha256: "0d201c866dc68652cdc5c632193179e14b06fdf5e112e837f0c998dd02440bff"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4-dev.8-uniqueId"
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
   digit_scanner:
     dependency: "direct main"
     description:
@@ -1446,6 +1473,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.0"
+  win32_registry:
+    dependency: transitive
+    description:
+      name: win32_registry
+      sha256: "41fd8a189940d8696b1b810efb9abcf60827b6cbfab90b0c43e8439e3a39d85a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   xdg_directories:
     dependency: transitive
     description:

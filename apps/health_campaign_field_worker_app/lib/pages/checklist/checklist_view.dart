@@ -109,13 +109,49 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                         // close the location capturing `dialog`
                         DigitComponentsUtils().hideDialog(context);
 
+<<<<<<< HEAD
+=======
+                        context.read<ServiceBloc>().add(
+                              const ServiceChecklistEvent(
+                                value: '',
+                                submitTriggered: true,
+                              ),
+                            );
+                        final isValid =
+                            checklistFormKey.currentState?.validate();
+                        if (!isValid!) {
+                          return;
+                        }
+                        final itemsAttributes = initialAttributes;
+
+                        for (int i = 0; i < controller.length; i++) {
+                          if (itemsAttributes?[i].required == true &&
+                              ((itemsAttributes?[i].dataType ==
+                                          'SingleValueList' &&
+                                      visibleChecklistIndexes
+                                          .any((e) => e == i) &&
+                                      (controller[i].text == '')) ||
+                                  (itemsAttributes?[i].dataType !=
+                                          'SingleValueList' &&
+                                      (controller[i].text == '' &&
+                                          !(isHealthFacilityWorker &&
+                                              widget.referralClientRefId !=
+                                                  null))))) {
+                            return;
+                          }
+                        }
+
+                        // Request location from LocationBloc
+                        context
+                            .read<LocationBloc>()
+                            .add(const LocationEvent.load());
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
 
                         // Wait for the location to be obtained
                         final locationState =
                             context.read<LocationBloc>().state;
                         double? latitude = locationState.latitude;
                         double? longitude = locationState.longitude;
-
 
                         final shouldSubmit = await DigitDialog.show(
                           context,
@@ -166,6 +202,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                         widget.referralClientRefId != null
                                         ? null
                                         : ((attribute?[i].values?.length == 2 ||
+<<<<<<< HEAD
                                         attribute?[i]
                                             .values
                                             ?.length ==
@@ -185,6 +222,27 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                         : null,
                                     additionalFields:
                                     ServiceAttributesAdditionalFields(
+=======
+                                                    attribute?[i]
+                                                            .values
+                                                            ?.length ==
+                                                        3) &&
+                                                controller[i].text ==
+                                                    attribute?[i]
+                                                        .values?[1]
+                                                        .trim())
+                                            ? additionalController[i]
+                                                    .text
+                                                    .toString()
+                                                    .isEmpty
+                                                ? null
+                                                : additionalController[i]
+                                                    .text
+                                                    .toString()
+                                            : null,
+                                    additionalFields:
+                                        ServiceAttributesAdditionalFields(
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
                                       version: 1,
                                       fields: [
                                         AdditionalField(
@@ -201,6 +259,7 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                 }
 
                                 context.read<ServiceBloc>().add(
+<<<<<<< HEAD
                                   ServiceCreateEvent(
                                     serviceModel: ServiceModel(
                                       createdAt: DigitDateUtils
@@ -210,6 +269,52 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                             .millisecondsSinceEpoch,
                                         dateFormat: Constants
                                             .checklistViewDateFormat,
+=======
+                                      ServiceCreateEvent(
+                                        serviceModel: ServiceModel(
+                                            createdAt: DigitDateUtils
+                                                .getDateFromTimestamp(
+                                              DateTime.now()
+                                                  .toLocal()
+                                                  .millisecondsSinceEpoch,
+                                              dateFormat: Constants
+                                                  .checklistViewDateFormat,
+                                            ),
+                                            tenantId: value
+                                                .selectedServiceDefinition!
+                                                .tenantId,
+                                            clientId: isHealthFacilityWorker &&
+                                                    widget.referralClientRefId !=
+                                                        null
+                                                ? widget.referralClientRefId.toString()
+                                                : referenceId,
+                                            serviceDefId: value.selectedServiceDefinition?.id,
+                                            attributes: attributes,
+                                            rowVersion: 1,
+                                            accountId: context.projectId,
+                                            auditDetails: AuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: DateTime.now()
+                                                  .millisecondsSinceEpoch,
+                                            ),
+                                            clientAuditDetails: ClientAuditDetails(
+                                              createdBy:
+                                                  context.loggedInUserUuid,
+                                              createdTime: context
+                                                  .millisecondsSinceEpoch(),
+                                              lastModifiedBy:
+                                                  context.loggedInUserUuid,
+                                              lastModifiedTime: context
+                                                  .millisecondsSinceEpoch(),
+                                            ),
+                                            additionalDetails: {
+                                              "boundaryCode":
+                                                  context.boundary.code,
+                                              "lat": latitude,
+                                              "lng": longitude
+                                            }),
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
                                       ),
                                       tenantId: value
                                           .selectedServiceDefinition!
@@ -492,8 +597,15 @@ class _ChecklistViewPageState extends LocalizedState<ChecklistViewPage> {
                                                               ),
                                                             );
 
+<<<<<<< HEAD
                                                         // Split the controller text into a list of values
                                                         var val = controller[index].text.split('.').where((v) => v.trim().isNotEmpty).toList();
+=======
+                                                        var val =
+                                                            controller[index]
+                                                                .text
+                                                                .split('.');
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
                                                         if (val
                                                             .contains(item)) {
                                                           val.remove(item);

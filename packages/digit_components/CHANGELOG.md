@@ -1,6 +1,9 @@
+<<<<<<< HEAD
 ## 1.0.2+1
 * Added description field for Labeled Field component
 
+=======
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
 ## 1.0.2
 * Added privacy notice component
 

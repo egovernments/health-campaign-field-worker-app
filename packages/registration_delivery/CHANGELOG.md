@@ -1,5 +1,29 @@
+<<<<<<< HEAD
 ## 1.0.3+3
 * Updated Service model additionalDetails objectType in digit_data_model package
+=======
+## 1.0.4-dev.4-search-fix
+* Changed additionalDetails of ServiceModel to Map<String, dynamic>
+
+## 1.0.4
+* Bug Fix -
+    * Updated query search for beneficiary referred status
+
+## 1.0.4-dev.3-search-fix
+
+* Bug Fix -
+  * Individual, Household search for child query fix
+
+## 1.0.4-dev.2-uniqueId
+
+* Unique Beneficiary Id link to identifier
+* Updated digit_data_model package
+
+## 1.0.4-dev.1-uniqueId
+
+* Added BeneficiaryInEligible status
+* Added utils function to get unique beneficiary id
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
 
 ## 1.0.3+2
 

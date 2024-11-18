@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## 1.0.4
 
 * Added user_action entity for digit_location_tracker package
@@ -7,6 +8,23 @@
 * Added tenant id to query params and RequestInfo for security gateway fixes
 * Updated additionalDetails field to service definition attributes model
 * Changed the object type of additionalDetails in Service model from String to Map
+=======
+## 1.0.4-dev.8-uniqueId
+* Changed additionalDetails of ServiceModel to Map<String, dynamic>
+
+## 1.0.4-dev.7-uniqueId
+* Modified identifierType of unique beneficiary id
+
+## 1.0.4-dev.6-uniqueId
+* Added additionalDetails field to service definition attributes model
+
+## 1.0.4-dev.5-uniqueId
+* Added identifierType enum entity
+* Added identifierType and id as primary key to identifier table
+
+* Updated oplog transactions to synchronous - fix for write transaction lock
+* Same change in 1.0.3-hotfix, 1.0.4-dev.3
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
 
 ## 1.0.3+2
 

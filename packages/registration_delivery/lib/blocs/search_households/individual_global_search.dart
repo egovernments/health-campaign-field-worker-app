@@ -141,14 +141,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         null,
       );
 
-      final List<String> individualClientReferenceIds = householdMembersList
-          .map((e) => e.individualClientReferenceId.toString())
-          .toList();
-
-      individualsList = await individual.search(
-        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
-      );
-
       late List<String> houseHoldClientReferenceIds = [];
 
       houseHoldClientReferenceIds = householdMembersList
@@ -159,9 +151,43 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         clientReferenceId: houseHoldClientReferenceIds,
       ));
 
-      finalResults.forEach((element) {
-        taskList.add(element);
-      });
+      householdMembersList = await fetchHouseholdMembersBulk(
+        null,
+        houseHoldClientReferenceIds,
+      );
+
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembersList
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
+
+      final List<String> individualClientReferenceIds = householdMembersList
+          .map((e) => e.individualClientReferenceId.toString())
+          .toList();
+
+      projectBeneficiariesList = await projectBeneficiary.search(
+          ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
+              beneficiaryClientReferenceId:
+                  individualClientReferenceIds.map((e) => e).toList()));
+
+      individualsList = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
+      );
+
+      if (!event.globalSearchParams.filter!
+          .contains(Status.beneficiaryReferred.name)) {
+        finalResults.forEach((element) {
+          taskList.add(element);
+        });
+      } else {
+        finalResults.forEach((element) {
+          referralsList.add(element);
+        });
+      }
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -193,7 +219,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
               individualClientReferenceIds.map((e) => e.toString()).toList()));
 
       // Search for individual results using the extracted IDs and search text.
-      final List<HouseholdMemberModel> householdMembers =
+      List<HouseholdMemberModel> householdMembers =
           await fetchHouseholdMembersBulk(
         individualClientReferenceIds,
         null,
@@ -204,6 +230,19 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
             .map((e) => e.householdClientReferenceId.toString())
             .toList(),
       ));
+
+      householdMembers = await fetchHouseholdMembersBulk(
+        null,
+        householdList.map((e) => e.clientReferenceId).toList(),
+      );
+
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembers
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
@@ -333,10 +372,12 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         taskClientReferenceId:
             taskList.map((e) => e.clientReferenceId).toList(),
       ));
-      referralsList = await referralDataRepository.search(ReferralSearchModel(
-        projectBeneficiaryClientReferenceId:
-            projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
-      ));
+      if (referralsList.isEmpty) {
+        referralsList = await referralDataRepository.search(ReferralSearchModel(
+          projectBeneficiaryClientReferenceId:
+              projectBeneficiariesList.map((e) => e.clientReferenceId).toList(),
+        ));
+      }
     }
 
     return [taskList, sideEffectsList, referralsList];

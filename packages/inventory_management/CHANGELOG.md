@@ -1,8 +1,11 @@
+<<<<<<< HEAD
 ## 1.0.3+5
 
 * Added audit and client audit details in stock reconciliation
 * Updated digit_data_model and components to latest version
 
+=======
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
 ## 1.0.3+4
 
 * Updated wayBillNumber validation

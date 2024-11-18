@@ -68,11 +68,18 @@ packages:
   attendance_management:
     dependency: "direct main"
     description:
+<<<<<<< HEAD
       name: attendance_management
       sha256: "8a09814ca11cca736d771be70fb6174303ea0cb3525aa72e7239cbc14b915303"
       url: "https://pub.dev"
     source: hosted
     version: "1.0.2+4"
+=======
+      path: "../../packages/attendance_management"
+      relative: true
+    source: path
+    version: "1.0.2+1"
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
   audioplayers:
     dependency: "direct main"
     description:
@@ -340,10 +347,9 @@ packages:
   closed_household:
     dependency: "direct main"
     description:
-      name: closed_household
-      sha256: d216dbc8e263c9be576e3747ceee9715a6a96e6056a7a812847fb44589f515e8
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/closed_household"
+      relative: true
+    source: path
     version: "1.0.1+1"
   code_builder:
     dependency: transitive
@@ -428,11 +434,17 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
+<<<<<<< HEAD
       path: "packages/dart_mappable_builder"
       ref: master
       resolved-ref: e3d8ac43f70568b4a17c200cae5cde285050ef23
       url: "https://github.com/egovernments/health-campaign-field-worker-app/"
     source: git
+=======
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -493,6 +505,7 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
+<<<<<<< HEAD
       name: digit_components
       sha256: "07b585e5d8010639366da72a4a8b215ce9b8790c75b2162b66af3cea57ca35d9"
       url: "https://pub.dev"
@@ -505,13 +518,26 @@ packages:
       relative: true
     source: path
     version: "1.0.4"
+=======
+      path: "../../packages/digit_components"
+      relative: true
+    source: path
+    version: "1.0.2"
+  digit_data_model:
+    dependency: "direct main"
+    description:
+      name: digit_data_model
+      sha256: "0d201c866dc68652cdc5c632193179e14b06fdf5e112e837f0c998dd02440bff"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4-dev.8-uniqueId"
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
   digit_dss:
     dependency: "direct main"
     description:
-      name: digit_dss
-      sha256: "32e2173ae52e7fd9fb53fa435fb21466248029366584f44a0c0f2c6836267a98"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_dss"
+      relative: true
+    source: path
     version: "1.0.1"
   digit_firebase_services:
     dependency: "direct main"
@@ -532,18 +558,16 @@ packages:
   digit_scanner:
     dependency: "direct main"
     description:
-      name: digit_scanner
-      sha256: "9862c4885465bb1942e36dc9b42596c201648db9b0f5ffb8ad768e2409fc2742"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_scanner"
+      relative: true
+    source: path
     version: "1.0.3+1"
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
     version: "1.0.0"
   dio:
     dependency: "direct main"
@@ -1130,7 +1154,11 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
+<<<<<<< HEAD
     version: "1.0.3+5"
+=======
+    version: "1.0.3+4"
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
   io:
     dependency: transitive
     description:
@@ -1593,15 +1621,26 @@ packages:
       path: "../../packages/referral_reconciliation"
       relative: true
     source: path
+<<<<<<< HEAD
     version: "1.0.2+2"
+=======
+    version: "1.0.2+1"
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
   registration_delivery:
     dependency: "direct main"
     description:
       name: registration_delivery
+<<<<<<< HEAD
       sha256: b7074bf7115e375b9df2ad2937891139fea163024a35958ff177af137574c047
       url: "https://pub.dev"
     source: hosted
     version: "1.0.3+3"
+=======
+      sha256: "86024b07a5c5e51e0717d60e5d2970102167fc0f7f2c253554351cd881f3fe97"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4-dev.4-search-fix"
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -2136,5 +2175,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.3 <3.9.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"

@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -183,11 +182,19 @@ class _BeneficiaryChecklistPageState
                                   rowVersion: 1,
                                   accountId:
                                       RegistrationDeliverySingleton().projectId,
+<<<<<<< HEAD
                                   additionalDetails:
                                   {
                                    "boundaryCode": RegistrationDeliverySingleton()
                                         .boundary
                                         ?.code
+=======
+                                  additionalDetails: {
+                                    "boundaryCode":
+                                        RegistrationDeliverySingleton()
+                                            .boundary
+                                            ?.code,
+>>>>>>> ce07a75f70a13be46d06ddc6a8514bc85b73a8f1
                                   },
                                   auditDetails: AuditDetails(
                                     createdBy: RegistrationDeliverySingleton()
