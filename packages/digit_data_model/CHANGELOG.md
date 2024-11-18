@@ -1,3 +1,7 @@
+## 1.0.5-dev.1
+
+* Merged pgr and survey_form package changes
+
 ## 1.0.4
 
 * Added user_action entity for digit_location_tracker package
@@ -12,10 +16,6 @@
 
 * Updated beneficiary type target model and table to string
 * Updated project type beneficiary type model and table to BeneficiaryType enum
-
-## 1.0.4-dev.5
-
-* Merged pgr and checklist changes
 
 ## 1.0.3+1
 
