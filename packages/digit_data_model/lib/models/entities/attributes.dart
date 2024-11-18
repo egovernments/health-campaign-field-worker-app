@@ -72,6 +72,7 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
   final Map<String, dynamic>? additionalDetails;
 
   AttributesModel({
+    this.additionalDetails,
     this.additionalFields,
     this.id,
     this.dataType,

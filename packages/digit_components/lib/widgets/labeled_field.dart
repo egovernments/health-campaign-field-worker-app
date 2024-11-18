@@ -30,7 +30,6 @@ class LabeledField extends StatelessWidget {
     this.textStyle,
     this.isRequired = false,
   });
-
   @override
   Widget build(BuildContext context) => Padding(
         padding: padding ?? const EdgeInsets.only(top: kPadding),

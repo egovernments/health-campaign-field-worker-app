@@ -344,7 +344,7 @@ class _SearchBeneficiaryPageState
                                 );
 
                                 if ((i.tasks != null &&
-                                        i.tasks?.last.status ==
+                                        i.tasks?.lastOrNull!.status ==
                                             Status.closeHousehold.toValue() &&
                                         (i.tasks ?? []).isNotEmpty) ||
                                     (i.projectBeneficiaries ?? []).isEmpty) {
@@ -363,10 +363,10 @@ class _SearchBeneficiaryPageState
                                                   (i.projectBeneficiaries ?? [])
                                                           .isNotEmpty
                                                       ? i.projectBeneficiaries
-                                                          ?.last
+                                                          ?.lastOrNull
                                                       : null,
                                               addressModel: i.headOfHousehold!
-                                                  .address!.last,
+                                                  .address!.lastOrNull!,
                                               headOfHousehold:
                                                   i.headOfHousehold),
                                     ),
