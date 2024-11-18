@@ -372,11 +372,9 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "packages/dart_mappable_builder"
-      ref: master
-      resolved-ref: "8011a4c367094dfb018fce701d700a582ba862bb"
-      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
-    source: git
+      path: "../dart_mappable_builder"
+      relative: true
+    source: path
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -403,7 +401,7 @@ packages:
     source: hosted
     version: "0.4.1"
   digit_components:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: digit_components
       sha256: "07b585e5d8010639366da72a4a8b215ce9b8790c75b2162b66af3cea57ca35d9"
@@ -413,11 +411,10 @@ packages:
   digit_data_model:
     dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "63c878bfe49e3e8db190dd5cd35d7a7b93b2e3b6663cebaaee25ff0089c1112b"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5-dev.1"
+      path: "../digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.4"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -427,7 +424,7 @@ packages:
     source: hosted
     version: "1.0.3+1"
   digit_ui_components:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: digit_ui_components
       sha256: e38f163515aa6a6c5283754e741b21f33fb3a6c0a1fc171a1e4e6620510d46ae
@@ -762,10 +759,10 @@ packages:
     dependency: transitive
     description:
       name: geolocator_apple
-      sha256: "6154ea2682563f69fc0125762ed7e91e7ed85d0b9776595653be33918e064807"
+      sha256: bc2aca02423ad429cb0556121f56e60360a2b7d694c8570301d06ea0c00732fd
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.8+1"
+    version: "2.3.7"
   geolocator_platform_interface:
     dependency: transitive
     description:
@@ -1462,11 +1459,10 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      name: survey_form
-      sha256: "52532fb3fae06883828d22f870045587bf7122f67cb4de236c82ad4d6de1d7d7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1-dev.2"
+      path: "../survey_form"
+      relative: true
+    source: path
+    version: "0.0.1-dev.1"
   synchronized:
     dependency: transitive
     description:
