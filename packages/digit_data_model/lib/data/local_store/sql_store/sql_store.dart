@@ -11,7 +11,7 @@ import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
-import '../../../models/pgr_complaints/pgr_complaints.dart';
+import '../../../models/entities/pgr_application_status.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';

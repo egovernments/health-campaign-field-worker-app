@@ -66,6 +66,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
         'batchSize': 5,
       });
       emit(const SyncInProgressState());
+
       await networkManager.performSync(
         localRepositories: event.localRepositories,
         remoteRepositories: event.remoteRepositories,

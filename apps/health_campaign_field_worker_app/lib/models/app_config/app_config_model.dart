@@ -1,4 +1,3 @@
-import 'package:digit_dss/digit_dss.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../privacy_notice/privacy_notice_model.dart';
@@ -123,7 +122,8 @@ class CommonMastersWrapperModel with _$CommonMastersWrapperModel {
   const factory CommonMastersWrapperModel({
     @JsonKey(name: 'GenderType') required List<CommonMasterModel> genderType,
     @JsonKey(name: 'StateInfo') required List<StateInfoModel> stateInfo,
-    @JsonKey(name: 'PrivacyPolicy') required List<PrivacyPolicyModel> privacyPolicyConfig,
+    @JsonKey(name: 'PrivacyPolicy')
+    List<PrivacyPolicyModel>? privacyPolicyConfig,
   }) = _CommonMastersWrapperModel;
 
   factory CommonMastersWrapperModel.fromJson(
