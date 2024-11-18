@@ -32,14 +32,13 @@ dependencies:
   digit_scanner: ^1.0.3+1
   gs1_barcode_parser: ^1.0.5
   auto_route: ^7.8.4
-  digit_data_model: ^1.0.3+3
+  digit_data_model: ^1.0.5-dev.1
   collection: ^1.16.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  dart_code_metrics: ^5.7.6
   freezed: ^2.1.0+1
   json_serializable: ^6.4.0
   drift_dev: ^2.14.1
