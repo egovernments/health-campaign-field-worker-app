@@ -365,7 +365,7 @@ packages:
       path: "../../packages/complaints"
       relative: true
     source: path
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -441,9 +441,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: "8011a4c367094dfb018fce701d700a582ba862bb"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -514,7 +516,7 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5-dev.1"
   digit_dss:
     dependency: "direct main"
     description:
@@ -2065,7 +2067,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   sync_http:
     dependency: transitive
     description:
