@@ -1,3 +1,6 @@
+## 1.0.3+4
+* Delivery action label and administered_success status update based on the project
+
 ## 1.0.3+3
 * Updated Service model additionalDetails objectType in digit_data_model package
 
