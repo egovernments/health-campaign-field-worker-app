@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,6 +45,8 @@ class ClosedHouseholdSummaryPageState
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
         builder: (context, householdState) {
       return Scaffold(
@@ -53,20 +57,18 @@ class ClosedHouseholdSummaryPageState
                 showcaseButton: ShowcaseButton(),
               ),
               footer: DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                 padding:
-                    const EdgeInsets.fromLTRB(kPadding, kPadding, kPadding, 0),
-                child: BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                    EdgeInsets.all(theme.spacerTheme.spacer2),
+                children: [
+                  BlocBuilder<DigitScannerBloc, DigitScannerState>(
                     builder: (context, scannerState) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      DigitOutlineIconButton(
-                        buttonStyle: OutlinedButton.styleFrom(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                        ),
+                      Button(
+                        size: ButtonSize.large,
+                        type: ButtonType.secondary,
+                        mainAxisSize: MainAxisSize.max,
                         onPressed: () {
                           Navigator.of(context).push(
                             // [TODO: Add the route to auto_route]
@@ -81,11 +83,17 @@ class ClosedHouseholdSummaryPageState
                             ),
                           );
                         },
-                        icon: Icons.qr_code,
+                        prefixIcon: Icons.qr_code,
                         label: localizations.translate(i18
                             .closeHousehold.closeHouseholdVoucherScannerLabel),
                       ),
-                      DigitElevatedButton(
+                      SizedBox(
+                        height: theme.spacerTheme.spacer3,
+                      ),
+                      Button(
+                        size: ButtonSize.large,
+                        type: ButtonType.primary,
+                        mainAxisSize: MainAxisSize.max,
                         onPressed: () {
                           context.read<ClosedHouseholdBloc>().add(
                               ClosedHouseholdEvent.handleSubmit(
@@ -104,23 +112,21 @@ class ClosedHouseholdSummaryPageState
                           context.router
                               .push(ClosedHouseholdAcknowledgementRoute());
                         },
-                        child: Center(
-                          child: Text(
-                            localizations
+                        label: localizations
                                 .translate(i18.common.coreCommonSubmit),
-                          ),
-                        ),
                       ),
                     ],
                   );
-                }),
+                }),]
               ),
               slivers: [
             SliverToBoxAdapter(
               child: Column(
                 children: [
                   DigitCard(
-                    child: LabelValueList(
+                    children: [
+                      LabelValueList(
+                      labelFlex: theme.spacerTheme.spacer2.toInt(),
                         heading: localizations.translate(
                             i18.closeHousehold.closeHouseholdSummaryLabel),
                         withDivider: false,
@@ -157,12 +163,14 @@ class ClosedHouseholdSummaryPageState
                                     .translate(i18.common.coreCommonNA),
                           ),
                         ]),
+                    ]
                   ),
                   BlocBuilder<DigitScannerBloc, DigitScannerState>(
                       builder: (context, state) {
                     if (state.qrCodes.isNotEmpty) {
                       return DigitCard(
-                        child: LabelValueList(
+                        children: [LabelValueList(
+                          labelFlex: theme.spacerTheme.spacer2.toInt(),
                           heading: localizations.translate(i18.closeHousehold
                               .closeHouseholdVoucherSummaryLabel),
                           withDivider: false,
@@ -173,7 +181,7 @@ class ClosedHouseholdSummaryPageState
                               value: state.qrCodes.first,
                             ),
                           ],
-                        ),
+                        ),]
                       );
                     } else {
                       return const SizedBox();
