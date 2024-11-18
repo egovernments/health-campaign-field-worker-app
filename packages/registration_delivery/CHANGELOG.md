@@ -1,3 +1,8 @@
+## 1.0.4-dev.5
+* Updated digit_data_model to latest version
+* Updated survey_form to latest version
+* Migrated to digit_ui_components
+
 ## 1.0.3+3
 * Updated Service model additionalDetails objectType in digit_data_model package
 
