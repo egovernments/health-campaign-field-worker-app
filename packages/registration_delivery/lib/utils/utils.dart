@@ -13,6 +13,7 @@ import '../models/entities/referral.dart';
 import '../models/entities/side_effect.dart';
 import '../models/entities/status.dart';
 import '../models/entities/task.dart';
+import 'models/widget_config_model.dart';
 
 /// This class contains custom validators for form controls.
 class CustomValidator {
@@ -315,6 +316,7 @@ class RegistrationDeliverySingleton {
   BoundaryModel? _boundaryModel;
   PersistenceConfiguration? _persistenceConfiguration = PersistenceConfiguration
       .offlineFirst; // Default to offline first persistence configuration
+  List<FormConfigModel>? _formConfig;
   List<String>? _genderOptions;
   List<String>? _idTypeOptions;
   List<String>? _householdDeletionReasonOptions;
@@ -353,6 +355,7 @@ class RegistrationDeliverySingleton {
     required List<String>? houseStructureTypes,
     required List<String>? refusalReasons,
     required UserModel? loggedInUser,
+    List<FormConfigModel>? formConfig,
   }) {
     _loggedInUserUuid = loggedInUserUuid;
     _maxRadius = maxRadius;
@@ -372,6 +375,7 @@ class RegistrationDeliverySingleton {
     _houseStructureTypes = houseStructureTypes;
     _refusalReasons = refusalReasons;
     _loggedInUser = loggedInUser;
+    _formConfig = formConfig;
   }
 
   void setTenantId(String tenantId) {
@@ -401,6 +405,7 @@ class RegistrationDeliverySingleton {
   List<String>? get houseStructureTypes => _houseStructureTypes;
   List<String>? get refusalReasons => _refusalReasons;
   UserModel? get loggedInUser => _loggedInUser;
+  List <FormConfigModel>? get formConfig => _formConfig;
 }
 
 bool allDosesDelivered(

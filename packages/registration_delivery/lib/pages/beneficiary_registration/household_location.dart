@@ -12,6 +12,7 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../router/registration_delivery_router.gm.dart';
+import '../../utils/convert_to_map.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/models/widget_config_model.dart';
 import '../../utils/utils.dart';
@@ -22,39 +23,13 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseholdLocationPage extends LocalizedStatefulWidget {
-  final Map<String, Map<String, dynamic>> widgetConfig;
+  final List<FormConfigModel>? widgetConfig;
 
-  HouseholdLocationPage({
-    Map<String, Map<String, dynamic>>? widgetConfig,
+  const HouseholdLocationPage({
+    this.widgetConfig,
     super.key,
     super.appLocalizations,
-  }) : widgetConfig = widgetConfig ??
-            {
-              'administrationArea': {
-                'isEnabled': false,
-                'readOnly': true,
-                'isRequired': false,
-                'order': 3,
-              },
-              'accuracy': {
-                'isEnabled': true,
-                'readOnly': true,
-                'isRequired': true,
-                'order': 2,
-              },
-              'addressLine1': {
-                'isEnabled': true,
-                'readOnly': false,
-                'isRequired': false,
-                'order': 1,
-              },
-              'postalCode': {
-                'isEnabled': true,
-                'readOnly': false,
-                'isRequired': false,
-                'order': 1,
-              }
-            };
+  });
 
   @override
   State<HouseholdLocationPage> createState() => HouseholdLocationPageState();
@@ -89,176 +64,182 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
           });
           return true;
         });
+
+    if(widget.widgetConfig != null) {
+      final converter = FieldConverter(widget.widgetConfig);
+      final converted = converter.convertFields('HouseholdLocation');
+      print(converted);
+    }
     super.initState();
   }
 
-  List<Widget> buildWidgetsFromConfig(WidgetConfigModel model) {
-    List<Widget> widgets = [];
-
-    // Sort the config keys by the 'order' key
-    var sortedKeys = model.config.keys.toList();
-    sortedKeys.sort(
-        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
-
-    for (var key in sortedKeys) {
-      var fieldConfig = model.config[key];
-
-      if (fieldConfig['isEnabled'] == true) {
-        Widget widget;
-
-        // Generate the widget based on the fieldConfig['type'] using a switch case
-        switch (key) {
-          case _administrationAreaKey:
-            widget = householdLocationShowcaseData.administrativeArea.buildWith(
-                child: DigitTextFormField(
-              formControlName: _administrationAreaKey,
-              label: localizations.translate(
-                i18.householdLocation.administrationAreaFormLabel,
-              ),
-              isRequired: fieldConfig['isRequired'] ?? false,
-              readOnly: fieldConfig['readOnly'] ?? false,
-              validationMessages: {
-                'required': (_) => localizations.translate(
-                      i18.householdLocation
-                          .administrationAreaRequiredValidation,
-                    ),
-                'customError': (object) => localizations.translate(
-                  fieldConfig['errorMessage'] ?? '',
-                )
-              },
-            ));
-            break;
-          case _accuracyKey:
-            widget = householdLocationShowcaseData.gpsAccuracy.buildWith(
-              child: DigitTextFormField(
-                key: const Key(_accuracyKey),
-                formControlName: _accuracyKey,
-                label: localizations.translate(
-                  i18.householdLocation.gpsAccuracyLabel,
-                ),
-                readOnly: fieldConfig['readOnly'] ?? false,
-                isRequired: fieldConfig['isRequired'] ?? false,
-                validationMessages: {
-                  'required': (_) => localizations.translate(
-                        i18.common.corecommonRequired,
-                      ),
-                  'customError': (object) => localizations.translate(
-                    fieldConfig['errorMessage'] ?? '',
-                  )
-                },
-              ),
-            );
-            break;
-          case _addressLine1Key:
-            widget = householdLocationShowcaseData.addressLine1.buildWith(
-              child: DigitTextFormField(
-                formControlName: _addressLine1Key,
-                label: localizations.translate(
-                  i18.householdLocation.householdAddressLine1LabelText,
-                ),
-                readOnly: fieldConfig['readOnly'] ?? false,
-                isRequired: fieldConfig['isRequired'] ?? false,
-                validationMessages: {
-                  'required': (_) => localizations.translate(
-                        i18.common.min2CharsRequired,
-                      ),
-                  'maxLength': (object) => localizations
-                      .translate(i18.common.maxCharsRequired)
-                      .replaceAll('{}', maxLength.toString()),
-                  'customError': (object) => localizations.translate(
-                    fieldConfig['errorMessage'] ?? '',
-                  )
-                },
-              ),
-            );
-            break;
-          case _addressLine2Key:
-            widget = householdLocationShowcaseData.addressLine2.buildWith(
-              child: DigitTextFormField(
-                formControlName: _addressLine2Key,
-                label: localizations.translate(
-                  i18.householdLocation.householdAddressLine2LabelText,
-                ),
-                readOnly: fieldConfig['readOnly'] ?? false,
-                isRequired: fieldConfig['isRequired'] ?? false,
-                validationMessages: {
-                  'required': (_) => localizations.translate(
-                        i18.common.min2CharsRequired,
-                      ),
-                  'maxLength': (object) => localizations
-                      .translate(i18.common.maxCharsRequired)
-                      .replaceAll('{}', maxLength.toString()),
-                  'customError': (object) => localizations.translate(
-                    fieldConfig['errorMessage'] ?? '',
-                  )
-                },
-              ),
-            );
-            break;
-          case _landmarkKey:
-            widget = householdLocationShowcaseData.postalCode.buildWith(
-              child: DigitTextFormField(
-                keyboardType: TextInputType.text,
-                formControlName: _postalCodeKey,
-                label: localizations.translate(
-                  i18.householdLocation.postalCodeFormLabel,
-                ),
-                readOnly: fieldConfig['readOnly'] ?? false,
-                isRequired: fieldConfig['isRequired'] ?? false,
-                validationMessages: {
-                  'required': (_) => localizations.translate(
-                        i18.common.min2CharsRequired,
-                      ),
-                  'maxLength': (object) => localizations
-                      .translate(i18.common.maxCharsRequired)
-                      .replaceAll('{}', '6'),
-                  'customError': (object) => localizations.translate(
-                    fieldConfig['errorMessage'] ?? '',
-                  )
-                },
-                // inputFormatters: [
-                //   FilteringTextInputFormatter.digitsOnly,
-                // ],
-              ),
-            );
-            break;
-          case _postalCodeKey:
-            widget = householdLocationShowcaseData.postalCode.buildWith(
-              child: DigitTextFormField(
-                keyboardType: TextInputType.number,
-                formControlName: _postalCodeKey,
-                label: localizations.translate(
-                  i18.householdLocation.postalCodeFormLabel,
-                ),
-                readOnly: fieldConfig['readOnly'] ?? false,
-                isRequired: fieldConfig['isRequired'] ?? false,
-                validationMessages: {
-                  'required': (_) => localizations.translate(
-                        i18.common.min2CharsRequired,
-                      ),
-                  'maxLength': (object) => localizations
-                      .translate(i18.common.maxCharsRequired)
-                      .replaceAll('{}', '6'),
-                  'customError': (object) => localizations.translate(
-                        fieldConfig['errorMessage'] ?? '',
-                  )
-                },
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                ],
-              ),
-            );
-            break;
-          default:
-            throw Exception("Unsupported widget type: ${key}");
-        }
-
-        widgets.add(widget);
-      }
-    }
-
-    return widgets;
-  }
+  // List<Widget> buildWidgetsFromConfig(WidgetConfigModel model) {
+  //   List<Widget> widgets = [];
+  //
+  //   // Sort the config keys by the 'order' key
+  //   var sortedKeys = model.config.keys.toList();
+  //   sortedKeys.sort(
+  //       (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
+  //
+  //   for (var key in sortedKeys) {
+  //     var fieldConfig = model.config[key];
+  //
+  //     if (fieldConfig['isEnabled'] == true) {
+  //       Widget widget;
+  //
+  //       // Generate the widget based on the fieldConfig['type'] using a switch case
+  //       switch (key) {
+  //         case _administrationAreaKey:
+  //           widget = householdLocationShowcaseData.administrativeArea.buildWith(
+  //               child: DigitTextFormField(
+  //             formControlName: _administrationAreaKey,
+  //             label: localizations.translate(
+  //               i18.householdLocation.administrationAreaFormLabel,
+  //             ),
+  //             isRequired: fieldConfig['isRequired'] ?? false,
+  //             readOnly: fieldConfig['readOnly'] ?? false,
+  //             validationMessages: {
+  //               'required': (_) => localizations.translate(
+  //                     i18.householdLocation
+  //                         .administrationAreaRequiredValidation,
+  //                   ),
+  //               'customError': (object) => localizations.translate(
+  //                 fieldConfig['errorMessage'] ?? '',
+  //               )
+  //             },
+  //           ));
+  //           break;
+  //         case _accuracyKey:
+  //           widget = householdLocationShowcaseData.gpsAccuracy.buildWith(
+  //             child: DigitTextFormField(
+  //               key: const Key(_accuracyKey),
+  //               formControlName: _accuracyKey,
+  //               label: localizations.translate(
+  //                 i18.householdLocation.gpsAccuracyLabel,
+  //               ),
+  //               readOnly: fieldConfig['readOnly'] ?? false,
+  //               isRequired: fieldConfig['isRequired'] ?? false,
+  //               validationMessages: {
+  //                 'required': (_) => localizations.translate(
+  //                       i18.common.corecommonRequired,
+  //                     ),
+  //                 'customError': (object) => localizations.translate(
+  //                   fieldConfig['errorMessage'] ?? '',
+  //                 )
+  //               },
+  //             ),
+  //           );
+  //           break;
+  //         case _addressLine1Key:
+  //           widget = householdLocationShowcaseData.addressLine1.buildWith(
+  //             child: DigitTextFormField(
+  //               formControlName: _addressLine1Key,
+  //               label: localizations.translate(
+  //                 i18.householdLocation.householdAddressLine1LabelText,
+  //               ),
+  //               readOnly: fieldConfig['readOnly'] ?? false,
+  //               isRequired: fieldConfig['isRequired'] ?? false,
+  //               validationMessages: {
+  //                 'required': (_) => localizations.translate(
+  //                       i18.common.min2CharsRequired,
+  //                     ),
+  //                 'maxLength': (object) => localizations
+  //                     .translate(i18.common.maxCharsRequired)
+  //                     .replaceAll('{}', maxLength.toString()),
+  //                 'customError': (object) => localizations.translate(
+  //                   fieldConfig['errorMessage'] ?? '',
+  //                 )
+  //               },
+  //             ),
+  //           );
+  //           break;
+  //         case _addressLine2Key:
+  //           widget = householdLocationShowcaseData.addressLine2.buildWith(
+  //             child: DigitTextFormField(
+  //               formControlName: _addressLine2Key,
+  //               label: localizations.translate(
+  //                 i18.householdLocation.householdAddressLine2LabelText,
+  //               ),
+  //               readOnly: fieldConfig['readOnly'] ?? false,
+  //               isRequired: fieldConfig['isRequired'] ?? false,
+  //               validationMessages: {
+  //                 'required': (_) => localizations.translate(
+  //                       i18.common.min2CharsRequired,
+  //                     ),
+  //                 'maxLength': (object) => localizations
+  //                     .translate(i18.common.maxCharsRequired)
+  //                     .replaceAll('{}', maxLength.toString()),
+  //                 'customError': (object) => localizations.translate(
+  //                   fieldConfig['errorMessage'] ?? '',
+  //                 )
+  //               },
+  //             ),
+  //           );
+  //           break;
+  //         case _landmarkKey:
+  //           widget = householdLocationShowcaseData.postalCode.buildWith(
+  //             child: DigitTextFormField(
+  //               keyboardType: TextInputType.text,
+  //               formControlName: _postalCodeKey,
+  //               label: localizations.translate(
+  //                 i18.householdLocation.postalCodeFormLabel,
+  //               ),
+  //               readOnly: fieldConfig['readOnly'] ?? false,
+  //               isRequired: fieldConfig['isRequired'] ?? false,
+  //               validationMessages: {
+  //                 'required': (_) => localizations.translate(
+  //                       i18.common.min2CharsRequired,
+  //                     ),
+  //                 'maxLength': (object) => localizations
+  //                     .translate(i18.common.maxCharsRequired)
+  //                     .replaceAll('{}', '6'),
+  //                 'customError': (object) => localizations.translate(
+  //                   fieldConfig['errorMessage'] ?? '',
+  //                 )
+  //               },
+  //               // inputFormatters: [
+  //               //   FilteringTextInputFormatter.digitsOnly,
+  //               // ],
+  //             ),
+  //           );
+  //           break;
+  //         case _postalCodeKey:
+  //           widget = householdLocationShowcaseData.postalCode.buildWith(
+  //             child: DigitTextFormField(
+  //               keyboardType: TextInputType.number,
+  //               formControlName: _postalCodeKey,
+  //               label: localizations.translate(
+  //                 i18.householdLocation.postalCodeFormLabel,
+  //               ),
+  //               readOnly: fieldConfig['readOnly'] ?? false,
+  //               isRequired: fieldConfig['isRequired'] ?? false,
+  //               validationMessages: {
+  //                 'required': (_) => localizations.translate(
+  //                       i18.common.min2CharsRequired,
+  //                     ),
+  //                 'maxLength': (object) => localizations
+  //                     .translate(i18.common.maxCharsRequired)
+  //                     .replaceAll('{}', '6'),
+  //                 'customError': (object) => localizations.translate(
+  //                       fieldConfig['errorMessage'] ?? '',
+  //                 )
+  //               },
+  //               inputFormatters: [
+  //                 FilteringTextInputFormatter.digitsOnly,
+  //               ],
+  //             ),
+  //           );
+  //           break;
+  //         default:
+  //           throw Exception("Unsupported widget type: ${key}");
+  //       }
+  //
+  //       widgets.add(widget);
+  //     }
+  //   }
+  //
+  //   return widgets;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -475,9 +456,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               i18.householdLocation
                                   .householdLocationDescriptionText,
                             )),
-                        Column(
-                            children: buildWidgetsFromConfig(WidgetConfigModel(
-                                config: widget.widgetConfig, form: form)))
+                      //   Column(
+                      //       children: buildWidgetsFromConfig(WidgetConfigModel(
+                      //           config: widget.widgetConfig, form: form)))
                       ],
                     ),
                   ),
@@ -536,49 +517,49 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       ),
     });
 
-    widget.widgetConfig.forEach((key, fieldConfig) {
-      final formControl = formGroup.control(key);
-
-      // Get current validators
-      final currentValidators = formControl.validators;
-
-      dynamic updatedValidators = currentValidators.where((validator) {
-        // Check if the validator is of the same type as Validators.required
-        return validator.runtimeType != Validators.required.runtimeType;
-      }).toList();
-
-      if (fieldConfig['isRequired'] == true) {
-        // Add the new validator to the list
-        updatedValidators = [
-          ...currentValidators,
-          Validators.required // Example new validator
-        ];
-      }
-
-
-      // If JSON config has regex, add it as a validator
-      if (fieldConfig.containsKey('regex') && fieldConfig['regex'] is List) {
-        List<String> regexList = fieldConfig['regex'];
-        String errorMessages = fieldConfig['errorMessage'];
-
-        regexList.asMap().forEach((index, regexPattern) {
-          updatedValidators.add((control) {
-            final value = control.value;
-            if (value != null && value.isNotEmpty && !RegExp(regexPattern).hasMatch(value)) {
-              // Ensure there's a matching error message for this index
-              return {'customError': errorMessages};
-            }
-            return null;
-          });
-        });
-      }
-
-      // Set the updated validators back to the form control
-      formControl.setValidators(updatedValidators);
-
-      // Re-run validation with the new validators
-      formControl.updateValueAndValidity();
-    });
+    // widget.widgetConfig.forEach((key, fieldConfig) {
+    //   final formControl = formGroup.control(key);
+    //
+    //   // Get current validators
+    //   final currentValidators = formControl.validators;
+    //
+    //   dynamic updatedValidators = currentValidators.where((validator) {
+    //     // Check if the validator is of the same type as Validators.required
+    //     return validator.runtimeType != Validators.required.runtimeType;
+    //   }).toList();
+    //
+    //   if (fieldConfig['isRequired'] == true) {
+    //     // Add the new validator to the list
+    //     updatedValidators = [
+    //       ...currentValidators,
+    //       Validators.required // Example new validator
+    //     ];
+    //   }
+    //
+    //
+    //   // If JSON config has regex, add it as a validator
+    //   if (fieldConfig.containsKey('regex') && fieldConfig['regex'] is List) {
+    //     List<String> regexList = fieldConfig['regex'];
+    //     String errorMessages = fieldConfig['errorMessage'] ?? "Invalid data";
+    //
+    //     regexList.asMap().forEach((index, regexPattern) {
+    //       updatedValidators.add((control) {
+    //         final value = control.value;
+    //         if (value != null && value.isNotEmpty && !RegExp(regexPattern).hasMatch(value)) {
+    //           // Ensure there's a matching error message for this index
+    //           return {'customError': errorMessages};
+    //         }
+    //         return null;
+    //       });
+    //     });
+    //   }
+    //
+    //   // Set the updated validators back to the form control
+    //   formControl.setValidators(updatedValidators);
+    //
+    //   // Re-run validation with the new validators
+    //   formControl.updateValueAndValidity();
+    // });
 
     return formGroup;
   }

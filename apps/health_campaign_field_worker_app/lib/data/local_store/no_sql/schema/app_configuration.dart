@@ -30,6 +30,9 @@ class AppConfiguration {
   @Name("BACKEND_INTERFACE")
   late BackendInterface? backendInterface;
 
+  @Name("FORM_CONFIG")
+  late List<FormConfig>? formConfig;
+
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;
 
@@ -94,6 +97,26 @@ class Languages {
 class BackendInterface {
   @Name("interfaces")
   late List<Interfaces> interfaces;
+}
+
+@embedded
+class FormConfig {
+  @Name("name")
+  late String name;
+  late String type;
+  @Name('fields')
+  late List<FormConfigField>? fields;
+}
+
+@embedded
+class FormConfigField {
+  late String name;
+  late int order;
+  late bool isRequired;
+  late bool isEnabled;
+  late bool readOnly;
+  late List<String>? regex;
+  late String? errorMessage;
 }
 
 @embedded

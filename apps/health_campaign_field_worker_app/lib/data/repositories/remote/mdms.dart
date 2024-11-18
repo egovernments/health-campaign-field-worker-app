@@ -73,6 +73,7 @@ class MdmsRepository {
     Map body,
   ) async {
     try {
+      print('printing: $apiEndPoint,$body');
       final response = await _client.post(apiEndPoint, data: body);
 
       final appCon = app_configuration.AppConfigPrimaryWrapperModel.fromJson(
@@ -130,6 +131,33 @@ class MdmsRepository {
 
     final element = result.hcmWrapperModel;
     final appConfig = result.hcmWrapperModel?.appConfig.first;
+    final formConfigResult = result.hcmWrapperModel?.formConfig;
+
+    print('formConfigResult: $result');
+
+    final List<FormConfig> formConfigList = [];
+    for (final element in formConfigResult ?? <app_configuration.FormConfigModel>[]) {
+      List<FormConfigField> formConfigField = [];
+      for(final data in element.fields ?? <app_configuration.FormConfigFieldModel>[]) {
+        final fields = FormConfigField()
+            ..name = data.name
+            ..readOnly = data.readOnly
+            ..isRequired = data.isRequired
+            ..isEnabled = data.isEnabled
+            ..regex = data.regex
+            ..errorMessage = data.errorMessage
+            ..order = data.order;
+
+        formConfigField.add(fields);
+      }
+      final formConfig = FormConfig()
+          ..name = element.name
+          ..type = element.type
+          ..fields = formConfigField;
+
+      formConfigList.add(formConfig);
+    }
+
     final commonMasters = result.commonMasters;
     final backgroundServiceConfig = BackgroundServiceConfig()
       ..apiConcurrency = element?.backgroundServiceConfig?.first.apiConcurrency
@@ -150,7 +178,8 @@ class MdmsRepository {
       ..tenantId = appConfig?.tenantId
       ..maxRadius = appConfig?.maxRadius
       ..backgroundServiceConfig = backgroundServiceConfig
-      ..firebaseConfig = firebaseConfig;
+      ..firebaseConfig = firebaseConfig
+      ..formConfig = formConfigList;
 
     final List<Languages>? languageList =
         commonMasters?.stateInfo.first.languages.map((element) {

@@ -71,3 +71,4 @@ export 'utils/utils.dart' show RegistrationDeliverySingleton;
 export 'widgets/beneficiary/beneficiary_card.dart';
 export 'widgets/beneficiary/beneficiary_statistics_card.dart';
 export 'widgets/progress_bar/beneficiary_progress.dart';
+export 'utils/models/widget_config_model.dart';

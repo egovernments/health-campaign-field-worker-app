@@ -53,4 +53,6 @@ enum MasterEnums {
   privacyPolicy,
   @MappableValue("dashboardConfig")
   dashboardConfig,
+  @MappableValue("FORM_CONFIG")
+  formConfig,
 }

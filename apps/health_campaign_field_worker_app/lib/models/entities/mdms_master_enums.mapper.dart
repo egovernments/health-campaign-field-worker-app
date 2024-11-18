@@ -73,6 +73,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.privacyPolicy;
       case "dashboardConfig":
         return MasterEnums.dashboardConfig;
+      case "FORM_CONFIG":
+        return MasterEnums.formConfig;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -129,6 +131,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "PrivacyPolicy";
       case MasterEnums.dashboardConfig:
         return "dashboardConfig";
+      case MasterEnums.formConfig:
+        return "FORM_CONFIG";
     }
   }
 }

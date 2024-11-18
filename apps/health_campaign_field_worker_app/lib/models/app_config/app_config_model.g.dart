@@ -153,6 +153,9 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       firebaseConfig: (json['FIREBASE_CONFIG'] as List<dynamic>?)
           ?.map((e) => FirebaseConfig.fromJson(e as Map<String, dynamic>))
           .toList(),
+      formConfig: (json['FORM_CONFIG'] as List<dynamic>?)
+          ?.map((e) => FormConfigModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -178,6 +181,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'HOUSE_STRUCTURE_TYPES': instance.houseStructureTypes,
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
+      'FORM_CONFIG': instance.formConfig,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -381,6 +385,49 @@ Map<String, dynamic> _$$BackendInterfaceImplToJson(
         _$BackendInterfaceImpl instance) =>
     <String, dynamic>{
       'interfaces': instance.interface,
+    };
+
+_$FormConfigModelImpl _$$FormConfigModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$FormConfigModelImpl(
+      name: json['name'] as String,
+      type: json['type'] as String,
+      fields: (json['fields'] as List<dynamic>?)
+          ?.map((e) => FormConfigFieldModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$FormConfigModelImplToJson(
+        _$FormConfigModelImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': instance.type,
+      'fields': instance.fields,
+    };
+
+_$FormConfigFieldModelImpl _$$FormConfigFieldModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$FormConfigFieldModelImpl(
+      name: json['name'] as String,
+      order: (json['order'] as num).toInt(),
+      isRequired: json['isRequired'] as bool,
+      isEnabled: json['isEnabled'] as bool,
+      readOnly: json['readOnly'] as bool,
+      regex:
+          (json['regex'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      errorMessage: json['errorMessage'] as String?,
+    );
+
+Map<String, dynamic> _$$FormConfigFieldModelImplToJson(
+        _$FormConfigFieldModelImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'order': instance.order,
+      'isRequired': instance.isRequired,
+      'isEnabled': instance.isEnabled,
+      'readOnly': instance.readOnly,
+      'regex': instance.regex,
+      'errorMessage': instance.errorMessage,
     };
 
 _$InterfacesWrapperImpl _$$InterfacesWrapperImplFromJson(

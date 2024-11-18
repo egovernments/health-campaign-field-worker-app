@@ -97,6 +97,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
     @JsonKey(name: 'FIREBASE_CONFIG')
     required List<FirebaseConfig>? firebaseConfig,
+    @JsonKey(name: 'FORM_CONFIG')
+    List<FormConfigModel>? formConfig,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -262,6 +264,35 @@ class BackendInterface with _$BackendInterface {
 
   factory BackendInterface.fromJson(Map<String, dynamic> json) =>
       _$BackendInterfaceFromJson(json);
+}
+
+@freezed
+class FormConfigModel with _$FormConfigModel {
+  factory FormConfigModel({
+    required String name,
+    required String type,
+    @JsonKey(name: 'fields')
+    List<FormConfigFieldModel>? fields
+  }) = _FormConfigModel;
+
+  factory FormConfigModel.fromJson(Map<String, dynamic> json) =>
+      _$FormConfigModelFromJson(json);
+}
+
+@freezed
+class FormConfigFieldModel with _$FormConfigFieldModel {
+  factory FormConfigFieldModel({
+    required String name,
+    required int order,
+    required bool isRequired,
+    required bool isEnabled,
+    required bool readOnly,
+    List <String>? regex,
+    String? errorMessage,
+  }) = _FormConfigFieldModel;
+
+  factory FormConfigFieldModel.fromJson(Map<String, dynamic> json) =>
+      _$FormConfigFieldModelFromJson(json);
 }
 
 @freezed

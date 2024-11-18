@@ -25,6 +25,7 @@ import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/utils/models/widget_config_model.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -649,6 +650,19 @@ void setPackagesSingleton(BuildContext context) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
+          formConfig: appConfiguration.formConfig?.map((e) => FormConfigModel()
+            ..name = e.name
+            ..type = e.type
+            ..fields = e.fields?.map((field) => FormConfigFieldModel()
+              ..name = field.name
+              ..isEnabled = field.isEnabled
+              ..readOnly = field.readOnly
+              ..isRequired = field.isRequired
+              ..order = field.order
+              ..regex = field.regex
+              ..errorMessage = field.errorMessage,
+            ).toList()
+          ).toList(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,

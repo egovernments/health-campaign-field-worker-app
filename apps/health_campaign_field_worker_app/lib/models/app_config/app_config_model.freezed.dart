@@ -967,6 +967,8 @@ mixin _$HCMWrapperModel {
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig =>
       throw _privateConstructorUsedError;
+  @JsonKey(name: 'FORM_CONFIG')
+  List<FormConfigModel>? get formConfig => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1009,7 +1011,8 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'FORM_CONFIG') List<FormConfigModel>? formConfig});
 }
 
 /// @nodoc
@@ -1043,6 +1046,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
+    Object? formConfig = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: null == appConfig
@@ -1118,6 +1122,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
+      formConfig: freezed == formConfig
+          ? _value.formConfig
+          : formConfig // ignore: cast_nullable_to_non_nullable
+              as List<FormConfigModel>?,
     ) as $Val);
   }
 }
@@ -1159,7 +1167,8 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       @JsonKey(name: 'HOUSE_STRUCTURE_TYPES')
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
-      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig});
+      @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'FORM_CONFIG') List<FormConfigModel>? formConfig});
 }
 
 /// @nodoc
@@ -1191,6 +1200,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? houseStructureTypes = freezed,
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
+    Object? formConfig = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
       appConfig: null == appConfig
@@ -1266,6 +1276,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._firebaseConfig
           : firebaseConfig // ignore: cast_nullable_to_non_nullable
               as List<FirebaseConfig>?,
+      formConfig: freezed == formConfig
+          ? _value._formConfig
+          : formConfig // ignore: cast_nullable_to_non_nullable
+              as List<FormConfigModel>?,
     ));
   }
 }
@@ -1309,7 +1323,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>? firebaseConfig})
+      required final List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'FORM_CONFIG') final List<FormConfigModel>? formConfig})
       : _appConfig = appConfig,
         _bandWidthBatchSize = bandWidthBatchSize,
         _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
@@ -1328,7 +1343,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _referralReasonList = referralReasonList,
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
-        _firebaseConfig = firebaseConfig;
+        _firebaseConfig = firebaseConfig,
+        _formConfig = formConfig;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HCMWrapperModelImplFromJson(json);
@@ -1523,9 +1539,20 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<FormConfigModel>? _formConfig;
+  @override
+  @JsonKey(name: 'FORM_CONFIG')
+  List<FormConfigModel>? get formConfig {
+    final value = _formConfig;
+    if (value == null) return null;
+    if (_formConfig is EqualUnmodifiableListView) return _formConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, formConfig: $formConfig)';
   }
 
   @override
@@ -1571,32 +1598,36 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._refusalReasons, _refusalReasons) &&
             const DeepCollectionEquality()
-                .equals(other._firebaseConfig, _firebaseConfig));
+                .equals(other._firebaseConfig, _firebaseConfig) &&
+            const DeepCollectionEquality()
+                .equals(other._formConfig, _formConfig));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      const DeepCollectionEquality().hash(_appConfig),
-      const DeepCollectionEquality().hash(_bandWidthBatchSize),
-      const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
-      const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
-      const DeepCollectionEquality()
-          .hash(_householdMemberDeletionReasonOptions),
-      const DeepCollectionEquality().hash(_backgroundServiceConfig),
-      const DeepCollectionEquality().hash(_checklistTypes),
-      const DeepCollectionEquality().hash(_idTypeOptions),
-      const DeepCollectionEquality().hash(_deliveryCommentOptions),
-      const DeepCollectionEquality().hash(_backendInterface),
-      const DeepCollectionEquality().hash(_callSupportOptions),
-      const DeepCollectionEquality().hash(_transportTypes),
-      const DeepCollectionEquality().hash(_symptomsTypeList),
-      const DeepCollectionEquality().hash(_searchHouseHoldFilters),
-      const DeepCollectionEquality().hash(_referralReasonList),
-      const DeepCollectionEquality().hash(_houseStructureTypes),
-      const DeepCollectionEquality().hash(_refusalReasons),
-      const DeepCollectionEquality().hash(_firebaseConfig));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        const DeepCollectionEquality().hash(_appConfig),
+        const DeepCollectionEquality().hash(_bandWidthBatchSize),
+        const DeepCollectionEquality().hash(_downSyncBandWidthBatchSize),
+        const DeepCollectionEquality().hash(_householdDeletionReasonOptions),
+        const DeepCollectionEquality()
+            .hash(_householdMemberDeletionReasonOptions),
+        const DeepCollectionEquality().hash(_backgroundServiceConfig),
+        const DeepCollectionEquality().hash(_checklistTypes),
+        const DeepCollectionEquality().hash(_idTypeOptions),
+        const DeepCollectionEquality().hash(_deliveryCommentOptions),
+        const DeepCollectionEquality().hash(_backendInterface),
+        const DeepCollectionEquality().hash(_callSupportOptions),
+        const DeepCollectionEquality().hash(_transportTypes),
+        const DeepCollectionEquality().hash(_symptomsTypeList),
+        const DeepCollectionEquality().hash(_searchHouseHoldFilters),
+        const DeepCollectionEquality().hash(_referralReasonList),
+        const DeepCollectionEquality().hash(_houseStructureTypes),
+        const DeepCollectionEquality().hash(_refusalReasons),
+        const DeepCollectionEquality().hash(_firebaseConfig),
+        const DeepCollectionEquality().hash(_formConfig)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -1650,8 +1681,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       @JsonKey(name: 'REFUSAL_REASONS')
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
-      required final List<FirebaseConfig>?
-          firebaseConfig}) = _$HCMWrapperModelImpl;
+      required final List<FirebaseConfig>? firebaseConfig,
+      @JsonKey(name: 'FORM_CONFIG')
+      final List<FormConfigModel>? formConfig}) = _$HCMWrapperModelImpl;
 
   factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
       _$HCMWrapperModelImpl.fromJson;
@@ -1710,6 +1742,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'FIREBASE_CONFIG')
   List<FirebaseConfig>? get firebaseConfig;
+  @override
+  @JsonKey(name: 'FORM_CONFIG')
+  List<FormConfigModel>? get formConfig;
   @override
   @JsonKey(ignore: true)
   _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
@@ -4120,6 +4155,484 @@ abstract class _BackendInterface implements BackendInterface {
   @JsonKey(ignore: true)
   _$$BackendInterfaceImplCopyWith<_$BackendInterfaceImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+FormConfigModel _$FormConfigModelFromJson(Map<String, dynamic> json) {
+  return _FormConfigModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FormConfigModel {
+  String get name => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  @JsonKey(name: 'fields')
+  List<FormConfigFieldModel>? get fields => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $FormConfigModelCopyWith<FormConfigModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FormConfigModelCopyWith<$Res> {
+  factory $FormConfigModelCopyWith(
+          FormConfigModel value, $Res Function(FormConfigModel) then) =
+      _$FormConfigModelCopyWithImpl<$Res, FormConfigModel>;
+  @useResult
+  $Res call(
+      {String name,
+      String type,
+      @JsonKey(name: 'fields') List<FormConfigFieldModel>? fields});
+}
+
+/// @nodoc
+class _$FormConfigModelCopyWithImpl<$Res, $Val extends FormConfigModel>
+    implements $FormConfigModelCopyWith<$Res> {
+  _$FormConfigModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? type = null,
+    Object? fields = freezed,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      fields: freezed == fields
+          ? _value.fields
+          : fields // ignore: cast_nullable_to_non_nullable
+              as List<FormConfigFieldModel>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FormConfigModelImplCopyWith<$Res>
+    implements $FormConfigModelCopyWith<$Res> {
+  factory _$$FormConfigModelImplCopyWith(_$FormConfigModelImpl value,
+          $Res Function(_$FormConfigModelImpl) then) =
+      __$$FormConfigModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String name,
+      String type,
+      @JsonKey(name: 'fields') List<FormConfigFieldModel>? fields});
+}
+
+/// @nodoc
+class __$$FormConfigModelImplCopyWithImpl<$Res>
+    extends _$FormConfigModelCopyWithImpl<$Res, _$FormConfigModelImpl>
+    implements _$$FormConfigModelImplCopyWith<$Res> {
+  __$$FormConfigModelImplCopyWithImpl(
+      _$FormConfigModelImpl _value, $Res Function(_$FormConfigModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? type = null,
+    Object? fields = freezed,
+  }) {
+    return _then(_$FormConfigModelImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      fields: freezed == fields
+          ? _value._fields
+          : fields // ignore: cast_nullable_to_non_nullable
+              as List<FormConfigFieldModel>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$FormConfigModelImpl implements _FormConfigModel {
+  _$FormConfigModelImpl(
+      {required this.name,
+      required this.type,
+      @JsonKey(name: 'fields') final List<FormConfigFieldModel>? fields})
+      : _fields = fields;
+
+  factory _$FormConfigModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FormConfigModelImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String type;
+  final List<FormConfigFieldModel>? _fields;
+  @override
+  @JsonKey(name: 'fields')
+  List<FormConfigFieldModel>? get fields {
+    final value = _fields;
+    if (value == null) return null;
+    if (_fields is EqualUnmodifiableListView) return _fields;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'FormConfigModel(name: $name, type: $type, fields: $fields)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormConfigModelImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.type, type) || other.type == type) &&
+            const DeepCollectionEquality().equals(other._fields, _fields));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, name, type, const DeepCollectionEquality().hash(_fields));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormConfigModelImplCopyWith<_$FormConfigModelImpl> get copyWith =>
+      __$$FormConfigModelImplCopyWithImpl<_$FormConfigModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FormConfigModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _FormConfigModel implements FormConfigModel {
+  factory _FormConfigModel(
+          {required final String name,
+          required final String type,
+          @JsonKey(name: 'fields') final List<FormConfigFieldModel>? fields}) =
+      _$FormConfigModelImpl;
+
+  factory _FormConfigModel.fromJson(Map<String, dynamic> json) =
+      _$FormConfigModelImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get type;
+  @override
+  @JsonKey(name: 'fields')
+  List<FormConfigFieldModel>? get fields;
+  @override
+  @JsonKey(ignore: true)
+  _$$FormConfigModelImplCopyWith<_$FormConfigModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+FormConfigFieldModel _$FormConfigFieldModelFromJson(Map<String, dynamic> json) {
+  return _FormConfigFieldModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FormConfigFieldModel {
+  String get name => throw _privateConstructorUsedError;
+  int get order => throw _privateConstructorUsedError;
+  bool get isRequired => throw _privateConstructorUsedError;
+  bool get isEnabled => throw _privateConstructorUsedError;
+  bool get readOnly => throw _privateConstructorUsedError;
+  List<String>? get regex => throw _privateConstructorUsedError;
+  String? get errorMessage => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $FormConfigFieldModelCopyWith<FormConfigFieldModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FormConfigFieldModelCopyWith<$Res> {
+  factory $FormConfigFieldModelCopyWith(FormConfigFieldModel value,
+          $Res Function(FormConfigFieldModel) then) =
+      _$FormConfigFieldModelCopyWithImpl<$Res, FormConfigFieldModel>;
+  @useResult
+  $Res call(
+      {String name,
+      int order,
+      bool isRequired,
+      bool isEnabled,
+      bool readOnly,
+      List<String>? regex,
+      String? errorMessage});
+}
+
+/// @nodoc
+class _$FormConfigFieldModelCopyWithImpl<$Res,
+        $Val extends FormConfigFieldModel>
+    implements $FormConfigFieldModelCopyWith<$Res> {
+  _$FormConfigFieldModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? order = null,
+    Object? isRequired = null,
+    Object? isEnabled = null,
+    Object? readOnly = null,
+    Object? regex = freezed,
+    Object? errorMessage = freezed,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+      isRequired: null == isRequired
+          ? _value.isRequired
+          : isRequired // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isEnabled: null == isEnabled
+          ? _value.isEnabled
+          : isEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      readOnly: null == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      regex: freezed == regex
+          ? _value.regex
+          : regex // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FormConfigFieldModelImplCopyWith<$Res>
+    implements $FormConfigFieldModelCopyWith<$Res> {
+  factory _$$FormConfigFieldModelImplCopyWith(_$FormConfigFieldModelImpl value,
+          $Res Function(_$FormConfigFieldModelImpl) then) =
+      __$$FormConfigFieldModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String name,
+      int order,
+      bool isRequired,
+      bool isEnabled,
+      bool readOnly,
+      List<String>? regex,
+      String? errorMessage});
+}
+
+/// @nodoc
+class __$$FormConfigFieldModelImplCopyWithImpl<$Res>
+    extends _$FormConfigFieldModelCopyWithImpl<$Res, _$FormConfigFieldModelImpl>
+    implements _$$FormConfigFieldModelImplCopyWith<$Res> {
+  __$$FormConfigFieldModelImplCopyWithImpl(_$FormConfigFieldModelImpl _value,
+      $Res Function(_$FormConfigFieldModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? order = null,
+    Object? isRequired = null,
+    Object? isEnabled = null,
+    Object? readOnly = null,
+    Object? regex = freezed,
+    Object? errorMessage = freezed,
+  }) {
+    return _then(_$FormConfigFieldModelImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+      isRequired: null == isRequired
+          ? _value.isRequired
+          : isRequired // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isEnabled: null == isEnabled
+          ? _value.isEnabled
+          : isEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      readOnly: null == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      regex: freezed == regex
+          ? _value._regex
+          : regex // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      errorMessage: freezed == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$FormConfigFieldModelImpl implements _FormConfigFieldModel {
+  _$FormConfigFieldModelImpl(
+      {required this.name,
+      required this.order,
+      required this.isRequired,
+      required this.isEnabled,
+      required this.readOnly,
+      final List<String>? regex,
+      this.errorMessage})
+      : _regex = regex;
+
+  factory _$FormConfigFieldModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FormConfigFieldModelImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final int order;
+  @override
+  final bool isRequired;
+  @override
+  final bool isEnabled;
+  @override
+  final bool readOnly;
+  final List<String>? _regex;
+  @override
+  List<String>? get regex {
+    final value = _regex;
+    if (value == null) return null;
+    if (_regex is EqualUnmodifiableListView) return _regex;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final String? errorMessage;
+
+  @override
+  String toString() {
+    return 'FormConfigFieldModel(name: $name, order: $order, isRequired: $isRequired, isEnabled: $isEnabled, readOnly: $readOnly, regex: $regex, errorMessage: $errorMessage)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FormConfigFieldModelImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.isRequired, isRequired) ||
+                other.isRequired == isRequired) &&
+            (identical(other.isEnabled, isEnabled) ||
+                other.isEnabled == isEnabled) &&
+            (identical(other.readOnly, readOnly) ||
+                other.readOnly == readOnly) &&
+            const DeepCollectionEquality().equals(other._regex, _regex) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      name,
+      order,
+      isRequired,
+      isEnabled,
+      readOnly,
+      const DeepCollectionEquality().hash(_regex),
+      errorMessage);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FormConfigFieldModelImplCopyWith<_$FormConfigFieldModelImpl>
+      get copyWith =>
+          __$$FormConfigFieldModelImplCopyWithImpl<_$FormConfigFieldModelImpl>(
+              this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FormConfigFieldModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _FormConfigFieldModel implements FormConfigFieldModel {
+  factory _FormConfigFieldModel(
+      {required final String name,
+      required final int order,
+      required final bool isRequired,
+      required final bool isEnabled,
+      required final bool readOnly,
+      final List<String>? regex,
+      final String? errorMessage}) = _$FormConfigFieldModelImpl;
+
+  factory _FormConfigFieldModel.fromJson(Map<String, dynamic> json) =
+      _$FormConfigFieldModelImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  int get order;
+  @override
+  bool get isRequired;
+  @override
+  bool get isEnabled;
+  @override
+  bool get readOnly;
+  @override
+  List<String>? get regex;
+  @override
+  String? get errorMessage;
+  @override
+  @JsonKey(ignore: true)
+  _$$FormConfigFieldModelImplCopyWith<_$FormConfigFieldModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 InterfacesWrapper _$InterfacesWrapperFromJson(Map<String, dynamic> json) {
