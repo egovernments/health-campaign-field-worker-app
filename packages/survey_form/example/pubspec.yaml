@@ -29,6 +29,8 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   digit_components: ^1.0.0+2
+  digit_data_model:
+    path: ../../digit_data_model
   survey_form:
     path: ../
 

@@ -21,6 +21,9 @@ class FacilitySearchModelMapper
   @override
   final String id = 'FacilitySearchModel';
 
+  static String? _$name(FacilitySearchModel v) => v.name;
+  static const Field<FacilitySearchModel, String> _f$name =
+      Field('name', _$name, opt: true);
   static List<String>? _$id(FacilitySearchModel v) => v.id;
   static const Field<FacilitySearchModel, List<String>> _f$id =
       Field('id', _$id, opt: true);
@@ -50,6 +53,7 @@ class FacilitySearchModelMapper
 
   @override
   final MappableFields<FacilitySearchModel> fields = const {
+    #name: _f$name,
     #id: _f$id,
     #isPermanent: _f$isPermanent,
     #usage: _f$usage,
@@ -72,6 +76,7 @@ class FacilitySearchModelMapper
 
   static FacilitySearchModel _instantiate(DecodingData data) {
     return FacilitySearchModel.ignoreDeleted(
+        name: data.dec(_f$name),
         id: data.dec(_f$id),
         isPermanent: data.dec(_f$isPermanent),
         usage: data.dec(_f$usage),
@@ -140,7 +145,8 @@ abstract class FacilitySearchModelCopyWith<$R, $In extends FacilitySearchModel,
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get id;
   @override
   $R call(
-      {List<String>? id,
+      {String? name,
+      List<String>? id,
       bool? isPermanent,
       String? usage,
       int? storageCapacity,
@@ -166,13 +172,15 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
           : null;
   @override
   $R call(
-          {Object? id = $none,
+          {Object? name = $none,
+          Object? id = $none,
           Object? isPermanent = $none,
           Object? usage = $none,
           Object? storageCapacity = $none,
           Object? tenantId = $none,
           Object? boundaryCode = $none}) =>
       $apply(FieldCopyWithData({
+        if (name != $none) #name: name,
         if (id != $none) #id: id,
         if (isPermanent != $none) #isPermanent: isPermanent,
         if (usage != $none) #usage: usage,
@@ -183,6 +191,7 @@ class _FacilitySearchModelCopyWithImpl<$R, $Out>
   @override
   FacilitySearchModel $make(CopyWithData data) =>
       FacilitySearchModel.ignoreDeleted(
+          name: data.get(#name, or: $value.name),
           id: data.get(#id, or: $value.id),
           isPermanent: data.get(#isPermanent, or: $value.isPermanent),
           usage: data.get(#usage, or: $value.usage),
