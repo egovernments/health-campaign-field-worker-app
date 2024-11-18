@@ -1,11 +1,13 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
+import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/blocs/search_households/household_global_seach.dart';
 import 'package:registration_delivery/blocs/search_households/individual_global_search.dart';
 import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
+import 'package:location/location.dart';
 
 import '../blocs/household_details/household_details.dart';
 import '../blocs/search_households/search_bloc_common_wrapper.dart';
@@ -159,6 +161,9 @@ class RegistrationDeliveryWrapperPage extends StatelessWidget {
           ),
           BlocProvider(
             create: (_) => HouseholdDetailsBloc(const HouseholdDetailsState()),
+          ),
+          BlocProvider(
+              create: (_)=>LocationBloc(location: Location()),
           ),
         ],
         child: const AutoRouter(),
