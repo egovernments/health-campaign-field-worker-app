@@ -2,11 +2,8 @@
 import 'dart:convert';
 
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:drift/drift.dart';
-
 import 'package:digit_data_model/data_model.dart';
-
-import '../../data/local_store/sql_store/sql_store.dart';
+import 'package:drift/drift.dart';
 
 part 'attributes.mapper.dart';
 
@@ -86,7 +83,6 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
     this.order,
     this.nonRecoverableError = false,
     this.rowVersion,
-    this.additionalDetails,
     super.auditDetails,
     super.clientAuditDetails,
     super.isDeleted = false,

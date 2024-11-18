@@ -290,11 +290,6 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   static int? _$rowVersion(AttributesModel v) => v.rowVersion;
   static const Field<AttributesModel, int> _f$rowVersion =
       Field('rowVersion', _$rowVersion, opt: true);
-  static Map<String, dynamic>? _$additionalDetails(AttributesModel v) =>
-      v.additionalDetails;
-  static const Field<AttributesModel, Map<String, dynamic>>
-      _f$additionalDetails =
-      Field('additionalDetails', _$additionalDetails, opt: true);
   static AuditDetails? _$auditDetails(AttributesModel v) => v.auditDetails;
   static const Field<AttributesModel, AuditDetails> _f$auditDetails =
       Field('auditDetails', _$auditDetails, opt: true);
@@ -323,7 +318,6 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
     #order: _f$order,
     #nonRecoverableError: _f$nonRecoverableError,
     #rowVersion: _f$rowVersion,
-    #additionalDetails: _f$additionalDetails,
     #auditDetails: _f$auditDetails,
     #clientAuditDetails: _f$clientAuditDetails,
     #isDeleted: _f$isDeleted,
@@ -355,7 +349,6 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
         order: data.dec(_f$order),
         nonRecoverableError: data.dec(_f$nonRecoverableError),
         rowVersion: data.dec(_f$rowVersion),
-        additionalDetails: data.dec(_f$additionalDetails),
         auditDetails: data.dec(_f$auditDetails),
         clientAuditDetails: data.dec(_f$clientAuditDetails),
         isDeleted: data.dec(_f$isDeleted));
@@ -421,8 +414,6 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
   AttributesAdditionalFieldsCopyWith<$R, AttributesAdditionalFields,
       AttributesAdditionalFields>? get additionalFields;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get values;
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-      get additionalDetails;
   @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails;
   @override
@@ -444,7 +435,6 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       int? order,
       bool? nonRecoverableError,
       int? rowVersion,
-      Map<String, dynamic>? additionalDetails,
       AuditDetails? auditDetails,
       ClientAuditDetails? clientAuditDetails,
       bool? isDeleted});
@@ -480,14 +470,6 @@ class _AttributesModelCopyWithImpl<$R, $Out>
               (v, t) => ObjectCopyWith(v, $identity, t), (v) => call(values: v))
           : null;
   @override
-  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
-      get additionalDetails => $value.additionalDetails != null
-          ? MapCopyWith(
-              $value.additionalDetails!,
-              (v, t) => ObjectCopyWith(v, $identity, t),
-              (v) => call(additionalDetails: v))
-          : null;
-  @override
   AuditDetailsCopyWith<$R, AuditDetails, AuditDetails>? get auditDetails =>
       $value.auditDetails?.copyWith.$chain((v) => call(auditDetails: v));
   @override
@@ -510,7 +492,6 @@ class _AttributesModelCopyWithImpl<$R, $Out>
           Object? order = $none,
           Object? nonRecoverableError = $none,
           Object? rowVersion = $none,
-          Object? additionalDetails = $none,
           Object? auditDetails = $none,
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
@@ -530,7 +511,6 @@ class _AttributesModelCopyWithImpl<$R, $Out>
         if (nonRecoverableError != $none)
           #nonRecoverableError: nonRecoverableError,
         if (rowVersion != $none) #rowVersion: rowVersion,
-        if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (auditDetails != $none) #auditDetails: auditDetails,
         if (clientAuditDetails != $none)
           #clientAuditDetails: clientAuditDetails,
@@ -555,8 +535,6 @@ class _AttributesModelCopyWithImpl<$R, $Out>
       nonRecoverableError:
           data.get(#nonRecoverableError, or: $value.nonRecoverableError),
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
-      additionalDetails:
-          data.get(#additionalDetails, or: $value.additionalDetails),
       auditDetails: data.get(#auditDetails, or: $value.auditDetails),
       clientAuditDetails:
           data.get(#clientAuditDetails, or: $value.clientAuditDetails),

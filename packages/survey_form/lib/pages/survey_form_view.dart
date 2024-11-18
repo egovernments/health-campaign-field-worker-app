@@ -162,9 +162,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                 .isNotEmpty
                                             ? controller[i].text.toString()
                                             : (attribute?[i].dataType !=
-                'Number'
-                ? ''
-                    : '0')
+                                                    'Number'
+                                                ? ''
+                                                : '0')
                                         : visibleSurveyFormIndexes.contains(i)
                                             ? controller[i].text.toString()
                                             : i18.surveyForm.notSelectedKey,
@@ -174,19 +174,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             widget.referralClientRefId != null
                                         ? null
                                         : ((attribute?[i].values?.length == 2 ||
-                                                    attribute?[i]
-                                                            .values
-                                                            ?.length ==
-                                                        3) ||
+                                                        attribute?[i]
+                                                                .values
+                                                                ?.length ==
+                                                            3) ||
                                                     attribute?[i]
                                                             .values
                                                             ?.length ==
                                                         4) &&
-                                                controller[i]
-                                                        .text ==
+                                                controller[i].text ==
                                                     attribute?[i]
                                                         .values?[1]
-                                                        .trim())
+                                                        .trim()
                                             ? additionalController[i]
                                                     .text
                                                     .toString()
@@ -422,18 +421,16 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           : localizations
                                               .translate("${e.code}_REGEX");
                                     }
-                                        return null;
-                                      },
-                                      label: localizations.translate(
-                                        '${value.selectedServiceDefinition?.code}.$code',
-                                      ),
-                                      description: description != null
-                                          ? localizations.translate(
-                                              '${value.selectedServiceDefinition?.code}.$description',
-                                            )
-                                          : null,
-                                    ),
-                                  ],
+                                    return null;
+                                  },
+                                  label: localizations.translate(
+                                    '${value.selectedServiceDefinition?.code}.$code',
+                                  ),
+                                  description: description != null
+                                      ? localizations.translate(
+                                          '${value.selectedServiceDefinition?.code}.$description',
+                                        )
+                                      : null,
                                 ),
                               ] else if (e.dataType == 'Number' &&
                                   !(code).contains('.')) ...[
@@ -1042,7 +1039,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 options: const [true, false],
                 onSelectionChanged: (value) {
                   context.read<ServiceBloc>().add(
-                    ServiceSurveyFormEvent(
+                        ServiceSurveyFormEvent(
                           value: value.toString(),
                           submitTriggered: submitTriggered,
                         ),

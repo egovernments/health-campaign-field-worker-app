@@ -3,8 +3,8 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:drift/drift.dart';
+import 'package:survey_form/survey_form.dart';
 
 class ServiceDefinitionLocalRepository extends LocalRepository<
     ServiceDefinitionModel, ServiceDefinitionSearchModel> {
@@ -12,10 +12,10 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
 
   @override
   FutureOr<void> create(
-      ServiceDefinitionModel entity, {
-        bool createOpLog = false,
-        DataOperation dataOperation = DataOperation.create,
-      }) async {
+    ServiceDefinitionModel entity, {
+    bool createOpLog = false,
+    DataOperation dataOperation = DataOperation.create,
+  }) async {
     return retryLocalCallOperation(() async {
       final serviceDefinitionCompanion = entity.companion;
       final attributes = entity.attributes;
@@ -44,25 +44,25 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
 
   @override
   FutureOr<List<ServiceDefinitionModel>> search(
-      ServiceDefinitionSearchModel query, {
-        bool createOpLog = false,
-      }) async {
+    ServiceDefinitionSearchModel query, {
+    bool createOpLog = false,
+  }) async {
     return retryLocalCallOperation(() async {
       final selectQuery = sql.select(sql.serviceDefinition).join([]);
 
       final results = await (selectQuery
-        ..where(buildAnd([
-          // To fetch service definition with the id
-          if (query.id != null)
-            sql.serviceDefinition.id.equals(
-              query.id!,
-            ),
-          // To fetch service definition of a single survey_form with the code
-          if (query.code != null)
-            sql.serviceDefinition.code.isIn(
-              query.code!,
-            ),
-        ])))
+            ..where(buildAnd([
+              // To fetch service definition with the id
+              if (query.id != null)
+                sql.serviceDefinition.id.equals(
+                  query.id!,
+                ),
+              // To fetch service definition of a single survey_form with the code
+              if (query.code != null)
+                sql.serviceDefinition.code.isIn(
+                  query.code!,
+                ),
+            ])))
           .get();
 
       final List<ServiceDefinitionModel> serviceDefinitionList = [];
@@ -71,11 +71,11 @@ class ServiceDefinitionLocalRepository extends LocalRepository<
         final selectattributeQuery = sql.select(sql.attributes).join([]);
 
         final val = await (selectattributeQuery
-          ..where(buildAnd([
-            sql.attributes.referenceId.equals(
-              data.id!,
-            ),
-          ])))
+              ..where(buildAnd([
+                sql.attributes.referenceId.equals(
+                  data.id!,
+                ),
+              ])))
             .get();
 
         final res = val.map((e) {
