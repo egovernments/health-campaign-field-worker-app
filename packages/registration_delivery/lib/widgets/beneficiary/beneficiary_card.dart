@@ -40,7 +40,8 @@ class BeneficiaryCard extends StatelessWidget {
           offstage: status == null,
           child: status == Status.visited.toValue() ||
                   status == Status.registered.toValue() ||
-                  status == Status.administeredSuccess.toValue()
+                  status == Status.administeredSuccess.toValue() ||
+                  status == Status.delivered.toValue()
               ? DigitIconButton(
                   icon: Icons.check_circle,
                   iconText: RegistrationDeliveryLocalization.of(context)

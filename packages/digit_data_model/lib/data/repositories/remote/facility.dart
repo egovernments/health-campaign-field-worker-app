@@ -6,8 +6,8 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
 
-
-class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilitySearchModel> {
+class FacilityRemoteRepository
+    extends RemoteRepository<FacilityModel, FacilitySearchModel> {
   FacilityRemoteRepository(
     super.dio, {
     required super.actionMap,
@@ -17,20 +17,25 @@ class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilityS
 
   @override
   FutureOr<List<FacilityModel>> search(
-      FacilitySearchModel query, {
-        int? offSet,
-        int? limit,
-      }) async {
+    FacilitySearchModel query, {
+    int? offSet,
+    int? limit,
+  }) async {
     int defaultBatchSize = limit ?? 100; // Default batch size for fetching data
     int currentOffset = offSet ?? 0;
 
     List<FacilityModel> allResults = [];
-    bool hasMoreData = true;
-    List<Map<String, dynamic>>? lastResponse;
 
-    while (hasMoreData) {
+    //To fetch the totalCount from the first Response
+    bool flag = true;
+
+    //Total number of records
+    var totalCount = 0;
+
+    do {
       Response response;
 
+      //Execute the request
       try {
         response = await executeFuture(
           future: () async {
@@ -42,17 +47,9 @@ class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilityS
                 'tenantId': DigitDataModelSingleton().tenantId,
                 if (query.isDeleted ?? false) 'includeDeleted': query.isDeleted,
               },
-              data: entityName == 'User'
-                  ? query.toMap()
-                  : {
-                isPlural
-                    ? entityNamePlural
-                    : entityName == 'ServiceDefinition'
-                    ? 'ServiceDefinitionCriteria'
-                    : entityName == 'Downsync'
-                    ? 'DownsyncCriteria'
-                    : entityName:
-                isPlural ? [query.toMap()] : query.toMap(),
+              data: {
+                isPlural ? entityNamePlural : entityName:
+                    isPlural ? [query.toMap()] : query.toMap(),
               },
             );
           },
@@ -71,16 +68,22 @@ class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilityS
         );
       }
 
-      String key = (isSearchResponsePlural || entityName == 'ServiceDefinition')
-          ? entityNamePlural
-          : entityName;
+      String key = (isSearchResponsePlural) ? entityNamePlural : entityName;
 
-      if (!responseMap.containsKey(key)) {
+      //Check whether the response contains valid key and totalCount
+      if (!responseMap.containsKey(key) ||
+          !responseMap.containsKey('TotalCount')) {
         throw InvalidApiResponseException(
           data: query.toMap(),
           path: searchPath,
           response: responseMap,
         );
+      }
+
+      //Fetch the totalCount of records only from the first response
+      if (flag && responseMap.containsKey('TotalCount')) {
+        totalCount = responseMap['TotalCount'];
+        flag = false;
       }
 
       final entityResponse = await responseMap[key];
@@ -93,29 +96,26 @@ class FacilityRemoteRepository extends RemoteRepository<FacilityModel, FacilityS
         );
       }
 
-      final entityList = entityResponse.whereType<Map<String, dynamic>>().toList();
-
-      if (lastResponse != null && lastResponse.toString() == entityList.toString()) {
-        // If the last response is equal to the current response, stop fetching more data
-        break;
-      }
+      final entityList =
+          entityResponse.whereType<Map<String, dynamic>>().toList();
 
       List<FacilityModel> currentBatch;
 
       try {
-        currentBatch = entityList.map((e) => MapperContainer.globals.fromMap<FacilityModel>(e)).toList();
+        currentBatch = entityList
+            .map((e) => MapperContainer.globals.fromMap<FacilityModel>(e))
+            .toList();
       } catch (e) {
         rethrow;
       }
 
-      if (currentBatch.isEmpty) {
-        hasMoreData = false; // if no more data stop fetching
-      } else {
-        allResults.addAll(currentBatch);
-        currentOffset += defaultBatchSize;
-        lastResponse = entityList; // Update lastResponse to the current response
-      }
-    }
+      allResults.addAll(currentBatch);
+      currentOffset += defaultBatchSize;
+      totalCount -= defaultBatchSize;
+
+      //If remaining record is less than defaultBatchSize, adjust the Batch size
+      if (totalCount < defaultBatchSize) defaultBatchSize = totalCount;
+    } while (totalCount > 0);
 
     return allResults;
   }

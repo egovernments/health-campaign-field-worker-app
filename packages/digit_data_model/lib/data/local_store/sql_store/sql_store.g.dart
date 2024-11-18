@@ -6875,6 +6875,11 @@ class $FacilityTable extends Facility
   late final GeneratedColumn<String> tenantId = GeneratedColumn<String>(
       'tenant_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+      'name', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _isDeletedMeta =
       const VerificationMeta('isDeleted');
   @override
@@ -6913,6 +6918,7 @@ class $FacilityTable extends Facility
         auditModifiedBy,
         auditModifiedTime,
         tenantId,
+        name,
         isDeleted,
         rowVersion,
         additionalFields
@@ -7006,6 +7012,10 @@ class $FacilityTable extends Facility
       context.handle(_tenantIdMeta,
           tenantId.isAcceptableOrUnknown(data['tenant_id']!, _tenantIdMeta));
     }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
     if (data.containsKey('is_deleted')) {
       context.handle(_isDeletedMeta,
           isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta));
@@ -7059,6 +7069,8 @@ class $FacilityTable extends Facility
           DriftSqlType.int, data['${effectivePrefix}audit_modified_time']),
       tenantId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}tenant_id']),
+      name: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}name']),
       isDeleted: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
@@ -7089,6 +7101,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
   final String? auditModifiedBy;
   final int? auditModifiedTime;
   final String? tenantId;
+  final String? name;
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
@@ -7107,6 +7120,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       this.auditModifiedBy,
       this.auditModifiedTime,
       this.tenantId,
+      this.name,
       this.isDeleted,
       this.rowVersion,
       this.additionalFields});
@@ -7152,6 +7166,9 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
     }
     if (!nullToAbsent || tenantId != null) {
       map['tenant_id'] = Variable<String>(tenantId);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String>(name);
     }
     if (!nullToAbsent || isDeleted != null) {
       map['is_deleted'] = Variable<bool>(isDeleted);
@@ -7206,6 +7223,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       tenantId: tenantId == null && nullToAbsent
           ? const Value.absent()
           : Value(tenantId),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       isDeleted: isDeleted == null && nullToAbsent
           ? const Value.absent()
           : Value(isDeleted),
@@ -7237,6 +7255,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       auditModifiedBy: serializer.fromJson<String?>(json['auditModifiedBy']),
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       tenantId: serializer.fromJson<String?>(json['tenantId']),
+      name: serializer.fromJson<String?>(json['name']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
@@ -7260,6 +7279,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       'auditModifiedBy': serializer.toJson<String?>(auditModifiedBy),
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'tenantId': serializer.toJson<String?>(tenantId),
+      'name': serializer.toJson<String?>(name),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
@@ -7281,6 +7301,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           Value<String?> auditModifiedBy = const Value.absent(),
           Value<int?> auditModifiedTime = const Value.absent(),
           Value<String?> tenantId = const Value.absent(),
+          Value<String?> name = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
@@ -7318,6 +7339,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
             ? auditModifiedTime.value
             : this.auditModifiedTime,
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
+        name: name.present ? name.value : this.name,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
         additionalFields: additionalFields.present
@@ -7341,6 +7363,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('tenantId: $tenantId, ')
+          ..write('name: $name, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields')
@@ -7364,6 +7387,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
       auditModifiedBy,
       auditModifiedTime,
       tenantId,
+      name,
       isDeleted,
       rowVersion,
       additionalFields);
@@ -7385,6 +7409,7 @@ class FacilityData extends DataClass implements Insertable<FacilityData> {
           other.auditModifiedBy == this.auditModifiedBy &&
           other.auditModifiedTime == this.auditModifiedTime &&
           other.tenantId == this.tenantId &&
+          other.name == this.name &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
           other.additionalFields == this.additionalFields);
@@ -7405,6 +7430,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
   final Value<String?> auditModifiedBy;
   final Value<int?> auditModifiedTime;
   final Value<String?> tenantId;
+  final Value<String?> name;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
@@ -7424,6 +7450,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
     this.tenantId = const Value.absent(),
+    this.name = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
@@ -7444,6 +7471,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     this.auditModifiedBy = const Value.absent(),
     this.auditModifiedTime = const Value.absent(),
     this.tenantId = const Value.absent(),
+    this.name = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
@@ -7464,6 +7492,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     Expression<String>? auditModifiedBy,
     Expression<int>? auditModifiedTime,
     Expression<String>? tenantId,
+    Expression<String>? name,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
@@ -7486,6 +7515,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       if (auditModifiedBy != null) 'audit_modified_by': auditModifiedBy,
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (tenantId != null) 'tenant_id': tenantId,
+      if (name != null) 'name': name,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
@@ -7508,6 +7538,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       Value<String?>? auditModifiedBy,
       Value<int?>? auditModifiedTime,
       Value<String?>? tenantId,
+      Value<String?>? name,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
@@ -7527,6 +7558,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
       auditModifiedBy: auditModifiedBy ?? this.auditModifiedBy,
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       tenantId: tenantId ?? this.tenantId,
+      name: name ?? this.name,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
@@ -7579,6 +7611,9 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
     if (tenantId.present) {
       map['tenant_id'] = Variable<String>(tenantId.value);
     }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
     if (isDeleted.present) {
       map['is_deleted'] = Variable<bool>(isDeleted.value);
     }
@@ -7611,6 +7646,7 @@ class FacilityCompanion extends UpdateCompanion<FacilityData> {
           ..write('auditModifiedBy: $auditModifiedBy, ')
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('tenantId: $tenantId, ')
+          ..write('name: $name, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
@@ -14874,9 +14910,12 @@ class $ProjectTypeTable extends ProjectType
   static const VerificationMeta _beneficiaryTypeMeta =
       const VerificationMeta('beneficiaryType');
   @override
-  late final GeneratedColumn<String> beneficiaryType = GeneratedColumn<String>(
-      'beneficiary_type', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumnWithTypeConverter<BeneficiaryType?, int>
+      beneficiaryType = GeneratedColumn<int>(
+              'beneficiary_type', aliasedName, true,
+              type: DriftSqlType.int, requiredDuringInsert: false)
+          .withConverter<BeneficiaryType?>(
+              $ProjectTypeTable.$converterbeneficiaryTypen);
   static const VerificationMeta _eligibilityCriteriaMeta =
       const VerificationMeta('eligibilityCriteria');
   @override
@@ -15030,12 +15069,7 @@ class $ProjectTypeTable extends ProjectType
       context.handle(
           _groupMeta, group.isAcceptableOrUnknown(data['group']!, _groupMeta));
     }
-    if (data.containsKey('beneficiary_type')) {
-      context.handle(
-          _beneficiaryTypeMeta,
-          beneficiaryType.isAcceptableOrUnknown(
-              data['beneficiary_type']!, _beneficiaryTypeMeta));
-    }
+    context.handle(_beneficiaryTypeMeta, const VerificationResult.success());
     if (data.containsKey('eligibility_criteria')) {
       context.handle(
           _eligibilityCriteriaMeta,
@@ -15147,8 +15181,9 @@ class $ProjectTypeTable extends ProjectType
           .read(DriftSqlType.string, data['${effectivePrefix}code']),
       group: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}group']),
-      beneficiaryType: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}beneficiary_type']),
+      beneficiaryType: $ProjectTypeTable.$converterbeneficiaryTypen.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}beneficiary_type'])),
       eligibilityCriteria: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}eligibility_criteria']),
       taskProcedure: attachedDatabase.typeMapping
@@ -15188,6 +15223,13 @@ class $ProjectTypeTable extends ProjectType
   $ProjectTypeTable createAlias(String alias) {
     return $ProjectTypeTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<BeneficiaryType, int, int>
+      $converterbeneficiaryType =
+      const EnumIndexConverter<BeneficiaryType>(BeneficiaryType.values);
+  static JsonTypeConverter2<BeneficiaryType?, int?, int?>
+      $converterbeneficiaryTypen =
+      JsonTypeConverter2.asNullable($converterbeneficiaryType);
 }
 
 class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
@@ -15195,7 +15237,7 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
   final String? name;
   final String? code;
   final String? group;
-  final String? beneficiaryType;
+  final BeneficiaryType? beneficiaryType;
   final String? eligibilityCriteria;
   final String? taskProcedure;
   final String? auditCreatedBy;
@@ -15250,7 +15292,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       map['group'] = Variable<String>(group);
     }
     if (!nullToAbsent || beneficiaryType != null) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType);
+      map['beneficiary_type'] = Variable<int>(
+          $ProjectTypeTable.$converterbeneficiaryTypen.toSql(beneficiaryType));
     }
     if (!nullToAbsent || eligibilityCriteria != null) {
       map['eligibility_criteria'] = Variable<String>(eligibilityCriteria);
@@ -15368,7 +15411,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       name: serializer.fromJson<String?>(json['name']),
       code: serializer.fromJson<String?>(json['code']),
       group: serializer.fromJson<String?>(json['group']),
-      beneficiaryType: serializer.fromJson<String?>(json['beneficiaryType']),
+      beneficiaryType: $ProjectTypeTable.$converterbeneficiaryTypen
+          .fromJson(serializer.fromJson<int?>(json['beneficiaryType'])),
       eligibilityCriteria:
           serializer.fromJson<String?>(json['eligibilityCriteria']),
       taskProcedure: serializer.fromJson<String?>(json['taskProcedure']),
@@ -15397,7 +15441,8 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
       'name': serializer.toJson<String?>(name),
       'code': serializer.toJson<String?>(code),
       'group': serializer.toJson<String?>(group),
-      'beneficiaryType': serializer.toJson<String?>(beneficiaryType),
+      'beneficiaryType': serializer.toJson<int?>(
+          $ProjectTypeTable.$converterbeneficiaryTypen.toJson(beneficiaryType)),
       'eligibilityCriteria': serializer.toJson<String?>(eligibilityCriteria),
       'taskProcedure': serializer.toJson<String?>(taskProcedure),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
@@ -15422,7 +15467,7 @@ class ProjectTypeData extends DataClass implements Insertable<ProjectTypeData> {
           Value<String?> name = const Value.absent(),
           Value<String?> code = const Value.absent(),
           Value<String?> group = const Value.absent(),
-          Value<String?> beneficiaryType = const Value.absent(),
+          Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
           Value<String?> eligibilityCriteria = const Value.absent(),
           Value<String?> taskProcedure = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
@@ -15570,7 +15615,7 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
   final Value<String?> name;
   final Value<String?> code;
   final Value<String?> group;
-  final Value<String?> beneficiaryType;
+  final Value<BeneficiaryType?> beneficiaryType;
   final Value<String?> eligibilityCriteria;
   final Value<String?> taskProcedure;
   final Value<String?> auditCreatedBy;
@@ -15641,7 +15686,7 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
     Expression<String>? name,
     Expression<String>? code,
     Expression<String>? group,
-    Expression<String>? beneficiaryType,
+    Expression<int>? beneficiaryType,
     Expression<String>? eligibilityCriteria,
     Expression<String>? taskProcedure,
     Expression<String>? auditCreatedBy,
@@ -15694,7 +15739,7 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
       Value<String?>? name,
       Value<String?>? code,
       Value<String?>? group,
-      Value<String?>? beneficiaryType,
+      Value<BeneficiaryType?>? beneficiaryType,
       Value<String?>? eligibilityCriteria,
       Value<String?>? taskProcedure,
       Value<String?>? auditCreatedBy,
@@ -15754,7 +15799,9 @@ class ProjectTypeCompanion extends UpdateCompanion<ProjectTypeData> {
       map['group'] = Variable<String>(group.value);
     }
     if (beneficiaryType.present) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType.value);
+      map['beneficiary_type'] = Variable<int>($ProjectTypeTable
+          .$converterbeneficiaryTypen
+          .toSql(beneficiaryType.value));
     }
     if (eligibilityCriteria.present) {
       map['eligibility_criteria'] = Variable<String>(eligibilityCriteria.value);
@@ -18014,6 +18061,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
   late final GeneratedColumn<String> senderType = GeneratedColumn<String>(
       'sender_type', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _dateOfEntryMeta =
+      const VerificationMeta('dateOfEntry');
+  @override
+  late final GeneratedColumn<int> dateOfEntry = GeneratedColumn<int>(
+      'date_of_entry', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _auditCreatedByMeta =
       const VerificationMeta('auditCreatedBy');
   @override
@@ -18128,6 +18181,7 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
         receiverType,
         senderId,
         senderType,
+        dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
         auditCreatedTime,
@@ -18228,6 +18282,12 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           _senderTypeMeta,
           senderType.isAcceptableOrUnknown(
               data['sender_type']!, _senderTypeMeta));
+    }
+    if (data.containsKey('date_of_entry')) {
+      context.handle(
+          _dateOfEntryMeta,
+          dateOfEntry.isAcceptableOrUnknown(
+              data['date_of_entry']!, _dateOfEntryMeta));
     }
     if (data.containsKey('audit_created_by')) {
       context.handle(
@@ -18357,6 +18417,8 @@ class $StockTable extends Stock with TableInfo<$StockTable, StockData> {
           .read(DriftSqlType.string, data['${effectivePrefix}sender_id']),
       senderType: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}sender_type']),
+      dateOfEntry: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}date_of_entry']),
       auditCreatedBy: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}audit_created_by']),
       nonRecoverableError: attachedDatabase.typeMapping.read(
@@ -18411,6 +18473,7 @@ class StockData extends DataClass implements Insertable<StockData> {
   final String? receiverType;
   final String? senderId;
   final String? senderType;
+  final int? dateOfEntry;
   final String? auditCreatedBy;
   final bool? nonRecoverableError;
   final int? auditCreatedTime;
@@ -18441,6 +18504,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       this.receiverType,
       this.senderId,
       this.senderType,
+      this.dateOfEntry,
       this.auditCreatedBy,
       this.nonRecoverableError,
       this.auditCreatedTime,
@@ -18500,6 +18564,9 @@ class StockData extends DataClass implements Insertable<StockData> {
     }
     if (!nullToAbsent || senderType != null) {
       map['sender_type'] = Variable<String>(senderType);
+    }
+    if (!nullToAbsent || dateOfEntry != null) {
+      map['date_of_entry'] = Variable<int>(dateOfEntry);
     }
     if (!nullToAbsent || auditCreatedBy != null) {
       map['audit_created_by'] = Variable<String>(auditCreatedBy);
@@ -18589,6 +18656,9 @@ class StockData extends DataClass implements Insertable<StockData> {
       senderType: senderType == null && nullToAbsent
           ? const Value.absent()
           : Value(senderType),
+      dateOfEntry: dateOfEntry == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateOfEntry),
       auditCreatedBy: auditCreatedBy == null && nullToAbsent
           ? const Value.absent()
           : Value(auditCreatedBy),
@@ -18655,6 +18725,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       receiverType: serializer.fromJson<String?>(json['receiverType']),
       senderId: serializer.fromJson<String?>(json['senderId']),
       senderType: serializer.fromJson<String?>(json['senderType']),
+      dateOfEntry: serializer.fromJson<int?>(json['dateOfEntry']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
       nonRecoverableError:
           serializer.fromJson<bool?>(json['nonRecoverableError']),
@@ -18692,6 +18763,7 @@ class StockData extends DataClass implements Insertable<StockData> {
       'receiverType': serializer.toJson<String?>(receiverType),
       'senderId': serializer.toJson<String?>(senderId),
       'senderType': serializer.toJson<String?>(senderType),
+      'dateOfEntry': serializer.toJson<int?>(dateOfEntry),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
       'nonRecoverableError': serializer.toJson<bool?>(nonRecoverableError),
       'auditCreatedTime': serializer.toJson<int?>(auditCreatedTime),
@@ -18725,6 +18797,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           Value<String?> receiverType = const Value.absent(),
           Value<String?> senderId = const Value.absent(),
           Value<String?> senderType = const Value.absent(),
+          Value<int?> dateOfEntry = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
           Value<bool?> nonRecoverableError = const Value.absent(),
           Value<int?> auditCreatedTime = const Value.absent(),
@@ -18765,6 +18838,7 @@ class StockData extends DataClass implements Insertable<StockData> {
             receiverType.present ? receiverType.value : this.receiverType,
         senderId: senderId.present ? senderId.value : this.senderId,
         senderType: senderType.present ? senderType.value : this.senderType,
+        dateOfEntry: dateOfEntry.present ? dateOfEntry.value : this.dateOfEntry,
         auditCreatedBy:
             auditCreatedBy.present ? auditCreatedBy.value : this.auditCreatedBy,
         nonRecoverableError: nonRecoverableError.present
@@ -18821,6 +18895,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
@@ -18856,6 +18931,7 @@ class StockData extends DataClass implements Insertable<StockData> {
         receiverType,
         senderId,
         senderType,
+        dateOfEntry,
         auditCreatedBy,
         nonRecoverableError,
         auditCreatedTime,
@@ -18890,6 +18966,7 @@ class StockData extends DataClass implements Insertable<StockData> {
           other.receiverType == this.receiverType &&
           other.senderId == this.senderId &&
           other.senderType == this.senderType &&
+          other.dateOfEntry == this.dateOfEntry &&
           other.auditCreatedBy == this.auditCreatedBy &&
           other.nonRecoverableError == this.nonRecoverableError &&
           other.auditCreatedTime == this.auditCreatedTime &&
@@ -18922,6 +18999,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
   final Value<String?> receiverType;
   final Value<String?> senderId;
   final Value<String?> senderType;
+  final Value<int?> dateOfEntry;
   final Value<String?> auditCreatedBy;
   final Value<bool?> nonRecoverableError;
   final Value<int?> auditCreatedTime;
@@ -18953,6 +19031,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -18985,6 +19064,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     this.receiverType = const Value.absent(),
     this.senderId = const Value.absent(),
     this.senderType = const Value.absent(),
+    this.dateOfEntry = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
     this.nonRecoverableError = const Value.absent(),
     this.auditCreatedTime = const Value.absent(),
@@ -19017,6 +19097,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
     Expression<String>? receiverType,
     Expression<String>? senderId,
     Expression<String>? senderType,
+    Expression<int>? dateOfEntry,
     Expression<String>? auditCreatedBy,
     Expression<bool>? nonRecoverableError,
     Expression<int>? auditCreatedTime,
@@ -19051,6 +19132,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       if (receiverType != null) 'receiver_type': receiverType,
       if (senderId != null) 'sender_id': senderId,
       if (senderType != null) 'sender_type': senderType,
+      if (dateOfEntry != null) 'date_of_entry': dateOfEntry,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
       if (nonRecoverableError != null)
         'non_recoverable_error': nonRecoverableError,
@@ -19087,6 +19169,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       Value<String?>? receiverType,
       Value<String?>? senderId,
       Value<String?>? senderType,
+      Value<int?>? dateOfEntry,
       Value<String?>? auditCreatedBy,
       Value<bool?>? nonRecoverableError,
       Value<int?>? auditCreatedTime,
@@ -19118,6 +19201,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
       receiverType: receiverType ?? this.receiverType,
       senderId: senderId ?? this.senderId,
       senderType: senderType ?? this.senderType,
+      dateOfEntry: dateOfEntry ?? this.dateOfEntry,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
       nonRecoverableError: nonRecoverableError ?? this.nonRecoverableError,
       auditCreatedTime: auditCreatedTime ?? this.auditCreatedTime,
@@ -19182,6 +19266,9 @@ class StockCompanion extends UpdateCompanion<StockData> {
     }
     if (senderType.present) {
       map['sender_type'] = Variable<String>(senderType.value);
+    }
+    if (dateOfEntry.present) {
+      map['date_of_entry'] = Variable<int>(dateOfEntry.value);
     }
     if (auditCreatedBy.present) {
       map['audit_created_by'] = Variable<String>(auditCreatedBy.value);
@@ -19251,6 +19338,7 @@ class StockCompanion extends UpdateCompanion<StockData> {
           ..write('receiverType: $receiverType, ')
           ..write('senderId: $senderId, ')
           ..write('senderType: $senderType, ')
+          ..write('dateOfEntry: $dateOfEntry, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
           ..write('nonRecoverableError: $nonRecoverableError, ')
           ..write('auditCreatedTime: $auditCreatedTime, ')
@@ -20489,12 +20577,9 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   static const VerificationMeta _beneficiaryTypeMeta =
       const VerificationMeta('beneficiaryType');
   @override
-  late final GeneratedColumnWithTypeConverter<BeneficiaryType?, int>
-      beneficiaryType = GeneratedColumn<int>(
-              'beneficiary_type', aliasedName, true,
-              type: DriftSqlType.int, requiredDuringInsert: false)
-          .withConverter<BeneficiaryType?>(
-              $TargetTable.$converterbeneficiaryTypen);
+  late final GeneratedColumn<String> beneficiaryType = GeneratedColumn<String>(
+      'beneficiary_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -20619,7 +20704,12 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
-    context.handle(_beneficiaryTypeMeta, const VerificationResult.success());
+    if (data.containsKey('beneficiary_type')) {
+      context.handle(
+          _beneficiaryTypeMeta,
+          beneficiaryType.isAcceptableOrUnknown(
+              data['beneficiary_type']!, _beneficiaryTypeMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -20667,9 +20757,8 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
-      beneficiaryType: $TargetTable.$converterbeneficiaryTypen.fromSql(
-          attachedDatabase.typeMapping.read(
-              DriftSqlType.int, data['${effectivePrefix}beneficiary_type'])),
+      beneficiaryType: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}beneficiary_type']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -20679,13 +20768,6 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   $TargetTable createAlias(String alias) {
     return $TargetTable(attachedDatabase, alias);
   }
-
-  static JsonTypeConverter2<BeneficiaryType, int, int>
-      $converterbeneficiaryType =
-      const EnumIndexConverter<BeneficiaryType>(BeneficiaryType.values);
-  static JsonTypeConverter2<BeneficiaryType?, int?, int?>
-      $converterbeneficiaryTypen =
-      JsonTypeConverter2.asNullable($converterbeneficiaryType);
 }
 
 class TargetData extends DataClass implements Insertable<TargetData> {
@@ -20705,7 +20787,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final BeneficiaryType? beneficiaryType;
+  final String? beneficiaryType;
   final String? additionalFields;
   const TargetData(
       {required this.id,
@@ -20776,8 +20858,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       map['row_version'] = Variable<int>(rowVersion);
     }
     if (!nullToAbsent || beneficiaryType != null) {
-      map['beneficiary_type'] = Variable<int>(
-          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType));
+      map['beneficiary_type'] = Variable<String>(beneficiaryType);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -20864,8 +20945,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      beneficiaryType: $TargetTable.$converterbeneficiaryTypen
-          .fromJson(serializer.fromJson<int?>(json['beneficiaryType'])),
+      beneficiaryType: serializer.fromJson<String?>(json['beneficiaryType']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -20889,8 +20969,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'beneficiaryType': serializer.toJson<int?>(
-          $TargetTable.$converterbeneficiaryTypen.toJson(beneficiaryType)),
+      'beneficiaryType': serializer.toJson<String?>(beneficiaryType),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -20912,7 +20991,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
+          Value<String?> beneficiaryType = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       TargetData(
         id: id ?? this.id,
@@ -21043,7 +21122,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<BeneficiaryType?> beneficiaryType;
+  final Value<String?> beneficiaryType;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const TargetCompanion({
@@ -21105,7 +21184,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
-    Expression<int>? beneficiaryType,
+    Expression<String>? beneficiaryType,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -21151,7 +21230,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<BeneficiaryType?>? beneficiaryType,
+      Value<String?>? beneficiaryType,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return TargetCompanion(
@@ -21229,8 +21308,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
     if (beneficiaryType.present) {
-      map['beneficiary_type'] = Variable<int>(
-          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType.value));
+      map['beneficiary_type'] = Variable<String>(beneficiaryType.value);
     }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
@@ -25188,6 +25266,12 @@ class $AttributesTable extends Attributes
   late final GeneratedColumn<String> additionalFields = GeneratedColumn<String>(
       'additional_fields', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _additionalDetailsMeta =
+      const VerificationMeta('additionalDetails');
+  @override
+  late final GeneratedColumn<String> additionalDetails =
+      GeneratedColumn<String>('additional_details', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -25211,7 +25295,8 @@ class $AttributesTable extends Attributes
         auditModifiedTime,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        additionalDetails
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -25334,6 +25419,12 @@ class $AttributesTable extends Attributes
           additionalFields.isAcceptableOrUnknown(
               data['additional_fields']!, _additionalFieldsMeta));
     }
+    if (data.containsKey('additional_details')) {
+      context.handle(
+          _additionalDetailsMeta,
+          additionalDetails.isAcceptableOrUnknown(
+              data['additional_details']!, _additionalDetailsMeta));
+    }
     return context;
   }
 
@@ -25387,6 +25478,8 @@ class $AttributesTable extends Attributes
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
+      additionalDetails: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_details']),
     );
   }
 
@@ -25419,6 +25512,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
   final bool? isDeleted;
   final int? rowVersion;
   final String? additionalFields;
+  final String? additionalDetails;
   const Attribute(
       {this.id,
       this.dataType,
@@ -25441,7 +25535,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       this.auditModifiedTime,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields});
+      this.additionalFields,
+      this.additionalDetails});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -25511,6 +25606,9 @@ class Attribute extends DataClass implements Insertable<Attribute> {
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
     }
+    if (!nullToAbsent || additionalDetails != null) {
+      map['additional_details'] = Variable<String>(additionalDetails);
+    }
     return map;
   }
 
@@ -25575,6 +25673,9 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
+      additionalDetails: additionalDetails == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalDetails),
     );
   }
 
@@ -25605,6 +25706,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
+      additionalDetails:
+          serializer.fromJson<String?>(json['additionalDetails']),
     );
   }
   @override
@@ -25633,6 +25736,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
       'additionalFields': serializer.toJson<String?>(additionalFields),
+      'additionalDetails': serializer.toJson<String?>(additionalDetails),
     };
   }
 
@@ -25658,7 +25762,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           Value<int?> auditModifiedTime = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent()}) =>
+          Value<String?> additionalFields = const Value.absent(),
+          Value<String?> additionalDetails = const Value.absent()}) =>
       Attribute(
         id: id.present ? id.value : this.id,
         dataType: dataType.present ? dataType.value : this.dataType,
@@ -25701,6 +25806,9 @@ class Attribute extends DataClass implements Insertable<Attribute> {
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
+        additionalDetails: additionalDetails.present
+            ? additionalDetails.value
+            : this.additionalDetails,
       );
   @override
   String toString() {
@@ -25726,7 +25834,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields')
+          ..write('additionalFields: $additionalFields, ')
+          ..write('additionalDetails: $additionalDetails')
           ..write(')'))
         .toString();
   }
@@ -25754,7 +25863,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
         auditModifiedTime,
         isDeleted,
         rowVersion,
-        additionalFields
+        additionalFields,
+        additionalDetails
       ]);
   @override
   bool operator ==(Object other) =>
@@ -25781,7 +25891,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           other.auditModifiedTime == this.auditModifiedTime &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields);
+          other.additionalFields == this.additionalFields &&
+          other.additionalDetails == this.additionalDetails);
 }
 
 class AttributesCompanion extends UpdateCompanion<Attribute> {
@@ -25807,6 +25918,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
   final Value<String?> additionalFields;
+  final Value<String?> additionalDetails;
   final Value<int> rowid;
   const AttributesCompanion({
     this.id = const Value.absent(),
@@ -25831,6 +25943,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.additionalDetails = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   AttributesCompanion.insert({
@@ -25856,6 +25969,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
     this.additionalFields = const Value.absent(),
+    this.additionalDetails = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   static Insertable<Attribute> custom({
@@ -25881,6 +25995,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
     Expression<String>? additionalFields,
+    Expression<String>? additionalDetails,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -25908,6 +26023,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
       if (additionalFields != null) 'additional_fields': additionalFields,
+      if (additionalDetails != null) 'additional_details': additionalDetails,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -25935,6 +26051,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
       Value<String?>? additionalFields,
+      Value<String?>? additionalDetails,
       Value<int>? rowid}) {
     return AttributesCompanion(
       id: id ?? this.id,
@@ -25959,6 +26076,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
       additionalFields: additionalFields ?? this.additionalFields,
+      additionalDetails: additionalDetails ?? this.additionalDetails,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -26032,6 +26150,9 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
+    if (additionalDetails.present) {
+      map['additional_details'] = Variable<String>(additionalDetails.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -26063,6 +26184,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
           ..write('additionalFields: $additionalFields, ')
+          ..write('additionalDetails: $additionalDetails, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();

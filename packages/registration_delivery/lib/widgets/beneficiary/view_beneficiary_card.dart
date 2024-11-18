@@ -416,7 +416,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
       if (tasks.isEmpty) {
         return Status.registered.toValue();
       } else {
-        return getTaskStatus(tasks).toValue();
+        return getTaskStatus(tasks.toList()).toValue();
       }
     } else {
       return Status.notRegistered.toValue();
