@@ -1,3 +1,6 @@
+##
+* Modified attributes and service definitions for mapping additional details
+
 ## 1.0.4
 
 * Added user_action entity for digit_location_tracker package

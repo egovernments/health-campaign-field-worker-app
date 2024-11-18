@@ -161,7 +161,10 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                 .trim()
                                                 .isNotEmpty
                                             ? controller[i].text.toString()
-                                            : ''
+                                            : (attribute?[i].dataType !=
+                                                    'Number'
+                                                ? ''
+                                                : '0')
                                         : visibleSurveyFormIndexes.contains(i)
                                             ? controller[i].text.toString()
                                             : i18.surveyForm.notSelectedKey,
@@ -171,14 +174,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             widget.referralClientRefId != null
                                         ? null
                                         : ((attribute?[i].values?.length == 2 ||
+                                                        attribute?[i]
+                                                                .values
+                                                                ?.length ==
+                                                            3) ||
                                                     attribute?[i]
                                                             .values
                                                             ?.length ==
-                                                        3) &&
+                                                        4) &&
                                                 controller[i].text ==
                                                     attribute?[i]
                                                         .values?[1]
-                                                        .trim())
+                                                        .trim()
                                             ? additionalController[i]
                                                     .text
                                                     .toString()
@@ -382,6 +389,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           ...initialAttributes!.map((
                             e,
                           ) {
+                            String code = e.code ?? '';
+                            String? description = e.additionalDetails?.entries
+                                .where((a) => a.key == 'helpText')
+                                .first
+                                .value;
                             int index = (initialAttributes ?? []).indexOf(e);
                             return Column(children: [
                               if (e.dataType == 'String' &&
@@ -390,7 +402,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   onChange: (value) {
                                     surveyFormKey.currentState?.validate();
                                   },
-                                  isRequired: false,
+                                  isRequired: true,
                                   controller: controller[index],
                                   inputFormatter: [
                                     FilteringTextInputFormatter.allow(RegExp(
@@ -409,16 +421,22 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           : localizations
                                               .translate("${e.code}_REGEX");
                                     }
-
                                     return null;
                                   },
                                   label: localizations.translate(
-                                    '${value.selectedServiceDefinition?.code}.${e.code}',
+                                    '${value.selectedServiceDefinition?.code}.$code',
                                   ),
+                                  description: description != null
+                                      ? localizations.translate(
+                                          '${value.selectedServiceDefinition?.code}.$description',
+                                        )
+                                      : null,
                                 ),
                               ] else if (e.dataType == 'Number' &&
-                                  !(e.code ?? '').contains('.')) ...[
+                                  !(code).contains('.')) ...[
                                 DigitTextField(
+                                  autoValidation:
+                                      AutovalidateMode.onUserInteraction,
                                   onChange: (value) {
                                     surveyFormKey.currentState?.validate();
                                   },
@@ -440,18 +458,23 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                       return (RegExp(e.regex!).hasMatch(value!))
                                           ? null
                                           : localizations
-                                              .translate("${e.code}_REGEX");
+                                              .translate("${code}_REGEX");
                                     }
 
                                     return null;
                                   },
                                   controller: controller[index],
                                   label: '${localizations.translate(
-                                        '${value.selectedServiceDefinition?.code}.${e.code}',
+                                        '${value.selectedServiceDefinition?.code}.$code',
                                       ).trim()} ${e.required == true ? '*' : ''}',
+                                  description: description != null
+                                      ? localizations.translate(
+                                          '${value.selectedServiceDefinition?.code}.$description',
+                                        )
+                                      : description,
                                 ),
                               ] else if (e.dataType == 'MultiValueList' &&
-                                  !(e.code ?? '').contains('.')) ...[
+                                  !(code).contains('.')) ...[
                                 Align(
                                   alignment: Alignment.topLeft,
                                   child: Padding(
@@ -460,10 +483,20 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                       children: [
                                         Text(
                                           '${localizations.translate(
-                                            '${value.selectedServiceDefinition?.code}.${e.code}',
+                                            '${value.selectedServiceDefinition?.code}.$code',
                                           )} ${e.required == true ? '*' : ''}',
                                           style: theme.textTheme.headlineSmall,
                                         ),
+                                        if (description != null)
+                                          Text(
+                                            '${localizations.translate(
+                                              '${value.selectedServiceDefinition?.code}.$description',
+                                            )} ${e.required == true ? '*' : ''}',
+                                            style: theme.textTheme.bodyMedium
+                                                ?.copyWith(
+                                              fontWeight: FontWeight.w100,
+                                            ),
+                                          ),
                                       ],
                                     ),
                                   ),
@@ -562,7 +595,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   },
                                 ),
                               ] else if (e.dataType == 'SingleValueList') ...[
-                                if (!(e.code ?? '').contains('.'))
+                                if (!(code).contains('.'))
                                   DigitCard(
                                     child: _buildSurveyForm(
                                       e,
@@ -702,11 +735,27 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
             alignment: Alignment.topLeft,
             child: Padding(
               padding: const EdgeInsets.all(16.0), // Add padding here
-              child: Text(
-                '${localizations.translate(
-                  '${selectedServiceDefinition?.code}.${item.code}',
-                )} ${item.required == true ? '*' : ''}',
-                style: theme.textTheme.headlineSmall,
+              child: Column(
+                children: [
+                  Text(
+                    '${localizations.translate(
+                      '${selectedServiceDefinition?.code}.${item.code}',
+                    )} ${item.required == true ? '*' : ''}',
+                    style: theme.textTheme.headlineSmall,
+                  ),
+                  if (item.additionalDetails != null &&
+                      (item.additionalDetails ?? {}).keys.contains('helpText'))
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: Text(
+                        localizations.translate(
+                          '${selectedServiceDefinition?.code}.${item.additionalDetails?.entries.where((a) => a.key == 'helpText').first.value}',
+                        ),
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w100),
+                      ),
+                    ),
+                ],
               ),
             ),
           ),
@@ -988,10 +1037,10 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 },
                 initialSelection: const [false],
                 options: const [true, false],
-                onSelectionChanged: (valuec) {
+                onSelectionChanged: (value) {
                   context.read<ServiceBloc>().add(
                         ServiceSurveyFormEvent(
-                          value: valuec.toString(),
+                          value: value.toString(),
                           submitTriggered: submitTriggered,
                         ),
                       );

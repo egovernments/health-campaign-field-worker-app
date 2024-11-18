@@ -37,25 +37,32 @@ class LabeledField extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              children: [
-                Flexible(
-                  child: Text(
-                    label ?? '',
-                    style: labelStyle ??
-                        DigitTheme.instance.mobileTheme.textTheme.labelSmall,
+            if (label != null)
+              Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      label!,
+                      style: labelStyle ??
+                          DigitTheme.instance.mobileTheme.textTheme.labelSmall,
+                    ),
                   ),
-                ),
-                icon != null
-                    ? Tooltip(
-                        message: tooltipMessage ?? '',
-                        preferBelow: preferToolTipBelow,
-                        triggerMode: tooltipTriggerMode,
-                        child: Icon(icon ?? Icons.info_outline))
-                    : const SizedBox.shrink()
-              ],
-            ),
-            const SizedBox(height: 8),
+                  if (isRequired)
+                    Text(
+                      ' *',
+                      style: labelStyle ??
+                          DigitTheme.instance.mobileTheme.textTheme.labelSmall,
+                    ),
+                  icon != null
+                      ? Tooltip(
+                          message: tooltipMessage ?? '',
+                          preferBelow: preferToolTipBelow,
+                          triggerMode: tooltipTriggerMode,
+                          child: Icon(icon ?? Icons.info_outline))
+                      : const SizedBox.shrink()
+                ],
+              ),
+            if (label != null) const SizedBox(height: 8),
             description != null
                 ? Flexible(
                     child: Text(

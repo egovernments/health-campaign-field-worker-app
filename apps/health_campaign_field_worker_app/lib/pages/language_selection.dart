@@ -11,7 +11,6 @@ import '../blocs/localization/localization.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
-import '../utils/constants.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 
