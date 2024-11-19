@@ -360,6 +360,18 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+
+      //CLF HOME ITEM CARD
+      i18.home.clfLabel: homeShowcaseData.clf.buildWith(
+        child: HomeItemCard(
+          icon: Icons.account_balance,
+          label: i18.home.clfLabel,
+          onPressed: () async {
+            await context.router.push(const CLFDetailsRoute());
+          },
+        ),
+      ),
+
       i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
         child: HomeItemCard(
           icon: Icons.home,
@@ -507,11 +519,13 @@ class _HomePageState extends LocalizedState<HomePage> {
       // INFO : Need to add showcase keys of package Here
       i18.home.beneficiaryLabel:
           homeShowcaseData.distributorBeneficiaries.showcaseKey,
+      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
       i18.home.manageStockLabel:
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
+      i18.home.mySurveyForm:
+          homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -529,6 +543,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
+      i18.home.clfLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
@@ -548,7 +563,8 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.clfLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
@@ -725,14 +741,18 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
-          isHealthFacilityWorker: context.loggedInUserRoles.where((role) => role.code == RolesType.healthFacilityWorker.toValue()).toList().isNotEmpty,
+          isHealthFacilityWorker: context.loggedInUserRoles
+              .where((role) =>
+                  role.code == RolesType.healthFacilityWorker.toValue())
+              .toList()
+              .isNotEmpty,
           roles: context.read<AuthBloc>().state.maybeMap(
-            orElse: () => const Offstage(),
-            authenticated: (res) {
-              return res.userModel.roles
-                  .map((e) => e.code.snakeCase.toUpperCase())
-                  .toList();
-            }),
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
         );
 
         ReferralReconSingleton().setInitialData(

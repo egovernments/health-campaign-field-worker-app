@@ -144,6 +144,10 @@ class HomeShowcase {
     return 'DISTRIBUTOR_HOME_SHOWCASE_BENEFICIARIES';
   }
 
+  String get clf {
+    return 'COMMUNAL_LIVING_FACILITY';
+  }
+
   String get distributorFileComplaint {
     return 'DISTRIBUTOR_HOME_SHOWCASE_FILE_COMPLAINT';
   }
@@ -510,7 +514,6 @@ class ComplaintsInboxShowcase {
   }
 }
 
-
 class ForgotPassword {
   const ForgotPassword();
 
@@ -561,6 +564,8 @@ class Home {
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+
+  String get clfLabel => 'HOME_COMMUNAL_LIVING_FACILITY_LABEL';
 }
 
 class AcknowledgementSuccess {
@@ -1014,7 +1019,6 @@ class PrivacyPolicy {
   String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
   String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
   String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
-
 }
 
 class Dashboard {
