@@ -19,6 +19,8 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.da
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:institution_campaign/router/institution_campaign_router.dart';
+import 'package:institution_campaign/router/institution_campaign_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -48,7 +50,8 @@ part 'app_router.gr.dart';
     ClosedHouseholdPackageRoute,
     DashboardRoute,
     SurveyFormRoute,
-    ComplaintsRoute
+    ComplaintsRoute,
+    InstitutionCampaignRouter
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -229,10 +232,13 @@ class AppRouter extends _$AppRouter {
                 path: '',
               ),
               AutoRoute(
-                  page: SurveyFormBoundaryViewRoute.page, path: 'view-boundary'),
+                  page: SurveyFormBoundaryViewRoute.page,
+                  path: 'view-boundary'),
               AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
               AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
-              AutoRoute(page: SurveyFormAcknowledgementRoute.page, path: 'surveyForm-acknowledgement'),
+              AutoRoute(
+                  page: SurveyFormAcknowledgementRoute.page,
+                  path: 'surveyForm-acknowledgement'),
             ]),
         AutoRoute(
           page: BeneficiaryAcknowledgementRoute.page,
@@ -320,8 +326,8 @@ class AppRouter extends _$AppRouter {
 
         // Attendance Route
         AutoRoute(
-            page: MarkAttendanceRoute.page,
-            path: 'mark-attendance',
+          page: MarkAttendanceRoute.page,
+          path: 'mark-attendance',
         ),
         AutoRoute(
           page: ManageAttendanceRoute.page,
@@ -399,6 +405,18 @@ class AppRouter extends _$AppRouter {
           page: SearchReferralReconciliationsRoute.page,
           path: 'search-referrals',
         ),
+
+        /// Institution Campaign Route
+        AutoRoute(
+            page: InstitutionCampaignWrapperRoute.page,
+            path: 'institution-campaign',
+            children: [
+              AutoRoute(
+                page: InstitutionTypeRoute.page,
+                path: 'institution-type',
+                initial: true,
+              )
+            ])
       ],
     )
   ];

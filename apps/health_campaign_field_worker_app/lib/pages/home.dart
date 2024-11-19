@@ -31,6 +31,7 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.gm
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:institution_campaign/router/institution_campaign_router.gm.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -365,7 +366,9 @@ class _HomePageState extends LocalizedState<HomePage> {
         child: HomeItemCard(
           icon: Icons.account_balance,
           label: i18.home.institutionLabel,
-          onPressed: () {},
+          onPressed: () async {
+            await context.router.push(const InstitutionCampaignWrapperRoute());
+          },
         ),
       ),
 
