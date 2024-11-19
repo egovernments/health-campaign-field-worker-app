@@ -14,6 +14,7 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../models/entities/household.dart';
 import '../../router/registration_delivery_router.gm.dart';
+import '../../utils/convert_to_map.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/models/widget_config_model.dart';
 import '../../utils/utils.dart';
@@ -24,39 +25,14 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseHoldDetailsPage extends LocalizedStatefulWidget {
-  final Map<String, Map<String, dynamic>> widgetConfig;
+  final List<FormConfigModel>? widgetConfig;
 
-  HouseHoldDetailsPage({
-    Map<String, Map<String, dynamic>>? widgetConfig,
+  const HouseHoldDetailsPage({
+    this.widgetConfig,
     super.key,
     super.appLocalizations,
-  }) : widgetConfig = widgetConfig ??
-            {
-              'dateOfRegistration': {
-                'isEnabled': true,
-                'readOnly': true,
-                'isRequired': true,
-                'order': 4,
-              },
-              'memberCount': {
-                'isEnabled': true,
-                'readOnly': false,
-                'isRequired': true,
-                'order': 1,
-              },
-              'pregnantWomenCount': {
-                'isEnabled': true,
-                'readOnly': false,
-                'isRequired': true,
-                'order': 2,
-              },
-              'childrenCount': {
-                'isEnabled': true,
-                'readOnly': false,
-                'isRequired': false,
-                'order': 4,
-              },
-            };
+  });
+
 
   @override
   State<HouseHoldDetailsPage> createState() => HouseHoldDetailsPageState();
@@ -67,6 +43,41 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   static const _memberCountKey = 'memberCount';
   static const _pregnantWomenCountKey = 'pregnantWomenCount';
   static const _childrenCountKey = 'childrenCount';
+  Map<String, Map<String, dynamic>> configs =  {
+    'dateOfRegistration': {
+      'isEnabled': true,
+      'readOnly': true,
+      'isRequired': true,
+      'order': 4,
+    },
+    'memberCount': {
+      'isEnabled': true,
+      'readOnly': false,
+      'isRequired': true,
+      'order': 1,
+    },
+    'pregnantWomenCount': {
+      'isEnabled': true,
+      'readOnly': false,
+      'isRequired': true,
+      'order': 2,
+    },
+    'childrenCount': {
+      'isEnabled': true,
+      'readOnly': false,
+      'isRequired': false,
+      'order': 4,
+    },
+  };
+
+  @override
+  void initState() {
+    if(widget.widgetConfig != null) {
+      final converter = FieldConverter(widget.widgetConfig);
+      configs = converter.convertFields('HouseholdDetails');
+    }
+    super.initState();
+  }
 
   List<Widget> buildWidgetsFromConfig(WidgetConfigModel model) {
     List<Widget> widgets = [];
@@ -76,144 +87,160 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
     sortedKeys.sort(
         (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
 
-    for (var key in sortedKeys) {
-      var fieldConfig = model.config[key];
+    if (sortedKeys.isEmpty) {
+      Widget widget = const AlertDialog(
+        title: Text("Error"),
+        content: Text("Household location config not found"),
+      );
+      widgets.add(widget);
+    } else {
+      for (var key in sortedKeys) {
+        var fieldConfig = model.config[key];
 
-      if (fieldConfig['isEnabled'] == true) {
-        Widget widget;
+        if (fieldConfig['isEnabled'] == true) {
+          Widget widget;
 
-        // Generate the widget based on the fieldConfig['type'] using a switch case
-        switch (key) {
-          case _dateOfRegistrationKey:
-            widget = householdDetailsShowcaseData.dateOfRegistration.buildWith(
-              child: DigitDateFormPicker(
-                isEnabled: (fieldConfig['readOnly'] ?? false) != true,
-                formControlName: _dateOfRegistrationKey,
-                label: localizations.translate(
-                  i18.householdDetails.dateOfRegistrationLabel,
+          // Generate the widget based on the fieldConfig['type'] using a switch case
+          switch (key) {
+            case _dateOfRegistrationKey:
+              widget = householdDetailsShowcaseData.dateOfRegistration.buildWith(
+                child: DigitDateFormPicker(
+                  isEnabled: (fieldConfig['readOnly'] ?? false) != true,
+                  formControlName: _dateOfRegistrationKey,
+                  label: localizations.translate(
+                    i18.householdDetails.dateOfRegistrationLabel,
+                  ),
+                  isRequired: fieldConfig['isRequired'] ?? false,
+                  confirmText: localizations.translate(
+                    i18.common.coreCommonOk,
+                  ),
+                  cancelText: localizations.translate(
+                    i18.common.coreCommonCancel,
+                  ),
                 ),
-                isRequired: fieldConfig['isRequired'] ?? false,
-                confirmText: localizations.translate(
-                  i18.common.coreCommonOk,
-                ),
-                cancelText: localizations.translate(
-                  i18.common.coreCommonCancel,
-                ),
-              ),
-            );
-            break;
-          case _memberCountKey:
-            int pregnantWomen =
-                model.form.control(_pregnantWomenCountKey).value;
-            int children = model.form.control(_childrenCountKey).value;
-            widget = householdDetailsShowcaseData
-                .numberOfMembersLivingInHousehold
-                .buildWith(
-              child: AbsorbPointer(
-                absorbing: fieldConfig['readOnly'] ?? false,
-                child: Opacity(
-                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                  child: DigitIntegerFormPicker(
-                    minimum: children + pregnantWomen != 0
-                        ? children + pregnantWomen
-                        : 1,
-                    maximum: 30,
-                    onChange: () {
-                      int pregnantWomen =
-                          model.form.control(_pregnantWomenCountKey).value;
-                      int children =
-                          model.form.control(_childrenCountKey).value;
-                      int memberCount =
-                          model.form.control(_memberCountKey).value;
-                      if (memberCount <= pregnantWomen + children) {
-                        model.form.control(_memberCountKey).value =
-                            (children + pregnantWomen);
-                      }
-                    },
-                    form: model.form,
-                    formControlName: _memberCountKey,
-                    label: localizations.translate(
-                      i18.householdDetails.noOfMembersCountLabel,
+              );
+              break;
+            case _memberCountKey:
+              int pregnantWomen =
+                  model.form.control(_pregnantWomenCountKey).value;
+              int children = model.form.control(_childrenCountKey).value;
+              widget = householdDetailsShowcaseData
+                  .numberOfMembersLivingInHousehold
+                  .buildWith(
+                child: AbsorbPointer(
+                  absorbing: fieldConfig['readOnly'] ?? false,
+                  child: Opacity(
+                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                    child: DigitIntegerFormPicker(
+                      minimum: children + pregnantWomen != 0
+                          ? children + pregnantWomen
+                          : 1,
+                      maximum: 30,
+                      onChange: () {
+                        int pregnantWomen =
+                            model.form.control(_pregnantWomenCountKey).value;
+                        int children =
+                            model.form.control(_childrenCountKey).value;
+                        int memberCount =
+                            model.form.control(_memberCountKey).value;
+                        if (memberCount <= pregnantWomen + children) {
+                          model.form.control(_memberCountKey).value =
+                          (children + pregnantWomen);
+                        }
+                      },
+                      form: model.form,
+                      formControlName: _memberCountKey,
+                      label: localizations.translate(
+                        i18.householdDetails.noOfMembersCountLabel,
+                      ),
+                      incrementer: true,
                     ),
-                    incrementer: true,
                   ),
                 ),
-              ),
-            );
-            break;
-          case _pregnantWomenCountKey:
-            widget = householdDetailsShowcaseData
-                .numberOfPregnantWomenInHousehold
-                .buildWith(
-              child: AbsorbPointer(
-                absorbing: fieldConfig['readOnly'] ?? false,
-                child: Opacity(
-                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                  child: DigitIntegerFormPicker(
-                    minimum: 0,
-                    maximum: 10,
-                    onChange: () {
-                      int pregnantWomen =
-                          model.form.control(_pregnantWomenCountKey).value;
-                      int children =
-                          model.form.control(_childrenCountKey).value;
-                      int memberCount =
-                          model.form.control(_memberCountKey).value;
-                      model.form.control(_memberCountKey).value =
-                          memberCount < (children + pregnantWomen)
-                              ? children + pregnantWomen
-                              : memberCount;
-                    },
-                    form: model.form,
-                    formControlName: _pregnantWomenCountKey,
-                    label: '${localizations.translate(
-                      i18.householdDetails.noOfPregnantWomenCountLabel,
-                    )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                    incrementer: true,
+              );
+              break;
+            case _pregnantWomenCountKey:
+              widget = householdDetailsShowcaseData
+                  .numberOfPregnantWomenInHousehold
+                  .buildWith(
+                child: AbsorbPointer(
+                  absorbing: fieldConfig['readOnly'] ?? false,
+                  child: Opacity(
+                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                    child: DigitIntegerFormPicker(
+                      minimum: 0,
+                      maximum: 10,
+                      onChange: () {
+                        int pregnantWomen =
+                            model.form.control(_pregnantWomenCountKey).value;
+                        int children =
+                            model.form.control(_childrenCountKey).value;
+                        int memberCount =
+                            model.form.control(_memberCountKey).value;
+                        model.form.control(_memberCountKey).value =
+                        memberCount < (children + pregnantWomen)
+                            ? children + pregnantWomen
+                            : memberCount;
+                      },
+                      form: model.form,
+                      formControlName: _pregnantWomenCountKey,
+                      label: '${localizations.translate(
+                        i18.householdDetails.noOfPregnantWomenCountLabel,
+                      )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                      incrementer: true,
+                    ),
                   ),
                 ),
-              ),
-            );
-            break;
-          case _childrenCountKey:
-            widget = householdDetailsShowcaseData
-                .numberOfChildrenBelow5InHousehold
-                .buildWith(
-              child: AbsorbPointer(
-                absorbing: fieldConfig['readOnly'] ?? false,
-                child: Opacity(
-                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                  child: DigitIntegerFormPicker(
-                    minimum: 0,
-                    maximum: 20,
-                    onChange: () {
-                      int pregnantWomen =
-                          model.form.control(_pregnantWomenCountKey).value;
-                      int children =
-                          model.form.control(_childrenCountKey).value;
-                      int memberCount =
-                          model.form.control(_memberCountKey).value;
-                      model.form.control(_memberCountKey).value =
-                          memberCount <= (children + pregnantWomen)
-                              ? children + pregnantWomen
-                              : memberCount;
-                    },
-                    form: model.form,
-                    formControlName: _childrenCountKey,
-                    label: '${localizations.translate(
-                      i18.householdDetails.noOfChildrenBelow5YearsLabel,
-                    )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                    incrementer: true,
+              );
+              break;
+            case _childrenCountKey:
+              widget = householdDetailsShowcaseData
+                  .numberOfChildrenBelow5InHousehold
+                  .buildWith(
+                child: AbsorbPointer(
+                  absorbing: fieldConfig['readOnly'] ?? false,
+                  child: Opacity(
+                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                    child: DigitIntegerFormPicker(
+                      minimum: 0,
+                      maximum: 20,
+                      onChange: () {
+                        int pregnantWomen =
+                            model.form.control(_pregnantWomenCountKey).value;
+                        int children =
+                            model.form.control(_childrenCountKey).value;
+                        int memberCount =
+                            model.form.control(_memberCountKey).value;
+                        model.form.control(_memberCountKey).value =
+                        memberCount <= (children + pregnantWomen)
+                            ? children + pregnantWomen
+                            : memberCount;
+                      },
+                      form: model.form,
+                      formControlName: _childrenCountKey,
+                      label: '${localizations.translate(
+                        i18.householdDetails.noOfChildrenBelow5YearsLabel,
+                      )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                      incrementer: true,
+                    ),
                   ),
                 ),
-              ),
-            );
-            break;
-          default:
-            throw Exception("Unsupported widget type: ${key}");
-        }
+              );
+              break;
+            default:
+              widget = Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    const Text('Error:', style: TextStyle(color: Colors.red)),
+                    Text("Unknown key $key")
+                  ],
+                ),
+              );
+          }
 
-        widgets.add(widget);
+          widgets.add(widget);
+        }
       }
     }
 
@@ -544,7 +571,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                           Column(
                               children: buildWidgetsFromConfig(
                                   WidgetConfigModel(
-                                      config: widget.widgetConfig,
+                                      config: configs,
                                       form: form))),
                           const SizedBox(height: 16),
                         ],

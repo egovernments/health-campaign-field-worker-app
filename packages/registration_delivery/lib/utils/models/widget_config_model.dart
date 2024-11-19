@@ -13,8 +13,8 @@ class WidgetConfigModel {
 }
 
 class FormConfigModel {
-  late String name;
-  late String type;
+  late String name = '';
+  late String type = '';
   late List<FormConfigFieldModel>? fields;
 }
 

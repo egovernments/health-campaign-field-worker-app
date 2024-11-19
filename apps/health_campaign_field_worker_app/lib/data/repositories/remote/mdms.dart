@@ -133,8 +133,6 @@ class MdmsRepository {
     final appConfig = result.hcmWrapperModel?.appConfig.first;
     final formConfigResult = result.hcmWrapperModel?.formConfig;
 
-    print('formConfigResult: $result');
-
     final List<FormConfig> formConfigList = [];
     for (final element in formConfigResult ?? <app_configuration.FormConfigModel>[]) {
       List<FormConfigField> formConfigField = [];

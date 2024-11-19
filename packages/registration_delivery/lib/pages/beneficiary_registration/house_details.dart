@@ -10,6 +10,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../models/entities/additional_fields_type.dart';
+import '../../utils/convert_to_map.dart';
 import '../../utils/formController.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/models/widget_config_model.dart';
@@ -22,27 +23,13 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseDetailsPage extends LocalizedStatefulWidget {
-  final Map<String, Map<String, dynamic>> widgetConfig;
+  final List<FormConfigModel>? widgetConfig;
 
-  HouseDetailsPage({
-    Map<String, Map<String, dynamic>>? widgetConfig,
+  const HouseDetailsPage({
+    this.widgetConfig,
     super.key,
     super.appLocalizations,
-  }) : widgetConfig = widgetConfig ??
-            {
-              'householdStructure': {
-                'isEnabled': true,
-                'readOnly': false,
-                'isRequired': true,
-                'order': 1,
-              },
-              'noOfRooms': {
-                'isEnabled': true,
-                'readOnly': false,
-                'isRequired': true,
-                'order': 2,
-              }
-            };
+  });
 
   @override
   State<HouseDetailsPage> createState() => HouseDetailsPageState();
@@ -52,11 +39,31 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
   static const _noOfRoomsKey = 'noOfRooms';
   static const _householdStructureKey = 'householdStructure';
   List<String>? selectedHouseStructureTypes;
+  Map<String, Map<String, dynamic>> configs = {
+    'householdStructure': {
+      'isEnabled': true,
+      'readOnly': false,
+      'isRequired': false,
+      'order': 1,
+    },
+    'noOfRooms': {
+      'isEnabled': true,
+      'readOnly': false,
+      'isRequired': true,
+      'regex': ["^\\d+\$"],
+      "errorMessage": "Invalid input",
+      'order': 2,
+    }
+  };
 
   @override
   void initState() {
     final registrationState = context.read<BeneficiaryRegistrationBloc>().state;
 
+    if(widget.widgetConfig != null) {
+      final converter = FieldConverter(widget.widgetConfig);
+      configs = converter.convertFields('Housedetails');
+    }
     super.initState();
   }
 
@@ -68,92 +75,108 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
     sortedKeys.sort(
         (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
 
-    for (var key in sortedKeys) {
-      var fieldConfig = model.config[key];
+    if (sortedKeys.isEmpty) {
+      Widget widget = const AlertDialog(
+        title: Text("Error"),
+        content: Text("Household location config not found"),
+      );
+      widgets.add(widget);
+    } else {
+      for (var key in sortedKeys) {
+        var fieldConfig = model.config[key];
 
-      if (fieldConfig['isEnabled'] == true) {
-        Widget widget;
+        if (fieldConfig['isEnabled'] == true) {
+          Widget widget;
 
-        // Generate the widget based on the fieldConfig['type'] using a switch case
-        switch (key) {
-          case _householdStructureKey:
-            widget = houseShowcaseData.typeOfStructure.buildWith(
-              child: AbsorbPointer(
-                absorbing: fieldConfig['readOnly'] ?? false,
-                child: Opacity(
-                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                  child: SelectionBox<String>(
-                    title:
-                        '${localizations.translate(i18.householdDetails.typeOfStructure)}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                    equalWidthOptions: true,
-                    allowMultipleSelection: false,
-                    options:
-                        RegistrationDeliverySingleton().houseStructureTypes ??
-                            [],
-                    initialSelection: model.form
-                                .control(_householdStructureKey)
-                                .value !=
-                            null
-                        ? [...model.form.control(_householdStructureKey).value]
-                        : [],
-                    onSelectionChanged: (values) {
-                      model.form
+          // Generate the widget based on the fieldConfig['type'] using a switch case
+          switch (key) {
+            case _householdStructureKey:
+              widget = houseShowcaseData.typeOfStructure.buildWith(
+                child: AbsorbPointer(
+                  absorbing: fieldConfig['readOnly'] ?? false,
+                  child: Opacity(
+                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                    child: SelectionBox<String>(
+                      title:
+                      '${localizations.translate(i18.householdDetails.typeOfStructure)}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                      equalWidthOptions: true,
+                      allowMultipleSelection: false,
+                      options:
+                      RegistrationDeliverySingleton().houseStructureTypes ??
+                          [],
+                      initialSelection: model.form
                           .control(_householdStructureKey)
-                          .markAsTouched();
-                      if (values.isEmpty) {
-                        model.form.control(_householdStructureKey).value = null;
-                        setState(() {
-                          model.form
-                              .control(_householdStructureKey)
-                              .setErrors({'': true});
-                        });
-                      } else {
-                        setState(() {
-                          model.form.control(_householdStructureKey).value =
-                              values;
-                        });
-                      }
-                    },
-                    valueMapper: (value) {
-                      return localizations.translate(value.toString());
-                    },
-                    errorMessage: model.form
+                          .value !=
+                          null
+                          ? [...model.form.control(_householdStructureKey).value]
+                          : [],
+                      onSelectionChanged: (values) {
+                        model.form
+                            .control(_householdStructureKey)
+                            .markAsTouched();
+                        if (values.isEmpty) {
+                          model.form.control(_householdStructureKey).value = null;
+                          setState(() {
+                            model.form
                                 .control(_householdStructureKey)
-                                .hasErrors &&
-                            model.form.control(_householdStructureKey).touched
-                        ? localizations.translate(
-                            i18.householdDetails.selectStructureTypeError)
-                        : null,
+                                .setErrors({'': true});
+                          });
+                        } else {
+                          setState(() {
+                            model.form.control(_householdStructureKey).value =
+                                values;
+                          });
+                        }
+                      },
+                      valueMapper: (value) {
+                        return localizations.translate(value.toString());
+                      },
+                      errorMessage: model.form
+                          .control(_householdStructureKey)
+                          .hasErrors &&
+                          model.form.control(_householdStructureKey).touched
+                          ? localizations.translate(
+                          i18.householdDetails.selectStructureTypeError)
+                          : null,
+                    ),
                   ),
                 ),
-              ),
-            );
-            break;
-          case _noOfRoomsKey:
-            widget = houseShowcaseData.noOfRooms.buildWith(
-              child: AbsorbPointer(
-                absorbing: fieldConfig['readOnly'],
-                child: Opacity(
-                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                  child: DigitIntegerFormPicker(
-                    minimum: 1,
-                    maximum: 20,
-                    form: model.form,
-                    formControlName: _noOfRoomsKey,
-                    label: '${localizations.translate(
-                      i18.householdDetails.noOfRoomsLabel,
-                    )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                    incrementer: true,
+              );
+              break;
+            case _noOfRoomsKey:
+              widget = houseShowcaseData.noOfRooms.buildWith(
+                child: AbsorbPointer(
+                  absorbing: fieldConfig['readOnly'],
+                  child: Opacity(
+                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                    child: DigitIntegerFormPicker(
+                      minimum: 1,
+                      maximum: 20,
+                      form: model.form,
+                      formControlName: _noOfRoomsKey,
+                      label: '${localizations.translate(
+                        i18.householdDetails.noOfRoomsLabel,
+                      )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                      incrementer: true,
+                    ),
                   ),
                 ),
-              ),
-            );
-            break;
-          default:
-            throw Exception("Unsupported widget type: ${key}");
-        }
+              );
+              break;
+            default:
+              widget = Container(
+                padding: EdgeInsets.all(10),
+                child: Row(
+                  children: [
+                    const Text('Error:', style: TextStyle(color: Colors.red)),
+                    Text("Unknown key $key")
+                  ],
+                ),
+              );
+          }
 
-        widgets.add(widget);
+          widgets.add(widget);
+        }
       }
     }
 
@@ -191,9 +214,9 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                           form.markAllAsTouched();
                           if (form.control(_householdStructureKey).value ==
                                   null &&
-                              (widget.widgetConfig[_householdStructureKey]
+                              (configs[_householdStructureKey]
                                       ?['isRequired'] ??
-                                  false)) {
+                                  false) && (configs[_householdStructureKey]?['isEnabled'] ?? false)) {
                             setState(() {
                               form
                                   .control(_householdStructureKey)
@@ -354,7 +377,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               Column(
                                   children: buildWidgetsFromConfig(
                                       WidgetConfigModel(
-                                          config: widget.widgetConfig,
+                                          config: configs,
                                           form: form)))
                             ],
                           ),
@@ -383,7 +406,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       ?.value
                       .toString() ??
                   '1')
-              : 1),
+              : 1,
+      validators: [Validators.required]),
       _householdStructureKey: FormControl<List<String>>(
         value: state.householdModel?.additionalFields?.fields
             .where((e) =>
@@ -395,40 +419,23 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
       )
     });
 
-    widget.widgetConfig.forEach((key, fieldConfig) {
+    configs.forEach((key, fieldConfig) {
       final formControl = formGroup.control(key);
 
       // Get current validators
       final currentValidators = formControl.validators;
 
-      dynamic updatedValidators = currentValidators.where((validator) {
+      List<Map<String, dynamic>? Function(AbstractControl<dynamic>)> updatedValidators = currentValidators.where((validator) {
         // Check if the validator is of the same type as Validators.required
         return validator.runtimeType != Validators.required.runtimeType;
       }).toList();
 
-      if (fieldConfig['isRequired'] == true) {
+      if (fieldConfig['isRequired'] == true && fieldConfig['isEnabled'] == true) {
         // Add the new validator to the list
         updatedValidators = [
-          ...currentValidators,
+          ...updatedValidators,
           Validators.required // Example new validator
         ];
-      }
-
-      // If JSON config has regex, add it as a validator
-      if (fieldConfig.containsKey('regex') && fieldConfig['regex'] is List) {
-        List<String> regexList = fieldConfig['regex'];
-        String errorMessages = fieldConfig['errorMessage'];
-
-        regexList.asMap().forEach((index, regexPattern) {
-          updatedValidators.add((control) {
-            final value = control.value;
-            if (value != null && value.isNotEmpty && !RegExp(regexPattern).hasMatch(value)) {
-              // Ensure there's a matching error message for this index
-              return {'customError': errorMessages};
-            }
-            return null;
-          });
-        });
       }
 
       // Set the updated validators back to the form control

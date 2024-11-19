@@ -9,12 +9,13 @@
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:auto_route/auto_route.dart' as _i26;
-import 'package:digit_data_model/data_model.dart' as _i31;
+import 'package:digit_data_model/data_model.dart' as _i32;
+import 'package:flutter/cupertino.dart' as _i31;
 import 'package:flutter/material.dart' as _i27;
 import 'package:registration_delivery/blocs/app_localization.dart' as _i28;
 import 'package:registration_delivery/blocs/search_households/search_households.dart'
     as _i30;
-import 'package:registration_delivery/models/entities/task.dart' as _i33;
+import 'package:registration_delivery/models/entities/task.dart' as _i34;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_checklist.dart'
     as _i2;
 import 'package:registration_delivery/pages/beneficiary/beneficiary_details.dart'
@@ -64,7 +65,7 @@ import 'package:registration_delivery/pages/search_beneficiary.dart' as _i22;
 import 'package:registration_delivery/pages/summary_page.dart' as _i25;
 import 'package:registration_delivery/registration_delivery.dart' as _i29;
 import 'package:registration_delivery/utils/models/widget_config_model.dart'
-    as _i32;
+    as _i33;
 
 abstract class $RegistrationDeliveryRoute extends _i26.AutoRouterModule {
   @override
@@ -161,9 +162,11 @@ abstract class $RegistrationDeliveryRoute extends _i26.AutoRouterModule {
       );
     },
     ExtendedFormRoute.name: (routeData) {
+      final args = routeData.argsAs<ExtendedFormRouteArgs>(
+          orElse: () => const ExtendedFormRouteArgs());
       return _i26.AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: _i9.ExtendedFormPage(),
+        child: _i9.ExtendedFormPage(key: args.key),
       );
     },
     FacilitySelectionRoute.name: (routeData) {
@@ -684,16 +687,31 @@ class DoseAdministeredRouteArgs {
 
 /// generated route for
 /// [_i9.ExtendedFormPage]
-class ExtendedFormRoute extends _i26.PageRouteInfo<void> {
-  const ExtendedFormRoute({List<_i26.PageRouteInfo>? children})
-      : super(
+class ExtendedFormRoute extends _i26.PageRouteInfo<ExtendedFormRouteArgs> {
+  ExtendedFormRoute({
+    _i31.Key? key,
+    List<_i26.PageRouteInfo>? children,
+  }) : super(
           ExtendedFormRoute.name,
+          args: ExtendedFormRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'ExtendedFormRoute';
 
-  static const _i26.PageInfo<void> page = _i26.PageInfo<void>(name);
+  static const _i26.PageInfo<ExtendedFormRouteArgs> page =
+      _i26.PageInfo<ExtendedFormRouteArgs>(name);
+}
+
+class ExtendedFormRouteArgs {
+  const ExtendedFormRouteArgs({this.key});
+
+  final _i31.Key? key;
+
+  @override
+  String toString() {
+    return 'ExtendedFormRouteArgs{key: $key}';
+  }
 }
 
 /// generated route for
@@ -702,7 +720,7 @@ class FacilitySelectionRoute
     extends _i26.PageRouteInfo<FacilitySelectionRouteArgs> {
   FacilitySelectionRoute({
     _i27.Key? key,
-    required List<_i31.FacilityModel> facilities,
+    required List<_i32.FacilityModel> facilities,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           FacilitySelectionRoute.name,
@@ -727,7 +745,7 @@ class FacilitySelectionRouteArgs {
 
   final _i27.Key? key;
 
-  final List<_i31.FacilityModel> facilities;
+  final List<_i32.FacilityModel> facilities;
 
   @override
   String toString() {
@@ -739,7 +757,7 @@ class FacilitySelectionRouteArgs {
 /// [_i11.HouseDetailsPage]
 class HouseDetailsRoute extends _i26.PageRouteInfo<HouseDetailsRouteArgs> {
   HouseDetailsRoute({
-    Map<String, Map<String, dynamic>>? widgetConfig,
+    List<_i29.FormConfigModel>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     List<_i26.PageRouteInfo>? children,
@@ -766,7 +784,7 @@ class HouseDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final Map<String, Map<String, dynamic>>? widgetConfig;
+  final List<_i29.FormConfigModel>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -783,7 +801,7 @@ class HouseDetailsRouteArgs {
 class HouseHoldDetailsRoute
     extends _i26.PageRouteInfo<HouseHoldDetailsRouteArgs> {
   HouseHoldDetailsRoute({
-    Map<String, Map<String, dynamic>>? widgetConfig,
+    List<_i33.FormConfigModel>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     List<_i26.PageRouteInfo>? children,
@@ -810,7 +828,7 @@ class HouseHoldDetailsRouteArgs {
     this.appLocalizations,
   });
 
-  final Map<String, Map<String, dynamic>>? widgetConfig;
+  final List<_i33.FormConfigModel>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -871,7 +889,7 @@ class HouseholdAcknowledgementRouteArgs {
 class HouseholdLocationRoute
     extends _i26.PageRouteInfo<HouseholdLocationRouteArgs> {
   HouseholdLocationRoute({
-    List<_i32.FormConfigModel>? widgetConfig,
+    List<_i33.FormConfigModel>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     List<_i26.PageRouteInfo>? children,
@@ -898,7 +916,7 @@ class HouseholdLocationRouteArgs {
     this.appLocalizations,
   });
 
-  final List<_i32.FormConfigModel>? widgetConfig;
+  final List<_i33.FormConfigModel>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -954,7 +972,7 @@ class HouseholdOverviewRouteArgs {
 class IndividualDetailsRoute
     extends _i26.PageRouteInfo<IndividualDetailsRouteArgs> {
   IndividualDetailsRoute({
-    Map<String, Map<String, dynamic>>? widgetConfig,
+    List<_i33.FormConfigModel>? widgetConfig,
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
     bool isHeadOfHousehold = false,
@@ -984,7 +1002,7 @@ class IndividualDetailsRouteArgs {
     this.isHeadOfHousehold = false,
   });
 
-  final Map<String, Map<String, dynamic>>? widgetConfig;
+  final List<_i33.FormConfigModel>? widgetConfig;
 
   final _i27.Key? key;
 
@@ -1049,7 +1067,7 @@ class RecordPastDeliveryDetailsRoute
   RecordPastDeliveryDetailsRoute({
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
-    List<_i33.TaskModel>? tasks,
+    List<_i34.TaskModel>? tasks,
     List<_i26.PageRouteInfo>? children,
   }) : super(
           RecordPastDeliveryDetailsRoute.name,
@@ -1078,7 +1096,7 @@ class RecordPastDeliveryDetailsRouteArgs {
 
   final _i28.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i33.TaskModel>? tasks;
+  final List<_i34.TaskModel>? tasks;
 
   @override
   String toString() {
@@ -1233,7 +1251,7 @@ class SideEffectsRoute extends _i26.PageRouteInfo<SideEffectsRouteArgs> {
   SideEffectsRoute({
     _i27.Key? key,
     _i28.RegistrationDeliveryLocalization? appLocalizations,
-    required List<_i33.TaskModel> tasks,
+    required List<_i34.TaskModel> tasks,
     bool isEditing = false,
     List<_i26.PageRouteInfo>? children,
   }) : super(
@@ -1265,7 +1283,7 @@ class SideEffectsRouteArgs {
 
   final _i28.RegistrationDeliveryLocalization? appLocalizations;
 
-  final List<_i33.TaskModel> tasks;
+  final List<_i34.TaskModel> tasks;
 
   final bool isEditing;
 
