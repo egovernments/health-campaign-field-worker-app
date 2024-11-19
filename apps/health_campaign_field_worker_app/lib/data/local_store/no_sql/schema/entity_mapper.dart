@@ -1,3 +1,6 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:digit_data_model/data/local_store/no_sql/schema/entity_mapper_listener.dart';
 import 'package:digit_data_model/data_model.dart';
 
@@ -22,7 +25,41 @@ class EntityMapper extends EntityMapperListener {
         final entity = IndividualModelMapper.fromJson(entityString);
         return entity;
 
+      case "household":
+        final entity = HouseholdModelMapper.fromJson(entityString);
+        return entity;
 
+      case "householdMember":
+        final entity = HouseholdMemberModelMapper.fromJson(entityString);
+        return entity;
+
+      case "projectBeneficiary":
+        final entity = ProjectBeneficiaryModelMapper.fromJson(entityString);
+        return entity;
+
+      case "task":
+        final entity = TaskModelMapper.fromJson(entityString);
+        return entity;
+
+      case "sideEffect":
+        final entity = SideEffectModelMapper.fromJson(entityString);
+        return entity;
+
+      case "referral":
+        final entity = ReferralModelMapper.fromJson(entityString);
+        return entity;
+
+      case "stock":
+        final entity = StockModelMapper.fromJson(entityString);
+        return entity;
+
+      case "stockReconciliation":
+        final entity = StockReconciliationModelMapper.fromJson(entityString);
+        return entity;
+
+      case "attendance":
+        final entity = AttendanceLogModelMapper.fromJson(entityString);
+        return entity;
 
       default:
         final entity = EntityModelMapper.fromJson(entityString);

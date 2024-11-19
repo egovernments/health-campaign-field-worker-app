@@ -72,13 +72,28 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  UserModel? get loggedInUserModel {
+    final userRequestModel = loggedInUser;
+    final userModel = UserModel(
+      userName: userRequestModel.userName,
+      name: userRequestModel.name,
+      uuid: userRequestModel.uuid,
+      mobileNumber: userRequestModel.mobileNumber,
+      gender: userRequestModel.gender,
+      active: userRequestModel.active,
+      tenantId: userRequestModel.tenantId,
+    );
+
+    return userModel;
+  }
+
   BeneficiaryType get beneficiaryType {
     final projectBloc = _get<ProjectBloc>();
 
     final projectState = projectBloc.state;
 
-    final BeneficiaryType? selectedBeneficiary =
-        projectState.selectedProject?.targets?.firstOrNull?.beneficiaryType;
+    final BeneficiaryType? selectedBeneficiary = projectState
+        .selectedProject?.additionalDetails?.projectType?.beneficiaryType;
 
     if (selectedBeneficiary == null) {
       throw AppException('No beneficiary type is selected');
@@ -101,6 +116,8 @@ extension ContextUtilityExtensions on BuildContext {
     }
 
     // INFO: Set Boundary for packages
+    InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
+    RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
 
     return selectedBoundary;
   }

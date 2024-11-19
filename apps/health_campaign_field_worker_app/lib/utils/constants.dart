@@ -1,3 +1,6 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:inventory_management/inventory_management.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
@@ -91,6 +94,30 @@ class Constants {
         sql,
         BoundaryOpLogManager(isar),
       ),
+      HouseholdMemberLocalRepository(sql, HouseholdMemberOpLogManager(isar)),
+      HouseholdLocalRepository(sql, HouseholdOpLogManager(isar)),
+      ProjectBeneficiaryLocalRepository(
+        sql,
+        ProjectBeneficiaryOpLogManager(
+          isar,
+        ),
+      ),
+      TaskLocalRepository(sql, TaskOpLogManager(isar)),
+      SideEffectLocalRepository(sql, SideEffectOpLogManager(isar)),
+      ReferralLocalRepository(sql, ReferralOpLogManager(isar)),
+      StockLocalRepository(sql, StockOpLogManager(isar)),
+      StockReconciliationLocalRepository(
+        sql,
+        StockReconciliationOpLogManager(isar),
+      ),
+      AttendanceLocalRepository(
+        sql,
+        AttendanceOpLogManager(isar),
+      ),
+      AttendanceLogsLocalRepository(
+        sql,
+        AttendanceLogOpLogManager(isar),
+      ),
     ];
   }
 
@@ -138,6 +165,26 @@ class Constants {
           IndividualRemoteRepository(dio, actionMap: actions),
         if (value == DataModelType.downsync)
           DownsyncRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.household)
+          HouseholdRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.projectBeneficiary)
+          ProjectBeneficiaryRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.task)
+          TaskRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.householdMember)
+          HouseholdMemberRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.sideEffect)
+          SideEffectRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.referral)
+          ReferralRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stock)
+          StockRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.stockReconciliation)
+          StockReconciliationRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendanceRegister)
+          AttendanceRemoteRepository(dio, actionMap: actions),
+        if (value == DataModelType.attendance)
+          AttendanceLogRemoteRepository(dio, actionMap: actions),
       ]);
     }
 
@@ -172,6 +219,12 @@ class Constants {
         entityMapper: EntityMapper(),
         errorDumpApiPath: envConfig.variables.dumpErrorApiPath,
         hierarchyType: envConfig.variables.hierarchyType);
+
+    RegistrationDeliverySingleton().setTenantId(envConfig.variables.tenantId);
+
+    InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
+
+    AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

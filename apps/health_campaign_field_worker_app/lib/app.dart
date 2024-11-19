@@ -1,3 +1,4 @@
+import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:dio/dio.dart';
@@ -65,6 +66,24 @@ class MainApplicationState extends State<MainApplication>
           child: MultiBlocProvider(
             providers: [
               // INFO : Need to add bloc of package Here
+              BlocProvider(
+                create: (_) {
+                  return DigitScannerBloc(
+                    const DigitScannerState(),
+                  );
+                },
+                lazy: false,
+              ),
+
+              BlocProvider(
+                create: (_) {
+                  return DigitScannerBloc(
+                    const DigitScannerState(),
+                  );
+                },
+                lazy: false,
+              ),
+
               BlocProvider(
                 create: (_) {
                   return LocationBloc(location: Location())
@@ -213,8 +232,7 @@ class MainApplicationState extends State<MainApplication>
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
                             context: context,
-                            // Info can any package here 
-     
+                            // Info can any package here
                           ),
                         ),
                         BlocProvider(

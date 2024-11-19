@@ -1,5 +1,14 @@
 library app_utils;
 
+import 'package:attendance_management/attendance_management.dart'
+    as attendance_mappers;
+
+import 'package:inventory_management/inventory_management.init.dart'
+    as inventory_mappers;
+
+import 'package:registration_delivery/registration_delivery.init.dart'
+    as registration_delivery_mappers;
+
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'dart:async';
 import 'dart:io';
@@ -34,18 +43,18 @@ export 'extensions/extensions.dart';
 class CustomValidator {
   /// Validates that control's value must be `true`
   static Map<String, dynamic>? requiredMin(
-      AbstractControl<dynamic> control,
-      ) {
+    AbstractControl<dynamic> control,
+  ) {
     return control.value == null ||
-        control.value.toString().length >= 2 ||
-        control.value.toString().trim().isEmpty
+            control.value.toString().length >= 2 ||
+            control.value.toString().trim().isEmpty
         ? null
         : {'required': true};
   }
 
   static Map<String, dynamic>? validMobileNumber(
-      AbstractControl<dynamic> control,
-      ) {
+    AbstractControl<dynamic> control,
+  ) {
     if (control.value == null || control.value.toString().isEmpty) {
       return null;
     }
@@ -115,7 +124,7 @@ String maskString(String input) {
 
   // Create a new string with the same length as the input string
   final maskedString =
-  List<String>.generate(input.length, (index) => maskingChar).join();
+      List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
 }
@@ -125,10 +134,10 @@ List<MdmsMasterDetailModel> getMasterDetailsModel(List<String> masterNames) {
 }
 
 Timer makePeriodicTimer(
-    Duration duration,
-    void Function(Timer timer) callback, {
-      bool fireNow = false,
-    }) {
+  Duration duration,
+  void Function(Timer timer) callback, {
+  bool fireNow = false,
+}) {
   var timer = Timer.periodic(duration, callback);
   if (fireNow) {
     callback(timer);
@@ -209,12 +218,12 @@ Future<bool> getIsConnected() async {
 }
 
 void showDownloadDialog(
-    BuildContext context, {
-      required DownloadBeneficiary model,
-      required DigitProgressDialogType dialogType,
-      bool isPop = true,
-      StreamController<double>? downloadProgressController,
-    }) {
+  BuildContext context, {
+  required DownloadBeneficiary model,
+  required DigitProgressDialogType dialogType,
+  bool isPop = true,
+  StreamController<double>? downloadProgressController,
+}) {
   if (isPop) {
     Navigator.of(context, rootNavigator: true).pop();
   }
@@ -233,14 +242,14 @@ void showDownloadDialog(
                 dialogType == DigitProgressDialogType.checkFailed) {
               Navigator.of(context, rootNavigator: true).pop();
               context.read<BeneficiaryDownSyncBloc>().add(
-                DownSyncGetBatchSizeEvent(
-                  appConfiguration: [model.appConfiguartion!],
-                  projectId: context.projectId,
-                  boundaryCode: model.boundary,
-                  pendingSyncCount: model.pendingSyncCount ?? 0,
-                  boundaryName: model.boundaryName,
-                ),
-              );
+                    DownSyncGetBatchSizeEvent(
+                      appConfiguration: [model.appConfiguartion!],
+                      projectId: context.projectId,
+                      boundaryCode: model.boundary,
+                      pendingSyncCount: model.pendingSyncCount ?? 0,
+                      boundaryName: model.boundaryName,
+                    ),
+                  );
             } else {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.pop();
@@ -280,32 +289,32 @@ void showDownloadDialog(
               } else {
                 if ((model.totalCount ?? 0) > 0) {
                   context.read<BeneficiaryDownSyncBloc>().add(
-                    DownSyncBeneficiaryEvent(
-                      projectId: context.projectId,
-                      boundaryCode: model.boundary,
-                      // Batch Size need to be defined based on Internet speed.
-                      batchSize: model.batchSize ?? 1,
-                      initialServerCount: model.totalCount ?? 0,
-                      boundaryName: model.boundaryName,
-                    ),
-                  );
+                        DownSyncBeneficiaryEvent(
+                          projectId: context.projectId,
+                          boundaryCode: model.boundary,
+                          // Batch Size need to be defined based on Internet speed.
+                          batchSize: model.batchSize ?? 1,
+                          initialServerCount: model.totalCount ?? 0,
+                          boundaryName: model.boundaryName,
+                        ),
+                      );
                 } else {
                   Navigator.of(context, rootNavigator: true).pop();
                   context.read<BeneficiaryDownSyncBloc>().add(
-                    const DownSyncResetStateEvent(),
-                  );
+                        const DownSyncResetStateEvent(),
+                      );
                 }
               }
             },
           ),
           secondaryAction: model.secondaryButtonLabel != null
               ? DigitDialogActions(
-            label: model.secondaryButtonLabel ?? '',
-            action: (ctx) {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.router.popUntilRouteWithName(HomeRoute.name);
-            },
-          )
+                  label: model.secondaryButtonLabel ?? '',
+                  action: (ctx) {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    context.router.popUntilRouteWithName(HomeRoute.name);
+                  },
+                )
               : null,
         ),
       );
@@ -320,8 +329,8 @@ void showDownloadDialog(
                 label: '',
                 prefixLabel: '',
                 suffixLabel:
-                '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
-                    '',
+                    '${(snapshot.data == null ? 0 : snapshot.data! * model.totalCount!.toDouble()).toInt()}/${model.suffixLabel}' ??
+                        '',
                 value: snapshot.data ?? 0,
                 valueColor: AlwaysStoppedAnimation<Color>(
                   DigitTheme.instance.colorScheme.secondary,
@@ -336,7 +345,6 @@ void showDownloadDialog(
       return;
   }
 }
-
 
 getSelectedLanguage(AppInitialized state, int index) {
   if (AppSharedPreferences().getSelectedLocale == null) {
@@ -354,6 +362,9 @@ initializeAllMappers() async {
   List<Future> initializations = [
     Future(() => initializeMappers()),
     Future(() => data_model_mappers.initializeMappers()),
+    Future(() => registration_delivery_mappers.initializeMappers()),
+    Future(() => inventory_mappers.initializeMappers()),
+    Future(() => attendance_mappers.initializeMappers()),
   ];
   await Future.wait(initializations);
 }
@@ -383,55 +394,43 @@ int getSyncCount(List<OpLog> oplogs) {
   return count;
 }
 
-
 class LocalizationParams {
   static final LocalizationParams _singleton = LocalizationParams._internal();
-
 
   factory LocalizationParams() {
     return _singleton;
   }
 
-
   LocalizationParams._internal();
-
 
   List<String>? _code;
   String? _module;
   Locale? _locale;
   bool? _exclude = true;
 
-
   void setCode(List<String>? code) {
     _code = code;
   }
-
 
   void setModule(String? module, bool? exclude) {
     _module = module;
     _exclude = exclude;
   }
 
-
   void setLocale(Locale locale) {
     _locale = locale;
   }
-
 
   void clear() {
     _code = null;
     _module = null;
   }
 
-
   List<String>? get code => _code;
-
 
   String? get module => _module;
 
-
   Locale? get locale => _locale;
-
 
   bool? get exclude => _exclude;
 }

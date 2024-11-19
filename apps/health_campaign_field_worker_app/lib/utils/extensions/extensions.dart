@@ -1,3 +1,5 @@
+import 'package:inventory_management/inventory_management.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 // Importing necessary packages and files
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';

@@ -1,3 +1,12 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:attendance_management/router/attendance_router.gm.dart';
+
+import 'package:inventory_management/inventory_management.dart';
+import 'package:inventory_management/router/inventory_router.gm.dart';
+
+import 'package:registration_delivery/registration_delivery.dart';
+import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+
 import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -296,6 +305,63 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.buildWith(
+        child: HomeItemCard(
+          icon: Icons.fingerprint_outlined,
+          label: i18.home.manageAttendanceLabel,
+          onPressed: () {
+            context.router.push(const ManageAttendanceRoute());
+          },
+        ),
+      ),
+
+      i18.home.manageStockLabel:
+          homeShowcaseData.warehouseManagerManageStock.buildWith(
+        child: HomeItemCard(
+          icon: Icons.store_mall_directory,
+          label: i18.home.manageStockLabel,
+          onPressed: () {
+            context.read<AppInitializationBloc>().state.maybeWhen(
+                  orElse: () {},
+                  initialized: (AppConfiguration appConfiguration, _) {
+                    context.router.push(ManageStocksRoute());
+                  },
+                );
+          },
+        ),
+      ),
+      i18.home.stockReconciliationLabel:
+          homeShowcaseData.wareHouseManagerStockReconciliation.buildWith(
+        child: HomeItemCard(
+          icon: Icons.menu_book,
+          label: i18.home.stockReconciliationLabel,
+          onPressed: () {
+            context.router.push(StockReconciliationRoute());
+          },
+        ),
+      ),
+      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.viewReportsLabel,
+          onPressed: () {
+            context.router.push(InventoryReportSelectionRoute());
+          },
+        ),
+      ),
+
+      i18.home.beneficiaryLabel:
+          homeShowcaseData.distributorBeneficiaries.buildWith(
+        child: HomeItemCard(
+          icon: Icons.all_inbox,
+          label: i18.home.beneficiaryLabel,
+          onPressed: () async {
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
+          },
+        ),
+      ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -343,12 +409,32 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, GlobalKey> homeItemsShowcaseMap = {
       // INFO : Need to add showcase keys of package Here
+      i18.home.manageAttendanceLabel:
+          homeShowcaseData.manageAttendance.showcaseKey,
+
+      i18.home.manageStockLabel:
+          homeShowcaseData.warehouseManagerManageStock.showcaseKey,
+      i18.home.stockReconciliationLabel:
+          homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
+      i18.home.viewReportsLabel: homeShowcaseData.inventoryReport.showcaseKey,
+
+      i18.home.beneficiaryLabel:
+          homeShowcaseData.distributorBeneficiaries.showcaseKey,
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
+      i18.home.manageAttendanceLabel,
+
+      i18.home.manageStockLabel,
+      i18.home.stockReconciliationLabel,
+      i18.home.viewReportsLabel,
+
+      i18.home.beneficiaryLabel,
+
       i18.home.syncDataLabel,
       i18.home.db,
     ];
@@ -386,10 +472,56 @@ class _HomePageState extends LocalizedState<HomePage> {
               localRepositories: [
                 // INFO : Need to add local repo of package Here
                 context.read<
+                    LocalRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+
+                context.read<LocalRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    LocalRepository<StockReconciliationModel,
+                        StockReconciliationSearchModel>>(),
+
+                context.read<
+                    LocalRepository<HouseholdModel, HouseholdSearchModel>>(),
+                context.read<
+                    LocalRepository<ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>>(),
+                context.read<
+                    LocalRepository<HouseholdMemberModel,
+                        HouseholdMemberSearchModel>>(),
+                context.read<LocalRepository<TaskModel, TaskSearchModel>>(),
+                context.read<
+                    LocalRepository<SideEffectModel, SideEffectSearchModel>>(),
+                context.read<
+                    LocalRepository<ReferralModel, ReferralSearchModel>>(),
+
+                context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
               ],
               remoteRepositories: [
                 // INFO : Need to add repo repo of package Here
+                context.read<
+                    RemoteRepository<AttendanceLogModel,
+                        AttendanceLogSearchModel>>(),
+
+                context.read<RemoteRepository<StockModel, StockSearchModel>>(),
+                context.read<
+                    RemoteRepository<StockReconciliationModel,
+                        StockReconciliationSearchModel>>(),
+
+                context.read<
+                    RemoteRepository<HouseholdModel, HouseholdSearchModel>>(),
+                context.read<
+                    RemoteRepository<ProjectBeneficiaryModel,
+                        ProjectBeneficiarySearchModel>>(),
+                context.read<
+                    RemoteRepository<HouseholdMemberModel,
+                        HouseholdMemberSearchModel>>(),
+                context.read<RemoteRepository<TaskModel, TaskSearchModel>>(),
+                context.read<
+                    RemoteRepository<SideEffectModel, SideEffectSearchModel>>(),
+                context.read<
+                    RemoteRepository<ReferralModel, ReferralSearchModel>>(),
+
                 context.read<
                     RemoteRepository<IndividualModel, IndividualSearchModel>>(),
               ],
@@ -405,6 +537,64 @@ void setPackagesSingleton(BuildContext context) {
       orElse: () {},
       initialized: (AppConfiguration appConfiguration, _) {
         // INFO : Need to add singleton of package Here
+        AttendanceSingleton().setInitialData(
+            projectId: context.projectId,
+            loggedInIndividualId: context.loggedInIndividualId!,
+            loggedInUserUuid: context.loggedInUserUuid,
+            appVersion: Constants().version);
+
+        InventorySingleton().setInitialData(
+          isWareHouseMgr: context.loggedInUserRoles
+              .where(
+                  (role) => role.code == RolesType.warehouseManager.toValue())
+              .toList()
+              .isNotEmpty,
+          isDistributor: context.loggedInUserRoles
+              .where(
+                (role) => role.code == RolesType.distributor.toValue(),
+              )
+              .toList()
+              .isNotEmpty,
+          projectId: context.projectId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          transportTypes: appConfiguration.transportTypes
+              ?.map((e) => InventoryTransportTypes()
+                ..name = e.code
+                ..code = e.code)
+              .toList(),
+        );
+
+        RegistrationDeliverySingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          maxRadius: appConfiguration.maxRadius!,
+          projectId: context.projectId,
+          selectedBeneficiaryType: context.beneficiaryType,
+          projectType: context.selectedProjectType,
+          selectedProject: context.selectedProject,
+          searchHouseHoldFilter: [],
+          refusalReasons: [],
+          loggedInUser: context.loggedInUserModel,
+          houseStructureTypes: [],
+          genderOptions:
+              appConfiguration.genderOptions!.map((e) => e.code).toList(),
+          idTypeOptions:
+              appConfiguration.idTypeOptions!.map((e) => e.code).toList(),
+          householdDeletionReasonOptions: appConfiguration
+              .householdDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          householdMemberDeletionReasonOptions: appConfiguration
+              .householdMemberDeletionReasonOptions!
+              .map((e) => e.code)
+              .toList(),
+          deliveryCommentOptions: appConfiguration.deliveryCommentOptions!
+              .map((e) => e.code)
+              .toList(),
+          symptomsTypes:
+              appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
+          referralReasons:
+              appConfiguration.referralReasons!.map((e) => e.code).toList(),
+        );
       });
 }
 
