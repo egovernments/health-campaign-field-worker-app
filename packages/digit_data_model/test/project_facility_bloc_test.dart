@@ -8,6 +8,9 @@ import 'package:mocktail/mocktail.dart';
 class MockProjectFacilityDataRepository extends Mock
     implements ProjectFacilityDataRepository {}
 
+class MockFacilityDataRepository extends Mock
+    implements FacilityDataRepository {}
+
 class FakeProjectFacilitySearchModel extends Fake
     implements ProjectFacilitySearchModel {}
 
@@ -18,14 +21,17 @@ void main() {
   });
 
   late MockProjectFacilityDataRepository mockProjectFacilityDataRepository;
+  late MockFacilityDataRepository mockFacilityDataRepository;
   late ProjectFacilityBloc projectFacilityBloc;
 
   // Initializing mock objects before each test.
   setUp(() {
     mockProjectFacilityDataRepository = MockProjectFacilityDataRepository();
+    mockFacilityDataRepository = MockFacilityDataRepository();
     projectFacilityBloc = ProjectFacilityBloc(
       const ProjectFacilityEmptyState(),
       projectFacilityDataRepository: mockProjectFacilityDataRepository,
+      facilityDataRepository: mockFacilityDataRepository,
     );
   });
 
@@ -64,7 +70,10 @@ void main() {
           query: ProjectFacilitySearchModel(projectId: testProjectId))),
       expect: () => [
         const ProjectFacilityLoadingState(),
-        ProjectFacilityFetchedState(projectFacilities: testProjectFacilities),
+        ProjectFacilityFetchedState(
+          projectFacilities: testProjectFacilities,
+          facilityMap: {},
+        ),
       ],
       verify: (_) {
         verify(() => mockProjectFacilityDataRepository.search(any())).called(1);

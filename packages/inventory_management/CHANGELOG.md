@@ -1,3 +1,9 @@
+## 1.0.3-dev.3
+
+* Added _handleSetDateOfReconciliation event in stock_reconciliation_bloc
+* Added dateOfEntry in stock model
+* Updated digit_data_model dev version with the latest changes
+
 ## 1.0.3+4
 
 * Updated wayBillNumber validation

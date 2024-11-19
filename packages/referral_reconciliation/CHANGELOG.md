@@ -1,3 +1,7 @@
+## 1.0.2-dev.1
+* Incorporated ProjectFacilityBloc changes
+* Updated digit_data_model dev version with the latest changes
+
 ## 1.0.2+1
 
 * Updated digit_scanner package, digit_components, digit_data_model

@@ -1,3 +1,8 @@
+## 1.0.4-dev.9-uniqueId
+* Stock and facility related changes
+  * Added dateOfEntry in stock table
+  * Added name in facility table
+
 ## 1.0.4-dev.8-uniqueId
 * Changed additionalDetails of ServiceModel to Map<String, dynamic>
 
