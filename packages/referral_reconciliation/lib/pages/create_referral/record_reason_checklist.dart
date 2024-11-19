@@ -163,31 +163,30 @@ class _ReferralReasonChecklistPageState
                                 context.read<ServiceBloc>().add(
                                       ServiceCreateEvent(
                                         serviceModel: ServiceModel(
-                                          createdAt: DigitDateUtils
-                                              .getDateFromTimestamp(
-                                            DateTime.now()
-                                                .toLocal()
-                                                .millisecondsSinceEpoch,
-                                            dateFormat: defaultDateTimeFormat,
-                                          ),
-                                          tenantId: value
-                                              .selectedServiceDefinition!
-                                              .tenantId,
-                                          clientId: widget.referralClientRefId
-                                              .toString(),
-                                          serviceDefId: value
-                                              .selectedServiceDefinition?.id,
-                                          attributes: attributes,
-                                          rowVersion: 1,
-                                          accountId: ReferralReconSingleton()
-                                              .projectId,
-                                          additionalDetails: {
-                                            "boundaryCode":
-                                                ReferralReconSingleton()
-                                                    .boundary
-                                                    ?.code
-                                          },
-                                        ),
+                                            createdAt: DigitDateUtils
+                                                .getDateFromTimestamp(
+                                              DateTime.now()
+                                                  .toLocal()
+                                                  .millisecondsSinceEpoch,
+                                              dateFormat: defaultDateTimeFormat,
+                                            ),
+                                            tenantId: value
+                                                .selectedServiceDefinition!
+                                                .tenantId,
+                                            clientId: widget.referralClientRefId
+                                                .toString(),
+                                            serviceDefId: value
+                                                .selectedServiceDefinition?.id,
+                                            attributes: attributes,
+                                            rowVersion: 1,
+                                            accountId: ReferralReconSingleton()
+                                                .projectId,
+                                            additionalDetails: {
+                                              "boundaryCode":
+                                                  ReferralReconSingleton()
+                                                      .boundary!
+                                                      .code,
+                                            }),
                                       ),
                                     );
 

@@ -17380,7 +17380,8 @@ class $IdentifierTable extends Identifier
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {auditCreatedBy, clientReferenceId};
+  Set<GeneratedColumn> get $primaryKey =>
+      {auditCreatedBy, clientReferenceId, identifierType, identifierId};
   @override
   IdentifierData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -25260,6 +25261,12 @@ class $AttributesTable extends Attributes
   late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
       'row_version', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _additionalDetailsMeta =
+      const VerificationMeta('additionalDetails');
+  @override
+  late final GeneratedColumn<String> additionalDetails =
+      GeneratedColumn<String>('additional_details', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -25295,8 +25302,8 @@ class $AttributesTable extends Attributes
         auditModifiedTime,
         isDeleted,
         rowVersion,
-        additionalFields,
-        additionalDetails
+        additionalDetails,
+        additionalFields
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -25413,6 +25420,12 @@ class $AttributesTable extends Attributes
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
+    if (data.containsKey('additional_details')) {
+      context.handle(
+          _additionalDetailsMeta,
+          additionalDetails.isAcceptableOrUnknown(
+              data['additional_details']!, _additionalDetailsMeta));
+    }
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -25476,6 +25489,8 @@ class $AttributesTable extends Attributes
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      additionalDetails: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}additional_details']),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
       additionalDetails: attachedDatabase.typeMapping.read(
@@ -25511,6 +25526,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
   final int? auditModifiedTime;
   final bool? isDeleted;
   final int? rowVersion;
+  final String? additionalDetails;
   final String? additionalFields;
   final String? additionalDetails;
   const Attribute(
@@ -25535,8 +25551,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       this.auditModifiedTime,
       this.isDeleted,
       this.rowVersion,
-      this.additionalFields,
-      this.additionalDetails});
+      this.additionalDetails,
+      this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -25602,6 +25618,9 @@ class Attribute extends DataClass implements Insertable<Attribute> {
     }
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || additionalDetails != null) {
+      map['additional_details'] = Variable<String>(additionalDetails);
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -25670,6 +25689,9 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
+      additionalDetails: additionalDetails == null && nullToAbsent
+          ? const Value.absent()
+          : Value(additionalDetails),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
@@ -25705,6 +25727,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       auditModifiedTime: serializer.fromJson<int?>(json['auditModifiedTime']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      additionalDetails:
+          serializer.fromJson<String?>(json['additionalDetails']),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
       additionalDetails:
           serializer.fromJson<String?>(json['additionalDetails']),
@@ -25735,6 +25759,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       'auditModifiedTime': serializer.toJson<int?>(auditModifiedTime),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
+      'additionalDetails': serializer.toJson<String?>(additionalDetails),
       'additionalFields': serializer.toJson<String?>(additionalFields),
       'additionalDetails': serializer.toJson<String?>(additionalDetails),
     };
@@ -25762,8 +25787,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           Value<int?> auditModifiedTime = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> additionalFields = const Value.absent(),
-          Value<String?> additionalDetails = const Value.absent()}) =>
+          Value<String?> additionalDetails = const Value.absent(),
+          Value<String?> additionalFields = const Value.absent()}) =>
       Attribute(
         id: id.present ? id.value : this.id,
         dataType: dataType.present ? dataType.value : this.dataType,
@@ -25803,6 +25828,9 @@ class Attribute extends DataClass implements Insertable<Attribute> {
             : this.auditModifiedTime,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        additionalDetails: additionalDetails.present
+            ? additionalDetails.value
+            : this.additionalDetails,
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
@@ -25834,8 +25862,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
-          ..write('additionalFields: $additionalFields, ')
-          ..write('additionalDetails: $additionalDetails')
+          ..write('additionalDetails: $additionalDetails, ')
+          ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
   }
@@ -25863,8 +25891,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
         auditModifiedTime,
         isDeleted,
         rowVersion,
-        additionalFields,
-        additionalDetails
+        additionalDetails,
+        additionalFields
       ]);
   @override
   bool operator ==(Object other) =>
@@ -25891,8 +25919,8 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           other.auditModifiedTime == this.auditModifiedTime &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
-          other.additionalFields == this.additionalFields &&
-          other.additionalDetails == this.additionalDetails);
+          other.additionalDetails == this.additionalDetails &&
+          other.additionalFields == this.additionalFields);
 }
 
 class AttributesCompanion extends UpdateCompanion<Attribute> {
@@ -25917,6 +25945,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
   final Value<int?> auditModifiedTime;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
+  final Value<String?> additionalDetails;
   final Value<String?> additionalFields;
   final Value<String?> additionalDetails;
   final Value<int> rowid;
@@ -25942,6 +25971,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.additionalDetails = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.additionalDetails = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -25968,6 +25998,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     this.auditModifiedTime = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.additionalDetails = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.additionalDetails = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -25994,6 +26025,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     Expression<int>? auditModifiedTime,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
+    Expression<String>? additionalDetails,
     Expression<String>? additionalFields,
     Expression<String>? additionalDetails,
     Expression<int>? rowid,
@@ -26022,6 +26054,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       if (auditModifiedTime != null) 'audit_modified_time': auditModifiedTime,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
+      if (additionalDetails != null) 'additional_details': additionalDetails,
       if (additionalFields != null) 'additional_fields': additionalFields,
       if (additionalDetails != null) 'additional_details': additionalDetails,
       if (rowid != null) 'rowid': rowid,
@@ -26050,6 +26083,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       Value<int?>? auditModifiedTime,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
+      Value<String?>? additionalDetails,
       Value<String?>? additionalFields,
       Value<String?>? additionalDetails,
       Value<int>? rowid}) {
@@ -26075,6 +26109,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       auditModifiedTime: auditModifiedTime ?? this.auditModifiedTime,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
+      additionalDetails: additionalDetails ?? this.additionalDetails,
       additionalFields: additionalFields ?? this.additionalFields,
       additionalDetails: additionalDetails ?? this.additionalDetails,
       rowid: rowid ?? this.rowid,
@@ -26147,6 +26182,9 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     if (rowVersion.present) {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
+    if (additionalDetails.present) {
+      map['additional_details'] = Variable<String>(additionalDetails.value);
+    }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
@@ -26183,6 +26221,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
           ..write('auditModifiedTime: $auditModifiedTime, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('additionalDetails: $additionalDetails, ')
           ..write('additionalFields: $additionalFields, ')
           ..write('additionalDetails: $additionalDetails, ')
           ..write('rowid: $rowid')

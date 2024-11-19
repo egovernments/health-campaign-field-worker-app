@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -84,20 +85,60 @@ class MemberCard extends StatelessWidget {
         children: [
           Stack(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              Column(
                 children: [
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width / 1.8,
-                    child: Padding(
-                      padding:
-                          const EdgeInsets.only(left: kPadding, top: kPadding),
-                      child: Text(
-                        name,
-                        style: theme.textTheme.headlineMedium,
+                  if (individual.identifiers != null)
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: DigitTheme.instance.colorScheme.primary,
+                            ),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(kPadding),
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                              kPadding,
+                            ),
+                            child: Text(
+                              individual.identifiers
+                                      ?.lastWhereOrNull(
+                                        (e) =>
+                                            e.identifierType ==
+                                            IdentifierTypes.uniqueBeneficiaryID
+                                                .toValue(),
+                                      )
+                                      ?.identifierId ??
+                                  localizations
+                                      .translate(i18.common.noResultsFound),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
+                    )
+                  else
+                    const Offstage(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 1.8,
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              left: kPadding, top: kPadding),
+                          child: Text(
+                            name,
+                            style: theme.textTheme.headlineMedium,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

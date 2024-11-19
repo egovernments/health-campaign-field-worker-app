@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/entities/referral.dart';
 import '../../../models/entities/status.dart';
 import '../../../models/entities/task.dart';
 import '../../../models/entities/task_resource.dart';
@@ -93,45 +95,80 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         }
         await filterSelectQuery.limit(params.limit ?? 50,
             offset: params.offset ?? 0);
-
+        var data;
         final results = await filterSelectQuery.get();
-        var data = results
-            .map((e) {
-              final task = e.readTableOrNull(sql.task);
-              final resources = e.readTableOrNull(sql.taskResource);
+        if (params.filter!.contains(Status.beneficiaryReferred.name)) {
+          data = results
+              .map((e) {
+                final referral = e.readTableOrNull(sql.referral);
+                if (referral == null) return null;
 
-              return TaskModel(
-                id: task.id,
-                createdBy: task.createdBy,
-                clientReferenceId: task.clientReferenceId,
-                rowVersion: task.rowVersion,
-                tenantId: task.tenantId,
-                isDeleted: task.isDeleted,
-                projectId: task.projectId,
-                projectBeneficiaryId: task.projectBeneficiaryId,
-                projectBeneficiaryClientReferenceId:
-                    task.projectBeneficiaryClientReferenceId,
-                createdDate: task.createdDate,
-                status: task.status,
-                resources: resources == null
-                    ? null
-                    : [
-                        TaskResourceModel(
-                          taskclientReferenceId:
-                              resources.taskclientReferenceId,
-                          clientReferenceId: resources.clientReferenceId,
-                          id: resources.id,
-                          productVariantId: resources.productVariantId,
-                          taskId: resources.taskId,
-                          deliveryComment: resources.deliveryComment,
-                          quantity: resources.quantity,
-                          rowVersion: resources.rowVersion,
+                return ReferralModel(
+                  id: referral.id,
+                  clientReferenceId: referral.clientReferenceId,
+                  rowVersion: referral.rowVersion,
+                  tenantId: referral.tenantId,
+                  isDeleted: referral.isDeleted,
+                  projectBeneficiaryClientReferenceId:
+                      referral.projectBeneficiaryClientReferenceId,
+                  auditDetails: AuditDetails(
+                    createdBy: referral.auditCreatedBy!,
+                    createdTime: referral.auditCreatedTime!,
+                    lastModifiedBy: referral.auditModifiedBy,
+                    lastModifiedTime: referral.auditModifiedTime,
+                  ),
+                  clientAuditDetails: referral.clientCreatedTime == null ||
+                          referral.clientCreatedBy == null
+                      ? null
+                      : ClientAuditDetails(
+                          createdTime: referral.clientCreatedTime!,
+                          createdBy: referral.clientCreatedBy!,
+                          lastModifiedBy: referral.clientModifiedBy,
+                          lastModifiedTime: referral.clientModifiedTime,
                         ),
-                      ],
-              );
-            })
-            .where((element) => element.isDeleted != true)
-            .toList();
+                );
+              })
+              .where((element) => element.isDeleted != true)
+              .toList();
+        } else {
+          data = results
+              .map((e) {
+                final task = e.readTableOrNull(sql.task);
+                final resources = e.readTableOrNull(sql.taskResource);
+
+                return TaskModel(
+                  id: task.id,
+                  createdBy: task.createdBy,
+                  clientReferenceId: task.clientReferenceId,
+                  rowVersion: task.rowVersion,
+                  tenantId: task.tenantId,
+                  isDeleted: task.isDeleted,
+                  projectId: task.projectId,
+                  projectBeneficiaryId: task.projectBeneficiaryId,
+                  projectBeneficiaryClientReferenceId:
+                      task.projectBeneficiaryClientReferenceId,
+                  createdDate: task.createdDate,
+                  status: task.status,
+                  resources: resources == null
+                      ? null
+                      : [
+                          TaskResourceModel(
+                            taskclientReferenceId:
+                                resources.taskclientReferenceId,
+                            clientReferenceId: resources.clientReferenceId,
+                            id: resources.id,
+                            productVariantId: resources.productVariantId,
+                            taskId: resources.taskId,
+                            deliveryComment: resources.deliveryComment,
+                            quantity: resources.quantity,
+                            rowVersion: resources.rowVersion,
+                          ),
+                        ],
+                );
+              })
+              .where((element) => element.isDeleted != true)
+              .toList();
+        }
 
         return {"data": data, "total_count": count};
       }
@@ -219,19 +256,15 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       return selectQuery;
     } else if (params.nameSearch != null ||
         params.nameSearch!.isNotEmpty && selectQuery == null) {
-      selectQuery = super
-          .sql
-          .individual
-          .select()
-          .join([joinName(sql), joinIndividualAddress(sql)]);
+      selectQuery = super.sql.individual.select().join(
+          [joinName(sql), joinIdentifier(sql), joinIndividualAddress(sql)]);
       await searchByName(selectQuery, params, sql);
       selectQuery = selectQuery.join([
         leftOuterJoin(
             sql.householdMember,
             sql.householdMember.individualClientReferenceId
                 .equalsExp(sql.individual.clientReferenceId))
-      ])
-        ..where(sql.householdMember.isHeadOfHousehold.equals(true));
+      ]);
       selectQuery.join([
         leftOuterJoin(
             sql.household,
@@ -240,14 +273,12 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         leftOuterJoin(
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
-                .equalsExp(sql.household.clientReferenceId))
+                .equalsExp(sql.individual.clientReferenceId))
       ]);
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
-      selectQuery = selectQuery.join([
-        joinName(sql),
-      ]);
+      selectQuery = selectQuery.join([joinName(sql), joinIdentifier(sql)]);
       selectQuery = searchByName(selectQuery, params, sql);
     }
     return selectQuery;
@@ -261,6 +292,20 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           sql.name.givenName.contains(
             params.nameSearch!,
           ),
+          sql.name.familyName.contains(
+            params.nameSearch!,
+          ),
+          buildOr([
+            sql.name.givenName.contains(
+              params.nameSearch!,
+            ),
+            sql.name.familyName.contains(
+              params.nameSearch!,
+            ),
+            sql.name.otherNames.equals(
+              params.nameSearch!,
+            ),
+          ]),
         ]),
     ]));
   }
@@ -281,6 +326,15 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      } else if (filter == Status.beneficiaryReferred.name) {
+        selectQuery = sql.referral.select().join([
+          if (params.nameSearch == null || !params.isProximityEnabled)
+            leftOuterJoin(
+                sql.projectBeneficiary,
+                sql.projectBeneficiary.beneficiaryClientReferenceId.equalsExp(
+                    sql.referral.projectBeneficiaryClientReferenceId))
+        ])
+          ..where(sql.referral.projectId.equals(params.projectId!));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -300,6 +354,14 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+      } else if (filter == Status.beneficiaryReferred.name) {
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.referral,
+              sql.referral.projectBeneficiaryClientReferenceId
+                  .equalsExp(sql.projectBeneficiary.clientReferenceId))
+        ])
+          ..where(sql.referral.projectId.equals(params.projectId!));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -324,7 +386,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       Status.toAdminister.name: Status.toAdminister,
       Status.closeHousehold.name: Status.closeHousehold,
     };
-    var applyFilter = filter;
+    var appliedFilter = statusMap[filter]!.toValue();
     if (selectQuery == null) {
       selectQuery = sql.select(sql.task).join([
         leftOuterJoin(
@@ -333,11 +395,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.task.projectBeneficiaryClientReferenceId)),
         leftOuterJoin(
             sql.individual,
-            sql.individual.clientReferenceId
-                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId)),
+            sql.individual.clientReferenceId.equalsExp(
+                sql.projectBeneficiary.beneficiaryClientReferenceId)),
       ])
         ..where(sql.task.status.equals(
-          statusMap[applyFilter]!.toValue(),
+          appliedFilter,
         ));
       if (!(params.filter!.contains(Status.notRegistered.name))) {
         selectQuery
@@ -370,6 +432,15 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     );
   }
 
+  joinIdentifier(LocalSqlDataStore sql) {
+    return leftOuterJoin(
+      sql.identifier,
+      sql.identifier.clientReferenceId.equalsExp(
+        sql.individual.clientReferenceId,
+      ),
+    );
+  }
+
   joinIndividualAddress(LocalSqlDataStore sql) {
     return leftOuterJoin(
       sql.address,
@@ -377,11 +448,6 @@ class IndividualGlobalSearchRepository extends LocalRepository {
         sql.individual.clientReferenceId,
       ),
     );
-  }
-
-  joinProjectBeneficiary(LocalSqlDataStore sql) {
-    return leftOuterJoin(sql.projectBeneficiary,
-        sql.projectBeneficiary.clientReferenceId.isNotNull());
   }
 
   // Executing custom select query on top of filterSelectQuery to get count
@@ -403,7 +469,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                   : [])
           .get();
     } catch (e) {
-      debugPrint('error in total $e');
+      debugPrint('Error in total $e');
     }
     return totalCount == null ? 0 : totalCount.first.data['total_count'];
   }
@@ -414,38 +480,71 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           final individual = e.readTableOrNull(sql.individual);
           final address = e.readTableOrNull(sql.address);
           final name = e.readTableOrNull(sql.name);
+          final identifier = e.readTableOrNull(sql.identifier);
 
           return IndividualModel(
-            id: individual?.id,
-            tenantId: individual?.tenantId,
-            clientReferenceId: individual!.clientReferenceId,
+            id: individual.id,
+            tenantId: individual.tenantId,
+            individualId: individual.individualId,
+            clientReferenceId: individual.clientReferenceId,
             dateOfBirth: individual.dateOfBirth,
-            name: NameModel(
-              givenName: name?.givenName,
-              individualClientReferenceId: individual.clientReferenceId,
-              tenantId: individual.tenantId,
-              auditDetails: AuditDetails(
-                createdBy: individual.auditCreatedBy!,
-                createdTime: individual.auditCreatedTime!,
-                lastModifiedBy: individual.auditModifiedBy,
-                lastModifiedTime: individual.auditModifiedTime,
-              ),
-            ),
-            rowVersion: individual.rowVersion,
+            mobileNumber: individual.mobileNumber,
             isDeleted: individual.isDeleted,
-            auditDetails: AuditDetails(
-              createdBy: individual.auditCreatedBy!,
-              createdTime: individual.auditCreatedTime!,
-              lastModifiedBy: individual.auditModifiedBy,
-              lastModifiedTime: individual.auditModifiedTime,
-            ),
-            address: address == null
+            rowVersion: individual.rowVersion,
+            clientAuditDetails: (individual.clientCreatedBy != null &&
+                    individual.clientCreatedTime != null)
+                ? ClientAuditDetails(
+                    createdBy: individual.clientCreatedBy!,
+                    createdTime: individual.clientCreatedTime!,
+                    lastModifiedBy: individual.clientModifiedBy,
+                    lastModifiedTime: individual.clientModifiedTime,
+                  )
+                : null,
+            auditDetails: (individual.auditCreatedBy != null &&
+                    individual.auditCreatedTime != null)
+                ? AuditDetails(
+                    createdBy: individual.auditCreatedBy!,
+                    createdTime: individual.auditCreatedTime!,
+                    lastModifiedBy: individual.auditModifiedBy,
+                    lastModifiedTime: individual.auditModifiedTime,
+                  )
+                : null,
+            name: name == null
                 ? null
-                : [
-                    AddressModel(
+                : NameModel(
+                    id: name.id,
+                    individualClientReferenceId: individual.clientReferenceId,
+                    familyName: name.familyName,
+                    givenName: name.givenName,
+                    otherNames: name.otherNames,
+                    rowVersion: name.rowVersion,
+                    tenantId: name.tenantId,
+                    auditDetails: (name.auditCreatedBy != null &&
+                            name.auditCreatedTime != null)
+                        ? AuditDetails(
+                            createdBy: name.auditCreatedBy!,
+                            createdTime: name.auditCreatedTime!,
+                            lastModifiedBy: name.auditModifiedBy,
+                            lastModifiedTime: name.auditModifiedTime,
+                          )
+                        : null,
+                    clientAuditDetails: (name.clientCreatedBy != null &&
+                            name.clientCreatedTime != null)
+                        ? ClientAuditDetails(
+                            createdBy: name.clientCreatedBy!,
+                            createdTime: name.clientCreatedTime!,
+                            lastModifiedBy: name.clientModifiedBy,
+                            lastModifiedTime: name.clientModifiedTime,
+                          )
+                        : null,
+                  ),
+            bloodGroup: individual.bloodGroup,
+            address: [
+              address == null
+                  ? null
+                  : AddressModel(
                       id: address.id,
-                      relatedClientReferenceId:
-                          address.relatedClientReferenceId,
+                      relatedClientReferenceId: individual.clientReferenceId,
                       tenantId: address.tenantId,
                       doorNo: address.doorNo,
                       latitude: address.latitude,
@@ -456,22 +555,57 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                       addressLine2: address.addressLine2,
                       city: address.city,
                       pincode: address.pincode,
+                      type: address.type,
                       locality: address.localityBoundaryCode != null
                           ? LocalityModel(
                               code: address.localityBoundaryCode!,
                               name: address.localityBoundaryName,
                             )
                           : null,
-                      type: address.type,
                       rowVersion: address.rowVersion,
-                      auditDetails: AuditDetails(
-                        createdBy: individual.auditCreatedBy!,
-                        createdTime: individual.auditCreatedTime!,
-                        lastModifiedBy: individual.auditModifiedBy,
-                        lastModifiedTime: individual.auditModifiedTime,
-                      ),
+                      auditDetails: (address.auditCreatedBy != null &&
+                              address.auditCreatedTime != null)
+                          ? AuditDetails(
+                              createdBy: address.auditCreatedBy!,
+                              createdTime: address.auditCreatedTime!,
+                              lastModifiedBy: address.auditModifiedBy,
+                              lastModifiedTime: address.auditModifiedTime,
+                            )
+                          : null,
+                      clientAuditDetails: (address.clientCreatedBy != null &&
+                              address.clientCreatedTime != null)
+                          ? ClientAuditDetails(
+                              createdBy: address.clientCreatedBy!,
+                              createdTime: address.clientCreatedTime!,
+                              lastModifiedBy: address.clientModifiedBy,
+                              lastModifiedTime: address.clientModifiedTime,
+                            )
+                          : null,
                     ),
-                  ],
+            ].whereNotNull().toList(),
+            gender: individual.gender,
+            identifiers: [
+              if (identifier != null)
+                IdentifierModel(
+                  id: identifier.id,
+                  clientReferenceId: individual.clientReferenceId,
+                  identifierType: identifier.identifierType,
+                  identifierId: identifier.identifierId,
+                  rowVersion: identifier.rowVersion,
+                  tenantId: identifier.tenantId,
+                  auditDetails: AuditDetails(
+                    createdBy: identifier.auditCreatedBy!,
+                    createdTime: identifier.auditCreatedTime!,
+                    lastModifiedBy: identifier.auditModifiedBy,
+                    lastModifiedTime: identifier.auditModifiedTime,
+                  ),
+                ),
+            ],
+            additionalFields: individual.additionalFields == null
+                ? null
+                : IndividualAdditionalFieldsMapper.fromJson(
+                    individual.additionalFields!,
+                  ),
           );
         })
         .where((element) => element.isDeleted != true)

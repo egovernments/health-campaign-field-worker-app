@@ -67,10 +67,10 @@ dependencies:
   camera: ^0.10.5+7
   attendance_management: ^1.0.2+4
   digit_scanner: ^1.0.3+1
-  inventory_management: 
-  referral_reconciliation: 
-  digit_data_model: 
-  registration_delivery: ^1.0.3+2
+  inventory_management: ^1.0.3+4
+  referral_reconciliation: ^1.0.2+1
+  digit_data_model: 1.0.4-dev.8-uniqueId
+  registration_delivery: ^1.0.4-dev.4-search-fix
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.1
   closed_household: ^1.0.1+1

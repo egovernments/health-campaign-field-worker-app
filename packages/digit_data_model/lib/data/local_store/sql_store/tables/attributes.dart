@@ -26,7 +26,7 @@ class Attributes extends Table {
   BoolColumn get isDeleted =>
       boolean().nullable().withDefault(const Constant(false))();
   IntColumn get rowVersion => integer().nullable()();
-
+  TextColumn get additionalDetails => text().nullable()();
   TextColumn get additionalFields => text().nullable()();
   TextColumn get additionalDetails => text().nullable()();
 
