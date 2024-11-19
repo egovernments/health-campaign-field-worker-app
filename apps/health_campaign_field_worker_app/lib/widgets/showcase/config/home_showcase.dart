@@ -105,4 +105,7 @@ class _HomePageShowcaseData {
   final closedHouseHold = ShowcaseItemBuilder(
     messageLocalizationKey: i18.home.closedHouseHoldLabel,
   );
+
+  final instituteCampaign = ShowcaseItemBuilder(
+      messageLocalizationKey: i18.homeShowcase.instituteCampaign);
 }
