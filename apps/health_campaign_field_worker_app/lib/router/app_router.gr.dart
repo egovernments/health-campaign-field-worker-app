@@ -55,6 +55,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomStockDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomStockDetailsRouteArgs>(
+          orElse: () => const CustomStockDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomStockDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -275,6 +286,45 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomStockDetailsPage]
+class CustomStockDetailsRoute
+    extends PageRouteInfo<CustomStockDetailsRouteArgs> {
+  CustomStockDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomStockDetailsRoute.name,
+          args: CustomStockDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomStockDetailsRoute';
+
+  static const PageInfo<CustomStockDetailsRouteArgs> page =
+      PageInfo<CustomStockDetailsRouteArgs>(name);
+}
+
+class CustomStockDetailsRouteArgs {
+  const CustomStockDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomStockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

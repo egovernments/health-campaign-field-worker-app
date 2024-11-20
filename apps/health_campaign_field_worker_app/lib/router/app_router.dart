@@ -21,6 +21,7 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/inventory/custom_stock_details.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -96,7 +97,18 @@ class AppRouter extends _$AppRouter {
               path: 'warehouse-details',
               initial: true,
             ),
-            AutoRoute(page: StockDetailsRoute.page, path: 'details'),
+            AutoRoute(
+              page: StockDetailsRoute.page,
+              path: 'details',
+            ),
+            AutoRoute(
+              page: CustomStockDetailsRoute.page,
+              path: 'custom-details',
+            ),
+            RedirectRoute(
+              path: 'details',
+              redirectTo: 'custom-details',
+            ),
           ],
         ),
         AutoRoute(
