@@ -73,6 +73,8 @@ class AppConfiguration {
   late List<SymptomsTypes>? symptomsTypes;
 
   late List<ReferralReasons>? referralReasons;
+
+  late PrivacyPolicy? privacyPolicyConfig;
 }
 
 @embedded
@@ -193,4 +195,34 @@ class ReferralReasons {
   late String code;
   late String name;
   late bool active;
+}
+
+@embedded
+class PrivacyPolicy {
+  late String header;
+  late String module;
+  late bool? active;
+  late List<Content>? contents;
+}
+
+@embedded
+class Content {
+  late String? header;
+  late List<Description>? descriptions;
+}
+
+@embedded
+class Description {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late List<SubDescription>? subDescriptions;
+}
+
+@embedded
+class SubDescription {
+  late String? text;
+  late String? type;
+  late bool? isBold;
+  late bool? isSpaceRequired;
 }

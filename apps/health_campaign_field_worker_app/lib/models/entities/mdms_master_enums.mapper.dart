@@ -61,6 +61,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.rowVersion;
       case "ServiceDefs":
         return MasterEnums.serviceDefinitions;
+      case "PrivacyPolicy":
+        return MasterEnums.privacyPolicy;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -105,6 +107,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "ROW_VERSIONS";
       case MasterEnums.serviceDefinitions:
         return "ServiceDefs";
+      case MasterEnums.privacyPolicy:
+        return "PrivacyPolicy";
     }
   }
 }

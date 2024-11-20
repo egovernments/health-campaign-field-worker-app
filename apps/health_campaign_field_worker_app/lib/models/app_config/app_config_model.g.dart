@@ -185,6 +185,9 @@ _$CommonMastersWrapperModelImpl _$$CommonMastersWrapperModelImplFromJson(
       stateInfo: (json['StateInfo'] as List<dynamic>)
           .map((e) => StateInfoModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      privacyPolicyConfig: (json['PrivacyPolicy'] as List<dynamic>)
+          .map((e) => PrivacyNoticeModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$CommonMastersWrapperModelImplToJson(
@@ -192,6 +195,7 @@ Map<String, dynamic> _$$CommonMastersWrapperModelImplToJson(
     <String, dynamic>{
       'GenderType': instance.genderType,
       'StateInfo': instance.stateInfo,
+      'PrivacyPolicy': instance.privacyPolicyConfig,
     };
 
 _$CommonMasterModelImpl _$$CommonMasterModelImplFromJson(
