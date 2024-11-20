@@ -539,7 +539,7 @@ void setPackagesSingleton(BuildContext context) {
         // INFO : Need to add singleton of package Here
         AttendanceSingleton().setInitialData(
             projectId: context.projectId,
-            loggedInIndividualId: context.loggedInIndividualId!,
+            loggedInIndividualId: context.loggedInIndividualId ?? "",
             loggedInUserUuid: context.loggedInUserUuid,
             appVersion: Constants().version);
 
