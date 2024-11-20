@@ -109,6 +109,7 @@ extension ContextUtilityExtensions on BuildContext {
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
+    InstitutionCampaignSingleton().setBoundary(boundary: selectedBoundary);
     return selectedBoundary;
   }
 

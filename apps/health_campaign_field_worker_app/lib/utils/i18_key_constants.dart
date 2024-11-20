@@ -203,6 +203,10 @@ class HomeShowcase {
   String get deleteAll {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
+
+  String get instituteCampaign {
+    return "INSTITUTE_CAMPAIGN_SHOWCASE";
+  }
 }
 
 class SelectStockShowcase {
@@ -510,7 +514,6 @@ class ComplaintsInboxShowcase {
   }
 }
 
-
 class ForgotPassword {
   const ForgotPassword();
 
@@ -561,6 +564,8 @@ class Home {
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+
+  String get institutionLabel => "HOME_INSTITUTION_CAMPAIGN_LABEL";
 }
 
 class AcknowledgementSuccess {
@@ -1014,7 +1019,6 @@ class PrivacyPolicy {
   String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
   String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
   String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
-
 }
 
 class Dashboard {
