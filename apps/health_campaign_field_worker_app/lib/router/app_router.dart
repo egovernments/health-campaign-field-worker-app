@@ -22,6 +22,9 @@ import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
 import '../pages/inventory/custom_stock_details.dart';
+import '../pages/inventory/custom_warehouse_details.dart';
+import 'package:inventory_management/blocs/app_localization.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -95,6 +98,10 @@ class AppRouter extends _$AppRouter {
             AutoRoute(
               page: WarehouseDetailsRoute.page,
               path: 'warehouse-details',
+            ),
+            AutoRoute(
+              page: CustomWarehouseDetailsRoute.page,
+              path: 'custom-warehouse-details',
               initial: true,
             ),
             AutoRoute(

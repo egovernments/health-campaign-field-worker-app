@@ -1238,28 +1238,29 @@ class CustomStockDetailsPageState
                                         )
                                       : const Offstage(),
                                 if (isWareHouseMgr)
-                                  DigitTextFormField(
-                                    label: localizations.translate(
-                                      i18_local.stockDetailsReceiptShowcase
-                                          .driverName,
-                                    ),
-                                    isRequired: isWareHouseMgr,
-                                    formControlName: _driverNameKey,
-                                    validationMessages: {
-                                      'required': (object) =>
-                                          localizations.translate(
-                                            i18.common.corecommonRequired,
-                                          ),
-                                      'maxLength': (object) => localizations
-                                          .translate(
-                                              i18.common.maxCharsRequired)
-                                          .replaceAll('{}', '200'),
-                                      'min2': (object) => localizations
-                                          .translate(
-                                              i18.common.min2CharsRequired)
-                                          .replaceAll('{}', ''),
-                                    },
+                                  const SizedBox(
+                                    height: kPadding,
                                   ),
+                                DigitTextFormField(
+                                  label: localizations.translate(
+                                    i18_local
+                                        .stockDetailsReceiptShowcase.driverName,
+                                  ),
+                                  isRequired: isWareHouseMgr,
+                                  formControlName: _driverNameKey,
+                                  validationMessages: {
+                                    'required': (object) =>
+                                        localizations.translate(
+                                          i18.common.corecommonRequired,
+                                        ),
+                                    'maxLength': (object) => localizations
+                                        .translate(i18.common.maxCharsRequired)
+                                        .replaceAll('{}', '200'),
+                                    'min2': (object) => localizations
+                                        .translate(i18.common.min2CharsRequired)
+                                        .replaceAll('{}', ''),
+                                  },
+                                ),
                                 if (isWareHouseMgr)
                                   DigitTextFormField(
                                     label: localizations.translate(

@@ -66,6 +66,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomWarehouseDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomWarehouseDetailsRouteArgs>(
+          orElse: () => const CustomWarehouseDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomWarehouseDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -325,6 +336,45 @@ class CustomStockDetailsRouteArgs {
   @override
   String toString() {
     return 'CustomStockDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomWarehouseDetailsPage]
+class CustomWarehouseDetailsRoute
+    extends PageRouteInfo<CustomWarehouseDetailsRouteArgs> {
+  CustomWarehouseDetailsRoute({
+    Key? key,
+    InventoryLocalization? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomWarehouseDetailsRoute.name,
+          args: CustomWarehouseDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomWarehouseDetailsRoute';
+
+  static const PageInfo<CustomWarehouseDetailsRouteArgs> page =
+      PageInfo<CustomWarehouseDetailsRouteArgs>(name);
+}
+
+class CustomWarehouseDetailsRouteArgs {
+  const CustomWarehouseDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final InventoryLocalization? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomWarehouseDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
