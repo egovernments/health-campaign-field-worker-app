@@ -775,6 +775,38 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
+                  return (controller[index].text == item.values?[1].trim() &&
+                      !(isHealthFacilityWorker &&
+                          widget.referralClientRefId != null) && item.dataType != 'SingleValueList')
+                      ? Padding(
+                    padding: const EdgeInsets.only(
+                      left: 4.0,
+                      right: 4.0,
+                      bottom: 16,
+                    ),
+                    child: DigitTextField(
+                      maxLength: 1000,
+                      isRequired: true,
+                      controller: additionalController[index],
+                      label: localizations.translate(
+                        '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
+                      ),
+                      validator: (value1) {
+                        if (value1 == null || value1 == '') {
+                          return localizations.translate(
+                            i18.common.coreCommonReasonRequired,
+                          );
+                        }
+
+                        return null;
+                      },
+                    ),
+                  )
+                      : const SizedBox();
+                },
+              ),
+              BlocBuilder<ServiceBloc, ServiceState>(
+                builder: (context, state) {
                   final hasError = (item.required == true &&
                       controller[index].text.isEmpty &&
                       submitTriggered);
