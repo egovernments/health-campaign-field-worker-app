@@ -11,4 +11,6 @@ enum RegistrationDeliveryEnums {
   userName,
   @MappableValue("IEC")
   iec,
+  @MappableValue("ELIGIBILITY")
+  eligibility,
 }

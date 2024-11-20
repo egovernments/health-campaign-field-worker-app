@@ -269,14 +269,6 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                               ),
                                             ],
                                           ),
-                                          additionalDetails: {
-                                            "boundaryCode":
-                                                SurveyFormSingleton()
-                                                    .boundary
-                                                    ?.code,
-                                            'lat': latitude,
-                                            'lng': longitude,
-                                          },
                                         ),
                                       ),
                                     );

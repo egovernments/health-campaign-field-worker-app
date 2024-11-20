@@ -161,8 +161,12 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                     0, 0, 0, kPadding),
                                 child: Text(
                                   localizations.translate(
-                                    i18.deliverIntervention
-                                        .refusedDeliveryLabel,
+                                    RegistrationDeliverySingleton()
+                                            .projectType!
+                                            .code
+                                            .toString() +
+                                        i18.deliverIntervention
+                                            .refusedDeliveryLabel,
                                   ),
                                   style: theme.textTheme.displayMedium,
                                 ),
@@ -196,8 +200,12 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                                     .buildWith(
                                   child: LabeledField(
                                     label: localizations.translate(
-                                      i18.deliverIntervention
-                                          .reasonForRefusalLabel,
+                                      RegistrationDeliverySingleton()
+                                              .projectType!
+                                              .code
+                                              .toString() +
+                                          i18.deliverIntervention
+                                              .reasonForRefusalLabel,
                                     ),
                                     isRequired: true,
                                     child: SelectionBox<String>(

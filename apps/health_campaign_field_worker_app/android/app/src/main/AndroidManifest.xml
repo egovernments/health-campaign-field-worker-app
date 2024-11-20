@@ -29,10 +29,10 @@
     <application
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
-        android:label="HCM">
+        android:label="HCM"
         android:allowBackup="false"
         android:fullBackupOnly="false"
-        android:fullBackupContent="false"
+        android:fullBackupContent="false">
         <service
             android:name=".LocationService"
             android:enabled="true"
