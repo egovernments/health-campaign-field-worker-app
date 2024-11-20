@@ -226,13 +226,12 @@ packages:
     source: hosted
     version: "1.0.1"
   digit_data_model:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      name: digit_data_model
-      sha256: "058168c32c198f7c76ff8765f56827812f9c71cd269d5cb792afd77302b766ab"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4-dev.3"
+      path: "../../digit_data_model"
+      relative: true
+    source: path
+    version: "1.0.4"
   dio:
     dependency: transitive
     description:
@@ -920,11 +919,9 @@ packages:
   survey_form:
     dependency: "direct main"
     description:
-      path: "packages/survey_form"
-      ref: checklist-package
-      resolved-ref: bbac302cdb35f380fb369faf3bc778ee0cbf1bbf
-      url: "https://github.com/egovernments/health-campaign-field-worker-app"
-    source: git
+      path: ".."
+      relative: true
+    source: path
     version: "0.0.1-dev.1"
   term_glyph:
     dependency: transitive
