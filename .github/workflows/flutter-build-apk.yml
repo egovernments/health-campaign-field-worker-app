@@ -2,9 +2,9 @@ name: Build APK Workflow
 
 on:
   push:
-    branches: ['develop', 'starter-pack-test']  # This specifies that the workflow will run on any push to the 'main' branch
+    branches: ['develop', 'starter-pack']  # This specifies that the workflow will run on any push to the 'main' branch
   pull_request:
-    branches: ['develop', 'starter-pack-test']  # Optionally, run on pull requests targeting the 'main' branch
+    branches: ['develop', 'starter-pack']  # Optionally, run on pull requests targeting the 'main' branch
 
 jobs:
   build-apk:
