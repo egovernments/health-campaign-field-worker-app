@@ -1,16 +1,15 @@
-
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '/blocs/complaints_inbox/complaints_inbox.dart';
-
 import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
 import '/widgets/localized.dart';
-import 'package:flutter/services.dart';
+import '../../utils/constants.dart';
 
 @RoutePage()
 class ComplaintsInboxSearchPage extends LocalizedStatefulWidget {
@@ -108,7 +107,8 @@ class ComplaintsInboxSearchPageState
                                   complaintNumber: complaintNumberValue == ""
                                       ? null
                                       : complaintNumberValue,
-                                  createdByUserId: ComplaintsSingleton().loggedInUserUuid,
+                                  createdByUserId:
+                                      ComplaintsSingleton().loggedInUserUuid,
                                 ),
                               );
 
