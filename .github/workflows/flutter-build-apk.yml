@@ -2,9 +2,9 @@ name: Build APK Workflow
 
 on:
   push:
-    branches: ['develop', 'starter-pack']  # This specifies that the workflow will run on any push to the 'main' branch
+    branches: ['develop', 'starter-pack-test']  # This specifies that the workflow will run on any push to the 'main' branch
   pull_request:
-    branches: ['develop', 'starter-pack']  # Optionally, run on pull requests targeting the 'main' branch
+    branches: ['develop', 'starter-pack-test']  # Optionally, run on pull requests targeting the 'main' branch
 
 jobs:
   build-apk:
@@ -49,20 +49,26 @@ jobs:
           echo "HIERARCHY_TYPE=${{ vars.HIERARCHY_TYPE }}" >> apps/health_campaign_field_worker_app/.env
           echo "ENV_NAME=${{ vars.ENV_NAME }}" >> apps/health_campaign_field_worker_app/.env
 
-      - name: Run APK build script
-        env:
-          BUILD_CONFIG: release   # or profile depending on your choice
-        run: bash ./tools/generate-apk.sh
+      - name: Verify .env file
+        run: |
+          ls -l apps/health_campaign_field_worker_app/.env
+          cat apps/health_campaign_field_worker_app/.env
 
-      # Archive the APK as a build artifact so it can be downloaded
-      - name: Upload APKs
-        uses: actions/upload-artifact@v3
-        with:
-          name: app-release-apk
-          path: apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk
+      # - name: Run APK build script
+      #   env:
+      #     BUILD_CONFIG: release   # or profile depending on your choice
+      #   run: bash ./tools/generate-apk.sh
+
+      # # Archive the APK as a build artifact so it can be downloaded
+      # - name: Upload APKs
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: app-release-apk
+      #     path: apps/health_campaign_field_worker_app/build/app/outputs/flutter-apk/app-release.apk
 
       - name: Upload .env as artifact
         uses: actions/upload-artifact@v3
         with:
           name: env-file
           path: apps/health_campaign_field_worker_app/.env
+          include-hidden-files: true
