@@ -65,8 +65,8 @@ dependencies:
   disk_space: ^0.2.1
   google_mlkit_barcode_scanning: ^0.10.0
   camera: ^0.10.5+7
-  digit_data_model: ^1.0.3
-  checklist: ^0.0.1-dev.1
+  digit_data_model: ^1.0.5-dev.1
+  survey_form: ^0.0.1-dev.2
   digit_scanner: ^1.0.3
 
 dev_dependencies:
