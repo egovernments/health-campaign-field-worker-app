@@ -1276,89 +1276,92 @@ class CustomStockDetailsPageState
                                   maxLines: 3,
                                   formControlName: _commentsKey,
                                 ),
-                                scannerState.barCodes.isEmpty
-                                    ? DigitOutlineIconButton(
-                                        buttonStyle: OutlinedButton.styleFrom(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.zero,
+                                // todo not yet confirmed if needed or not for issue flow
+                                if (isWareHouseMgr &&
+                                    (entryType == StockRecordEntryType.receipt))
+                                  scannerState.barCodes.isEmpty
+                                      ? DigitOutlineIconButton(
+                                          buttonStyle: OutlinedButton.styleFrom(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.zero,
+                                            ),
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          //[TODO: Add route to auto_route]
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DigitScannerPage(
-                                                quantity: 5,
-                                                isGS1code: true,
-                                                singleValue: false,
+                                          onPressed: () {
+                                            //[TODO: Add route to auto_route]
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const DigitScannerPage(
+                                                  quantity: 5,
+                                                  isGS1code: true,
+                                                  singleValue: false,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
                                               ),
-                                              settings: const RouteSettings(
-                                                  name: '/qr-scanner'),
-                                            ),
-                                          );
-                                        },
-                                        icon: Icons.qr_code,
-                                        label: localizations.translate(
-                                          i18.common.scanBales,
-                                        ),
-                                      )
-                                    : Column(children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(
-                                                localizations.translate(i18
-                                                    .stockDetails
-                                                    .scannedResources),
-                                                style: DigitTheme
-                                                    .instance
-                                                    .mobileTheme
-                                                    .textTheme
-                                                    .labelSmall,
+                                            );
+                                          },
+                                          icon: Icons.qr_code,
+                                          label: localizations.translate(
+                                            i18.common.scanBales,
+                                          ),
+                                        )
+                                      : Column(children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  localizations.translate(i18
+                                                      .stockDetails
+                                                      .scannedResources),
+                                                  style: DigitTheme
+                                                      .instance
+                                                      .mobileTheme
+                                                      .textTheme
+                                                      .labelSmall,
+                                                ),
                                               ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                bottom: kPadding * 2,
-                                              ),
-                                              child: IconButton(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                color:
-                                                    theme.colorScheme.secondary,
-                                                icon: const Icon(Icons.edit),
-                                                onPressed: () {
-                                                  //[TODO: Add route to auto_route]
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          const DigitScannerPage(
-                                                        quantity: 5,
-                                                        isGS1code: true,
-                                                        singleValue: false,
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                  bottom: kPadding * 2,
+                                                ),
+                                                child: IconButton(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  color: theme
+                                                      .colorScheme.secondary,
+                                                  icon: const Icon(Icons.edit),
+                                                  onPressed: () {
+                                                    //[TODO: Add route to auto_route]
+                                                    Navigator.of(context).push(
+                                                      MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            const DigitScannerPage(
+                                                          quantity: 5,
+                                                          isGS1code: true,
+                                                          singleValue: false,
+                                                        ),
+                                                        settings:
+                                                            const RouteSettings(
+                                                                name:
+                                                                    '/qr-scanner'),
                                                       ),
-                                                      settings:
-                                                          const RouteSettings(
-                                                              name:
-                                                                  '/qr-scanner'),
-                                                    ),
-                                                  );
-                                                },
+                                                    );
+                                                  },
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                        ...scannedResources.map((e) => Align(
-                                              alignment: Alignment.centerLeft,
-                                              child: Text(e
-                                                  .elements.values.first.data
-                                                  .toString()),
-                                            ))
-                                      ])
+                                            ],
+                                          ),
+                                          ...scannedResources.map((e) => Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(e
+                                                    .elements.values.first.data
+                                                    .toString()),
+                                              ))
+                                        ])
                               ],
                             ),
                           ),
