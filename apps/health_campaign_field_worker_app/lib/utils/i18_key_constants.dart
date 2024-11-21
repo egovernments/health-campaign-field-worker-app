@@ -577,6 +577,7 @@ class ForgotPassword {
 class Home {
   const Home();
 
+  String get closedHouseHoldLabel => 'CLOSED_HOUSEHOLD_LABEL';
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';

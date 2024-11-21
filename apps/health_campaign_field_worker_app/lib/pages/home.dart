@@ -1,5 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
 
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -362,6 +363,19 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home,
+          enableCustomIcon: true,
+          customIcon:
+              'assets/icons/svg/mychecklist.svg', //add in constants foe closed households
+          label: i18.home.closedHouseHoldLabel,
+          onPressed: () async {
+            await context.router.push(const ClosedHouseholdWrapperRoute());
+          },
+        ),
+      ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -423,6 +437,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.closedHouseHoldLabel:
+          homeShowcaseData.closedHouseHold.showcaseKey
     };
 
     final homeItemsLabel = <String>[
@@ -437,6 +453,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.syncDataLabel,
       i18.home.db,
+      i18.home.closedHouseHoldLabel
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -445,11 +462,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.closedHouseHoldLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) => f != i18.home.db || f != i18.home.closedHouseHoldLabel)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 

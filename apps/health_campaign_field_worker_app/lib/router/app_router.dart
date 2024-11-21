@@ -1,5 +1,7 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/router/closed_household_router.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -31,6 +33,7 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     InventoryRoute,
     AttendanceRoute,
+    ClosedHouseholdPackageRoute
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -64,6 +67,24 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
+        // Closed-Household Route
+        AutoRoute(
+            page: ClosedHouseholdWrapperRoute.page,
+            path: 'closed-household-wrapper',
+            children: [
+              AutoRoute(
+                page: ClosedHouseholdDetailsRoute.page,
+                path: 'closed-household-details',
+                initial: true,
+              ),
+              AutoRoute(
+                  page: ClosedHouseholdSummaryRoute.page,
+                  path: 'closed-household-summary'),
+              AutoRoute(
+                  page: ClosedHouseholdAcknowledgementRoute.page,
+                  path: 'closed-household-acknowledgement'),
+            ]),
+
         // Attendance Route
         AutoRoute(
           page: ManageAttendanceRoute.page,
