@@ -23,6 +23,7 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/closed/custom_closed_household_summary.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -80,6 +81,12 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                   page: ClosedHouseholdSummaryRoute.page,
                   path: 'closed-household-summary'),
+              AutoRoute(
+                  page: CustomClosedHouseholdSummaryRoute.page,
+                  path: 'custom-closed-household-summary'),
+              RedirectRoute(
+                  path: 'closed-household-summary',
+                  redirectTo: 'custom-closed-household-summary'),
               AutoRoute(
                   page: ClosedHouseholdAcknowledgementRoute.page,
                   path: 'closed-household-acknowledgement'),
