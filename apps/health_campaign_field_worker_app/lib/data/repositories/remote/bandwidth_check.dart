@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dio/dio.dart';
 
+import '../../../utils/environment_config.dart';
 import '../../../utils/utils.dart';
 
 class BandwidthCheckRepository {
@@ -19,6 +20,7 @@ class BandwidthCheckRepository {
       await _client.post(
         bandwidthPath,
         data: requestData,
+        queryParameters: {"tenantId": envConfig.variables.tenantId},
         options: Options(headers: headers),
       );
 
@@ -27,7 +29,7 @@ class BandwidthCheckRepository {
       final speed = (((800 / timeconsumed) / 1000));
 
       return speed;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       rethrow;
     }
   }

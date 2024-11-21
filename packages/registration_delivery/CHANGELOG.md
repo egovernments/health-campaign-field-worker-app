@@ -1,6 +1,20 @@
-## 1.0.4
-* Updated to latest package versions
-* Updated flutter version to 3.22.1
+## 1.0.4-dev.5
+* Updated digit_data_model to latest version
+* Updated survey_form to latest version
+* Migrated to digit_ui_components
+
+## 1.0.3+3
+* Updated Service model additionalDetails objectType in digit_data_model package
+
+## 1.0.3+2
+
+* Bug Fix -
+  * fixed wrong status map of beneficiaryRefused in utils
+* Sorting tasks based on createTime
+
+## 1.0.4-dev.1
+
+* Integrated survey_form package
 
 ## 1.0.3+1
 

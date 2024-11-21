@@ -1,5 +1,7 @@
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/models/privacy_notice/privacy_notice_model.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_components/widgets/privacy_notice/privacy_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -11,7 +13,6 @@ import '../router/app_router.dart';
 import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
-import '../widgets/privacy_notice/privacy_component.dart';
 
 @RoutePage()
 class LoginPage extends LocalizedStatefulWidget {
@@ -142,7 +143,8 @@ class _LoginPageState extends LocalizedState<LoginPage> {
                             .setValidators([Validators.requiredTrue]);
                         form.control(_privacyCheck).updateValueAndValidity();
                         return PrivacyComponent(
-                          privacyPolicy: privacyPolicyJson,
+                          privacyPolicy:
+                              convertToPrivacyPolicyModel(privacyPolicyJson),
                           formControlName: _privacyCheck,
                           text: localizations
                               .translate(i18.privacyPolicy.privacyNoticeText),
@@ -238,4 +240,34 @@ class _LoginPageState extends LocalizedState<LoginPage> {
           value: false,
         )
       });
+}
+
+// convert to privacy notice model
+PrivacyNoticeModel? convertToPrivacyPolicyModel(PrivacyPolicy? privacyPolicy) {
+  return PrivacyNoticeModel(
+    header: privacyPolicy?.header ?? '',
+    module: privacyPolicy?.module ?? '',
+    active: privacyPolicy?.active,
+    contents: privacyPolicy?.contents
+        ?.map((content) => ContentNoticeModel(
+              header: content.header,
+              descriptions: content.descriptions
+                  ?.map((description) => DescriptionNoticeModel(
+                        text: description.text,
+                        type: description.type,
+                        isBold: description.isBold,
+                        subDescriptions: description.subDescriptions
+                            ?.map((subDescription) => SubDescriptionNoticeModel(
+                                  text: subDescription.text,
+                                  type: subDescription.type,
+                                  isBold: subDescription.isBold,
+                                  isSpaceRequired:
+                                      subDescription.isSpaceRequired,
+                                ))
+                            .toList(),
+                      ))
+                  .toList(),
+            ))
+        .toList(),
+  );
 }

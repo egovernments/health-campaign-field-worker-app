@@ -5,6 +5,9 @@ import 'dart:ui';
 import 'package:battery_plus/battery_plus.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_location_tracker/bloc/location_tracker_service.dart';
+import 'package:digit_location_tracker/utils/utils.dart'
+    as location_tracker_utils;
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -115,6 +118,15 @@ void onStart(ServiceInstance service) async {
   final _isar = await isarFuture;
 
   final userRequestModel = await LocalSecureStore.instance.userRequestModel;
+  final selectedProject = await LocalSecureStore.instance.selectedProject;
+
+  location_tracker_utils.LocationTrackerSingleton()
+      .setTenantId(tenantId: userRequestModel!.tenantId!);
+  location_tracker_utils.LocationTrackerSingleton().setInitialData(
+      projectId: selectedProject!.id, loggedInUserUuid: userRequestModel.uuid);
+
+  LocationTrackerService().processLocationData(
+      interval: 120, createdBy: userRequestModel.uuid, isar: _isar);
 
   final appConfiguration = await _isar.appConfigurations.where().findAll();
   final interval =

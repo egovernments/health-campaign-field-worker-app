@@ -48,8 +48,7 @@ class SyncBloc extends Bloc<SyncEvent, SyncState> {
     int? length = event.count;
     emit(const SyncState.loading());
     try {
-      length ??= (SyncServiceSingleton().entityMapper!.getSyncCount(isar
-              .opLogs
+      length ??= (SyncServiceSingleton().entityMapper!.getSyncCount(isar.opLogs
               .filter()
               .createdByEqualTo(event.createdBy)
               .syncedUpEqualTo(false)

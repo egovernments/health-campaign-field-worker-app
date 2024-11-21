@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/details_card.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
@@ -83,7 +85,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                 ),
                 Padding(
                   padding:
-                      const EdgeInsets.only(bottom: kPadding, left: kPadding),
+                      const EdgeInsets.only(bottom: spacer2, left: spacer2),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -97,109 +99,116 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                 ),
               ]),
               footer: DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                child: ValueListenableBuilder(
-                  valueListenable: clickedStatus,
-                  builder: (context, bool isClicked, _) {
-                    return DigitElevatedButton(
-                      onPressed: isClicked
-                          ? null
-                          : () async {
-                              final bloc =
-                                  context.read<BeneficiaryRegistrationBloc>();
-                              final userId = RegistrationDeliverySingleton()
-                                  .loggedInUserUuid;
-                              final projectId =
-                                  RegistrationDeliverySingleton().projectId;
-
-                              householdState.maybeWhen(
-                                orElse: () {
-                                  return;
-                                },
-                                summary: (
-                                  navigateToRoot,
-                                  householdModel,
-                                  individualModel,
-                                  projectBeneficiaryModel,
-                                  registrationDate,
-                                  addressModel,
-                                  loading,
-                                  isHeadOfHousehold,
-                                ) async {
-                                  final submit = await DigitDialog.show<bool>(
-                                    context,
-                                    options: DigitDialogOptions(
-                                      titleText: localizations.translate(
-                                        i18.deliverIntervention.dialogTitle,
-                                      ),
-                                      contentText: localizations.translate(
-                                        i18.deliverIntervention.dialogContent,
-                                      ),
-                                      primaryAction: DigitDialogActions(
-                                        label: localizations.translate(
-                                          i18.common.coreCommonSubmit,
-                                        ),
-                                        action: (context) {
-                                          clickedStatus.value = true;
-                                          Navigator.of(
-                                            context,
-                                            rootNavigator: true,
-                                          ).pop(true);
-                                        },
-                                      ),
-                                      secondaryAction: DigitDialogActions(
-                                        label: localizations.translate(
-                                          i18.common.coreCommonCancel,
-                                        ),
-                                        action: (context) => Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(false),
-                                      ),
-                                    ),
-                                  );
-
-                                  if (submit ?? false) {
-                                    if (context.mounted) {
-                                      bloc.add(
-                                        BeneficiaryRegistrationCreateEvent(
-                                            projectId: projectId!,
-                                            userUuid: userId!,
-                                            boundary:
-                                                RegistrationDeliverySingleton()
-                                                    .boundary!,
-                                            tag: projectBeneficiaryModel?.tag,
-                                            navigateToSummary: false),
-                                      );
-                                    }
-                                  }
-                                },
-                              );
-                            },
-                      child: Center(
-                        child: Text(
-                          householdState.mapOrNull(
+                  margin: const EdgeInsets.only(top: spacer2),
+                  padding: const EdgeInsets.all(spacer2),
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: clickedStatus,
+                      builder: (context, bool isClicked, _) {
+                        return Button(
+                          label: householdState.mapOrNull(
                                 editIndividual: (value) => localizations
                                     .translate(i18.common.coreCommonSave),
                               ) ??
                               localizations
                                   .translate(i18.common.coreCommonSubmit),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+                          type: ButtonType.primary,
+                          size: ButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          isDisabled: isClicked ? true : false,
+                          onPressed: () async {
+                            final bloc =
+                                context.read<BeneficiaryRegistrationBloc>();
+                            final userId = RegistrationDeliverySingleton()
+                                .loggedInUserUuid;
+                            final projectId =
+                                RegistrationDeliverySingleton().projectId;
+
+                            householdState.maybeWhen(
+                              orElse: () {
+                                return;
+                              },
+                              summary: (
+                                navigateToRoot,
+                                householdModel,
+                                individualModel,
+                                projectBeneficiaryModel,
+                                registrationDate,
+                                addressModel,
+                                loading,
+                                isHeadOfHousehold,
+                              ) async {
+                                final submit = await showDialog(
+                                  context: context,
+                                  builder: (ctx) => Popup(
+                                    title: localizations.translate(
+                                      i18.deliverIntervention.dialogTitle,
+                                    ),
+                                    description: localizations.translate(
+                                      i18.deliverIntervention.dialogContent,
+                                    ),
+                                    actions: [
+                                      Button(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonSubmit,
+                                          ),
+                                          onPressed: () {
+                                            clickedStatus.value = true;
+                                            Navigator.of(
+                                              context,
+                                              rootNavigator: true,
+                                            ).pop(true);
+                                          },
+                                          type: ButtonType.primary,
+                                          size: ButtonSize.large),
+                                      Button(
+                                          label: localizations.translate(
+                                            i18.common.coreCommonCancel,
+                                          ),
+                                          onPressed: () => Navigator.of(
+                                                context,
+                                                rootNavigator: true,
+                                              ).pop(false),
+                                          type: ButtonType.secondary,
+                                          size: ButtonSize.large)
+                                    ],
+                                  ),
+                                );
+
+                                if (submit ?? false) {
+                                  if (context.mounted) {
+                                    bloc.add(
+                                      BeneficiaryRegistrationCreateEvent(
+                                          projectId: projectId!,
+                                          userUuid: userId!,
+                                          boundary:
+                                              RegistrationDeliverySingleton()
+                                                  .boundary!,
+                                          tag: projectBeneficiaryModel?.tag,
+                                          navigateToSummary: false),
+                                    );
+                                  }
+                                }
+                              },
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ]),
               slivers: [
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
                       DigitCard(
-                        child: LabelValueList(
+                        margin: const EdgeInsets.all(spacer2),
+                          children: [
+                        LabelValueList(
                             heading: localizations.translate(i18
                                 .householdLocation.householdLocationLabelText),
-                            withDivider: true,
+
+                            labelFlex: 6,
+                            maxLines: 2,
                             items: [
                               LabelValuePair(
                                   label: localizations.translate(
@@ -218,12 +227,14 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                           .translate(i18.common.coreCommonNA),
                                   isInline: true),
                             ]),
-                      ),
+                      ]),
                       DigitCard(
-                        child: LabelValueList(
+                        margin: const EdgeInsets.all(spacer2),
+                          children: [
+                        LabelValueList(
                             heading: localizations.translate(
                                 i18.householdDetails.householdDetailsLabel),
-                            withDivider: true,
+                            labelFlex: 6,
                             items: [
                               LabelValuePair(
                                   label: localizations.translate(
@@ -264,12 +275,14 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       '0',
                                   isInline: true),
                             ]),
-                      ),
+                      ]),
                       DigitCard(
-                        child: LabelValueList(
+                        margin: const EdgeInsets.all(spacer2),
+                          children: [
+                        LabelValueList(
                             heading: localizations.translate(
                                 i18.householdDetails.houseDetailsLabel),
-                            withDivider: true,
+                            labelFlex: 6,
                             items: [
                               LabelValuePair(
                                   label: localizations.translate(
@@ -305,12 +318,14 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                       .join(', '),
                                   isInline: true),
                             ]),
-                      ),
+                      ]),
                       DigitCard(
-                        child: LabelValueList(
+                        margin: const EdgeInsets.all(spacer2),
+                          children: [
+                        LabelValueList(
                             heading: localizations.translate(i18
                                 .individualDetails.individualsDetailsLabelText),
-                            withDivider: true,
+                            labelFlex: 6,
                             items: [
                               LabelValuePair(
                                 label: localizations.translate(
@@ -387,7 +402,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                 i18.common.coreCommonNA)),
                               ),
                             ]),
-                      ),
+                      ]),
                     ],
                   ),
                 )

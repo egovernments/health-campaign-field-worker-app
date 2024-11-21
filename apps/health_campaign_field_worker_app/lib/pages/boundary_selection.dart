@@ -129,8 +129,14 @@ class _BoundarySelectionPageState
                           children: [
                             Expanded(
                               child: ListView.builder(
-                                itemCount: labelList.length,
+                                itemCount: labelList.length+1,
                                 itemBuilder: (context, labelIndex) {
+
+                                  if (labelIndex == labelList.length) {
+                                    // Return a SizedBox for whitespace after the last item
+                                    return const SizedBox(height: kPadding*3); // Adjust height as needed
+                                  }
+
                                   final label = labelList.elementAt(labelIndex);
 
                                   final filteredItems =

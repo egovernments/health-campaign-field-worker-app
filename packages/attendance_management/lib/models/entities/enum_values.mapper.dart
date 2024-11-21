@@ -53,6 +53,8 @@ class EnumValuesMapper extends EnumMapper<EnumValues> {
         return EnumValues.latitude;
       case "longitude":
         return EnumValues.longitude;
+      case "boundaryCode":
+        return EnumValues.boundaryCode;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -89,6 +91,8 @@ class EnumValuesMapper extends EnumMapper<EnumValues> {
         return "latitude";
       case EnumValues.longitude:
         return "longitude";
+      case EnumValues.boundaryCode:
+        return "boundaryCode";
     }
   }
 }

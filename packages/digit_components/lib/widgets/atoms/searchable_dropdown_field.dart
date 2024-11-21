@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:digit_components/digit_components.dart';
 import 'package:flutter/foundation.dart';
@@ -262,6 +263,10 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
   OverlayEntry _createOverlayEntry() {
     final renderObject = context.findRenderObject() as RenderBox;
     final Size size = renderObject.size;
+    // Calculate the available height below the dropdown
+    final double availableHeight = MediaQuery.of(context).size.height -
+        (renderObject.localToGlobal(Offset.zero).dy + size.height) -
+        MediaQuery.of(context).viewInsets.bottom;
 
     var overlay = OverlayEntry(builder: (context) {
       return Positioned(
@@ -274,7 +279,7 @@ class SearchDropdownFormFieldState<T> extends State<SearchDropdownFormField>
               elevation: 4.0,
               child: SizedBox(
                 height: _options != null && _options!.length > 2
-                    ? widget.dropdownHeight ?? 140
+                    ? min(availableHeight, widget.dropdownHeight ?? 140)
                     : (_options ?? []).length * 45,
                 child: Container(
                     color: widget.dropdownColor ?? Colors.white70,

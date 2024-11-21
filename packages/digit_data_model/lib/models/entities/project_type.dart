@@ -14,7 +14,7 @@ class ProjectTypeModel extends EntityModel with ProjectTypeModelMappable {
   final String? name;
   final String? code;
   final String? group;
-  final String? beneficiaryType;
+  final BeneficiaryType? beneficiaryType;
   final List<String>? eligibilityCriteria;
   final List<String>? taskProcedure;
   final List<ProjectCycle>? cycles;

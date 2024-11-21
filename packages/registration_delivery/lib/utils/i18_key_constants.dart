@@ -643,6 +643,9 @@ class ReferBeneficiary {
   String get selectCycle => 'REFERRAL_SELECT_CYCLE';
   String get createReferralLabel => 'CREATE_REFERRAL_LABEL';
   String get noChecklistFound => 'NO_CHECKLISTS_FOUND';
+  String get noFacilityAssigned => 'NO_FACILITY_ASSIGNED';
+  String get noFacilityAssignedDescription =>
+      'NO_FACILITY_ASSIGNED_DESCRIPTION';
 }
 
 class ReasonForDeletion {

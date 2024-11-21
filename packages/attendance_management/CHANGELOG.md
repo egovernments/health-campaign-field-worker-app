@@ -1,6 +1,17 @@
-## 1.0.3
-* Updated to latest package versions
-* Updated flutter version to 3.22.1
+## 1.0.3-dev.1
+* Updated digit_data_model to latest version
+* Updated survey_form to latest version
+* Migrated to digit_ui_components
+
+## 1.0.2+4
+* Fix for boundaryCode in attendance logs
+
+## 1.0.2+3
+* Updated Attendance Singleton to add boundary
+
+## 1.0.2+2
+* Updated digit_components, digit_data_model
+* Added boundaryCode to additionalDetails of attendanceLogs
 
 ## 1.0.2+1
 * Updated Digit_components
