@@ -2,7 +2,6 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-
 class NetworkManager {
   final NetworkManagerConfiguration configuration;
 

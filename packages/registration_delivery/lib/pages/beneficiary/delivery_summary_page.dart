@@ -44,351 +44,361 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
     return ProductVariantBlocWrapper(
       child: Scaffold(
           body: BlocConsumer<DeliverInterventionBloc, DeliverInterventionState>(
-            listener: (context, deliverState) {
-              final router = context.router;
-            },
-            builder: (context, deliverState) {
-              return ScrollableContent(
-                  enableFixedButton: true,
-                  header: Column(children: [
-                    const BackNavigationHelpHeaderWidget(
-                      showHelp: false,
-                      showcaseButton: ShowcaseButton(),
-                    ),
-                    Padding(
-                      padding:
-                      const EdgeInsets.all(spacer2),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          localizations.translate(
-                            i18.common.coreCommonSummaryDetails,
-                          ),
-                          style: DigitTheme
-                              .instance.mobileTheme.textTheme.displayMedium,
-                        ),
+        listener: (context, deliverState) {
+          final router = context.router;
+        },
+        builder: (context, deliverState) {
+          return ScrollableContent(
+              enableFixedButton: true,
+              header: Column(children: [
+                const BackNavigationHelpHeaderWidget(
+                  showHelp: false,
+                  showcaseButton: ShowcaseButton(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(spacer2),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      localizations.translate(
+                        i18.common.coreCommonSummaryDetails,
                       ),
+                      style: DigitTheme
+                          .instance.mobileTheme.textTheme.displayMedium,
                     ),
-                  ]),
-                  footer: DigitCard(
-                      margin: const EdgeInsets.only(top: spacer2),
-                      padding: const EdgeInsets.all(spacer2),
-                      children: [
-                        ValueListenableBuilder(
-                          valueListenable: clickedStatus,
-                          builder: (context, bool isClicked, _) {
-                            return Button(
-                              label: localizations.translate(i18.common.coreCommonNext),
-                              type: ButtonType.primary,
-                              size: ButtonSize.large,
-                              mainAxisSize: MainAxisSize.max,
-                              isDisabled: isClicked?true:false,
-                              onPressed: () async {
-                                final submit = await showDialog<bool>(
-                                  context: context,
-                                  builder: (ctx)=> Popup(
-                                    title: localizations.translate(
-                                        i18.deliverIntervention.dialogTitle),
-                                    description: localizations.translate(
-                                        i18.deliverIntervention.dialogContent),
-                                    actions: [
-                                      Button(
-                                          label: localizations
-                                              .translate(i18.common.coreCommonSubmit),
-                                          onPressed: () {
-                                            clickedStatus.value = true;
-                                            Navigator.of(context, rootNavigator: true)
-                                                .pop(true);
-                                          },
-                                          type: ButtonType.primary,
-                                          size: ButtonSize.large
-                                      ),
-                                      Button(
-                                          label: localizations
-                                              .translate(i18.common.coreCommonCancel),
-                                          onPressed:() => Navigator.of(context,
+                  ),
+                ),
+              ]),
+              footer: DigitCard(
+                  margin: const EdgeInsets.only(top: spacer2),
+                  padding: const EdgeInsets.all(spacer2),
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: clickedStatus,
+                      builder: (context, bool isClicked, _) {
+                        return Button(
+                          label: localizations
+                              .translate(i18.common.coreCommonNext),
+                          type: ButtonType.primary,
+                          size: ButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          isDisabled: isClicked ? true : false,
+                          onPressed: () async {
+                            final submit = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => Popup(
+                                title: localizations.translate(
+                                    i18.deliverIntervention.dialogTitle),
+                                description: localizations.translate(
+                                    i18.deliverIntervention.dialogContent),
+                                actions: [
+                                  Button(
+                                      label: localizations.translate(
+                                          i18.common.coreCommonSubmit),
+                                      onPressed: () {
+                                        clickedStatus.value = true;
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pop(true);
+                                      },
+                                      type: ButtonType.primary,
+                                      size: ButtonSize.large),
+                                  Button(
+                                      label: localizations.translate(
+                                          i18.common.coreCommonCancel),
+                                      onPressed: () => Navigator.of(context,
                                               rootNavigator: true)
-                                              .pop(false),
-                                          type: ButtonType.secondary,
-                                          size: ButtonSize.large
-                                      ),
-                                    ],
-                                  ),
-                                );
-                                if (submit ?? false) {
-                                  if (context.mounted) {
-                                    context.read<DeliverInterventionBloc>().add(
+                                          .pop(false),
+                                      type: ButtonType.secondary,
+                                      size: ButtonSize.large),
+                                ],
+                              ),
+                            );
+                            if (submit ?? false) {
+                              if (context.mounted) {
+                                context.read<DeliverInterventionBloc>().add(
                                       DeliverInterventionSubmitEvent(
                                         task: deliverState.oldTask!,
                                         isEditing: (deliverState.tasks ?? [])
-                                            .isNotEmpty &&
-                                            RegistrationDeliverySingleton()
-                                                .beneficiaryType ==
-                                                BeneficiaryType.household
+                                                    .isNotEmpty &&
+                                                RegistrationDeliverySingleton()
+                                                        .beneficiaryType ==
+                                                    BeneficiaryType.household
                                             ? true
                                             : false,
                                         boundaryModel:
-                                        RegistrationDeliverySingleton()
-                                            .boundary!,
+                                            RegistrationDeliverySingleton()
+                                                .boundary!,
                                       ),
                                     );
 
-                                    if (deliverState.futureDeliveries != null &&
-                                        deliverState
-                                            .futureDeliveries!.isNotEmpty &&
-                                        RegistrationDeliverySingleton()
+                                if (deliverState.futureDeliveries != null &&
+                                    deliverState.futureDeliveries!.isNotEmpty &&
+                                    RegistrationDeliverySingleton()
                                             .projectType
                                             ?.cycles
                                             ?.isNotEmpty ==
-                                            true) {
-                                      context.router.popUntilRouteWithName(
-                                        BeneficiaryWrapperRoute.name,
-                                      );
-                                      context.router.push(
-                                        SplashAcknowledgementRoute(
-                                          enableBackToSearch: false,
-                                        ),
-                                      );
-                                    } else {
-                                      final reloadState =
+                                        true) {
+                                  context.router.popUntilRouteWithName(
+                                    BeneficiaryWrapperRoute.name,
+                                  );
+                                  context.router.push(
+                                    SplashAcknowledgementRoute(
+                                      enableBackToSearch: false,
+                                    ),
+                                  );
+                                } else {
+                                  final reloadState =
                                       context.read<HouseholdOverviewBloc>();
 
-                                      reloadState.add(
-                                        HouseholdOverviewReloadEvent(
-                                          projectId:
-                                          RegistrationDeliverySingleton()
-                                              .projectId!,
-                                          projectBeneficiaryType:
+                                  reloadState.add(
+                                    HouseholdOverviewReloadEvent(
+                                      projectId: RegistrationDeliverySingleton()
+                                          .projectId!,
+                                      projectBeneficiaryType:
                                           RegistrationDeliverySingleton()
                                               .beneficiaryType!,
-                                        ),
-                                      );
-                                      context.router.popAndPush(
-                                        HouseholdAcknowledgementRoute(
-                                          enableViewHousehold: true,
-                                        ),
-                                      );
-                                    }
-                                  }
+                                    ),
+                                  );
+                                  context.router.popAndPush(
+                                    HouseholdAcknowledgementRoute(
+                                      enableViewHousehold: true,
+                                    ),
+                                  );
                                 }
-                              },
-                            );
+                              }
+                            }
                           },
-                        ),
-                      ]
-                  ),
-                  slivers: [
-                    SliverToBoxAdapter(
-                      child: Column(
-                        children: [
-                          DigitCard(
-                              margin: const EdgeInsets.all(spacer2),
-                              children: [
-                                LabelValueList(
-                                    heading: localizations.translate(i18
-                                        .householdLocation.householdLocationLabelText),
-                                    withDivider: true,
-                                    labelFlex: 6,
-                                    items: [
-                                      LabelValuePair(
-                                          label: localizations.translate(
-                                              i18.householdLocation.villageLabel),
-                                          value: deliverState.householdMemberWrapper
-                                              ?.household?.address?.locality?.code
+                        );
+                      },
+                    ),
+                  ]),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                          children: [
+                            LabelValueList(
+                                heading: localizations.translate(i18
+                                    .householdLocation
+                                    .householdLocationLabelText),
+                                withDivider: true,
+                                labelFlex: 6,
+                                items: [
+                                  LabelValuePair(
+                                      label: localizations.translate(
+                                          i18.householdLocation.villageLabel),
+                                      value: deliverState
+                                              .householdMemberWrapper
+                                              ?.household
+                                              ?.address
+                                              ?.locality
+                                              ?.code
                                               .split('_')
                                               .last
                                               .titleCase ??
-                                              localizations
-                                                  .translate(i18.common.coreCommonNA),
-                                          isInline: true),
-                                      LabelValuePair(
-                                          label: localizations.translate(
-                                              i18.householdLocation.landmarkFormLabel),
-                                          value: deliverState.householdMemberWrapper
+                                          localizations.translate(
+                                              i18.common.coreCommonNA),
+                                      isInline: true),
+                                  LabelValuePair(
+                                      label: localizations.translate(i18
+                                          .householdLocation.landmarkFormLabel),
+                                      value: deliverState.householdMemberWrapper
                                               ?.household?.address?.landmark ??
-                                              localizations
-                                                  .translate(i18.common.coreCommonNA),
-                                          isInline: true),
-                                    ]),
-                              ]
-                          ),
-                          DigitCard(
-                              margin: const EdgeInsets.all(spacer2),
-                              children: [
-                                LabelValueList(
-                                    heading: localizations.translate(
-                                        i18.householdDetails.householdDetailsLabel),
-                                    withDivider: true,
-                                    labelFlex: 6,
-                                    items: [
-                                      LabelValuePair(
-                                          label: localizations.translate(
-                                              i18.beneficiaryDetails.totalMembers),
-                                          value: deliverState.householdMemberWrapper
+                                          localizations.translate(
+                                              i18.common.coreCommonNA),
+                                      isInline: true),
+                                ]),
+                          ]),
+                      DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                          children: [
+                            LabelValueList(
+                                heading: localizations.translate(
+                                    i18.householdDetails.householdDetailsLabel),
+                                withDivider: true,
+                                labelFlex: 6,
+                                items: [
+                                  LabelValuePair(
+                                      label: localizations.translate(
+                                          i18.beneficiaryDetails.totalMembers),
+                                      value: deliverState.householdMemberWrapper
                                               ?.household?.memberCount
                                               .toString() ??
-                                              '0',
-                                          isInline: true),
-                                      LabelValuePair(
-                                          label: localizations.translate(i18
-                                              .householdDetails
-                                              .noOfPregnantWomenCountLabel),
-                                          value: deliverState.householdMemberWrapper
-                                              ?.household?.additionalFields?.fields
-                                              .where((h) =>
-                                          h.key ==
-                                              AdditionalFieldsType.pregnantWomen
-                                                  .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                              '0',
-                                          isInline: true),
-                                      LabelValuePair(
-                                          label: localizations.translate(i18
-                                              .householdDetails
-                                              .noOfChildrenBelow5YearsLabel),
-                                          value: deliverState.householdMemberWrapper
-                                              ?.household?.additionalFields?.fields
-                                              .where((h) =>
-                                          h.key ==
-                                              AdditionalFieldsType.children
-                                                  .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                              '0',
-                                          isInline: true),
-                                    ]),
-                              ]
-                          ),
-                          DigitCard(
-                              margin: const EdgeInsets.all(spacer2),
-                              children: [
-                                LabelValueList(
-                                    heading: localizations.translate(
-                                        i18.householdDetails.houseDetailsLabel),
-                                    withDivider: true,
-                                    labelFlex: 6,
-                                    items: [
-                                      LabelValuePair(
-                                          label: localizations.translate(
-                                              i18.householdDetails.noOfRoomsLabel),
-                                          value: deliverState.householdMemberWrapper
-                                              ?.household?.additionalFields?.fields
-                                              .where((h) =>
-                                          h.key ==
-                                              AdditionalFieldsType.noOfRooms
-                                                  .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                              '0',
-                                          isInline: true),
-                                      LabelValuePair(
-                                          label: localizations.translate(
-                                              i18.householdDetails.typeOfStructure),
-                                          value: (deliverState
+                                          '0',
+                                      isInline: true),
+                                  LabelValuePair(
+                                      label: localizations.translate(i18
+                                          .householdDetails
+                                          .noOfPregnantWomenCountLabel),
+                                      value: deliverState
                                               .householdMemberWrapper
                                               ?.household
                                               ?.additionalFields
                                               ?.fields
                                               .where((h) =>
-                                          h.key ==
-                                              AdditionalFieldsType
-                                                  .houseStructureTypes
-                                                  .toValue())
+                                                  h.key ==
+                                                  AdditionalFieldsType
+                                                      .pregnantWomen
+                                                      .toValue())
                                               .firstOrNull
-                                              ?.value ??
-                                              [])
-                                              .toString()
-                                              .split('|')
-                                              .map((item) => getLocalizedMessage(item))
-                                              .toList()
-                                              .join(', '),
-                                          isInline: true),
-                                    ]),
-                              ]
-                          ),
-                          BlocBuilder<ProductVariantBloc, ProductVariantState>(
-                              builder: (context, productState) {
-                                final variants = productState.whenOrNull(
-                                  fetched: (productVariants) {
-                                    final resourcesDelivered = deliverState
-                                        .oldTask?.resources
-                                        ?.map((e) => TaskResourceInfo(
-                                        productVariants
-                                            .where((p) =>
-                                        p.id == e.productVariantId)
-                                            .firstOrNull
-                                            ?.sku ??
-                                            productVariants
-                                                .where((p) =>
-                                            p.id == e.productVariantId)
-                                                .firstOrNull
-                                                ?.variation ??
-                                            i18.common.coreCommonNA,
-                                        e.quantity ?? '0'))
-                                        .toList();
-                                    return resourcesDelivered;
-                                  },
-                                );
-                                return DigitCard(
-                                    margin: const EdgeInsets.all(spacer2),
-                                    children: [
-                                      LabelValueList(
-                                          heading: localizations.translate(
-                                              '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
-                                          withDivider: true,
-                                          labelFlex: 6,
-                                          items: [
-                                            LabelValuePair(
-                                              label: localizations.translate(deliverState
-                                                  .oldTask?.status ==
-                                                  Status.administeredFailed
-                                                      .toValue() ||
-                                                  deliverState.oldTask?.status ==
-                                                      Status.beneficiaryRefused
-                                                          .toValue()
-                                                  ? i18.deliverIntervention
-                                                  .reasonForRefusalLabel
-                                                  : '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.typeOfResourceUsed}'),
-                                              value: deliverState.oldTask?.status ==
-                                                  Status.administeredFailed
-                                                      .toValue() ||
-                                                  deliverState.oldTask?.status ==
-                                                      Status.beneficiaryRefused
-                                                          .toValue()
-                                                  ? getLocalizedMessage(deliverState
-                                                  .oldTask?.additionalFields?.fields
-                                                  .where(
-                                                    (d) =>
-                                                d.key ==
-                                                    AdditionalFieldsType
-                                                        .reasonOfRefusal
-                                                        .toValue(),
-                                              )
+                                              ?.value
+                                              .toString() ??
+                                          '0',
+                                      isInline: true),
+                                  LabelValuePair(
+                                      label: localizations.translate(i18
+                                          .householdDetails
+                                          .noOfChildrenBelow5YearsLabel),
+                                      value: deliverState
+                                              .householdMemberWrapper
+                                              ?.household
+                                              ?.additionalFields
+                                              ?.fields
+                                              .where((h) =>
+                                                  h.key ==
+                                                  AdditionalFieldsType.children
+                                                      .toValue())
+                                              .firstOrNull
+                                              ?.value
+                                              .toString() ??
+                                          '0',
+                                      isInline: true),
+                                ]),
+                          ]),
+                      DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                          children: [
+                            LabelValueList(
+                                heading: localizations.translate(
+                                    i18.householdDetails.houseDetailsLabel),
+                                withDivider: true,
+                                labelFlex: 6,
+                                items: [
+                                  LabelValuePair(
+                                      label: localizations.translate(
+                                          i18.householdDetails.noOfRoomsLabel),
+                                      value: deliverState
+                                              .householdMemberWrapper
+                                              ?.household
+                                              ?.additionalFields
+                                              ?.fields
+                                              .where((h) =>
+                                                  h.key ==
+                                                  AdditionalFieldsType.noOfRooms
+                                                      .toValue())
+                                              .firstOrNull
+                                              ?.value
+                                              .toString() ??
+                                          '0',
+                                      isInline: true),
+                                  LabelValuePair(
+                                      label: localizations.translate(
+                                          i18.householdDetails.typeOfStructure),
+                                      value: (deliverState
+                                                  .householdMemberWrapper
+                                                  ?.household
+                                                  ?.additionalFields
+                                                  ?.fields
+                                                  .where((h) =>
+                                                      h.key ==
+                                                      AdditionalFieldsType
+                                                          .houseStructureTypes
+                                                          .toValue())
                                                   .firstOrNull
                                                   ?.value ??
-                                                  i18.common.coreCommonNA)
-                                                  : variants
+                                              [])
+                                          .toString()
+                                          .split('|')
+                                          .map((item) =>
+                                              getLocalizedMessage(item))
+                                          .toList()
+                                          .join(', '),
+                                      isInline: true),
+                                ]),
+                          ]),
+                      BlocBuilder<ProductVariantBloc, ProductVariantState>(
+                          builder: (context, productState) {
+                        final variants = productState.whenOrNull(
+                          fetched: (productVariants) {
+                            final resourcesDelivered = deliverState
+                                .oldTask?.resources
+                                ?.map((e) => TaskResourceInfo(
+                                    productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.sku ??
+                                        productVariants
+                                            .where((p) =>
+                                                p.id == e.productVariantId)
+                                            .firstOrNull
+                                            ?.variation ??
+                                        i18.common.coreCommonNA,
+                                    e.quantity ?? '0'))
+                                .toList();
+                            return resourcesDelivered;
+                          },
+                        );
+                        return DigitCard(
+                            margin: const EdgeInsets.all(spacer2),
+                            children: [
+                              LabelValueList(
+                                  heading: localizations.translate(
+                                      '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                  withDivider: true,
+                                  labelFlex: 6,
+                                  items: [
+                                    LabelValuePair(
+                                      label: localizations.translate(deliverState
+                                                      .oldTask?.status ==
+                                                  Status.administeredFailed
+                                                      .toValue() ||
+                                              deliverState.oldTask?.status ==
+                                                  Status.beneficiaryRefused
+                                                      .toValue()
+                                          ? i18.deliverIntervention
+                                              .reasonForRefusalLabel
+                                          : '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.typeOfResourceUsed}'),
+                                      value: deliverState.oldTask?.status ==
+                                                  Status.administeredFailed
+                                                      .toValue() ||
+                                              deliverState.oldTask?.status ==
+                                                  Status.beneficiaryRefused
+                                                      .toValue()
+                                          ? getLocalizedMessage(deliverState
+                                                  .oldTask
+                                                  ?.additionalFields
+                                                  ?.fields
+                                                  .where(
+                                                    (d) =>
+                                                        d.key ==
+                                                        AdditionalFieldsType
+                                                            .reasonOfRefusal
+                                                            .toValue(),
+                                                  )
+                                                  .firstOrNull
+                                                  ?.value ??
+                                              i18.common.coreCommonNA)
+                                          : variants
                                                   ?.map((e) =>
-                                              '${getLocalizedMessage(e.productName)} : ${e.quantityDelivered}')
+                                                      '${getLocalizedMessage(e.productName)} : ${e.quantityDelivered}')
                                                   .toList()
                                                   .join('\n') ??
-                                                  localizations.translate(
-                                                      i18.common.coreCommonNA),
-                                            ),
-                                          ]),
-                                    ]
-                                );
-                              }),
-                        ],
-                      ),
-                    )
-                  ]);
-            },
-          )),
+                                              localizations.translate(
+                                                  i18.common.coreCommonNA),
+                                    ),
+                                  ]),
+                            ]);
+                      }),
+                    ],
+                  ),
+                )
+              ]);
+        },
+      )),
     );
   }
 }

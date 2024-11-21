@@ -6,13 +6,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
-import '../../models/pgr_address.dart';
 import '/blocs/complaints_registration/complaints_registration.dart';
 import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
 import '/widgets/header/back_navigation_help_header.dart';
 import '/widgets/localized.dart';
-
+import '../../models/pgr_address.dart';
 
 @RoutePage()
 class ComplaintsLocationPage extends LocalizedStatefulWidget {
