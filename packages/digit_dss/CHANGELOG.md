@@ -1,6 +1,7 @@
 ## 1.0.2
-* Updated to latest package versions
-* Updated flutter version to 3.22.1
+* Bug fixes
+  * Added last sync time 
+* Added amount enum
 
 ## 1.0.1
 * Bug fixes

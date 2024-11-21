@@ -1,13 +1,16 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_divider.dart';
-import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
+import '../../router/referral_reconciliation_router.gm.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
@@ -42,17 +45,27 @@ class _ReferralReasonChecklistPreviewPageState
               serviceSearch: (serviceList, selectedService, loading) {
                 return selectedService != null
                     ? DigitCard(
-                        child: DigitElevatedButton(
-                          onPressed: () {
-                            context.read<ServiceBloc>().add(
-                                  ServiceResetEvent(serviceList: serviceList),
-                                );
-                          },
-                          child: Text(
-                            localizations.translate(i18.common.corecommonclose),
-                          ),
-                        ),
-                      )
+                        cardType: CardType.primary,
+                        padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                        children: [
+                            Button(
+                              size: ButtonSize.large,
+                              label: localizations
+                                  .translate(i18.common.corecommonclose),
+                              mainAxisSize: MainAxisSize.max,
+                              onPressed: () {
+                                context.read<ServiceBloc>().add(
+                                      ServiceResetEvent(
+                                          serviceList: serviceList),
+                                    );
+                                context.router.popUntil((route) =>
+                                    route.settings.name ==
+                                    SearchReferralReconciliationsRoute.name);
+                                context.router.maybePop();
+                              },
+                              type: ButtonType.primary,
+                            )
+                          ])
                     : const Offstage();
               },
             );
@@ -69,57 +82,61 @@ class _ReferralReasonChecklistPreviewPageState
                         children: [
                           ...value1.map((e) => e.serviceDefId != null
                               ? DigitCard(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerLeft,
-                                        child: Text(
-                                          DateFormat(defaultDateFormat).format(
-                                            DateFormat(defaultDateFormat).parse(
-                                              e.createdAt.toString(),
-                                            ),
-                                          ),
-                                          style: theme.textTheme.headlineMedium,
-                                        ),
-                                      ),
-                                      Row(
+                                  margin:
+                                      EdgeInsets.all(theme.spacerTheme.spacer2),
+                                  cardType: CardType.primary,
+                                  children: [
+                                      Column(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          SizedBox(
+                                          Align(
+                                            alignment: Alignment.centerLeft,
                                             child: Text(
-                                              localizations.translate(
-                                                '${e.tenantId}',
+                                              DateFormat(defaultDateFormat)
+                                                  .format(
+                                                DateFormat(defaultDateFormat)
+                                                    .parse(
+                                                  e.createdAt.toString(),
+                                                ),
                                               ),
+                                              style: theme
+                                                  .textTheme.headlineMedium,
                                             ),
                                           ),
-                                          DigitOutLineButton(
-                                            label: localizations.translate(
-                                              i18.referralReconciliation
-                                                  .iconLabel,
-                                            ),
-                                            onPressed: () {
-                                              context.read<ServiceBloc>().add(
-                                                    ServiceSelectionEvent(
-                                                      service: e,
-                                                    ),
-                                                  );
-                                            },
-                                            buttonStyle:
-                                                OutlinedButton.styleFrom(
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.zero,
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              SizedBox(
+                                                child: Text(
+                                                  localizations.translate(
+                                                    '${e.tenantId}',
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                              Button(
+                                                label: localizations.translate(
+                                                  i18.referralReconciliation
+                                                      .iconLabel,
+                                                ),
+                                                onPressed: () {
+                                                  context
+                                                      .read<ServiceBloc>()
+                                                      .add(
+                                                        ServiceSelectionEvent(
+                                                          service: e,
+                                                        ),
+                                                      );
+                                                },
+                                                type: ButtonType.secondary,
+                                                size: ButtonSize.large,
+                                              ),
+                                            ],
                                           ),
                                         ],
                                       ),
-                                    ],
-                                  ),
-                                )
+                                    ])
                               : const Offstage()),
                         ],
                       )
@@ -132,120 +149,132 @@ class _ReferralReasonChecklistPreviewPageState
                             item2,
                           ) {
                             return DigitCard(
-                              child: Column(
-                                children: [
-                                  Container(
-                                    width: MediaQuery.of(context).size.width,
-                                    margin: const EdgeInsets.all(8),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            localizations.translate(
-                                              item2?.code ?? '',
+                              cardType: CardType.primary,
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      margin: const EdgeInsets.all(8),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.centerLeft,
+                                            child: Text(
+                                              localizations.translate(
+                                                item2?.code ?? '',
+                                              ),
+                                              style:
+                                                  theme.textTheme.displayMedium,
                                             ),
-                                            style:
-                                                theme.textTheme.displayMedium,
                                           ),
-                                        ),
-                                        ...(value2.attributes ?? [])
-                                            .where((a) =>
-                                                a.value !=
-                                                    i18.checklist
-                                                        .notSelectedKey &&
-                                                a.value != '')
-                                            .map(
-                                              (e) => Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        localizations.translate(
-                                                          "${item2?.code ?? ''}.${e.attributeCode!}",
-                                                        ),
-                                                        style: theme.textTheme
-                                                            .headlineSmall,
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      margin: const EdgeInsets
-                                                              .only()
-                                                          .copyWith(
-                                                        top: kPadding,
-                                                        bottom: kPadding,
-                                                      ),
-                                                      child: Align(
+                                          ...(value2.attributes ?? [])
+                                              .where((a) =>
+                                                  a.value !=
+                                                      i18.checklist
+                                                          .notSelectedKey &&
+                                                  a.value != '')
+                                              .map(
+                                                (e) => Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.start,
+                                                    children: [
+                                                      Align(
                                                         alignment: Alignment
                                                             .centerLeft,
                                                         child: Text(
-                                                          e.dataType ==
-                                                                  'SingleValueList'
-                                                              ? localizations
-                                                                  .translate(
-                                                                  'CORE_COMMON_${e.value.toString().toUpperCase()}',
-                                                                )
-                                                              : e.value ?? "",
+                                                          localizations
+                                                              .translate(
+                                                            "${item2?.code ?? ''}.${e.attributeCode!}",
+                                                          ),
+                                                          style: theme.textTheme
+                                                              .headlineSmall,
                                                         ),
                                                       ),
-                                                    ),
-                                                    e.additionalDetails != '' &&
-                                                            e.additionalDetails !=
-                                                                null
-                                                        ? Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only()
-                                                                    .copyWith(
-                                                              top: kPadding,
-                                                              bottom: kPadding,
-                                                            ),
-                                                            child: Column(
-                                                              children: [
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    localizations
-                                                                        .translate(
-                                                                      "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                      Container(
+                                                        margin: const EdgeInsets
+                                                                .only()
+                                                            .copyWith(
+                                                          top: theme.spacerTheme
+                                                              .spacer2,
+                                                          bottom: theme
+                                                              .spacerTheme
+                                                              .spacer2,
+                                                        ),
+                                                        child: Align(
+                                                          alignment: Alignment
+                                                              .centerLeft,
+                                                          child: Text(
+                                                            e.dataType ==
+                                                                    'SingleValueList'
+                                                                ? localizations
+                                                                    .translate(
+                                                                    'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                                  )
+                                                                : e.value ?? "",
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      e.additionalDetails !=
+                                                                  '' &&
+                                                              e.additionalDetails !=
+                                                                  null
+                                                          ? Container(
+                                                              margin:
+                                                                  const EdgeInsets
+                                                                          .only()
+                                                                      .copyWith(
+                                                                top: theme
+                                                                    .spacerTheme
+                                                                    .spacer2,
+                                                                bottom: theme
+                                                                    .spacerTheme
+                                                                    .spacer2,
+                                                              ),
+                                                              child: Column(
+                                                                children: [
+                                                                  Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Text(
+                                                                      localizations
+                                                                          .translate(
+                                                                        "${item2?.code ?? ''}.${e.attributeCode!}.ADDITIONAL_FIELD",
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                                Align(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .centerLeft,
-                                                                  child: Text(
-                                                                    localizations
-                                                                        .translate(
-                                                                      e.additionalDetails,
+                                                                  Align(
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .centerLeft,
+                                                                    child: Text(
+                                                                      localizations
+                                                                          .translate(
+                                                                        e.additionalDetails,
+                                                                      ),
                                                                     ),
                                                                   ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          )
-                                                        : const Offstage(),
-                                                    const DigitDivider(),
-                                                  ],
+                                                                ],
+                                                              ),
+                                                            )
+                                                          : const Offstage(),
+                                                      const DigitDivider(),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                      ].toList(),
+                                        ].toList(),
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                )
+                              ],
                             );
                           },
                           orElse: () => const Offstage(),

@@ -1,9 +1,18 @@
-## 1.0.4
-* Updated to latest package versions
-* Updated flutter version to 3.22.1
+## 1.0.3+5
 
+* Added audit and client audit details in stock reconciliation
+* Updated digit_data_model and components to latest version
 
-## 1.0.3+1
+## 1.0.3+4
+
+* Updated wayBillNumber validation
+
+## 1.0.3+3
+
+* Updated key name of waybillNumber to wayBillNumber
+* Return transaction type logic change in stock_details and report_details bloc
+
+## 1.0.3+2
 
 * Updated digit_scanner package, digit_components, digit_data_model
 

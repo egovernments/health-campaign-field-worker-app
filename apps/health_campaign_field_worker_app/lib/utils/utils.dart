@@ -5,6 +5,8 @@ import 'dart:io';
 
 import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
+
+import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -25,6 +27,8 @@ import 'package:referral_reconciliation/referral_reconciliation.dart'
     as referral_reconciliation_mappers;
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
+import 'package:survey_form/survey_form.init.dart'
+    as survey_form_mappers;
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/projects_beneficiary_downsync/project_beneficiaries_downsync.dart';
@@ -399,8 +403,57 @@ initializeAllMappers() async {
     Future(() => data_model_mappers.initializeMappers()),
     Future(() => registration_delivery_mappers.initializeMappers()),
     Future(() => dss_mappers.initializeMappers()),
+    Future(() => survey_form_mappers.initializeMappers()),
+    Future(() => complaints_mappers.initializeMappers())
   ];
   await Future.wait(initializations);
+}
+
+int getSyncCount(List<OpLog> oplogs) {
+  int count = oplogs.where((element) {
+    if (element.syncedDown == false && element.syncedUp == true) {
+      switch (element.entityType) {
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+        case DataModelType.service:
+          return true;
+        default:
+          return false;
+      }
+    } else {
+      switch (element.entityType) {
+        // add syncCount case for package
+        case DataModelType.household:
+        case DataModelType.individual:
+        case DataModelType.householdMember:
+        case DataModelType.projectBeneficiary:
+        case DataModelType.task:
+        case DataModelType.stock:
+        case DataModelType.stockReconciliation:
+        case DataModelType.service:
+        case DataModelType.complaints:
+        case DataModelType.sideEffect:
+        case DataModelType.referral:
+        case DataModelType.hFReferral:
+        case DataModelType.attendance:
+        case DataModelType.userLocation:
+          return true;
+        default:
+          return false;
+      }
+    }
+  }).length;
+
+  return count;
 }
 
 class LocalizationParams {

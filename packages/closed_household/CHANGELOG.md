@@ -1,6 +1,6 @@
-## 1.0.2
-* Updated to latest package versions
-* Updated flutter version to 3.22.1
+## 1.0.2-dev.1
+* Updated digit_data_model to latest version
+* Migrated to digit_ui_components
 
 ## 1.0.1+1
 

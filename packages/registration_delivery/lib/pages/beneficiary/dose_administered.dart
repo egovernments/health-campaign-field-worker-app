@@ -1,14 +1,10 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/blocs/location/location.dart';
-import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
-import 'package:digit_components/widgets/digit_card.dart';
-import 'package:digit_components/widgets/digit_elevated_button.dart';
-import 'package:digit_components/widgets/molecules/digit_table.dart';
-import 'package:digit_components/widgets/molecules/digit_table_card.dart';
-import 'package:digit_components/widgets/scrollable_content.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -28,6 +24,7 @@ import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/localized.dart';
+import '../../widgets/table_card/table_card.dart';
 
 @RoutePage()
 class DoseAdministeredPage extends LocalizedStatefulWidget {
@@ -60,13 +57,17 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
     final overViewBloc = context.read<HouseholdOverviewBloc>().state;
     // Define a list of TableHeader objects for the header of a table
     final headerListResource = [
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
-        cellKey: 'dose',
+      DigitTableColumn(
+        header: localizations.translate(i18.beneficiaryDetails.beneficiaryDose),
+        cellValue: 'dose',
+        width: MediaQuery.of(context).size.width /
+            2.18,
       ),
-      TableHeader(
-        localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
-        cellKey: 'resources',
+      DigitTableColumn(
+        header: localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+        cellValue: 'resources',
+        width: MediaQuery.of(context).size.width /
+            2.18,
       ),
     ];
 
@@ -87,16 +88,20 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                     ),
                   ]),
                   footer: DigitCard(
-                    margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                    margin: const EdgeInsets.only(top: spacer2),
                     padding:
-                        const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                    child: ValueListenableBuilder(
+                        const EdgeInsets.all(spacer2),
+                    children: [ValueListenableBuilder(
                       valueListenable: clickedStatus,
                       builder: (context, bool isClicked, _) {
-                        return DigitElevatedButton(
-                          onPressed: isClicked
-                              ? null
-                              : () {
+                        return Button(
+                          label: localizations
+                              .translate(i18.common.coreCommonNext),
+                          type: ButtonType.primary,
+                          size: ButtonSize.large,
+                          mainAxisSize: MainAxisSize.max,
+                          isDisabled: isClicked,
+                          onPressed: () {
                                   if (form
                                           .control(_doseAdministeredKey)
                                           .value ==
@@ -113,7 +118,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                   } else {
                                     final doseAdministered = form
                                         .control(_doseAdministeredKey)
-                                        .value as KeyValue;
+                                        .value as bool;
                                     final lat = locationState.latitude;
                                     final long = locationState.longitude;
                                     clickedStatus.value = true;
@@ -123,7 +128,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                     final event =
                                         context.read<DeliverInterventionBloc>();
 
-                                    if (doseAdministered.key == true &&
+                                    if (doseAdministered == true &&
                                         context.mounted) {
                                       // Iterate through future deliveries
 
@@ -302,47 +307,38 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         ));
                                   }
                                 },
-                          child: Center(
-                            child: Text(
-                              localizations
-                                  .translate(i18.common.coreCommonNext),
-                            ),
-                          ),
                         );
                       },
-                    ),
+                    ),]
                   ),
                   children: [
                     DigitCard(
-                      child: Column(
-                        children: [
-                          Text(
-                            localizations.translate(
-                              i18.deliverIntervention.wasTheDoseAdministered,
-                            ),
-                            style: theme.textTheme.displayMedium,
-                          ),
-                          DigitRadioButtonList<KeyValue>(
-                            contentPadding: EdgeInsets.zero,
-                            labelStyle: DigitTheme
-                                .instance.mobileTheme.textTheme.headlineSmall,
-                            formControlName: _doseAdministeredKey,
-                            valueMapper: (val) =>
-                                localizations.translate(val.label),
-                            options: Constants.yesNo,
-                            isRequired: true,
-                            errorMessage: localizations.translate(
-                              i18.common.corecommonRequired,
-                            ),
-                            onValueChange: (val) {
-                              setState(() {
-                                doseAdministered = val
-                                    .key; // Update doseAdministered with setState
-                              });
-                            },
-                          ),
-                        ],
+                      margin: const EdgeInsets.only(
+                          top: spacer2, bottom: spacer2),
+                      children: [Text(
+                        localizations.translate(
+                          i18.deliverIntervention.wasTheDoseAdministered,
+                        ),
+                        style: theme.textTheme.displayMedium,
                       ),
+                      ReactiveWrapperField(
+                        formControlName: _doseAdministeredKey,
+                        builder: (field)=> RadioList(
+                          radioButtons: Constants.yesNo
+                              .map((e) => RadioButtonModel(
+                              code: e.key.toString(),
+                              name: localizations.translate(e.label),
+                          )).toList(),
+                          errorMessage: form.control(_doseAdministeredKey).hasErrors?
+                          localizations.translate(
+                            i18.common.corecommonRequired,
+                          ):null,
+                          groupValue: form.control(_doseAdministeredKey).value.toString()??'',
+                          onChanged: (val) {
+                            form.control(_doseAdministeredKey).value=val.code=='true'?true:false;
+                          },
+                        ),
+                      ),]
                     ),
                     BlocBuilder<ProductVariantBloc, ProductVariantState>(
                       builder: (context, productState) {
@@ -356,10 +352,12 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             );
 
                             return DigitCard(
-                              child: BlocBuilder<DeliverInterventionBloc,
+                              margin: const EdgeInsets.only(
+                                top: spacer2, bottom: spacer2),
+                              children: [BlocBuilder<DeliverInterventionBloc,
                                   DeliverInterventionState>(
                                 builder: (context, deliveryState) {
-                                  List<TableDataRow> tableDataRows =
+                                  List<DigitTableRow> tableDataRows =
                                       deliveryState.futureDeliveries!.map((e) {
                                     int doseIndex = deliveryState
                                             .futureDeliveries!
@@ -381,12 +379,12 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                       return '${ele.quantity} - ${pv.sku.toString()}';
                                     }).toList();
 
-                                    return TableDataRow([
-                                      TableData(
+                                    return DigitTableRow(tableRow: [
+                                      DigitTableData(
                                         'Dose $doseIndex',
                                         cellKey: 'dose',
                                       ),
-                                      TableData(
+                                      DigitTableData(
                                         skus.join(' + '),
                                         cellKey: 'resources',
                                       ),
@@ -399,7 +397,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         alignment: Alignment.centerLeft,
                                         child: Padding(
                                           padding: const EdgeInsets.only(
-                                            bottom: kPadding * 2,
+                                            bottom: spacer2 * 2,
                                           ),
                                           child: Text(
                                             localizations.translate(
@@ -412,10 +410,6 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         ),
                                       ),
                                       DigitTableCard(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 4.0),
-                                        topPadding:
-                                            const EdgeInsets.only(top: 4.0),
                                         element: {
                                           localizations.translate(
                                             i18.beneficiaryDetails
@@ -437,18 +431,17 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                         thickness: 2.0,
                                       ),
                                       DigitTable(
-                                        headerList: headerListResource,
-                                        tableData: tableDataRows,
-                                        columnWidth:
-                                            MediaQuery.of(context).size.width /
-                                                2.18,
-                                        height:
+                                        enableBorder: true,
+                                        showPagination: false,
+                                        columns: headerListResource,
+                                        rows: tableDataRows,
+                                        tableHeight:
                                             (tableDataRows.length + 1) * 57.5,
                                       ),
                                     ],
                                   );
                                 },
-                              ),
+                              ),]
                             );
                           },
                         );
@@ -466,7 +459,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
 
   FormGroup buildForm(BuildContext context) {
     return fb.group(<String, Object>{
-      _doseAdministeredKey: FormControl<KeyValue>(
+      _doseAdministeredKey: FormControl<bool>(
         value: null,
       ),
     });

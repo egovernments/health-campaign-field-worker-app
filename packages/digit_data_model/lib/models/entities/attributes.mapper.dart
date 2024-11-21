@@ -240,6 +240,11 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   @override
   final String id = 'AttributesModel';
 
+  static Map<String, dynamic>? _$additionalDetails(AttributesModel v) =>
+      v.additionalDetails;
+  static const Field<AttributesModel, Map<String, dynamic>>
+      _f$additionalDetails =
+      Field('additionalDetails', _$additionalDetails, opt: true);
   static AttributesAdditionalFields? _$additionalFields(AttributesModel v) =>
       v.additionalFields;
   static const Field<AttributesModel, AttributesAdditionalFields>
@@ -297,6 +302,7 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
 
   @override
   final MappableFields<AttributesModel> fields = const {
+    #additionalDetails: _f$additionalDetails,
     #additionalFields: _f$additionalFields,
     #id: _f$id,
     #dataType: _f$dataType,
@@ -327,6 +333,7 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
 
   static AttributesModel _instantiate(DecodingData data) {
     return AttributesModel(
+        additionalDetails: data.dec(_f$additionalDetails),
         additionalFields: data.dec(_f$additionalFields),
         id: data.dec(_f$id),
         dataType: data.dec(_f$dataType),
@@ -398,6 +405,8 @@ extension AttributesModelValueCopy<$R, $Out>
 
 abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
     implements EntityModelCopyWith<$R, $In, $Out> {
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails;
   AttributesAdditionalFieldsCopyWith<$R, AttributesAdditionalFields,
       AttributesAdditionalFields>? get additionalFields;
   ListCopyWith<$R, String, ObjectCopyWith<$R, String, String>>? get values;
@@ -408,7 +417,8 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       get clientAuditDetails;
   @override
   $R call(
-      {AttributesAdditionalFields? additionalFields,
+      {Map<String, dynamic>? additionalDetails,
+      AttributesAdditionalFields? additionalFields,
       String? id,
       String? dataType,
       String? referenceId,
@@ -437,6 +447,14 @@ class _AttributesModelCopyWithImpl<$R, $Out>
   late final ClassMapperBase<AttributesModel> $mapper =
       AttributesModelMapper.ensureInitialized();
   @override
+  MapCopyWith<$R, String, dynamic, ObjectCopyWith<$R, dynamic, dynamic>>?
+      get additionalDetails => $value.additionalDetails != null
+          ? MapCopyWith(
+              $value.additionalDetails!,
+              (v, t) => ObjectCopyWith(v, $identity, t),
+              (v) => call(additionalDetails: v))
+          : null;
+  @override
   AttributesAdditionalFieldsCopyWith<$R, AttributesAdditionalFields,
           AttributesAdditionalFields>?
       get additionalFields => $value.additionalFields?.copyWith
@@ -456,7 +474,8 @@ class _AttributesModelCopyWithImpl<$R, $Out>
           .$chain((v) => call(clientAuditDetails: v));
   @override
   $R call(
-          {Object? additionalFields = $none,
+          {Object? additionalDetails = $none,
+          Object? additionalFields = $none,
           Object? id = $none,
           Object? dataType = $none,
           Object? referenceId = $none,
@@ -473,6 +492,7 @@ class _AttributesModelCopyWithImpl<$R, $Out>
           Object? clientAuditDetails = $none,
           Object? isDeleted = $none}) =>
       $apply(FieldCopyWithData({
+        if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (additionalFields != $none) #additionalFields: additionalFields,
         if (id != $none) #id: id,
         if (dataType != $none) #dataType: dataType,
@@ -494,6 +514,8 @@ class _AttributesModelCopyWithImpl<$R, $Out>
       }));
   @override
   AttributesModel $make(CopyWithData data) => AttributesModel(
+      additionalDetails:
+          data.get(#additionalDetails, or: $value.additionalDetails),
       additionalFields:
           data.get(#additionalFields, or: $value.additionalFields),
       id: data.get(#id, or: $value.id),
