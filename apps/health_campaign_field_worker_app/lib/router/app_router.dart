@@ -6,20 +6,20 @@ import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/router/complaints_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:survey_form/router/survey_form_router.dart';
-import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -101,10 +101,13 @@ class AppRouter extends _$AppRouter {
                 path: '',
               ),
               AutoRoute(
-                  page: SurveyFormBoundaryViewRoute.page, path: 'view-boundary'),
+                  page: SurveyFormBoundaryViewRoute.page,
+                  path: 'view-boundary'),
               AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
               AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
-              AutoRoute(page: SurveyFormAcknowledgementRoute.page, path: 'surveyForm-acknowledgement'),
+              AutoRoute(
+                  page: SurveyFormAcknowledgementRoute.page,
+                  path: 'surveyForm-acknowledgement'),
             ]),
         AutoRoute(
           page: BeneficiaryAcknowledgementRoute.page,

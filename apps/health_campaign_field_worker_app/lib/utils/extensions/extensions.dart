@@ -1,7 +1,7 @@
-import 'package:attendance_management/attendance_management.dart';
-import 'package:closed_household/utils/utils.dart';
 import 'dart:async';
 
+import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/utils/utils.dart';
 import 'package:collection/collection.dart';
 import 'package:complaints/utils/utils.dart';
 import 'package:digit_data_model/data_model.dart';

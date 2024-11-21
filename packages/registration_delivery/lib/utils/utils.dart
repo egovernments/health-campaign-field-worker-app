@@ -104,9 +104,10 @@ bool checkEligibilityForAgeAndSideEffect(
               : false
           : false;
     } else {
-      if(projectType?.validMaxAge!=null && projectType?.validMinAge!=null){
+      if (projectType?.validMaxAge != null &&
+          projectType?.validMinAge != null) {
         return totalAgeMonths >= projectType!.validMinAge! &&
-            totalAgeMonths <= projectType.validMaxAge!
+                totalAgeMonths <= projectType.validMaxAge!
             ? true
             : false;
       }

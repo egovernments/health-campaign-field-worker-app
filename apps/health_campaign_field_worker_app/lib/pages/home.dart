@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
-import 'package:survey_form/survey_form.dart';
-import 'package:complaints/complaints.dart';
-import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -31,6 +30,7 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.gm
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
@@ -501,7 +501,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.showcaseKey,
+      i18.home.mySurveyForm:
+          homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -714,14 +715,18 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
-          isHealthFacilityWorker: context.loggedInUserRoles.where((role) => role.code == RolesType.healthFacilityWorker.toValue()).toList().isNotEmpty,
+          isHealthFacilityWorker: context.loggedInUserRoles
+              .where((role) =>
+                  role.code == RolesType.healthFacilityWorker.toValue())
+              .toList()
+              .isNotEmpty,
           roles: context.read<AuthBloc>().state.maybeMap(
-            orElse: () => const Offstage(),
-            authenticated: (res) {
-              return res.userModel.roles
-                  .map((e) => e.code.snakeCase.toUpperCase())
-                  .toList();
-            }),
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
         );
 
         ReferralReconSingleton().setInitialData(

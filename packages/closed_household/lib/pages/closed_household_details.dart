@@ -95,147 +95,150 @@ class ClosedHouseholdDetailsPageState
                 ],
               ),
               footer: DigitCard(
-                padding: EdgeInsets.all(theme.spacerTheme.spacer2),
-                children: [
-                  BlocBuilder<LocationBloc, LocationState>(
-                  builder: (context, locationState) {
-                    return Button(
-                      size: ButtonSize.large,
-                      type: ButtonType.primary,
-                      mainAxisSize: MainAxisSize.max,
-                      onPressed: () {
-                        if(!form.valid && form
-                            .control(
-                          _householdHeadNameKey,)
-                            .value.length>0) {
-                          return;
-                        }
-                        final String? householdHeadName = form
-                            .control(_householdHeadNameKey)
-                            .value as String?;
+                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                  children: [
+                    BlocBuilder<LocationBloc, LocationState>(
+                      builder: (context, locationState) {
+                        return Button(
+                          size: ButtonSize.large,
+                          type: ButtonType.primary,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {
+                            if (!form.valid &&
+                                form
+                                        .control(
+                                          _householdHeadNameKey,
+                                        )
+                                        .value
+                                        .length >
+                                    0) {
+                              return;
+                            }
+                            final String? householdHeadName = form
+                                .control(_householdHeadNameKey)
+                                .value as String?;
 
-                        context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSummary(
-                                latitude: locationState.latitude!,
-                                longitude: locationState.longitude!,
-                                locationAccuracy: locationState.accuracy!,
-                                householdHeadName: householdHeadName != null &&
-                                        householdHeadName.trim().isNotEmpty
-                                    ? householdHeadName
-                                    : null,
-                              ),
-                            );
+                            context.read<ClosedHouseholdBloc>().add(
+                                  ClosedHouseholdEvent.handleSummary(
+                                    latitude: locationState.latitude!,
+                                    longitude: locationState.longitude!,
+                                    locationAccuracy: locationState.accuracy!,
+                                    householdHeadName: householdHeadName !=
+                                                null &&
+                                            householdHeadName.trim().isNotEmpty
+                                        ? householdHeadName
+                                        : null,
+                                  ),
+                                );
 
-                        context.router.push(ClosedHouseholdSummaryRoute());
-                      },
-                      label: localizations.translate(
+                            context.router.push(ClosedHouseholdSummaryRoute());
+                          },
+                          label: localizations.translate(
                             i18.common.coreCommonNext,
-                      ),
-                    );
-                  },
-                ),]
-              ),
+                          ),
+                        );
+                      },
+                    ),
+                  ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(
-                    children: [
-                      DigitTextBlock(
-                        heading: localizations.translate(
-                          i18.closeHousehold.closeHouseHoldDetailLabel,
-                        ),
-                        headingStyle: theme.textTheme.displayMedium,
-                        description: localizations.translate(
-                          i18.closeHousehold.closeHouseHoldDetailDescLabel,
-                        ),
+                  child: DigitCard(children: [
+                    DigitTextBlock(
+                      heading: localizations.translate(
+                        i18.closeHousehold.closeHouseHoldDetailLabel,
                       ),
-                      DigitCard(children: [
-                        ReactiveWrapperField<String>(
-                            formControlName:
-                            _administrationAreaKey,
-                            showErrors: (control) =>
-                            control.invalid &&
-                                control.touched,
-                            // Ensures error is shown if invalid and touched
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.closeHousehold.villageName,
-                                ),
-                                child: DigitTextFormInput(
-                                  errorMessage: field.errorText,
-                                  readOnly: true,
-                                  initialValue: form
-                                      .control(
-                                    _administrationAreaKey)
-                                      .value,
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<double>(
-                            formControlName:
-                            _accuracyKey,
-                            showErrors: (control) =>
-                            control.invalid &&
-                                control.touched,
-                            // Ensures error is shown if invalid and touched
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.closeHousehold.accuracyLabel,
-                                ),
-                                child: DigitTextFormInput(
-                                  errorMessage: field.errorText,
-                                  readOnly: true,
-                                  initialValue: (form
-                                      .control(
-                                    _accuracyKey,)
-                                      .value).toString(),
-                                ),
-                              );
-                            }),
-                        ReactiveWrapperField<String>(
-                            validationMessages: {
-                              'maxLength': (_) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', maxLength.toString()),
-                              'minLength': (_) => localizations
-                                  .translate(i18.common.min2CharsRequired)
-                                  .replaceAll('{}', '2'),
-                            },
-                            formControlName:
-                            _householdHeadNameKey,
-                            showErrors: (control) =>
-                            control.invalid &&
-                                control.touched && control.value != '',
-                            // Ensures error is shown if invalid and touched
-                            builder: (field) {
-                              return LabeledField(
-                                label: localizations.translate(
-                                  i18.closeHousehold.headNameLabel,
-                                ),
-                                child: DigitTextFormInput(
-                                  maxLength: 64,
-                                  charCount: true,
-                                  onChange: (val) => {
-                                    form
+                      headingStyle: theme.textTheme.displayMedium,
+                      description: localizations.translate(
+                        i18.closeHousehold.closeHouseHoldDetailDescLabel,
+                      ),
+                    ),
+                    DigitCard(children: [
+                      ReactiveWrapperField<String>(
+                          formControlName: _administrationAreaKey,
+                          showErrors: (control) =>
+                              control.invalid && control.touched,
+                          // Ensures error is shown if invalid and touched
+                          builder: (field) {
+                            return LabeledField(
+                              label: localizations.translate(
+                                i18.closeHousehold.villageName,
+                              ),
+                              child: DigitTextFormInput(
+                                errorMessage: field.errorText,
+                                readOnly: true,
+                                initialValue:
+                                    form.control(_administrationAreaKey).value,
+                              ),
+                            );
+                          }),
+                      ReactiveWrapperField<double>(
+                          formControlName: _accuracyKey,
+                          showErrors: (control) =>
+                              control.invalid && control.touched,
+                          // Ensures error is shown if invalid and touched
+                          builder: (field) {
+                            return LabeledField(
+                              label: localizations.translate(
+                                i18.closeHousehold.accuracyLabel,
+                              ),
+                              child: DigitTextFormInput(
+                                errorMessage: field.errorText,
+                                readOnly: true,
+                                initialValue: (form
                                         .control(
-                                      _householdHeadNameKey,)
-                                        .markAsTouched(),
-                                    form
-                                        .control(
-                                      _householdHeadNameKey,)
-                                        .value = val,
-                                  },
-                                  errorMessage: field.errorText,
-                                  initialValue: form
+                                          _accuracyKey,
+                                        )
+                                        .value)
+                                    .toString(),
+                              ),
+                            );
+                          }),
+                      ReactiveWrapperField<String>(
+                          validationMessages: {
+                            'maxLength': (_) => localizations
+                                .translate(i18.common.maxCharsRequired)
+                                .replaceAll('{}', maxLength.toString()),
+                            'minLength': (_) => localizations
+                                .translate(i18.common.min2CharsRequired)
+                                .replaceAll('{}', '2'),
+                          },
+                          formControlName: _householdHeadNameKey,
+                          showErrors: (control) =>
+                              control.invalid &&
+                              control.touched &&
+                              control.value != '',
+                          // Ensures error is shown if invalid and touched
+                          builder: (field) {
+                            return LabeledField(
+                              label: localizations.translate(
+                                i18.closeHousehold.headNameLabel,
+                              ),
+                              child: DigitTextFormInput(
+                                maxLength: 64,
+                                charCount: true,
+                                onChange: (val) => {
+                                  form
                                       .control(
-                                    _householdHeadNameKey,)
-                                      .value,
-                                ),
-                              );
-                            }),
-                      ]),]
-                  ),
+                                        _householdHeadNameKey,
+                                      )
+                                      .markAsTouched(),
+                                  form
+                                      .control(
+                                        _householdHeadNameKey,
+                                      )
+                                      .value = val,
+                                },
+                                errorMessage: field.errorText,
+                                initialValue: form
+                                    .control(
+                                      _householdHeadNameKey,
+                                    )
+                                    .value,
+                              ),
+                            );
+                          }),
+                    ]),
+                  ]),
                 ),
               ],
             );

@@ -181,8 +181,7 @@ class MemberCard extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding:
-                    const EdgeInsets.only(left: spacer1, bottom: spacer2),
+                padding: const EdgeInsets.only(left: spacer1, bottom: spacer2),
                 child: Offstage(
                   offstage: beneficiaryType != BeneficiaryType.individual,
                   child: !isDelivered ||
