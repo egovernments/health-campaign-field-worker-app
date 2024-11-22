@@ -28,6 +28,8 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
+import '../../router/app_router.dart';
+
 @RoutePage()
 class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
   final bool isHeadOfHousehold;
@@ -188,7 +190,7 @@ class CustomIndividualDetailsPageState
                                       : null,
                                 ),
                               );
-                              router.push(SummaryRoute());
+                              router.push(CustomSummaryRoute());
                             }
                           },
                           editIndividual: (
@@ -480,7 +482,7 @@ class CustomIndividualDetailsPageState
                                         child: Text(
                                           overflow: TextOverflow.ellipsis,
                                           localizations
-                                              .translate(state.qrCodes.last),
+                                              .translate(state.qrCodes.first),
                                         ),
                                       ),
                                       Padding(
