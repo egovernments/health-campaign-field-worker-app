@@ -487,7 +487,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                         const EdgeInsets.only(
                                                             left: kPadding * 2),
                                                     child: DigitCheckboxTile(
-                                                      label: item,
+                                                      label: localizations.translate('${selectedServiceDefinition?.code}.${item}'),
                                                       value: controller[index]
                                                           .text
                                                           .split('.')
@@ -927,7 +927,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               return Column(
                 children: item.values!
                     .map((e) => DigitCheckboxTile(
-                          label: e,
+                          label: localizations.translate('${selectedServiceDefinition?.code}.${e}'),
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(

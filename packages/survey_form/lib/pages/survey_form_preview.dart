@@ -37,6 +37,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
         header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
+        enableFixedButton: true,
         footer: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             return state.maybeWhen(

@@ -12,6 +12,7 @@ import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../router/app_router.dart';
 import '../utils/constants.dart';
+import '../utils/environment_config.dart';
 import '../utils/i18_key_constants.dart' as i18;
 import '../utils/utils.dart';
 
@@ -154,10 +155,14 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     setState(() {});
     context.read<LocalizationBloc>().add(
           LocalizationEvent.onLoadLocalization(
-            module: localizationModulesList
-                .map((e) => e.name.toString())
-                .join(',')
-                .toString(),
+            module: 'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList
+        .map((e)
+    =>
+        e.name.toString()
+    )
+        .join(',')
+        .toString()
+  }',
             tenantId: tenantId,
             locale: locale,
             path: Constants.localizationApiPath,

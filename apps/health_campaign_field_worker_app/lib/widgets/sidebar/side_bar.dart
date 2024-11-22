@@ -13,6 +13,7 @@ import '../../blocs/localization/localization.dart';
 import '../../models/data_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 
@@ -124,17 +125,11 @@ class SideBar extends StatelessWidget {
                                         ele.value.toString() ==
                                         value.value.toString(),
                                   );
-                                  context.read<LocalizationBloc>().add(
-                                          LocalizationEvent
-                                              .onLoadLocalization(
-                                        module: localizationModulesList
-                                            .interfaces
-                                            .where((element) =>
-                                                element.type ==
-                                                Modules.localizationModule)
-                                            .map((e) => e.name.toString())
-                                            .join(',')
-                                            .toString(),
+                                  context
+                                      .read<LocalizationBloc>()
+                                      .add(LocalizationEvent.onLoadLocalization(
+                                        module:
+                                            "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                         tenantId:
                                             appConfig.tenantId ?? "default",
                                         locale: value.value.toString(),
@@ -207,8 +202,7 @@ class SideBar extends StatelessWidget {
                             i18.common.coreCommonOk,
                           ),
                           action: (ctx) =>
-                              Navigator.of(context, rootNavigator: true)
-                                  .pop(),
+                              Navigator.of(context, rootNavigator: true).pop(),
                         ),
                       ),
                     );
