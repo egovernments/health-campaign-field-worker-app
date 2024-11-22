@@ -35,7 +35,7 @@ class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
   const CustomIndividualDetailsPage({
     super.key,
     super.appLocalizations,
-    this.isHeadOfHousehold = false,
+    this.isHeadOfHousehold = true,
   });
 
   @override
