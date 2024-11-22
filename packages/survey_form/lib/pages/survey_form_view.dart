@@ -379,7 +379,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                               textAlign: TextAlign.left,
                             ),
                           ),
-                          ...initialAttributes!.where((att) => att.isActive.toString() == 'true').map((
+                          ...initialAttributes!.where((att) => att.isActive == true).map((
                             e,
                           ) {
                             int index = (initialAttributes ?? []).indexOf(e);

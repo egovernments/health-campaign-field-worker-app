@@ -18,7 +18,7 @@ class AttributesSearchModel extends EntitySearchModel
   final String? referenceId;
   final String? tenantId;
   final String? code;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
@@ -62,7 +62,7 @@ class AttributesModel extends EntityModel with AttributesModelMappable {
   final String? tenantId;
   final String? code;
   final List<String>? values;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
