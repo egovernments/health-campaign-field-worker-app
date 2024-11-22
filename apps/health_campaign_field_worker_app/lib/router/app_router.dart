@@ -21,6 +21,13 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/beneficiary_registration/custom_household_location.dart';
+import 'package:registration_delivery/blocs/app_localization.dart';
+import '../pages/beneficiary_registration/custom_household_details.dart';
+import '../pages/custom_search_beneficiary.dart';
+import '../pages/beneficiary_registration/custom_individual_details.dart';
+import '../pages/beneficiary_registration/custom_summary_page.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -125,10 +132,18 @@ class AppRouter extends _$AppRouter {
             path: 'registration-delivery-wrapper',
             children: [
               AutoRoute(
-                  initial: true,
-                  page: SearchBeneficiaryRoute.page,
-                  path: 'search-beneficiary'),
-
+                page: SearchBeneficiaryRoute.page,
+                path: 'search-beneficiary',
+              ),
+              AutoRoute(
+                initial: true,
+                page: CustomSearchBeneficiaryRoute.page,
+                path: 'custom-search-beneficiary',
+              ),
+              RedirectRoute(
+                path: 'search-beneficiary',
+                redirectTo: 'custom-search-beneficiary',
+              ),
               AutoRoute(
                 page: FacilitySelectionRoute.page,
                 path: 'select-facilities',
@@ -140,15 +155,53 @@ class AppRouter extends _$AppRouter {
                 path: 'beneficiary-registration',
                 children: [
                   AutoRoute(
-                      page: IndividualDetailsRoute.page,
-                      path: 'individual-details'),
+                    page: IndividualDetailsRoute.page,
+                    path: 'individual-details',
+                  ),
                   AutoRoute(
-                      page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
+                    page: CustomIndividualDetailsRoute.page,
+                    path: 'custom-individual-details',
+                  ),
+                  RedirectRoute(
+                    path: 'individual-details',
+                    redirectTo: 'custom-individual-details',
+                  ),
+                  AutoRoute(
+                    page: HouseHoldDetailsRoute.page,
+                    path: 'household-details',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseHoldDetailsRoute.page,
+                    path: 'custom-household-details',
+                  ),
+                  RedirectRoute(
+                    path: 'household-details',
+                    redirectTo: 'custom-household-details',
+                  ),
                   AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseholdLocationRoute.page,
+                    path: 'custom-household-location',
                     initial: true,
+                  ),
+                  RedirectRoute(
+                    path: 'household-location',
+                    redirectTo: 'custom-household-location',
+                  ),
+                  AutoRoute(
+                    page: SummaryRoute.page,
+                    path: 'beneficiary-summary',
+                  ),
+                  AutoRoute(
+                    page: CustomSummaryRoute.page,
+                    path: 'custom-beneficiary-summary',
+                  ),
+                  RedirectRoute(
+                    path: 'beneficiary-summary',
+                    redirectTo: 'custom-beneficiary-summary',
                   ),
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
