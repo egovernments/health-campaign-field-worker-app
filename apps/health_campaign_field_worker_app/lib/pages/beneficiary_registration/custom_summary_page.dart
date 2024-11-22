@@ -4,6 +4,7 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:recase/recase.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
@@ -198,30 +199,6 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                     children: [
                       DigitCard(
                         child: LabelValueList(
-                            heading: localizations.translate(i18
-                                .householdLocation.householdLocationLabelText),
-                            withDivider: true,
-                            items: [
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdLocation.villageLabel),
-                                  value: householdState.householdModel?.address
-                                          ?.locality?.code ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdLocation.landmarkFormLabel),
-                                  value: householdState
-                                          .householdModel?.address?.landmark ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
-                                  isInline: true),
-                            ]),
-                      ),
-                      DigitCard(
-                        child: LabelValueList(
                             heading: localizations.translate(
                                 i18.householdDetails.householdDetailsLabel),
                             withDivider: true,
@@ -233,77 +210,6 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                           .householdModel?.memberCount
                                           .toString() ??
                                       '0',
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(i18
-                                      .householdDetails
-                                      .noOfPregnantWomenCountLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.pregnantWomen
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(i18
-                                      .householdDetails
-                                      .noOfChildrenBelow5YearsLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.children
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                            ]),
-                      ),
-                      DigitCard(
-                        child: LabelValueList(
-                            heading: localizations.translate(
-                                i18.householdDetails.houseDetailsLabel),
-                            withDivider: true,
-                            items: [
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdDetails.noOfRoomsLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.noOfRooms
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdDetails.typeOfStructure),
-                                  value: (householdState.householdModel
-                                              ?.additionalFields?.fields
-                                              .where((h) =>
-                                                  h.key ==
-                                                  AdditionalFieldsType
-                                                      .houseStructureTypes
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value ??
-                                          [])
-                                      .toString()
-                                      .split('|')
-                                      .map((item) => getLocalizedMessage(item))
-                                      .toList()
-                                      .join(', '),
                                   isInline: true),
                             ]),
                       ),
@@ -365,6 +271,29 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                               ),
                               LabelValuePair(
                                 label: localizations.translate(
+                                    i18.individualDetails.ageLabelText),
+                                value: householdState.maybeWhen(
+                                    orElse: () => localizations
+                                        .translate(i18.common.coreCommonNA),
+                                    summary: (
+                                      navigateToRoot,
+                                      householdModel,
+                                      individualModel,
+                                      projectBeneficiaryModel,
+                                      registrationDate,
+                                      addressModel,
+                                      loading,
+                                      isHeadOfHousehold,
+                                    ) =>
+                                        individualModel?.dateOfBirth != null
+                                            ? getAgeString(
+                                                individualModel?.dateOfBirth ??
+                                                    '')
+                                            : localizations.translate(
+                                                i18.common.coreCommonNA)),
+                              ),
+                              LabelValuePair(
+                                label: localizations.translate(
                                     i18.individualDetails.genderLabelText),
                                 value: householdState.maybeWhen(
                                     orElse: () => localizations
@@ -387,6 +316,29 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                                             : localizations.translate(
                                                 i18.common.coreCommonNA)),
                               ),
+                              LabelValuePair(
+                                label: localizations.translate(
+                                    i18.deliverIntervention.voucherCode),
+                                value: householdState.maybeWhen(
+                                  orElse: () => localizations
+                                      .translate(i18.common.coreCommonNA),
+                                  summary: (
+                                    navigateToRoot,
+                                    householdModel,
+                                    individualModel,
+                                    projectBeneficiaryModel,
+                                    registrationDate,
+                                    addressModel,
+                                    loading,
+                                    isHeadOfHousehold,
+                                  ) =>
+                                      projectBeneficiaryModel?.tag == null
+                                          ? localizations.translate(
+                                              i18.common.coreCommonNA)
+                                          : projectBeneficiaryModel!.tag
+                                              .toString(),
+                                ),
+                              ),
                             ]),
                       ),
                     ],
@@ -397,4 +349,10 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
       )),
     );
   }
+}
+
+String getAgeString(String dateOfBirth) {
+  final dob = DateFormat("dd/MM/yyyy").parse(dateOfBirth);
+  final age = DigitDateUtils.calculateAge(dob);
+  return age.years == 0 ? age.months.toString() : age.years.toString();
 }
