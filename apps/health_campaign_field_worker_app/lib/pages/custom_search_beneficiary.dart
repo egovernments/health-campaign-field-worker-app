@@ -117,18 +117,6 @@ class _CustomSearchBeneficiaryPageStateState
                         builder: (context, locationState) {
                           return Column(
                             children: [
-                              locationState.latitude != null
-                                  ? Row(
-                                      children: [
-                                        Text(
-                                          localizations.translate(
-                                            i18.searchBeneficiary
-                                                .proximityLabel,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : const Offstage(),
                               DigitSearchBar(
                                 controller: searchController,
                                 hintText: localizations.translate(
@@ -373,7 +361,7 @@ class _CustomSearchBeneficiaryPageStateState
           ),
         ),
         bottomNavigationBar: SizedBox(
-          height: 150,
+          height: 70,
           child: Card(
             margin: const EdgeInsets.all(0),
             child: Container(
@@ -382,7 +370,8 @@ class _CustomSearchBeneficiaryPageStateState
                 children: [
                   DigitElevatedButton(
                     onPressed: searchHouseholdsState.loading
-                        ? () {
+                        ? null
+                        : () {
                             FocusManager.instance.primaryFocus?.unfocus();
                             context.read<DigitScannerBloc>().add(
                                   const DigitScannerEvent.handleScanner(),
@@ -396,8 +385,7 @@ class _CustomSearchBeneficiaryPageStateState
                             searchController.clear();
                             selectedFilters = [];
                             blocWrapper.clearEvent();
-                          }
-                        : null,
+                          },
                     child: Center(
                       child: Text(localizations.translate(
                         i18.searchBeneficiary.beneficiaryAddActionLabel,
