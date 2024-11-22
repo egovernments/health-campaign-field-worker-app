@@ -9360,6 +9360,12 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $ProjectTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _projectTypeMeta =
+      const VerificationMeta('projectType');
+  @override
+  late final GeneratedColumn<String> projectType = GeneratedColumn<String>(
+      'project_type', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String> id = GeneratedColumn<String>(
@@ -9526,6 +9532,7 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
       type: DriftSqlType.string, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
+        projectType,
         id,
         projectTypeId,
         projectNumber,
@@ -9563,6 +9570,12 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
+    if (data.containsKey('project_type')) {
+      context.handle(
+          _projectTypeMeta,
+          projectType.isAcceptableOrUnknown(
+              data['project_type']!, _projectTypeMeta));
+    }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
@@ -9717,6 +9730,8 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
   ProjectData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
     return ProjectData(
+      projectType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}project_type']),
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       projectTypeId: attachedDatabase.typeMapping
@@ -9779,6 +9794,7 @@ class $ProjectTable extends Project with TableInfo<$ProjectTable, ProjectData> {
 }
 
 class ProjectData extends DataClass implements Insertable<ProjectData> {
+  final String? projectType;
   final String id;
   final String? projectTypeId;
   final String? projectNumber;
@@ -9806,7 +9822,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   final int? endDate;
   final String? additionalFields;
   const ProjectData(
-      {required this.id,
+      {this.projectType,
+      required this.id,
       this.projectTypeId,
       this.projectNumber,
       this.subProjectTypeId,
@@ -9835,6 +9852,9 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (!nullToAbsent || projectType != null) {
+      map['project_type'] = Variable<String>(projectType);
+    }
     map['id'] = Variable<String>(id);
     if (!nullToAbsent || projectTypeId != null) {
       map['project_type_id'] = Variable<String>(projectTypeId);
@@ -9914,6 +9934,9 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
 
   ProjectCompanion toCompanion(bool nullToAbsent) {
     return ProjectCompanion(
+      projectType: projectType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(projectType),
       id: Value(id),
       projectTypeId: projectTypeId == null && nullToAbsent
           ? const Value.absent()
@@ -9994,6 +10017,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ProjectData(
+      projectType: serializer.fromJson<String?>(json['projectType']),
       id: serializer.fromJson<String>(json['id']),
       projectTypeId: serializer.fromJson<String?>(json['projectTypeId']),
       projectNumber: serializer.fromJson<String?>(json['projectNumber']),
@@ -10027,6 +10051,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
+      'projectType': serializer.toJson<String?>(projectType),
       'id': serializer.toJson<String>(id),
       'projectTypeId': serializer.toJson<String?>(projectTypeId),
       'projectNumber': serializer.toJson<String?>(projectNumber),
@@ -10057,7 +10082,8 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   }
 
   ProjectData copyWith(
-          {String? id,
+          {Value<String?> projectType = const Value.absent(),
+          String? id,
           Value<String?> projectTypeId = const Value.absent(),
           Value<String?> projectNumber = const Value.absent(),
           Value<String?> subProjectTypeId = const Value.absent(),
@@ -10084,6 +10110,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
           Value<int?> endDate = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       ProjectData(
+        projectType: projectType.present ? projectType.value : this.projectType,
         id: id ?? this.id,
         projectTypeId:
             projectTypeId.present ? projectTypeId.value : this.projectTypeId,
@@ -10140,6 +10167,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   @override
   String toString() {
     return (StringBuffer('ProjectData(')
+          ..write('projectType: $projectType, ')
           ..write('id: $id, ')
           ..write('projectTypeId: $projectTypeId, ')
           ..write('projectNumber: $projectNumber, ')
@@ -10172,6 +10200,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
 
   @override
   int get hashCode => Object.hashAll([
+        projectType,
         id,
         projectTypeId,
         projectNumber,
@@ -10203,6 +10232,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ProjectData &&
+          other.projectType == this.projectType &&
           other.id == this.id &&
           other.projectTypeId == this.projectTypeId &&
           other.projectNumber == this.projectNumber &&
@@ -10232,6 +10262,7 @@ class ProjectData extends DataClass implements Insertable<ProjectData> {
 }
 
 class ProjectCompanion extends UpdateCompanion<ProjectData> {
+  final Value<String?> projectType;
   final Value<String> id;
   final Value<String?> projectTypeId;
   final Value<String?> projectNumber;
@@ -10260,6 +10291,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const ProjectCompanion({
+    this.projectType = const Value.absent(),
     this.id = const Value.absent(),
     this.projectTypeId = const Value.absent(),
     this.projectNumber = const Value.absent(),
@@ -10289,6 +10321,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     this.rowid = const Value.absent(),
   });
   ProjectCompanion.insert({
+    this.projectType = const Value.absent(),
     required String id,
     this.projectTypeId = const Value.absent(),
     this.projectNumber = const Value.absent(),
@@ -10319,6 +10352,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   })  : id = Value(id),
         name = Value(name);
   static Insertable<ProjectData> custom({
+    Expression<String>? projectType,
     Expression<String>? id,
     Expression<String>? projectTypeId,
     Expression<String>? projectNumber,
@@ -10348,6 +10382,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
+      if (projectType != null) 'project_type': projectType,
       if (id != null) 'id': id,
       if (projectTypeId != null) 'project_type_id': projectTypeId,
       if (projectNumber != null) 'project_number': projectNumber,
@@ -10381,7 +10416,8 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   }
 
   ProjectCompanion copyWith(
-      {Value<String>? id,
+      {Value<String?>? projectType,
+      Value<String>? id,
       Value<String?>? projectTypeId,
       Value<String?>? projectNumber,
       Value<String?>? subProjectTypeId,
@@ -10409,6 +10445,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return ProjectCompanion(
+      projectType: projectType ?? this.projectType,
       id: id ?? this.id,
       projectTypeId: projectTypeId ?? this.projectTypeId,
       projectNumber: projectNumber ?? this.projectNumber,
@@ -10442,6 +10479,9 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
+    if (projectType.present) {
+      map['project_type'] = Variable<String>(projectType.value);
+    }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
     }
@@ -10529,6 +10569,7 @@ class ProjectCompanion extends UpdateCompanion<ProjectData> {
   @override
   String toString() {
     return (StringBuffer('ProjectCompanion(')
+          ..write('projectType: $projectType, ')
           ..write('id: $id, ')
           ..write('projectTypeId: $projectTypeId, ')
           ..write('projectNumber: $projectNumber, ')
