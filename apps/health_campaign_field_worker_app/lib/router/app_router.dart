@@ -248,6 +248,8 @@ class AppRouter extends _$AppRouter {
                     path: 'deliver-intervention',
                   ),
                   AutoRoute(
+                      page: DeliverySummaryRoute.page, path: 'deliver-summary'),
+                  AutoRoute(
                     page: SideEffectsRoute.page,
                     path: 'side-effects',
                   ),
