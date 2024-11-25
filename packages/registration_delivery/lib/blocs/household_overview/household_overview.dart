@@ -67,14 +67,24 @@ class HouseholdOverviewBloc
     emit(state.copyWith(loading: true));
 
     // Retrieve household members based on certain criteria.
-    final members = await householdMemberRepository.search(
-      HouseholdMemberSearchModel(
-        householdClientReferenceId:
-            state.householdMemberWrapper.household != null
+    final members = event.limit != null
+        ? await householdMemberRepository.search(
+            HouseholdMemberSearchModel(
+              householdClientReferenceId: state
+                          .householdMemberWrapper.household !=
+                      null
+                  ? [state.householdMemberWrapper.household!.clientReferenceId]
+                  : [],
+              limit: event.limit,
+              offset: event.offset,
+            ),
+          )
+        : await householdMemberRepository.search(HouseholdMemberSearchModel(
+            householdClientReferenceId: state
+                        .householdMemberWrapper.household !=
+                    null
                 ? [state.householdMemberWrapper.household!.clientReferenceId]
-                : [],
-      ),
-    );
+                : []));
 
     // Group household members by household ID.
     final groupedHouseholds = members.groupListsBy(
@@ -120,7 +130,9 @@ class HouseholdOverviewBloc
 
     // Search for individuals based on their client reference IDs.
     final individuals = await individualRepository.search(
-      IndividualSearchModel(clientReferenceId: individualIds),
+      IndividualSearchModel(
+        clientReferenceId: individualIds,
+      ),
     );
 
     // Search for project beneficiaries based on specified criteria.
@@ -164,14 +176,6 @@ class HouseholdOverviewBloc
               ?.individualClientReferenceId,
     );
 
-    // Check if a head of household was found.
-    if (head == null) {
-      // If no head of household was found, stop loading and return.
-      emit(state.copyWith(loading: false));
-
-      return;
-    }
-
     // Search for tasks associated with project beneficiaries.
     var tasks = await taskDataRepository.search(TaskSearchModel(
         projectBeneficiaryClientReferenceId:
@@ -197,6 +201,48 @@ class HouseholdOverviewBloc
     beneficiaryIndividuals.sort((a, b) =>
         (a.clientAuditDetails?.createdTime ?? 0)
             .compareTo(b.clientAuditDetails?.createdTime ?? 0));
+
+    // Check if a head of household was found.
+    if (head == null) {
+      // If head is not found, append the new data to the existing state.
+
+      emit(state.copyWith(
+        loading: false,
+        offset: members.isNotEmpty && members.length == (event.limit ?? 10)
+            ? (event.offset ?? 0) + (event.limit ?? 10)
+            : null,
+        householdMemberWrapper: state.householdMemberWrapper.copyWith(
+          members: (event.projectBeneficiaryType == BeneficiaryType.individual)
+              ? [
+                  ...state.householdMemberWrapper.members ?? [],
+                  ...beneficiaryIndividuals,
+                ]
+              : [
+                  ...state.householdMemberWrapper.members ?? [],
+                  ...individuals,
+                ],
+          projectBeneficiaries: [
+            ...state.householdMemberWrapper.projectBeneficiaries ?? [],
+            ...projectBeneficiaries,
+          ],
+          tasks: [
+            ...?state.householdMemberWrapper.tasks,
+            ...tasks,
+          ],
+          sideEffects: [
+            ...?state.householdMemberWrapper.sideEffects,
+            ...sideEffects,
+          ],
+          referrals: [
+            ...?state.householdMemberWrapper.referrals,
+            ...referrals,
+          ],
+        ),
+      ));
+
+      return;
+    }
+
     // Update the state with the loaded data and stop loading.
     emit(
       state.copyWith(
@@ -212,6 +258,7 @@ class HouseholdOverviewBloc
           referrals: referrals,
         ),
         loading: false,
+        offset: members.isNotEmpty ? (event.offset ?? 10) : null,
       ),
     );
   }
@@ -393,10 +440,11 @@ class HouseholdOverviewEvent with _$HouseholdOverviewEvent {
     required IndividualModel individualModel,
   }) = HouseholdOverviewSelectIndividualEvent;
 
-  const factory HouseholdOverviewEvent.reload({
-    required String projectId,
-    required BeneficiaryType projectBeneficiaryType,
-  }) = HouseholdOverviewReloadEvent;
+  const factory HouseholdOverviewEvent.reload(
+      {required String projectId,
+      required BeneficiaryType projectBeneficiaryType,
+      int? offset,
+      int? limit}) = HouseholdOverviewReloadEvent;
 }
 
 @freezed
@@ -405,5 +453,7 @@ class HouseholdOverviewState with _$HouseholdOverviewState {
     @Default(false) bool loading,
     required HouseholdMemberWrapper householdMemberWrapper,
     IndividualModel? selectedIndividual,
+    int? offset,
+    int? limit,
   }) = _HouseholdOverviewState;
 }
