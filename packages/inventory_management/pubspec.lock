@@ -345,14 +345,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
-  csslib:
-    dependency: transitive
-    description:
-      name: csslib
-      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
   cupertino_icons:
     dependency: transitive
     description:
@@ -361,22 +353,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  dart_code_metrics:
-    dependency: "direct dev"
-    description:
-      name: dart_code_metrics
-      sha256: "3dede3f7abc077a4181ec7445448a289a9ce08e2981e6a4d49a3fb5099d47e1f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.7.6"
-  dart_code_metrics_presets:
-    dependency: transitive
-    description:
-      name: dart_code_metrics_presets
-      sha256: b71eadf02a3787ebd5c887623f83f6fdc204d45c75a081bd636c4104b3fd8b73
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.8.0"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -421,23 +397,26 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      path: "../digit_components"
-      relative: true
-    source: path
+      name: digit_components
+      sha256: "07b585e5d8010639366da72a4a8b215ce9b8790c75b2162b66af3cea57ca35d9"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.2+1"
   digit_data_model:
     dependency: "direct main"
     description:
-      path: "../digit_data_model"
-      relative: true
-    source: path
-    version: "1.0.4"
+      name: digit_data_model
+      sha256: "63c878bfe49e3e8db190dd5cd35d7a7b93b2e3b6663cebaaee25ff0089c1112b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5-dev.1"
   digit_scanner:
     dependency: "direct main"
     description:
-      path: "../digit_scanner"
-      relative: true
-    source: path
+      name: digit_scanner
+      sha256: "9862c4885465bb1942e36dc9b42596c201648db9b0f5ffb8ad768e2409fc2742"
+      url: "https://pub.dev"
+    source: hosted
     version: "1.0.3+1"
   dio:
     dependency: transitive
@@ -718,14 +697,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.3.1"
-  html:
-    dependency: transitive
-    description:
-      name: html
-      sha256: "3a7812d5bcd2894edf53dfaf8cd640876cf6cef50a8f238745c8b8120ea74d3a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.15.4"
   http:
     dependency: transitive
     description:
@@ -1054,14 +1025,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
-  process:
-    dependency: transitive
-    description:
-      name: process
-      sha256: "53fd8db9cec1d37b0574e12f07520d582019cb6c44abf5479a01505099a34a09"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.4"
   provider:
     dependency: transitive
     description:
@@ -1078,14 +1041,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  pub_updater:
-    dependency: transitive
-    description:
-      name: pub_updater
-      sha256: "05ae70703e06f7fdeb05f7f02dd680b8aad810e87c756a618f33e1794635115c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0"
   pubspec_parse:
     dependency: transitive
     description:
@@ -1444,5 +1399,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0 <4.0.0"
+  dart: ">=3.2.0 <3.9.0"
   flutter: ">=3.16.0"

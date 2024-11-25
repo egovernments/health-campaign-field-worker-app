@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.2+4"
+    version: "1.0.3-dev.1"
   audioplayers:
     dependency: "direct main"
     description:
@@ -365,7 +365,7 @@ packages:
       path: "../../packages/complaints"
       relative: true
     source: path
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -418,10 +418,10 @@ packages:
     dependency: transitive
     description:
       name: csslib
-      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
+      sha256: "09bad715f418841f976c77db72d5398dc1253c21fb9c0c7f0b0b985860b2d58e"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.0.2"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -434,16 +434,18 @@ packages:
     dependency: "direct main"
     description:
       name: dart_mappable
-      sha256: "47269caf2060533c29b823ff7fa9706502355ffcb61e7f2a374e3a0fb2f2c3f0"
+      sha256: f69a961ae8589724ebb542e588f228ae844c5f78028899cbe2cc718977c1b382
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.2"
+    version: "4.3.0"
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: "8011a4c367094dfb018fce701d700a582ba862bb"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
     version: "4.2.0"
   dart_style:
     dependency: transitive
@@ -514,7 +516,7 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.4"
+    version: "1.0.5-dev.1"
   digit_dss:
     dependency: "direct main"
     description:
@@ -525,11 +527,9 @@ packages:
   digit_firebase_services:
     dependency: "direct main"
     description:
-      path: "packages/digit_firebase_services"
-      ref: checklist-tanishi
-      resolved-ref: a4fd63e10e76cec82675332689e344e309246e65
-      url: "https://github.com/egovernments/health-campaign-field-worker-app"
-    source: git
+      path: "../../packages/digit_firebase_services"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_location_tracker:
     dependency: "direct main"
@@ -548,13 +548,12 @@ packages:
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_showcase"
+      relative: true
+    source: path
     version: "1.0.0"
   digit_ui_components:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: digit_ui_components
       sha256: e38f163515aa6a6c5283754e741b21f33fb3a6c0a1fc171a1e4e6620510d46ae
@@ -757,10 +756,10 @@ packages:
     dependency: transitive
     description:
       name: fixnum
-      sha256: "25517a4deb0c03aa0f32fd12db525856438902d9c16536311e76cdc57b31d7d1"
+      sha256: b6dc7065e46c974bc7c5f143080a6764ec7a4be6da1285ececdc37be96de53be
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -810,10 +809,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_dotenv
-      sha256: "9357883bdd153ab78cbf9ffa07656e336b8bbb2b5a3ca596b0b27e119f7c7d77"
+      sha256: b7c7be5cd9f6ef7a78429cabd2774d3c4af50e79cb2b7593e3d5d763ef95c61b
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.0"
+    version: "5.2.1"
   flutter_driver:
     dependency: transitive
     description: flutter
@@ -831,10 +830,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_dropzone_platform_interface
-      sha256: b4e2df75364bab2f4c3ca32b87193267d786b6e158c3f345c3a1daeb911d82b9
+      sha256: "96d2c51c86063ba150551c3b40fd26c5a18785bee071c0c751502d28a545df3b"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.6"
+    version: "2.2.0"
   flutter_dropzone_web:
     dependency: transitive
     description:
@@ -1235,10 +1234,10 @@ packages:
     dependency: transitive
     description:
       name: html
-      sha256: "3a7812d5bcd2894edf53dfaf8cd640876cf6cef50a8f238745c8b8120ea74d3a"
+      sha256: "1fc58edeaec4307368c60d59b7e15b9d658b57d7f3125098b6294153c75337ec"
       url: "https://pub.dev"
     source: hosted
-    version: "0.15.4"
+    version: "0.15.5"
   http:
     dependency: transitive
     description:
@@ -1267,10 +1266,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "2237616a36c0d69aef7549ab439b833fb7f9fb9fc861af2cc9ac3eedddd69ca8"
+      sha256: f31d52537dc417fdcde36088fdf11d191026fd5e4fae742491ebd40e5a8bea7d
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.0"
+    version: "4.3.0"
   image_picker:
     dependency: transitive
     description:
@@ -1351,10 +1350,9 @@ packages:
   inventory_management:
     dependency: "direct main"
     description:
-      name: inventory_management
-      sha256: c3f0162035ce56ea2b9482ab702e82a5aca5d30101bfe35f542c453fedbdbc45
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/inventory_management"
+      relative: true
+    source: path
     version: "1.0.3+5"
   io:
     dependency: transitive
@@ -1656,10 +1654,10 @@ packages:
     dependency: transitive
     description:
       name: permission_handler_android
-      sha256: "76e4ab092c1b240d31177bb64d2b0bea43f43d0e23541ec866151b9f7b2490fa"
+      sha256: "71bbecfee799e65aff7c744761a57e817e73b738fedf62ab7afd5593da21f9f1"
       url: "https://pub.dev"
     source: hosted
-    version: "12.0.12"
+    version: "12.0.13"
   permission_handler_apple:
     dependency: transitive
     description:
@@ -1833,7 +1831,7 @@ packages:
       path: "../../packages/registration_delivery"
       relative: true
     source: path
-    version: "1.0.4-dev.1"
+    version: "1.0.4-dev.5"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
@@ -2003,10 +2001,10 @@ packages:
     dependency: transitive
     description:
       name: speech_to_text_platform_interface
-      sha256: a0df1a907091ea09880077dc25aae02af9f79811264e6e97ddb08639b7f771c2
+      sha256: a1935847704e41ee468aad83181ddd2423d0833abe55d769c59afca07adb5114
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "2.3.0"
   sqlite3:
     dependency: transitive
     description:
@@ -2019,10 +2017,10 @@ packages:
     dependency: "direct main"
     description:
       name: sqlite3_flutter_libs
-      sha256: "62bbb4073edbcdf53f40c80775f33eea01d301b7b81417e5b3fb7395416258c1"
+      sha256: "7ae52b23366e5295005022e62fa093f64bfe190810223ea0ebf733a4cd140bce"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.24"
+    version: "0.5.26"
   sqlparser:
     dependency: transitive
     description:
@@ -2069,7 +2067,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   sync_http:
     dependency: transitive
     description:
@@ -2386,10 +2384,10 @@ packages:
     dependency: transitive
     description:
       name: xxh3
-      sha256: a92b30944a9aeb4e3d4f3c3d4ddb3c7816ca73475cd603682c4f8149690f56d7
+      sha256: cbeb0e1d10f4c6bf67b650f395eac0cc689425b5efc2ba0cc3d3e069a0beaeec
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.1.0"
   yaml:
     dependency: transitive
     description:
