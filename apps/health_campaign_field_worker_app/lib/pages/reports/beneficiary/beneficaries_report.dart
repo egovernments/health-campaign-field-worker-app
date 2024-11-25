@@ -18,6 +18,7 @@ import '../../../utils/utils.dart';
 import '../../../widgets/header/back_navigation_help_header.dart';
 import '../../../widgets/localized.dart';
 import '../../../widgets/no_result_card/no_result_card.dart';
+import '../../near_by_share_list.dart';
 
 @RoutePage()
 class BeneficiariesReportPage extends LocalizedStatefulWidget {
@@ -416,6 +417,18 @@ class BeneficiariesReportState extends LocalizedState<BeneficiariesReportPage> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: kPadding,
+                      ),
+                      ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (_) => const DevicesListScreen(
+                                        deviceType: DeviceType.sender)));
+                          },
+                          child: Text('Data Transfer')),
                       downSyncList.isEmpty
                           ? NoResultCard(
                               align: Alignment.center,

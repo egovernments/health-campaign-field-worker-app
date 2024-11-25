@@ -101,6 +101,11 @@ dev_dependencies:
   isar_generator: ^3.0.5
   flutter_launcher_icons: ^0.13.1
   hrk_flutter_test_batteries: ^0.8.0
+  flutter_nearby_connections:
+    git:
+      url: https://github.com/champeauxr/flutter_nearby_connections
+      ref: master
+  simple_ripple_animation: ^0.1.0
 
 dependency_overrides:
   intl: ^0.18.0
