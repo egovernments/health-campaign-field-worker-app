@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/blocs/app_localization.dart';
 import 'package:closed_household/widgets/showcase/showcase_button.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
@@ -29,7 +29,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(kPadding / 2),
+      padding: EdgeInsets.all( theme.spacerTheme.spacer2/ 2),
       child: Row(
         children: [
           Expanded(
@@ -58,7 +58,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(width: showHelp ? kPadding * 2 : 0),
+          SizedBox(width: showHelp ? theme.spacerTheme.spacer2 * 2 : 0),
           if (showHelp)
             TextButton(
               style: TextButton.styleFrom(padding: EdgeInsets.zero),

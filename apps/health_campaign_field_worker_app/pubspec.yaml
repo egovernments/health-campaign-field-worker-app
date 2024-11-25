@@ -18,6 +18,7 @@ dependencies:
   sqlite3_flutter_libs: ^0.5.10
   path_provider: ^2.0.11
   path: ^1.8.2
+  digit_ui_components: 0.0.1+7
   digit_components: ^1.0.2
   auto_route: ^7.8.4
   flutter_bloc: ^8.1.1
@@ -69,16 +70,15 @@ dependencies:
   digit_scanner: ^1.0.3+1
   inventory_management: ^1.0.3+4
   referral_reconciliation: ^1.0.2+2
-  digit_data_model: ^1.0.4
+  digit_data_model: ^1.0.5-dev.1
   registration_delivery: ^1.0.3+2
-
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.1
   closed_household: ^1.0.1+1
   digit_location_tracker: ^0.0.1-dev.1
   permission_handler: ^11.3.1
-  survey_form: ^0.0.1-dev.1
-  complaints: ^0.0.1-dev.1
+  survey_form: ^0.0.1-dev.2
+  complaints: ^0.0.1-dev.2
 
 dev_dependencies:
   flutter_test:
@@ -116,6 +116,7 @@ flutter:
     - ./
     - assets/icons/svg/
     - assets/animated_json/
+
   fonts:
     - family: Roboto
       fonts:

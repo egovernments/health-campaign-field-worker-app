@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -44,6 +46,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
     final theme = Theme.of(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -62,10 +65,10 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       ],
                     ),
                     footer: DigitCard(
-                      margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
+                      margin: const EdgeInsets.only(top: spacer2),
                       padding:
-                          const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                      child: DigitElevatedButton(
+                          const EdgeInsets.all(spacer2),
+                      children: [Button(
                         onPressed: () {
                           form.markAllAsTouched();
                           if (form.control(_householdStructureKey).value ==
@@ -201,96 +204,94 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                             },
                           );
                         },
-                        child: Center(
-                          child: Text(
-                            localizations.translate(
-                              i18.householdLocation.actionLabel,
-                            ),
-                          ),
+                        type: ButtonType.primary,
+                        size: ButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        label: localizations.translate(
+                            i18.householdLocation.actionLabel,
                         ),
-                      ),
+                      ),]
                     ),
                     slivers: [
                       SliverToBoxAdapter(
                         child: DigitCard(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    0, 0, 0, kPadding),
-                                child: Text(
-                                  localizations.translate(
-                                    i18.householdDetails.houseDetailsLabel,
-                                  ),
-                                  style: theme.textTheme.displayMedium,
-                                ),
+                          children: [
+                            Padding(
+                            padding: const EdgeInsets.all(spacer2),
+                            child: Text(
+                              localizations.translate(
+                                i18.householdDetails.houseDetailsLabel,
                               ),
-                              Column(children: [
-                                houseShowcaseData.typeOfStructure.buildWith(
-                                  child: SelectionBox<String>(
-                                    isRequired: true,
-                                    title: localizations.translate(
-                                        i18.householdDetails.typeOfStructure),
-                                    equalWidthOptions: true,
-                                    allowMultipleSelection: false,
-                                    options: RegistrationDeliverySingleton()
-                                            .houseStructureTypes ??
-                                        [],
-                                    initialSelection: form.control(_householdStructureKey).value!= null ? [...form.control(_householdStructureKey).value ] : [],
-                                    onSelectionChanged: (values) {
+                              style: textTheme.headingXl,
+                            ),
+                          ),
+                          houseShowcaseData.typeOfStructure.buildWith(
+                            child: SelectionCard<String>(
+                              isRequired: true,
+                              title: localizations.translate(
+                                  i18.householdDetails.typeOfStructure),
+                              equalWidthOptions: true,
+                              allowMultipleSelection: false,
+                              options: RegistrationDeliverySingleton()
+                                      .houseStructureTypes ??
+                                  [],
+                              initialSelection: form.control(_householdStructureKey).value!= null ? [...form.control(_householdStructureKey).value ] : [],
+                              onSelectionChanged: (values) {
+                                form
+                                    .control(_householdStructureKey)
+                                    .markAsTouched();
+                                if (values.isEmpty) {
+                                  form
+                                      .control(_householdStructureKey)
+                                      .value = null;
+                                  setState(() {
+                                    form
+                                        .control(_householdStructureKey)
+                                        .setErrors({'': true});
+                                  });
+                                } else {
+                                  setState(() {
+                                    form
+                                        .control(_householdStructureKey)
+                                        .value = values;
+                                  });
+                                }
+                              },
+                              valueMapper: (value) {
+                                return localizations
+                                    .translate(value.toString());
+                              },
+                              errorMessage: form
+                                          .control(_householdStructureKey)
+                                          .hasErrors &&
                                       form
                                           .control(_householdStructureKey)
-                                          .markAsTouched();
-                                      if (values.isEmpty) {
-                                        form
-                                            .control(_householdStructureKey)
-                                            .value = null;
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .setErrors({'': true});
-                                        });
-                                      } else {
-                                        setState(() {
-                                          form
-                                              .control(_householdStructureKey)
-                                              .value = values;
-                                        });
-                                      }
-                                    },
-                                    valueMapper: (value) {
-                                      return localizations
-                                          .translate(value.toString());
-                                    },
-                                    errorMessage: form
-                                                .control(_householdStructureKey)
-                                                .hasErrors &&
-                                            form
-                                                .control(_householdStructureKey)
-                                                .touched
-                                        ? localizations.translate(i18
-                                            .householdDetails
-                                            .selectStructureTypeError)
-                                        : null,
-                                  ),
-                                ),
-                                houseShowcaseData.noOfRooms.buildWith(
-                                  child: DigitIntegerFormPicker(
-                                    minimum: 1,
-                                    maximum: 20,
-                                    form: form,
-                                    formControlName: _noOfRoomsKey,
-                                    label: localizations.translate(
-                                      i18.householdDetails.noOfRoomsLabel,
-                                    ),
-                                    incrementer: true,
-                                  ),
-                                ),
-                              ]),
-                            ],
+                                          .touched
+                                  ? localizations.translate(i18
+                                      .householdDetails
+                                      .selectStructureTypeError)
+                                  : null,
+                            ),
                           ),
+                          houseShowcaseData.noOfRooms.buildWith(
+                            child: ReactiveWrapperField(
+                              formControlName: _noOfRoomsKey,
+                              builder:(field)=> LabeledField(
+                                label: localizations.translate(
+                                  i18.householdDetails.noOfRoomsLabel,
+                                ),
+                                child: DigitNumericFormInput(
+                                  minValue: 1,
+                                  maxValue: 20,
+                                  initialValue: form.control(_noOfRoomsKey).value.toString(),
+                                  step: 1,
+                                  onChange: (value){
+                                    form.control(_noOfRoomsKey).value=int.parse(value);
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),]
                         ),
                       ),
                     ],
