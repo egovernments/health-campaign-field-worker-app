@@ -214,7 +214,8 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
           .where((h) =>
       h.key == AdditionalFieldsType.houseStructureTypes.toValue())
           .firstOrNull
-          ?.value;
+          ?.value
+          .toString();
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
@@ -224,18 +225,17 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
 
         List expressionParser = [];
         for (var element in conditions) {
-          final expression = FormulaParser(
-            element,
-            {
-              if (individualModel != null && individualAgeInMonths != 0)
-                'age': individualAgeInMonths,
-              if (gender != null) 'gender': gender,
-              if (memberCount != null) 'memberCount': memberCount,
-              if (roomCount != null) 'roomCount': roomCount,
-              if (structureType != null) 'structure': structureType
-            },
-          );
-          final error = expression.parse;
+          final expression = CustomFormulaParser.parseCondition(element, {
+            if (individualModel != null && individualAgeInMonths != 0)
+              'age': individualAgeInMonths,
+            if (gender != null) 'gender': gender,
+            if (memberCount != null) 'memberCount': memberCount,
+            if (roomCount != null) 'roomCount': roomCount,
+            if (structureType != null) 'type_of_structure': structureType
+          }, stringKeys: [
+            'type_of_structure'
+          ]);
+          final error = expression;
           expressionParser.add(error["value"]);
         }
 
@@ -261,6 +261,53 @@ String maskString(String input) {
       List<String>.generate(input.length, (index) => maskingChar).join();
 
   return maskedString;
+}
+class CustomFormulaParser {
+  // Modify the function to accept stringKeys as nullable
+  static Map<String, dynamic> parseCondition(
+      String condition,
+      Map<String, dynamic> variables, {
+        List<String>? stringKeys,
+      } // Accept stringKeys as nullable
+      ) {
+    // If stringKeys is null or empty, default to FormulaParser for all conditions
+    if (stringKeys == null || stringKeys.isEmpty) {
+      return _parseAsFormula(condition, variables);
+    }
+
+    // Loop through stringKeys and check for string comparison in the condition
+    for (var key in stringKeys) {
+      if (condition.contains('$key==')) {
+        // Extract the expected value after '==' for string comparison
+        var value = condition.split('==')[1].trim();
+        if (variables.containsKey(key) && variables[key] is String) {
+          return _compareString(condition, value, variables[key]);
+        }
+      }
+    }
+
+    // If no string-specific comparison, use FormulaParser for numeric evaluation
+    return _parseAsFormula(condition, variables);
+  }
+
+  // Handle string comparison
+  static Map<String, dynamic> _compareString(
+      String condition, String expectedValue, String actualValue) {
+    // Compare string values directly
+    bool comparisonResult = actualValue == expectedValue;
+    return {'value': comparisonResult};
+  }
+
+  // Handle numeric evaluation using FormulaParser
+  static Map<String, dynamic> _parseAsFormula(
+      String condition, Map<String, dynamic> variables) {
+    final expression = FormulaParser(
+      condition,
+      variables,
+    );
+    final error = expression.parse;
+    return error; // Parsing the numeric expression
+  }
 }
 
 class Coordinate {
