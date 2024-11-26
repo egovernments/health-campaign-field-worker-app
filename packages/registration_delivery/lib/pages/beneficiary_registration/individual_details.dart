@@ -21,6 +21,7 @@ import 'package:registration_delivery/utils/extensions/extensions.dart';
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../blocs/household_overview/household_overview.dart';
 import '../../router/registration_delivery_router.gm.dart';
+import '../../utils/component_mapper/individual_details_component_mapper.dart';
 import '../../utils/convert_to_map.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/models/widget_config_model.dart';
@@ -47,54 +48,17 @@ class IndividualDetailsPage extends LocalizedStatefulWidget {
 }
 
 class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
-  static const _individualNameKey = 'individualName';
-  static const _idTypeKey = 'idType';
-  static const _idNumberKey = 'idNumber';
-  static const _dobKey = 'dob';
-  static const _genderKey = 'gender';
-  static const _mobileNumberKey = 'mobileNumber';
+  static const individualNameKey = 'individualName';
+  static const idTypeKey = 'idType';
+  static const idNumberKey = 'idNumber';
+  static const dobKey = 'dob';
+  static const genderKey = 'gender';
+  static const mobileNumberKey = 'mobileNumber';
   bool isDuplicateTag = false;
-  static const maxLength = 200;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
   bool isHeadOfHousehold = false;
-  Map<String, Map<String, dynamic>> configs = {
-    'individualName': {
-      'isEnabled': true,
-      'readOnly': true,
-      'order': 1,
-    },
-    'idType': {
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': false,
-      'order': 2,
-    },
-    'idNumber': {
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': false,
-      'regex': ["^\\d+\$"],
-      "errorMessage": "Invalid input",
-      'order': 3,
-    },
-    'dob': {
-      'isEnabled': true,
-      'readOnly': false,
-      'order': 4,
-    },
-    'gender': {
-      'isEnabled': false,
-      'readOnly': false,
-      'isRequired': true,
-      'order': 5,
-    },
-    'mobileNumber': {
-      'isEnabled': true,
-      'readOnly': false,
-      'order': 6,
-    },
-  };
+  IndividualsDatailsComponentMapper mapper = IndividualsDatailsComponentMapper();
 
   @override
   void initState() {
@@ -102,340 +66,91 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
-      configs = converter.convertFields('IndividualDetails');
+      mapper.configs = converter.convertFields('IndividualDetails');
     }
     super.initState();
   }
 
-  List<Widget> buildWidgetsFromConfig(WidgetConfigModel model) {
-    List<Widget> widgets = [];
+  void updateState(dynamic form, bool flag, var value) {
+    if(flag) {
+      setState(() {
+        if (value == 'DEFAULT') {
+          form.control(idNumberKey).setValidators([
+                (control) => null, // No validation
+          ]);
+          form.control(idNumberKey).value =
+              IdGen.i.identifier.toString();
+        } else {
+          form.control(idNumberKey).setValidators([
+                (control) => null, // No validation
+          ]);
 
-    // Sort the config keys by the 'order' key
-    var sortedKeys = model.config.keys.toList();
-    sortedKeys.sort(
-        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
-
-    if (sortedKeys.isEmpty) {
-      Widget widget = const AlertDialog(
-        title: Text("Error"),
-        content: Text("Household location config not found"),
-      );
-      widgets.add(widget);
-    } else {
-      for (var key in sortedKeys) {
-        var fieldConfig = model.config[key];
-
-        if (fieldConfig['isEnabled'] == true) {
-          Widget widget;
-
-          // Generate the widget based on the fieldConfig['type'] using a switch case
-          switch (key) {
-            case _individualNameKey:
-              widget = DigitTextFormField(
-                formControlName: _individualNameKey,
-                label: localizations.translate(
-                  i18.individualDetails.nameLabelText,
-                ),
-                isRequired: fieldConfig['isRequired'] ?? false,
-                readOnly: fieldConfig['readOnly'] ?? false,
-                validationMessages: {
-                  'required': (object) => localizations.translate(
-                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                      ),
-                  'maxLength': (object) => localizations
-                      .translate(i18.common.maxCharsRequired)
-                      .replaceAll('{}', maxLength.toString()),
-                  'customError': (object) => localizations.translate(
-                        fieldConfig['errorMessage'] ?? '',
-                      )
-                },
-              );
-              if (isHeadOfHousehold) {
-                widgets.add(widget);
-                widget = Offstage(
-                  offstage: !isHeadOfHousehold,
-                  child: DigitCheckbox(
-                    label: localizations.translate(
-                      i18.individualDetails.checkboxLabelText,
-                    ),
-                    value: isHeadOfHousehold,
-                  ),
-                );
-              }
-              break;
-            case _idTypeKey:
-              widget = DigitReactiveSearchDropdown<String>(
-                enabled: (fieldConfig['readOnly'] ?? false) != true,
-                label: localizations.translate(
-                  i18.individualDetails.idTypeLabelText,
-                ),
-                form: model.form,
-                menuItems: RegistrationDeliverySingleton().idTypeOptions!.map(
-                  (e) {
-                    return e;
-                  },
-                ).toList(),
-                formControlName: _idTypeKey,
-                valueMapper: (value) {
-                  return localizations.translate(value);
-                },
-                onSelected: (value) {
-                  setState(() {
-                    if (value == 'DEFAULT') {
-                      model.form.control(_idNumberKey).setValidators([
-                        (control) => null, // No validation
-                      ]);
-                      model.form.control(_idNumberKey).value =
-                          IdGen.i.identifier.toString();
-                    } else {
-                      model.form.control(_idNumberKey).setValidators([
-                        (control) => null, // No validation
-                      ]);
-
-                      // Retrieve current validators
-                      final currentValidators =
-                          model.form.control(_idNumberKey).validators ?? [];
+          // Retrieve current validators
+          final currentValidators =
+              form.control(idNumberKey).validators ?? [];
 
 // Create a new list of validators
-                      List<
-                              Map<String, dynamic>? Function(
-                                  AbstractControl<dynamic>)> updatedValidators =
-                          List.from(currentValidators);
-                      if (model.config[_idNumberKey]['isRequired'] == true &&
-                          model.config[_idNumberKey]['isEnabled'] == true) {
-                        // Add the new validator to the list
-                        updatedValidators = [
-                          ...updatedValidators,
-                          Validators.required // Example new validator
-                        ];
-                      }
-
-                      // If JSON config has regex, add it as a validator
-                      if (model.config[_idNumberKey]['isEnabled'] == true &&
-                          model.config[_idNumberKey].containsKey('regex') &&
-                          model.config[_idNumberKey]['regex'] is List) {
-                        List<String> regexList =
-                            model.config[_idNumberKey]['regex'];
-                        String errorMessages =
-                            model.config[_idNumberKey]['errorMessage'];
-
-                        regexList.asMap().forEach((index, regexPattern) {
-                          updatedValidators.add((control) {
-                            final value = control.value?.toString() ??
-                                ''; // Convert to string or default to empty
-                            if (value.isNotEmpty &&
-                                !RegExp(regexPattern).hasMatch(value)) {
-                              // Ensure there's a matching error message for this index
-                              return {
-                                'customError': errorMessages[index]
-                              }; // Use the correct error message for the index
-                            }
-                            return null;
-                          });
-                        });
-                      }
-                      model.form
-                          .control(_idNumberKey)
-                          .setValidators(updatedValidators);
-                      model.form.control(_idNumberKey).value = null;
-                    }
-
-                    // Ensure that changes to validators are applied
-                    model.form.control(_idNumberKey).updateValueAndValidity();
-                  });
-                },
-                isRequired: fieldConfig['isRequired'] ?? false,
-                validationMessage: model.form.control(_idTypeKey).hasErrors &&
-                        model.form.control(_idTypeKey).touched
-                    ? localizations.translate(
-                        i18.common.corecommonRequired,
-                      )
-                    : null,
-                emptyText: localizations.translate(i18.common.noMatchFound),
-              );
-              break;
-            case _idNumberKey:
-              widget = model.form.control(_idTypeKey).value != 'DEFAULT'
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ReactiveFormConsumer(
-                          builder: (context, formGroup, child) {
-                            return DigitTextFormField(
-                              readOnly: fieldConfig['readOnly'] ?? false,
-                              isRequired: fieldConfig['isRequired'] ?? false,
-                              formControlName: _idNumberKey,
-                              label: localizations.translate(
-                                i18.individualDetails.idNumberLabelText,
-                              ),
-                              validationMessages: {
-                                'required': (object) => localizations.translate(
-                                      '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                                    ),
-                                'customError': (object) =>
-                                    localizations.translate(
-                                      fieldConfig['errorMessage'] ?? '',
-                                    )
-                              },
-                              padding: const EdgeInsets.only(
-                                top: kPadding * 2,
-                                left: kPadding / 2,
-                                right: kPadding / 2,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
-                    )
-                  : SizedBox(height: 16);
-              break;
-            case _dobKey:
-              DateTime before150Years =
-                  DateTime(now.year - 150, now.month, now.day);
-              widget = individualDetailsShowcaseData.dateOfBirth.buildWith(
-                child: AbsorbPointer(
-                  absorbing: fieldConfig['readOnly'] ?? false,
-                  child: Opacity(
-                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                    child: DigitDobPicker(
-                      datePickerFormControl: _dobKey,
-                      datePickerLabel: localizations.translate(
-                        i18.individualDetails.dobLabelText,
-                      ),
-                      ageFieldLabel: localizations.translate(
-                        i18.individualDetails.ageLabelText,
-                      ),
-                      yearsHintLabel: localizations.translate(
-                        i18.individualDetails.yearsHintText,
-                      ),
-                      monthsHintLabel: localizations.translate(
-                        i18.individualDetails.monthsHintText,
-                      ),
-                      separatorLabel: localizations.translate(
-                        i18.individualDetails.separatorLabelText,
-                      ),
-                      yearsAndMonthsErrMsg: localizations.translate(
-                        i18.individualDetails.yearsAndMonthsErrorText,
-                      ),
-                      initialDate: before150Years,
-                      onChangeOfFormControl: (formControl) {
-                        // Handle changes to the control's value here
-                        final value = formControl.value;
-                        if (value == null) {
-                          formControl.setErrors({'': true});
-                        } else {
-                          DigitDOBAge age = DigitDateUtils.calculateAge(value);
-                          if ((age.years == 0 && age.months == 0) ||
-                              age.months > 11 ||
-                              (age.years >= 150 && age.months >= 0)) {
-                            formControl.setErrors({'': true});
-                          } else {
-                            formControl.removeError('');
-                          }
-                        }
-                      },
-                      cancelText:
-                          localizations.translate(i18.common.coreCommonCancel),
-                      confirmText:
-                          localizations.translate(i18.common.coreCommonOk),
-                    ),
-                  ),
-                ),
-              );
-              break;
-            case _genderKey:
-              widget = AbsorbPointer(
-                absorbing: fieldConfig['readOnly'] ?? false,
-                child: Opacity(
-                  opacity: (fieldConfig['readOnly'] ?? false) ? 0.5 : 1,
-                  child: SelectionBox<String>(
-                    title: '${localizations.translate(
-                      i18.individualDetails.genderLabelText,
-                    )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                    allowMultipleSelection: false,
-                    width: 126,
-                    initialSelection:
-                        model.form.control(_genderKey).value != null
-                            ? [model.form.control(_genderKey).value]
-                            : [],
-                    options: RegistrationDeliverySingleton()
-                        .genderOptions!
-                        .map(
-                          (e) => e,
-                        )
-                        .toList(),
-                    onSelectionChanged: (value) {
-                      setState(() {
-                        if (value.isNotEmpty) {
-                          model.form.control(_genderKey).value = value.first;
-                        } else {
-                          model.form.control(_genderKey).value = null;
-                          setState(() {
-                            model.form
-                                .control(_genderKey)
-                                .setErrors({'': true});
-                          });
-                        }
-                      });
-                    },
-                    valueMapper: (value) {
-                      return localizations.translate(value);
-                    },
-                    errorMessage: model.form.control(_genderKey).hasErrors &&
-                            model.form.control(_genderKey).touched
-                        ? localizations.translate(i18.common.corecommonRequired)
-                        : null,
-                  ),
-                ),
-              );
-              break;
-            case _mobileNumberKey:
-              widget = individualDetailsShowcaseData.mobile.buildWith(
-                child: DigitTextFormField(
-                  isRequired: fieldConfig['isRequired'] ?? false,
-                  readOnly: fieldConfig['readOnly'] ?? false,
-                  keyboardType: TextInputType.number,
-                  formControlName: _mobileNumberKey,
-                  maxLength: 10,
-                  label: localizations.translate(
-                    i18.individualDetails.mobileNumberLabelText,
-                  ),
-                  validationMessages: {
-                    'required': (object) => localizations.translate(
-                          '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                        ),
-                    'maxLength': (object) => localizations.translate(i18
-                        .individualDetails.mobileNumberLengthValidationMessage),
-                    'minLength': (object) => localizations.translate(i18
-                        .individualDetails.mobileNumberLengthValidationMessage),
-                    'customError': (object) => localizations.translate(
-                          fieldConfig['errorMessage'] ?? '',
-                        )
-                  },
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
-                ),
-              );
-              break;
-            default:
-              widget = Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    const Text('Error:', style: TextStyle(color: Colors.red)),
-                    Text("Unknown key $key")
-                  ],
-                ),
-              );
+          List<
+              Map<String, dynamic>? Function(
+                  AbstractControl<dynamic>)> updatedValidators =
+          List.from(currentValidators);
+          if (mapper.configs[idNumberKey]?['isRequired'] == true &&
+              mapper.configs[idNumberKey]?['isEnabled'] == true) {
+            // Add the new validator to the list
+            updatedValidators = [
+              ...updatedValidators,
+              Validators.required // Example new validator
+            ];
           }
 
-          widgets.add(widget);
-        }
-      }
-    }
+          // If JSON config has regex, add it as a validator
+          if (mapper.configs[idNumberKey]?['isEnabled'] == true &&
+              mapper.configs[idNumberKey]!.containsKey('regex') &&
+              mapper.configs[idNumberKey]?['regex'] is List) {
+            List<String> regexList =
+            mapper.configs[idNumberKey]?['regex'];
+            String errorMessages =
+            mapper.configs[idNumberKey]?['errorMessage'];
 
-    return widgets;
+            regexList.asMap().forEach((index, regexPattern) {
+              updatedValidators.add((control) {
+                final value = control.value?.toString() ??
+                    ''; // Convert to string or default to empty
+                if (value.isNotEmpty &&
+                    !RegExp(regexPattern).hasMatch(value)) {
+                  // Ensure there's a matching error message for this index
+                  return {
+                    'customError': errorMessages[index]
+                  }; // Use the correct error message for the index
+                }
+                return null;
+              });
+            });
+          }
+          form
+              .control(idNumberKey)
+              .setValidators(updatedValidators);
+          form.control(idNumberKey).value = null;
+        }
+
+        // Ensure that changes to validators are applied
+        form.control(idNumberKey).updateValueAndValidity();
+      });
+    }
+    else {
+      setState(() {
+        if (value.isNotEmpty) {
+          form.control(genderKey).value = value.first;
+        } else {
+          form.control(genderKey).value = null;
+          setState(() {
+            form
+                .control(genderKey)
+                .setErrors({'': true});
+          });
+        }
+      });
+    }
   }
 
   @override
@@ -447,7 +162,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     return Scaffold(
       body: ReactiveFormBuilder(
-        form: () => buildForm(bloc.state),
+        form: () => mapper.buildForm(bloc.state, context, getGenderOptions),
         builder: (context, form, child) => BlocConsumer<
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
           listener: (context, state) {
@@ -497,24 +212,24 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     return DigitElevatedButton(
                       onPressed: () async {
                         final age = DigitDateUtils.calculateAge(
-                          form.control(_dobKey).value as DateTime?,
+                          form.control(dobKey).value as DateTime?,
                         );
-                        if ((configs[_dobKey]?['isRequired'] ?? false) &&
-                            (configs[_dobKey]?['isEnabled'] ?? false) &&
+                        if ((mapper.configs[dobKey]?['isRequired'] ?? false) &&
+                            (mapper.configs[dobKey]?['isEnabled'] ?? false) &&
                             ((age.years == 0 && age.months == 0) ||
                                 (age.years >= 150 && age.months > 0))) {
-                          form.control(_dobKey).setErrors({'': true});
+                          form.control(dobKey).setErrors({'': true});
                         }
-                        if (form.control(_idTypeKey).value == null &&
-                            (configs[_idTypeKey]?['isRequired'] ?? false) &&
-                            (configs[_idTypeKey]?['isEnabled'] ?? false)) {
-                          form.control(_idTypeKey).setErrors({'': true});
+                        if (form.control(idTypeKey).value == null &&
+                            (mapper.configs[idTypeKey]?['isRequired'] ?? false) &&
+                            (mapper.configs[idTypeKey]?['isEnabled'] ?? false)) {
+                          form.control(idTypeKey).setErrors({'': true});
                         }
-                        if (form.control(_genderKey).value == null &&
-                            (configs[_genderKey]?['isRequired'] ?? false) &&
-                            (configs[_genderKey]?['isEnabled'] ?? false)) {
+                        if (form.control(genderKey).value == null &&
+                            (mapper.configs[genderKey]?['isRequired'] ?? false) &&
+                            (mapper.configs[genderKey]?['isEnabled'] ?? false)) {
                           setState(() {
-                            form.control(_genderKey).setErrors({'': true});
+                            form.control(genderKey).setErrors({'': true});
                           });
                         }
                         final userId =
@@ -732,8 +447,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           ),
                         ),
                         Column(
-                            children: buildWidgetsFromConfig(WidgetConfigModel(
-                                config: configs, form: form))),
+                            children: mapper.buildWidgetsFromConfig(WidgetConfigModel(
+                                config: mapper.configs, form: form,localizations: localizations, func: updateState),isHeadOfHousehold)),
                         const SizedBox(height: 16),
                         if ((RegistrationDeliverySingleton().beneficiaryType ==
                                     BeneficiaryType.household &&
@@ -842,7 +557,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
-    final dob = form.control(_dobKey).value as DateTime?;
+    final dob = form.control(dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {
       dobString = DateFormat(Constants().dateFormat).format(dob);
@@ -908,133 +623,26 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       ),
     );
 
-    String? individualName = form.control(_individualNameKey).value as String?;
+    String? individualName = form.control(individualNameKey).value as String?;
     individual = individual.copyWith(
       name: name.copyWith(
         givenName: individualName?.trim(),
       ),
-      gender: form.control(_genderKey).value == null
+      gender: form.control(genderKey).value == null
           ? null
           : Gender.values
-              .byName(form.control(_genderKey).value.toString().toLowerCase()),
-      mobileNumber: form.control(_mobileNumberKey).value,
+              .byName(form.control(genderKey).value.toString().toLowerCase()),
+      mobileNumber: form.control(mobileNumberKey).value,
       dateOfBirth: dobString,
       identifiers: [
         identifier.copyWith(
-          identifierId: form.control(_idNumberKey).value,
-          identifierType: form.control(_idTypeKey).value,
+          identifierId: form.control(idNumberKey).value,
+          identifierType: form.control(idTypeKey).value,
         ),
       ],
     );
 
     return individual;
-  }
-
-  FormGroup buildForm(BeneficiaryRegistrationState state) {
-    final individual = state.mapOrNull<IndividualModel>(
-      editIndividual: (value) {
-        if (value.projectBeneficiaryModel?.tag != null) {
-          context.read<DigitScannerBloc>().add(DigitScannerScanEvent(
-              barCode: [], qrCode: [value.projectBeneficiaryModel!.tag!]));
-        }
-
-        return value.individualModel;
-      },
-      create: (value) {
-        return value.individualModel;
-      },
-      summary: (value) {
-        return value.individualModel;
-      },
-    );
-
-    final searchQuery = state.mapOrNull<String>(
-      create: (value) {
-        return value.searchQuery;
-      },
-    );
-
-    final formGroup = fb.group(<String, Object>{
-      _individualNameKey: FormControl<String>(
-        validators: [
-          CustomValidator.requiredMin,
-          Validators.maxLength(200),
-        ],
-        value: individual?.name?.givenName ?? searchQuery?.trim(),
-      ),
-      _idTypeKey: FormControl<String>(
-        value: individual?.identifiers?.firstOrNull?.identifierType,
-      ),
-      _idNumberKey: FormControl<String>(
-        value: individual?.identifiers?.firstOrNull?.identifierId,
-      ),
-      _dobKey: FormControl<DateTime>(
-        value: individual?.dateOfBirth != null
-            ? DateFormat(Constants().dateFormat).parse(
-                individual!.dateOfBirth!,
-              )
-            : null,
-      ),
-      _genderKey: FormControl<String>(value: getGenderOptions(individual)),
-      _mobileNumberKey:
-          FormControl<String>(value: individual?.mobileNumber, validators: [
-        CustomValidator.validMobileNumber,
-        CustomValidator.minPhoneNumValidation,
-        Validators.maxLength(10)
-      ]),
-    });
-
-    configs.forEach((key, fieldConfig) {
-      final formControl = formGroup.control(key);
-
-      // Get current validators
-      final currentValidators = formControl.validators;
-
-      List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
-          updatedValidators = currentValidators.where((validator) {
-        // Check if the validator is of the same type as Validators.required
-        return validator.runtimeType != Validators.required.runtimeType;
-      }).toList();
-
-      if (fieldConfig['isRequired'] == true &&
-          fieldConfig['isEnabled'] == true) {
-        // Add the new validator to the list
-        updatedValidators = [
-          ...updatedValidators,
-          Validators.required // Example new validator
-        ];
-      }
-
-      // If JSON config has regex, add it as a validator
-      if (fieldConfig['isEnabled'] == true &&
-          fieldConfig.containsKey('regex') &&
-          fieldConfig['regex'] is List) {
-        List<String> regexList = fieldConfig['regex'];
-        String errorMessages = fieldConfig['errorMessage'];
-
-        regexList.asMap().forEach((index, regexPattern) {
-          updatedValidators.add((control) {
-            final value = control.value?.toString() ??
-                ''; // Convert to string or default to empty
-            if (value.isNotEmpty && !RegExp(regexPattern).hasMatch(value)) {
-              // Ensure there's a matching error message for this index
-              return {
-                'customError': errorMessages[index]
-              }; // Use the correct error message for the index
-            }
-            return null;
-          });
-        });
-      }
-
-      // Set the updated validators back to the form control
-      formControl.setValidators(updatedValidators);
-
-      // Re-run validation with the new validators
-      formControl.updateValueAndValidity();
-    });
-
-    return formGroup;
   }
 
   getGenderOptions(IndividualModel? individual) {

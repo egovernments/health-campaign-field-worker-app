@@ -10,6 +10,7 @@ import 'package:registration_delivery/router/registration_delivery_router.gm.dar
 import 'package:registration_delivery/utils/extensions/extensions.dart';
 
 import '../../models/entities/additional_fields_type.dart';
+import '../../utils/component_mapper/house_details_component_mapper.dart';
 import '../../utils/convert_to_map.dart';
 import '../../utils/formController.dart';
 import '../../utils/i18_key_constants.dart' as i18;
@@ -36,25 +37,10 @@ class HouseDetailsPage extends LocalizedStatefulWidget {
 }
 
 class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
-  static const _noOfRoomsKey = 'noOfRooms';
-  static const _householdStructureKey = 'householdStructure';
+  static const noOfRoomsKey = 'noOfRooms';
+  static const householdStructureKey = 'householdStructure';
   List<String>? selectedHouseStructureTypes;
-  Map<String, Map<String, dynamic>> configs = {
-    'householdStructure': {
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': false,
-      'order': 1,
-    },
-    'noOfRooms': {
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': true,
-      'regex': ["^\\d+\$"],
-      "errorMessage": "Invalid input",
-      'order': 2,
-    }
-  };
+  HouseDetailsComponentMapper mapper = HouseDetailsComponentMapper();
 
   @override
   void initState() {
@@ -62,125 +48,25 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
 
     if(widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
-      configs = converter.convertFields('Housedetails');
+      mapper.configs = converter.convertFields('Housedetails');
     }
     super.initState();
   }
 
-  List<Widget> buildWidgetsFromConfig(WidgetConfigModel model) {
-    List<Widget> widgets = [];
-
-    // Sort the config keys by the 'order' key
-    var sortedKeys = model.config.keys.toList();
-    sortedKeys.sort(
-        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
-
-    if (sortedKeys.isEmpty) {
-      Widget widget = const AlertDialog(
-        title: Text("Error"),
-        content: Text("Household location config not found"),
-      );
-      widgets.add(widget);
-    } else {
-      for (var key in sortedKeys) {
-        var fieldConfig = model.config[key];
-
-        if (fieldConfig['isEnabled'] == true) {
-          Widget widget;
-
-          // Generate the widget based on the fieldConfig['type'] using a switch case
-          switch (key) {
-            case _householdStructureKey:
-              widget = houseShowcaseData.typeOfStructure.buildWith(
-                child: AbsorbPointer(
-                  absorbing: fieldConfig['readOnly'] ?? false,
-                  child: Opacity(
-                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                    child: SelectionBox<String>(
-                      title:
-                      '${localizations.translate(i18.householdDetails.typeOfStructure)}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                      equalWidthOptions: true,
-                      allowMultipleSelection: false,
-                      options:
-                      RegistrationDeliverySingleton().houseStructureTypes ??
-                          [],
-                      initialSelection: model.form
-                          .control(_householdStructureKey)
-                          .value !=
-                          null
-                          ? [...model.form.control(_householdStructureKey).value]
-                          : [],
-                      onSelectionChanged: (values) {
-                        model.form
-                            .control(_householdStructureKey)
-                            .markAsTouched();
-                        if (values.isEmpty) {
-                          model.form.control(_householdStructureKey).value = null;
-                          setState(() {
-                            model.form
-                                .control(_householdStructureKey)
-                                .setErrors({'': true});
-                          });
-                        } else {
-                          setState(() {
-                            model.form.control(_householdStructureKey).value =
-                                values;
-                          });
-                        }
-                      },
-                      valueMapper: (value) {
-                        return localizations.translate(value.toString());
-                      },
-                      errorMessage: model.form
-                          .control(_householdStructureKey)
-                          .hasErrors &&
-                          model.form.control(_householdStructureKey).touched
-                          ? localizations.translate(
-                          i18.householdDetails.selectStructureTypeError)
-                          : null,
-                    ),
-                  ),
-                ),
-              );
-              break;
-            case _noOfRoomsKey:
-              widget = houseShowcaseData.noOfRooms.buildWith(
-                child: AbsorbPointer(
-                  absorbing: fieldConfig['readOnly'],
-                  child: Opacity(
-                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                    child: DigitIntegerFormPicker(
-                      minimum: 1,
-                      maximum: 20,
-                      form: model.form,
-                      formControlName: _noOfRoomsKey,
-                      label: '${localizations.translate(
-                        i18.householdDetails.noOfRoomsLabel,
-                      )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                      incrementer: true,
-                    ),
-                  ),
-                ),
-              );
-              break;
-            default:
-              widget = Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    const Text('Error:', style: TextStyle(color: Colors.red)),
-                    Text("Unknown key $key")
-                  ],
-                ),
-              );
-          }
-
-          widgets.add(widget);
-        }
-      }
+  void updateState(dynamic form, bool flag, var values) {
+    if(flag) {
+      setState(() {
+        form
+            .control(householdStructureKey)
+            .setErrors({'': true});
+      });
     }
-
-    return widgets;
+    else {
+      setState(() {
+        form.control(householdStructureKey).value =
+            values;
+      });
+    }
   }
 
   @override
@@ -191,7 +77,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
 
     return Scaffold(
       body: ReactiveFormBuilder(
-          form: () => buildForm(bloc.state),
+          form: () => mapper.buildForm(bloc.state,localizations),
           builder: (_, form, __) => BlocBuilder<BeneficiaryRegistrationBloc,
                   BeneficiaryRegistrationState>(
                 builder: (context, registrationState) {
@@ -212,24 +98,24 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       child: DigitElevatedButton(
                         onPressed: () {
                           form.markAllAsTouched();
-                          if (form.control(_householdStructureKey).value ==
+                          if (form.control(householdStructureKey).value ==
                                   null &&
-                              (configs[_householdStructureKey]
+                              (mapper.configs[householdStructureKey]
                                       ?['isRequired'] ??
-                                  false) && (configs[_householdStructureKey]?['isEnabled'] ?? false)) {
+                                  false) && (mapper.configs[householdStructureKey]?['isEnabled'] ?? false)) {
                             setState(() {
                               form
-                                  .control(_householdStructureKey)
+                                  .control(householdStructureKey)
                                   .setErrors({'': true});
                             });
                           }
 
                           if (!form.valid) return;
                           selectedHouseStructureTypes =
-                              form.control(_householdStructureKey).value;
+                              form.control(householdStructureKey).value;
 
                           final noOfRooms =
-                              form.control(_noOfRoomsKey).value as int;
+                              form.control(noOfRoomsKey).value as int;
                           registrationState.maybeWhen(
                             orElse: () {
                               return;
@@ -375,10 +261,10 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                 ),
                               ),
                               Column(
-                                  children: buildWidgetsFromConfig(
+                                  children: mapper.buildWidgetsFromConfig(
                                       WidgetConfigModel(
-                                          config: configs,
-                                          form: form)))
+                                          config: mapper.configs,
+                                          form: form, func: updateState, localizations: localizations)))
                             ],
                           ),
                         ),
@@ -388,63 +274,5 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                 },
               )),
     );
-  }
-
-  FormGroup buildForm(BeneficiaryRegistrationState state) {
-    final formGroup = fb.group(<String, Object>{
-      _noOfRoomsKey: FormControl<int>(
-          value: state.householdModel?.additionalFields?.fields
-                      .where((h) =>
-                          h.key == AdditionalFieldsType.noOfRooms.toValue())
-                      .firstOrNull
-                      ?.value !=
-                  null
-              ? int.tryParse(state.householdModel?.additionalFields?.fields
-                      .where((h) =>
-                          h.key == AdditionalFieldsType.noOfRooms.toValue())
-                      .firstOrNull
-                      ?.value
-                      .toString() ??
-                  '1')
-              : 1,
-      validators: [Validators.required]),
-      _householdStructureKey: FormControl<List<String>>(
-        value: state.householdModel?.additionalFields?.fields
-            .where((e) =>
-                e.key == AdditionalFieldsType.houseStructureTypes.toValue())
-            .first
-            .value
-            .toString()
-            .split("|"),
-      )
-    });
-
-    configs.forEach((key, fieldConfig) {
-      final formControl = formGroup.control(key);
-
-      // Get current validators
-      final currentValidators = formControl.validators;
-
-      List<Map<String, dynamic>? Function(AbstractControl<dynamic>)> updatedValidators = currentValidators.where((validator) {
-        // Check if the validator is of the same type as Validators.required
-        return validator.runtimeType != Validators.required.runtimeType;
-      }).toList();
-
-      if (fieldConfig['isRequired'] == true && fieldConfig['isEnabled'] == true) {
-        // Add the new validator to the list
-        updatedValidators = [
-          ...updatedValidators,
-          Validators.required // Example new validator
-        ];
-      }
-
-      // Set the updated validators back to the form control
-      formControl.setValidators(updatedValidators);
-
-      // Re-run validation with the new validators
-      formControl.updateValueAndValidity();
-    });
-
-    return formGroup;
   }
 }

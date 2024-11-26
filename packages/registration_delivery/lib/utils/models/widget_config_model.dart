@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../../blocs/app_localization.dart';
+
 class WidgetConfigModel {
   final Map<String, dynamic> config;
   final dynamic form;
   final Function? func;
+  final RegistrationDeliveryLocalization localizations;
 
   WidgetConfigModel({
     required this.config,
     required this.form,
     this.func,
+    required this.localizations
   });
 }
 
