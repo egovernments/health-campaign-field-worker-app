@@ -18,6 +18,8 @@ import 'package:registration_delivery/widgets/beneficiary/view_beneficiary_card.
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
+import '../utils/extensions/extensions.dart';
+
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
   const CustomSearchBeneficiaryPage({
@@ -361,37 +363,70 @@ class _CustomSearchBeneficiaryPageStateState
           ),
         ),
         bottomNavigationBar: SizedBox(
-          height: 70,
+          height: 80,
           child: Card(
             margin: const EdgeInsets.all(0),
             child: Container(
               padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
               child: Column(
                 children: [
-                  DigitElevatedButton(
-                    onPressed: searchHouseholdsState.loading
-                        ? null
-                        : () {
-                            FocusManager.instance.primaryFocus?.unfocus();
-                            context.read<DigitScannerBloc>().add(
-                                  const DigitScannerEvent.handleScanner(),
-                                );
-                            context.router
-                                .push(BeneficiaryRegistrationWrapperRoute(
-                              initialState: BeneficiaryRegistrationCreateState(
-                                searchQuery: searchHouseholdsState.searchQuery,
-                              ),
-                            ));
-                            searchController.clear();
-                            selectedFilters = [];
+                  context.isRegistrar
+                      ? DigitElevatedButton(
+                          onPressed: searchHouseholdsState.loading
+                              ? null
+                              : () {
+                                  FocusManager.instance.primaryFocus?.unfocus();
+                                  context.read<DigitScannerBloc>().add(
+                                        const DigitScannerEvent.handleScanner(),
+                                      );
+                                  context.router
+                                      .push(BeneficiaryRegistrationWrapperRoute(
+                                    initialState:
+                                        BeneficiaryRegistrationCreateState(
+                                      searchQuery:
+                                          searchHouseholdsState.searchQuery,
+                                    ),
+                                  ));
+                                  searchController.clear();
+                                  selectedFilters = [];
+                                  blocWrapper.clearEvent();
+                                },
+                          child: Center(
+                            child: Text(localizations.translate(
+                              i18.searchBeneficiary.beneficiaryAddActionLabel,
+                            )),
+                          ),
+                        )
+                      : const Offstage(),
+                  context.isRegistrar
+                      ? const Offstage()
+                      : DigitOutlineIconButton(
+                          buttonStyle: OutlinedButton.styleFrom(
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.zero,
+                            ),
+                          ),
+                          onPressed: () {
                             blocWrapper.clearEvent();
+                            selectedFilters = [];
+                            searchController.clear();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const DigitScannerPage(
+                                  quantity: 1,
+                                  isGS1code: false,
+                                  singleValue: true,
+                                ),
+                                settings:
+                                    const RouteSettings(name: '/qr-scanner'),
+                              ),
+                            );
                           },
-                    child: Center(
-                      child: Text(localizations.translate(
-                        i18.searchBeneficiary.beneficiaryAddActionLabel,
-                      )),
-                    ),
-                  ),
+                          icon: Icons.qr_code,
+                          label: localizations.translate(
+                            i18.deliverIntervention.scannerLabel,
+                          ),
+                        ),
                 ],
               ),
             ),

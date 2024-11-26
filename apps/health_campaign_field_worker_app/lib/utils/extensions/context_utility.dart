@@ -130,6 +130,27 @@ extension ContextUtilityExtensions on BuildContext {
     }
   }
 
+  bool get isRegistrar {
+    UserRequestModel loggedInUser;
+
+    try {
+      loggedInUser = this.loggedInUser;
+    } catch (_) {
+      return false;
+    }
+
+    for (final role in loggedInUser.roles) {
+      switch (role.code) {
+        case "REGISTRAR":
+          return true;
+        default:
+          break;
+      }
+    }
+
+    return false;
+  }
+
   List<UserRoleModel> get loggedInUserRoles {
     final authBloc = _get<AuthBloc>();
     final userRequestObject = authBloc.state.whenOrNull(
