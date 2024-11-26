@@ -128,6 +128,12 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                       SideEffectsSubmitEvent(
                                                         SideEffectModel(
                                                           id: null,
+                                                          additionalFields: SideEffectAdditionalFields(
+                                                            version: 1,
+                                                            fields: [
+                                                              AdditionalField("boundaryCode",RegistrationDeliverySingleton().boundary?.code),
+                                                            ],
+                                                          ),
                                                           taskClientReferenceId:
                                                               widget.tasks.last
                                                                   .clientReferenceId,

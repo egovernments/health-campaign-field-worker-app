@@ -189,12 +189,13 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     var gender;
     var roomCount;
     var memberCount;
+    String? structureType;
 
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
         DigitDateUtils.getFormattedDateToDateTime(
-              individualModel.dateOfBirth!,
-            ) ??
+          individualModel.dateOfBirth!,
+        ) ??
             DateTime.now(),
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
@@ -204,11 +205,16 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
       roomCount = int.tryParse(householdModel.additionalFields?.fields
-              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull
-              ?.value
-              .toString() ??
+          .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+          .firstOrNull
+          ?.value
+          .toString() ??
           '1')!;
+      structureType = householdModel.additionalFields?.fields
+          .where((h) =>
+      h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+          .firstOrNull
+          ?.value;
     }
 
     final filteredCriteria = currentDelivery.doseCriteria?.where((criteria) {
@@ -221,10 +227,12 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
           final expression = FormulaParser(
             element,
             {
-              'age': individualAgeInMonths,
+              if (individualModel != null && individualAgeInMonths != 0)
+                'age': individualAgeInMonths,
               if (gender != null) 'gender': gender,
               if (memberCount != null) 'memberCount': memberCount,
-              if (roomCount != null) 'roomCount': roomCount
+              if (roomCount != null) 'roomCount': roomCount,
+              if (structureType != null) 'structure': structureType
             },
           );
           final error = expression.parse;

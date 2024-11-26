@@ -291,6 +291,7 @@ class _RecordReferralDetailsPageState
                                                           HFReferralAdditionalFields(
                                                         version: 1,
                                                         fields: [
+                                                          AdditionalField("boundaryCode",ReferralReconSingleton().boundary?.code),
                                                           if (hfCoordinator !=
                                                                   null &&
                                                               hfCoordinator
@@ -631,6 +632,7 @@ class _RecordReferralDetailsPageState
                                                             HFReferralAdditionalFields(
                                                           version: 1,
                                                           fields: [
+                                                            AdditionalField("boundaryCode",ReferralReconSingleton().boundary?.code),
                                                             if (hfCoordinator !=
                                                                     null &&
                                                                 hfCoordinator

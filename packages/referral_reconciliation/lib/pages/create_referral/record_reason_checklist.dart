@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 import 'package:survey_form/survey_form.dart';
 import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -182,6 +183,34 @@ class _ReferralReasonChecklistPageState
                                           rowVersion: 1,
                                           accountId: ReferralReconSingleton()
                                               .projectId,
+                                          auditDetails:
+                                          AuditDetails(
+                                            createdBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            lastModifiedTime:
+                                            context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          clientAuditDetails:
+                                          ClientAuditDetails(
+                                            createdBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            lastModifiedTime:
+                                            context
+                                                .millisecondsSinceEpoch(),
+                                          ),
                                           additionalDetails: {
                                             "boundaryCode":
                                                 ReferralReconSingleton()
