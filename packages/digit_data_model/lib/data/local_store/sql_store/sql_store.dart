@@ -108,7 +108,41 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5; // Increment schema version
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (migrator, from, to) async {
+      if (from < 5) {
+        // Step 1: Create the new table
+        await migrator.createTable(attributes);
+
+        // Step 2: Copy data from the old table to the new table
+        await customStatement('''
+              INSERT INTO attributes (
+                id, dataType, referenceId, tenantId, code, values, isActive, required, regex, "order",
+                auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+                clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+                auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+              )
+              SELECT 
+                id, dataType, referenceId, tenantId, code, values,
+                CASE isActive WHEN 'true' THEN 1 WHEN 'false' THEN 0 ELSE NULL END, -- Convert String to Boolean
+                required, regex, "order",
+                auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+                clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+                auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+              FROM attributes;
+            ''');
+
+        // Step 3: Drop the old table
+        await migrator.deleteTable('attributes');
+
+        // Step 4: Rename the new table to the old table's name
+        await customStatement('ALTER TABLE attributes RENAME TO attributes;');
+      }
+    },
+  );
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.
