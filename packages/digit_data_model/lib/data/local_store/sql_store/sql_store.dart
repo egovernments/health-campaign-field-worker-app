@@ -114,32 +114,57 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (migrator, from, to) async {
       if (from < 5) {
-        // Step 1: Create the new table
-        await migrator.createTable(attributes);
+        await customStatement('''
+        CREATE TABLE attributes_temp (
+          id TEXT,
+          dataType TEXT,
+          referenceId TEXT,
+          tenantId TEXT,
+          code TEXT,
+          values TEXT,
+          isActive BOOLEAN,
+          required BOOLEAN,
+          regex TEXT,
+          "order" INTEGER,
+          auditCreatedBy TEXT,
+          nonRecoverableError BOOLEAN DEFAULT 0,
+          auditCreatedTime INTEGER,
+          clientCreatedTime INTEGER,
+          clientModifiedBy TEXT,
+          clientCreatedBy TEXT,
+          clientModifiedTime INTEGER,
+          auditModifiedBy TEXT,
+          auditModifiedTime INTEGER,
+          isDeleted BOOLEAN DEFAULT 0,
+          rowVersion INTEGER,
+          additionalFields TEXT,
+          additionalDetails TEXT
+        );
+      ''');
 
         // Step 2: Copy data from the old table to the new table
         await customStatement('''
-              INSERT INTO attributes (
-                id, dataType, referenceId, tenantId, code, values, isActive, required, regex, "order",
-                auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
-                clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
-                auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
-              )
-              SELECT 
-                id, dataType, referenceId, tenantId, code, values,
-                CASE isActive WHEN 'true' THEN 1 WHEN 'false' THEN 0 ELSE NULL END, -- Convert String to Boolean
-                required, regex, "order",
-                auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
-                clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
-                auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
-              FROM attributes;
-            ''');
+        INSERT INTO attributes_temp (
+          id, dataType, referenceId, tenantId, code, values, isActive, required, regex, "order",
+          auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+          clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+          auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+        )
+        SELECT 
+          id, dataType, referenceId, tenantId, code, values,
+          CASE isActive WHEN 'true' THEN 1 WHEN 'false' THEN 0 ELSE NULL END,
+          required, regex, "order",
+          auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
+          clientModifiedBy, clientCreatedBy, clientModifiedTime, auditModifiedBy,
+          auditModifiedTime, isDeleted, rowVersion, additionalFields, additionalDetails
+        FROM attributes;
+      ''');
 
         // Step 3: Drop the old table
         await migrator.deleteTable('attributes');
 
         // Step 4: Rename the new table to the old table's name
-        await customStatement('ALTER TABLE attributes RENAME TO attributes;');
+        await customStatement('ALTER TABLE attributes_temp RENAME TO attributes;');
       }
     },
   );
