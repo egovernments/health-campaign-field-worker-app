@@ -36,6 +36,7 @@ import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
+import '../widgets/progress_indicator/custom_beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
@@ -96,8 +97,7 @@ class _HomePageState extends LocalizedState<HomePage> {
     });
 
     //[TODO: Add below roles to enum]
-    if (!(roles.contains(RolesType.distributor.toValue()) ||
-        roles.contains(RolesType.registrar.toValue()))) {
+    if (!roles.contains(RolesType.distributor.toValue())) {
       skipProgressBar = true;
     }
 
@@ -153,13 +153,22 @@ class _HomePageState extends LocalizedState<HomePage> {
             ],
             header: Column(
               children: [
-                BackNavigationHelpHeaderWidget(
+                const BackNavigationHelpHeaderWidget(
                   showBackNavigation: false,
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(
-                    showcaseFor: showcaseKeys.toSet().toList(),
-                  ),
                 ),
+                skipProgressBar
+                    ? const SizedBox.shrink()
+                    : homeShowcaseData.distributorProgressBar.buildWith(
+                        child: CustomBeneficiaryProgressBar(
+                          label: localizations.translate(
+                            i18.home.progressIndicatorTitle,
+                          ),
+                          prefixLabel: localizations.translate(
+                            i18.home.progressIndicatorPrefixLabel,
+                          ),
+                        ),
+                      ),
               ],
             ),
             footer: PoweredByDigit(

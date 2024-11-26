@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 import '../blocs/app_initialization/app_initialization.dart';
 import '../data/local_store/downsync/downsync.dart';
 import '../data/network_manager.dart';
+import '../data/repositories/local/custom_task.dart';
 import '../data/repositories/oplog.dart';
 import '../data/repositories/remote/auth.dart';
 import '../data/repositories/remote/downsync.dart';
@@ -186,6 +187,12 @@ class NetworkManagerProviderWrapper extends StatelessWidget {
       ),
       RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
         create: (_) => TaskLocalRepository(
+          sql,
+          TaskOpLogManager(isar),
+        ),
+      ),
+      RepositoryProvider<LocalRepository<TaskModel, TaskSearchModel>>(
+        create: (_) => CustomTaskLocalRepository(
           sql,
           TaskOpLogManager(isar),
         ),
