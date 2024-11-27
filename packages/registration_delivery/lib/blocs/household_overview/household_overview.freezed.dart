@@ -39,8 +39,13 @@ mixin _$HouseholdOverviewEvent {
         setAsHead,
     required TResult Function(IndividualModel individualModel)
         selectedIndividual,
-    required TResult Function(String projectId,
-            BeneficiaryType projectBeneficiaryType, int? offset, int? limit)
+    required TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)
         reload,
   }) =>
       throw _privateConstructorUsedError;
@@ -66,8 +71,13 @@ mixin _$HouseholdOverviewEvent {
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
-    TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult? Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
   }) =>
       throw _privateConstructorUsedError;
@@ -93,8 +103,13 @@ mixin _$HouseholdOverviewEvent {
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult Function(IndividualModel individualModel)? selectedIndividual,
-    TResult Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
     required TResult orElse(),
   }) =>
@@ -308,8 +323,13 @@ class _$HouseholdOverviewDeleteHouseholdEventImpl
         setAsHead,
     required TResult Function(IndividualModel individualModel)
         selectedIndividual,
-    required TResult Function(String projectId,
-            BeneficiaryType projectBeneficiaryType, int? offset, int? limit)
+    required TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)
         reload,
   }) {
     return deleteHousehold(projectId, householdModel, members,
@@ -339,8 +359,13 @@ class _$HouseholdOverviewDeleteHouseholdEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
-    TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult? Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
   }) {
     return deleteHousehold?.call(projectId, householdModel, members,
@@ -370,8 +395,13 @@ class _$HouseholdOverviewDeleteHouseholdEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult Function(IndividualModel individualModel)? selectedIndividual,
-    TResult Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
     required TResult orElse(),
   }) {
@@ -582,8 +612,13 @@ class _$HouseholdOverviewDeleteIndividualEventImpl
         setAsHead,
     required TResult Function(IndividualModel individualModel)
         selectedIndividual,
-    required TResult Function(String projectId,
-            BeneficiaryType projectBeneficiaryType, int? offset, int? limit)
+    required TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)
         reload,
   }) {
     return deleteIndividual(
@@ -613,8 +648,13 @@ class _$HouseholdOverviewDeleteIndividualEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
-    TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult? Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
   }) {
     return deleteIndividual?.call(
@@ -644,8 +684,13 @@ class _$HouseholdOverviewDeleteIndividualEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult Function(IndividualModel individualModel)? selectedIndividual,
-    TResult Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
     required TResult orElse(),
   }) {
@@ -853,8 +898,13 @@ class _$HouseholdOverviewSetAsHeadEventImpl
         setAsHead,
     required TResult Function(IndividualModel individualModel)
         selectedIndividual,
-    required TResult Function(String projectId,
-            BeneficiaryType projectBeneficiaryType, int? offset, int? limit)
+    required TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)
         reload,
   }) {
     return setAsHead(
@@ -884,8 +934,13 @@ class _$HouseholdOverviewSetAsHeadEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
-    TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult? Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
   }) {
     return setAsHead?.call(
@@ -915,8 +970,13 @@ class _$HouseholdOverviewSetAsHeadEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult Function(IndividualModel individualModel)? selectedIndividual,
-    TResult Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
     required TResult orElse(),
   }) {
@@ -1090,8 +1150,13 @@ class _$HouseholdOverviewSelectIndividualEventImpl
         setAsHead,
     required TResult Function(IndividualModel individualModel)
         selectedIndividual,
-    required TResult Function(String projectId,
-            BeneficiaryType projectBeneficiaryType, int? offset, int? limit)
+    required TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)
         reload,
   }) {
     return selectedIndividual(individualModel);
@@ -1120,8 +1185,13 @@ class _$HouseholdOverviewSelectIndividualEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
-    TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult? Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
   }) {
     return selectedIndividual?.call(individualModel);
@@ -1150,8 +1220,13 @@ class _$HouseholdOverviewSelectIndividualEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult Function(IndividualModel individualModel)? selectedIndividual,
-    TResult Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
     required TResult orElse(),
   }) {
@@ -1235,7 +1310,9 @@ abstract class _$$HouseholdOverviewReloadEventImplCopyWith<$Res> {
       {String projectId,
       BeneficiaryType projectBeneficiaryType,
       int? offset,
-      int? limit});
+      int? limit,
+      List<String>? selectedFilter,
+      String? searchByName});
 }
 
 /// @nodoc
@@ -1255,6 +1332,8 @@ class __$$HouseholdOverviewReloadEventImplCopyWithImpl<$Res>
     Object? projectBeneficiaryType = null,
     Object? offset = freezed,
     Object? limit = freezed,
+    Object? selectedFilter = freezed,
+    Object? searchByName = freezed,
   }) {
     return _then(_$HouseholdOverviewReloadEventImpl(
       projectId: null == projectId
@@ -1273,6 +1352,14 @@ class __$$HouseholdOverviewReloadEventImplCopyWithImpl<$Res>
           ? _value.limit
           : limit // ignore: cast_nullable_to_non_nullable
               as int?,
+      selectedFilter: freezed == selectedFilter
+          ? _value._selectedFilter
+          : selectedFilter // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      searchByName: freezed == searchByName
+          ? _value.searchByName
+          : searchByName // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -1285,7 +1372,10 @@ class _$HouseholdOverviewReloadEventImpl
       {required this.projectId,
       required this.projectBeneficiaryType,
       this.offset,
-      this.limit});
+      this.limit,
+      final List<String>? selectedFilter,
+      this.searchByName})
+      : _selectedFilter = selectedFilter;
 
   @override
   final String projectId;
@@ -1295,10 +1385,22 @@ class _$HouseholdOverviewReloadEventImpl
   final int? offset;
   @override
   final int? limit;
+  final List<String>? _selectedFilter;
+  @override
+  List<String>? get selectedFilter {
+    final value = _selectedFilter;
+    if (value == null) return null;
+    if (_selectedFilter is EqualUnmodifiableListView) return _selectedFilter;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final String? searchByName;
 
   @override
   String toString() {
-    return 'HouseholdOverviewEvent.reload(projectId: $projectId, projectBeneficiaryType: $projectBeneficiaryType, offset: $offset, limit: $limit)';
+    return 'HouseholdOverviewEvent.reload(projectId: $projectId, projectBeneficiaryType: $projectBeneficiaryType, offset: $offset, limit: $limit, selectedFilter: $selectedFilter, searchByName: $searchByName)';
   }
 
   @override
@@ -1311,12 +1413,22 @@ class _$HouseholdOverviewReloadEventImpl
             (identical(other.projectBeneficiaryType, projectBeneficiaryType) ||
                 other.projectBeneficiaryType == projectBeneficiaryType) &&
             (identical(other.offset, offset) || other.offset == offset) &&
-            (identical(other.limit, limit) || other.limit == limit));
+            (identical(other.limit, limit) || other.limit == limit) &&
+            const DeepCollectionEquality()
+                .equals(other._selectedFilter, _selectedFilter) &&
+            (identical(other.searchByName, searchByName) ||
+                other.searchByName == searchByName));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, projectId, projectBeneficiaryType, offset, limit);
+      runtimeType,
+      projectId,
+      projectBeneficiaryType,
+      offset,
+      limit,
+      const DeepCollectionEquality().hash(_selectedFilter),
+      searchByName);
 
   @JsonKey(ignore: true)
   @override
@@ -1350,11 +1462,17 @@ class _$HouseholdOverviewReloadEventImpl
         setAsHead,
     required TResult Function(IndividualModel individualModel)
         selectedIndividual,
-    required TResult Function(String projectId,
-            BeneficiaryType projectBeneficiaryType, int? offset, int? limit)
+    required TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)
         reload,
   }) {
-    return reload(projectId, projectBeneficiaryType, offset, limit);
+    return reload(projectId, projectBeneficiaryType, offset, limit,
+        selectedFilter, searchByName);
   }
 
   @override
@@ -1380,11 +1498,17 @@ class _$HouseholdOverviewReloadEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult? Function(IndividualModel individualModel)? selectedIndividual,
-    TResult? Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult? Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
   }) {
-    return reload?.call(projectId, projectBeneficiaryType, offset, limit);
+    return reload?.call(projectId, projectBeneficiaryType, offset, limit,
+        selectedFilter, searchByName);
   }
 
   @override
@@ -1410,13 +1534,19 @@ class _$HouseholdOverviewReloadEventImpl
             BeneficiaryType projectBeneficiaryType)?
         setAsHead,
     TResult Function(IndividualModel individualModel)? selectedIndividual,
-    TResult Function(String projectId, BeneficiaryType projectBeneficiaryType,
-            int? offset, int? limit)?
+    TResult Function(
+            String projectId,
+            BeneficiaryType projectBeneficiaryType,
+            int? offset,
+            int? limit,
+            List<String>? selectedFilter,
+            String? searchByName)?
         reload,
     required TResult orElse(),
   }) {
     if (reload != null) {
-      return reload(projectId, projectBeneficiaryType, offset, limit);
+      return reload(projectId, projectBeneficiaryType, offset, limit,
+          selectedFilter, searchByName);
     }
     return orElse();
   }
@@ -1476,12 +1606,16 @@ abstract class HouseholdOverviewReloadEvent implements HouseholdOverviewEvent {
       {required final String projectId,
       required final BeneficiaryType projectBeneficiaryType,
       final int? offset,
-      final int? limit}) = _$HouseholdOverviewReloadEventImpl;
+      final int? limit,
+      final List<String>? selectedFilter,
+      final String? searchByName}) = _$HouseholdOverviewReloadEventImpl;
 
   String get projectId;
   BeneficiaryType get projectBeneficiaryType;
   int? get offset;
   int? get limit;
+  List<String>? get selectedFilter;
+  String? get searchByName;
   @JsonKey(ignore: true)
   _$$HouseholdOverviewReloadEventImplCopyWith<
           _$HouseholdOverviewReloadEventImpl>

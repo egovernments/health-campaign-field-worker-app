@@ -225,23 +225,44 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           .select()
           .join([joinName(sql), joinIndividualAddress(sql)]);
       await searchByName(selectQuery, params, sql);
-      selectQuery = selectQuery.join([
-        leftOuterJoin(
-            sql.householdMember,
-            sql.householdMember.individualClientReferenceId
-                .equalsExp(sql.individual.clientReferenceId))
-      ])
-        ..where(sql.householdMember.isHeadOfHousehold.equals(true));
-      selectQuery.join([
-        leftOuterJoin(
-            sql.household,
-            sql.household.clientReferenceId
-                .equalsExp(sql.householdMember.householdClientReferenceId)),
-        leftOuterJoin(
-            sql.projectBeneficiary,
-            sql.projectBeneficiary.beneficiaryClientReferenceId
-                .equalsExp(sql.household.clientReferenceId))
-      ]);
+      if (params.householdClientReferenceId != null) {
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.household,
+              sql.household.clientReferenceId
+                  .equals(params.householdClientReferenceId ?? '')),
+          leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId)),
+        ]);
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.householdMember,
+              sql.householdMember.individualClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId))
+        ])
+          ..where(sql.householdMember.householdClientReferenceId
+              .equals(params.householdClientReferenceId ?? ''));
+      } else {
+        selectQuery = selectQuery.join([
+          leftOuterJoin(
+              sql.householdMember,
+              sql.householdMember.individualClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId))
+        ])
+          ..where(sql.householdMember.isHeadOfHousehold.equals(true));
+        selectQuery.join([
+          leftOuterJoin(
+              sql.household,
+              sql.household.clientReferenceId
+                  .equalsExp(sql.householdMember.householdClientReferenceId)),
+          leftOuterJoin(
+              sql.projectBeneficiary,
+              sql.projectBeneficiary.beneficiaryClientReferenceId
+                  .equalsExp(sql.household.clientReferenceId))
+        ]);
+      }
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
@@ -281,11 +302,33 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           ..where(filter == Status.registered.name
               ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
               : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+
+        if (params.householdClientReferenceId != null) {
+          selectQuery = selectQuery.join([
+            leftOuterJoin(
+                sql.householdMember,
+                sql.householdMember.individualClientReferenceId
+                    .equalsExp(sql.individual.clientReferenceId))
+          ])
+            ..where(sql.householdMember.householdClientReferenceId
+                .equals(params.householdClientReferenceId ?? ''));
+        }
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
 
         selectQuery = filterSearchQuery;
+
+        if (params.householdClientReferenceId != null) {
+          selectQuery = selectQuery.join([
+            leftOuterJoin(
+                sql.householdMember,
+                sql.householdMember.individualClientReferenceId
+                    .equalsExp(sql.individual.clientReferenceId))
+          ])
+            ..where(sql.householdMember.householdClientReferenceId
+                .equals(params.householdClientReferenceId ?? ''));
+        }
       }
     } else if (selectQuery != null) {
       if (filter == Status.registered.name ||
@@ -333,8 +376,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.task.projectBeneficiaryClientReferenceId)),
         leftOuterJoin(
             sql.individual,
-            sql.individual.clientReferenceId
-                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId)),
+            sql.individual.clientReferenceId.equalsExp(
+                sql.projectBeneficiary.beneficiaryClientReferenceId)),
       ])
         ..where(sql.task.status.equals(
           statusMap[applyFilter]!.toValue(),

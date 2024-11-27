@@ -8,6 +8,9 @@ import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_chip.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
@@ -30,6 +33,7 @@ import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/localized.dart';
 import '../../widgets/member_card/member_card.dart';
 import '../../widgets/table_card/table_card.dart';
+import '/widgets/status_filter/status_filter.dart';
 
 @RoutePage()
 class HouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -41,8 +45,14 @@ class HouseholdOverviewPage extends LocalizedStatefulWidget {
 
 class _HouseholdOverviewPageState
     extends LocalizedState<HouseholdOverviewPage> {
+  final TextEditingController searchController = TextEditingController();
   int offset = 0;
   int limit = 10;
+
+  String? householdClientReferenceId;
+
+  List<String> selectedFilters = [];
+
   @override
   void initState() {
     callReloadEvent(offset: offset, limit: limit);
@@ -73,10 +83,13 @@ class _HouseholdOverviewPageState
                       if (scrollNotification is ScrollUpdateNotification) {
                         final metrics = scrollNotification.metrics;
                         if (metrics.atEdge && metrics.pixels != 0) {
-                          callReloadEvent(offset: offset + limit, limit: limit);
-                          offset += limit;
+                          if (state.offset != null) {
+                            callReloadEvent(
+                                offset: state.offset ?? 0, limit: limit);
+                          }
                         }
                       }
+                      //Return true to allow the notification to continue to be dispatched to further ancestors.
                       return true;
                     },
                     child: ScrollableContent(
@@ -88,136 +101,161 @@ class _HouseholdOverviewPageState
                         },
                       ),
                       enableFixedButton: true,
-                      footer: Offstage(
-                        offstage:
-                            beneficiaryType == BeneficiaryType.individual ||
-                                isOutsideProjectDateRange(),
-                        child: BlocBuilder<ServiceDefinitionBloc,
-                            ServiceDefinitionState>(
-                          builder: (context, serviceDefinitionState) =>
-                              BlocBuilder<DeliverInterventionBloc,
-                                  DeliverInterventionState>(
-                            builder: (ctx, deliverInterventionState) =>
-                                DigitCard(
-                                    margin: const EdgeInsets.only(top: spacer2),
-                                    padding: const EdgeInsets.all(spacer2),
-                                    children: [
-                                  state.householdMemberWrapper.tasks?.lastOrNull
-                                              ?.status ==
-                                          Status.administeredSuccess.toValue()
-                                      ? Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: spacer2),
-                                          child: Button(
-                                            label: localizations.translate(
-                                              i18.memberCard
-                                                  .deliverDetailsUpdateLabel,
-                                            ),
-                                            isDisabled: state
-                                                        .householdMemberWrapper
-                                                        .tasks
-                                                        ?.lastOrNull
-                                                        ?.status ==
-                                                    Status.administeredSuccess
-                                                        .toValue()
-                                                ? true
-                                                : false,
-                                            type: ButtonType.secondary,
-                                            size: ButtonSize.large,
-                                            mainAxisSize: MainAxisSize.max,
-                                            onPressed: () {
-                                              serviceDefinitionState.when(
-                                                  empty: () {},
-                                                  isloading: () {},
-                                                  serviceDefinitionFetch:
-                                                      (value, model) {
-                                                    if (value
-                                                        .where((element) => element
-                                                            .code
-                                                            .toString()
-                                                            .contains(
-                                                                '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
-                                                        .toList()
-                                                        .isEmpty) {
-                                                      context.router.push(
-                                                        DeliverInterventionRoute(),
-                                                      );
-                                                    } else {
-                                                      navigateToChecklist(ctx);
-                                                    }
-                                                  });
-                                              callReloadEvent(
-                                                  offset: state
-                                                      .householdMemberWrapper
-                                                      .members!
-                                                      .length,
-                                                  limit: limit);
-                                            },
-                                          ),
-                                        )
-                                      : Button(
-                                          label: localizations.translate(
-                                            i18.householdOverView
-                                                .householdOverViewActionText,
-                                          ),
-                                          type: ButtonType.primary,
-                                          size: ButtonSize.large,
-                                          mainAxisSize: MainAxisSize.max,
-                                          isDisabled: (state.householdMemberWrapper
-                                                              .projectBeneficiaries ??
-                                                          [])
-                                                      .isEmpty ||
-                                                  state
+                      footer: DigitCard(
+                          margin: const EdgeInsets.only(top: spacer2),
+                          padding: const EdgeInsets.all(spacer2),
+                          children: [
+                            Button(
+                              mainAxisSize: MainAxisSize.max,
+                              onPressed: () => addIndividual(
+                                context,
+                                state.householdMemberWrapper.household!,
+                              ),
+                              label: localizations.translate(
+                                i18.householdOverView
+                                    .householdOverViewAddActionText,
+                              ),
+                              prefixIcon: Icons.add_circle,
+                              type: ButtonType.secondary,
+                              size: ButtonSize.medium,
+                            ),
+                            Offstage(
+                              offstage: beneficiaryType ==
+                                      BeneficiaryType.individual ||
+                                  isOutsideProjectDateRange(),
+                              child: BlocBuilder<ServiceDefinitionBloc,
+                                  ServiceDefinitionState>(
+                                builder: (context, serviceDefinitionState) =>
+                                    BlocBuilder<DeliverInterventionBloc,
+                                        DeliverInterventionState>(
+                                  builder: (ctx, deliverInterventionState) =>
+                                      state.householdMemberWrapper.tasks
+                                                  ?.lastOrNull?.status ==
+                                              Status.administeredSuccess
+                                                  .toValue()
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: spacer2),
+                                              child: Button(
+                                                label: localizations.translate(
+                                                  i18.memberCard
+                                                      .deliverDetailsUpdateLabel,
+                                                ),
+                                                isDisabled: state
+                                                            .householdMemberWrapper
+                                                            .tasks
+                                                            ?.lastOrNull
+                                                            ?.status ==
+                                                        Status
+                                                            .administeredSuccess
+                                                            .toValue()
+                                                    ? true
+                                                    : false,
+                                                type: ButtonType.secondary,
+                                                size: ButtonSize.large,
+                                                mainAxisSize: MainAxisSize.max,
+                                                onPressed: () {
+                                                  serviceDefinitionState.when(
+                                                      empty: () {},
+                                                      isloading: () {},
+                                                      serviceDefinitionFetch:
+                                                          (value, model) {
+                                                        if (value
+                                                            .where((element) =>
+                                                                element.code
+                                                                    .toString()
+                                                                    .contains(
+                                                                        '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                            .toList()
+                                                            .isEmpty) {
+                                                          context.router.push(
+                                                            DeliverInterventionRoute(),
+                                                          );
+                                                        } else {
+                                                          navigateToChecklist(
+                                                              ctx);
+                                                        }
+                                                      });
+                                                  callReloadEvent(
+                                                      offset: state
                                                           .householdMemberWrapper
-                                                          .tasks
-                                                          ?.lastOrNull
-                                                          ?.status ==
-                                                      Status.closeHousehold
-                                                          .toValue()
-                                              ? true
-                                              : false,
-                                          onPressed: () async {
-                                            final bloc = ctx
-                                                .read<HouseholdOverviewBloc>();
-
-                                            final projectId =
-                                                RegistrationDeliverySingleton()
-                                                    .projectId!;
-
-                                            bloc.add(
-                                              HouseholdOverviewReloadEvent(
-                                                projectId: projectId,
-                                                projectBeneficiaryType:
-                                                    beneficiaryType,
+                                                          .members!
+                                                          .length,
+                                                      limit: limit);
+                                                },
                                               ),
-                                            );
+                                            )
+                                          : Button(
+                                              label: localizations.translate(
+                                                i18.householdOverView
+                                                    .householdOverViewActionText,
+                                              ),
+                                              type: ButtonType.primary,
+                                              size: ButtonSize.large,
+                                              mainAxisSize: MainAxisSize.max,
+                                              isDisabled: (state.householdMemberWrapper
+                                                                  .projectBeneficiaries ??
+                                                              [])
+                                                          .isEmpty ||
+                                                      state
+                                                              .householdMemberWrapper
+                                                              .tasks
+                                                              ?.lastOrNull
+                                                              ?.status ==
+                                                          Status.closeHousehold
+                                                              .toValue()
+                                                  ? true
+                                                  : false,
+                                              onPressed: () async {
+                                                final bloc = ctx.read<
+                                                    HouseholdOverviewBloc>();
 
-                                            serviceDefinitionState.when(
-                                                empty: () {},
-                                                isloading: () {},
-                                                serviceDefinitionFetch:
-                                                    (value, model) {
-                                                  if (value
-                                                      .where((element) => element
-                                                          .code
-                                                          .toString()
-                                                          .contains(
-                                                              '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
-                                                      .toList()
-                                                      .isEmpty) {
-                                                    context.router.push(
-                                                      DeliverInterventionRoute(),
-                                                    );
-                                                  } else {
-                                                    navigateToChecklist(ctx);
-                                                  }
-                                                });
-                                          },
-                                        ),
-                                ]),
-                          ),
-                        ),
-                      ),
+                                                final projectId =
+                                                    RegistrationDeliverySingleton()
+                                                        .projectId!;
+
+                                                bloc.add(
+                                                  HouseholdOverviewReloadEvent(
+                                                    projectId: projectId,
+                                                    projectBeneficiaryType:
+                                                        beneficiaryType,
+                                                  ),
+                                                );
+
+                                                serviceDefinitionState.when(
+                                                    empty: () {},
+                                                    isloading: () {},
+                                                    serviceDefinitionFetch:
+                                                        (value, model) {
+                                                      if (value
+                                                          .where((element) =>
+                                                              element.code
+                                                                  .toString()
+                                                                  .contains(
+                                                                      '${RegistrationDeliverySingleton().selectedProject?.name}.${RegistrationDeliveryEnums.iec.toValue()}'))
+                                                          .toList()
+                                                          .isEmpty) {
+                                                        context.router.push(
+                                                          DeliverInterventionRoute(),
+                                                        );
+                                                      } else {
+                                                        navigateToChecklist(
+                                                            ctx);
+                                                      }
+                                                    });
+                                                callReloadEvent(
+                                                    offset: state
+                                                        .householdMemberWrapper
+                                                        .members!
+                                                        .length,
+                                                    limit: limit);
+                                              },
+                                            ),
+                                ),
+                              ),
+                            ),
+                          ]),
                       slivers: [
                         SliverToBoxAdapter(
                           child: DigitCard(children: [
@@ -359,15 +397,56 @@ class _HouseholdOverviewPageState
                                 //     ),
                                 //   ),
                                 // ),
-                                Padding(
-                                  padding: const EdgeInsets.all(spacer2),
-                                  child: Text(
-                                    localizations.translate(i18
-                                        .householdOverView
-                                        .householdOverViewLabel),
-                                    style: textTheme.headingXl,
-                                  ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(spacer2),
+                                        child: Text(
+                                          localizations.translate(i18
+                                              .householdOverView
+                                              .householdOverViewLabel),
+                                          style: textTheme.headingXl,
+                                        ),
+                                      ),
+                                    ),
+                                    Column(
+                                      children: [
+                                        RegistrationDeliverySingleton()
+                                                        .searchHouseHoldFilter !=
+                                                    null &&
+                                                RegistrationDeliverySingleton()
+                                                    .searchHouseHoldFilter!
+                                                    .isNotEmpty
+                                            ? Align(
+                                                alignment: Alignment.topLeft,
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      spacer2),
+                                                  child: Button(
+                                                    label:
+                                                        getFilterIconNLabel()[
+                                                            'label'],
+                                                    size: ButtonSize.medium,
+                                                    type: ButtonType.tertiary,
+                                                    suffixIcon:
+                                                        getFilterIconNLabel()[
+                                                            'icon'],
+                                                    onPressed: () =>
+                                                        showFilterDialog(),
+                                                  ),
+                                                ),
+                                              )
+                                            : const Offstage(),
+                                      ],
+                                    ),
+                                  ],
                                 ),
+
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     left: spacer2,
@@ -423,6 +502,61 @@ class _HouseholdOverviewPageState
                                     );
                                   }),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: spacer2, bottom: spacer2),
+                                  child: DigitSearchBar(
+                                    controller: searchController,
+                                    hintText: localizations.translate(
+                                      i18.common.searchByName,
+                                    ),
+                                    textCapitalization:
+                                        TextCapitalization.words,
+                                    onChanged: (value) {
+                                      if (value.length >= 3) {
+                                        callReloadEvent(offset: 0, limit: 10);
+                                      } else if (searchController
+                                          .value.text.isEmpty) {
+                                        callReloadEvent(offset: 0, limit: 10);
+                                      }
+                                    },
+                                  ),
+                                ),
+                                selectedFilters.isNotEmpty
+                                    ? Align(
+                                        alignment: Alignment.topLeft,
+                                        child: SizedBox(
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.06,
+                                          child: ListView.builder(
+                                              shrinkWrap: true,
+                                              scrollDirection: Axis.horizontal,
+                                              itemCount: selectedFilters.length,
+                                              itemBuilder: (context, index) {
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      spacer1),
+                                                  child: DigitChip(
+                                                    label:
+                                                        '${localizations.translate(getStatus(selectedFilters[index]))}'
+                                                        ' (${state.householdMemberWrapper.members!.length})',
+                                                    onItemDelete: () {
+                                                      setState(() {
+                                                        selectedFilters.remove(
+                                                            selectedFilters[
+                                                                index]);
+                                                      });
+                                                      callReloadEvent(
+                                                          offset: 0, limit: 10);
+                                                    },
+                                                  ),
+                                                );
+                                              }),
+                                        ),
+                                      )
+                                    : const Offstage(),
                                 Column(
                                   children:
                                       (state.householdMemberWrapper.members ??
@@ -742,31 +876,6 @@ class _HouseholdOverviewPageState
                                     },
                                   ).toList(),
                                 ),
-                                const SizedBox(
-                                  height: spacer2,
-                                ),
-                                Center(
-                                  child: Button(
-                                    isDisabled: (state.householdMemberWrapper
-                                                .projectBeneficiaries ??
-                                            [])
-                                        .isEmpty,
-                                    onPressed: () => addIndividual(
-                                      context,
-                                      state.householdMemberWrapper.household!,
-                                    ),
-                                    label: localizations.translate(
-                                      i18.householdOverView
-                                          .householdOverViewAddActionText,
-                                    ),
-                                    prefixIcon: Icons.add_circle,
-                                    type: ButtonType.tertiary,
-                                    size: ButtonSize.medium,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: spacer2,
-                                ),
                               ],
                             ),
                           ]),
@@ -872,8 +981,86 @@ class _HouseholdOverviewPageState
               RegistrationDeliverySingleton().beneficiaryType!,
           offset: offset,
           limit: limit,
+          searchByName:
+              searchController.text.isNotEmpty ? searchController.text : null,
+          selectedFilter: selectedFilters,
         ),
       );
+    }
+  }
+
+  getFilterIconNLabel() {
+    return {
+      'label': localizations.translate(
+        i18.searchBeneficiary.filterLabel,
+      ),
+      'icon': Icons.filter_alt
+    };
+  }
+
+  showFilterDialog() async {
+    var filters = await showDialog(
+        context: context,
+        builder: (ctx) => Popup(
+                title: getFilterIconNLabel()['label'],
+                titleIcon: Icon(
+                  getFilterIconNLabel()['icon'],
+                  color: DigitTheme.instance.colorScheme.primary,
+                ),
+                onCrossTap: () {
+                  Navigator.of(
+                    context,
+                    rootNavigator: true,
+                  ).pop();
+                },
+                additionalWidgets: [
+                  StatusFilter(
+                    selectedFilters: selectedFilters,
+                  ),
+                ]));
+
+    if (filters != null && filters.isNotEmpty) {
+      setState(() {
+        selectedFilters = [];
+      });
+      setState(() {
+        selectedFilters.addAll(filters);
+      });
+      callReloadEvent(offset: 0, limit: 10);
+    } else {
+      setState(() {
+        selectedFilters = [];
+      });
+      // blocWrapper.clearEvent();
+      callReloadEvent(offset: 0, limit: 10);
+    }
+  }
+
+  String getStatus(String selectedFilter) {
+    final statusMap = {
+      Status.delivered.toValue(): Status.delivered,
+      Status.notAdministered.toValue(): Status.notAdministered,
+      Status.visited.toValue(): Status.visited,
+      Status.notVisited.toValue(): Status.notVisited,
+      Status.beneficiaryRefused.toValue(): Status.beneficiaryRefused,
+      Status.beneficiaryReferred.toValue(): Status.beneficiaryReferred,
+      Status.administeredSuccess.toValue(): Status.administeredSuccess,
+      Status.administeredFailed.toValue(): Status.administeredFailed,
+      Status.inComplete.toValue(): Status.inComplete,
+      Status.toAdminister.toValue(): Status.toAdminister,
+      Status.closeHousehold.toValue(): Status.closeHousehold,
+      Status.registered.toValue(): Status.registered,
+      Status.notRegistered.toValue(): Status.notRegistered,
+    };
+
+    var mappedStatus = statusMap.entries
+        .where((element) => element.value.name == selectedFilter)
+        .first
+        .key;
+    if (mappedStatus != null) {
+      return mappedStatus;
+    } else {
+      return selectedFilter;
     }
   }
 }
