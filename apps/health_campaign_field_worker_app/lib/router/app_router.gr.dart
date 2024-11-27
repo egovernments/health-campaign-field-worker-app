@@ -55,6 +55,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomClosedHouseholdSummaryRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomClosedHouseholdSummaryRouteArgs>(
+          orElse: () => const CustomClosedHouseholdSummaryRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseHoldDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseHoldDetailsRouteArgs>(
           orElse: () => const CustomHouseHoldDetailsRouteArgs());
@@ -72,6 +83,17 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomHouseholdLocationPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    CustomHouseholdOverviewRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomHouseholdOverviewRouteArgs>(
+          orElse: () => const CustomHouseholdOverviewRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomHouseholdOverviewPage(
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -336,6 +358,45 @@ class BoundarySelectionRouteArgs {
 }
 
 /// generated route for
+/// [CustomClosedHouseholdSummaryPage]
+class CustomClosedHouseholdSummaryRoute
+    extends PageRouteInfo<CustomClosedHouseholdSummaryRouteArgs> {
+  CustomClosedHouseholdSummaryRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdSummaryRoute.name,
+          args: CustomClosedHouseholdSummaryRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdSummaryRoute';
+
+  static const PageInfo<CustomClosedHouseholdSummaryRouteArgs> page =
+      PageInfo<CustomClosedHouseholdSummaryRouteArgs>(name);
+}
+
+class CustomClosedHouseholdSummaryRouteArgs {
+  const CustomClosedHouseholdSummaryRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseHoldDetailsPage]
 class CustomHouseHoldDetailsRoute
     extends PageRouteInfo<CustomHouseHoldDetailsRouteArgs> {
@@ -410,6 +471,45 @@ class CustomHouseholdLocationRouteArgs {
   @override
   String toString() {
     return 'CustomHouseholdLocationRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomHouseholdOverviewPage]
+class CustomHouseholdOverviewRoute
+    extends PageRouteInfo<CustomHouseholdOverviewRouteArgs> {
+  CustomHouseholdOverviewRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomHouseholdOverviewRoute.name,
+          args: CustomHouseholdOverviewRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomHouseholdOverviewRoute';
+
+  static const PageInfo<CustomHouseholdOverviewRouteArgs> page =
+      PageInfo<CustomHouseholdOverviewRouteArgs>(name);
+}
+
+class CustomHouseholdOverviewRouteArgs {
+  const CustomHouseholdOverviewRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomHouseholdOverviewRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
