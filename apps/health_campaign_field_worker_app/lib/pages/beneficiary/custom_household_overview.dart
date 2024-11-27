@@ -5,7 +5,6 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:registration_delivery/blocs/app_localization.dart';
 import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
 import 'package:registration_delivery/blocs/delivery_intervention/deliver_intervention.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
@@ -15,6 +14,7 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/member_card/member_card.dart';
 
 import '../../models/entities/status.dart';
@@ -22,7 +22,9 @@ import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/action_card/action_card.dart';
 import '../../widgets/header/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
+import 'package:registration_delivery/widgets/localized.dart';
+
+import '../../router/app_router.dart';
 
 @RoutePage()
 class CustomHouseholdOverviewPage extends LocalizedStatefulWidget {
@@ -405,7 +407,67 @@ class _HouseholdOverviewPageState
                                           projectBeneficiary ?? [],
                                       tasks: taskData,
                                       sideEffects: sideEffectData,
-                                      editMemberAction: () {},
+                                      editMemberAction: () async {
+                                        final bloc =
+                                            ctx.read<HouseholdOverviewBloc>();
+
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop();
+
+                                        final address = e.address;
+                                        if (address == null ||
+                                            address.isEmpty) {
+                                          return;
+                                        }
+
+                                        final projectId =
+                                            RegistrationDeliverySingleton()
+                                                .projectId!;
+                                        bloc.add(
+                                          HouseholdOverviewReloadEvent(
+                                            projectId: projectId,
+                                            projectBeneficiaryType:
+                                                beneficiaryType,
+                                          ),
+                                        );
+
+                                        await context.router.root.push(
+                                          BeneficiaryRegistrationWrapperRoute(
+                                            initialState:
+                                                BeneficiaryRegistrationEditIndividualState(
+                                              individualModel: e,
+                                              householdModel: state
+                                                  .householdMemberWrapper
+                                                  .household!,
+                                              addressModel: address.first,
+                                              projectBeneficiaryModel: state
+                                                  .householdMemberWrapper
+                                                  .projectBeneficiaries
+                                                  ?.firstWhereOrNull(
+                                                (element) =>
+                                                    element
+                                                        .beneficiaryClientReferenceId ==
+                                                    (RegistrationDeliverySingleton()
+                                                                .beneficiaryType ==
+                                                            BeneficiaryType
+                                                                .individual
+                                                        ? e.clientReferenceId
+                                                        : state
+                                                            .householdMemberWrapper
+                                                            .household
+                                                            ?.clientReferenceId),
+                                              ),
+                                            ),
+                                            children: [
+                                              IndividualDetailsRoute(
+                                                isHeadOfHousehold: isHead,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
                                       setAsHeadAction: () {
                                         ctx.read<HouseholdOverviewBloc>().add(
                                               HouseholdOverviewSetAsHeadEvent(
@@ -535,10 +597,7 @@ class _HouseholdOverviewPageState
                                                   )
                                               ? true
                                               : false,
-                                      localizations:
-                                          RegistrationDeliveryLocalization(
-                                              localizations.locale,
-                                              localizations.load(), []),
+                                      localizations: localizations,
                                       projectBeneficiaryClientReferenceId:
                                           projectBeneficiaryId,
                                     );

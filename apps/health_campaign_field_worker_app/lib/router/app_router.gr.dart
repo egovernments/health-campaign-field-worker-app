@@ -480,7 +480,7 @@ class CustomHouseholdOverviewRoute
     extends PageRouteInfo<CustomHouseholdOverviewRouteArgs> {
   CustomHouseholdOverviewRoute({
     Key? key,
-    AppLocalizations? appLocalizations,
+    RegistrationDeliveryLocalization? appLocalizations,
     List<PageRouteInfo>? children,
   }) : super(
           CustomHouseholdOverviewRoute.name,
@@ -505,7 +505,7 @@ class CustomHouseholdOverviewRouteArgs {
 
   final Key? key;
 
-  final AppLocalizations? appLocalizations;
+  final RegistrationDeliveryLocalization? appLocalizations;
 
   @override
   String toString() {
