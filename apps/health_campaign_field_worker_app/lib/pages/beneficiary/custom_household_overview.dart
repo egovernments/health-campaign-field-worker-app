@@ -12,6 +12,7 @@ import 'package:registration_delivery/blocs/search_households/search_bloc_common
 import 'package:registration_delivery/blocs/search_households/search_households.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/registration_delivery_enums.dart';
+import 'package:registration_delivery/models/entities/status.dart' as regStatus;
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/localized.dart';
@@ -694,7 +695,8 @@ class _HouseholdOverviewPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []) //check
+          ? getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+              .toValue() //check
           : Status.registered.toValue();
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
