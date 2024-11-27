@@ -13,6 +13,10 @@ const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 
+const memberCard = MemberCard();
+const householdOverView = HouseholdOverView();
+const deliverIntervention = DeliverIntervention();
+
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
@@ -33,6 +37,49 @@ const complaintTypeShowcase = ComplaintTypeShowcase();
 const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
+
+class MemberCard {
+  const MemberCard();
+
+  String get deliverDetailsUpdateLabel => "DELIVER_DETAILS_UPDATE_LABEL";
+}
+
+class HouseholdOverView {
+  const HouseholdOverView();
+
+  String get householdOverViewActionText => "HOUSEHOLD_OVERVIEW_ACTION_TEXT";
+
+  String get householdOverViewEditLabel => "HOUSEHOLD_OVERVIEW_EDIT_LABEL";
+
+  String get householdOverViewEditIconText =>
+      "HOUSEHOLD_OVERVIEW_EDIT_ICON_BUTTON";
+
+  String get householdOverViewLabel => "HOUSEHOLD_OVERVIEW_LABEL";
+
+  String get householdOverViewHouseholdHeadNameLabel =>
+      "HOUSEHOLD_OVERVIEW_HOUSEHOLD_HEAD_NAME_LABEL";
+
+  String get householdOverViewActionCardTitle =>
+      "HOUSEHOLD_OVERVIEW_PRIMARY_ACTION_CARD_TITLE";
+
+  String get householdOverViewPrimaryActionLabel =>
+      "HOUSEHOLD_OVERVIEW_PRIMARY_ACTION_LABEL";
+
+  String get householdOverViewSecondaryActionLabel =>
+      "HOUSEHOLD_OVERVIEW_SECONDARY_ACTION_LABEL";
+
+  String get householdOverViewAddActionText =>
+      "HOUSEHOLD_OVERVIEW_ADD_ACTION_TEXT";
+
+  String get householdOverViewNotRegisteredIconLabel =>
+      "HOUSEHOLD_OVER_VIEW_NOT_REGISTERED_ICON_LABEL";
+}
+
+class DeliverIntervention {
+  const DeliverIntervention();
+
+  String get memberCountText => "MEMBER_COUNT_TEXT";
+}
 
 class Common {
   const Common();

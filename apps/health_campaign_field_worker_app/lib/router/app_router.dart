@@ -29,7 +29,8 @@ import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/custom_search_beneficiary.dart';
 import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/beneficiary_registration/custom_summary_page.dart';
-
+import '../pages/beneficiary/custom_household_overview.dart';
+import '../pages/closed/custom_closed_household_summary.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -87,6 +88,12 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                   page: ClosedHouseholdSummaryRoute.page,
                   path: 'closed-household-summary'),
+              AutoRoute(
+                  page: CustomClosedHouseholdSummaryRoute.page,
+                  path: 'custom-closed-household-summary'),
+              RedirectRoute(
+                  path: 'closed-household-summary',
+                  redirectTo: 'custom-closed-household-summary'),
               AutoRoute(
                   page: ClosedHouseholdAcknowledgementRoute.page,
                   path: 'closed-household-acknowledgement'),
@@ -237,8 +244,15 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: HouseholdOverviewRoute.page,
                     path: 'overview',
+                    // initial: true,
+                  ),
+                  AutoRoute(
+                    page: CustomHouseholdOverviewRoute.page,
+                    path: 'custom-overview',
                     initial: true,
                   ),
+                  RedirectRoute(
+                      path: 'overview', redirectTo: 'custom-overview'),
                   AutoRoute(
                     page: BeneficiaryDetailsRoute.page,
                     path: 'beneficiary-details',

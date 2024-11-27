@@ -1,6 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:closed_household/utils/utils.dart';
 
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -621,6 +622,11 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
               appConfiguration.referralReasons!.map((e) => e.code).toList(),
+        );
+        ClosedHouseholdSingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
         );
       });
 }
