@@ -79,6 +79,7 @@ class DeliverIntervention {
   const DeliverIntervention();
 
   String get memberCountText => "MEMBER_COUNT_TEXT";
+  String get bednetCountText => "BEDNET_COUNT_TEXT";
 }
 
 class Common {

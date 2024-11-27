@@ -66,6 +66,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverInterventionRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverInterventionRouteArgs>(
+          orElse: () => const CustomDeliverInterventionRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverInterventionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
     CustomHouseHoldDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseHoldDetailsRouteArgs>(
           orElse: () => const CustomHouseHoldDetailsRouteArgs());
@@ -393,6 +405,50 @@ class CustomClosedHouseholdSummaryRouteArgs {
   @override
   String toString() {
     return 'CustomClosedHouseholdSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomDeliverInterventionPage]
+class CustomDeliverInterventionRoute
+    extends PageRouteInfo<CustomDeliverInterventionRouteArgs> {
+  CustomDeliverInterventionRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverInterventionRoute.name,
+          args: CustomDeliverInterventionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverInterventionRoute';
+
+  static const PageInfo<CustomDeliverInterventionRouteArgs> page =
+      PageInfo<CustomDeliverInterventionRouteArgs>(name);
+}
+
+class CustomDeliverInterventionRouteArgs {
+  const CustomDeliverInterventionRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomDeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
   }
 }
 
