@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/text_block.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
+import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/text_block.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -51,10 +53,10 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
         create: (value) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             // Show the dialog after the first frame is built
-            DigitComponentsUtils().showLocationCapturingDialog(
+            DigitComponentsUtils.showDialog(
               context,
               localizations.translate(i18.common.locationCapturing),
-              DigitSyncDialogType.inProgress,
+              DialogType.inProgress,
             );
           });
           return true;
@@ -81,7 +83,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                     if (locationState.accuracy != null) {
                       //Hide the dialog after 1 seconds
                       Future.delayed(const Duration(seconds: 1), () {
-                        DigitComponentsUtils().hideDialog(context);
+                        DigitComponentsUtils.hideDialog(context);
                       });
                     }
                   });
@@ -115,11 +117,17 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                 ],
               ),
               footer: DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                child: BlocBuilder<LocationBloc, LocationState>(
+                margin: const EdgeInsets.only(top: spacer2),
+                padding: const EdgeInsets.all(spacer2),
+                children: [BlocBuilder<LocationBloc, LocationState>(
                   builder: (context, locationState) {
-                    return DigitElevatedButton(
+                    return Button(
+                      label: localizations.translate(
+                        i18.householdLocation.actionLabel,
+                      ),
+                      type: ButtonType.primary,
+                      size: ButtonSize.large,
+                      mainAxisSize: MainAxisSize.max,
                       onPressed: () {
                         form.markAllAsTouched();
                         if (!form.valid) return;
@@ -249,139 +257,176 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                           },
                         );
                       },
-                      child: Center(
-                        child: Text(
-                          localizations.translate(
-                            i18.householdLocation.actionLabel,
-                          ),
-                        ),
-                      ),
                     );
                   },
-                ),
+                ),]
               ),
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextBlock(
-                            padding: const EdgeInsets.only(top: kPadding),
-                            heading: localizations.translate(
-                              i18.householdLocation.householdLocationLabelText,
-                            ),
-                            headingStyle: theme.textTheme.displayMedium,
-                            body: localizations.translate(
-                              i18.householdLocation
-                                  .householdLocationDescriptionText,
-                            )),
-                        Column(children: [
-                          householdLocationShowcaseData.administrativeArea
-                              .buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _administrationAreaKey,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .administrationAreaFormLabel,
-                              ),
-                              readOnly: true,
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.householdLocation
-                                          .administrationAreaRequiredValidation,
-                                    ),
-                              },
-                            ),
+                    children: [
+                      DigitTextBlock(
+                        padding: const EdgeInsets.only(top: spacer2),
+                        heading: localizations.translate(
+                          i18.householdLocation.householdLocationLabelText,
+                        ),
+                        description: localizations.translate(
+                          i18.householdLocation
+                              .householdLocationDescriptionText,
+                        )),
+                    householdLocationShowcaseData.administrativeArea
+                        .buildWith(
+                      child: ReactiveWrapperField(
+                        formControlName: _administrationAreaKey,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                            i18.householdLocation
+                                .administrationAreaRequiredValidation,
                           ),
-                          householdLocationShowcaseData.gpsAccuracy.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _accuracyKey,
-                              label: localizations.translate(
-                                i18.householdLocation.gpsAccuracyLabel,
-                              ),
-                              readOnly: true,
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.corecommonRequired,
-                                    ),
-                              },
-                            ),
+                        },
+                        builder: (field)=> LabeledField(
+                          label: localizations.translate(
+                            i18.householdLocation
+                                .administrationAreaFormLabel,
                           ),
-                          householdLocationShowcaseData.addressLine1.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _addressLine1Key,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .householdAddressLine1LabelText,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
+                          child: DigitTextFormInput(
+                            readOnly: true,
+                            errorMessage: field.errorText,
+                            initialValue: form.control(_administrationAreaKey).value,
+                            onChange: (value){
+                              form.control(_administrationAreaKey).value=value;
+                            },
                           ),
-                          householdLocationShowcaseData.addressLine2.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _addressLine2Key,
-                              label: localizations.translate(
-                                i18.householdLocation
-                                    .householdAddressLine2LabelText,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.landmark.buildWith(
-                            child: DigitTextFormField(
-                              formControlName: _landmarkKey,
-                              label: localizations.translate(
-                                i18.householdLocation.landmarkFormLabel,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', maxLength.toString()),
-                              },
-                            ),
-                          ),
-                          householdLocationShowcaseData.postalCode.buildWith(
-                            child: DigitTextFormField(
-                              keyboardType: TextInputType.text,
-                              formControlName: _postalCodeKey,
-                              label: localizations.translate(
-                                i18.householdLocation.postalCodeFormLabel,
-                              ),
-                              validationMessages: {
-                                'required': (_) => localizations.translate(
-                                      i18.common.min2CharsRequired,
-                                    ),
-                                'maxLength': (object) => localizations
-                                    .translate(i18.common.maxCharsRequired)
-                                    .replaceAll('{}', '6'),
-                              },
-                              inputFormatters: [
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                            ),
-                          ),
-                        ]),
-                      ],
+                        ),
+                      ),
                     ),
+                    householdLocationShowcaseData.gpsAccuracy.buildWith(
+                      child: ReactiveWrapperField(
+                        formControlName: _accuracyKey,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                            i18.common.corecommonRequired,
+                          ),
+                        },
+                        builder: (field)=>LabeledField(
+                          label: localizations.translate(
+                            i18.householdLocation.gpsAccuracyLabel,
+                          ),
+                          child: DigitTextFormInput(
+                            readOnly: true,
+                            errorMessage: field.errorText,
+                            initialValue: form.control(_accuracyKey).value.toString(),
+                          ),
+                        ),
+                      ),
+                    ),
+                    householdLocationShowcaseData.addressLine1.buildWith(
+                      child: ReactiveWrapperField(
+                        formControlName: _addressLine1Key,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                            i18.common.min2CharsRequired,
+                          ),
+                          'maxLength': (object) => localizations
+                              .translate(i18.common.maxCharsRequired)
+                              .replaceAll('{}', maxLength.toString()),
+                        },
+                        builder: (field)=> LabeledField(
+                          label: localizations.translate(
+                            i18.householdLocation
+                                .householdAddressLine1LabelText,
+                          ),
+                          child: DigitTextFormInput(
+                            errorMessage: field.errorText,
+                            onChange: (value){
+                              form.control(_addressLine1Key).value=value;
+                            },
+                            initialValue: form.control(_addressLine1Key).value,
+                          ),
+                        ),
+                      ),
+                    ),
+                    householdLocationShowcaseData.addressLine2.buildWith(
+                      child: ReactiveWrapperField(
+                        formControlName: _addressLine2Key,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                            i18.common.min2CharsRequired,
+                          ),
+                          'maxLength': (object) => localizations
+                              .translate(i18.common.maxCharsRequired)
+                              .replaceAll('{}', maxLength.toString()),
+                        },
+                        builder: (field)=> LabeledField(
+                          label: localizations.translate(
+                            i18.householdLocation
+                                .householdAddressLine2LabelText,
+                          ),
+                          child: DigitTextFormInput(
+                            errorMessage: field.errorText,
+                            onChange: (value){
+                              form.control(_addressLine2Key).value=value;
+                            },
+                            initialValue: form.control(_addressLine2Key).value,
+                          ),
+                        ),
+                      ),
+                    ),
+                    householdLocationShowcaseData.landmark.buildWith(
+                      child: ReactiveWrapperField(
+                        formControlName: _landmarkKey,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                            i18.common.min2CharsRequired,
+                          ),
+                          'maxLength': (object) => localizations
+                              .translate(i18.common.maxCharsRequired)
+                              .replaceAll('{}', maxLength.toString()),
+                        },
+                        builder: (field)=> LabeledField(
+                          label: localizations.translate(
+                            i18.householdLocation.landmarkFormLabel,
+                          ),
+                          child: DigitTextFormInput(
+                            errorMessage: field.errorText,
+                            onChange: (value){
+                              form.control(_landmarkKey).value=value;
+                            },
+                            initialValue: form.control(_landmarkKey).value,
+                          ),
+                        ),
+                      ),
+                    ),
+                    householdLocationShowcaseData.postalCode.buildWith(
+                      child: ReactiveWrapperField(
+                        formControlName: _postalCodeKey,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                            i18.common.min2CharsRequired,
+                          ),
+                          'maxLength': (object) => localizations
+                              .translate(i18.common.maxCharsRequired)
+                              .replaceAll('{}', '6'),
+                        },
+                        builder: (field)=> LabeledField(
+                          label: localizations.translate(
+                            i18.householdLocation.postalCodeFormLabel,
+                          ),
+                          child: DigitTextFormInput(
+                            keyboardType: TextInputType.text,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            errorMessage: field.errorText,
+                            onChange: (value){
+                              form.control(_postalCodeKey).value=value;
+                            },
+                            maxLength: 6,
+                            initialValue: form.control(_postalCodeKey).value,
+                          ),
+                        ),
+                      ),
+                    ),]
                   ),
                 ),
               ],

@@ -1,3 +1,7 @@
+## 1.0.2-dev.1
+* Updated digit_data_model to latest version
+* Migrated to digit_ui_components
+
 ## 1.0.1+1
 
 * Updated digit_data_model, digit_components and registration_delivery

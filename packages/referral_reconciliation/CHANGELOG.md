@@ -1,3 +1,8 @@
+## 1.0.3-dev.1
+* Updated digit_data_model to latest version
+* Updated survey_form to latest version
+* Migrated to digit_ui_components
+
 ## 1.0.2+2
 
 * Updated digit_components, digit_data_model

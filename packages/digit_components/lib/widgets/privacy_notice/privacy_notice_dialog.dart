@@ -4,6 +4,7 @@ import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_elevated_button.dart';
 import 'package:digit_components/widgets/digit_outline_button.dart';
 import 'package:flutter/material.dart';
+import '../../models/privacy_policy_model.dart';
 import '../../theme/digit_theme.dart';
 import '../localized.dart';
 import 'privacy_notice_expand_component.dart';

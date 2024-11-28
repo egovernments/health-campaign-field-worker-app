@@ -1,6 +1,6 @@
 name: complaints
 description: This package offers filing complaints features, allowing users to file complaints.
-version: 0.0.1-dev.1
+version: 0.0.1-dev.2
 homepage:
 
 environment:
@@ -15,8 +15,7 @@ dependencies:
   freezed_annotation: ^2.1.0
   build_runner: ^2.2.1
   auto_route: ^7.8.4
-  digit_data_model:
-    path: ../digit_data_model
+  digit_data_model: ^1.0.5-dev.1
   dart_mappable: ^4.2.0
   group_radio_button: ^1.3.0
   reactive_forms: ^14.1.0

@@ -2,8 +2,8 @@
 import 'dart:math';
 
 import 'package:collection/collection.dart';
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/models/entities/household.dart';
@@ -97,7 +97,7 @@ bool checkIfBeneficiaryRefused(
 
 ///  * Returns [true] if the individual is in the same cycle and is eligible for the next dose,
 bool checkEligibilityForAgeAndSideEffect(
-  DigitDOBAge age,
+  DigitDOBAgeConvertor age,
   ProjectTypeModel? projectType,
   TaskModel? tasks,
   List<SideEffectModel>? sideEffects,
@@ -132,10 +132,13 @@ bool checkEligibilityForAgeAndSideEffect(
               : false
           : false;
     } else {
-      return totalAgeMonths >= projectType!.validMinAge! &&
-              totalAgeMonths <= projectType.validMaxAge!
-          ? true
-          : false;
+      if(projectType?.validMaxAge!=null && projectType?.validMinAge!=null){
+        return totalAgeMonths >= projectType!.validMinAge! &&
+            totalAgeMonths <= projectType.validMaxAge!
+            ? true
+            : false;
+      }
+      return false;
     }
   }
 

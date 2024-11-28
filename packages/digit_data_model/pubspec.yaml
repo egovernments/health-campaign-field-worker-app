@@ -1,6 +1,6 @@
 name: digit_data_model
 description: The digit_data_model package is a data modeling library. It defines various classes, enums, and functions.
-version: 1.0.4
+version: 1.0.5-dev.1
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_data_model
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -32,7 +32,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^3.0.1
-  dart_code_metrics: ^5.7.6
   freezed: ^2.1.0+1
   build_runner: ^2.4.9
   json_serializable: ^6.4.0
