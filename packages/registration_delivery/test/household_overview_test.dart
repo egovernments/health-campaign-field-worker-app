@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
+import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
@@ -34,6 +35,9 @@ class MockSideEffectDataRepository extends Mock
 class MockReferralDataRepository extends Mock
     implements ReferralDataRepository {}
 
+class MockIndividualGlobalSearchRepository extends Mock
+    implements IndividualGlobalSearchRepository {}
+
 void main() {
   late MockHouseholdDataRepository mockHouseholdDataRepository;
   late MockIndividualDataRepository mockIndividualDataRepository;
@@ -44,6 +48,8 @@ void main() {
   late MockSideEffectDataRepository mockSideEffectDataRepository;
   late MockReferralDataRepository mockReferralDataRepository;
   late HouseholdOverviewBloc householdOverviewBloc;
+  late MockIndividualGlobalSearchRepository
+      mockIndividualGlobalSearchRepository;
 
   setUp(() {
     mockHouseholdDataRepository = MockHouseholdDataRepository();
@@ -54,6 +60,8 @@ void main() {
     mockTaskDataRepository = MockTaskDataRepository();
     mockSideEffectDataRepository = MockSideEffectDataRepository();
     mockReferralDataRepository = MockReferralDataRepository();
+    mockIndividualGlobalSearchRepository =
+        MockIndividualGlobalSearchRepository();
     householdOverviewBloc = HouseholdOverviewBloc(
       HouseholdOverviewState(
           householdMemberWrapper:
@@ -66,6 +74,7 @@ void main() {
       sideEffectDataRepository: mockSideEffectDataRepository,
       referralDataRepository: mockReferralDataRepository,
       beneficiaryType: BeneficiaryType.individual,
+      individualGlobalSearchRepository: mockIndividualGlobalSearchRepository,
     );
   });
 
