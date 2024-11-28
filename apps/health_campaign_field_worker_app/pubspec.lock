@@ -944,7 +944,7 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_nearby_connections:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       path: "."
       ref: master
@@ -1945,14 +1945,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
-  simple_ripple_animation:
-    dependency: "direct dev"
-    description:
-      name: simple_ripple_animation
-      sha256: "09a80a6d352ce12d33c2ca43423bf5b544179cc5bc78bf3ff73bd5c08ea378bd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
   sky_engine:
     dependency: transitive
     description: flutter

@@ -55,6 +55,33 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DataShareHomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const DataShareHomePage(),
+      );
+    },
+    DataTransferRoute.name: (routeData) {
+      final args = routeData.argsAs<DataTransferRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DataTransferPage(
+          key: args.key,
+          nearbyService: args.nearbyService,
+          connectedDevice: args.connectedDevice,
+        ),
+      );
+    },
+    DevicesListRoute.name: (routeData) {
+      final args = routeData.argsAs<DevicesListRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DevicesListPage(
+          key: args.key,
+          deviceType: args.deviceType,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -281,6 +308,101 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [DataShareHomePage]
+class DataShareHomeRoute extends PageRouteInfo<void> {
+  const DataShareHomeRoute({List<PageRouteInfo>? children})
+      : super(
+          DataShareHomeRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'DataShareHomeRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [DataTransferPage]
+class DataTransferRoute extends PageRouteInfo<DataTransferRouteArgs> {
+  DataTransferRoute({
+    Key? key,
+    required NearbyService nearbyService,
+    required Device connectedDevice,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DataTransferRoute.name,
+          args: DataTransferRouteArgs(
+            key: key,
+            nearbyService: nearbyService,
+            connectedDevice: connectedDevice,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DataTransferRoute';
+
+  static const PageInfo<DataTransferRouteArgs> page =
+      PageInfo<DataTransferRouteArgs>(name);
+}
+
+class DataTransferRouteArgs {
+  const DataTransferRouteArgs({
+    this.key,
+    required this.nearbyService,
+    required this.connectedDevice,
+  });
+
+  final Key? key;
+
+  final NearbyService nearbyService;
+
+  final Device connectedDevice;
+
+  @override
+  String toString() {
+    return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevice: $connectedDevice}';
+  }
+}
+
+/// generated route for
+/// [DevicesListPage]
+class DevicesListRoute extends PageRouteInfo<DevicesListRouteArgs> {
+  DevicesListRoute({
+    Key? key,
+    required DeviceType deviceType,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DevicesListRoute.name,
+          args: DevicesListRouteArgs(
+            key: key,
+            deviceType: deviceType,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DevicesListRoute';
+
+  static const PageInfo<DevicesListRouteArgs> page =
+      PageInfo<DevicesListRouteArgs>(name);
+}
+
+class DevicesListRouteArgs {
+  const DevicesListRouteArgs({
+    this.key,
+    required this.deviceType,
+  });
+
+  final Key? key;
+
+  final DeviceType deviceType;
+
+  @override
+  String toString() {
+    return 'DevicesListRouteArgs{key: $key, deviceType: $deviceType}';
   }
 }
 
