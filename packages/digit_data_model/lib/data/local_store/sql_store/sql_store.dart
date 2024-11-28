@@ -1,6 +1,7 @@
 // Importing necessary packages and files.
 import 'dart:io';
 
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data/local_store/sql_store/tables/localization.dart';
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -12,6 +13,7 @@ import '../../../models/entities/beneficiary_type.dart';
 import '../../../models/entities/blood_group.dart';
 import '../../../models/entities/gender.dart';
 import '../../../models/entities/pgr_application_status.dart';
+import '../../../models/entities/household_type.dart';
 import 'tables/address.dart';
 import 'tables/attributes.dart';
 import 'tables/boundary.dart';
@@ -108,7 +110,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.
@@ -121,6 +123,26 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
       // Return a `NativeDatabase` that uses the file for storage.
       return NativeDatabase(file, logStatements: true, setup: (data) {});
+    });
+  }
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(onCreate: (Migrator m) async {
+      await m.createAll();
+    }, onUpgrade: (Migrator m, int from, int to) async {
+      //Add column for householdType for facility based campaign
+      if (from < 5) {
+        try {
+          AppLogger.instance.info('Apply migration $from to $to');
+          await m.addColumn(household, household.householdType);
+        } catch (e) {
+          AppLogger.instance.error(
+            title: 'migration',
+            message: e.toString(),
+          );
+        }
+      }
     });
   }
 }
