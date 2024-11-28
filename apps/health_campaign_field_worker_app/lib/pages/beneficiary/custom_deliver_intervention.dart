@@ -26,6 +26,7 @@ import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_c
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/beneficiary/custom_resource_beneficiary_card.dart';
 import '../../widgets/localized.dart';
+import '../custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomDeliverInterventionPage extends LocalizedStatefulWidget {
@@ -513,7 +514,7 @@ class CustomDeliverInterventionPageState
                                                             .push(
                                                           MaterialPageRoute(
                                                             builder: (context) =>
-                                                                const DigitScannerPage(
+                                                                const CustomDigitScannerPage(
                                                               quantity: 1,
                                                               isGS1code: false,
                                                               singleValue: true,

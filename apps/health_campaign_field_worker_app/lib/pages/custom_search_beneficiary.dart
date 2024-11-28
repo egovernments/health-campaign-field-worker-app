@@ -19,6 +19,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
 import '../utils/extensions/extensions.dart';
+import 'custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomSearchBeneficiaryPage extends LocalizedStatefulWidget {
@@ -412,7 +413,8 @@ class _CustomSearchBeneficiaryPageStateState
                             searchController.clear();
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => const DigitScannerPage(
+                                builder: (context) =>
+                                    const CustomDigitScannerPage(
                                   quantity: 1,
                                   isGS1code: false,
                                   singleValue: true,

@@ -29,6 +29,7 @@ import 'package:registration_delivery/widgets/showcase/config/showcase_constants
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../router/app_router.dart';
+import '../custom_qr_scanner.dart';
 
 @RoutePage()
 class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
@@ -497,7 +498,7 @@ class CustomIndividualDetailsPageState
                                               //[TODO: Add the route to auto_route]
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    const DigitScannerPage(
+                                                    const CustomDigitScannerPage(
                                                   quantity: 1,
                                                   isGS1code: false,
                                                   singleValue: true,
@@ -525,7 +526,7 @@ class CustomIndividualDetailsPageState
                                         // [TODO: Add the route to auto_route]
                                         MaterialPageRoute(
                                           builder: (context) =>
-                                              const DigitScannerPage(
+                                              const CustomDigitScannerPage(
                                             quantity: 1,
                                             isGS1code: false,
                                             singleValue: true,
