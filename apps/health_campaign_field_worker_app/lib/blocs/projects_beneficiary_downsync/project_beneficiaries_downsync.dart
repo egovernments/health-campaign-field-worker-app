@@ -1,10 +1,14 @@
 // GENERATED using mason_cli
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:digit_data_model/data_model.dart';
 import 'package:disk_space/disk_space.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../data/local_store/no_sql/schema/app_configuration.dart';
@@ -203,7 +207,9 @@ class BeneficiaryDownSyncBloc
             );
             // check if the API response is there or it failed
             if (downSyncResults.isNotEmpty) {
-              await networkManager.writeToEntityDB(downSyncResults, [
+              writeToFile(event.boundaryCode, downSyncResults);
+              await networkManager
+                  .writeToEntityDB(event.boundaryCode, downSyncResults, [
                 individualLocalRepository,
                 householdLocalRepository,
                 householdMemberLocalRepository,
@@ -257,6 +263,64 @@ class BeneficiaryDownSyncBloc
         await LocalSecureStore.instance.setManualSyncTrigger(false);
         emit(const BeneficiaryDownSyncState.failed());
       }
+    }
+  }
+
+  void writeToFile(
+    String selectedBoundaryCode,
+    Map<String, dynamic> response,
+  ) async {
+    Map<String, dynamic> storedData = {};
+
+    // Get the Downloads directory
+    final downloadsDirectory = await getDownloadsDirectory();
+    if (downloadsDirectory == null) {
+      if (kDebugMode) {
+        print("Downloads directory is not available.");
+      }
+      return;
+    }
+
+    // Define the file path
+    final file = File('${downloadsDirectory.path}/down_sync_data.json');
+
+    // Read existing file content if available
+    if (file.existsSync()) {
+      final content = await file.readAsString();
+      if (content.isNotEmpty) {
+        storedData = jsonDecode(content);
+      }
+    } else {
+      // Create the file if it doesn't exist
+      await file.create(recursive: true);
+      await file.writeAsString(
+          jsonEncode({})); // Initialize with an empty JSON object
+    }
+
+    // Merge new response with stored data
+    response.forEach((key, value) {
+      if (key != "DownsyncCriteria") {
+        if (storedData.containsKey(key)) {
+          final existingList = storedData[key] as List<dynamic>? ?? [];
+          final newList = value as List<dynamic>? ?? [];
+
+          final mergedList = [
+            ...existingList,
+            ...newList.where((newItem) => existingList
+                .every((existingItem) => existingItem['id'] != newItem['id']))
+          ];
+          storedData[key] = mergedList;
+        } else {
+          storedData[key] = value;
+        }
+      }
+    });
+
+    // Write the merged data back to the file
+    await file.writeAsString(jsonEncode(storedData));
+
+    if (kDebugMode) {
+      print("Data successfully written to ${file.path}");
     }
   }
 

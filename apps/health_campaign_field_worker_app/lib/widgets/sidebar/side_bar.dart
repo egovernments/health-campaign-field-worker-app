@@ -12,7 +12,6 @@ import '../../blocs/auth/auth.dart';
 import '../../blocs/localization/localization.dart';
 import '../../models/data_model.dart';
 import '../../models/entities/roles_type.dart';
-import '../../pages/near_by_share_list.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
@@ -229,19 +228,6 @@ class SideBar extends StatelessWidget {
                 context.router.push(const BeneficiariesReportRoute());
               },
             ),
-          DigitIconTile(
-            title: AppLocalizations.of(context).translate(
-              'RECEIVE_DATA',
-            ),
-            icon: Icons.emergency_share,
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (_) => const DevicesListScreen(
-                          deviceType: DeviceType.receiver)));
-            },
-          ),
           DigitIconTile(
             title: AppLocalizations.of(context)
                 .translate(i18.common.coreCommonLogout),

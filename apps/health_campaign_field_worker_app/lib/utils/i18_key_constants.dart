@@ -4,6 +4,7 @@ const common = Common();
 const login = Login();
 const forgotPassword = ForgotPassword();
 const home = Home();
+const dataShare = DataShare();
 const acknowledgementSuccess = AcknowledgementSuccess();
 const adverseEvents = AdverseEvents();
 const projectSelection = ProjectSelection();
@@ -510,7 +511,6 @@ class ComplaintsInboxShowcase {
   }
 }
 
-
 class ForgotPassword {
   const ForgotPassword();
 
@@ -556,11 +556,20 @@ class Home {
 
   String get deleteAllLabel => 'HOME_DELETE_ALL_LABEL';
   String get db => 'HOME_DB_LABEL';
+  String get dataShare => 'HOME_DATA_SHARE_LABEL';
   String get dashboard => 'HOME_DASHBOARD_LABEL';
   String get beneficiaryReferralLabel => 'HOME_BENEFICIARY_REFERRAL_LABEL';
   String get manageAttendanceLabel => 'HOME_MANAGE_ATTENDANCE_LABEL';
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
+}
+
+class DataShare {
+  const DataShare();
+
+  String get sendAction => 'SEND_ACTION';
+  String get receiveAction => 'RECEIVE_ACTION';
+  String get connectedTo => 'CONNECTED_TO';
 }
 
 class AcknowledgementSuccess {
@@ -1014,7 +1023,6 @@ class PrivacyPolicy {
   String get privacyNoticeText => 'PRIVACY_POLICY_TEXT';
   String get privacyPolicyLinkText => 'PRIVACY_POLICY_LINK_TEXT';
   String get privacyPolicyValidationText => 'PRIVACY_POLICY_VALIDATION_TEXT';
-
 }
 
 class Dashboard {

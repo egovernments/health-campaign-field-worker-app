@@ -51,6 +51,7 @@ import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import 'peer_to_peer/data_share_home.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -492,6 +493,16 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
+      i18.home.dataShare: homeShowcaseData.dataShare.buildWith(
+        child: HomeItemCard(
+          icon: Icons.send,
+          label: i18.home.dataShare,
+          onPressed: () async {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const DataShareHomePage()));
+          },
+        ),
+      ),
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
@@ -556,6 +567,8 @@ class _HomePageState extends LocalizedState<HomePage> {
         .where((f) => f != i18.home.db)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
+
+    filteredLabels.add(i18.home.dataShare); // TODO: Role action mapping
 
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
