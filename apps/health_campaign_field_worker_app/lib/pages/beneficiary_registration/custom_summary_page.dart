@@ -69,7 +69,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                       ),
                     );
                 router.push(BeneficiaryAcknowledgementRoute(
-                  enableViewHousehold: true,
+                  enableViewHousehold: false,
                 ));
               }
             },
