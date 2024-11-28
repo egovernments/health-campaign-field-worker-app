@@ -51,7 +51,6 @@ class CustomDeliverInterventionPageState
   static const _doseAdministrationKey = 'doseAdministered';
   final clickedStatus = ValueNotifier<bool>(false);
   var bednetCount = 0;
-  bool? shouldSubmit = false;
 
   // Variable to track dose administration status
   bool doseAdministered = false;
