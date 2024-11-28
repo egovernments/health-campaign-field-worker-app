@@ -6,6 +6,7 @@ import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -100,10 +101,11 @@ class CustomDeliverInterventionPageState
                   ? true
                   : false,
               boundaryModel: RegistrationDeliverySingleton().boundary!,
-              navigateToSummary: true,
+              navigateToSummary: false,
               householdMemberWrapper: householdMember),
         );
-    context.router.push(DeliverySummaryRoute());
+    context.router
+        .push(HouseholdAcknowledgementRoute(enableViewHousehold: false));
   }
 
   void handleLocationState(
@@ -333,20 +335,80 @@ class CustomDeliverInterventionPageState
                                                               ),
                                                             );
                                                           } else {
-                                                            context
-                                                                .read<
-                                                                    LocationBloc>()
-                                                                .add(
-                                                                    const LoadLocationEvent());
-                                                            handleLocationState(
-                                                              locationState,
+                                                            final shouldSubmit =
+                                                                await DigitDialog
+                                                                    .show<bool>(
                                                               context,
-                                                              deliveryInterventionState,
-                                                              form,
-                                                              householdMemberWrapper,
-                                                              projectBeneficiary!
-                                                                  .first,
+                                                              options:
+                                                                  DigitDialogOptions(
+                                                                titleText:
+                                                                    localizations
+                                                                        .translate(
+                                                                  i18.deliverIntervention
+                                                                      .dialogTitle,
+                                                                ),
+                                                                contentText:
+                                                                    localizations
+                                                                        .translate(
+                                                                  i18.deliverIntervention
+                                                                      .dialogContent,
+                                                                ),
+                                                                primaryAction:
+                                                                    DigitDialogActions(
+                                                                  label: localizations
+                                                                      .translate(
+                                                                    i18.common
+                                                                        .coreCommonSubmit,
+                                                                  ),
+                                                                  action:
+                                                                      (context) {
+                                                                    clickedStatus
+                                                                            .value =
+                                                                        true;
+                                                                    Navigator
+                                                                        .of(
+                                                                      context,
+                                                                      rootNavigator:
+                                                                          true,
+                                                                    ).pop(true);
+                                                                  },
+                                                                ),
+                                                                secondaryAction:
+                                                                    DigitDialogActions(
+                                                                  label: localizations
+                                                                      .translate(
+                                                                    i18.common
+                                                                        .coreCommonCancel,
+                                                                  ),
+                                                                  action: (context) =>
+                                                                      Navigator
+                                                                          .of(
+                                                                    context,
+                                                                    rootNavigator:
+                                                                        true,
+                                                                  ).pop(false),
+                                                                ),
+                                                              ),
                                                             );
+                                                            if ((shouldSubmit ??
+                                                                    false) &&
+                                                                context
+                                                                    .mounted) {
+                                                              context
+                                                                  .read<
+                                                                      LocationBloc>()
+                                                                  .add(
+                                                                      const LoadLocationEvent());
+                                                              handleLocationState(
+                                                                locationState,
+                                                                context,
+                                                                deliveryInterventionState,
+                                                                form,
+                                                                householdMemberWrapper,
+                                                                projectBeneficiary!
+                                                                    .first,
+                                                              );
+                                                            }
                                                           }
                                                         },
                                                   child: Center(
@@ -431,6 +493,45 @@ class CustomDeliverInterventionPageState
                                                           _controllers;
                                                         });
                                                       },
+                                                    )),
+                                                Padding(
+                                                    padding: const EdgeInsets
+                                                        .fromLTRB(kPadding,
+                                                        kPadding, kPadding, 0),
+                                                    child:
+                                                        DigitOutlineIconButton(
+                                                      buttonStyle:
+                                                          OutlinedButton
+                                                              .styleFrom(
+                                                        shape:
+                                                            const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.zero,
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context)
+                                                            .push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                const DigitScannerPage(
+                                                              quantity: 1,
+                                                              isGS1code: false,
+                                                              singleValue: true,
+                                                            ),
+                                                            settings:
+                                                                const RouteSettings(
+                                                                    name:
+                                                                        '/qr-scanner'),
+                                                          ),
+                                                        );
+                                                      },
+                                                      icon: Icons.qr_code,
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.deliverIntervention
+                                                            .scannerLabel,
+                                                      ),
                                                     )),
                                               ],
                                             ),

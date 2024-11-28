@@ -85,17 +85,20 @@ class CustomDigitIntegerFormPicker extends StatelessWidget {
                     bottom: _borderSide,
                     top: _borderSide,
                   ),
-                  icon: Icons.add, onPressed: () {
-                if (maximum != null &&
-                    form.control(formControlName).value == maximum) {
-                  form.control(formControlName).value = maximum;
-                } else {
-                  form.control(formControlName).value += 1;
-                }
-                if (onChange != null) {
-                  onChange!();
-                }
-              }),
+                  icon: Icons.add,
+                  onPressed: readOnly
+                      ? null
+                      : () {
+                          if (maximum != null &&
+                              form.control(formControlName).value == maximum) {
+                            form.control(formControlName).value = maximum;
+                          } else {
+                            form.control(formControlName).value += 1;
+                          }
+                          if (onChange != null) {
+                            onChange!();
+                          }
+                        }),
             ],
           ),
         ));

@@ -42,16 +42,6 @@ class CustomResourceBeneficiaryCardState
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        color: DigitTheme.instance.colorScheme.surface,
-        border: Border.all(
-          color: DigitTheme.instance.colorScheme.outline,
-          width: 1,
-        ),
-        borderRadius: const BorderRadius.all(
-          Radius.circular(4.0),
-        ),
-      ),
       margin: const EdgeInsets.only(
         top: kPadding,
         bottom: kPadding,
@@ -91,6 +81,7 @@ class CustomResourceBeneficiaryCardState
             ),
             minimum: 0,
             maximum: 3,
+            buttonWidth: 50,
           ),
           SizedBox(
             child: Align(
