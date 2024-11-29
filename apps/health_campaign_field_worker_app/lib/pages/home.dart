@@ -473,8 +473,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            element == i18.home.closedHouseHoldLabel ||
-            element == i18.home.manageAttendanceLabel)
+            element == i18.home.closedHouseHoldLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
