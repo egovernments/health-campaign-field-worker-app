@@ -79,10 +79,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
           return ScrollableContent(
               enableFixedButton: true,
               header: Column(children: [
-                const BackNavigationHelpHeaderWidget(
-                  showHelp: false,
-                  showcaseButton: ShowcaseButton(),
-                ),
+                const BackNavigationHelpHeaderWidget(),
                 Padding(
                   padding:
                       const EdgeInsets.only(bottom: kPadding, left: kPadding),

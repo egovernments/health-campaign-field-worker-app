@@ -48,10 +48,7 @@ class CustomClosedHouseholdSummaryPageState
       return Scaffold(
           body: ScrollableContent(
               enableFixedButton: true,
-              header: const BackNavigationHelpHeaderWidget(
-                showHelp: false,
-                showcaseButton: ShowcaseButton(),
-              ),
+              header: const BackNavigationHelpHeaderWidget(),
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
                 padding:

@@ -99,10 +99,7 @@ class CustomIndividualDetailsPageState
             return ScrollableContent(
               enableFixedButton: true,
               header: const Column(children: [
-                BackNavigationHelpHeaderWidget(
-                  showHelp: false,
-                  showcaseButton: ShowcaseButton(),
-                ),
+                BackNavigationHelpHeaderWidget(),
               ]),
               footer: DigitCard(
                 margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
