@@ -71,6 +71,9 @@ class Constants {
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
   static const String healthFacilityChecklistPrefix = 'HF_RF';
+  static const String curlyBraces = '{}';
+  static const String smallBraces = '()';
+  static const String intTwo = '2';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

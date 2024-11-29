@@ -145,6 +145,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DoseAdministeredVerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<DoseAdministeredVerificationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DoseAdministeredVerificationPage(
+          householdModel: args.householdModel,
+          selectedIndividual: args.selectedIndividual,
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     HomeRoute.name: (routeData) {
       final args =
           routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
@@ -687,6 +699,55 @@ class CustomSummaryRouteArgs {
   @override
   String toString() {
     return 'CustomSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [DoseAdministeredVerificationPage]
+class DoseAdministeredVerificationRoute
+    extends PageRouteInfo<DoseAdministeredVerificationRouteArgs> {
+  DoseAdministeredVerificationRoute({
+    required HouseholdModel householdModel,
+    required IndividualModel? selectedIndividual,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DoseAdministeredVerificationRoute.name,
+          args: DoseAdministeredVerificationRouteArgs(
+            householdModel: householdModel,
+            selectedIndividual: selectedIndividual,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DoseAdministeredVerificationRoute';
+
+  static const PageInfo<DoseAdministeredVerificationRouteArgs> page =
+      PageInfo<DoseAdministeredVerificationRouteArgs>(name);
+}
+
+class DoseAdministeredVerificationRouteArgs {
+  const DoseAdministeredVerificationRouteArgs({
+    required this.householdModel,
+    required this.selectedIndividual,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final HouseholdModel householdModel;
+
+  final IndividualModel? selectedIndividual;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'DoseAdministeredVerificationRouteArgs{householdModel: $householdModel, selectedIndividual: $selectedIndividual, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

@@ -80,6 +80,13 @@ class DeliverIntervention {
 
   String get memberCountText => "MEMBER_COUNT_TEXT";
   String get bednetCountText => "BEDNET_COUNT_TEXT";
+
+  String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
+  String get infoWrittenInChildCard =>
+      'DELIVER_INTERVENTION_DOSE_INFO_IN_CHILD_CARD_ADDED';
+  String get healthTalkGivenOnSPAQ =>
+      'DELIVER_INTERVENTION_DOSE_HEALTH_TALK_GIVEN_SPAQ';
+  String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
 }
 
 class Common {
