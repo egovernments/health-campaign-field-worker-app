@@ -25,12 +25,15 @@ import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
 import '../pages/beneficiary_registration/custom_household_location.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/registration_delivery.dart';
 import '../pages/beneficiary_registration/custom_household_details.dart';
 import '../pages/custom_search_beneficiary.dart';
 import '../pages/beneficiary_registration/custom_individual_details.dart';
 import '../pages/beneficiary_registration/custom_summary_page.dart';
 import '../pages/beneficiary/custom_household_overview.dart';
 import '../pages/closed/custom_closed_household_summary.dart';
+import '../pages/beneficiary/custom_deliver_intervention.dart';
+import '../pages/beneficiary/dose_administered_verification.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -232,6 +235,10 @@ class AppRouter extends _$AppRouter {
                     redirectTo: 'custom-beneficiary-summary',
                   ),
                   AutoRoute(
+                    page: DoseAdministeredVerificationRoute.page,
+                    path: 'dose-administered-verification',
+                  ),
+                  AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
                   ),
@@ -260,6 +267,14 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',
+                  ),
+                  AutoRoute(
+                    page: CustomDeliverInterventionRoute.page,
+                    path: 'custom-deliver-intervention',
+                  ),
+                  RedirectRoute(
+                    path: 'deliver-intervention',
+                    redirectTo: 'custom-deliver-intervention',
                   ),
                   AutoRoute(
                       page: DeliverySummaryRoute.page, path: 'deliver-summary'),

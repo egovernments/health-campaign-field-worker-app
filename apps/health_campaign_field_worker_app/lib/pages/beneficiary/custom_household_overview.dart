@@ -208,6 +208,30 @@ class _HouseholdOverviewPageState
                                   style: theme.textTheme.displayMedium,
                                 ),
                               ),
+                              BlocBuilder<DeliverInterventionBloc,
+                                  DeliverInterventionState>(
+                                builder: (ctx, deliverInterventionState) =>
+                                    Offstage(
+                                  offstage: beneficiaryType ==
+                                      BeneficiaryType.individual,
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: DigitIconButton(
+                                      icon: getStatusAttributes(state,
+                                          deliverInterventionState)['icon'],
+                                      iconText: localizations.translate(
+                                        getStatusAttributes(state,
+                                                deliverInterventionState)[
+                                            'textLabel'],
+                                      ), // [TODO: map task status accordingly based on projectBeneficiaries and tasks]
+                                      iconTextColor: getStatusAttributes(state,
+                                          deliverInterventionState)['color'],
+                                      iconColor: getStatusAttributes(state,
+                                          deliverInterventionState)['color'],
+                                    ),
+                                  ),
+                                ),
+                              ),
                               Padding(
                                 padding: const EdgeInsets.only(
                                   left: kPadding,
@@ -216,9 +240,6 @@ class _HouseholdOverviewPageState
                                 child: BlocBuilder<DeliverInterventionBloc,
                                         DeliverInterventionState>(
                                     builder: (ctx, deliverInterventionState) {
-                                  bool shouldShowStatus = beneficiaryType ==
-                                      BeneficiaryType.household;
-
                                   return Column(
                                     children: [
                                       DigitTableCard(
@@ -248,14 +269,6 @@ class _HouseholdOverviewPageState
                                                 .memberCountText,
                                           ): state.householdMemberWrapper
                                               .household?.memberCount,
-                                          if (shouldShowStatus)
-                                            localizations.translate(i18
-                                                    .beneficiaryDetails.status):
-                                                localizations.translate(
-                                              getStatusAttributes(state,
-                                                      deliverInterventionState)[
-                                                  'textLabel'],
-                                            )
                                         },
                                       ),
                                     ],

@@ -66,6 +66,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomDeliverInterventionRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomDeliverInterventionRouteArgs>(
+          orElse: () => const CustomDeliverInterventionRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomDeliverInterventionPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          isEditing: args.isEditing,
+        ),
+      );
+    },
     CustomHouseHoldDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseHoldDetailsRouteArgs>(
           orElse: () => const CustomHouseHoldDetailsRouteArgs());
@@ -128,6 +140,18 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: CustomSummaryPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
+    DoseAdministeredVerificationRoute.name: (routeData) {
+      final args = routeData.argsAs<DoseAdministeredVerificationRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DoseAdministeredVerificationPage(
+          householdModel: args.householdModel,
+          selectedIndividual: args.selectedIndividual,
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
@@ -397,6 +421,50 @@ class CustomClosedHouseholdSummaryRouteArgs {
 }
 
 /// generated route for
+/// [CustomDeliverInterventionPage]
+class CustomDeliverInterventionRoute
+    extends PageRouteInfo<CustomDeliverInterventionRouteArgs> {
+  CustomDeliverInterventionRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool isEditing = false,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomDeliverInterventionRoute.name,
+          args: CustomDeliverInterventionRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            isEditing: isEditing,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomDeliverInterventionRoute';
+
+  static const PageInfo<CustomDeliverInterventionRouteArgs> page =
+      PageInfo<CustomDeliverInterventionRouteArgs>(name);
+}
+
+class CustomDeliverInterventionRouteArgs {
+  const CustomDeliverInterventionRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.isEditing = false,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool isEditing;
+
+  @override
+  String toString() {
+    return 'CustomDeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
 /// [CustomHouseHoldDetailsPage]
 class CustomHouseHoldDetailsRoute
     extends PageRouteInfo<CustomHouseHoldDetailsRouteArgs> {
@@ -631,6 +699,55 @@ class CustomSummaryRouteArgs {
   @override
   String toString() {
     return 'CustomSummaryRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [DoseAdministeredVerificationPage]
+class DoseAdministeredVerificationRoute
+    extends PageRouteInfo<DoseAdministeredVerificationRouteArgs> {
+  DoseAdministeredVerificationRoute({
+    required HouseholdModel householdModel,
+    required IndividualModel? selectedIndividual,
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DoseAdministeredVerificationRoute.name,
+          args: DoseAdministeredVerificationRouteArgs(
+            householdModel: householdModel,
+            selectedIndividual: selectedIndividual,
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DoseAdministeredVerificationRoute';
+
+  static const PageInfo<DoseAdministeredVerificationRouteArgs> page =
+      PageInfo<DoseAdministeredVerificationRouteArgs>(name);
+}
+
+class DoseAdministeredVerificationRouteArgs {
+  const DoseAdministeredVerificationRouteArgs({
+    required this.householdModel,
+    required this.selectedIndividual,
+    this.key,
+    this.appLocalizations,
+  });
+
+  final HouseholdModel householdModel;
+
+  final IndividualModel? selectedIndividual;
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'DoseAdministeredVerificationRouteArgs{householdModel: $householdModel, selectedIndividual: $selectedIndividual, key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

@@ -19,6 +19,8 @@ import 'package:registration_delivery/blocs/search_households/search_households.
 import 'package:registration_delivery/utils/constants.dart';
 import 'package:registration_delivery/utils/utils.dart';
 
+import '../../router/app_router.dart';
+
 @RoutePage()
 class CustomSummaryPage extends LocalizedStatefulWidget {
   const CustomSummaryPage({
@@ -68,8 +70,9 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                         isProximityEnabled: false,
                       ),
                     );
-                router.push(BeneficiaryAcknowledgementRoute(
-                  enableViewHousehold: true,
+                router.push(DoseAdministeredVerificationRoute(
+                  selectedIndividual: value.individualModel,
+                  householdModel: value.householdModel,
                 ));
               }
             },
@@ -351,6 +354,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
   }
 }
 
+//Info : parse the dateOFBirth string to DiigtDOBAge
 String getAgeString(String dateOfBirth) {
   final dob = DateFormat("dd/MM/yyyy").parse(dateOfBirth);
   final age = DigitDateUtils.calculateAge(dob);
