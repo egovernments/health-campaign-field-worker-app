@@ -77,10 +77,7 @@ class CustomHouseHoldDetailsPageState
             builder: (context, registrationState) {
               return ScrollableContent(
                 header: const Column(children: [
-                  BackNavigationHelpHeaderWidget(
-                    showHelp: false,
-                    showcaseButton: ShowcaseButton(),
-                  ),
+                  BackNavigationHelpHeaderWidget(),
                 ]),
                 enableFixedButton: true,
                 footer: DigitCard(
