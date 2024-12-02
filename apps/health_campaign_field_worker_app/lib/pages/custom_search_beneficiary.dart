@@ -91,7 +91,9 @@ class _CustomSearchBeneficiaryPageStateState
           },
           child: ScrollableContent(
             header: const Column(children: [
-              BackNavigationHelpHeaderWidget(),
+              BackNavigationHelpHeaderWidget(
+                showHelp: false,
+              ),
             ]),
             slivers: [
               SliverToBoxAdapter(

@@ -76,6 +76,7 @@ class _HouseholdOverviewPageState
                             .read<SearchHouseholdsBloc>()
                             .add(const SearchHouseholdsEvent.clear());
                       },
+                      showHelp: false,
                     ),
                     enableFixedButton: true,
                     footer: Offstage(

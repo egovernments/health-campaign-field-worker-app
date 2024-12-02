@@ -102,7 +102,6 @@ class CustomIndividualDetailsPageState
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(),
                 ),
               ]),
               footer: DigitCard(
