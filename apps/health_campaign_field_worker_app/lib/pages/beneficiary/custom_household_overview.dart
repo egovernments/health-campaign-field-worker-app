@@ -80,7 +80,8 @@ class _HouseholdOverviewPageState
                     enableFixedButton: true,
                     footer: Offstage(
                       offstage: beneficiaryType == BeneficiaryType.individual ||
-                          isOutsideProjectDateRange(),
+                          isOutsideProjectDateRange() ||
+                          context.isRegistrar,
                       child: BlocBuilder<ServiceDefinitionBloc,
                           ServiceDefinitionState>(
                         builder: (context, serviceDefinitionState) =>
