@@ -13,6 +13,7 @@ import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/models/entities/task.dart';
 import 'package:registration_delivery/utils/utils.dart';
 import '../../data/repositories/local/custom_task.dart';
+import '../../utils/extensions/extensions.dart';
 import '../progress_indicator/progress_indicator.dart';
 
 class CustomBeneficiaryProgressBar extends StatefulWidget {
@@ -40,6 +41,11 @@ class CustomBeneficiaryProgressBarState
         context.read<LocalRepository<TaskModel, TaskSearchModel>>()
             as CustomTaskLocalRepository;
 
+    final projectBeneficiaryRepository = context.read<
+            LocalRepository<ProjectBeneficiaryModel,
+                ProjectBeneficiarySearchModel>>()
+        as ProjectBeneficiaryLocalRepository;
+
     final projectId = RegistrationDeliverySingleton().projectId;
     final loggedInUserUuid = RegistrationDeliverySingleton().loggedInUserUuid;
 
@@ -59,49 +65,94 @@ class CustomBeneficiaryProgressBarState
       59,
       999,
     );
+    // Info : handles only registrar and distributor as , progress bar is enabled only for them currently
+    if (context.isRegistrar) {
+      projectBeneficiaryRepository.listenToChanges(
+        query: ProjectBeneficiarySearchModel(
+          beneficiaryRegistrationDateLte: lte,
+          beneficiaryRegistrationDateGte: gte,
+          projectId: [projectId!],
+        ),
+        listener: (data) async {
+          final now = DateTime.now();
+          final gte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+          );
 
-    repository.listenToChanges(
-      query: TaskSearchModel(
-        projectId: projectId,
-        createdBy: loggedInUserUuid,
-        status: Status.administeredSuccess.toValue(),
-        plannedEndDate: lte.millisecondsSinceEpoch,
-        plannedStartDate: gte.millisecondsSinceEpoch,
-      ),
-      listener: (data) async {
-        final now = DateTime.now();
-        final gte = DateTime(
-          now.year,
-          now.month,
-          now.day,
-        );
+          final lte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            23,
+            59,
+            59,
+            999,
+          );
 
-        final lte = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          23,
-          59,
-          59,
-          999,
-        );
+          ProjectBeneficiarySearchModel projectBeneficiarySearchQuery =
+              ProjectBeneficiarySearchModel(
+            beneficiaryRegistrationDateLte: lte,
+            beneficiaryRegistrationDateGte: gte,
+            projectId: [projectId],
+          );
+          List<ProjectBeneficiaryModel> results =
+              await projectBeneficiaryRepository.search(
+                  projectBeneficiarySearchQuery, loggedInUserUuid);
 
-        TaskSearchModel taskSearchQuery = TaskSearchModel(
-          status: Status.administeredSuccess.toValue(),
+          if (mounted) {
+            setState(() {
+              current = results.length;
+            });
+          }
+        },
+      );
+    } else {
+      repository.listenToChanges(
+        query: TaskSearchModel(
+          projectId: projectId,
           createdBy: loggedInUserUuid,
+          status: Status.administeredSuccess.toValue(),
           plannedEndDate: lte.millisecondsSinceEpoch,
           plannedStartDate: gte.millisecondsSinceEpoch,
-          projectId: projectId,
-        );
-        List<TaskModel> results = await repository.search(taskSearchQuery);
+        ),
+        listener: (data) async {
+          final now = DateTime.now();
+          final gte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+          );
 
-        if (mounted) {
-          setState(() {
-            current = results.length;
-          });
-        }
-      },
-    );
+          final lte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            23,
+            59,
+            59,
+            999,
+          );
+
+          TaskSearchModel taskSearchQuery = TaskSearchModel(
+            status: Status.administeredSuccess.toValue(),
+            createdBy: loggedInUserUuid,
+            plannedEndDate: lte.millisecondsSinceEpoch,
+            plannedStartDate: gte.millisecondsSinceEpoch,
+            projectId: projectId,
+          );
+          List<TaskModel> results = await repository.search(taskSearchQuery);
+
+          if (mounted) {
+            setState(() {
+              current = results.length;
+            });
+          }
+        },
+      );
+    }
+
     super.didChangeDependencies();
   }
 
