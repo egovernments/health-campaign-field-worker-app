@@ -194,13 +194,27 @@ class Constants {
     return remoteRepositories;
   }
 
+  // static String getEndPoint({
+  //   required AppInitialized state,
+  //   required String service,
+  //   required String action,
+  //   required String entityName,
+  // }) {
+  //   final actionResult = state.serviceRegistryList
+  //       .firstWhereOrNull((element) => element.service == service)
+  //       ?.actions
+  //       .firstWhereOrNull((element) => element.entityName == entityName)
+  //       ?.path;
+
+  //   return actionResult ?? '';
+  // }
   static String getEndPoint({
-    required AppInitialized state,
+    required List<ServiceRegistry> serviceRegistry,
     required String service,
     required String action,
     required String entityName,
   }) {
-    final actionResult = state.serviceRegistryList
+    final actionResult = serviceRegistry
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) => element.entityName == entityName)
