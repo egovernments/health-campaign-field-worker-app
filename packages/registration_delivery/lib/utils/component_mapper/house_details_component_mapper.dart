@@ -1,23 +1,23 @@
 import 'package:digit_components/widgets/atoms/digit_integer_form_picker.dart';
-import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
 import '../../blocs/beneficiary_registration/beneficiary_registration.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../pages/beneficiary_registration/house_details.dart';
-import '../../pages/beneficiary_registration/household_location.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
+import '../formController.dart';
 import '../models/widget_config_model.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../utils.dart';
+import '../widgetfactory.dart';
 
 class HouseDetailsComponentMapper {
   static const _noOfRoomsKey = HouseDetailsPageState.noOfRoomsKey;
-  static const _householdStructureKey = HouseDetailsPageState.householdStructureKey;
+  static const _householdStructureKey =
+      HouseDetailsPageState.householdStructureKey;
   Map<String, Map<String, dynamic>> configs = {
     'householdStructure': {
       'isEnabled': true,
@@ -28,10 +28,22 @@ class HouseDetailsComponentMapper {
     'noOfRooms': {
       'isEnabled': true,
       'readOnly': false,
-      'isRequired': true,
+      'isRequired': false,
       'regex': ["^\\d+\$"],
       "errorMessage": "Invalid input",
       'order': 2,
+    },
+    'abcd': {
+      'type': 'additionalField',
+      'label': 'abcd',
+      'component': 'selectionbox',
+      'formDataType': 'List<String>',
+      'allowMultipleSelection': true,
+      'menuItems': ['a', 'b', 'c', 'd'],
+      'isEnabled': true,
+      'readOnly': false,
+      'isRequired': true,
+      'order': 5,
     }
   };
 
@@ -42,7 +54,7 @@ class HouseDetailsComponentMapper {
     // Sort the config keys by the 'order' key
     var sortedKeys = model.config.keys.toList();
     sortedKeys.sort(
-            (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
+        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
 
     if (sortedKeys.isEmpty) {
       Widget widget = const AlertDialog(
@@ -67,38 +79,42 @@ class HouseDetailsComponentMapper {
                     opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
                     child: SelectionBox<String>(
                       title:
-                      '${localizations.translate(i18.householdDetails.typeOfStructure)}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                          '${localizations.translate(i18.householdDetails.typeOfStructure)}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
                       equalWidthOptions: true,
                       allowMultipleSelection: false,
                       options:
-                      RegistrationDeliverySingleton().houseStructureTypes ??
-                          [],
-                      initialSelection: model.form
-                          .control(_householdStructureKey)
-                          .value !=
-                          null
-                          ? [...model.form.control(_householdStructureKey).value]
-                          : [],
+                          RegistrationDeliverySingleton().houseStructureTypes ??
+                              [],
+                      initialSelection:
+                          model.form.control(_householdStructureKey).value !=
+                                  null
+                              ? [
+                                  ...model.form
+                                      .control(_householdStructureKey)
+                                      .value
+                                ]
+                              : [],
                       onSelectionChanged: (values) {
                         model.form
                             .control(_householdStructureKey)
                             .markAsTouched();
                         if (values.isEmpty) {
-                          model.form.control(_householdStructureKey).value = null;
-                          model.func!(model.form,true,values);
+                          model.form.control(_householdStructureKey).value =
+                              null;
+                          model.func!(model.form, true, values);
                         } else {
-                          model.func!(model.form,false,values);
+                          model.func!(model.form, false, values);
                         }
                       },
                       valueMapper: (value) {
                         return localizations.translate(value.toString());
                       },
                       errorMessage: model.form
-                          .control(_householdStructureKey)
-                          .hasErrors &&
-                          model.form.control(_householdStructureKey).touched
+                                  .control(_householdStructureKey)
+                                  .hasErrors &&
+                              model.form.control(_householdStructureKey).touched
                           ? localizations.translate(
-                          i18.householdDetails.selectStructureTypeError)
+                              i18.householdDetails.selectStructureTypeError)
                           : null,
                     ),
                   ),
@@ -126,15 +142,8 @@ class HouseDetailsComponentMapper {
               );
               break;
             default:
-              widget = Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    const Text('Error:', style: TextStyle(color: Colors.red)),
-                    Text("Unknown key $key")
-                  ],
-                ),
-              );
+              widget =
+                  WidgetBuilderFactory.buildWidgetsFromConfig(key, fieldConfig,model.form,localizations);
           }
 
           widgets.add(widget);
@@ -145,28 +154,29 @@ class HouseDetailsComponentMapper {
     return widgets;
   }
 
-  FormGroup buildForm(BeneficiaryRegistrationState state, RegistrationDeliveryLocalization localizations) {
+  FormGroup buildForm(BeneficiaryRegistrationState state,
+      RegistrationDeliveryLocalization localizations) {
     final formGroup = fb.group(<String, Object>{
       _noOfRoomsKey: FormControl<int>(
           value: state.householdModel?.additionalFields?.fields
-              .where((h) =>
-          h.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull
-              ?.value !=
-              null
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.noOfRooms.toValue())
+                      .firstOrNull
+                      ?.value !=
+                  null
               ? int.tryParse(state.householdModel?.additionalFields?.fields
-              .where((h) =>
-          h.key == AdditionalFieldsType.noOfRooms.toValue())
-              .firstOrNull
-              ?.value
-              .toString() ??
-              '1')
+                      .where((h) =>
+                          h.key == AdditionalFieldsType.noOfRooms.toValue())
+                      .firstOrNull
+                      ?.value
+                      .toString() ??
+                  '1')
               : 1,
           validators: [Validators.required]),
       _householdStructureKey: FormControl<List<String>>(
         value: state.householdModel?.additionalFields?.fields
             .where((e) =>
-        e.key == AdditionalFieldsType.houseStructureTypes.toValue())
+                e.key == AdditionalFieldsType.houseStructureTypes.toValue())
             .first
             .value
             .toString()
@@ -174,23 +184,65 @@ class HouseDetailsComponentMapper {
       )
     });
 
+    final existingConfigs = [_householdStructureKey, _noOfRoomsKey];
+
+    Map<String, AbstractControl<dynamic>> newControls = {};
+    configs.forEach((key, fieldConfig) {
+      if (!existingConfigs.contains(key)) {
+        newControls[key] = FormControlFactory.createFormControl(
+            type: fieldConfig['formDataType'],
+            initialValue: fieldConfig['initialValue'] ?? '');
+      }
+    });
+
+    formGroup.addAll(newControls);
+
+    addValidators(formGroup);
+
+    return formGroup;
+  }
+
+  void addValidators(final formGroup) {
     configs.forEach((key, fieldConfig) {
       final formControl = formGroup.control(key);
 
       // Get current validators
       final currentValidators = formControl.validators;
 
-      List<Map<String, dynamic>? Function(AbstractControl<dynamic>)> updatedValidators = currentValidators.where((validator) {
+      List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+          updatedValidators = currentValidators.where((validator) {
         // Check if the validator is of the same type as Validators.required
         return validator.runtimeType != Validators.required.runtimeType;
       }).toList();
 
-      if (fieldConfig['isRequired'] == true && fieldConfig['isEnabled'] == true) {
+      if (fieldConfig['isRequired'] == true &&
+          fieldConfig['isEnabled'] == true) {
         // Add the new validator to the list
         updatedValidators = [
           ...updatedValidators,
           Validators.required // Example new validator
         ];
+      }
+
+      // If JSON config has regex, add it as a validator
+      if (fieldConfig['isEnabled'] == true &&
+          fieldConfig.containsKey('validation') &&
+          fieldConfig['validation'] is List) {
+        List<dynamic> validationList = fieldConfig['validation'];
+
+        validationList.asMap().forEach((index, regex) {
+          updatedValidators.add((control) {
+            final value = control.value?.toString() ??
+                ''; // Convert to string or default to empty
+            if (value.isNotEmpty && !RegExp(regex['pattern']).hasMatch(value)) {
+              // Ensure there's a matching error message for this index
+              return {
+                '${regex['key']}': regex['errorMessage']
+              }; // Use the correct error message for the index
+            }
+            return null;
+          });
+        });
       }
 
       // Set the updated validators back to the form control
@@ -199,7 +251,5 @@ class HouseDetailsComponentMapper {
       // Re-run validation with the new validators
       formControl.updateValueAndValidity();
     });
-
-    return formGroup;
   }
 }

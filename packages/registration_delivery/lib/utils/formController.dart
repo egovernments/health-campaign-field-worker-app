@@ -1,43 +1,43 @@
+import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
+
+import 'constants.dart';
 
 class FormControlFactory {
   // This static method generates a FormControl based on the given type.
   static FormControl createFormControl({
     required String type,
-    required dynamic initialValue,
-    required List<ValidatorFunction> validators,
+    dynamic initialValue = "",
   }) {
     switch (type) {
       case 'String':
         return FormControl<String>(
           value: initialValue as String?,
-          validators: validators,
         );
       case 'int':
         return FormControl<int>(
-          value: initialValue as int?,
-          validators: validators,
+          value: initialValue != '' ? int.tryParse(initialValue.toString()) : null,
         );
       case 'double':
         return FormControl<double>(
-          value: initialValue as double?,
-          validators: validators,
+          value: initialValue != '' ? double.tryParse(initialValue.toString()) : null,
         );
       case 'bool':
         return FormControl<bool>(
-          value: initialValue as bool?,
-          validators: validators,
+          value: initialValue != '' ? bool.tryParse(initialValue.toString()) : null,
         );
-        case 'DateTime':
-          return FormControl<DateTime>(
-            value: initialValue as DateTime?,
-            validators: validators,
-          );
-          case 'List<String>':
-            return FormControl<List<String>>(
-              value: initialValue as List<String>?,
-              validators: validators,
-          );
+      case 'DateTime':
+        return FormControl<DateTime>(
+          value: initialValue != ''
+              ? DateTime.parse(
+                  initialValue.toString(),
+                )
+              : null,
+        );
+      case 'List<String>':
+        return FormControl<List<String>>(
+            value: initialValue != '' ? initialValue as List<String>? : null,
+        );
       default:
         throw Exception("Unsupported type $type");
     }

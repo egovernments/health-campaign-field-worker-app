@@ -156,6 +156,11 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
       formConfig: (json['FORM_CONFIG'] as List<dynamic>?)
           ?.map((e) => FormConfigModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      registrationDeliveryConfig:
+          (json['REGISTRATION_DELIVERY_CONFIGS'] as List<dynamic>?)
+              ?.map((e) => RegistrationDeliveryConfigModel.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
     );
 
 Map<String, dynamic> _$$HCMWrapperModelImplToJson(
@@ -182,6 +187,7 @@ Map<String, dynamic> _$$HCMWrapperModelImplToJson(
       'REFUSAL_REASONS': instance.refusalReasons,
       'FIREBASE_CONFIG': instance.firebaseConfig,
       'FORM_CONFIG': instance.formConfig,
+      'REGISTRATION_DELIVERY_CONFIGS': instance.registrationDeliveryConfig,
     };
 
 _$AppConfigSecondaryWrapperModelImpl
@@ -385,6 +391,87 @@ Map<String, dynamic> _$$BackendInterfaceImplToJson(
         _$BackendInterfaceImpl instance) =>
     <String, dynamic>{
       'interfaces': instance.interface,
+    };
+
+_$RegistrationDeliveryConfigModelImpl
+    _$$RegistrationDeliveryConfigModelImplFromJson(Map<String, dynamic> json) =>
+        _$RegistrationDeliveryConfigModelImpl(
+          name: json['name'] as String,
+          type: json['type'] as String,
+          fields: (json['fields'] as List<dynamic>?)
+              ?.map((e) => RegistrationDeliveryConfigFieldModel.fromJson(
+                  e as Map<String, dynamic>))
+              .toList(),
+        );
+
+Map<String, dynamic> _$$RegistrationDeliveryConfigModelImplToJson(
+        _$RegistrationDeliveryConfigModelImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': instance.type,
+      'fields': instance.fields,
+    };
+
+_$RegistrationDeliveryConfigFieldModelImpl
+    _$$RegistrationDeliveryConfigFieldModelImplFromJson(
+            Map<String, dynamic> json) =>
+        _$RegistrationDeliveryConfigFieldModelImpl(
+          name: json['name'] as String,
+          type: json['type'] as String,
+          label: json['label'] as String,
+          component: json['component'] as String,
+          formDataType: json['formDataType'] as String,
+          order: (json['order'] as num).toInt(),
+          isRequired: json['isRequired'] as bool,
+          isEnabled: json['isEnabled'] as bool,
+          readOnly: json['readOnly'] as bool,
+          keyboardType: json['keyboardType'] as String?,
+          validation: (json['validation'] as List<dynamic>?)
+              ?.map((e) => ValidationRule.fromJson(e as Map<String, dynamic>))
+              .toList(),
+          menuItems: (json['menuItems'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
+          allowMultipleSelection: json['allowMultipleSelection'] as bool?,
+          initialValue: (json['initialValue'] as num?)?.toInt(),
+          minimum: (json['minimum'] as num?)?.toInt(),
+          maximum: (json['maximum'] as num?)?.toInt(),
+        );
+
+Map<String, dynamic> _$$RegistrationDeliveryConfigFieldModelImplToJson(
+        _$RegistrationDeliveryConfigFieldModelImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'type': instance.type,
+      'label': instance.label,
+      'component': instance.component,
+      'formDataType': instance.formDataType,
+      'order': instance.order,
+      'isRequired': instance.isRequired,
+      'isEnabled': instance.isEnabled,
+      'readOnly': instance.readOnly,
+      'keyboardType': instance.keyboardType,
+      'validation': instance.validation,
+      'menuItems': instance.menuItems,
+      'allowMultipleSelection': instance.allowMultipleSelection,
+      'initialValue': instance.initialValue,
+      'minimum': instance.minimum,
+      'maximum': instance.maximum,
+    };
+
+_$ValidationRuleImpl _$$ValidationRuleImplFromJson(Map<String, dynamic> json) =>
+    _$ValidationRuleImpl(
+      pattern: json['pattern'] as String,
+      key: json['key'] as String,
+      errorMessage: json['errorMessage'] as String,
+    );
+
+Map<String, dynamic> _$$ValidationRuleImplToJson(
+        _$ValidationRuleImpl instance) =>
+    <String, dynamic>{
+      'pattern': instance.pattern,
+      'key': instance.key,
+      'errorMessage': instance.errorMessage,
     };
 
 _$FormConfigModelImpl _$$FormConfigModelImplFromJson(

@@ -99,6 +99,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<FirebaseConfig>? firebaseConfig,
     @JsonKey(name: 'FORM_CONFIG')
     List<FormConfigModel>? formConfig,
+    // @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+    // List<RegistrationDeliveryConfigModel>? registrationDeliveryConfig,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -264,6 +266,56 @@ class BackendInterface with _$BackendInterface {
 
   factory BackendInterface.fromJson(Map<String, dynamic> json) =>
       _$BackendInterfaceFromJson(json);
+}
+
+@freezed
+class RegistrationDeliveryConfigModel with _$RegistrationDeliveryConfigModel {
+  factory RegistrationDeliveryConfigModel({
+    required String name,
+    required String type,
+    @JsonKey(name: 'fields')
+    List<RegistrationDeliveryConfigFieldModel>? fields
+  }) = _RegistrationDeliveryConfigModel;
+
+  factory RegistrationDeliveryConfigModel.fromJson(Map<String, dynamic> json) =>
+      _$RegistrationDeliveryConfigModelFromJson(json);
+}
+
+@freezed
+class RegistrationDeliveryConfigFieldModel with _$RegistrationDeliveryConfigFieldModel {
+  factory RegistrationDeliveryConfigFieldModel({
+    required String name,
+    required String type,
+    required String label,
+    required String component,
+    required String formDataType,
+    required int order,
+    required bool isRequired,
+    required bool isEnabled,
+    required bool readOnly,
+    String? keyboardType,
+    List<ValidationRule>? validation,
+    List<String>? menuItems,
+    bool? allowMultipleSelection,
+    int? initialValue,
+    int? minimum,
+    int? maximum,
+  }) = _RegistrationDeliveryConfigFieldModel;
+
+  factory RegistrationDeliveryConfigFieldModel.fromJson(Map<String, dynamic> json) =>
+      _$RegistrationDeliveryConfigFieldModelFromJson(json);
+}
+
+@freezed
+class ValidationRule with _$ValidationRule {
+  factory ValidationRule({
+    required String pattern,
+    required String key,
+    required String errorMessage,
+  }) = _ValidationRule;
+
+  factory ValidationRule.fromJson(Map<String, dynamic> json) =>
+      _$ValidationRuleFromJson(json);
 }
 
 @freezed

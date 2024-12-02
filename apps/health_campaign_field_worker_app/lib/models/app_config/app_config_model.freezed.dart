@@ -969,6 +969,9 @@ mixin _$HCMWrapperModel {
       throw _privateConstructorUsedError;
   @JsonKey(name: 'FORM_CONFIG')
   List<FormConfigModel>? get formConfig => throw _privateConstructorUsedError;
+  @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+  List<RegistrationDeliveryConfigModel>? get registrationDeliveryConfig =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -1012,7 +1015,9 @@ abstract class $HCMWrapperModelCopyWith<$Res> {
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'FORM_CONFIG') List<FormConfigModel>? formConfig});
+      @JsonKey(name: 'FORM_CONFIG') List<FormConfigModel>? formConfig,
+      @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+      List<RegistrationDeliveryConfigModel>? registrationDeliveryConfig});
 }
 
 /// @nodoc
@@ -1047,6 +1052,7 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
     Object? formConfig = freezed,
+    Object? registrationDeliveryConfig = freezed,
   }) {
     return _then(_value.copyWith(
       appConfig: null == appConfig
@@ -1126,6 +1132,10 @@ class _$HCMWrapperModelCopyWithImpl<$Res, $Val extends HCMWrapperModel>
           ? _value.formConfig
           : formConfig // ignore: cast_nullable_to_non_nullable
               as List<FormConfigModel>?,
+      registrationDeliveryConfig: freezed == registrationDeliveryConfig
+          ? _value.registrationDeliveryConfig
+          : registrationDeliveryConfig // ignore: cast_nullable_to_non_nullable
+              as List<RegistrationDeliveryConfigModel>?,
     ) as $Val);
   }
 }
@@ -1168,7 +1178,9 @@ abstract class _$$HCMWrapperModelImplCopyWith<$Res>
       List<CommonMasterModel>? houseStructureTypes,
       @JsonKey(name: 'REFUSAL_REASONS') List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG') List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'FORM_CONFIG') List<FormConfigModel>? formConfig});
+      @JsonKey(name: 'FORM_CONFIG') List<FormConfigModel>? formConfig,
+      @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+      List<RegistrationDeliveryConfigModel>? registrationDeliveryConfig});
 }
 
 /// @nodoc
@@ -1201,6 +1213,7 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
     Object? refusalReasons = freezed,
     Object? firebaseConfig = freezed,
     Object? formConfig = freezed,
+    Object? registrationDeliveryConfig = freezed,
   }) {
     return _then(_$HCMWrapperModelImpl(
       appConfig: null == appConfig
@@ -1280,6 +1293,10 @@ class __$$HCMWrapperModelImplCopyWithImpl<$Res>
           ? _value._formConfig
           : formConfig // ignore: cast_nullable_to_non_nullable
               as List<FormConfigModel>?,
+      registrationDeliveryConfig: freezed == registrationDeliveryConfig
+          ? _value._registrationDeliveryConfig
+          : registrationDeliveryConfig // ignore: cast_nullable_to_non_nullable
+              as List<RegistrationDeliveryConfigModel>?,
     ));
   }
 }
@@ -1324,7 +1341,9 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
       required final List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'FORM_CONFIG') final List<FormConfigModel>? formConfig})
+      @JsonKey(name: 'FORM_CONFIG') final List<FormConfigModel>? formConfig,
+      @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+      final List<RegistrationDeliveryConfigModel>? registrationDeliveryConfig})
       : _appConfig = appConfig,
         _bandWidthBatchSize = bandWidthBatchSize,
         _downSyncBandWidthBatchSize = downSyncBandWidthBatchSize,
@@ -1344,7 +1363,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         _houseStructureTypes = houseStructureTypes,
         _refusalReasons = refusalReasons,
         _firebaseConfig = firebaseConfig,
-        _formConfig = formConfig;
+        _formConfig = formConfig,
+        _registrationDeliveryConfig = registrationDeliveryConfig;
 
   factory _$HCMWrapperModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$HCMWrapperModelImplFromJson(json);
@@ -1550,9 +1570,21 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
     return EqualUnmodifiableListView(value);
   }
 
+  final List<RegistrationDeliveryConfigModel>? _registrationDeliveryConfig;
+  @override
+  @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+  List<RegistrationDeliveryConfigModel>? get registrationDeliveryConfig {
+    final value = _registrationDeliveryConfig;
+    if (value == null) return null;
+    if (_registrationDeliveryConfig is EqualUnmodifiableListView)
+      return _registrationDeliveryConfig;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
   @override
   String toString() {
-    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, formConfig: $formConfig)';
+    return 'HCMWrapperModel(appConfig: $appConfig, bandWidthBatchSize: $bandWidthBatchSize, downSyncBandWidthBatchSize: $downSyncBandWidthBatchSize, householdDeletionReasonOptions: $householdDeletionReasonOptions, householdMemberDeletionReasonOptions: $householdMemberDeletionReasonOptions, backgroundServiceConfig: $backgroundServiceConfig, checklistTypes: $checklistTypes, idTypeOptions: $idTypeOptions, deliveryCommentOptions: $deliveryCommentOptions, backendInterface: $backendInterface, callSupportOptions: $callSupportOptions, transportTypes: $transportTypes, symptomsTypeList: $symptomsTypeList, searchHouseHoldFilters: $searchHouseHoldFilters, referralReasonList: $referralReasonList, houseStructureTypes: $houseStructureTypes, refusalReasons: $refusalReasons, firebaseConfig: $firebaseConfig, formConfig: $formConfig, registrationDeliveryConfig: $registrationDeliveryConfig)';
   }
 
   @override
@@ -1600,7 +1632,10 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
             const DeepCollectionEquality()
                 .equals(other._firebaseConfig, _firebaseConfig) &&
             const DeepCollectionEquality()
-                .equals(other._formConfig, _formConfig));
+                .equals(other._formConfig, _formConfig) &&
+            const DeepCollectionEquality().equals(
+                other._registrationDeliveryConfig,
+                _registrationDeliveryConfig));
   }
 
   @JsonKey(ignore: true)
@@ -1626,7 +1661,8 @@ class _$HCMWrapperModelImpl implements _HCMWrapperModel {
         const DeepCollectionEquality().hash(_houseStructureTypes),
         const DeepCollectionEquality().hash(_refusalReasons),
         const DeepCollectionEquality().hash(_firebaseConfig),
-        const DeepCollectionEquality().hash(_formConfig)
+        const DeepCollectionEquality().hash(_formConfig),
+        const DeepCollectionEquality().hash(_registrationDeliveryConfig)
       ]);
 
   @JsonKey(ignore: true)
@@ -1682,8 +1718,10 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
       final List<CommonMasterModel>? refusalReasons,
       @JsonKey(name: 'FIREBASE_CONFIG')
       required final List<FirebaseConfig>? firebaseConfig,
-      @JsonKey(name: 'FORM_CONFIG')
-      final List<FormConfigModel>? formConfig}) = _$HCMWrapperModelImpl;
+      @JsonKey(name: 'FORM_CONFIG') final List<FormConfigModel>? formConfig,
+      @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+      final List<RegistrationDeliveryConfigModel>?
+          registrationDeliveryConfig}) = _$HCMWrapperModelImpl;
 
   factory _HCMWrapperModel.fromJson(Map<String, dynamic> json) =
       _$HCMWrapperModelImpl.fromJson;
@@ -1745,6 +1783,9 @@ abstract class _HCMWrapperModel implements HCMWrapperModel {
   @override
   @JsonKey(name: 'FORM_CONFIG')
   List<FormConfigModel>? get formConfig;
+  @override
+  @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+  List<RegistrationDeliveryConfigModel>? get registrationDeliveryConfig;
   @override
   @JsonKey(ignore: true)
   _$$HCMWrapperModelImplCopyWith<_$HCMWrapperModelImpl> get copyWith =>
@@ -4154,6 +4195,891 @@ abstract class _BackendInterface implements BackendInterface {
   @override
   @JsonKey(ignore: true)
   _$$BackendInterfaceImplCopyWith<_$BackendInterfaceImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+RegistrationDeliveryConfigModel _$RegistrationDeliveryConfigModelFromJson(
+    Map<String, dynamic> json) {
+  return _RegistrationDeliveryConfigModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RegistrationDeliveryConfigModel {
+  String get name => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  @JsonKey(name: 'fields')
+  List<RegistrationDeliveryConfigFieldModel>? get fields =>
+      throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RegistrationDeliveryConfigModelCopyWith<RegistrationDeliveryConfigModel>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RegistrationDeliveryConfigModelCopyWith<$Res> {
+  factory $RegistrationDeliveryConfigModelCopyWith(
+          RegistrationDeliveryConfigModel value,
+          $Res Function(RegistrationDeliveryConfigModel) then) =
+      _$RegistrationDeliveryConfigModelCopyWithImpl<$Res,
+          RegistrationDeliveryConfigModel>;
+  @useResult
+  $Res call(
+      {String name,
+      String type,
+      @JsonKey(name: 'fields')
+      List<RegistrationDeliveryConfigFieldModel>? fields});
+}
+
+/// @nodoc
+class _$RegistrationDeliveryConfigModelCopyWithImpl<$Res,
+        $Val extends RegistrationDeliveryConfigModel>
+    implements $RegistrationDeliveryConfigModelCopyWith<$Res> {
+  _$RegistrationDeliveryConfigModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? type = null,
+    Object? fields = freezed,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      fields: freezed == fields
+          ? _value.fields
+          : fields // ignore: cast_nullable_to_non_nullable
+              as List<RegistrationDeliveryConfigFieldModel>?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$RegistrationDeliveryConfigModelImplCopyWith<$Res>
+    implements $RegistrationDeliveryConfigModelCopyWith<$Res> {
+  factory _$$RegistrationDeliveryConfigModelImplCopyWith(
+          _$RegistrationDeliveryConfigModelImpl value,
+          $Res Function(_$RegistrationDeliveryConfigModelImpl) then) =
+      __$$RegistrationDeliveryConfigModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String name,
+      String type,
+      @JsonKey(name: 'fields')
+      List<RegistrationDeliveryConfigFieldModel>? fields});
+}
+
+/// @nodoc
+class __$$RegistrationDeliveryConfigModelImplCopyWithImpl<$Res>
+    extends _$RegistrationDeliveryConfigModelCopyWithImpl<$Res,
+        _$RegistrationDeliveryConfigModelImpl>
+    implements _$$RegistrationDeliveryConfigModelImplCopyWith<$Res> {
+  __$$RegistrationDeliveryConfigModelImplCopyWithImpl(
+      _$RegistrationDeliveryConfigModelImpl _value,
+      $Res Function(_$RegistrationDeliveryConfigModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? type = null,
+    Object? fields = freezed,
+  }) {
+    return _then(_$RegistrationDeliveryConfigModelImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      fields: freezed == fields
+          ? _value._fields
+          : fields // ignore: cast_nullable_to_non_nullable
+              as List<RegistrationDeliveryConfigFieldModel>?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RegistrationDeliveryConfigModelImpl
+    implements _RegistrationDeliveryConfigModel {
+  _$RegistrationDeliveryConfigModelImpl(
+      {required this.name,
+      required this.type,
+      @JsonKey(name: 'fields')
+      final List<RegistrationDeliveryConfigFieldModel>? fields})
+      : _fields = fields;
+
+  factory _$RegistrationDeliveryConfigModelImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$RegistrationDeliveryConfigModelImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String type;
+  final List<RegistrationDeliveryConfigFieldModel>? _fields;
+  @override
+  @JsonKey(name: 'fields')
+  List<RegistrationDeliveryConfigFieldModel>? get fields {
+    final value = _fields;
+    if (value == null) return null;
+    if (_fields is EqualUnmodifiableListView) return _fields;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  String toString() {
+    return 'RegistrationDeliveryConfigModel(name: $name, type: $type, fields: $fields)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RegistrationDeliveryConfigModelImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.type, type) || other.type == type) &&
+            const DeepCollectionEquality().equals(other._fields, _fields));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType, name, type, const DeepCollectionEquality().hash(_fields));
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RegistrationDeliveryConfigModelImplCopyWith<
+          _$RegistrationDeliveryConfigModelImpl>
+      get copyWith => __$$RegistrationDeliveryConfigModelImplCopyWithImpl<
+          _$RegistrationDeliveryConfigModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RegistrationDeliveryConfigModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RegistrationDeliveryConfigModel
+    implements RegistrationDeliveryConfigModel {
+  factory _RegistrationDeliveryConfigModel(
+          {required final String name,
+          required final String type,
+          @JsonKey(name: 'fields')
+          final List<RegistrationDeliveryConfigFieldModel>? fields}) =
+      _$RegistrationDeliveryConfigModelImpl;
+
+  factory _RegistrationDeliveryConfigModel.fromJson(Map<String, dynamic> json) =
+      _$RegistrationDeliveryConfigModelImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get type;
+  @override
+  @JsonKey(name: 'fields')
+  List<RegistrationDeliveryConfigFieldModel>? get fields;
+  @override
+  @JsonKey(ignore: true)
+  _$$RegistrationDeliveryConfigModelImplCopyWith<
+          _$RegistrationDeliveryConfigModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+RegistrationDeliveryConfigFieldModel
+    _$RegistrationDeliveryConfigFieldModelFromJson(Map<String, dynamic> json) {
+  return _RegistrationDeliveryConfigFieldModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$RegistrationDeliveryConfigFieldModel {
+  String get name => throw _privateConstructorUsedError;
+  String get type => throw _privateConstructorUsedError;
+  String get label => throw _privateConstructorUsedError;
+  String get component => throw _privateConstructorUsedError;
+  String get formDataType => throw _privateConstructorUsedError;
+  int get order => throw _privateConstructorUsedError;
+  bool get isRequired => throw _privateConstructorUsedError;
+  bool get isEnabled => throw _privateConstructorUsedError;
+  bool get readOnly => throw _privateConstructorUsedError;
+  String? get keyboardType => throw _privateConstructorUsedError;
+  List<ValidationRule>? get validation => throw _privateConstructorUsedError;
+  List<String>? get menuItems => throw _privateConstructorUsedError;
+  bool? get allowMultipleSelection => throw _privateConstructorUsedError;
+  int? get initialValue => throw _privateConstructorUsedError;
+  int? get minimum => throw _privateConstructorUsedError;
+  int? get maximum => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $RegistrationDeliveryConfigFieldModelCopyWith<
+          RegistrationDeliveryConfigFieldModel>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $RegistrationDeliveryConfigFieldModelCopyWith<$Res> {
+  factory $RegistrationDeliveryConfigFieldModelCopyWith(
+          RegistrationDeliveryConfigFieldModel value,
+          $Res Function(RegistrationDeliveryConfigFieldModel) then) =
+      _$RegistrationDeliveryConfigFieldModelCopyWithImpl<$Res,
+          RegistrationDeliveryConfigFieldModel>;
+  @useResult
+  $Res call(
+      {String name,
+      String type,
+      String label,
+      String component,
+      String formDataType,
+      int order,
+      bool isRequired,
+      bool isEnabled,
+      bool readOnly,
+      String? keyboardType,
+      List<ValidationRule>? validation,
+      List<String>? menuItems,
+      bool? allowMultipleSelection,
+      int? initialValue,
+      int? minimum,
+      int? maximum});
+}
+
+/// @nodoc
+class _$RegistrationDeliveryConfigFieldModelCopyWithImpl<$Res,
+        $Val extends RegistrationDeliveryConfigFieldModel>
+    implements $RegistrationDeliveryConfigFieldModelCopyWith<$Res> {
+  _$RegistrationDeliveryConfigFieldModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? type = null,
+    Object? label = null,
+    Object? component = null,
+    Object? formDataType = null,
+    Object? order = null,
+    Object? isRequired = null,
+    Object? isEnabled = null,
+    Object? readOnly = null,
+    Object? keyboardType = freezed,
+    Object? validation = freezed,
+    Object? menuItems = freezed,
+    Object? allowMultipleSelection = freezed,
+    Object? initialValue = freezed,
+    Object? minimum = freezed,
+    Object? maximum = freezed,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      component: null == component
+          ? _value.component
+          : component // ignore: cast_nullable_to_non_nullable
+              as String,
+      formDataType: null == formDataType
+          ? _value.formDataType
+          : formDataType // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+      isRequired: null == isRequired
+          ? _value.isRequired
+          : isRequired // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isEnabled: null == isEnabled
+          ? _value.isEnabled
+          : isEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      readOnly: null == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      keyboardType: freezed == keyboardType
+          ? _value.keyboardType
+          : keyboardType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      validation: freezed == validation
+          ? _value.validation
+          : validation // ignore: cast_nullable_to_non_nullable
+              as List<ValidationRule>?,
+      menuItems: freezed == menuItems
+          ? _value.menuItems
+          : menuItems // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      allowMultipleSelection: freezed == allowMultipleSelection
+          ? _value.allowMultipleSelection
+          : allowMultipleSelection // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      initialValue: freezed == initialValue
+          ? _value.initialValue
+          : initialValue // ignore: cast_nullable_to_non_nullable
+              as int?,
+      minimum: freezed == minimum
+          ? _value.minimum
+          : minimum // ignore: cast_nullable_to_non_nullable
+              as int?,
+      maximum: freezed == maximum
+          ? _value.maximum
+          : maximum // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$RegistrationDeliveryConfigFieldModelImplCopyWith<$Res>
+    implements $RegistrationDeliveryConfigFieldModelCopyWith<$Res> {
+  factory _$$RegistrationDeliveryConfigFieldModelImplCopyWith(
+          _$RegistrationDeliveryConfigFieldModelImpl value,
+          $Res Function(_$RegistrationDeliveryConfigFieldModelImpl) then) =
+      __$$RegistrationDeliveryConfigFieldModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String name,
+      String type,
+      String label,
+      String component,
+      String formDataType,
+      int order,
+      bool isRequired,
+      bool isEnabled,
+      bool readOnly,
+      String? keyboardType,
+      List<ValidationRule>? validation,
+      List<String>? menuItems,
+      bool? allowMultipleSelection,
+      int? initialValue,
+      int? minimum,
+      int? maximum});
+}
+
+/// @nodoc
+class __$$RegistrationDeliveryConfigFieldModelImplCopyWithImpl<$Res>
+    extends _$RegistrationDeliveryConfigFieldModelCopyWithImpl<$Res,
+        _$RegistrationDeliveryConfigFieldModelImpl>
+    implements _$$RegistrationDeliveryConfigFieldModelImplCopyWith<$Res> {
+  __$$RegistrationDeliveryConfigFieldModelImplCopyWithImpl(
+      _$RegistrationDeliveryConfigFieldModelImpl _value,
+      $Res Function(_$RegistrationDeliveryConfigFieldModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? type = null,
+    Object? label = null,
+    Object? component = null,
+    Object? formDataType = null,
+    Object? order = null,
+    Object? isRequired = null,
+    Object? isEnabled = null,
+    Object? readOnly = null,
+    Object? keyboardType = freezed,
+    Object? validation = freezed,
+    Object? menuItems = freezed,
+    Object? allowMultipleSelection = freezed,
+    Object? initialValue = freezed,
+    Object? minimum = freezed,
+    Object? maximum = freezed,
+  }) {
+    return _then(_$RegistrationDeliveryConfigFieldModelImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      type: null == type
+          ? _value.type
+          : type // ignore: cast_nullable_to_non_nullable
+              as String,
+      label: null == label
+          ? _value.label
+          : label // ignore: cast_nullable_to_non_nullable
+              as String,
+      component: null == component
+          ? _value.component
+          : component // ignore: cast_nullable_to_non_nullable
+              as String,
+      formDataType: null == formDataType
+          ? _value.formDataType
+          : formDataType // ignore: cast_nullable_to_non_nullable
+              as String,
+      order: null == order
+          ? _value.order
+          : order // ignore: cast_nullable_to_non_nullable
+              as int,
+      isRequired: null == isRequired
+          ? _value.isRequired
+          : isRequired // ignore: cast_nullable_to_non_nullable
+              as bool,
+      isEnabled: null == isEnabled
+          ? _value.isEnabled
+          : isEnabled // ignore: cast_nullable_to_non_nullable
+              as bool,
+      readOnly: null == readOnly
+          ? _value.readOnly
+          : readOnly // ignore: cast_nullable_to_non_nullable
+              as bool,
+      keyboardType: freezed == keyboardType
+          ? _value.keyboardType
+          : keyboardType // ignore: cast_nullable_to_non_nullable
+              as String?,
+      validation: freezed == validation
+          ? _value._validation
+          : validation // ignore: cast_nullable_to_non_nullable
+              as List<ValidationRule>?,
+      menuItems: freezed == menuItems
+          ? _value._menuItems
+          : menuItems // ignore: cast_nullable_to_non_nullable
+              as List<String>?,
+      allowMultipleSelection: freezed == allowMultipleSelection
+          ? _value.allowMultipleSelection
+          : allowMultipleSelection // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      initialValue: freezed == initialValue
+          ? _value.initialValue
+          : initialValue // ignore: cast_nullable_to_non_nullable
+              as int?,
+      minimum: freezed == minimum
+          ? _value.minimum
+          : minimum // ignore: cast_nullable_to_non_nullable
+              as int?,
+      maximum: freezed == maximum
+          ? _value.maximum
+          : maximum // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$RegistrationDeliveryConfigFieldModelImpl
+    implements _RegistrationDeliveryConfigFieldModel {
+  _$RegistrationDeliveryConfigFieldModelImpl(
+      {required this.name,
+      required this.type,
+      required this.label,
+      required this.component,
+      required this.formDataType,
+      required this.order,
+      required this.isRequired,
+      required this.isEnabled,
+      required this.readOnly,
+      this.keyboardType,
+      final List<ValidationRule>? validation,
+      final List<String>? menuItems,
+      this.allowMultipleSelection,
+      this.initialValue,
+      this.minimum,
+      this.maximum})
+      : _validation = validation,
+        _menuItems = menuItems;
+
+  factory _$RegistrationDeliveryConfigFieldModelImpl.fromJson(
+          Map<String, dynamic> json) =>
+      _$$RegistrationDeliveryConfigFieldModelImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final String type;
+  @override
+  final String label;
+  @override
+  final String component;
+  @override
+  final String formDataType;
+  @override
+  final int order;
+  @override
+  final bool isRequired;
+  @override
+  final bool isEnabled;
+  @override
+  final bool readOnly;
+  @override
+  final String? keyboardType;
+  final List<ValidationRule>? _validation;
+  @override
+  List<ValidationRule>? get validation {
+    final value = _validation;
+    if (value == null) return null;
+    if (_validation is EqualUnmodifiableListView) return _validation;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<String>? _menuItems;
+  @override
+  List<String>? get menuItems {
+    final value = _menuItems;
+    if (value == null) return null;
+    if (_menuItems is EqualUnmodifiableListView) return _menuItems;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  @override
+  final bool? allowMultipleSelection;
+  @override
+  final int? initialValue;
+  @override
+  final int? minimum;
+  @override
+  final int? maximum;
+
+  @override
+  String toString() {
+    return 'RegistrationDeliveryConfigFieldModel(name: $name, type: $type, label: $label, component: $component, formDataType: $formDataType, order: $order, isRequired: $isRequired, isEnabled: $isEnabled, readOnly: $readOnly, keyboardType: $keyboardType, validation: $validation, menuItems: $menuItems, allowMultipleSelection: $allowMultipleSelection, initialValue: $initialValue, minimum: $minimum, maximum: $maximum)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$RegistrationDeliveryConfigFieldModelImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.type, type) || other.type == type) &&
+            (identical(other.label, label) || other.label == label) &&
+            (identical(other.component, component) ||
+                other.component == component) &&
+            (identical(other.formDataType, formDataType) ||
+                other.formDataType == formDataType) &&
+            (identical(other.order, order) || other.order == order) &&
+            (identical(other.isRequired, isRequired) ||
+                other.isRequired == isRequired) &&
+            (identical(other.isEnabled, isEnabled) ||
+                other.isEnabled == isEnabled) &&
+            (identical(other.readOnly, readOnly) ||
+                other.readOnly == readOnly) &&
+            (identical(other.keyboardType, keyboardType) ||
+                other.keyboardType == keyboardType) &&
+            const DeepCollectionEquality()
+                .equals(other._validation, _validation) &&
+            const DeepCollectionEquality()
+                .equals(other._menuItems, _menuItems) &&
+            (identical(other.allowMultipleSelection, allowMultipleSelection) ||
+                other.allowMultipleSelection == allowMultipleSelection) &&
+            (identical(other.initialValue, initialValue) ||
+                other.initialValue == initialValue) &&
+            (identical(other.minimum, minimum) || other.minimum == minimum) &&
+            (identical(other.maximum, maximum) || other.maximum == maximum));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      name,
+      type,
+      label,
+      component,
+      formDataType,
+      order,
+      isRequired,
+      isEnabled,
+      readOnly,
+      keyboardType,
+      const DeepCollectionEquality().hash(_validation),
+      const DeepCollectionEquality().hash(_menuItems),
+      allowMultipleSelection,
+      initialValue,
+      minimum,
+      maximum);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$RegistrationDeliveryConfigFieldModelImplCopyWith<
+          _$RegistrationDeliveryConfigFieldModelImpl>
+      get copyWith => __$$RegistrationDeliveryConfigFieldModelImplCopyWithImpl<
+          _$RegistrationDeliveryConfigFieldModelImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$RegistrationDeliveryConfigFieldModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _RegistrationDeliveryConfigFieldModel
+    implements RegistrationDeliveryConfigFieldModel {
+  factory _RegistrationDeliveryConfigFieldModel(
+      {required final String name,
+      required final String type,
+      required final String label,
+      required final String component,
+      required final String formDataType,
+      required final int order,
+      required final bool isRequired,
+      required final bool isEnabled,
+      required final bool readOnly,
+      final String? keyboardType,
+      final List<ValidationRule>? validation,
+      final List<String>? menuItems,
+      final bool? allowMultipleSelection,
+      final int? initialValue,
+      final int? minimum,
+      final int? maximum}) = _$RegistrationDeliveryConfigFieldModelImpl;
+
+  factory _RegistrationDeliveryConfigFieldModel.fromJson(
+          Map<String, dynamic> json) =
+      _$RegistrationDeliveryConfigFieldModelImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  String get type;
+  @override
+  String get label;
+  @override
+  String get component;
+  @override
+  String get formDataType;
+  @override
+  int get order;
+  @override
+  bool get isRequired;
+  @override
+  bool get isEnabled;
+  @override
+  bool get readOnly;
+  @override
+  String? get keyboardType;
+  @override
+  List<ValidationRule>? get validation;
+  @override
+  List<String>? get menuItems;
+  @override
+  bool? get allowMultipleSelection;
+  @override
+  int? get initialValue;
+  @override
+  int? get minimum;
+  @override
+  int? get maximum;
+  @override
+  @JsonKey(ignore: true)
+  _$$RegistrationDeliveryConfigFieldModelImplCopyWith<
+          _$RegistrationDeliveryConfigFieldModelImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+ValidationRule _$ValidationRuleFromJson(Map<String, dynamic> json) {
+  return _ValidationRule.fromJson(json);
+}
+
+/// @nodoc
+mixin _$ValidationRule {
+  String get pattern => throw _privateConstructorUsedError;
+  String get key => throw _privateConstructorUsedError;
+  String get errorMessage => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $ValidationRuleCopyWith<ValidationRule> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $ValidationRuleCopyWith<$Res> {
+  factory $ValidationRuleCopyWith(
+          ValidationRule value, $Res Function(ValidationRule) then) =
+      _$ValidationRuleCopyWithImpl<$Res, ValidationRule>;
+  @useResult
+  $Res call({String pattern, String key, String errorMessage});
+}
+
+/// @nodoc
+class _$ValidationRuleCopyWithImpl<$Res, $Val extends ValidationRule>
+    implements $ValidationRuleCopyWith<$Res> {
+  _$ValidationRuleCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? pattern = null,
+    Object? key = null,
+    Object? errorMessage = null,
+  }) {
+    return _then(_value.copyWith(
+      pattern: null == pattern
+          ? _value.pattern
+          : pattern // ignore: cast_nullable_to_non_nullable
+              as String,
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$ValidationRuleImplCopyWith<$Res>
+    implements $ValidationRuleCopyWith<$Res> {
+  factory _$$ValidationRuleImplCopyWith(_$ValidationRuleImpl value,
+          $Res Function(_$ValidationRuleImpl) then) =
+      __$$ValidationRuleImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String pattern, String key, String errorMessage});
+}
+
+/// @nodoc
+class __$$ValidationRuleImplCopyWithImpl<$Res>
+    extends _$ValidationRuleCopyWithImpl<$Res, _$ValidationRuleImpl>
+    implements _$$ValidationRuleImplCopyWith<$Res> {
+  __$$ValidationRuleImplCopyWithImpl(
+      _$ValidationRuleImpl _value, $Res Function(_$ValidationRuleImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? pattern = null,
+    Object? key = null,
+    Object? errorMessage = null,
+  }) {
+    return _then(_$ValidationRuleImpl(
+      pattern: null == pattern
+          ? _value.pattern
+          : pattern // ignore: cast_nullable_to_non_nullable
+              as String,
+      key: null == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String,
+      errorMessage: null == errorMessage
+          ? _value.errorMessage
+          : errorMessage // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$ValidationRuleImpl implements _ValidationRule {
+  _$ValidationRuleImpl(
+      {required this.pattern, required this.key, required this.errorMessage});
+
+  factory _$ValidationRuleImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ValidationRuleImplFromJson(json);
+
+  @override
+  final String pattern;
+  @override
+  final String key;
+  @override
+  final String errorMessage;
+
+  @override
+  String toString() {
+    return 'ValidationRule(pattern: $pattern, key: $key, errorMessage: $errorMessage)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$ValidationRuleImpl &&
+            (identical(other.pattern, pattern) || other.pattern == pattern) &&
+            (identical(other.key, key) || other.key == key) &&
+            (identical(other.errorMessage, errorMessage) ||
+                other.errorMessage == errorMessage));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, pattern, key, errorMessage);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$ValidationRuleImplCopyWith<_$ValidationRuleImpl> get copyWith =>
+      __$$ValidationRuleImplCopyWithImpl<_$ValidationRuleImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$ValidationRuleImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _ValidationRule implements ValidationRule {
+  factory _ValidationRule(
+      {required final String pattern,
+      required final String key,
+      required final String errorMessage}) = _$ValidationRuleImpl;
+
+  factory _ValidationRule.fromJson(Map<String, dynamic> json) =
+      _$ValidationRuleImpl.fromJson;
+
+  @override
+  String get pattern;
+  @override
+  String get key;
+  @override
+  String get errorMessage;
+  @override
+  @JsonKey(ignore: true)
+  _$$ValidationRuleImplCopyWith<_$ValidationRuleImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

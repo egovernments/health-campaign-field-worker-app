@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
@@ -75,6 +76,33 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
 
+    void validate(final form, final key, final fieldConfig) {
+      if (fieldConfig?['component'] != 'textField' &&
+          fieldConfig?['component'] != 'dateFormPicker' &&
+          fieldConfig?['component'] != 'dobPicker') {
+        if (form.control(key).value == null &&
+            (fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false)) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+      if (fieldConfig?['component'] == 'dobPicker') {
+        final age = DigitDateUtils.calculateAge(
+          form.control(key).value as DateTime?,
+        );
+        if ((fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false) &&
+            ((age.years == 0 && age.months == 0) ||
+                (age.years >= 150 && age.months > 0))) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+    }
+
     return Scaffold(
       body: ReactiveFormBuilder(
           form: () => mapper.buildForm(bloc.state,localizations),
@@ -97,19 +125,18 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                           const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
                       child: DigitElevatedButton(
                         onPressed: () {
+                          List<AdditionalField> fields = [];
+                          mapper.configs.forEach((key, fieldConfig) {
+                            validate(form, key, fieldConfig);
+                            if (fieldConfig['type'] == 'additionalField' &&
+                                fieldConfig['isEnabled'] == true) {
+                              fields.add(AdditionalField(
+                                key,
+                                form.control(key).value ?? '',
+                              ));
+                            }
+                          });
                           form.markAllAsTouched();
-                          if (form.control(householdStructureKey).value ==
-                                  null &&
-                              (mapper.configs[householdStructureKey]
-                                      ?['isRequired'] ??
-                                  false) && (mapper.configs[householdStructureKey]?['isEnabled'] ?? false)) {
-                            setState(() {
-                              form
-                                  .control(householdStructureKey)
-                                  .setErrors({'': true});
-                            });
-                          }
-
                           if (!form.valid) return;
                           selectedHouseStructureTypes =
                               form.control(householdStructureKey).value;
@@ -156,6 +183,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   additionalFields: HouseholdAdditionalFields(
                                       version: 1,
                                       fields: [
+                                        ...fields,
                                         ...?householdModel
                                             ?.additionalFields?.fields
                                             .where((e) =>
@@ -202,6 +230,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   additionalFields: HouseholdAdditionalFields(
                                       version: 1,
                                       fields: [
+                                        ...fields,
                                     ...?householdModel.additionalFields?.fields
                                         .where((e) =>
                                             e.key !=

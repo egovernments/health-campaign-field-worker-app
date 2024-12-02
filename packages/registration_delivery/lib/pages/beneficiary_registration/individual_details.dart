@@ -160,6 +160,33 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     final theme = Theme.of(context);
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
 
+    void validate(final form, final key, final fieldConfig) {
+      if (fieldConfig?['component'] != 'textField' &&
+          fieldConfig?['component'] != 'dateFormPicker' &&
+          fieldConfig?['component'] != 'dobPicker') {
+        if (form.control(key).value == null &&
+            (fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false)) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+      if (fieldConfig?['component'] == 'dobPicker') {
+        final age = DigitDateUtils.calculateAge(
+          form.control(key).value as DateTime?,
+        );
+        if ((fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false) &&
+            ((age.years == 0 && age.months == 0) ||
+                (age.years >= 150 && age.months > 0))) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+    }
+
     return Scaffold(
       body: ReactiveFormBuilder(
         form: () => mapper.buildForm(bloc.state, context, getGenderOptions),
@@ -211,27 +238,17 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   builder: (context, bool isClicked, _) {
                     return DigitElevatedButton(
                       onPressed: () async {
-                        final age = DigitDateUtils.calculateAge(
-                          form.control(dobKey).value as DateTime?,
-                        );
-                        if ((mapper.configs[dobKey]?['isRequired'] ?? false) &&
-                            (mapper.configs[dobKey]?['isEnabled'] ?? false) &&
-                            ((age.years == 0 && age.months == 0) ||
-                                (age.years >= 150 && age.months > 0))) {
-                          form.control(dobKey).setErrors({'': true});
-                        }
-                        if (form.control(idTypeKey).value == null &&
-                            (mapper.configs[idTypeKey]?['isRequired'] ?? false) &&
-                            (mapper.configs[idTypeKey]?['isEnabled'] ?? false)) {
-                          form.control(idTypeKey).setErrors({'': true});
-                        }
-                        if (form.control(genderKey).value == null &&
-                            (mapper.configs[genderKey]?['isRequired'] ?? false) &&
-                            (mapper.configs[genderKey]?['isEnabled'] ?? false)) {
-                          setState(() {
-                            form.control(genderKey).setErrors({'': true});
-                          });
-                        }
+                        List<AdditionalField> fields = [];
+                        mapper.configs.forEach((key, fieldConfig) {
+                          validate(form, key, fieldConfig);
+                          if (fieldConfig['type'] == 'additionalField' &&
+                              fieldConfig['isEnabled'] == true) {
+                            fields.add(AdditionalField(
+                              key,
+                              form.control(key).value ?? '',
+                            ));
+                          }
+                        });
                         final userId =
                             RegistrationDeliverySingleton().loggedInUserUuid;
                         final projectId =
@@ -256,6 +273,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           ) async {
                             final individual = _getIndividualModel(
                               context,
+                              fields,
                               form: form,
                               oldIndividual: null,
                             );
@@ -312,6 +330,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                 context.read<DigitScannerBloc>();
                             final individual = _getIndividualModel(
                               context,
+                              fields,
                               form: form,
                               oldIndividual: individualModel,
                             );
@@ -374,6 +393,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           ) {
                             final individual = _getIndividualModel(
                               context,
+                              fields,
                               form: form,
                             );
 
@@ -553,7 +573,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   }
 
   IndividualModel _getIndividualModel(
-    BuildContext context, {
+    BuildContext context, List<AdditionalField> fields, {
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
@@ -568,6 +588,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       clientReferenceId: IdGen.i.identifier,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
+      additionalFields: IndividualAdditionalFields(version: 1,fields: fields),
       auditDetails: AuditDetails(
         createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
@@ -587,6 +608,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       individualClientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
+      additionalFields: NameAdditionalFields(version: 1,fields: fields),
       auditDetails: AuditDetails(
         createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
@@ -609,6 +631,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       clientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
+        additionalFields: IdentifierAdditionalFields(version: 1,fields: fields),
       auditDetails: AuditDetails(
         createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),

@@ -33,6 +33,9 @@ class AppConfiguration {
   @Name("FORM_CONFIG")
   late List<FormConfig>? formConfig;
 
+  // @Name("REGISTRATION_DELIVERY_CONFIGS")
+  // late List<RegistrationDeliveryConfig>? registrationDeliveryConfigs;
+
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;
 
@@ -97,6 +100,42 @@ class Languages {
 class BackendInterface {
   @Name("interfaces")
   late List<Interfaces> interfaces;
+}
+
+@embedded
+class RegistrationDeliveryConfig {
+  @Name("name")
+  late String name;
+  late String type;
+  @Name('fields')
+  late List<RegistrationDeliveryConfigField>? fields;
+}
+
+@embedded
+class RegistrationDeliveryConfigField {
+  late String name;
+  late String type;
+  late String label;
+  late String component;
+  late String formDataType;
+  late int order;
+  late bool isRequired;
+  late bool isEnabled;
+  late bool readOnly;
+  late String? keyboardType;
+  late List<ValidationRule>? validation;
+  late List<String>? menuItems;
+  late bool? allowMultipleSelection;
+  late int? initialValue;
+  late int? minimum;
+  late int? maximum;
+}
+
+@embedded
+class ValidationRule {
+  late String pattern;
+  late String key;
+  late String errorMessage;
 }
 
 @embedded

@@ -20,12 +20,15 @@ import '../../pages/beneficiary_registration/individual_details.dart';
 import '../../widgets/showcase/config/showcase_constants.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 import '../constants.dart';
+import '../formController.dart';
 import '../models/widget_config_model.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../utils.dart';
+import '../widgetfactory.dart';
 
 class IndividualsDatailsComponentMapper {
-  static const _individualNameKey = IndividualDetailsPageState.individualNameKey;
+  static const _individualNameKey =
+      IndividualDetailsPageState.individualNameKey;
   static const _idTypeKey = IndividualDetailsPageState.idTypeKey;
   static const _idNumberKey = IndividualDetailsPageState.idNumberKey;
   static const _dobKey = IndividualDetailsPageState.dobKey;
@@ -42,20 +45,19 @@ class IndividualsDatailsComponentMapper {
     'idType': {
       'isEnabled': true,
       'readOnly': false,
-      'isRequired': false,
+      'isRequired': true,
       'order': 2,
     },
     'idNumber': {
       'isEnabled': true,
       'readOnly': false,
       'isRequired': true,
-      'regex': ["^\\d+\$"],
-      "errorMessage": "Invalid input",
       'order': 3,
     },
     'dob': {
       'isEnabled': true,
       'readOnly': false,
+      'isRequired': false,
       'order': 4,
     },
     'gender': {
@@ -69,16 +71,28 @@ class IndividualsDatailsComponentMapper {
       'readOnly': false,
       'order': 6,
     },
+    'abcd': {
+      'type': 'additionalField',
+      'label': 'abcd',
+      'component': 'dobPicker',
+      'formDataType': 'DateTime',
+      'menuItems': ['a', 'b', 'c', 'd'],
+      'isEnabled': true,
+      'readOnly': false,
+      'isRequired': false,
+      'order': 5,
+    }
   };
 
-  List<Widget> buildWidgetsFromConfig(WidgetConfigModel model, bool isHeadOfHousehold) {
+  List<Widget> buildWidgetsFromConfig(
+      WidgetConfigModel model, bool isHeadOfHousehold) {
     List<Widget> widgets = [];
     final localizations = model.localizations;
 
     // Sort the config keys by the 'order' key
     var sortedKeys = model.config.keys.toList();
     sortedKeys.sort(
-            (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
+        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
 
     if (sortedKeys.isEmpty) {
       Widget widget = const AlertDialog(
@@ -92,6 +106,14 @@ class IndividualsDatailsComponentMapper {
 
         if (fieldConfig['isEnabled'] == true) {
           Widget widget;
+          Map<String, String Function(Object control)> validationMessages = {};
+
+          if (fieldConfig['validation'] != null) {
+            fieldConfig['validation'].forEach((element) {
+              validationMessages[element['key']] =
+                  (_) => element['errorMessage'];
+            });
+          }
 
           // Generate the widget based on the fieldConfig['type'] using a switch case
           switch (key) {
@@ -105,14 +127,8 @@ class IndividualsDatailsComponentMapper {
                 readOnly: fieldConfig['readOnly'] ?? false,
                 validationMessages: {
                   'required': (object) => localizations.translate(
-                    '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                  ),
-                  'maxLength': (object) => localizations
-                      .translate(i18.common.maxCharsRequired)
-                      .replaceAll('{}', maxLength.toString()),
-                  'customError': (object) => localizations.translate(
-                    fieldConfig['errorMessage'] ?? '',
-                  )
+                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                      ),
                 },
               );
               if (isHeadOfHousehold) {
@@ -136,7 +152,7 @@ class IndividualsDatailsComponentMapper {
                 ),
                 form: model.form,
                 menuItems: RegistrationDeliverySingleton().idTypeOptions!.map(
-                      (e) {
+                  (e) {
                     return e;
                   },
                 ).toList(),
@@ -149,10 +165,10 @@ class IndividualsDatailsComponentMapper {
                 },
                 isRequired: fieldConfig['isRequired'] ?? false,
                 validationMessage: model.form.control(_idTypeKey).hasErrors &&
-                    model.form.control(_idTypeKey).touched
+                        model.form.control(_idTypeKey).touched
                     ? localizations.translate(
-                  i18.common.corecommonRequired,
-                )
+                        i18.common.corecommonRequired,
+                      )
                     : null,
                 emptyText: localizations.translate(i18.common.noMatchFound),
               );
@@ -160,41 +176,37 @@ class IndividualsDatailsComponentMapper {
             case _idNumberKey:
               widget = model.form.control(_idTypeKey).value != 'DEFAULT'
                   ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ReactiveFormConsumer(
-                    builder: (context, formGroup, child) {
-                      return DigitTextFormField(
-                        readOnly: fieldConfig['readOnly'] ?? false,
-                        isRequired: fieldConfig['isRequired'] ?? false,
-                        formControlName: _idNumberKey,
-                        label: localizations.translate(
-                          i18.individualDetails.idNumberLabelText,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ReactiveFormConsumer(
+                          builder: (context, formGroup, child) {
+                            return DigitTextFormField(
+                              readOnly: fieldConfig['readOnly'] ?? false,
+                              isRequired: fieldConfig['isRequired'] ?? false,
+                              formControlName: _idNumberKey,
+                              label: localizations.translate(
+                                i18.individualDetails.idNumberLabelText,
+                              ),
+                              validationMessages: {
+                                'required': (object) => localizations.translate(
+                                      '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                                    ),
+                              },
+                              padding: const EdgeInsets.only(
+                                top: kPadding * 2,
+                                left: kPadding / 2,
+                                right: kPadding / 2,
+                              ),
+                            );
+                          },
                         ),
-                        validationMessages: {
-                          'required': (object) => localizations.translate(
-                            '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                          ),
-                          'customError': (object) =>
-                              localizations.translate(
-                                fieldConfig['errorMessage'] ?? '',
-                              )
-                        },
-                        padding: const EdgeInsets.only(
-                          top: kPadding * 2,
-                          left: kPadding / 2,
-                          right: kPadding / 2,
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              )
+                      ],
+                    )
                   : SizedBox(height: 16);
               break;
             case _dobKey:
               DateTime before150Years =
-              DateTime(now.year - 150, now.month, now.day);
+                  DateTime(now.year - 150, now.month, now.day);
               widget = individualDetailsShowcaseData.dateOfBirth.buildWith(
                 child: AbsorbPointer(
                   absorbing: fieldConfig['readOnly'] ?? false,
@@ -238,9 +250,9 @@ class IndividualsDatailsComponentMapper {
                         }
                       },
                       cancelText:
-                      localizations.translate(i18.common.coreCommonCancel),
+                          localizations.translate(i18.common.coreCommonCancel),
                       confirmText:
-                      localizations.translate(i18.common.coreCommonOk),
+                          localizations.translate(i18.common.coreCommonOk),
                     ),
                   ),
                 ),
@@ -258,23 +270,23 @@ class IndividualsDatailsComponentMapper {
                     allowMultipleSelection: false,
                     width: 126,
                     initialSelection:
-                    model.form.control(_genderKey).value != null
-                        ? [model.form.control(_genderKey).value]
-                        : [],
+                        model.form.control(_genderKey).value != null
+                            ? [model.form.control(_genderKey).value]
+                            : [],
                     options: RegistrationDeliverySingleton()
                         .genderOptions!
                         .map(
                           (e) => e,
-                    )
+                        )
                         .toList(),
                     onSelectionChanged: (value) {
-                      model.func!(model.form,false,value);
+                      model.func!(model.form, false, value);
                     },
                     valueMapper: (value) {
                       return localizations.translate(value);
                     },
                     errorMessage: model.form.control(_genderKey).hasErrors &&
-                        model.form.control(_genderKey).touched
+                            model.form.control(_genderKey).touched
                         ? localizations.translate(i18.common.corecommonRequired)
                         : null,
                   ),
@@ -294,15 +306,8 @@ class IndividualsDatailsComponentMapper {
                   ),
                   validationMessages: {
                     'required': (object) => localizations.translate(
-                      '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                    ),
-                    'maxLength': (object) => localizations.translate(i18
-                        .individualDetails.mobileNumberLengthValidationMessage),
-                    'minLength': (object) => localizations.translate(i18
-                        .individualDetails.mobileNumberLengthValidationMessage),
-                    'customError': (object) => localizations.translate(
-                      fieldConfig['errorMessage'] ?? '',
-                    )
+                          '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                        ),
                   },
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
@@ -311,15 +316,8 @@ class IndividualsDatailsComponentMapper {
               );
               break;
             default:
-              widget = Container(
-                padding: EdgeInsets.all(10),
-                child: Row(
-                  children: [
-                    const Text('Error:', style: TextStyle(color: Colors.red)),
-                    Text("Unknown key $key")
-                  ],
-                ),
-              );
+              widget = WidgetBuilderFactory.buildWidgetsFromConfig(
+                  key, fieldConfig,model.form, localizations);
           }
 
           widgets.add(widget);
@@ -330,7 +328,8 @@ class IndividualsDatailsComponentMapper {
     return widgets;
   }
 
-  FormGroup buildForm(BeneficiaryRegistrationState state, BuildContext context, Function getGenderOptions) {
+  FormGroup buildForm(BeneficiaryRegistrationState state, BuildContext context,
+      Function getGenderOptions) {
     final individual = state.mapOrNull<IndividualModel>(
       editIndividual: (value) {
         if (value.projectBeneficiaryModel?.tag != null) {
@@ -371,19 +370,45 @@ class IndividualsDatailsComponentMapper {
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat(Constants().dateFormat).parse(
-          individual!.dateOfBirth!,
-        )
+                individual!.dateOfBirth!,
+              )
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
       _mobileNumberKey:
-      FormControl<String>(value: individual?.mobileNumber, validators: [
+          FormControl<String>(value: individual?.mobileNumber, validators: [
         CustomValidator.validMobileNumber,
         CustomValidator.minPhoneNumValidation,
         Validators.maxLength(10)
       ]),
     });
 
+    final existingConfigs = [
+      _dobKey,
+      _genderKey,
+      _idNumberKey,
+      _idTypeKey,
+      _individualNameKey,
+      _mobileNumberKey
+    ];
+
+    Map<String, AbstractControl<dynamic>> newControls = {};
+    configs.forEach((key, fieldConfig) {
+      if (!existingConfigs.contains(key)) {
+        newControls[key] = FormControlFactory.createFormControl(
+            type: fieldConfig['formDataType'],
+            initialValue: fieldConfig['initialValue'] ?? '');
+      }
+    });
+
+    formGroup.addAll(newControls);
+
+    addValidators(formGroup);
+
+    return formGroup;
+  }
+
+  void addValidators(final formGroup) {
     configs.forEach((key, fieldConfig) {
       final formControl = formGroup.control(key);
 
@@ -391,7 +416,7 @@ class IndividualsDatailsComponentMapper {
       final currentValidators = formControl.validators;
 
       List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
-      updatedValidators = currentValidators.where((validator) {
+          updatedValidators = currentValidators.where((validator) {
         // Check if the validator is of the same type as Validators.required
         return validator.runtimeType != Validators.required.runtimeType;
       }).toList();
@@ -407,19 +432,18 @@ class IndividualsDatailsComponentMapper {
 
       // If JSON config has regex, add it as a validator
       if (fieldConfig['isEnabled'] == true &&
-          fieldConfig.containsKey('regex') &&
-          fieldConfig['regex'] is List) {
-        List<String> regexList = fieldConfig['regex'];
-        String errorMessages = fieldConfig['errorMessage'];
+          fieldConfig.containsKey('validation') &&
+          fieldConfig['validation'] is List) {
+        List<dynamic> validationList = fieldConfig['validation'];
 
-        regexList.asMap().forEach((index, regexPattern) {
+        validationList.asMap().forEach((index, regex) {
           updatedValidators.add((control) {
             final value = control.value?.toString() ??
                 ''; // Convert to string or default to empty
-            if (value.isNotEmpty && !RegExp(regexPattern).hasMatch(value)) {
+            if (value.isNotEmpty && !RegExp(regex['pattern']).hasMatch(value)) {
               // Ensure there's a matching error message for this index
               return {
-                'customError': errorMessages[index]
+                '${regex['key']}': regex['errorMessage']
               }; // Use the correct error message for the index
             }
             return null;
@@ -433,7 +457,5 @@ class IndividualsDatailsComponentMapper {
       // Re-run validation with the new validators
       formControl.updateValueAndValidity();
     });
-
-    return formGroup;
   }
 }

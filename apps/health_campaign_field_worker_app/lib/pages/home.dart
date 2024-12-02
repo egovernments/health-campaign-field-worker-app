@@ -650,19 +650,19 @@ void setPackagesSingleton(BuildContext context) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
-          formConfig: appConfiguration.formConfig?.map((e) => FormConfigModel()
-            ..name = e.name
-            ..type = e.type
-            ..fields = e.fields?.map((field) => FormConfigFieldModel()
-              ..name = field.name
-              ..isEnabled = field.isEnabled
-              ..readOnly = field.readOnly
-              ..isRequired = field.isRequired
-              ..order = field.order
-              ..regex = field.regex
-              ..errorMessage = field.errorMessage,
-            ).toList()
-          ).toList(),
+          // formConfig: appConfiguration.formConfig?.map((e) => FormConfigModel()
+          //   ..name = e.name
+          //   ..type = e.type
+          //   ..fields = e.fields?.map((field) => FormConfigFieldModel()
+          //     ..name = field.name
+          //     ..isEnabled = field.isEnabled
+          //     ..readOnly = field.readOnly
+          //     ..isRequired = field.isRequired
+          //     ..order = field.order
+          //     ..regex = field.regex
+          //     ..errorMessage = field.errorMessage,
+          //   ).toList()
+          // ).toList(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,

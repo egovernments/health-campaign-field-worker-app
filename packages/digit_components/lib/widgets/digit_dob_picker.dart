@@ -132,7 +132,7 @@ class DigitDobPicker extends StatelessWidget {
             ReactiveFormConsumer(
               builder: (context, form, child) {
                 final datePickerControl = form.control(datePickerFormControl);
-                if (datePickerControl.hasErrors) {
+                if (datePickerControl.hasErrors && datePickerControl.touched) {
                   return Text(
                     yearsAndMonthsErrMsg,
                     style:

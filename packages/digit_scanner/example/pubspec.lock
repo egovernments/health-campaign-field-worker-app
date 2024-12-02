@@ -308,11 +308,10 @@ packages:
   digit_components:
     dependency: transitive
     description:
-      name: digit_components
-      sha256: "9cca4d9a546037080afe02b6ade82fdf01574e11f5656ad12120fd6966578616"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1+1"
+      path: "../../digit_components"
+      relative: true
+    source: path
+    version: "1.0.2+1"
   digit_scanner:
     dependency: "direct main"
     description:

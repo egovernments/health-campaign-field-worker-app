@@ -340,10 +340,9 @@ packages:
   digit_components:
     dependency: "direct main"
     description:
-      name: digit_components
-      sha256: "07b585e5d8010639366da72a4a8b215ce9b8790c75b2162b66af3cea57ca35d9"
-      url: "https://pub.dev"
-    source: hosted
+      path: "../digit_components"
+      relative: true
+    source: path
     version: "1.0.2+1"
   easy_stepper:
     dependency: transitive

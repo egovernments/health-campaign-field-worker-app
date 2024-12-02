@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -77,6 +78,34 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     final theme = Theme.of(context);
     final bloc = context.read<BeneficiaryRegistrationBloc>();
     final router = context.router;
+
+    void validate(final form, final key, final fieldConfig) {
+      if (fieldConfig?['component'] != 'textField' &&
+          fieldConfig?['component'] != 'dateFormPicker' &&
+          fieldConfig?['component'] != 'dobPicker') {
+        if (form.control(key).value == null &&
+            (fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false)) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+      if (fieldConfig?['component'] == 'dobPicker') {
+        final age = DigitDateUtils.calculateAge(
+          form.control(key).value as DateTime?,
+        );
+        if ((fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false) &&
+            ((age.years == 0 && age.months == 0) ||
+                (age.years >= 150 && age.months > 0))) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+    }
+
     return Scaffold(
       body: BlocBuilder<BeneficiaryRegistrationBloc,
           BeneficiaryRegistrationState>(builder: (context, registrationState) {
@@ -130,6 +159,17 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
+                        List<AdditionalField> fields = [];
+                        mapper.configs.forEach((key, fieldConfig) {
+                          validate(form, key, fieldConfig);
+                          if (fieldConfig['type'] == 'additionalField' &&
+                              fieldConfig['isEnabled'] == true) {
+                            fields.add(AdditionalField(
+                              key,
+                              form.control(key).value ?? '',
+                            ));
+                          }
+                        });
                         form.markAllAsTouched();
                         if (!form.valid) return;
 
@@ -191,6 +231,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               tenantId:
                                   RegistrationDeliverySingleton().tenantId,
                               rowVersion: 1,
+                              additionalFields: AddressAdditionalFields(
+                                  version: 1, fields: fields),
                               auditDetails: AuditDetails(
                                 createdBy: RegistrationDeliverySingleton()
                                     .loggedInUserUuid!,
@@ -244,8 +286,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                               type: AddressType.correspondence,
                               latitude: form.control(latKey).value,
                               longitude: form.control(lngKey).value,
-                              locationAccuracy:
-                                  form.control(accuracyKey).value,
+                              locationAccuracy: form.control(accuracyKey).value,
+                              additionalFields: AddressAdditionalFields(
+                                  version: 1, fields: fields),
                             );
                             // TODO [Linking of Voucher for Household based project  need to be handled]
 
@@ -288,7 +331,10 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                             )),
                         Column(
                             children: mapper.buildWidgetsFromConfig(
-                                WidgetConfigModel(config: mapper.configs, form: form, localizations: localizations)))
+                                WidgetConfigModel(
+                                    config: mapper.configs,
+                                    form: form,
+                                    localizations: localizations)))
                       ],
                     ),
                   ),
