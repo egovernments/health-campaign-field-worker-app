@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:formula_parser/formula_parser.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -132,9 +133,10 @@ bool checkEligibilityForAgeAndSideEffect(
               : false
           : false;
     } else {
-      if(projectType?.validMaxAge!=null && projectType?.validMinAge!=null){
+      if (projectType?.validMaxAge != null &&
+          projectType?.validMinAge != null) {
         return totalAgeMonths >= projectType!.validMinAge! &&
-            totalAgeMonths <= projectType.validMaxAge!
+                totalAgeMonths <= projectType.validMaxAge!
             ? true
             : false;
       }
@@ -328,6 +330,7 @@ class RegistrationDeliverySingleton {
   List<String>? _referralReasons;
   List<String>? _houseStructureTypes;
   List<String>? _refusalReasons;
+  HouseholdType? _householdType;
 
   void setBoundary({required BoundaryModel boundary}) {
     _boundaryModel = boundary;
@@ -381,6 +384,10 @@ class RegistrationDeliverySingleton {
     _tenantId = tenantId;
   }
 
+  void setHouseholdType(HouseholdType? householdType) {
+    _householdType = householdType;
+  }
+
   String? get tenantId => _tenantId;
   String? get loggedInUserUuid => _loggedInUserUuid;
   double? get maxRadius => _maxRadius;
@@ -404,6 +411,7 @@ class RegistrationDeliverySingleton {
   List<String>? get houseStructureTypes => _houseStructureTypes;
   List<String>? get refusalReasons => _refusalReasons;
   UserModel? get loggedInUser => _loggedInUser;
+  HouseholdType? get householdType => _householdType;
 }
 
 bool allDosesDelivered(

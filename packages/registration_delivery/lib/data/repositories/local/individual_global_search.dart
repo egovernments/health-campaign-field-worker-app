@@ -169,6 +169,12 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     } else if (params.isProximityEnabled) {
       selectQuery = super.sql.individual.select().join([
         joinIndividualAddress(sql),
+        leftOuterJoin(sql.household,
+            sql.household.householdType.equalsValue(params.householdType)),
+        leftOuterJoin(
+            sql.householdMember,
+            sql.householdMember.individualClientReferenceId
+                .equalsExp(sql.individual.clientReferenceId)),
         leftOuterJoin(
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
@@ -192,6 +198,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               params.maxRadius != null)
             sql.address.longitude.isNotNull(),
           sql.address.latitude.isNotNull(),
+          sql.householdMember.householdClientReferenceId
+              .equalsExp(sql.household.clientReferenceId),
         ]))
         ..orderBy([
           if (params.latitude != null &&
@@ -242,8 +250,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.householdMember.individualClientReferenceId
                   .equalsExp(sql.individual.clientReferenceId))
         ])
-          ..where(sql.householdMember.householdClientReferenceId
-              .equals(params.householdClientReferenceId ?? ''));
+          ..where(buildAnd([
+            sql.household.householdType.equalsValue(params.householdType),
+            sql.householdMember.householdClientReferenceId
+                .equals(params.householdClientReferenceId ?? '')
+          ]));
       } else {
         selectQuery = selectQuery.join([
           leftOuterJoin(
@@ -261,7 +272,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.projectBeneficiary,
               sql.projectBeneficiary.beneficiaryClientReferenceId
                   .equalsExp(sql.household.clientReferenceId))
-        ]);
+        ]).where(sql.household.householdType.equalsValue(params.householdType));
       }
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&

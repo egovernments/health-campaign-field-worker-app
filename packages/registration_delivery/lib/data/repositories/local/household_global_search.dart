@@ -196,6 +196,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
               params.maxRadius != null)
             sql.address.longitude.isNotNull(),
           sql.address.latitude.isNotNull(),
+          sql.household.householdType.equalsValue(params.householdType)
         ]))
         ..orderBy([
           if (params.latitude != null &&
@@ -245,7 +246,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             sql.projectBeneficiary,
             sql.projectBeneficiary.beneficiaryClientReferenceId
                 .equalsExp(sql.household.clientReferenceId))
-      ]);
+      ]).where(sql.household.householdType.equalsValue(params.householdType));
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
@@ -283,9 +284,13 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
                 sql.projectBeneficiary.beneficiaryClientReferenceId
                     .equalsExp(sql.household.clientReferenceId))
         ])
-          ..where(filter == Status.registered.name
-              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+          ..where(buildAnd([
+            sql.household.householdType.equalsValue(params.householdType),
+            filter == Status.registered.name
+                ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .isNotNull()
+                : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull()
+          ]));
       } else {
         var filterSearchQuery =
             await filterTasks(selectQuery, filter, sql, params);
@@ -341,9 +346,12 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
             sql.household.clientReferenceId
                 .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId))
       ])
-        ..where(sql.task.status.equals(
-          statusMap[applyFilter]!.toValue(),
-        ));
+        ..where(buildAnd([
+          sql.household.householdType.equalsValue(params.householdType),
+          sql.task.status.equals(
+            statusMap[applyFilter]!.toValue(),
+          )
+        ]));
       if (!(params.filter!.contains(Status.notRegistered.name))) {
         selectQuery
             .where(sql.projectBeneficiary.projectId.equals(params.projectId!));
@@ -409,6 +417,7 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
           final address = e.readTableOrNull(sql.address);
 
           return HouseholdModel(
+            householdType: household.householdType,
             id: household.id,
             tenantId: household.tenantId,
             clientReferenceId: household.clientReferenceId,

@@ -61,6 +61,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         offset: event.globalSearchParams.offset,
         limit: event.globalSearchParams.limit,
         totalCount: state.totalResults,
+        householdType: event.globalSearchParams.householdType,
       ),
     );
 

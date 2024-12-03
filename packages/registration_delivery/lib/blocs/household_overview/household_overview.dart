@@ -15,6 +15,7 @@ import '../../models/entities/household_member.dart';
 import '../../models/entities/project_beneficiary.dart';
 import '../../models/entities/referral.dart';
 import '../../models/entities/side_effect.dart';
+import '../../models/entities/status.dart';
 import '../../models/entities/task.dart';
 import '../../utils/typedefs.dart';
 import '../search_households/search_households.dart';
@@ -305,109 +306,351 @@ class HouseholdOverviewBloc
         ));
         return;
       }
+      if (event.selectedFilter!.contains(Status.registered.name) ||
+          event.selectedFilter!.contains(Status.notRegistered.name)) {
+        late List<String> individualClientReferenceIds = [];
 
-      late List<String> individualClientReferenceIds = [];
+        result.forEach((e) {
+          individualClientReferenceIds.add(e.clientReferenceId);
+        });
 
-      result.forEach((e) {
-        individualClientReferenceIds.add(e.clientReferenceId);
-      });
+        List<IndividualModel> individuals = await individualRepository.search(
+            IndividualSearchModel(
+                clientReferenceId: individualClientReferenceIds
+                    .map((e) => e.toString())
+                    .toList()));
 
-      List<IndividualModel> individuals = await individualRepository.search(
+        final projectBeneficiaries = await projectBeneficiaryRepository.search(
+          ProjectBeneficiarySearchModel(
+            beneficiaryClientReferenceId: event.projectBeneficiaryType ==
+                    BeneficiaryType.individual
+                ? individualClientReferenceIds
+                : [state.householdMemberWrapper.household!.clientReferenceId],
+            projectId: [event.projectId],
+          ),
+        );
+
+        final beneficiaryClientReferenceIds = projectBeneficiaries
+            .map((e) => e.beneficiaryClientReferenceId)
+            .toList();
+
+        final List<IndividualModel> beneficiaryIndividuals = individuals
+            .where((element) => beneficiaryClientReferenceIds
+                .contains(element.clientReferenceId))
+            .toList();
+
+        final tasks = await taskDataRepository.search(TaskSearchModel(
+          projectBeneficiaryClientReferenceId:
+              projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+          projectId: event.projectId,
+        ));
+
+        // Search for adverse events associated with tasks.
+        final sideEffects =
+            await sideEffectDataRepository.search(SideEffectSearchModel(
+          taskClientReferenceId:
+              tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
+        ));
+
+        final referrals =
+            await referralDataRepository.search(ReferralSearchModel(
+          projectBeneficiaryClientReferenceId: projectBeneficiaries
+              .map((e) => e.clientReferenceId)
+              .whereNotNull()
+              .toList(),
+        ));
+
+        emit(state.copyWith(
+          loading: false,
+          offset: individuals.isNotEmpty
+              ? (event.offset ?? 0) + (event.limit ?? 10)
+              : null,
+          householdMemberWrapper: state.householdMemberWrapper.copyWith(
+            members: event.offset == 0
+                ? (event.projectBeneficiaryType == BeneficiaryType.individual)
+                    ? beneficiaryIndividuals
+                    : individuals
+                : [
+                    ...{
+                      ...state.householdMemberWrapper.members ?? [],
+                      ...((event.projectBeneficiaryType ==
+                              BeneficiaryType.individual)
+                          ? beneficiaryIndividuals
+                          : individuals),
+                    },
+                  ],
+            projectBeneficiaries: event.offset == 0
+                ? projectBeneficiaries
+                : [
+                    ...{
+                      ...state.householdMemberWrapper.projectBeneficiaries ??
+                          [],
+                      ...projectBeneficiaries,
+                    },
+                  ],
+            tasks: event.offset == 0
+                ? tasks
+                : [
+                    ...{...?state.householdMemberWrapper.tasks, ...tasks},
+                  ],
+            sideEffects: event.offset == 0
+                ? sideEffects
+                : [
+                    ...{
+                      ...?state.householdMemberWrapper.sideEffects,
+                      ...sideEffects,
+                    },
+                  ],
+            referrals: event.offset == 0
+                ? referrals
+                : [
+                    ...{
+                      ...?state.householdMemberWrapper.referrals,
+                      ...referrals,
+                    },
+                  ],
+          ),
+          limit: event.limit,
+        ));
+      } else if (event.selectedFilter != null &&
+          event.selectedFilter!.isNotEmpty) {
+        late List<String> listOfBeneficiaries = [];
+        for (var e in result) {
+          !listOfBeneficiaries.contains(e.projectBeneficiaryClientReferenceId)
+              ? listOfBeneficiaries.add(e.projectBeneficiaryClientReferenceId)
+              : null;
+        }
+
+        List<ProjectBeneficiaryModel> projectBeneficiariesList =
+            await projectBeneficiaryRepository.search(
+                ProjectBeneficiarySearchModel(projectId: [
+          RegistrationDeliverySingleton().projectId.toString()
+        ], clientReferenceId: listOfBeneficiaries));
+
+        late List<String> listOfMembers = [];
+
+        listOfMembers = projectBeneficiariesList
+            .map((e) => e.beneficiaryClientReferenceId.toString())
+            .toList();
+
+        List<HouseholdMemberModel> householdMemberList =
+            await householdMemberRepository.search(HouseholdMemberSearchModel(
+                individualClientReferenceId: listOfMembers));
+
+        final List<String> individualClientReferenceIds = householdMemberList
+            .map((e) => e.individualClientReferenceId.toString())
+            .toList();
+
+        final List<IndividualModel> individualsList =
+            await individualRepository.search(
           IndividualSearchModel(
-              clientReferenceId: individualClientReferenceIds
-                  .map((e) => e.toString())
-                  .toList()));
+              clientReferenceId: individualClientReferenceIds),
+        );
 
-      final projectBeneficiaries = await projectBeneficiaryRepository.search(
-        ProjectBeneficiarySearchModel(
-          beneficiaryClientReferenceId:
-              event.projectBeneficiaryType == BeneficiaryType.individual
-                  ? individualClientReferenceIds
-                  : [state.householdMemberWrapper.household!.clientReferenceId],
-          projectId: [event.projectId],
-        ),
-      );
+        late List<String> householdClientReferenceIds = [];
 
-      final beneficiaryClientReferenceIds = projectBeneficiaries
-          .map((e) => e.beneficiaryClientReferenceId)
-          .toList();
+        householdClientReferenceIds = householdMemberList
+            .map((e) => e.householdClientReferenceId.toString())
+            .toList();
 
-      final List<IndividualModel> beneficiaryIndividuals = individuals
-          .where((element) =>
-              beneficiaryClientReferenceIds.contains(element.clientReferenceId))
-          .toList();
+        final projectBeneficiaries = await projectBeneficiaryRepository.search(
+          ProjectBeneficiarySearchModel(
+            beneficiaryClientReferenceId: event.projectBeneficiaryType ==
+                    BeneficiaryType.individual
+                ? individualClientReferenceIds
+                : [state.householdMemberWrapper.household!.clientReferenceId],
+            projectId: [event.projectId],
+          ),
+        );
 
-      final tasks = await taskDataRepository.search(TaskSearchModel(
-        projectBeneficiaryClientReferenceId:
-            projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
-        projectId: event.projectId,
-      ));
+        final beneficiaryClientReferenceIds = projectBeneficiaries
+            .map((e) => e.beneficiaryClientReferenceId)
+            .toList();
 
-      // Search for adverse events associated with tasks.
-      final sideEffects =
-          await sideEffectDataRepository.search(SideEffectSearchModel(
-        taskClientReferenceId:
-            tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
-      ));
+        final List<IndividualModel> beneficiaryIndividuals = individualsList
+            .where((element) => beneficiaryClientReferenceIds
+                .contains(element.clientReferenceId))
+            .toList();
 
-      final referrals = await referralDataRepository.search(ReferralSearchModel(
-        projectBeneficiaryClientReferenceId: projectBeneficiaries
-            .map((e) => e.clientReferenceId)
-            .whereNotNull()
-            .toList(),
-      ));
+        final tasks = await taskDataRepository.search(TaskSearchModel(
+          projectBeneficiaryClientReferenceId:
+              projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+          projectId: event.projectId,
+        ));
 
-      emit(state.copyWith(
-        loading: false,
-        offset: individuals.isNotEmpty
-            ? (event.offset ?? 0) + (event.limit ?? 10)
-            : null,
-        householdMemberWrapper: state.householdMemberWrapper.copyWith(
-          members: event.offset == 0
-              ? (event.projectBeneficiaryType == BeneficiaryType.individual)
-                  ? beneficiaryIndividuals
-                  : individuals
-              : [
-                  ...{
-                    ...state.householdMemberWrapper.members ?? [],
-                    ...((event.projectBeneficiaryType ==
-                            BeneficiaryType.individual)
-                        ? beneficiaryIndividuals
-                        : individuals),
-                  },
-                ],
-          projectBeneficiaries: event.offset == 0
-              ? projectBeneficiaries
-              : [
-                  ...{
-                    ...state.householdMemberWrapper.projectBeneficiaries ?? [],
-                    ...projectBeneficiaries,
-                  },
-                ],
-          tasks: event.offset == 0
-              ? tasks
-              : [
-                  ...{...?state.householdMemberWrapper.tasks, ...tasks},
-                ],
-          sideEffects: event.offset == 0
-              ? sideEffects
-              : [
-                  ...{
-                    ...?state.householdMemberWrapper.sideEffects,
-                    ...sideEffects,
-                  },
-                ],
-          referrals: event.offset == 0
-              ? referrals
-              : [
-                  ...{
-                    ...?state.householdMemberWrapper.referrals,
-                    ...referrals,
-                  },
-                ],
-        ),
-        limit: event.limit,
-      ));
+        // Search for adverse events associated with tasks.
+        final sideEffects =
+            await sideEffectDataRepository.search(SideEffectSearchModel(
+          taskClientReferenceId:
+              tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
+        ));
+
+        final referrals =
+            await referralDataRepository.search(ReferralSearchModel(
+          projectBeneficiaryClientReferenceId: projectBeneficiaries
+              .map((e) => e.clientReferenceId)
+              .whereNotNull()
+              .toList(),
+        ));
+
+        emit(state.copyWith(
+          loading: false,
+          offset: individualsList.isNotEmpty
+              ? (event.offset ?? 0) + (event.limit ?? 10)
+              : null,
+          householdMemberWrapper: state.householdMemberWrapper.copyWith(
+            members: event.offset == 0
+                ? (event.projectBeneficiaryType == BeneficiaryType.individual)
+                    ? beneficiaryIndividuals
+                    : individualsList
+                : [
+                    ...{
+                      ...state.householdMemberWrapper.members ?? [],
+                      ...((event.projectBeneficiaryType ==
+                              BeneficiaryType.individual)
+                          ? beneficiaryIndividuals
+                          : individualsList),
+                    },
+                  ],
+            projectBeneficiaries: event.offset == 0
+                ? projectBeneficiaries
+                : [
+                    ...{
+                      ...state.householdMemberWrapper.projectBeneficiaries ??
+                          [],
+                      ...projectBeneficiaries,
+                    },
+                  ],
+            tasks: event.offset == 0
+                ? tasks
+                : [
+                    ...{...?state.householdMemberWrapper.tasks, ...tasks},
+                  ],
+            sideEffects: event.offset == 0
+                ? sideEffects
+                : [
+                    ...{
+                      ...?state.householdMemberWrapper.sideEffects,
+                      ...sideEffects,
+                    },
+                  ],
+            referrals: event.offset == 0
+                ? referrals
+                : [
+                    ...{
+                      ...?state.householdMemberWrapper.referrals,
+                      ...referrals,
+                    },
+                  ],
+          ),
+          limit: event.limit,
+        ));
+      } else {
+        late List<String> individualClientReferenceIds = [];
+
+        result.forEach((e) {
+          individualClientReferenceIds.add(e.clientReferenceId);
+        });
+
+        List<IndividualModel> individuals = await individualRepository.search(
+            IndividualSearchModel(
+                clientReferenceId: individualClientReferenceIds
+                    .map((e) => e.toString())
+                    .toList()));
+
+        final projectBeneficiaries = await projectBeneficiaryRepository.search(
+          ProjectBeneficiarySearchModel(
+            beneficiaryClientReferenceId: event.projectBeneficiaryType ==
+                    BeneficiaryType.individual
+                ? individualClientReferenceIds
+                : [state.householdMemberWrapper.household!.clientReferenceId],
+            projectId: [event.projectId],
+          ),
+        );
+
+        final beneficiaryClientReferenceIds = projectBeneficiaries
+            .map((e) => e.beneficiaryClientReferenceId)
+            .toList();
+
+        final List<IndividualModel> beneficiaryIndividuals = individuals
+            .where((element) => beneficiaryClientReferenceIds
+                .contains(element.clientReferenceId))
+            .toList();
+
+        final tasks = await taskDataRepository.search(TaskSearchModel(
+          projectBeneficiaryClientReferenceId:
+              projectBeneficiaries.map((e) => e.clientReferenceId).toList(),
+          projectId: event.projectId,
+        ));
+
+        // Search for adverse events associated with tasks.
+        final sideEffects =
+            await sideEffectDataRepository.search(SideEffectSearchModel(
+          taskClientReferenceId:
+              tasks.map((e) => e.clientReferenceId).whereNotNull().toList(),
+        ));
+
+        final referrals =
+            await referralDataRepository.search(ReferralSearchModel(
+          projectBeneficiaryClientReferenceId: projectBeneficiaries
+              .map((e) => e.clientReferenceId)
+              .whereNotNull()
+              .toList(),
+        ));
+
+        emit(state.copyWith(
+          loading: false,
+          offset: individuals.isNotEmpty
+              ? (event.offset ?? 0) + (event.limit ?? 10)
+              : null,
+          householdMemberWrapper: state.householdMemberWrapper.copyWith(
+            members: event.offset == 0
+                ? (event.projectBeneficiaryType == BeneficiaryType.individual)
+                    ? beneficiaryIndividuals
+                    : individuals
+                : [
+                    ...{
+                      ...state.householdMemberWrapper.members ?? [],
+                      ...((event.projectBeneficiaryType ==
+                              BeneficiaryType.individual)
+                          ? beneficiaryIndividuals
+                          : individuals),
+                    },
+                  ],
+            projectBeneficiaries: event.offset == 0
+                ? projectBeneficiaries
+                : [
+                    ...{
+                      ...state.householdMemberWrapper.projectBeneficiaries ??
+                          [],
+                      ...projectBeneficiaries,
+                    },
+                  ],
+            tasks: event.offset == 0
+                ? tasks
+                : [
+                    ...{...?state.householdMemberWrapper.tasks, ...tasks},
+                  ],
+            sideEffects: event.offset == 0
+                ? sideEffects
+                : [
+                    ...{
+                      ...?state.householdMemberWrapper.sideEffects,
+                      ...sideEffects,
+                    },
+                  ],
+            referrals: event.offset == 0
+                ? referrals
+                : [
+                    ...{
+                      ...?state.householdMemberWrapper.referrals,
+                      ...referrals,
+                    },
+                  ],
+          ),
+          limit: event.limit,
+        ));
+      }
     }
   }
 

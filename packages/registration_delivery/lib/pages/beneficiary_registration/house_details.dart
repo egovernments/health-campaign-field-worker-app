@@ -65,69 +65,122 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       ],
                     ),
                     footer: DigitCard(
-                      margin: const EdgeInsets.only(top: spacer2),
-                      padding:
-                          const EdgeInsets.all(spacer2),
-                      children: [Button(
-                        onPressed: () {
-                          form.markAllAsTouched();
-                          if (form.control(_householdStructureKey).value ==
-                              null) {
-                            setState(() {
-                              form
-                                  .control(_householdStructureKey)
-                                  .setErrors({'': true});
-                            });
-                          }
+                        margin: const EdgeInsets.only(top: spacer2),
+                        padding: const EdgeInsets.all(spacer2),
+                        children: [
+                          Button(
+                            onPressed: () {
+                              form.markAllAsTouched();
+                              if (form.control(_householdStructureKey).value ==
+                                  null) {
+                                setState(() {
+                                  form
+                                      .control(_householdStructureKey)
+                                      .setErrors({'': true});
+                                });
+                              }
 
-                          if (!form.valid) return;
-                          selectedHouseStructureTypes =
-                              form.control(_householdStructureKey).value;
+                              if (!form.valid) return;
+                              selectedHouseStructureTypes =
+                                  form.control(_householdStructureKey).value;
 
-                          final noOfRooms =
-                              form.control(_noOfRoomsKey).value as int;
-                          registrationState.maybeWhen(
-                            orElse: () {
-                              return;
-                            },
-                            create: (
-                              address,
-                              householdModel,
-                              individualModel,
-                              projectBeneficiaryModel,
-                              registrationDate,
-                              searchQuery,
-                              loading,
-                              isHeadOfHousehold,
-                            ) {
-                              var houseModel = HouseholdModel(
-                                  clientReferenceId: IdGen.i.identifier,
-                                  tenantId:
-                                      RegistrationDeliverySingleton().tenantId,
-                                  rowVersion: 1,
-                                  auditDetails: AuditDetails(
-                                    createdBy: RegistrationDeliverySingleton()
-                                        .loggedInUserUuid!,
-                                    createdTime:
-                                        context.millisecondsSinceEpoch(),
-                                  ),
-                                  memberCount: householdModel?.memberCount,
-                                  clientAuditDetails: ClientAuditDetails(
-                                    createdBy: RegistrationDeliverySingleton()
-                                        .loggedInUserUuid!,
-                                    createdTime:
-                                        context.millisecondsSinceEpoch(),
-                                    lastModifiedBy:
-                                        RegistrationDeliverySingleton()
-                                            .loggedInUserUuid,
-                                    lastModifiedTime:
-                                        context.millisecondsSinceEpoch(),
-                                  ),
-                                  additionalFields: HouseholdAdditionalFields(
-                                      version: 1,
-                                      fields: [
+                              final noOfRooms =
+                                  form.control(_noOfRoomsKey).value as int;
+                              registrationState.maybeWhen(
+                                orElse: () {
+                                  return;
+                                },
+                                create: (
+                                  address,
+                                  householdModel,
+                                  individualModel,
+                                  projectBeneficiaryModel,
+                                  registrationDate,
+                                  searchQuery,
+                                  loading,
+                                  isHeadOfHousehold,
+                                ) {
+                                  var houseModel = HouseholdModel(
+                                      householdType:
+                                          RegistrationDeliverySingleton()
+                                              .householdType,
+                                      clientReferenceId: IdGen.i.identifier,
+                                      tenantId: RegistrationDeliverySingleton()
+                                          .tenantId,
+                                      rowVersion: 1,
+                                      auditDetails: AuditDetails(
+                                        createdBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      memberCount: householdModel?.memberCount,
+                                      clientAuditDetails: ClientAuditDetails(
+                                        createdBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid!,
+                                        createdTime:
+                                            context.millisecondsSinceEpoch(),
+                                        lastModifiedBy:
+                                            RegistrationDeliverySingleton()
+                                                .loggedInUserUuid,
+                                        lastModifiedTime:
+                                            context.millisecondsSinceEpoch(),
+                                      ),
+                                      additionalFields:
+                                          HouseholdAdditionalFields(
+                                              version: 1,
+                                              fields: [
+                                            ...?householdModel
+                                                ?.additionalFields?.fields
+                                                .where((e) =>
+                                                    e.key !=
+                                                        AdditionalFieldsType
+                                                            .houseStructureTypes
+                                                            .toValue() &&
+                                                    e.key !=
+                                                        AdditionalFieldsType
+                                                            .noOfRooms
+                                                            .toValue()),
+                                            AdditionalField(
+                                              AdditionalFieldsType
+                                                  .houseStructureTypes
+                                                  .toValue(),
+                                              selectedHouseStructureTypes
+                                                  ?.join("|")
+                                                  .toString(),
+                                            ),
+                                            AdditionalField(
+                                              AdditionalFieldsType.noOfRooms
+                                                  .toValue(),
+                                              noOfRooms,
+                                            )
+                                          ]));
+
+                                  bloc.add(
+                                    BeneficiaryRegistrationSaveHouseDetailsEvent(
+                                      model: houseModel,
+                                    ),
+                                  );
+                                  router.push(HouseHoldDetailsRoute());
+                                },
+                                editHousehold: (
+                                  address,
+                                  householdModel,
+                                  individuals,
+                                  registrationDate,
+                                  projectBeneficiaryModel,
+                                  loading,
+                                  headOfHousehold,
+                                ) {
+                                  var houseModel = householdModel.copyWith(
+                                      additionalFields:
+                                          HouseholdAdditionalFields(
+                                              version: 1,
+                                              fields: [
                                         ...?householdModel
-                                            ?.additionalFields?.fields
+                                            .additionalFields?.fields
                                             .where((e) =>
                                                 e.key !=
                                                     AdditionalFieldsType
@@ -151,72 +204,29 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                           noOfRooms,
                                         )
                                       ]));
+                                  // TODO [Linking of Voucher for Household based project  need to be handled]
 
-                              bloc.add(
-                                BeneficiaryRegistrationSaveHouseDetailsEvent(
-                                  model: houseModel,
-                                ),
-                              );
-                              router.push(HouseHoldDetailsRoute());
-                            },
-                            editHousehold: (
-                              address,
-                              householdModel,
-                              individuals,
-                              registrationDate,
-                              projectBeneficiaryModel,
-                              loading,
-                              headOfHousehold,
-                            ) {
-                              var houseModel = householdModel.copyWith(
-                                  additionalFields: HouseholdAdditionalFields(
-                                      version: 1,
-                                      fields: [
-                                    ...?householdModel.additionalFields?.fields
-                                        .where((e) =>
-                                            e.key !=
-                                                AdditionalFieldsType
-                                                    .houseStructureTypes
-                                                    .toValue() &&
-                                            e.key !=
-                                                AdditionalFieldsType.noOfRooms
-                                                    .toValue()),
-                                    AdditionalField(
-                                      AdditionalFieldsType.houseStructureTypes
-                                          .toValue(),
-                                      selectedHouseStructureTypes
-                                          ?.join("|")
-                                          .toString(),
+                                  bloc.add(
+                                    BeneficiaryRegistrationSaveHouseDetailsEvent(
+                                      model: houseModel,
                                     ),
-                                    AdditionalField(
-                                      AdditionalFieldsType.noOfRooms.toValue(),
-                                      noOfRooms,
-                                    )
-                                  ]));
-                              // TODO [Linking of Voucher for Household based project  need to be handled]
-
-                              bloc.add(
-                                BeneficiaryRegistrationSaveHouseDetailsEvent(
-                                  model: houseModel,
-                                ),
+                                  );
+                                  router.push(HouseHoldDetailsRoute());
+                                },
                               );
-                              router.push(HouseHoldDetailsRoute());
                             },
-                          );
-                        },
-                        type: ButtonType.primary,
-                        size: ButtonSize.large,
-                        mainAxisSize: MainAxisSize.max,
-                        label: localizations.translate(
-                            i18.householdLocation.actionLabel,
-                        ),
-                      ),]
-                    ),
+                            type: ButtonType.primary,
+                            size: ButtonSize.large,
+                            mainAxisSize: MainAxisSize.max,
+                            label: localizations.translate(
+                              i18.householdLocation.actionLabel,
+                            ),
+                          ),
+                        ]),
                     slivers: [
                       SliverToBoxAdapter(
-                        child: DigitCard(
-                          children: [
-                            Padding(
+                        child: DigitCard(children: [
+                          Padding(
                             padding: const EdgeInsets.all(spacer2),
                             child: Text(
                               localizations.translate(
@@ -235,15 +245,22 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                               options: RegistrationDeliverySingleton()
                                       .houseStructureTypes ??
                                   [],
-                              initialSelection: form.control(_householdStructureKey).value!= null ? [...form.control(_householdStructureKey).value ] : [],
+                              initialSelection:
+                                  form.control(_householdStructureKey).value !=
+                                          null
+                                      ? [
+                                          ...form
+                                              .control(_householdStructureKey)
+                                              .value
+                                        ]
+                                      : [],
                               onSelectionChanged: (values) {
                                 form
                                     .control(_householdStructureKey)
                                     .markAsTouched();
                                 if (values.isEmpty) {
-                                  form
-                                      .control(_householdStructureKey)
-                                      .value = null;
+                                  form.control(_householdStructureKey).value =
+                                      null;
                                   setState(() {
                                     form
                                         .control(_householdStructureKey)
@@ -251,9 +268,8 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   });
                                 } else {
                                   setState(() {
-                                    form
-                                        .control(_householdStructureKey)
-                                        .value = values;
+                                    form.control(_householdStructureKey).value =
+                                        values;
                                   });
                                 }
                               },
@@ -267,8 +283,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                       form
                                           .control(_householdStructureKey)
                                           .touched
-                                  ? localizations.translate(i18
-                                      .householdDetails
+                                  ? localizations.translate(i18.householdDetails
                                       .selectStructureTypeError)
                                   : null,
                             ),
@@ -276,23 +291,27 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                           houseShowcaseData.noOfRooms.buildWith(
                             child: ReactiveWrapperField(
                               formControlName: _noOfRoomsKey,
-                              builder:(field)=> LabeledField(
+                              builder: (field) => LabeledField(
                                 label: localizations.translate(
                                   i18.householdDetails.noOfRoomsLabel,
                                 ),
                                 child: DigitNumericFormInput(
                                   minValue: 1,
                                   maxValue: 20,
-                                  initialValue: form.control(_noOfRoomsKey).value.toString(),
+                                  initialValue: form
+                                      .control(_noOfRoomsKey)
+                                      .value
+                                      .toString(),
                                   step: 1,
-                                  onChange: (value){
-                                    form.control(_noOfRoomsKey).value=int.parse(value);
+                                  onChange: (value) {
+                                    form.control(_noOfRoomsKey).value =
+                                        int.parse(value);
                                   },
                                 ),
                               ),
                             ),
-                          ),]
-                        ),
+                          ),
+                        ]),
                       ),
                     ],
                   );
