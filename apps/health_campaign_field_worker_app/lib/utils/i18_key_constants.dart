@@ -204,8 +204,8 @@ class HomeShowcase {
     return 'WAREHOUSE_MANAGER_HOME_SHOWCASE_DELETE_ALL';
   }
 
-  String get instituteCampaign {
-    return "INSTITUTE_CAMPAIGN_SHOWCASE";
+  String get clf {
+    return "COMMUNAL_LIVING_FACILITY_SHOWCASE";
   }
 }
 
@@ -565,7 +565,7 @@ class Home {
 
   String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
 
-  String get institutionLabel => "HOME_INSTITUTION_CAMPAIGN_LABEL";
+  String get clfLabel => "HOME_COMMUNAL_LIVING_FACILITIES_LABEL";
 }
 
 class AcknowledgementSuccess {

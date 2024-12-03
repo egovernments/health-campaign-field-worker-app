@@ -31,6 +31,7 @@ import 'package:referral_reconciliation/router/referral_reconciliation_router.gm
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
@@ -356,16 +357,22 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.all_inbox,
           label: i18.home.beneficiaryLabel,
           onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.family);
             await context.router.push(const RegistrationDeliveryWrapperRoute());
           },
         ),
       ),
 
-      i18.home.institutionLabel: homeShowcaseData.instituteCampaign.buildWith(
+      i18.home.clfLabel: homeShowcaseData.clf.buildWith(
         child: HomeItemCard(
           icon: Icons.account_balance,
-          label: i18.home.institutionLabel,
-          onPressed: () {},
+          label: i18.home.clfLabel,
+          onPressed: () async {
+            RegistrationDeliverySingleton()
+                .setHouseholdType(HouseholdType.community);
+            await context.router.push(const RegistrationDeliveryWrapperRoute());
+          },
         ),
       ),
 
@@ -534,13 +541,13 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.closedHouseHoldLabel:
           homeShowcaseData.closedHouseHold.showcaseKey,
       i18.home.dashboard: homeShowcaseData.dashBoard.showcaseKey,
-      i18.home.institutionLabel: homeShowcaseData.instituteCampaign.showcaseKey,
+      i18.home.clfLabel: homeShowcaseData.clf.showcaseKey,
     };
 
     final homeItemsLabel = <String>[
       // INFO: Need to add items label of package Here
       i18.home.beneficiaryLabel,
-      i18.home.institutionLabel,
+      i18.home.clfLabel,
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
@@ -561,7 +568,7 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .toList()
                 .contains(element) ||
             element == i18.home.db ||
-            element == i18.home.institutionLabel)
+            element == i18.home.clfLabel)
         .toList();
 
     final showcaseKeys = filteredLabels

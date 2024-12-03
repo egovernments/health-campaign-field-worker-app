@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/digit_theme.dart';
@@ -407,9 +408,18 @@ class _HouseholdOverviewPageState
                                       child: Padding(
                                         padding: const EdgeInsets.all(spacer2),
                                         child: Text(
-                                          localizations.translate(i18
-                                              .householdOverView
-                                              .householdOverViewLabel),
+                                          RegistrationDeliverySingleton()
+                                                          .householdType !=
+                                                      null &&
+                                                  RegistrationDeliverySingleton()
+                                                          .householdType ==
+                                                      HouseholdType.community
+                                              ? localizations.translate(i18
+                                                  .householdOverView
+                                                  .clfOverviewLabel)
+                                              : localizations.translate(i18
+                                                  .householdOverView
+                                                  .householdOverViewLabel),
                                           style: textTheme.headingXl,
                                         ),
                                       ),
@@ -457,6 +467,49 @@ class _HouseholdOverviewPageState
                                       builder: (ctx, deliverInterventionState) {
                                     bool shouldShowStatus = beneficiaryType ==
                                         BeneficiaryType.household;
+
+                                    if (RegistrationDeliverySingleton()
+                                                .householdType !=
+                                            null &&
+                                        RegistrationDeliverySingleton()
+                                                .householdType ==
+                                            HouseholdType.community) {
+                                      return Column(
+                                        children: [
+                                          DigitTableCard(element: {
+                                            localizations.translate(i18
+                                                .householdOverView
+                                                .instituteNameLabel): state
+                                                    .householdMemberWrapper
+                                                    .headOfHousehold
+                                                    ?.name
+                                                    ?.givenName ??
+                                                localizations.translate(
+                                                    i18.common.coreCommonNA),
+                                            localizations.translate(i18
+                                                    .householdOverView
+                                                    .instituteTypeLabel):
+                                                RegistrationDeliverySingleton()
+                                                    .householdType,
+                                            localizations.translate(
+                                              i18.deliverIntervention
+                                                  .memberCountText,
+                                            ): state.householdMemberWrapper
+                                                .household?.memberCount,
+                                            localizations.translate(
+                                              i18.householdLocation
+                                                  .administrationAreaFormLabel,
+                                            ): state
+                                                .householdMemberWrapper
+                                                .headOfHousehold
+                                                ?.address
+                                                ?.first
+                                                .locality
+                                                ?.code,
+                                          }),
+                                        ],
+                                      );
+                                    }
 
                                     return Column(
                                       children: [
@@ -543,11 +596,9 @@ class _HouseholdOverviewPageState
                                                         '${localizations.translate(getStatus(selectedFilters[index]))}'
                                                         ' (${state.householdMemberWrapper.members!.length})',
                                                     onItemDelete: () {
-                                                      setState(() {
-                                                        selectedFilters.remove(
-                                                            selectedFilters[
-                                                                index]);
-                                                      });
+                                                      selectedFilters.remove(
+                                                          selectedFilters[
+                                                              index]);
                                                       callReloadEvent(
                                                           offset: 0, limit: 10);
                                                     },
@@ -1020,18 +1071,13 @@ class _HouseholdOverviewPageState
                 ]));
 
     if (filters != null && filters.isNotEmpty) {
-      setState(() {
-        selectedFilters = [];
-      });
-      setState(() {
-        selectedFilters.addAll(filters);
-      });
+      selectedFilters.addAll(filters);
       callReloadEvent(offset: 0, limit: 10);
     } else {
       setState(() {
         selectedFilters = [];
       });
-      // blocWrapper.clearEvent();
+
       callReloadEvent(offset: 0, limit: 10);
     }
   }

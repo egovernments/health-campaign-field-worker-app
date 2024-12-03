@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
@@ -109,11 +110,19 @@ class _SearchBeneficiaryPageState
                           alignment: Alignment.topLeft,
                           child: Text(
                             localizations.translate(
-                              RegistrationDeliverySingleton().beneficiaryType !=
-                                      BeneficiaryType.individual
-                                  ? i18.searchBeneficiary.statisticsLabelText
-                                  : i18.searchBeneficiary
-                                      .searchIndividualLabelText,
+                              RegistrationDeliverySingleton().householdType !=
+                                          null &&
+                                      RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community
+                                  ? i18.searchBeneficiary.searchCLFLabel
+                                  : RegistrationDeliverySingleton()
+                                              .beneficiaryType !=
+                                          BeneficiaryType.individual
+                                      ? i18
+                                          .searchBeneficiary.statisticsLabelText
+                                      : i18.searchBeneficiary
+                                          .searchIndividualLabelText,
                             ),
                             style: textTheme.headingXl,
                             textAlign: TextAlign.left,
@@ -489,31 +498,33 @@ class _SearchBeneficiaryPageState
           limit: isPagination
               ? blocWrapper.individualGlobalSearchBloc.state.limit
               : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
         )));
       }
     } else {
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        blocWrapper.houseHoldGlobalSearchBloc
-            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
+        blocWrapper.houseHoldGlobalSearchBloc.add(
+            SearchHouseholdsEvent.houseHoldGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
-          isProximityEnabled: isProximityEnabled,
-          latitude: lat,
-          longitude: long,
-          projectId: RegistrationDeliverySingleton().projectId!,
-          maxRadius: RegistrationDeliverySingleton().maxRadius,
-          nameSearch: searchController.text.trim().length > 2
-              ? searchController.text.trim()
-              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-          filter: selectedFilters,
-          offset: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-              : offset,
-          limit: isPagination
-              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-              : limit,
-        )));
+                    isProximityEnabled: isProximityEnabled,
+                    latitude: lat,
+                    longitude: long,
+                    projectId: RegistrationDeliverySingleton().projectId!,
+                    maxRadius: RegistrationDeliverySingleton().maxRadius,
+                    nameSearch: searchController.text.trim().length > 2
+                        ? searchController.text.trim()
+                        : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+                    filter: selectedFilters,
+                    offset: isPagination
+                        ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+                        : offset,
+                    limit: isPagination
+                        ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+                        : limit,
+                    householdType:
+                        RegistrationDeliverySingleton().householdType)));
       }
     }
   }
