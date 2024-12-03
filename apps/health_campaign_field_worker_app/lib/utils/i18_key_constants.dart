@@ -570,6 +570,7 @@ class DataShare {
   String get sendAction => 'SEND_ACTION';
   String get receiveAction => 'RECEIVE_ACTION';
   String get connectedTo => 'CONNECTED_TO';
+  String get noDevicesConnected => 'NO_DEVICES_CONNECTED';
 }
 
 class AcknowledgementSuccess {

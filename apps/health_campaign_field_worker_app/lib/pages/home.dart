@@ -51,7 +51,6 @@ import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
-import 'peer_to_peer/data_share_home.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -498,8 +497,7 @@ class _HomePageState extends LocalizedState<HomePage> {
           icon: Icons.send,
           label: i18.home.dataShare,
           onPressed: () async {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (_) => const DataShareHomePage()));
+            context.router.push(const DataShareHomeRoute());
           },
         ),
       ),

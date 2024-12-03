@@ -1,18 +1,20 @@
-import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-
+import 'package:attendance_management/widgets/back_navigation_help_header.dart';
 import 'package:auto_route/annotations.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
-import 'package:path_provider/path_provider.dart';
 
+import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
 class DataTransferPage extends LocalizedStatefulWidget {
-  final Device connectedDevice;
+  final List<Device> connectedDevice;
   final NearbyService nearbyService;
 
   const DataTransferPage(
@@ -24,12 +26,14 @@ class DataTransferPage extends LocalizedStatefulWidget {
 
 class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
   late NearbyService nearbyService;
-  double progress = 0.0; // To track progress
-
+  late PeerToPeerBloc peerToPeerBloc;
   @override
   void initState() {
     super.initState();
     nearbyService = widget.nearbyService;
+    peerToPeerBloc = context.read<PeerToPeerBloc>();
+    peerToPeerBloc.add(DataTransferEvent(
+        connectedDevice: widget.connectedDevice, nearbyService: nearbyService));
   }
 
   @override
@@ -37,152 +41,133 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
     super.dispose();
   }
 
-  void sendEntities(Map<String, dynamic> entities) async {
-    for (var entityName in entities.keys) {
-      List<dynamic> entityData = entities[entityName]!;
-      int totalSize = entityData.length;
-      int offset = 0;
-
-      try {
-        while (offset < totalSize) {
-          const int chunkSize = 100;
-          int end =
-              (offset + chunkSize < totalSize) ? offset + chunkSize : totalSize;
-          List<dynamic> chunk = entityData.sublist(offset, end);
-
-          // Send the chunk
-          widget.nearbyService.sendMessage(
-            widget.connectedDevice.deviceId,
-            jsonEncode({
-              "entityType": entityName,
-              "message": chunk,
-              "offset": offset + chunk.length,
-              "totalData": totalSize,
-            }),
-          );
-
-          // Update progress for the entity
-          setState(() {
-            progress = (offset + chunk.length) / totalSize;
-          });
-
-          // Simulate delay for smoother UX
-          await Future.delayed(const Duration(milliseconds: 200));
-          offset = end;
-        }
-
-        // Wait for receiver's confirmation for the current entity
-        await waitForConfirmation(entityName);
-      } catch (e) {
-        debugPrint('Error sending $entityName: $e');
-      }
-    }
-
-    // Notify completion
-    if (mounted) {
-      setState(() {
-        progress = 1.0;
-      });
-
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text("Transfer Complete"),
-          content: const Text("All entities have been sent successfully."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("OK"),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  Future<void> waitForConfirmation(String entityName) async {
-    final completer = Completer<void>();
-
-    final subscription =
-        nearbyService.dataReceivedSubscription(callback: (data) {
-      try {
-        var receivedJson = jsonDecode(data["message"]);
-        if (receivedJson["type"] == "confirmation" &&
-            receivedJson["entityType"] == entityName &&
-            receivedJson["status"] == "success") {
-          debugPrint("Confirmation received for $entityName");
-          completer.complete();
-        }
-      } catch (e) {
-        debugPrint("Error processing confirmation: $e");
-      }
-    });
-
-    Future.delayed(const Duration(seconds: 10), () {
-      if (!completer.isCompleted) {
-        completer
-            .completeError("Timeout waiting for confirmation for $entityName");
-      }
-    });
-
-    await completer.future;
-    subscription.cancel();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
     return PopScope(
-      onPopInvoked: (pop) {
-        if (pop) {
-          widget.nearbyService
-              .disconnectPeer(deviceID: widget.connectedDevice.deviceId);
-        }
-      },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-              "${localizations.translate(i18.dataShare.connectedTo)} ${widget.connectedDevice.deviceName}"),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              const Text(
-                "Transferring data to the connected device...",
-                style: TextStyle(fontSize: 18),
-              ),
-              const SizedBox(height: 20),
-              LinearProgressIndicator(value: progress),
-              const SizedBox(height: 10),
-              Text("${(progress * 100).toStringAsFixed(1)}%"),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: () async {
-                  // Example data to transfer
-                  readDownSyncData();
-                },
-                child: const Text("Start Transfer"),
-              ),
-            ],
+      onPopInvoked: (pop) {},
+      child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
+          builder: (context, state) {
+        return ScrollableContent(
+          header: const BackNavigationHelpHeaderWidget(
+            showHelp: true,
           ),
-        ),
-      ),
+          footer: DigitCard(
+              margin: const EdgeInsets.only(top: spacer2),
+              padding: const EdgeInsets.all(spacer2),
+              children: [
+                Button(
+                  type: ButtonType.secondary,
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {},
+                  label: localizations.translate(i18.common.coreCommonCancel),
+                  size: ButtonSize.large,
+                ),
+              ]),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(kPadding),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        localizations.translate(i18.dataShare.sendAction),
+                        style: textTheme.headingM,
+                      ),
+                    ),
+                  ),
+                  Material(
+                    child: Column(
+                      children: [
+                        state.maybeWhen(
+                            orElse: () => Center(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const SizedBox(height: 16),
+                                      SizedBox(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.2,
+                                        width:
+                                            MediaQuery.of(context).size.height *
+                                                0.2,
+                                        child: CircularProgressIndicator(
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                    DigitTheme.instance.colors
+                                                        .light.alertSuccess),
+                                            backgroundColor: DigitTheme.instance
+                                                .colors.light.textDisabled,
+                                            value: 0),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                            transferInProgress: (progress) => Column(
+                                  children: [
+                                    SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      width:
+                                          MediaQuery.of(context).size.height *
+                                              0.2,
+                                      child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                  DigitTheme.instance.colors
+                                                      .light.alertSuccess),
+                                          backgroundColor: DigitTheme.instance
+                                              .colors.light.textDisabled,
+                                          value: progress),
+                                    ),
+                                    const SizedBox(height: 16),
+                                    Button(
+                                      onPressed: () {
+                                        context.read<PeerToPeerBloc>().add(
+                                            DataTransferEvent(
+                                                nearbyService: nearbyService,
+                                                connectedDevice:
+                                                    widget.connectedDevice));
+                                      },
+                                      size: ButtonSize.large,
+                                      label: localizations.translate(
+                                          i18.common.coreCommonRetry),
+                                      type: ButtonType.primary,
+                                    ),
+                                  ],
+                                ),
+                            failedToTransfer: (error) => Center(
+                                  child: Button(
+                                    onPressed: () {
+                                      context.read<PeerToPeerBloc>().add(
+                                          DataTransferEvent(
+                                              nearbyService: nearbyService,
+                                              connectedDevice:
+                                                  widget.connectedDevice));
+                                    },
+                                    size: ButtonSize.large,
+                                    label: localizations
+                                        .translate(i18.common.coreCommonRetry),
+                                    type: ButtonType.primary,
+                                  ),
+                                ))
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        );
+      }),
     );
-  }
-
-  void readDownSyncData() async {
-    final downloadsDirectory = await getDownloadsDirectory();
-
-    final file = File('${downloadsDirectory!.path}/down_sync_data.json');
-
-    final content = await file.readAsString();
-    if (content.isNotEmpty) {
-      try {
-        sendEntities(jsonDecode(content));
-        // nearbyService.sendMessage(widget.connectedDevice.deviceId, content);
-      } catch (e) {
-        debugPrint('Error parsing data: $e');
-      }
-    }
   }
 }

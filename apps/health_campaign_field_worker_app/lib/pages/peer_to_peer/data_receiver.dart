@@ -1,16 +1,14 @@
-import 'dart:async';
-import 'dart:convert';
-
-import 'package:digit_data_model/data_model.dart';
+import 'package:auto_route/annotations.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
-import 'package:registration_delivery/registration_delivery.dart';
 
+import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../utils/i18_key_constants.dart' as i18;
-import '../../utils/utils.dart';
 import '../../widgets/localized.dart';
 
+@RoutePage()
 class DataReceiverPage extends LocalizedStatefulWidget {
   final Device connectedDevice;
   final NearbyService nearbyService;
@@ -23,105 +21,24 @@ class DataReceiverPage extends LocalizedStatefulWidget {
 
 class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
   late NearbyService nearbyService;
-  List<dynamic> receivedData = [];
-  double progress = 0.0;
-  int receivedBytes = 0;
-  int totalBytes = 0;
-  late StreamSubscription receivedDataSubscription;
+  late PeerToPeerBloc peerToPeerBloc;
 
   @override
   void initState() {
     super.initState();
     nearbyService = widget.nearbyService;
-    initReceiver();
+    peerToPeerBloc = context.read<PeerToPeerBloc>();
+    nearbyService.dataReceivedSubscription(callback: (data) {
+      peerToPeerBloc.add(
+          DataReceiverEvent(nearbyService: widget.nearbyService, data: data));
+    });
   }
 
   @override
   void dispose() {
     nearbyService.stopAdvertisingPeer();
     nearbyService.stopBrowsingForPeers();
-    receivedDataSubscription.cancel();
     super.dispose();
-  }
-
-  Future<void> initReceiver() async {
-    nearbyService.stateChangedSubscription(callback: (state) {
-      debugPrint("Nearby state changed: $state");
-    });
-
-    receivedDataSubscription =
-        nearbyService.dataReceivedSubscription(callback: (data) {
-      try {
-        var receivedJson = jsonDecode(data["message"]);
-        String entityType = receivedJson["entityType"];
-        int offset = receivedJson["offset"];
-        int totalData = receivedJson["totalData"];
-        List<dynamic> receivedChunk = receivedJson["message"];
-
-        // Update progress
-        setState(() {
-          receivedBytes = offset;
-          progress = receivedBytes / totalData;
-          receivedData.addAll(receivedChunk);
-        });
-
-        // When data for this entity is fully received
-        if (receivedBytes >= totalData) {
-          // Save the received entity data
-          LocalRepository repository = _getRepositoryForEntity(entityType);
-          final entityList =
-              receivedData.whereType<Map<String, dynamic>>().toList();
-          createDbRecords(repository, entityList, entityType);
-
-          debugPrint("$entityType data saved successfully.");
-
-          // Clear the received data buffer for the next entity
-          receivedData.clear();
-
-          // Send confirmation back to the sender
-          nearbyService.sendMessage(
-            data["senderDeviceId"],
-            jsonEncode({
-              "type": "confirmation",
-              "entityType": entityType,
-              "status": "success",
-              "message": "$entityType saved successfully."
-            }),
-          );
-        }
-      } catch (e) {
-        debugPrint("Error processing received data: $e");
-      }
-    });
-  }
-
-  LocalRepository _getRepositoryForEntity(String entityType) {
-    switch (entityType) {
-      case 'Individuals':
-        return context
-            .read<LocalRepository<IndividualModel, IndividualSearchModel>>();
-      case 'Households':
-        return context
-            .read<LocalRepository<HouseholdModel, HouseholdSearchModel>>();
-      case 'HouseholdMembers':
-        return context.read<
-            LocalRepository<HouseholdMemberModel,
-                HouseholdMemberSearchModel>>();
-      case 'ProjectBeneficiaries':
-        return context.read<
-            LocalRepository<ProjectBeneficiaryModel,
-                ProjectBeneficiarySearchModel>>();
-      case 'SideEffects':
-        return context
-            .read<LocalRepository<SideEffectModel, SideEffectSearchModel>>();
-      case 'Tasks':
-        return context.read<LocalRepository<TaskModel, TaskSearchModel>>();
-      case 'Referrals':
-        return context
-            .read<LocalRepository<ReferralModel, ReferralSearchModel>>();
-      default:
-        throw Exception("Unknown entity type: $entityType");
-    }
   }
 
   @override
@@ -138,21 +55,34 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
           title: Text(
               "${localizations.translate(i18.dataShare.connectedTo)} ${widget.connectedDevice.deviceName}"),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                "Receiving data from the connected device...",
-                style: TextStyle(fontSize: 18),
-              ),
-              LinearProgressIndicator(value: progress),
-              const SizedBox(height: 10),
-              Text("${(progress * 100).toStringAsFixed(1)}%"),
-              const SizedBox(height: 30),
-            ],
-          ),
+        body: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
+          builder: (context, state) {
+            return state.maybeWhen(
+                orElse: () => const Center(child: CircularProgressIndicator()),
+                receivingInProgress: (progress) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.2,
+                          width: MediaQuery.of(context).size.height * 0.2,
+                          child: CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                  DigitTheme
+                                      .instance.colors.light.alertSuccess),
+                              backgroundColor:
+                                  DigitTheme.instance.colors.light.textDisabled,
+                              value: progress),
+                        ),
+                        const SizedBox(height: 16),
+                        Text('${(progress * 100).toInt()} / 100')
+                      ],
+                    ),
+                  );
+                });
+          },
         ),
       ),
     );

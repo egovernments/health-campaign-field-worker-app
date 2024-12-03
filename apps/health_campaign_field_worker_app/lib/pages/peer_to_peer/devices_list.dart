@@ -3,18 +3,20 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:attendance_management/widgets/back_navigation_help_header.dart';
-import 'package:auto_route/annotations.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import '../../widgets/showcase/showcase_wrappers.dart';
 import 'data_receiver.dart';
-import 'data_transfer.dart';
 
 enum DeviceType { receiver, sender }
 
@@ -58,78 +60,115 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: ScrollableContent(
-        backgroundColor: DigitTheme.instance.colors.white,
-        footer: widget.deviceType == DeviceType.sender
-            ? DigitElevatedButton(
-                onPressed: connectedDevices.isNotEmpty
-                    ? () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return DataTransferPage(
-                            connectedDevice: connectedDevices.first,
-                            nearbyService: nearbyService,
-                          );
-                        }));
-                      }
-                    : null,
-                child: Text(localizations.translate(i18.dataShare.sendAction)),
-              )
-            : const Spacer(),
-        children: [
-          const BackNavigationHelpHeaderWidget(),
-          Text(
-            widget.deviceType.name.toUpperCase(),
-            style: textTheme.headingM,
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.6,
-            color: DigitTheme.instance.colors.regalBlue,
-            child: Stack(
-              alignment: Alignment.center,
+        backgroundColor: DigitTheme.instance.colors.light.primary1Bg,
+        enableFixedButton: true,
+        footer: DigitCard(
+          margin: const EdgeInsets.only(top: spacer2),
+          padding: const EdgeInsets.all(spacer2),
+          children: [
+            if (widget.deviceType == DeviceType.sender)
+              Button(
+                onPressed: () {
+                  if (connectedDevices.isNotEmpty) {
+                    context.router.push(DataTransferRoute(
+                      connectedDevice: connectedDevices,
+                      nearbyService: nearbyService,
+                    ));
+                  } else {
+                    DigitToast.show(context,
+                        options: DigitToastOptions(
+                            localizations
+                                .translate(i18.dataShare.noDevicesConnected),
+                            true,
+                            theme));
+                  }
+                },
+                type: ButtonType.primary,
+                label: localizations.translate(i18.dataShare.sendAction),
+                size: ButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+              ),
+          ],
+        ),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
               children: [
-                // Radar Circles
-                ...List.generate(4, (index) {
-                  return Container(
-                    width: 200.0 + (index * 50),
-                    height: 200.0 + (index * 50),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
-                      ),
-                    ),
-                  );
-                }),
-                // Radar Sweep
-                AnimatedBuilder(
-                  animation: _controller,
-                  builder: (context, child) {
-                    return Transform.rotate(
-                      angle: _controller.value * 2 * pi,
-                      child: Container(
-                        width: 400,
-                        height: 400,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: SweepGradient(
-                            colors: [
-                              Colors.white.withOpacity(0.3),
-                              Colors.transparent,
-                            ],
-                            stops: const [0.7, 1.0],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                const BackNavigationHelpHeaderWidget(
+                  showHelp: true,
                 ),
-                ..._generateRandomDevicePositions(devices, 400, 200),
+                Padding(
+                  padding: const EdgeInsets.all(kPadding),
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      widget.deviceType.name.toUpperCase(),
+                      style: textTheme.headingM,
+                    ),
+                  ),
+                ),
+                Container(
+                  height: screenHeight * 0.6,
+                  width: screenWidth * 0.9,
+                  margin: const EdgeInsets.all(kPadding),
+                  decoration: BoxDecoration(
+                    color: DigitTheme.instance.colors.light.primary2,
+                    borderRadius: BorderRadius.circular(kPadding),
+                  ),
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Radar Circles
+                      ...List.generate(3, (index) {
+                        return Container(
+                          width: screenWidth * 0.5 + (index * 50),
+                          height: screenHeight * 0.3 + (index * 50),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: DigitTheme.instance.colors.light.primary1Bg
+                                  .withOpacity(0.3),
+                            ),
+                          ),
+                        );
+                      }),
+                      // Radar Sweep
+                      AnimatedBuilder(
+                        animation: _controller,
+                        builder: (context, child) {
+                          return Transform.rotate(
+                            angle: _controller.value * 2 * pi,
+                            child: Container(
+                              width: screenWidth * 0.9,
+                              height: screenHeight * 0.6,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: SweepGradient(
+                                  colors: [
+                                    Colors.white.withOpacity(0.3),
+                                    Colors.transparent,
+                                  ],
+                                  stops: const [0.7, 1.0],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      ..._generateRandomDevicePositions(
+                          devices, screenWidth * 0.9, screenHeight * 0.6),
+                    ],
+                  ),
+                )
               ],
             ),
           )
@@ -139,42 +178,34 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   }
 
   List<Widget> _generateRandomDevicePositions(
-      List<Device> devices,
-      double size,
-      double
-          rippleRadius // Pass rippleRadius here to position devices inside it
-      ) {
+      List<Device> devices, double width, double height) {
     final random = Random();
     return widget.deviceType == DeviceType.receiver
         ? connectedDevices.asMap().entries.map((entry) {
-            // Ensure that the device is placed within the ripple's growing radius
-            final angle = random.nextDouble() * 2 * pi; // Random angle
-            final radius = random.nextDouble() *
-                rippleRadius; // Ensure radius is within ripple radius
+            // Use the device index to offset the randomization for uniqueness
+            final angle = random.nextDouble() * 2 * pi +
+                entry.key * 0.1; // slight offset for uniqueness
+            final radius = random.nextDouble() * rippleRadius;
             final x = radius * cos(angle);
             final y = radius * sin(angle);
 
             return Positioned(
-              left: size / 2 +
-                  x -
-                  40, // Adjust icon position (centered around the circle)
-              top: size / 2 + y - 40,
+              left: width / 2 + x - 20, // Adjust based on the container size
+              top: height / 2 + y - 20,
               child: _buildDeviceWidget(entry.value),
             );
           }).toList()
         : devices.asMap().entries.map((entry) {
-            // Ensure that the device is placed within the ripple's growing radius
-            final angle = random.nextDouble() * 2 * pi; // Random angle
-            final radius = random.nextDouble() *
-                rippleRadius; // Ensure radius is within ripple radius
+            final angle = random.nextDouble() * 2 * pi +
+                entry.key * 0.1; // slight offset for uniqueness
+            final radius = (random.nextDouble() * rippleRadius) +
+                20; // Ensure enough space between devices
             final x = radius * cos(angle);
             final y = radius * sin(angle);
 
             return Positioned(
-              left: size / 2 +
-                  x -
-                  40, // Adjust icon position (centered around the circle)
-              top: size / 2 + y - 40,
+              left: width / 2 + x - 20,
+              top: height / 2 + y - 20,
               child: _buildDeviceWidget(entry.value),
             );
           }).toList();
@@ -182,43 +213,61 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
 
   // Build each device widget with icon and name
   Widget _buildDeviceWidget(Device device) {
-    return GestureDetector(
-      onTap: () {
-        _onButtonClicked(device);
-      },
-      child: Material(
-        elevation: 5,
-        borderRadius: BorderRadius.circular(kPadding),
-        child: Padding(
-          padding: const EdgeInsets.all(kPadding),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.phone_android,
-                size: 50, // Adjust size of the device icon
-                color: DigitTheme.instance.colors.amber,
-              ),
-              const SizedBox(
-                height: kPadding,
-              ),
-              Text(
-                device.deviceName,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 12, color: DigitTheme.instance.colors.amber),
-              ),
-              Text(
-                getStateName(device.state),
-                textAlign: TextAlign.center,
-                style:
-                    TextStyle(fontSize: 8, color: getStateColor(device.state)),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return device.state == SessionState.connecting
+        ? const CircularProgressIndicator()
+        : GestureDetector(
+            onTap: () {
+              _onButtonClicked(device);
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: DigitTheme.instance.colors.light.primary1Bg
+                          .withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(kPadding),
+                      border: Border.all(
+                          color: DigitTheme.instance.colors.light.primary1Bg
+                              .withOpacity(0.2),
+                          width: 1.5)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(kPadding),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.account_circle,
+                          size: 24, // Adjust size of the device icon
+                          color: DigitTheme.instance.colors.light.primary1Bg,
+                        ),
+                        Text(
+                          device.deviceName,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 8,
+                            color: DigitTheme.instance.colors.light.primary1Bg,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Material(
+                  borderRadius: BorderRadius.circular(kPadding),
+                  color: DigitTheme.instance.colors.light.primary1Bg,
+                  child: Padding(
+                    padding: const EdgeInsets.all(kPadding / 2),
+                    child: Text(
+                      getStateName(device.state),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 8, color: getStateColor(device.state)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 
   String getStateName(SessionState state) {
@@ -237,11 +286,11 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
   Color getStateColor(SessionState state) {
     switch (state) {
       case SessionState.notConnected:
-        return DigitTheme.instance.colors.amber;
+        return DigitTheme.instance.colors.light.alertWarning;
       case SessionState.connecting:
-        return DigitTheme.instance.colors.white;
+        return DigitTheme.instance.colors.light.alertWarning;
       default:
-        return DigitTheme.instance.colors.darkSpringGreen;
+        return DigitTheme.instance.colors.light.alertSuccess;
     }
   }
 
