@@ -74,6 +74,7 @@ class Constants {
   static const String curlyBraces = '{}';
   static const String smallBraces = '()';
   static const String intTwo = '2';
+  static const String comma = ',';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,

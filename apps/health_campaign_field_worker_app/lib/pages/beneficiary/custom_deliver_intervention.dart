@@ -1,14 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/details_card.dart';
 import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
-import 'package:digit_scanner/utils/i18_key_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,9 +19,9 @@ import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/models/entities/additional_fields_type.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
+import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18Local;
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
-import 'package:registration_delivery/widgets/beneficiary/resource_beneficiary_card.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import '../../widgets/beneficiary/custom_resource_beneficiary_card.dart';
 import '../../widgets/localized.dart';
@@ -55,6 +52,7 @@ class CustomDeliverInterventionPageState
   final clickedStatus = ValueNotifier<bool>(false);
   var bednetCount = 0;
   var bednetScanned = 0;
+  static const _qrCodesKey = "qrCodes";
 
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -72,12 +70,14 @@ class CustomDeliverInterventionPageState
   }
 
   Future<void> handleCapturedLocationState(
-      LocationState locationState,
-      BuildContext context,
-      DeliverInterventionState deliverInterventionState,
-      FormGroup form,
-      HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) async {
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    List<String> codes,
+  ) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
     context.read<DeliverInterventionBloc>().add(
@@ -97,6 +97,7 @@ class CustomDeliverInterventionPageState
                 address: householdMember.members?.first.address?.first,
                 latitude: lat,
                 longitude: long,
+                codes: codes,
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
@@ -112,12 +113,14 @@ class CustomDeliverInterventionPageState
   }
 
   void handleLocationState(
-      LocationState locationState,
-      BuildContext context,
-      DeliverInterventionState deliverInterventionState,
-      FormGroup form,
-      HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) {
+    LocationState locationState,
+    BuildContext context,
+    DeliverInterventionState deliverInterventionState,
+    FormGroup form,
+    HouseholdMemberWrapper householdMember,
+    ProjectBeneficiaryModel projectBeneficiary,
+    List<String> codes,
+  ) {
     if (context.mounted) {
       DigitComponentsUtils().showLocationCapturingDialog(
           context,
@@ -133,7 +136,8 @@ class CustomDeliverInterventionPageState
             deliverInterventionState,
             form,
             householdMember,
-            projectBeneficiary);
+            projectBeneficiary,
+            codes);
       });
     }
   }
@@ -441,6 +445,8 @@ class CustomDeliverInterventionPageState
                                                                   householdMemberWrapper,
                                                                   projectBeneficiary!
                                                                       .first,
+                                                                  scannerState
+                                                                      .qrCodes,
                                                                 );
                                                               }
                                                             }
@@ -774,6 +780,7 @@ class CustomDeliverInterventionPageState
     AddressModel? address,
     double? latitude,
     double? longitude,
+    List<String>? codes,
   }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
@@ -877,6 +884,11 @@ class CustomDeliverInterventionPageState
             AdditionalField(
               AdditionalFieldsType.deliveryComment.toValue(),
               deliveryComment,
+            ),
+          if (codes != null && codes.isNotEmpty)
+            AdditionalField(
+              _qrCodesKey,
+              codes.join(Constants.comma),
             ),
         ],
       ),
