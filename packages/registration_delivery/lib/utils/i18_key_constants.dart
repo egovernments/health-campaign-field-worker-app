@@ -125,6 +125,8 @@ class Common {
 class SearchBeneficiary {
   const SearchBeneficiary();
 
+  String get searchCLFLabel => 'BENEFICIARY_SEARCH_CLF_LABEL_TEXT';
+
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
 
   String get searchIndividualLabelText =>
@@ -404,6 +406,12 @@ class HouseholdOverView {
   const HouseholdOverView();
 
   String get householdOverViewLabel => 'HOUSEHOLD_OVER_VIEW_LABEL';
+
+  String get instituteNameLabel => 'HOUSEHOLD_OVER_VIEW_INSTITUTE_NAME_LABEL';
+
+  String get instituteTypeLabel => 'HOUSEHOLD_OVER_VIEW_INSTITUTE_TYPE_LABEL';
+
+  String get clfOverviewLabel => 'HOUSEHOLD_OVER_VIEW_CLF_LABEL';
 
   String get householdOverViewEditLabel =>
       'HOUSEHOLD_OVER_VIEW_EDIT_ICON_LABEL';
