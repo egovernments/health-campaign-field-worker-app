@@ -55,6 +55,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    DataReceiverRoute.name: (routeData) {
+      final args = routeData.argsAs<DataReceiverRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: DataReceiverPage(
+          key: args.key,
+          connectedDevice: args.connectedDevice,
+          nearbyService: args.nearbyService,
+        ),
+      );
+    },
     DataShareHomeRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -108,6 +119,12 @@ abstract class _$AppRouter extends RootStackRouter {
           key: args.key,
           appLocalizations: args.appLocalizations,
         ),
+      );
+    },
+    PeerToPeerWrapperRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: WrappedRoute(child: const PeerToPeerWrapperPage()),
       );
     },
     ProfileRoute.name: (routeData) {
@@ -312,6 +329,49 @@ class BoundarySelectionRouteArgs {
 }
 
 /// generated route for
+/// [DataReceiverPage]
+class DataReceiverRoute extends PageRouteInfo<DataReceiverRouteArgs> {
+  DataReceiverRoute({
+    Key? key,
+    required Device connectedDevice,
+    required NearbyService nearbyService,
+    List<PageRouteInfo>? children,
+  }) : super(
+          DataReceiverRoute.name,
+          args: DataReceiverRouteArgs(
+            key: key,
+            connectedDevice: connectedDevice,
+            nearbyService: nearbyService,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'DataReceiverRoute';
+
+  static const PageInfo<DataReceiverRouteArgs> page =
+      PageInfo<DataReceiverRouteArgs>(name);
+}
+
+class DataReceiverRouteArgs {
+  const DataReceiverRouteArgs({
+    this.key,
+    required this.connectedDevice,
+    required this.nearbyService,
+  });
+
+  final Key? key;
+
+  final Device connectedDevice;
+
+  final NearbyService nearbyService;
+
+  @override
+  String toString() {
+    return 'DataReceiverRouteArgs{key: $key, connectedDevice: $connectedDevice, nearbyService: $nearbyService}';
+  }
+}
+
+/// generated route for
 /// [DataShareHomePage]
 class DataShareHomeRoute extends PageRouteInfo<void> {
   const DataShareHomeRoute({List<PageRouteInfo>? children})
@@ -331,7 +391,7 @@ class DataTransferRoute extends PageRouteInfo<DataTransferRouteArgs> {
   DataTransferRoute({
     Key? key,
     required NearbyService nearbyService,
-    required Device connectedDevice,
+    required List<Device> connectedDevice,
     List<PageRouteInfo>? children,
   }) : super(
           DataTransferRoute.name,
@@ -360,7 +420,7 @@ class DataTransferRouteArgs {
 
   final NearbyService nearbyService;
 
-  final Device connectedDevice;
+  final List<Device> connectedDevice;
 
   @override
   String toString() {
@@ -492,6 +552,20 @@ class LoginRouteArgs {
   String toString() {
     return 'LoginRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
+}
+
+/// generated route for
+/// [PeerToPeerWrapperPage]
+class PeerToPeerWrapperRoute extends PageRouteInfo<void> {
+  const PeerToPeerWrapperRoute({List<PageRouteInfo>? children})
+      : super(
+          PeerToPeerWrapperRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'PeerToPeerWrapperRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for

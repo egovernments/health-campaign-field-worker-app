@@ -5,20 +5,21 @@ import 'package:closed_household/router/closed_household_router.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:complaints/router/complaints_router.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/router/dashboard_router.dart';
 import 'package:digit_dss/router/dashboard_router.gm.dart';
 import 'package:digit_scanner/router/digit_scanner_router.dart';
 import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
-import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
-import 'package:survey_form/router/survey_form_router.dart';
-import 'package:survey_form/router/survey_form_router.gm.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
 
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
@@ -27,6 +28,11 @@ import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
 import '../pages/login.dart';
+import '../pages/peer_to_peer/data_receiver.dart';
+import '../pages/peer_to_peer/data_share_home.dart';
+import '../pages/peer_to_peer/data_transfer.dart';
+import '../pages/peer_to_peer/devices_list.dart';
+import '../pages/peer_to_peer/peer_to_peer_wrapper.dart';
 import '../pages/profile.dart';
 import '../pages/project_facility_selection.dart';
 import '../pages/project_selection.dart';
@@ -229,10 +235,13 @@ class AppRouter extends _$AppRouter {
                 path: '',
               ),
               AutoRoute(
-                  page: SurveyFormBoundaryViewRoute.page, path: 'view-boundary'),
+                  page: SurveyFormBoundaryViewRoute.page,
+                  path: 'view-boundary'),
               AutoRoute(page: SurveyFormViewRoute.page, path: 'view'),
               AutoRoute(page: SurveyFormPreviewRoute.page, path: 'preview'),
-              AutoRoute(page: SurveyFormAcknowledgementRoute.page, path: 'surveyForm-acknowledgement'),
+              AutoRoute(
+                  page: SurveyFormAcknowledgementRoute.page,
+                  path: 'surveyForm-acknowledgement'),
             ]),
         AutoRoute(
           page: BeneficiaryAcknowledgementRoute.page,
@@ -320,8 +329,8 @@ class AppRouter extends _$AppRouter {
 
         // Attendance Route
         AutoRoute(
-            page: MarkAttendanceRoute.page,
-            path: 'mark-attendance',
+          page: MarkAttendanceRoute.page,
+          path: 'mark-attendance',
         ),
         AutoRoute(
           page: ManageAttendanceRoute.page,
@@ -399,6 +408,22 @@ class AppRouter extends _$AppRouter {
           page: SearchReferralReconciliationsRoute.page,
           path: 'search-referrals',
         ),
+
+        AutoRoute(
+          page: DataShareHomeRoute.page,
+          path: 'data-share-home',
+        ),
+        AutoRoute(
+            page: PeerToPeerWrapperRoute.page,
+            path: 'peer-to-peer-wrapper',
+            children: [
+              AutoRoute(
+                  page: DevicesListRoute.page,
+                  path: 'devices-list',
+                  initial: true),
+              AutoRoute(page: DataTransferRoute.page, path: 'data-transfer'),
+              AutoRoute(page: DataReceiverRoute.page, path: 'data-receiver'),
+            ]),
       ],
     )
   ];
