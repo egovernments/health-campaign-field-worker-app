@@ -304,15 +304,26 @@ class IndividualGlobalSearchRepository extends LocalRepository {
       if (filter == Status.registered.name ||
           filter == Status.notRegistered.name) {
         selectQuery = sql.individual.select().join([
+          leftOuterJoin(sql.household,
+              sql.household.householdType.equalsValue(params.householdType)),
+          leftOuterJoin(
+              sql.householdMember,
+              sql.householdMember.individualClientReferenceId
+                  .equalsExp(sql.individual.clientReferenceId)),
           if (params.nameSearch == null || !params.isProximityEnabled)
             leftOuterJoin(
                 sql.projectBeneficiary,
                 sql.projectBeneficiary.beneficiaryClientReferenceId
                     .equalsExp(sql.individual.clientReferenceId))
         ])
-          ..where(filter == Status.registered.name
-              ? sql.projectBeneficiary.beneficiaryClientReferenceId.isNotNull()
-              : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull());
+          ..where(buildAnd([
+            sql.householdMember.householdClientReferenceId
+                .equalsExp(sql.household.clientReferenceId),
+            filter == Status.registered.name
+                ? sql.projectBeneficiary.beneficiaryClientReferenceId
+                    .isNotNull()
+                : sql.projectBeneficiary.beneficiaryClientReferenceId.isNull()
+          ]));
 
         if (params.householdClientReferenceId != null) {
           selectQuery = selectQuery.join([

@@ -398,63 +398,26 @@ class _HouseholdOverviewPageState
                                 //     ),
                                 //   ),
                                 // ),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(spacer2),
-                                        child: Text(
-                                          RegistrationDeliverySingleton()
-                                                          .householdType !=
-                                                      null &&
-                                                  RegistrationDeliverySingleton()
-                                                          .householdType ==
-                                                      HouseholdType.community
-                                              ? localizations.translate(i18
-                                                  .householdOverView
-                                                  .clfOverviewLabel)
-                                              : localizations.translate(i18
-                                                  .householdOverView
-                                                  .householdOverViewLabel),
-                                          style: textTheme.headingXl,
-                                        ),
-                                      ),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(spacer2),
+                                    child: Text(
+                                      RegistrationDeliverySingleton()
+                                                      .householdType !=
+                                                  null &&
+                                              RegistrationDeliverySingleton()
+                                                      .householdType ==
+                                                  HouseholdType.community
+                                          ? localizations.translate(i18
+                                              .householdOverView
+                                              .clfOverviewLabel)
+                                          : localizations.translate(i18
+                                              .householdOverView
+                                              .householdOverViewLabel),
+                                      style: textTheme.headingXl,
                                     ),
-                                    Column(
-                                      children: [
-                                        RegistrationDeliverySingleton()
-                                                        .searchHouseHoldFilter !=
-                                                    null &&
-                                                RegistrationDeliverySingleton()
-                                                    .searchHouseHoldFilter!
-                                                    .isNotEmpty
-                                            ? Align(
-                                                alignment: Alignment.topLeft,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      spacer2),
-                                                  child: Button(
-                                                    label:
-                                                        getFilterIconNLabel()[
-                                                            'label'],
-                                                    size: ButtonSize.medium,
-                                                    type: ButtonType.tertiary,
-                                                    suffixIcon:
-                                                        getFilterIconNLabel()[
-                                                            'icon'],
-                                                    onPressed: () =>
-                                                        showFilterDialog(),
-                                                  ),
-                                                ),
-                                              )
-                                            : const Offstage(),
-                                      ],
-                                    ),
-                                  ],
+                                  ),
                                 ),
 
                                 Padding(
@@ -558,21 +521,60 @@ class _HouseholdOverviewPageState
                                 Padding(
                                   padding: const EdgeInsets.only(
                                       top: spacer2, bottom: spacer2),
-                                  child: DigitSearchBar(
-                                    controller: searchController,
-                                    hintText: localizations.translate(
-                                      i18.common.searchByName,
-                                    ),
-                                    textCapitalization:
-                                        TextCapitalization.words,
-                                    onChanged: (value) {
-                                      if (value.length >= 3) {
-                                        callReloadEvent(offset: 0, limit: 10);
-                                      } else if (searchController
-                                          .value.text.isEmpty) {
-                                        callReloadEvent(offset: 0, limit: 10);
-                                      }
-                                    },
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: DigitSearchBar(
+                                          controller: searchController,
+                                          hintText: localizations.translate(
+                                            i18.common.searchByName,
+                                          ),
+                                          textCapitalization:
+                                              TextCapitalization.words,
+                                          onChanged: (value) {
+                                            if (value.length >= 3) {
+                                              callReloadEvent(
+                                                  offset: 0, limit: 10);
+                                            } else if (searchController
+                                                .value.text.isEmpty) {
+                                              callReloadEvent(
+                                                  offset: 0, limit: 10);
+                                            }
+                                          },
+                                        ),
+                                      ),
+                                      Column(
+                                        children: [
+                                          RegistrationDeliverySingleton()
+                                                          .searchHouseHoldFilter !=
+                                                      null &&
+                                                  RegistrationDeliverySingleton()
+                                                      .searchHouseHoldFilter!
+                                                      .isNotEmpty
+                                              ? Align(
+                                                  alignment: Alignment.topLeft,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            spacer2),
+                                                    child: Button(
+                                                      label:
+                                                          getFilterIconNLabel()[
+                                                              'label'],
+                                                      size: ButtonSize.medium,
+                                                      type: ButtonType.tertiary,
+                                                      suffixIcon:
+                                                          getFilterIconNLabel()[
+                                                              'icon'],
+                                                      onPressed: () =>
+                                                          showFilterDialog(),
+                                                    ),
+                                                  ),
+                                                )
+                                              : const Offstage(),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 selectedFilters.isNotEmpty
