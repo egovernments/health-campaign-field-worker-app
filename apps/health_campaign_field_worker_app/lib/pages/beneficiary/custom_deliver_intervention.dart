@@ -332,7 +332,9 @@ class CustomDeliverInterventionPageState
                                                                   theme,
                                                                 ),
                                                               );
-                                                            } else if (bednetScanned <
+                                                            }
+                                                            // info : show dialog stating less bednet scanned then the permissible count
+                                                            else if (bednetScanned <
                                                                 bednetCount) {
                                                               await DigitToast
                                                                   .show(
@@ -343,6 +345,23 @@ class CustomDeliverInterventionPageState
                                                                       .translate(i18Local
                                                                           .deliverIntervention
                                                                           .bednetScanLessThanCount),
+                                                                  true,
+                                                                  theme,
+                                                                ),
+                                                              );
+                                                            }
+                                                            // info : show dialog stating more bednet scanned then the permissible count
+                                                            else if (bednetScanned >
+                                                                bednetCount) {
+                                                              await DigitToast
+                                                                  .show(
+                                                                context,
+                                                                options:
+                                                                    DigitToastOptions(
+                                                                  localizations
+                                                                      .translate(i18Local
+                                                                          .deliverIntervention
+                                                                          .bednetScanMoreThanCount),
                                                                   true,
                                                                   theme,
                                                                 ),
@@ -562,13 +581,13 @@ class CustomDeliverInterventionPageState
                                                                       MaterialPageRoute(
                                                                         builder:
                                                                             (context) =>
-                                                                                const CustomDigitScannerPage(
+                                                                                CustomDigitScannerPage(
                                                                           quantity:
-                                                                              1,
+                                                                              bednetCount,
                                                                           isGS1code:
                                                                               false,
                                                                           singleValue:
-                                                                              true,
+                                                                              bednetCount < 2,
                                                                           isEditEnabled:
                                                                               true,
                                                                         ),

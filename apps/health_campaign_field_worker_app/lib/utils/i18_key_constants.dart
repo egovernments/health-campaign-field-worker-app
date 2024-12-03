@@ -88,6 +88,7 @@ class DeliverIntervention {
       'DELIVER_INTERVENTION_DOSE_HEALTH_TALK_GIVEN_SPAQ';
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
   String get bednetScanLessThanCount => 'NET_SCANNED_LESS_THAN_COUNT_LABEL';
+  String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
 }
 
 class Common {
