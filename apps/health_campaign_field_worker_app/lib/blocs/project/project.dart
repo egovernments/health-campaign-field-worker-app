@@ -568,7 +568,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
           rowVersionList.add(rowVersion);
         }
         isar.writeTxnSync(() {
-          isar.rowVersionLists.clear();
+          isar.rowVersionLists.clearSync();
 
           isar.rowVersionLists.putAllSync(rowVersionList);
         });

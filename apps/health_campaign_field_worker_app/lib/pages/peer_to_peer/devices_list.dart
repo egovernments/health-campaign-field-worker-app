@@ -16,7 +16,6 @@ import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
-import 'data_receiver.dart';
 
 enum DeviceType { receiver, sender }
 
@@ -80,7 +79,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                 onPressed: () {
                   if (connectedDevices.isNotEmpty) {
                     context.router.push(DataTransferRoute(
-                      connectedDevice: connectedDevices,
+                      connectedDevices: connectedDevices,
                       nearbyService: nearbyService,
                     ));
                   } else {
@@ -94,6 +93,28 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
                 },
                 type: ButtonType.primary,
                 label: localizations.translate(i18.dataShare.sendAction),
+                size: ButtonSize.large,
+                mainAxisSize: MainAxisSize.max,
+              ),
+            if (widget.deviceType == DeviceType.receiver)
+              Button(
+                onPressed: () {
+                  if (connectedDevices.isNotEmpty) {
+                    context.router.push(DataReceiverRoute(
+                      connectedDevice: connectedDevices.first,
+                      nearbyService: nearbyService,
+                    ));
+                  } else {
+                    DigitToast.show(context,
+                        options: DigitToastOptions(
+                            localizations
+                                .translate(i18.dataShare.noDevicesConnected),
+                            true,
+                            theme));
+                  }
+                },
+                type: ButtonType.primary,
+                label: localizations.translate(i18.dataShare.receiveAction),
                 size: ButtonSize.large,
                 mainAxisSize: MainAxisSize.max,
               ),
@@ -333,7 +354,7 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
       deviceId = iosInfo.localizedModel;
     }
     await nearbyService.init(
-        serviceType: 'mpconn',
+        serviceType: 'mpconn', // TODO: Replace with Digit service type
         deviceName: deviceId,
         strategy: Strategy.Wi_Fi_P2P,
         callback: (isRunning) async {
@@ -354,56 +375,49 @@ class DevicesListPageState extends LocalizedState<DevicesListPage>
     subscription =
         nearbyService.stateChangedSubscription(callback: (devicesList) {
       if (devicesList.isNotEmpty) {
-        var element = devicesList.first;
-        if (kDebugMode) {
-          print(
-              "deviceId: ${element.deviceId} | deviceName: ${element.deviceName} | state: ${element.state}");
-        }
+        for (var device in devicesList) {
+          var element = device;
 
-        // Handle Android-specific browsing
-        if (Platform.isAndroid) {
-          if (element.state == SessionState.connected) {
-            if (!navigatedDevices.contains(element.deviceId)) {
-              if (kDebugMode) {
-                print('connection successful');
-              }
-              navigatedDevices.add(element.deviceId);
-              if (widget.deviceType == DeviceType.receiver) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => DataReceiverPage(
-                              connectedDevice: element,
-                              nearbyService: nearbyService,
-                            )));
-              }
-              nearbyService.stopBrowsingForPeers();
+          if (kDebugMode) {
+            print(
+                "deviceId: ${element.deviceId} | deviceName: ${element.deviceName} | state: ${element.state}");
+          }
+
+          // Handle Android-specific browsing
+          if (Platform.isAndroid) {
+            if (element.state == SessionState.connected) {
+              DigitToast.show(context,
+                  options: DigitToastOptions(
+                      localizations
+                          .translate('${element.deviceName} is connected'),
+                      false,
+                      Theme.of(context)));
+            } else if (element.state == SessionState.notConnected) {
+              nearbyService.startBrowsingForPeers();
+              navigatedDevices.remove(
+                  element.deviceId); // Allow re-navigation if disconnected
             }
-          } else if (element.state == SessionState.notConnected) {
-            nearbyService.startBrowsingForPeers();
-            navigatedDevices.remove(
-                element.deviceId); // Allow re-navigation if disconnected
           }
+
+          setState(() {
+            // Deduplicate the devices list
+            final uniqueDevices =
+                <String, Device>{}; // Use a map for deduplication
+            for (var device in devicesList) {
+              uniqueDevices[device.deviceId] =
+                  device; // Replace entries with the same deviceId
+            }
+
+            // Update the devices list and connected devices
+            devices
+              ..clear()
+              ..addAll(uniqueDevices.values); // Add only unique devices
+
+            connectedDevices
+              ..clear()
+              ..addAll(devices.where((d) => d.state == SessionState.connected));
+          });
         }
-
-        setState(() {
-          // Deduplicate the devices list
-          final uniqueDevices =
-              <String, Device>{}; // Use a map for deduplication
-          for (var device in devicesList) {
-            uniqueDevices[device.deviceId] =
-                device; // Replace entries with the same deviceId
-          }
-
-          // Update the devices list and connected devices
-          devices
-            ..clear()
-            ..addAll(uniqueDevices.values); // Add only unique devices
-
-          connectedDevices
-            ..clear()
-            ..addAll(devices.where((d) => d.state == SessionState.connected));
-        });
       }
     });
   }

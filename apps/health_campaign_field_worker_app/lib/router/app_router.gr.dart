@@ -79,7 +79,7 @@ abstract class _$AppRouter extends RootStackRouter {
         child: DataTransferPage(
           key: args.key,
           nearbyService: args.nearbyService,
-          connectedDevice: args.connectedDevice,
+          connectedDevices: args.connectedDevices,
         ),
       );
     },
@@ -391,14 +391,14 @@ class DataTransferRoute extends PageRouteInfo<DataTransferRouteArgs> {
   DataTransferRoute({
     Key? key,
     required NearbyService nearbyService,
-    required List<Device> connectedDevice,
+    required List<Device> connectedDevices,
     List<PageRouteInfo>? children,
   }) : super(
           DataTransferRoute.name,
           args: DataTransferRouteArgs(
             key: key,
             nearbyService: nearbyService,
-            connectedDevice: connectedDevice,
+            connectedDevices: connectedDevices,
           ),
           initialChildren: children,
         );
@@ -413,18 +413,18 @@ class DataTransferRouteArgs {
   const DataTransferRouteArgs({
     this.key,
     required this.nearbyService,
-    required this.connectedDevice,
+    required this.connectedDevices,
   });
 
   final Key? key;
 
   final NearbyService nearbyService;
 
-  final List<Device> connectedDevice;
+  final List<Device> connectedDevices;
 
   @override
   String toString() {
-    return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevice: $connectedDevice}';
+    return 'DataTransferRouteArgs{key: $key, nearbyService: $nearbyService, connectedDevices: $connectedDevices}';
   }
 }
 

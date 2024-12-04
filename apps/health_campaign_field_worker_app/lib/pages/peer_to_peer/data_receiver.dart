@@ -1,12 +1,21 @@
-import 'package:auto_route/annotations.dart';
+import 'dart:io';
+
+import 'package:attendance_management/widgets/back_navigation_help_header.dart';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_nearby_connections/flutter_nearby_connections.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../blocs/peer_to_peer/peer_to_peer.dart';
+import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
 class DataReceiverPage extends LocalizedStatefulWidget {
@@ -22,6 +31,7 @@ class DataReceiverPage extends LocalizedStatefulWidget {
 class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
   late NearbyService nearbyService;
   late PeerToPeerBloc peerToPeerBloc;
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   @override
   void initState() {
@@ -31,6 +41,19 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
     nearbyService.dataReceivedSubscription(callback: (data) {
       peerToPeerBloc.add(
           DataReceiverEvent(nearbyService: widget.nearbyService, data: data));
+    });
+    nearbyService.stateChangedSubscription(callback: (devices) {
+      for (var device in devices) {
+        if (device.state == SessionState.notConnected) {
+          context.router.maybePop();
+          DigitToast.show(context,
+              options: DigitToastOptions(
+                  localizations.translate(
+                      '${device.deviceName} ${SessionState.notConnected.name}'),
+                  true,
+                  Theme.of(context)));
+        }
+      }
     });
   }
 
@@ -43,48 +66,276 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
+
     return PopScope(
-      onPopInvoked: (pop) {
-        if (pop) {
-          widget.nearbyService
-              .disconnectPeer(deviceID: widget.connectedDevice.deviceId);
+        onPopInvoked: (pop) {},
+        child: BlocListener<PeerToPeerBloc, PeerToPeerState>(
+          listener: (context, state) {
+            if (state is DataReceived) {
+              context.router.push(AcknowledgementRoute());
+            }
+          },
+          child: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
+            builder: (context, state) {
+              return ScrollableContent(
+                  header: const BackNavigationHelpHeaderWidget(
+                    showHelp: true,
+                  ),
+                  footer: DigitCard(
+                      margin: const EdgeInsets.only(top: spacer2),
+                      padding: const EdgeInsets.all(spacer2),
+                      children: [
+                        Button(
+                          type: ButtonType.secondary,
+                          mainAxisSize: MainAxisSize.max,
+                          onPressed: () {},
+                          label: localizations
+                              .translate(i18.common.coreCommonCancel),
+                          size: ButtonSize.large,
+                        ),
+                      ]),
+                  slivers: [
+                    SliverToBoxAdapter(
+                        child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.all(kPadding),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            localizations
+                                .translate(i18.dataShare.receiveAction),
+                            style: textTheme.headingM,
+                          ),
+                        ),
+                      ),
+                      Container(
+                          height: MediaQuery.of(context).size.height * 0.6,
+                          color: DigitTheme.instance.colors.light.paperPrimary,
+                          margin: const EdgeInsets.all(kPadding),
+                          child: state.maybeWhen(
+                              orElse: () => Center(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(height: 16),
+                                        CircularPercentIndicator(
+                                          radius: MediaQuery.of(context)
+                                                  .size
+                                                  .height *
+                                              0.15,
+                                          lineWidth: kPadding * 1.5,
+                                          animation: false,
+                                          percent:
+                                              0, // Update this dynamically for progress
+                                          center: const Text(
+                                            '0 %',
+                                            style: TextStyle(
+                                                fontSize: 24,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+
+                                          progressBorderColor: DigitTheme
+                                              .instance.colors.light.primary1Bg,
+                                          progressColor: DigitTheme.instance
+                                              .colors.light.alertSuccess,
+                                          backgroundColor: DigitTheme
+                                              .instance.colors.light.primary1Bg,
+                                        ),
+                                        const SizedBox(height: 16),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.smartphone,
+                                                size: 40,
+                                                color: DigitTheme.instance
+                                                    .colors.light.primary2),
+                                            const SizedBox(width: 8),
+                                            const Text(
+                                              'Receiving from',
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w500),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Icon(Icons.smartphone,
+                                                size: 40,
+                                                color: DigitTheme.instance
+                                                    .colors.light.primary2),
+                                          ],
+                                        ),
+                                        Wrap(
+                                            spacing: 8.0,
+                                            runSpacing: 4.0,
+                                            children: [
+                                              buildDeviceChip(),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: DigitTheme
+                                                        .instance
+                                                        .colors
+                                                        .light
+                                                        .primary1Bg,
+                                                  ),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          kPadding),
+                                                ),
+                                                child: Text(
+                                                  widget.connectedDevice
+                                                      .deviceName,
+                                                  style: TextStyle(
+                                                    color: DigitTheme.instance
+                                                        .colors.light.primary2,
+                                                  ),
+                                                ),
+                                              ),
+                                            ]),
+                                      ],
+                                    ),
+                                  ),
+                              receivingInProgress: (progress, receivingEntity) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Text('Receiving $receivingEntity'),
+                                      const SizedBox(height: 16),
+                                      CircularPercentIndicator(
+                                        radius:
+                                            MediaQuery.of(context).size.height *
+                                                0.15,
+                                        lineWidth: kPadding * 1.5,
+                                        animation: false,
+                                        percent:
+                                            progress, // Update this dynamically for progress
+                                        center: Text(
+                                          '${(progress * 100).toStringAsFixed(1)} %',
+                                          style: const TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+
+                                        progressBorderColor: DigitTheme
+                                            .instance.colors.light.primary1Bg,
+                                        progressColor: DigitTheme
+                                            .instance.colors.light.alertSuccess,
+                                        backgroundColor: DigitTheme
+                                            .instance.colors.light.primary1Bg,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(Icons.smartphone,
+                                              size: 40,
+                                              color: DigitTheme.instance.colors
+                                                  .light.primary2),
+                                          const SizedBox(width: 8),
+                                          const Text(
+                                            'Receiving from',
+                                            style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Icon(Icons.smartphone,
+                                              size: 40,
+                                              color: DigitTheme.instance.colors
+                                                  .light.primary2),
+                                        ],
+                                      ),
+                                      Wrap(
+                                          spacing: 8.0,
+                                          runSpacing: 4.0,
+                                          children: [
+                                            buildDeviceChip(),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                  color: DigitTheme.instance
+                                                      .colors.light.primary1Bg,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        kPadding),
+                                              ),
+                                              child: Text(
+                                                widget
+                                                    .connectedDevice.deviceName,
+                                                style: TextStyle(
+                                                  color: DigitTheme.instance
+                                                      .colors.light.primary2,
+                                                ),
+                                              ),
+                                            ),
+                                          ]),
+                                    ],
+                                  ),
+                                );
+                              })),
+                    ]))
+                  ]);
+            },
+          ),
+        ));
+  }
+
+  Future<String> getCurrentDeviceName() async {
+    var deviceId = '';
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      deviceId = androidInfo.model;
+    }
+    if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceId = iosInfo.localizedModel;
+    }
+    return deviceId;
+  }
+
+  Widget buildDeviceChip() {
+    return FutureBuilder<String>(
+      future: getCurrentDeviceName(), // Call your async method here
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Show a loading indicator while the future is being resolved
+          return const CircularProgressIndicator();
+        } else if (snapshot.hasError) {
+          // Handle error case
+          return Chip(
+            label: Text(localizations.translate(i18.common.coreCommonNA)),
+            backgroundColor: DigitTheme.instance.colors.light.primary1Bg,
+          );
+        } else if (snapshot.hasData) {
+          // Display the device name when available
+          return Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: DigitTheme.instance.colors.light.primary1Bg,
+              ),
+              borderRadius: BorderRadius.circular(kPadding),
+            ),
+            child: Text(
+              snapshot.data!,
+              style: TextStyle(
+                color: DigitTheme.instance.colors.light.primary2,
+              ),
+            ),
+          );
+        } else {
+          return const SizedBox.shrink(); // Handle unexpected case
         }
       },
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-              "${localizations.translate(i18.dataShare.connectedTo)} ${widget.connectedDevice.deviceName}"),
-        ),
-        body: BlocBuilder<PeerToPeerBloc, PeerToPeerState>(
-          builder: (context, state) {
-            return state.maybeWhen(
-                orElse: () => const Center(child: CircularProgressIndicator()),
-                receivingInProgress: (progress) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.2,
-                          width: MediaQuery.of(context).size.height * 0.2,
-                          child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                  DigitTheme
-                                      .instance.colors.light.alertSuccess),
-                              backgroundColor:
-                                  DigitTheme.instance.colors.light.textDisabled,
-                              value: progress),
-                        ),
-                        const SizedBox(height: 16),
-                        Text('${(progress * 100).toInt()} / 100')
-                      ],
-                    ),
-                  );
-                });
-          },
-        ),
-      ),
     );
   }
 }

@@ -230,8 +230,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
             sql.householdMember,
             sql.householdMember.individualClientReferenceId
                 .equalsExp(sql.individual.clientReferenceId))
-      ])
-        ..where(sql.householdMember.isHeadOfHousehold.equals(true));
+      ]);
       selectQuery.join([
         leftOuterJoin(
             sql.household,
@@ -333,8 +332,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.task.projectBeneficiaryClientReferenceId)),
         leftOuterJoin(
             sql.individual,
-            sql.individual.clientReferenceId
-                .equalsExp(sql.projectBeneficiary.beneficiaryClientReferenceId)),
+            sql.individual.clientReferenceId.equalsExp(
+                sql.projectBeneficiary.beneficiaryClientReferenceId)),
       ])
         ..where(sql.task.status.equals(
           statusMap[applyFilter]!.toValue(),
