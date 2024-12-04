@@ -265,61 +265,67 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         context.read<ServiceBloc>().add(
                                               ServiceCreateEvent(
                                                 serviceModel: ServiceModel(
-                                                  createdAt: DigitDateUtils
-                                                      .getDateFromTimestamp(
-                                                    DateTime.now()
-                                                        .toLocal()
-                                                        .millisecondsSinceEpoch,
-                                                    dateFormat: Constants
-                                                        .SurveyFormViewDateFormat,
-                                                  ),
-                                                  tenantId: value
-                                                      .selectedServiceDefinition!
-                                                      .tenantId,
-                                                  clientId: isHealthFacilityWorker &&
-                                                          widget.referralClientRefId !=
-                                                              null
-                                                      ? widget
-                                                          .referralClientRefId
-                                                          .toString()
-                                                      : referenceId,
-                                                  serviceDefId: value
-                                                      .selectedServiceDefinition
-                                                      ?.id,
-                                                  attributes: attributes,
-                                                  rowVersion: 1,
-                                                  accountId:
-                                                      SurveyFormSingleton()
-                                                          .projectId,
-                                                  auditDetails: AuditDetails(
-                                                    createdBy:
+                                                    createdAt: DigitDateUtils
+                                                        .getDateFromTimestamp(
+                                                      DateTime.now()
+                                                          .toLocal()
+                                                          .millisecondsSinceEpoch,
+                                                      dateFormat: Constants
+                                                          .SurveyFormViewDateFormat,
+                                                    ),
+                                                    tenantId: value
+                                                        .selectedServiceDefinition!
+                                                        .tenantId,
+                                                    clientId: isHealthFacilityWorker &&
+                                                            widget.referralClientRefId !=
+                                                                null
+                                                        ? widget
+                                                            .referralClientRefId
+                                                            .toString()
+                                                        : referenceId,
+                                                    serviceDefId: value
+                                                        .selectedServiceDefinition
+                                                        ?.id,
+                                                    attributes: attributes,
+                                                    rowVersion: 1,
+                                                    accountId:
                                                         SurveyFormSingleton()
-                                                            .loggedInUserUuid,
-                                                    createdTime: DateTime.now()
-                                                        .millisecondsSinceEpoch,
-                                                  ),
-                                                  clientAuditDetails:
-                                                      ClientAuditDetails(
-                                                    createdBy:
-                                                        SurveyFormSingleton()
-                                                            .loggedInUserUuid,
-                                                    createdTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                    lastModifiedBy:
-                                                        SurveyFormSingleton()
-                                                            .loggedInUserUuid,
-                                                    lastModifiedTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                  ),
-                                                  additionalDetails: {
-                                                    "boundaryCode":
-                                                        SurveyFormSingleton()
-                                                            .boundary
-                                                            ?.code,
-                                                    'lat': latitude,
-                                                    'lng': longitude,
-                                                  },
-                                                ),
+                                                            .projectId,
+                                                    auditDetails: AuditDetails(
+                                                      createdBy:
+                                                          SurveyFormSingleton()
+                                                              .loggedInUserUuid,
+                                                      createdTime: DateTime
+                                                              .now()
+                                                          .millisecondsSinceEpoch,
+                                                    ),
+                                                    clientAuditDetails:
+                                                        ClientAuditDetails(
+                                                      createdBy:
+                                                          SurveyFormSingleton()
+                                                              .loggedInUserUuid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                      lastModifiedBy:
+                                                          SurveyFormSingleton()
+                                                              .loggedInUserUuid,
+                                                      lastModifiedTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    additionalFields:
+                                                        ServiceAdditionalFields(
+                                                            version: 1,
+                                                            fields: [
+                                                          AdditionalField(
+                                                              'lng', longitude),
+                                                          AdditionalField(
+                                                              'lat', latitude),
+                                                          AdditionalField(
+                                                              'boundaryCode',
+                                                              SurveyFormSingleton()
+                                                                  .boundary
+                                                                  ?.code)
+                                                        ])),
                                               ),
                                             );
                                         Navigator.of(
