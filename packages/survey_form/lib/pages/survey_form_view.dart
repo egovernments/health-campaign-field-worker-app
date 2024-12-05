@@ -259,6 +259,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                     'longitude',
                                                     longitude,
                                                   ),
+                                                  AdditionalField(
+                                                      'boundaryCode',
+                                                      SurveyFormSingleton()
+                                                          .boundary
+                                                          ?.code)
                                                 ],
                                               ),
                                             ));
@@ -726,8 +731,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                       builder: (field) => RadioList(
                         radioDigitButtons: item.values != null
                             ? item.values!
-                                .where((e) =>
-                                    e != i18.surveyForm.notSelectedKey)
+                                .where(
+                                    (e) => e != i18.surveyForm.notSelectedKey)
                                 .toList()
                                 .map((item) => RadioButtonModel(
                                       code: item,
@@ -750,8 +755,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           setState(() {
                             // Clear child controllers and update visibility
                             for (final matchingChildItem in childItems) {
-                              final childIndex = initialAttributes
-                                  ?.indexOf(matchingChildItem);
+                              final childIndex =
+                                  initialAttributes?.indexOf(matchingChildItem);
                               if (childIndex != null) {
                                 // controller[childIndex].clear();
                                 visibleSurveyFormIndexes
@@ -768,9 +773,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             ).value;
 
                             if (excludedIndexes.isNotEmpty) {
-                              for (int i = 0;
-                                  i < excludedIndexes.length;
-                                  i++) {
+                              for (int i = 0; i < excludedIndexes.length; i++) {
                                 // Clear excluded child controllers
                                 if (item.dataType != 'SingleValueList') {
                                   // controller[excludedIndexes[i]].value =
@@ -793,8 +796,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
-                  return (controller[index].text ==
-                              item.values?[1].trim() &&
+                  return (controller[index].text == item.values?[1].trim() &&
                           !(isHealthFacilityWorker &&
                               widget.referralClientRefId != null))
                       ? Padding(
@@ -808,10 +810,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                 AutovalidateMode.onUserInteraction,
                             validator: (value1) {
                               if (item.required == true &&
-                                  (additionalController[index].text ==
-                                          null ||
-                                      additionalController[index].text ==
-                                          '')) {
+                                  (additionalController[index].text == null ||
+                                      additionalController[index].text == '')) {
                                 return localizations.translate(
                                   i18.common.coreCommonReasonRequired,
                                 );
@@ -828,8 +828,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   child: DigitTextFormInput(
                                     onChange: (value) {
                                       field.didChange(value);
-                                      additionalController[index].text =
-                                          value;
+                                      additionalController[index].text = value;
                                     },
                                     errorMessage: field.errorText,
                                     maxLength: 1000,
