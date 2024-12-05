@@ -196,60 +196,64 @@ class _ReferralReasonChecklistPageState
                                           context.read<ServiceBloc>().add(
                                                 ServiceCreateEvent(
                                                   serviceModel: ServiceModel(
-                                                    createdAt: DigitDateUtils
-                                                        .getDateFromTimestamp(
-                                                      DateTime.now()
-                                                          .toLocal()
-                                                          .millisecondsSinceEpoch,
-                                                      dateFormat:
-                                                          defaultDateTimeFormat,
-                                                    ),
-                                                    tenantId: value
-                                                        .selectedServiceDefinition!
-                                                        .tenantId,
-                                                    clientId: widget
-                                                        .referralClientRefId
-                                                        .toString(),
-                                                    serviceDefId: value
-                                                        .selectedServiceDefinition
-                                                        ?.id,
-                                                    attributes: attributes,
-                                                    rowVersion: 1,
-                                                    accountId:
-                                                        ReferralReconSingleton()
-                                                            .projectId,
-                                                    auditDetails: AuditDetails(
-                                                      createdBy:
+                                                      createdAt: DigitDateUtils
+                                                          .getDateFromTimestamp(
+                                                        DateTime.now()
+                                                            .toLocal()
+                                                            .millisecondsSinceEpoch,
+                                                        dateFormat:
+                                                            defaultDateTimeFormat,
+                                                      ),
+                                                      tenantId: value
+                                                          .selectedServiceDefinition!
+                                                          .tenantId,
+                                                      clientId: widget
+                                                          .referralClientRefId
+                                                          .toString(),
+                                                      serviceDefId: value
+                                                          .selectedServiceDefinition
+                                                          ?.id,
+                                                      attributes: attributes,
+                                                      rowVersion: 1,
+                                                      accountId:
                                                           ReferralReconSingleton()
-                                                              .userUUid,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                      lastModifiedBy:
-                                                          ReferralReconSingleton()
-                                                              .userUUid,
-                                                      lastModifiedTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                    clientAuditDetails:
-                                                        ClientAuditDetails(
-                                                      createdBy:
-                                                          ReferralReconSingleton()
-                                                              .userUUid,
-                                                      createdTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                      lastModifiedBy:
-                                                          ReferralReconSingleton()
-                                                              .userUUid,
-                                                      lastModifiedTime: context
-                                                          .millisecondsSinceEpoch(),
-                                                    ),
-                                                    additionalDetails: {
-                                                      "boundaryCode":
-                                                          ReferralReconSingleton()
-                                                              .boundary
-                                                              ?.code
-                                                    },
-                                                  ),
+                                                              .projectId,
+                                                      auditDetails:
+                                                          AuditDetails(
+                                                        createdBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      clientAuditDetails:
+                                                          ClientAuditDetails(
+                                                        createdBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            ReferralReconSingleton()
+                                                                .userUUid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      additionalFields:
+                                                          ServiceAdditionalFields(
+                                                              version: 1,
+                                                              fields: [
+                                                            AdditionalField(
+                                                                'boundaryCode',
+                                                                SurveyFormSingleton()
+                                                                    .boundary
+                                                                    ?.code)
+                                                          ])),
                                                 ),
                                               );
 
