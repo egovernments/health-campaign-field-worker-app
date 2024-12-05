@@ -1,3 +1,8 @@
+## 1.0.4+1
+
+* Bug Fix:
+  * Updated syncRetryCount,syncRetryInterval and errorPath to dynamic
+
 ## 1.0.5-dev.1
 
 * Merged pgr and survey_form package changes

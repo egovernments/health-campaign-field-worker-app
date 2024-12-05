@@ -297,7 +297,7 @@ abstract class RemoteRepository<D extends EntityModel,
         }
 
         return await dio.post(
-          'error-handler/handle-error', // [TODO: Update this URL]
+          DigitDataModelSingleton().errorDumpApiPath,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
