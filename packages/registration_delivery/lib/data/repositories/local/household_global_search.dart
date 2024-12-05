@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 import 'package:registration_delivery/models/entities/task.dart';
@@ -229,7 +230,12 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
           .individual
           .select()
           .join([joinName(sql), joinIndividualAddress(sql)]);
-      await searchByName(selectQuery, params, sql);
+      if (params.householdType == HouseholdType.community) {
+        await searchByBuildingName(selectQuery, params, sql);
+      } else {
+        await searchByName(selectQuery, params, sql);
+      }
+
       selectQuery = selectQuery.join([
         leftOuterJoin(
             sql.householdMember,
@@ -250,10 +256,14 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
-      selectQuery = selectQuery.join([
-        joinName(sql),
-      ]);
-      selectQuery = searchByName(selectQuery, params, sql);
+      if (params.householdType == HouseholdType.community) {
+        selectQuery = searchByBuildingName(selectQuery, params, sql);
+      } else {
+        selectQuery = selectQuery.join([
+          joinName(sql),
+        ]);
+        selectQuery = searchByName(selectQuery, params, sql);
+      }
     }
     return selectQuery;
   }
@@ -381,6 +391,16 @@ class HouseHoldGlobalSearchRepository extends LocalRepository {
         sql.individual.clientReferenceId,
       ),
     );
+  }
+
+  searchByBuildingName(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.address.buildingName.contains(params.nameSearch!),
+        ]),
+    ]));
   }
 
   joinHouseHoldAddress(LocalSqlDataStore sql) {

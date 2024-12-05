@@ -102,6 +102,7 @@ class HouseholdLocalRepository
                   ? null
                   : AddressModel(
                       id: address.id,
+                      buildingName: address.buildingName,
                       relatedClientReferenceId: household.clientReferenceId,
                       tenantId: address.tenantId,
                       doorNo: address.doorNo,

@@ -441,9 +441,9 @@ class _HouseholdOverviewPageState
                                                 .householdOverView
                                                 .instituteNameLabel): state
                                                     .householdMemberWrapper
-                                                    .headOfHousehold
-                                                    ?.name
-                                                    ?.givenName ??
+                                                    .household
+                                                    ?.address
+                                                    ?.buildingName ??
                                                 localizations.translate(
                                                     i18.common.coreCommonNA),
                                             localizations.translate(

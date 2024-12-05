@@ -204,7 +204,10 @@ class _SearchBeneficiaryPageState
                                           null &&
                                       RegistrationDeliverySingleton()
                                           .searchHouseHoldFilter!
-                                          .isNotEmpty
+                                          .isNotEmpty &&
+                                      RegistrationDeliverySingleton()
+                                              .householdType !=
+                                          HouseholdType.community
                                   ? Align(
                                       alignment: Alignment.topLeft,
                                       child: Padding(

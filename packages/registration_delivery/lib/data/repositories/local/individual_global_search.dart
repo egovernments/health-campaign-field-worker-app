@@ -235,8 +235,10 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           .individual
           .select()
           .join([joinName(sql), joinIndividualAddress(sql)]);
-      await searchByName(selectQuery, params, sql);
+
       if (params.householdClientReferenceId != null) {
+        await searchByName(selectQuery, params, sql);
+
         selectQuery = selectQuery.join([
           leftOuterJoin(
               sql.household,
@@ -259,6 +261,12 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equals(params.householdClientReferenceId ?? '')
           ]));
       } else {
+        if (params.householdType == HouseholdType.community) {
+          await searchByBuildingName(selectQuery, params, sql);
+        } else {
+          await searchByName(selectQuery, params, sql);
+        }
+
         selectQuery = selectQuery.join([
           leftOuterJoin(
               sql.householdMember,
@@ -283,10 +291,15 @@ class IndividualGlobalSearchRepository extends LocalRepository {
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
         selectQuery != null) {
-      selectQuery = selectQuery.join([
-        joinName(sql),
-      ]);
-      selectQuery = searchByName(selectQuery, params, sql);
+      if (params.householdType == HouseholdType.community &&
+          params.householdClientReferenceId == null) {
+        selectQuery = searchByBuildingName(selectQuery, params, sql);
+      } else {
+        selectQuery = selectQuery.join([
+          joinName(sql),
+        ]);
+        selectQuery = searchByName(selectQuery, params, sql);
+      }
     }
     return selectQuery;
   }
@@ -299,6 +312,16 @@ class IndividualGlobalSearchRepository extends LocalRepository {
           sql.name.givenName.contains(
             params.nameSearch!,
           ),
+        ]),
+    ]));
+  }
+
+  searchByBuildingName(
+      selectQuery, GlobalSearchParameters params, LocalSqlDataStore sql) {
+    return selectQuery.where(buildAnd([
+      if (params.nameSearch != null)
+        buildOr([
+          sql.address.buildingName.contains(params.nameSearch!),
         ]),
     ]));
   }
