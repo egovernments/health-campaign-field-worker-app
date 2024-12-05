@@ -1,3 +1,8 @@
+## 1.0.4+1
+
+* Bug Fix:
+  * Updated syncRetryCount,syncRetryInterval and errorPath to dynamic
+
 ## 1.0.4
 
 * Added user_action entity for digit_location_tracker package
