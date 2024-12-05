@@ -591,7 +591,7 @@ class CustomDeliverInterventionPageState
                                                                           quantity:
                                                                               bednetCount,
                                                                           isGS1code:
-                                                                              false,
+                                                                              true,
                                                                           singleValue:
                                                                               bednetCount < 2,
                                                                           isEditEnabled:
