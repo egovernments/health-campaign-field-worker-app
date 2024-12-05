@@ -219,7 +219,7 @@ class CustomSummaryPageState extends LocalizedState<CustomSummaryPage> {
                         child: LabelValueList(
                             heading: localizations.translate(i18
                                 .individualDetails.individualsDetailsLabelText),
-                            withDivider: true,
+                            withDivider: false,
                             items: [
                               LabelValuePair(
                                 label: localizations.translate(
