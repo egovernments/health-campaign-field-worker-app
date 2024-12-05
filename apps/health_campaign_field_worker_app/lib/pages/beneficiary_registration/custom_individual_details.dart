@@ -29,6 +29,7 @@ import 'package:registration_delivery/widgets/showcase/config/showcase_constants
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../router/app_router.dart';
+import '../../widgets/custom_digit_dob_picker.dart';
 import '../custom_qr_scanner.dart';
 
 @RoutePage()
@@ -367,7 +368,7 @@ class CustomIndividualDetailsPageState
                             ),
                           ),
                           individualDetailsShowcaseData.dateOfBirth.buildWith(
-                            child: DigitDobPicker(
+                            child: CustomDigitDobPicker(
                               datePickerFormControl: _dobKey,
                               datePickerLabel: localizations.translate(
                                 i18.individualDetails.dobLabelText,
