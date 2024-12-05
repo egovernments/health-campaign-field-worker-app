@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
@@ -163,7 +164,14 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                       model: houseModel,
                                     ),
                                   );
-                                  router.push(HouseHoldDetailsRoute());
+                                  if (RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community) {
+                                    router.push(IndividualDetailsRoute(
+                                        isHeadOfHousehold: true));
+                                  } else {
+                                    router.push(HouseHoldDetailsRoute());
+                                  }
                                 },
                                 editHousehold: (
                                   address,
@@ -211,7 +219,17 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                       model: houseModel,
                                     ),
                                   );
-                                  router.push(HouseHoldDetailsRoute());
+                                  if (RegistrationDeliverySingleton()
+                                          .householdType ==
+                                      HouseholdType.community) {
+                                    router.push(IndividualDetailsRoute(
+                                        isHeadOfHousehold:
+                                            headOfHousehold != null
+                                                ? true
+                                                : false));
+                                  } else {
+                                    router.push(HouseHoldDetailsRoute());
+                                  }
                                 },
                               );
                             },

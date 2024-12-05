@@ -125,6 +125,11 @@ class Common {
 class SearchBeneficiary {
   const SearchBeneficiary();
 
+  String get communityProximityLabel =>
+      'BENEFICIARY_SEARCH_COMMUNITY_PROXIMITY_LABEL_TEXT';
+
+  String get clfSearchHintText => 'BENEFICIARY_CLF_SEARCH_HINT_TEXT';
+
   String get searchCLFLabel => 'BENEFICIARY_SEARCH_CLF_LABEL_TEXT';
 
   String get statisticsLabelText => 'BENEFICIARY_STATISTICS_LABEL_TEXT';
@@ -145,7 +150,11 @@ class SearchBeneficiary {
 
   String get beneficiaryInfoTitle => 'BENEFICIARY_INFO_TITLE';
 
+  String get clfInfoTitle => 'BENEFICIARY_CLF_INFO_TITLE';
+
   String get beneficiaryAddActionLabel => 'BENEFICIARY_ADD_ACTION_LABEL';
+
+  String get clfAddActionLabel => 'BENEFICIARY_ADD_CLF_ACTION_LABEL';
 
   String get iconLabel => 'ICON_LABEL';
 
@@ -248,6 +257,8 @@ class BeneficiaryDetails {
 class IndividualDetails {
   const IndividualDetails();
 
+  String get clfCheckboxLabelText => 'INDIVIDUAL_CLF_CHECKBOX_LABEL_TEXT';
+
   String get individualsDetailsLabelText => 'INDIVIDUAL_LABEL_TEXT';
 
   String get nameLabelText => 'INDIVIDUAL_NAME_LABEL_TEXT';
@@ -296,6 +307,8 @@ class IndividualDetails {
 
 class HouseholdLocation {
   const HouseholdLocation();
+
+  String get clfLocationLabelText => 'CLF_LOCATION_LABEL_TEXT';
 
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
 

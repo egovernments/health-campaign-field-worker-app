@@ -12,6 +12,7 @@ import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/switch.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -139,9 +140,17 @@ class _SearchBeneficiaryPageState
                                       child: CustomSwitch(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
-                                        label: localizations.translate(
-                                          i18.searchBeneficiary.proximityLabel,
-                                        ),
+                                        label: (RegistrationDeliverySingleton()
+                                                    .householdType ==
+                                                HouseholdType.community)
+                                            ? localizations.translate(
+                                                i18.searchBeneficiary
+                                                    .communityProximityLabel,
+                                              )
+                                            : localizations.translate(
+                                                i18.searchBeneficiary
+                                                    .proximityLabel,
+                                              ),
                                         value: isProximityEnabled,
                                         onChanged: (value) {
                                           searchController.clear();
@@ -172,10 +181,15 @@ class _SearchBeneficiaryPageState
                                 padding: const EdgeInsets.all(spacer2),
                                 child: DigitSearchBar(
                                   controller: searchController,
-                                  hintText: localizations.translate(
-                                    i18.searchBeneficiary
-                                        .beneficiarySearchHintText,
-                                  ),
+                                  hintText: (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? localizations.translate(i18
+                                          .searchBeneficiary.clfSearchHintText)
+                                      : localizations.translate(
+                                          i18.searchBeneficiary
+                                              .beneficiarySearchHintText,
+                                        ),
                                   textCapitalization: TextCapitalization.words,
                                   onChanged: (value) {
                                     if (value.isEmpty ||
@@ -248,9 +262,15 @@ class _SearchBeneficiaryPageState
                           !searchHouseholdsState.loading)
                         InfoCard(
                           type: InfoType.info,
-                          description: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoDescription,
-                          ),
+                          description: (RegistrationDeliverySingleton()
+                                      .householdType ==
+                                  HouseholdType.community)
+                              ? localizations
+                                  .translate(i18.searchBeneficiary.clfInfoTitle)
+                              : localizations.translate(
+                                  i18.searchBeneficiary
+                                      .beneficiaryInfoDescription,
+                                ),
                           title: localizations.translate(
                             i18.searchBeneficiary.beneficiaryInfoTitle,
                           ),
@@ -365,61 +385,72 @@ class _SearchBeneficiaryPageState
             ],
           ),
         ),
-        bottomNavigationBar: DigitCard(
-            margin: const EdgeInsets.only(top: spacer2),
-            padding: const EdgeInsets.all(spacer2),
-            children: [
-              Button(
-                label: localizations.translate(
-                  i18.searchBeneficiary.beneficiaryAddActionLabel,
-                ),
-                mainAxisSize: MainAxisSize.max,
-                type: ButtonType.primary,
-                size: ButtonSize.large,
-                isDisabled: searchHouseholdsState.searchQuery != null &&
-                        searchHouseholdsState.searchQuery!.isNotEmpty
-                    ? false
-                    : true,
-                onPressed: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  context.read<DigitScannerBloc>().add(
-                        const DigitScannerEvent.handleScanner(),
-                      );
-                  context.router.push(BeneficiaryRegistrationWrapperRoute(
-                    initialState: BeneficiaryRegistrationCreateState(
-                      searchQuery: searchHouseholdsState.searchQuery,
-                    ),
-                  ));
-                  searchController.clear();
-                  selectedFilters = [];
-                  blocWrapper.clearEvent();
-                },
-              ),
-              Button(
-                type: ButtonType.secondary,
-                size: ButtonSize.large,
-                mainAxisSize: MainAxisSize.max,
-                onPressed: () {
-                  blocWrapper.clearEvent();
-                  selectedFilters = [];
-                  searchController.clear();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const DigitScannerPage(
-                        quantity: 1,
-                        isGS1code: false,
-                        singleValue: true,
+        bottomNavigationBar: Offstage(
+          offstage: RegistrationDeliverySingleton().householdType ==
+                      HouseholdType.community &&
+                  (searchHouseholdsState.searchQuery == null) ||
+              (searchHouseholdsState.searchQuery != null &&
+                  searchHouseholdsState.householdMembers.isNotEmpty),
+          child: DigitCard(
+              margin: const EdgeInsets.only(top: spacer2),
+              padding: const EdgeInsets.all(spacer2),
+              children: [
+                Button(
+                  label: (RegistrationDeliverySingleton().householdType ==
+                          HouseholdType.community)
+                      ? localizations
+                          .translate(i18.searchBeneficiary.clfAddActionLabel)
+                      : localizations.translate(
+                          i18.searchBeneficiary.beneficiaryAddActionLabel,
+                        ),
+                  mainAxisSize: MainAxisSize.max,
+                  type: ButtonType.primary,
+                  size: ButtonSize.large,
+                  isDisabled: searchHouseholdsState.searchQuery != null &&
+                          searchHouseholdsState.searchQuery!.isNotEmpty
+                      ? false
+                      : true,
+                  onPressed: () {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    context.read<DigitScannerBloc>().add(
+                          const DigitScannerEvent.handleScanner(),
+                        );
+                    context.router.push(BeneficiaryRegistrationWrapperRoute(
+                      initialState: BeneficiaryRegistrationCreateState(
+                        searchQuery: searchHouseholdsState.searchQuery,
                       ),
-                      settings: const RouteSettings(name: '/qr-scanner'),
-                    ),
-                  );
-                },
-                prefixIcon: Icons.qr_code,
-                label: localizations.translate(
-                  i18.deliverIntervention.scannerLabel,
+                    ));
+                    searchController.clear();
+                    selectedFilters = [];
+                    blocWrapper.clearEvent();
+                  },
                 ),
-              ),
-            ]),
+                Button(
+                  type: ButtonType.secondary,
+                  size: ButtonSize.large,
+                  mainAxisSize: MainAxisSize.max,
+                  onPressed: () {
+                    blocWrapper.clearEvent();
+                    selectedFilters = [];
+                    searchController.clear();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const DigitScannerPage(
+                          quantity: 1,
+                          isGS1code: false,
+                          singleValue: true,
+                        ),
+                        settings: const RouteSettings(name: '/qr-scanner'),
+                      ),
+                    );
+                  },
+                  prefixIcon: Icons.qr_code,
+                  label: localizations.translate(
+                    i18.deliverIntervention.scannerLabel,
+                  ),
+                ),
+              ]),
+        ),
       ),
     );
   }
@@ -505,26 +536,26 @@ class _SearchBeneficiaryPageState
       if (isProximityEnabled ||
           selectedFilters.isNotEmpty ||
           searchController.text.isNotEmpty) {
-        blocWrapper.houseHoldGlobalSearchBloc.add(
-            SearchHouseholdsEvent.houseHoldGlobalSearch(
+        blocWrapper.houseHoldGlobalSearchBloc
+            .add(SearchHouseholdsEvent.houseHoldGlobalSearch(
                 globalSearchParams: GlobalSearchParameters(
-                    isProximityEnabled: isProximityEnabled,
-                    latitude: lat,
-                    longitude: long,
-                    projectId: RegistrationDeliverySingleton().projectId!,
-                    maxRadius: RegistrationDeliverySingleton().maxRadius,
-                    nameSearch: searchController.text.trim().length > 2
-                        ? searchController.text.trim()
-                        : blocWrapper.searchHouseholdsBloc.state.searchQuery,
-                    filter: selectedFilters,
-                    offset: isPagination
-                        ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
-                        : offset,
-                    limit: isPagination
-                        ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
-                        : limit,
-                    householdType:
-                        RegistrationDeliverySingleton().householdType)));
+          isProximityEnabled: isProximityEnabled,
+          latitude: lat,
+          longitude: long,
+          projectId: RegistrationDeliverySingleton().projectId!,
+          maxRadius: RegistrationDeliverySingleton().maxRadius,
+          nameSearch: searchController.text.trim().length > 2
+              ? searchController.text.trim()
+              : blocWrapper.searchHouseholdsBloc.state.searchQuery,
+          filter: selectedFilters,
+          offset: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.offset
+              : offset,
+          limit: isPagination
+              ? blocWrapper.houseHoldGlobalSearchBloc.state.limit
+              : limit,
+          householdType: RegistrationDeliverySingleton().householdType,
+        )));
       }
     }
   }

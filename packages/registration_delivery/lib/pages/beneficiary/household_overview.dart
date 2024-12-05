@@ -432,11 +432,8 @@ class _HouseholdOverviewPageState
                                         BeneficiaryType.household;
 
                                     if (RegistrationDeliverySingleton()
-                                                .householdType !=
-                                            null &&
-                                        RegistrationDeliverySingleton()
-                                                .householdType ==
-                                            HouseholdType.community) {
+                                            .householdType ==
+                                        HouseholdType.community) {
                                       return Column(
                                         children: [
                                           DigitTableCard(element: {
@@ -449,11 +446,6 @@ class _HouseholdOverviewPageState
                                                     ?.givenName ??
                                                 localizations.translate(
                                                     i18.common.coreCommonNA),
-                                            localizations.translate(i18
-                                                    .householdOverView
-                                                    .instituteTypeLabel):
-                                                RegistrationDeliverySingleton()
-                                                    .householdType,
                                             localizations.translate(
                                               i18.deliverIntervention
                                                   .memberCountText,

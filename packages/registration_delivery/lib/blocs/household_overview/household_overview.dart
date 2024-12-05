@@ -278,6 +278,7 @@ class HouseholdOverviewBloc
     } else {
       final totalResult = await individualGlobalSearchRepository
           .individualGlobalSearch(GlobalSearchParameters(
+              householdType: RegistrationDeliverySingleton().householdType,
               householdClientReferenceId:
                   state.householdMemberWrapper.household!.clientReferenceId,
               isProximityEnabled: false,

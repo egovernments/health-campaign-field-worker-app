@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/material.dart';
 
@@ -181,6 +182,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                 .equalsExp(sql.individual.clientReferenceId))
       ])
         ..where(buildAnd([
+          if (params.householdType == HouseholdType.community)
+            sql.householdMember.isHeadOfHousehold.equals(true),
           sql.address.relatedClientReferenceId.isNotNull(),
           sql.individual.clientReferenceId.isNotNull(),
           if (params.latitude != null &&
@@ -261,8 +264,7 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.householdMember,
               sql.householdMember.individualClientReferenceId
                   .equalsExp(sql.individual.clientReferenceId))
-        ])
-          ..where(sql.householdMember.isHeadOfHousehold.equals(true));
+        ]);
         selectQuery.join([
           leftOuterJoin(
               sql.household,
@@ -272,7 +274,11 @@ class IndividualGlobalSearchRepository extends LocalRepository {
               sql.projectBeneficiary,
               sql.projectBeneficiary.beneficiaryClientReferenceId
                   .equalsExp(sql.household.clientReferenceId))
-        ]).where(sql.household.householdType.equalsValue(params.householdType));
+        ]).where(buildAnd([
+          if (params.householdType == HouseholdType.community)
+            sql.householdMember.isHeadOfHousehold.equals(true),
+          sql.household.householdType.equalsValue(params.householdType)
+        ]));
       }
     } else if (params.nameSearch != null &&
         params.nameSearch!.isNotEmpty &&
@@ -317,6 +323,8 @@ class IndividualGlobalSearchRepository extends LocalRepository {
                     .equalsExp(sql.individual.clientReferenceId))
         ])
           ..where(buildAnd([
+            if (params.householdType == HouseholdType.community)
+              sql.householdMember.isHeadOfHousehold.equals(true),
             sql.householdMember.householdClientReferenceId
                 .equalsExp(sql.household.clientReferenceId),
             filter == Status.registered.name
