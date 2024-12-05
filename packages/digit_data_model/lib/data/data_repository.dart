@@ -291,7 +291,7 @@ R extends EntitySearchModel> extends DataRepository<D, R> {
         }
 
         return await dio.post(
-          'error-handler/handle-error', // [TODO: Update this URL]
+          DigitDataModelSingleton().errorDumpApiPath,
           options: Options(headers: {
             "content-type": 'application/json',
           }),
