@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/models/entities/household_type.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -202,208 +203,214 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                   child: Column(
                     children: [
                       DigitCard(
-                        margin: const EdgeInsets.all(spacer2),
+                          margin: const EdgeInsets.all(spacer2),
                           children: [
-                        LabelValueList(
-                            heading: localizations.translate(i18
-                                .householdLocation.householdLocationLabelText),
-
-                            labelFlex: 6,
-                            maxLines: 2,
-                            items: [
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdLocation.villageLabel),
-                                  value: householdState.householdModel?.address
-                                          ?.locality?.code ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdLocation.landmarkFormLabel),
-                                  value: householdState
-                                          .householdModel?.address?.landmark ??
-                                      localizations
-                                          .translate(i18.common.coreCommonNA),
-                                  isInline: true),
+                            LabelValueList(
+                                heading: localizations.translate(i18
+                                    .householdLocation
+                                    .householdLocationLabelText),
+                                labelFlex: 6,
+                                maxLines: 2,
+                                items: [
+                                  LabelValuePair(
+                                      label: localizations.translate(
+                                          i18.householdLocation.villageLabel),
+                                      value: householdState.householdModel
+                                              ?.address?.locality?.code ??
+                                          localizations.translate(
+                                              i18.common.coreCommonNA),
+                                      isInline: true),
+                                  LabelValuePair(
+                                      label: localizations.translate(i18
+                                          .householdLocation.landmarkFormLabel),
+                                      value: householdState.householdModel
+                                              ?.address?.landmark ??
+                                          localizations.translate(
+                                              i18.common.coreCommonNA),
+                                      isInline: true),
+                                ]),
+                          ]),
+                      if (RegistrationDeliverySingleton().householdType !=
+                          HouseholdType.community)
+                        DigitCard(
+                            margin: const EdgeInsets.all(spacer2),
+                            children: [
+                              LabelValueList(
+                                  heading: localizations.translate(i18
+                                      .householdDetails.householdDetailsLabel),
+                                  labelFlex: 6,
+                                  items: [
+                                    LabelValuePair(
+                                        label: localizations.translate(i18
+                                            .beneficiaryDetails.totalMembers),
+                                        value: householdState
+                                                .householdModel?.memberCount
+                                                .toString() ??
+                                            '0',
+                                        isInline: true),
+                                    LabelValuePair(
+                                        label: localizations.translate(i18
+                                            .householdDetails
+                                            .noOfPregnantWomenCountLabel),
+                                        value: householdState.householdModel
+                                                ?.additionalFields?.fields
+                                                .where((h) =>
+                                                    h.key ==
+                                                    AdditionalFieldsType
+                                                        .pregnantWomen
+                                                        .toValue())
+                                                .firstOrNull
+                                                ?.value
+                                                .toString() ??
+                                            '0',
+                                        isInline: true),
+                                    LabelValuePair(
+                                        label: localizations.translate(i18
+                                            .householdDetails
+                                            .noOfChildrenBelow5YearsLabel),
+                                        value: householdState.householdModel
+                                                ?.additionalFields?.fields
+                                                .where((h) =>
+                                                    h.key ==
+                                                    AdditionalFieldsType
+                                                        .children
+                                                        .toValue())
+                                                .firstOrNull
+                                                ?.value
+                                                .toString() ??
+                                            '0',
+                                        isInline: true),
+                                  ]),
                             ]),
-                      ]),
                       DigitCard(
-                        margin: const EdgeInsets.all(spacer2),
+                          margin: const EdgeInsets.all(spacer2),
                           children: [
-                        LabelValueList(
-                            heading: localizations.translate(
-                                i18.householdDetails.householdDetailsLabel),
-                            labelFlex: 6,
-                            items: [
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.beneficiaryDetails.totalMembers),
-                                  value: householdState
-                                          .householdModel?.memberCount
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(i18
-                                      .householdDetails
-                                      .noOfPregnantWomenCountLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.pregnantWomen
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(i18
-                                      .householdDetails
-                                      .noOfChildrenBelow5YearsLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.children
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                            ]),
-                      ]),
-                      DigitCard(
-                        margin: const EdgeInsets.all(spacer2),
-                          children: [
-                        LabelValueList(
-                            heading: localizations.translate(
-                                i18.householdDetails.houseDetailsLabel),
-                            labelFlex: 6,
-                            items: [
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdDetails.noOfRoomsLabel),
-                                  value: householdState.householdModel
-                                          ?.additionalFields?.fields
-                                          .where((h) =>
-                                              h.key ==
-                                              AdditionalFieldsType.noOfRooms
-                                                  .toValue())
-                                          .firstOrNull
-                                          ?.value
-                                          .toString() ??
-                                      '0',
-                                  isInline: true),
-                              LabelValuePair(
-                                  label: localizations.translate(
-                                      i18.householdDetails.typeOfStructure),
-                                  value: (householdState.householdModel
+                            LabelValueList(
+                                heading: localizations.translate(
+                                    i18.householdDetails.houseDetailsLabel),
+                                labelFlex: 6,
+                                items: [
+                                  LabelValuePair(
+                                      label: localizations.translate(
+                                          i18.householdDetails.noOfRoomsLabel),
+                                      value: householdState.householdModel
                                               ?.additionalFields?.fields
                                               .where((h) =>
                                                   h.key ==
-                                                  AdditionalFieldsType
-                                                      .houseStructureTypes
+                                                  AdditionalFieldsType.noOfRooms
                                                       .toValue())
                                               .firstOrNull
-                                              ?.value ??
-                                          [])
-                                      .toString()
-                                      .split('|')
-                                      .map((item) => getLocalizedMessage(item))
-                                      .toList()
-                                      .join(', '),
-                                  isInline: true),
-                            ]),
-                      ]),
+                                              ?.value
+                                              .toString() ??
+                                          '0',
+                                      isInline: true),
+                                  LabelValuePair(
+                                      label: localizations.translate(
+                                          i18.householdDetails.typeOfStructure),
+                                      value: (householdState.householdModel
+                                                  ?.additionalFields?.fields
+                                                  .where((h) =>
+                                                      h.key ==
+                                                      AdditionalFieldsType
+                                                          .houseStructureTypes
+                                                          .toValue())
+                                                  .firstOrNull
+                                                  ?.value ??
+                                              [])
+                                          .toString()
+                                          .split('|')
+                                          .map((item) =>
+                                              getLocalizedMessage(item))
+                                          .toList()
+                                          .join(', '),
+                                      isInline: true),
+                                ]),
+                          ]),
                       DigitCard(
-                        margin: const EdgeInsets.all(spacer2),
+                          margin: const EdgeInsets.all(spacer2),
                           children: [
-                        LabelValueList(
-                            heading: localizations.translate(i18
-                                .individualDetails.individualsDetailsLabelText),
-                            labelFlex: 6,
-                            items: [
-                              LabelValuePair(
-                                label: localizations.translate(
-                                    i18.individualDetails.nameLabelText),
-                                value: householdState.maybeWhen(
-                                    orElse: () => localizations
-                                        .translate(i18.common.coreCommonNA),
-                                    summary: (
-                                      navigateToRoot,
-                                      householdModel,
-                                      individualModel,
-                                      projectBeneficiaryModel,
-                                      registrationDate,
-                                      addressModel,
-                                      loading,
-                                      isHeadOfHousehold,
-                                    ) =>
-                                        individualModel?.name?.givenName ??
-                                        localizations.translate(
-                                            i18.common.coreCommonNA)),
-                              ),
-                              LabelValuePair(
-                                label: localizations.translate(
-                                    i18.individualDetails.dobLabelText),
-                                value: householdState.maybeWhen(
-                                    orElse: () => localizations
-                                        .translate(i18.common.coreCommonNA),
-                                    summary: (
-                                      navigateToRoot,
-                                      householdModel,
-                                      individualModel,
-                                      projectBeneficiaryModel,
-                                      registrationDate,
-                                      addressModel,
-                                      loading,
-                                      isHeadOfHousehold,
-                                    ) =>
-                                        individualModel?.dateOfBirth != null
-                                            ? DigitDateUtils.getFilteredDate(
-                                                    DigitDateUtils
-                                                            .getFormattedDateToDateTime(
+                            LabelValueList(
+                                heading: localizations.translate(i18
+                                    .individualDetails
+                                    .individualsDetailsLabelText),
+                                labelFlex: 6,
+                                items: [
+                                  LabelValuePair(
+                                    label: localizations.translate(
+                                        i18.individualDetails.nameLabelText),
+                                    value: householdState.maybeWhen(
+                                        orElse: () => localizations
+                                            .translate(i18.common.coreCommonNA),
+                                        summary: (
+                                          navigateToRoot,
+                                          householdModel,
+                                          individualModel,
+                                          projectBeneficiaryModel,
+                                          registrationDate,
+                                          addressModel,
+                                          loading,
+                                          isHeadOfHousehold,
+                                        ) =>
+                                            individualModel?.name?.givenName ??
+                                            localizations.translate(
+                                                i18.common.coreCommonNA)),
+                                  ),
+                                  LabelValuePair(
+                                    label: localizations.translate(
+                                        i18.individualDetails.dobLabelText),
+                                    value: householdState.maybeWhen(
+                                        orElse: () => localizations
+                                            .translate(i18.common.coreCommonNA),
+                                        summary: (
+                                          navigateToRoot,
+                                          householdModel,
+                                          individualModel,
+                                          projectBeneficiaryModel,
+                                          registrationDate,
+                                          addressModel,
+                                          loading,
+                                          isHeadOfHousehold,
+                                        ) =>
+                                            individualModel?.dateOfBirth != null
+                                                ? DigitDateUtils.getFilteredDate(
+                                                        DigitDateUtils.getFormattedDateToDateTime(
                                                                 individualModel
                                                                         ?.dateOfBirth ??
                                                                     '')
-                                                        .toString(),
-                                                    dateFormat: Constants()
-                                                        .dateMonthYearFormat)
-                                                .toString()
-                                            : localizations.translate(
-                                                i18.common.coreCommonNA)),
-                              ),
-                              LabelValuePair(
-                                label: localizations.translate(
-                                    i18.individualDetails.genderLabelText),
-                                value: householdState.maybeWhen(
-                                    orElse: () => localizations
-                                        .translate(i18.common.coreCommonNA),
-                                    summary: (
-                                      navigateToRoot,
-                                      householdModel,
-                                      individualModel,
-                                      projectBeneficiaryModel,
-                                      registrationDate,
-                                      addressModel,
-                                      loading,
-                                      isHeadOfHousehold,
-                                    ) =>
-                                        individualModel?.gender != null
-                                            ? localizations.translate(
-                                                individualModel?.gender?.name
-                                                        .toUpperCase() ??
-                                                    '')
-                                            : localizations.translate(
-                                                i18.common.coreCommonNA)),
-                              ),
-                            ]),
-                      ]),
+                                                            .toString(),
+                                                        dateFormat: Constants()
+                                                            .dateMonthYearFormat)
+                                                    .toString()
+                                                : localizations.translate(
+                                                    i18.common.coreCommonNA)),
+                                  ),
+                                  LabelValuePair(
+                                    label: localizations.translate(
+                                        i18.individualDetails.genderLabelText),
+                                    value: householdState.maybeWhen(
+                                        orElse: () => localizations
+                                            .translate(i18.common.coreCommonNA),
+                                        summary: (
+                                          navigateToRoot,
+                                          householdModel,
+                                          individualModel,
+                                          projectBeneficiaryModel,
+                                          registrationDate,
+                                          addressModel,
+                                          loading,
+                                          isHeadOfHousehold,
+                                        ) =>
+                                            individualModel?.gender != null
+                                                ? localizations.translate(
+                                                    individualModel
+                                                            ?.gender?.name
+                                                            .toUpperCase() ??
+                                                        '')
+                                                : localizations.translate(
+                                                    i18.common.coreCommonNA)),
+                                  ),
+                                ]),
+                          ]),
                     ],
                   ),
                 )

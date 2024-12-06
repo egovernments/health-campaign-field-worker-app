@@ -32927,6 +32927,14 @@ class $HouseholdTable extends Household
   late final GeneratedColumn<int> rowVersion = GeneratedColumn<int>(
       'row_version', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _householdTypeMeta =
+      const VerificationMeta('householdType');
+  @override
+  late final GeneratedColumnWithTypeConverter<HouseholdType?, int>
+      householdType = GeneratedColumn<int>('household_type', aliasedName, true,
+              type: DriftSqlType.int, requiredDuringInsert: false)
+          .withConverter<HouseholdType?>(
+              $HouseholdTable.$converterhouseholdTypen);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -32952,6 +32960,7 @@ class $HouseholdTable extends Household
         tenantId,
         isDeleted,
         rowVersion,
+        householdType,
         additionalFields
       ];
   @override
@@ -33057,6 +33066,7 @@ class $HouseholdTable extends Household
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
+    context.handle(_householdTypeMeta, const VerificationResult.success());
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -33106,6 +33116,9 @@ class $HouseholdTable extends Household
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
+      householdType: $HouseholdTable.$converterhouseholdTypen.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}household_type'])),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -33115,6 +33128,12 @@ class $HouseholdTable extends Household
   $HouseholdTable createAlias(String alias) {
     return $HouseholdTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<HouseholdType, int, int> $converterhouseholdType =
+      const EnumIndexConverter<HouseholdType>(HouseholdType.values);
+  static JsonTypeConverter2<HouseholdType?, int?, int?>
+      $converterhouseholdTypen =
+      JsonTypeConverter2.asNullable($converterhouseholdType);
 }
 
 class HouseholdData extends DataClass implements Insertable<HouseholdData> {
@@ -33135,6 +33154,7 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
+  final HouseholdType? householdType;
   final String? additionalFields;
   const HouseholdData(
       {this.id,
@@ -33154,6 +33174,7 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       this.tenantId,
       this.isDeleted,
       this.rowVersion,
+      this.householdType,
       this.additionalFields});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -33206,6 +33227,10 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
     }
     if (!nullToAbsent || rowVersion != null) {
       map['row_version'] = Variable<int>(rowVersion);
+    }
+    if (!nullToAbsent || householdType != null) {
+      map['household_type'] = Variable<int>(
+          $HouseholdTable.$converterhouseholdTypen.toSql(householdType));
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -33262,6 +33287,9 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       rowVersion: rowVersion == null && nullToAbsent
           ? const Value.absent()
           : Value(rowVersion),
+      householdType: householdType == null && nullToAbsent
+          ? const Value.absent()
+          : Value(householdType),
       additionalFields: additionalFields == null && nullToAbsent
           ? const Value.absent()
           : Value(additionalFields),
@@ -33290,6 +33318,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
+      householdType: $HouseholdTable.$converterhouseholdTypen
+          .fromJson(serializer.fromJson<int?>(json['householdType'])),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -33314,6 +33344,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
+      'householdType': serializer.toJson<int?>(
+          $HouseholdTable.$converterhouseholdTypen.toJson(householdType)),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -33336,6 +33368,7 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
+          Value<HouseholdType?> householdType = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       HouseholdData(
         id: id.present ? id.value : this.id,
@@ -33372,6 +33405,8 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
         tenantId: tenantId.present ? tenantId.value : this.tenantId,
         isDeleted: isDeleted.present ? isDeleted.value : this.isDeleted,
         rowVersion: rowVersion.present ? rowVersion.value : this.rowVersion,
+        householdType:
+            householdType.present ? householdType.value : this.householdType,
         additionalFields: additionalFields.present
             ? additionalFields.value
             : this.additionalFields,
@@ -33396,6 +33431,7 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('householdType: $householdType, ')
           ..write('additionalFields: $additionalFields')
           ..write(')'))
         .toString();
@@ -33420,6 +33456,7 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
       tenantId,
       isDeleted,
       rowVersion,
+      householdType,
       additionalFields);
   @override
   bool operator ==(Object other) =>
@@ -33442,6 +33479,7 @@ class HouseholdData extends DataClass implements Insertable<HouseholdData> {
           other.tenantId == this.tenantId &&
           other.isDeleted == this.isDeleted &&
           other.rowVersion == this.rowVersion &&
+          other.householdType == this.householdType &&
           other.additionalFields == this.additionalFields);
 }
 
@@ -33463,6 +33501,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
+  final Value<HouseholdType?> householdType;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const HouseholdCompanion({
@@ -33483,6 +33522,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.householdType = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -33504,6 +33544,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     this.tenantId = const Value.absent(),
     this.isDeleted = const Value.absent(),
     this.rowVersion = const Value.absent(),
+    this.householdType = const Value.absent(),
     this.additionalFields = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : clientReferenceId = Value(clientReferenceId);
@@ -33525,6 +33566,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
+    Expression<int>? householdType,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -33548,6 +33590,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       if (tenantId != null) 'tenant_id': tenantId,
       if (isDeleted != null) 'is_deleted': isDeleted,
       if (rowVersion != null) 'row_version': rowVersion,
+      if (householdType != null) 'household_type': householdType,
       if (additionalFields != null) 'additional_fields': additionalFields,
       if (rowid != null) 'rowid': rowid,
     });
@@ -33571,6 +33614,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
+      Value<HouseholdType?>? householdType,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return HouseholdCompanion(
@@ -33591,6 +33635,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
       tenantId: tenantId ?? this.tenantId,
       isDeleted: isDeleted ?? this.isDeleted,
       rowVersion: rowVersion ?? this.rowVersion,
+      householdType: householdType ?? this.householdType,
       additionalFields: additionalFields ?? this.additionalFields,
       rowid: rowid ?? this.rowid,
     );
@@ -33650,6 +33695,10 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
     if (rowVersion.present) {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
+    if (householdType.present) {
+      map['household_type'] = Variable<int>(
+          $HouseholdTable.$converterhouseholdTypen.toSql(householdType.value));
+    }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
     }
@@ -33679,6 +33728,7 @@ class HouseholdCompanion extends UpdateCompanion<HouseholdData> {
           ..write('tenantId: $tenantId, ')
           ..write('isDeleted: $isDeleted, ')
           ..write('rowVersion: $rowVersion, ')
+          ..write('householdType: $householdType, ')
           ..write('additionalFields: $additionalFields, ')
           ..write('rowid: $rowid')
           ..write(')'))

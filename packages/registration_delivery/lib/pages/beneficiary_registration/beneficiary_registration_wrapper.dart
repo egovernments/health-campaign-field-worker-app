@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:registration_delivery/data/repositories/local/individual_global_search.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 
 import '../../utils/extensions/extensions.dart';
@@ -40,6 +41,9 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
         context.repository<SideEffectModel, SideEffectSearchModel>(context);
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
+
+    final individualGlobalSearch =
+        context.read<IndividualGlobalSearchRepository>();
 
     return BlocProvider(
       create: (_) => HouseholdOverviewBloc(
@@ -89,6 +93,7 @@ class BeneficiaryRegistrationWrapperPage extends StatelessWidget
           beneficiaryType: RegistrationDeliverySingleton().beneficiaryType!,
           taskDataRepository: task,
           sideEffectDataRepository: sideEffect,
+          individualGlobalSearchRepository: individualGlobalSearch,
           referralDataRepository: referral)
         ..add(HouseholdOverviewReloadEvent(
             projectId: RegistrationDeliverySingleton().selectedProject!.id,
