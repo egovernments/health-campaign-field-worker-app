@@ -452,11 +452,11 @@ mixin _$PeerToPeerState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
@@ -466,10 +466,12 @@ mixin _$PeerToPeerState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) =>
@@ -478,10 +480,12 @@ mixin _$PeerToPeerState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
@@ -593,11 +597,11 @@ class _$PeerToPeerInitialImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
@@ -610,10 +614,12 @@ class _$PeerToPeerInitialImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
@@ -625,10 +631,12 @@ class _$PeerToPeerInitialImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
@@ -742,11 +750,11 @@ class _$PeerToPeerLoadingImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
@@ -759,10 +767,12 @@ class _$PeerToPeerLoadingImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
@@ -774,10 +784,12 @@ class _$PeerToPeerLoadingImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
@@ -849,7 +861,7 @@ abstract class _$$TransferInProgressImplCopyWith<$Res> {
           $Res Function(_$TransferInProgressImpl) then) =
       __$$TransferInProgressImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({double progress, String entityName});
+  $Res call({double progress, int offset, int totalCount});
 }
 
 /// @nodoc
@@ -864,17 +876,22 @@ class __$$TransferInProgressImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? progress = null,
-    Object? entityName = null,
+    Object? offset = null,
+    Object? totalCount = null,
   }) {
     return _then(_$TransferInProgressImpl(
       progress: null == progress
           ? _value.progress
           : progress // ignore: cast_nullable_to_non_nullable
               as double,
-      entityName: null == entityName
-          ? _value.entityName
-          : entityName // ignore: cast_nullable_to_non_nullable
-              as String,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -885,16 +902,18 @@ class _$TransferInProgressImpl
     with DiagnosticableTreeMixin
     implements TransferInProgress {
   const _$TransferInProgressImpl(
-      {required this.progress, required this.entityName});
+      {required this.progress, required this.offset, required this.totalCount});
 
   @override
   final double progress;
   @override
-  final String entityName;
+  final int offset;
+  @override
+  final int totalCount;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PeerToPeerState.transferInProgress(progress: $progress, entityName: $entityName)';
+    return 'PeerToPeerState.transferInProgress(progress: $progress, offset: $offset, totalCount: $totalCount)';
   }
 
   @override
@@ -903,7 +922,8 @@ class _$TransferInProgressImpl
     properties
       ..add(DiagnosticsProperty('type', 'PeerToPeerState.transferInProgress'))
       ..add(DiagnosticsProperty('progress', progress))
-      ..add(DiagnosticsProperty('entityName', entityName));
+      ..add(DiagnosticsProperty('offset', offset))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
   }
 
   @override
@@ -913,12 +933,13 @@ class _$TransferInProgressImpl
             other is _$TransferInProgressImpl &&
             (identical(other.progress, progress) ||
                 other.progress == progress) &&
-            (identical(other.entityName, entityName) ||
-                other.entityName == entityName));
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, progress, entityName);
+  int get hashCode => Object.hash(runtimeType, progress, offset, totalCount);
 
   @JsonKey(ignore: true)
   @override
@@ -932,16 +953,16 @@ class _$TransferInProgressImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
-    return transferInProgress(progress, entityName);
+    return transferInProgress(progress, offset, totalCount);
   }
 
   @override
@@ -949,14 +970,16 @@ class _$TransferInProgressImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
-    return transferInProgress?.call(progress, entityName);
+    return transferInProgress?.call(progress, offset, totalCount);
   }
 
   @override
@@ -964,16 +987,18 @@ class _$TransferInProgressImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
     if (transferInProgress != null) {
-      return transferInProgress(progress, entityName);
+      return transferInProgress(progress, offset, totalCount);
     }
     return orElse();
   }
@@ -1032,10 +1057,12 @@ class _$TransferInProgressImpl
 abstract class TransferInProgress implements PeerToPeerState {
   const factory TransferInProgress(
       {required final double progress,
-      required final String entityName}) = _$TransferInProgressImpl;
+      required final int offset,
+      required final int totalCount}) = _$TransferInProgressImpl;
 
   double get progress;
-  String get entityName;
+  int get offset;
+  int get totalCount;
   @JsonKey(ignore: true)
   _$$TransferInProgressImplCopyWith<_$TransferInProgressImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1092,11 +1119,11 @@ class _$CompletedDataTransferImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
@@ -1109,10 +1136,12 @@ class _$CompletedDataTransferImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
@@ -1124,10 +1153,12 @@ class _$CompletedDataTransferImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
@@ -1270,11 +1301,11 @@ class _$FailedToTransferImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
@@ -1287,10 +1318,12 @@ class _$FailedToTransferImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
@@ -1302,10 +1335,12 @@ class _$FailedToTransferImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
@@ -1383,7 +1418,7 @@ abstract class _$$ReceivingInProgressImplCopyWith<$Res> {
           $Res Function(_$ReceivingInProgressImpl) then) =
       __$$ReceivingInProgressImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({double progress, String entityName});
+  $Res call({double progress, int offset, int totalCount});
 }
 
 /// @nodoc
@@ -1398,17 +1433,22 @@ class __$$ReceivingInProgressImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? progress = null,
-    Object? entityName = null,
+    Object? offset = null,
+    Object? totalCount = null,
   }) {
     return _then(_$ReceivingInProgressImpl(
       progress: null == progress
           ? _value.progress
           : progress // ignore: cast_nullable_to_non_nullable
               as double,
-      entityName: null == entityName
-          ? _value.entityName
-          : entityName // ignore: cast_nullable_to_non_nullable
-              as String,
+      offset: null == offset
+          ? _value.offset
+          : offset // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalCount: null == totalCount
+          ? _value.totalCount
+          : totalCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -1419,16 +1459,18 @@ class _$ReceivingInProgressImpl
     with DiagnosticableTreeMixin
     implements ReceivingInProgress {
   const _$ReceivingInProgressImpl(
-      {required this.progress, required this.entityName});
+      {required this.progress, required this.offset, required this.totalCount});
 
   @override
   final double progress;
   @override
-  final String entityName;
+  final int offset;
+  @override
+  final int totalCount;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'PeerToPeerState.receivingInProgress(progress: $progress, entityName: $entityName)';
+    return 'PeerToPeerState.receivingInProgress(progress: $progress, offset: $offset, totalCount: $totalCount)';
   }
 
   @override
@@ -1437,7 +1479,8 @@ class _$ReceivingInProgressImpl
     properties
       ..add(DiagnosticsProperty('type', 'PeerToPeerState.receivingInProgress'))
       ..add(DiagnosticsProperty('progress', progress))
-      ..add(DiagnosticsProperty('entityName', entityName));
+      ..add(DiagnosticsProperty('offset', offset))
+      ..add(DiagnosticsProperty('totalCount', totalCount));
   }
 
   @override
@@ -1447,12 +1490,13 @@ class _$ReceivingInProgressImpl
             other is _$ReceivingInProgressImpl &&
             (identical(other.progress, progress) ||
                 other.progress == progress) &&
-            (identical(other.entityName, entityName) ||
-                other.entityName == entityName));
+            (identical(other.offset, offset) || other.offset == offset) &&
+            (identical(other.totalCount, totalCount) ||
+                other.totalCount == totalCount));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, progress, entityName);
+  int get hashCode => Object.hash(runtimeType, progress, offset, totalCount);
 
   @JsonKey(ignore: true)
   @override
@@ -1466,16 +1510,16 @@ class _$ReceivingInProgressImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
   }) {
-    return receivingInProgress(progress, entityName);
+    return receivingInProgress(progress, offset, totalCount);
   }
 
   @override
@@ -1483,14 +1527,16 @@ class _$ReceivingInProgressImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
-    return receivingInProgress?.call(progress, entityName);
+    return receivingInProgress?.call(progress, offset, totalCount);
   }
 
   @override
@@ -1498,16 +1544,18 @@ class _$ReceivingInProgressImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
   }) {
     if (receivingInProgress != null) {
-      return receivingInProgress(progress, entityName);
+      return receivingInProgress(progress, offset, totalCount);
     }
     return orElse();
   }
@@ -1566,10 +1614,12 @@ class _$ReceivingInProgressImpl
 abstract class ReceivingInProgress implements PeerToPeerState {
   const factory ReceivingInProgress(
       {required final double progress,
-      required final String entityName}) = _$ReceivingInProgressImpl;
+      required final int offset,
+      required final int totalCount}) = _$ReceivingInProgressImpl;
 
   double get progress;
-  String get entityName;
+  int get offset;
+  int get totalCount;
   @JsonKey(ignore: true)
   _$$ReceivingInProgressImplCopyWith<_$ReceivingInProgressImpl> get copyWith =>
       throw _privateConstructorUsedError;
@@ -1621,11 +1671,11 @@ class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
@@ -1638,10 +1688,12 @@ class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
@@ -1653,10 +1705,12 @@ class _$DataReceivedImpl with DiagnosticableTreeMixin implements DataReceived {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),
@@ -1799,11 +1853,11 @@ class _$FailedDataTransferImpl
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         transferInProgress,
     required TResult Function() completedDataTransfer,
     required TResult Function(String error) failedToTransfer,
-    required TResult Function(double progress, String entityName)
+    required TResult Function(double progress, int offset, int totalCount)
         receivingInProgress,
     required TResult Function() dataReceived,
     required TResult Function(String error) failedToReceive,
@@ -1816,10 +1870,12 @@ class _$FailedDataTransferImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? initial,
     TResult? Function()? loading,
-    TResult? Function(double progress, String entityName)? transferInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult? Function()? completedDataTransfer,
     TResult? Function(String error)? failedToTransfer,
-    TResult? Function(double progress, String entityName)? receivingInProgress,
+    TResult? Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult? Function()? dataReceived,
     TResult? Function(String error)? failedToReceive,
   }) {
@@ -1831,10 +1887,12 @@ class _$FailedDataTransferImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
-    TResult Function(double progress, String entityName)? transferInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        transferInProgress,
     TResult Function()? completedDataTransfer,
     TResult Function(String error)? failedToTransfer,
-    TResult Function(double progress, String entityName)? receivingInProgress,
+    TResult Function(double progress, int offset, int totalCount)?
+        receivingInProgress,
     TResult Function()? dataReceived,
     TResult Function(String error)? failedToReceive,
     required TResult orElse(),

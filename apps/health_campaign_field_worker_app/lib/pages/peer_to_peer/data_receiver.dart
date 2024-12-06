@@ -15,6 +15,7 @@ import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import '../../widgets/peer_to_peer/file_transfer_animation.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
@@ -45,13 +46,15 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
     nearbyService.stateChangedSubscription(callback: (devices) {
       for (var device in devices) {
         if (device.state == SessionState.notConnected) {
-          context.router.maybePop();
-          DigitToast.show(context,
-              options: DigitToastOptions(
-                  localizations.translate(
-                      '${device.deviceName} ${SessionState.notConnected.name}'),
-                  true,
-                  Theme.of(context)));
+          if (mounted) {
+            context.router.maybePop();
+            DigitToast.show(context,
+                options: DigitToastOptions(
+                    localizations.translate(
+                        '${device.deviceName} ${SessionState.notConnected.name}'),
+                    true,
+                    Theme.of(context)));
+          }
         }
       }
     });
@@ -90,7 +93,9 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                         Button(
                           type: ButtonType.secondary,
                           mainAxisSize: MainAxisSize.max,
-                          onPressed: () {},
+                          onPressed: () {
+                            context.router.maybePop();
+                          },
                           label: localizations
                               .translate(i18.common.coreCommonCancel),
                           size: ButtonSize.large,
@@ -129,7 +134,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                                   .height *
                                               0.15,
                                           lineWidth: kPadding * 1.5,
-                                          animation: false,
+                                          animation: true,
                                           percent:
                                               0, // Update this dynamically for progress
                                           center: const Text(
@@ -151,30 +156,17 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            Icon(Icons.smartphone,
-                                                size: 40,
-                                                color: DigitTheme.instance
-                                                    .colors.light.primary2),
-                                            const SizedBox(width: 8),
-                                            const Text(
-                                              'Receiving from',
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w500),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            Icon(Icons.smartphone,
-                                                size: 40,
-                                                color: DigitTheme.instance
-                                                    .colors.light.primary2),
+                                            FileTransferAnimation(), // Add animation here
                                           ],
                                         ),
                                         Wrap(
                                             spacing: 8.0,
                                             runSpacing: 4.0,
                                             children: [
-                                              buildDeviceChip(),
+                                              // buildDeviceChip(),
                                               Container(
+                                                padding: const EdgeInsets.all(
+                                                    kPadding),
                                                 decoration: BoxDecoration(
                                                   border: Border.all(
                                                     color: DigitTheme
@@ -200,14 +192,15 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                       ],
                                     ),
                                   ),
-                              receivingInProgress: (progress, receivingEntity) {
+                              receivingInProgress:
+                                  (progress, offset, totalCount) {
                                 return Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      Text('Receiving $receivingEntity'),
+                                      Text('Receiving $offset / $totalCount'),
                                       const SizedBox(height: 16),
                                       CircularPercentIndicator(
                                         radius:
@@ -236,22 +229,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          Icon(Icons.smartphone,
-                                              size: 40,
-                                              color: DigitTheme.instance.colors
-                                                  .light.primary2),
-                                          const SizedBox(width: 8),
-                                          const Text(
-                                            'Receiving from',
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w500),
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Icon(Icons.smartphone,
-                                              size: 40,
-                                              color: DigitTheme.instance.colors
-                                                  .light.primary2),
+                                          FileTransferAnimation(), // Add animation here
                                         ],
                                       ),
                                       Wrap(
@@ -259,7 +237,10 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
                                           runSpacing: 4.0,
                                           children: [
                                             buildDeviceChip(),
+                                            const SizedBox(width: 8),
                                             Container(
+                                              padding: const EdgeInsets.all(
+                                                  kPadding),
                                               decoration: BoxDecoration(
                                                 border: Border.all(
                                                   color: DigitTheme.instance
@@ -319,6 +300,7 @@ class _DataReceiverPageState extends LocalizedState<DataReceiverPage> {
         } else if (snapshot.hasData) {
           // Display the device name when available
           return Container(
+            padding: const EdgeInsets.all(kPadding),
             decoration: BoxDecoration(
               border: Border.all(
                 color: DigitTheme.instance.colors.light.primary1Bg,
