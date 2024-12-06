@@ -296,28 +296,28 @@ class BeneficiaryDownSyncBloc
       await file.writeAsString(
           jsonEncode({})); // Initialize with an empty JSON object
     }
+    var downSyncModel = response["DownsyncCriteria"];
+    // Create a unique key using just the offset
+    String uniqueKey = '${downSyncModel["offset"]}';
+    response.removeWhere((key, value) => key == 'DownsyncCriteria');
 
-    // Merge new response with stored data
-    response.forEach((key, value) {
-      if (key != "DownsyncCriteria") {
-        if (storedData.containsKey(key)) {
-          final existingList = storedData[key] as List<dynamic>? ?? [];
-          final newList = value as List<dynamic>? ?? [];
+    // Prepare data to insert
+    Map<String, dynamic> data = {
+      "totalCount": downSyncModel["totalCount"],
+      "response": response,
+      "boundaryCode": selectedBoundaryCode,
+    };
 
-          final mergedList = [
-            ...existingList,
-            ...newList.where((newItem) => existingList
-                .every((existingItem) => existingItem['id'] != newItem['id']))
-          ];
-          storedData[key] = mergedList;
-        } else {
-          storedData[key] = value;
-        }
-      }
-    });
+    // Store the data under the unique key
+    storedData[uniqueKey] = data;
 
-    // Write the merged data back to the file
-    await file.writeAsString(jsonEncode(storedData));
+    // Convert map to JSON string
+    String storedDataString = jsonEncode(storedData);
+
+    debugPrint("Stored data: $storedDataString");
+
+    // Write the updated data back to the file
+    await file.writeAsString(storedDataString);
 
     if (kDebugMode) {
       print("Data successfully written to ${file.path}");

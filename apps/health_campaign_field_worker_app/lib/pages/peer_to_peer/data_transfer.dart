@@ -15,6 +15,7 @@ import '../../blocs/peer_to_peer/peer_to_peer.dart';
 import '../../router/app_router.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/localized.dart';
+import '../../widgets/peer_to_peer/file_transfer_animation.dart';
 import '../../widgets/showcase/showcase_wrappers.dart';
 
 @RoutePage()
@@ -45,13 +46,15 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
     nearbyService.stateChangedSubscription(callback: (devices) {
       for (var device in devices) {
         if (device.state == SessionState.notConnected) {
-          context.router.maybePop();
-          DigitToast.show(context,
-              options: DigitToastOptions(
-                  localizations.translate(
-                      '${device.deviceName} ${SessionState.notConnected.name}'),
-                  true,
-                  Theme.of(context)));
+          if (mounted) {
+            context.router.maybePop();
+            DigitToast.show(context,
+                options: DigitToastOptions(
+                    localizations.translate(
+                        '${device.deviceName} ${SessionState.notConnected.name}'),
+                    true,
+                    Theme.of(context)));
+          }
         }
       }
     });
@@ -59,6 +62,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
 
   @override
   void dispose() {
+    widget.nearbyService.stopAdvertisingPeer();
     super.dispose();
   }
 
@@ -88,7 +92,9 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                   Button(
                     type: ButtonType.secondary,
                     mainAxisSize: MainAxisSize.max,
-                    onPressed: () {},
+                    onPressed: () {
+                      context.router.maybePop();
+                    },
                     label: localizations.translate(i18.common.coreCommonCancel),
                     size: ButtonSize.large,
                   ),
@@ -122,7 +128,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                                   radius:
                                       MediaQuery.of(context).size.height * 0.15,
                                   lineWidth: kPadding * 1.5,
-                                  animation: false,
+                                  animation: true,
                                   percent:
                                       0, // Update this dynamically for progress
                                   center: const Text(
@@ -141,18 +147,18 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               ],
                             ),
                           ),
-                          transferInProgress: (progress, sendingEntity) =>
+                          transferInProgress: (progress, offset, totalCount) =>
                               Column(
                             mainAxisSize: MainAxisSize.max,
                             children: [
                               const SizedBox(height: 16),
-                              Text('Transferring $sendingEntity'),
+                              Text('Transferring $offset / $totalCount'),
                               const SizedBox(height: 16),
                               CircularPercentIndicator(
                                 radius:
                                     MediaQuery.of(context).size.height * 0.15,
                                 lineWidth: kPadding * 1.5,
-                                animation: false,
+                                animation: true,
                                 percent:
                                     progress, // Update this dynamically for progress
                                 center: Text(
@@ -172,27 +178,14 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Icon(Icons.smartphone,
-                                      size: 40,
-                                      color: DigitTheme
-                                          .instance.colors.light.primary2),
-                                  const SizedBox(width: 8),
-                                  const Text(
-                                    'Transferring to',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Icon(Icons.smartphone,
-                                      size: 40,
-                                      color: DigitTheme
-                                          .instance.colors.light.primary2),
+                                  FileTransferAnimation(), // Add animation here
                                 ],
                               ),
                               Wrap(spacing: 8.0, runSpacing: 4.0, children: [
-                                buildDeviceChip(),
+                                // buildDeviceChip(),
+                                const SizedBox(width: 8),
                                 Container(
+                                  padding: const EdgeInsets.all(kPadding),
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                       color: DigitTheme
@@ -267,6 +260,7 @@ class _DataTransferScreenState extends LocalizedState<DataTransferPage> {
         } else if (snapshot.hasData) {
           // Display the device name when available
           return Container(
+            padding: const EdgeInsets.all(kPadding),
             decoration: BoxDecoration(
               border: Border.all(
                 color: DigitTheme.instance.colors.light.primary1Bg,

@@ -35,7 +35,7 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
 
   List<dynamic> receivedData = [];
   int receivedBytes = 0;
-  int totalData = 0;
+  int totalCount = 0;
   String entityType = '';
   late Device connectedDevice;
   PeerToPeerBloc({
@@ -57,188 +57,251 @@ class PeerToPeerBloc extends Bloc<PeerToPeerEvent, PeerToPeerState> {
   ) async {
     try {
       emit(const PeerToPeerState.transferInProgress(
-          progress: 0, entityName: ''));
+          progress: 0, offset: 0, totalCount: 0));
 
       final downloadsDirectory = await getDownloadsDirectory();
-
       final file = File('${downloadsDirectory!.path}/down_sync_data.json');
 
-      final content = await file.readAsString();
+      if (await file.exists()) {
+        final fileStream = file.openRead();
+        final jsonStream =
+            fileStream.transform(utf8.decoder).transform(json.decoder);
 
-      if (content.isNotEmpty) {
-        final entities = jsonDecode(content);
-
-        for (var entityName in entities.keys) {
-          List<dynamic> entityData = entities[entityName]!;
-          int totalSize = entityData.length;
-          int offset = 0;
-
-          while (offset < totalSize) {
-            // Calculate the chunk
-            const int chunkSize = 1000;
-            int end = (offset + chunkSize < totalSize)
-                ? offset + chunkSize
-                : totalSize;
-            List<dynamic> chunk = entityData.sublist(offset, end);
-
-            // Send the chunk
-            for (var device in event.connectedDevice) {
-              await event.nearbyService.sendMessage(
-                device.deviceId,
-                jsonEncode({
-                  "entityType": entityName,
-                  "message": chunk,
-                  "offset": offset + chunk.length,
-                  "totalData": totalSize,
-                }),
-              );
-            }
-
-            // Wait for chunk confirmation
-            await waitForConfirmation(
-              entityName,
-              event.nearbyService,
-              confirmationType: "chunk",
-              offset: offset + chunk.length,
-            );
-
-            // Update progress
-            final progress = (offset + chunk.length) / totalSize;
-            emit(PeerToPeerState.transferInProgress(
-                progress: progress, entityName: entityName));
-            offset = end;
+        await for (final offsets in jsonStream) {
+          // Ensure that 'entities' is a Map<String, dynamic>
+          if (offsets is! Map<String, dynamic>) {
+            emit(PeerToPeerState.failedToTransfer(
+                error:
+                    'Expected a Map<String, dynamic>, but got ${offsets.runtimeType}'));
+            return;
           }
 
-          // Wait for final confirmation
+          final castedOffsets = offsets;
+
+          for (var offset in castedOffsets.entries) {
+            int offsetValue = int.parse(offset.key);
+            Map<String, dynamic> offsetData = offset.value;
+
+            var entityData = offsetData.keys
+                .where((element) => element == 'response')
+                .map((e) => offsetData[e])
+                .toList();
+
+            totalCount = offsetData.keys
+                .where((element) => element == 'totalCount')
+                .map((e) => offsetData[e])
+                .toList()
+                .first;
+
+            for (var entity in entityData) {
+              Map<String, dynamic> entityResponse = entity;
+
+              for (var device in event.connectedDevice) {
+                await event.nearbyService.sendMessage(
+                  device.deviceId,
+                  jsonEncode({
+                    "type": "chunk",
+                    "message": compressJson(entityResponse),
+                    "offset": offsetValue,
+                    "totalData": totalCount,
+                  }),
+                );
+              }
+
+              // Wait for confirmation before proceeding
+              await waitForConfirmation(
+                event.nearbyService,
+                confirmationType: "chunk",
+                offset: offsetValue,
+              );
+
+              emit(PeerToPeerState.transferInProgress(
+                  progress: offsetValue / totalCount,
+                  offset: offsetValue,
+                  totalCount: totalCount));
+            }
+          }
+
+          // Wait for final confirmation for the entity
           await waitForConfirmation(
-            entityName,
             event.nearbyService,
             confirmationType: "final",
           );
-        }
 
-        emit(const PeerToPeerState.completedDataTransfer());
+          // Send final acknowledgment to all devices
+          for (var device in event.connectedDevice) {
+            await event.nearbyService.sendMessage(
+              device.deviceId,
+              jsonEncode({
+                "type": "confirmation",
+                "confirmationType": "finalTransfer",
+                "status": "completed",
+                "message": "All entities have been sent successfully.",
+              }),
+            );
+          }
+
+          // Wait for receiver's overall acknowledgment
+          await waitForConfirmation(
+            event.nearbyService,
+            confirmationType: "finalAcknowledgment",
+          );
+
+          emit(const PeerToPeerState.completedDataTransfer());
+        }
       }
     } catch (e) {
       emit(PeerToPeerState.failedToTransfer(error: e.toString()));
     }
   }
 
+  String compressJson(Map<String, dynamic> jsonData) {
+    // Convert JSON data to string
+    final jsonString = jsonEncode(jsonData);
+
+    // Compress using zlib
+    final compressedData = zlib.encode(utf8.encode(jsonString));
+
+    // Encode to Base64 to ensure JSON-compatible transmission
+    return base64.encode(compressedData);
+  }
+
+  // Function to decompress JSON data
+  Map<String, dynamic> decompressJson(String base64Data) {
+    // Decode Base64 to binary data
+    final compressedData = base64.decode(base64Data);
+
+    // Decompress using zlib
+    final decompressedString = utf8.decode(zlib.decode(compressedData));
+
+    // Convert back to JSON
+    return jsonDecode(decompressedString);
+  }
+
+  Future<void> _handleReceiveEntities(
+    DataReceiverEvent event,
+    PeerToPeerEmitter emit,
+  ) async {
+    try {
+      var receivedJson = jsonDecode(event.data["message"]);
+      var messageType = receivedJson["type"];
+
+      if (messageType == "chunk") {
+        // Process chunk
+        int offset = receivedJson["offset"];
+        int totalCount = receivedJson["totalData"];
+        final compressedMessage = receivedJson["message"];
+        final entityList = decompressJson(compressedMessage).entries;
+
+        for (var entity in entityList) {
+          entityType = entity.key;
+          final List<dynamic> entityResponse = entity.value ?? [];
+          final entityList =
+              entityResponse.whereType<Map<String, dynamic>>().toList();
+          // Save chunk to database immediately
+          final local = RepositoryType.getLocalForType(
+            DataModels.getDataModelForEntityName(entityType),
+            [
+              individualLocalRepository,
+              householdLocalRepository,
+              householdMemberLocalRepository,
+              projectBeneficiaryLocalRepository,
+              taskLocalRepository,
+              sideEffectLocalRepository,
+              referralLocalRepository,
+            ],
+          );
+
+          // Convert chunk to entity list and save it
+          createDbRecords(local, entityList, entityType);
+        }
+
+        // Update progress and clear processed data
+        receivedBytes = offset;
+        double progress = receivedBytes / totalCount;
+
+        // Emit progress
+        emit(PeerToPeerState.receivingInProgress(
+          progress: progress,
+          offset: offset,
+          totalCount: totalCount,
+        ));
+
+        // Send chunk acknowledgment
+        await event.nearbyService.sendMessage(
+          event.data["deviceId"],
+          jsonEncode({
+            "type": "confirmation",
+            "confirmationType": "chunk",
+            "status": "received",
+            "offset": offset,
+            "progress": progress,
+            "message": "Chunk received and saved successfully.",
+          }),
+        );
+      } else if (messageType == "confirmation" &&
+          receivedJson["confirmationType"] == "allEntitiesTransferComplete") {
+        // Handle overall transfer final acknowledgment
+        emit(const PeerToPeerState.dataReceived());
+
+        // Send overall transfer acknowledgment
+        await event.nearbyService.sendMessage(
+          event.data["deviceId"],
+          jsonEncode({
+            "type": "confirmation",
+            "confirmationType": "finalAcknowledgment",
+            "level": "overall", // Differentiator
+            "status": "success",
+            "message": "All entities received and processed successfully.",
+          }),
+        );
+      }
+    } catch (e) {
+      debugPrint("Error processing received data: $e");
+      emit(PeerToPeerState.failedToReceive(error: e.toString()));
+      await event.nearbyService.sendMessage(
+        event.data["deviceId"],
+        jsonEncode({
+          "type": "confirmation",
+          "confirmationType": "failed",
+          "status": "fail",
+          "message": "$e",
+        }),
+      );
+    }
+  }
+
   Future<void> waitForConfirmation(
-    String entityName,
     NearbyService nearbyService, {
     required String confirmationType,
     int? offset,
   }) async {
     final completer = Completer<void>();
 
-    final subscription =
-        nearbyService.dataReceivedSubscription(callback: (data) {
-      try {
-        var receivedJson = jsonDecode(data["message"]);
-        if (receivedJson["type"] == "confirmation" &&
-            receivedJson["entityType"] == entityName &&
-            receivedJson["confirmationType"] == confirmationType) {
-          if (confirmationType == "chunk" &&
-              receivedJson["offset"] != null &&
-              receivedJson["offset"] == offset) {
-            debugPrint("Chunk confirmation received for $entityName");
-            completer.complete();
-          } else if (confirmationType == "final") {
-            debugPrint("Final confirmation received for $entityName");
-            completer.complete();
+    final subscription = nearbyService.dataReceivedSubscription(
+      callback: (data) {
+        try {
+          var receivedJson = jsonDecode(data["message"]);
+          if (receivedJson["type"] == "confirmation" &&
+              receivedJson["confirmationType"] == confirmationType) {
+            if (confirmationType == "chunk" &&
+                receivedJson["offset"] == offset) {
+              completer.complete();
+            } else if (confirmationType == "final") {
+              completer.complete();
+            } else if (confirmationType == "failed") {
+              completer.complete();
+              throw "Failed to transfer ${receivedJson['message']}";
+            }
           }
+        } catch (e) {
+          debugPrint("Error processing confirmation: $e");
         }
-      } catch (e) {
-        debugPrint("Error processing confirmation: $e");
-      }
-    });
+      },
+    );
 
-    // Add timeout logic if required
     await completer.future;
     subscription.cancel();
-  }
-
-  Future<void> _handleReceiveEntities(
-    DataReceiverEvent event,
-    Emitter<PeerToPeerState> emit,
-  ) async {
-    try {
-      // Decode the received data
-      var receivedJson = jsonDecode(event.data["message"]);
-      entityType = receivedJson["entityType"];
-      int offset = receivedJson["offset"];
-      totalData = receivedJson["totalData"];
-      List<dynamic> receivedChunk = receivedJson["message"];
-
-      // Update received bytes and data
-      receivedBytes = offset;
-      double progress = receivedBytes / totalData;
-      receivedData.addAll(receivedChunk);
-
-      // Emit progress for UI/State tracking
-      emit(PeerToPeerState.receivingInProgress(
-          progress: progress, entityName: entityType));
-
-      // Send a chunk-level confirmation
-      event.nearbyService.sendMessage(
-        event.data["deviceId"],
-        jsonEncode({
-          "type": "confirmation",
-          "confirmationType": "chunk",
-          "entityType": entityType,
-          "status": "received",
-          "offset": offset,
-          "progress": progress,
-          "message": "Chunk received successfully.",
-        }),
-      );
-
-      // Check if all data is received
-      if (receivedBytes >= totalData) {
-        // Save the received entity data
-        final local = RepositoryType.getLocalForType(
-          DataModels.getDataModelForEntityName(entityType),
-          [
-            individualLocalRepository,
-            householdLocalRepository,
-            householdMemberLocalRepository,
-            projectBeneficiaryLocalRepository,
-            taskLocalRepository,
-            sideEffectLocalRepository,
-            referralLocalRepository,
-          ],
-        );
-
-        final entityList =
-            receivedData.whereType<Map<String, dynamic>>().toList();
-        createDbRecords(local, entityList, entityType);
-
-        debugPrint("$entityType data saved successfully.");
-
-        // Clear buffer for the next entity
-        receivedData.clear();
-        receivedBytes = 0;
-
-        // Send a final confirmation
-        event.nearbyService.sendMessage(
-          event.data["deviceId"],
-          jsonEncode({
-            "type": "confirmation",
-            "confirmationType": "final",
-            "entityType": entityType,
-            "status": "success",
-            "message": "$entityType saved successfully.",
-          }),
-        );
-
-        // Emit final state
-        emit(const PeerToPeerState.dataReceived());
-      }
-    } catch (e) {
-      debugPrint("Error processing received data: $e");
-      emit(PeerToPeerState.failedToReceive(error: e.toString()));
-    }
   }
 }
 
@@ -260,7 +323,8 @@ class PeerToPeerState with _$PeerToPeerState {
 
   const factory PeerToPeerState.transferInProgress(
       {required double progress,
-      required String entityName}) = TransferInProgress;
+      required int offset,
+      required int totalCount}) = TransferInProgress;
 
   const factory PeerToPeerState.completedDataTransfer() = CompletedDataTransfer;
 
@@ -269,7 +333,8 @@ class PeerToPeerState with _$PeerToPeerState {
 
   const factory PeerToPeerState.receivingInProgress(
       {required double progress,
-      required String entityName}) = ReceivingInProgress;
+      required int offset,
+      required int totalCount}) = ReceivingInProgress;
 
   const factory PeerToPeerState.dataReceived() = DataReceived;
 

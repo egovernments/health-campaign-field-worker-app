@@ -44,6 +44,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
           height: MediaQuery.of(context).size.height * 0.2,
           child: DigitCard(
               margin: const EdgeInsets.all(kPadding * 2),
+              inline: true,
               onPressed: () {
                 context.router
                     .push(DevicesListRoute(deviceType: DeviceType.sender));
@@ -67,6 +68,7 @@ class _DataShareHomeState extends LocalizedState<DataShareHomePage> {
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height * 0.2,
           child: DigitCard(
+              inline: true,
               margin: const EdgeInsets.all(kPadding * 2),
               onPressed: () {
                 context.router
