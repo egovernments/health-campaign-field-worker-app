@@ -661,7 +661,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   await context.router.push(
                                                           InventoryFacilitySelectionRoute(
                                                               facilities:
-                                                                  allFacilities))
+                                                                  facilities))
                                                       as FacilityModel?;
 
                                               if (facility == null) return;
@@ -717,7 +717,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   final facility =
                                                       await context.router.push(
                                                     InventoryFacilitySelectionRoute(
-                                                      facilities: allFacilities,
+                                                      facilities: facilities,
                                                     ),
                                                   ) as FacilityModel?;
 
