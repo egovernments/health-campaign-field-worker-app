@@ -33,8 +33,8 @@ class AppConfiguration {
   @Name("FORM_CONFIG")
   late List<FormConfig>? formConfig;
 
-  // @Name("REGISTRATION_DELIVERY_CONFIGS")
-  // late List<RegistrationDeliveryConfig>? registrationDeliveryConfigs;
+  @Name("REGISTRATION_DELIVERY_CONFIGS")
+  late List<RegistrationDeliveryConfig>? registrationDeliveryConfigs;
 
   @Name('GENDER_OPTIONS_POPULATOR')
   late List<GenderOptions>? genderOptions;

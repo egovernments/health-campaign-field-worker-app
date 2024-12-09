@@ -57,13 +57,12 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   bool isDuplicateTag = false;
   final clickedStatus = ValueNotifier<bool>(false);
   DateTime now = DateTime.now();
-  bool isHeadOfHousehold = false;
-  IndividualsDatailsComponentMapper mapper = IndividualsDatailsComponentMapper();
+  late IndividualsDatailsComponentMapper mapper;
 
   @override
   void initState() {
-    isHeadOfHousehold = widget.isHeadOfHousehold;
-
+    mapper = IndividualsDatailsComponentMapper(
+        isHeadOfHousehold: widget.isHeadOfHousehold);
     if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
       mapper.configs = converter.convertFields('IndividualDetails');
@@ -72,30 +71,40 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   }
 
   void updateState(dynamic form, bool flag, var value) {
-    if(flag) {
+    if (flag) {
       setState(() {
         if (value == 'DEFAULT') {
           form.control(idNumberKey).setValidators([
-                (control) => null, // No validation
+            (control) => null, // No validation
           ]);
-          form.control(idNumberKey).value =
-              IdGen.i.identifier.toString();
+          form.control(idNumberKey).value = IdGen.i.identifier.toString();
         } else {
+          var config = {};
+          bool fg = false;
+          for (var component in mapper.configs["components"]) {
+            for (var fieldConfig in component["attributes"]) {
+              final key = fieldConfig["name"];
+              if (key == idNumberKey) {
+                config = fieldConfig;
+                fg = true;
+                break;
+              }
+            }
+            if (fg) {
+              break;
+            }
+          }
           form.control(idNumberKey).setValidators([
-                (control) => null, // No validation
+            (control) => null, // No validation
           ]);
 
           // Retrieve current validators
-          final currentValidators =
-              form.control(idNumberKey).validators ?? [];
+          final currentValidators = form.control(idNumberKey).validators ?? [];
 
 // Create a new list of validators
-          List<
-              Map<String, dynamic>? Function(
-                  AbstractControl<dynamic>)> updatedValidators =
-          List.from(currentValidators);
-          if (mapper.configs[idNumberKey]?['isRequired'] == true &&
-              mapper.configs[idNumberKey]?['isEnabled'] == true) {
+          List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+              updatedValidators = List.from(currentValidators);
+          if (config['isRequired'] == true && config['isEnabled'] == true) {
             // Add the new validator to the list
             updatedValidators = [
               ...updatedValidators,
@@ -104,49 +113,41 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           }
 
           // If JSON config has regex, add it as a validator
-          if (mapper.configs[idNumberKey]?['isEnabled'] == true &&
-              mapper.configs[idNumberKey]!.containsKey('regex') &&
-              mapper.configs[idNumberKey]?['regex'] is List) {
-            List<String> regexList =
-            mapper.configs[idNumberKey]?['regex'];
-            String errorMessages =
-            mapper.configs[idNumberKey]?['errorMessage'];
+          if (config['isEnabled'] == true &&
+              config.containsKey('validation') &&
+              config['validation'] is List) {
+            List<dynamic> validationList = config['validation'];
 
-            regexList.asMap().forEach((index, regexPattern) {
+            validationList.asMap().forEach((index, regex) {
               updatedValidators.add((control) {
                 final value = control.value?.toString() ??
                     ''; // Convert to string or default to empty
                 if (value.isNotEmpty &&
-                    !RegExp(regexPattern).hasMatch(value)) {
+                    !RegExp(regex['pattern']).hasMatch(value)) {
                   // Ensure there's a matching error message for this index
                   return {
-                    'customError': errorMessages[index]
+                    '${regex['key']}': regex['errorMessage']
                   }; // Use the correct error message for the index
                 }
                 return null;
               });
             });
           }
-          form
-              .control(idNumberKey)
-              .setValidators(updatedValidators);
+          form.control(idNumberKey).setValidators(updatedValidators);
           form.control(idNumberKey).value = null;
         }
 
         // Ensure that changes to validators are applied
         form.control(idNumberKey).updateValueAndValidity();
       });
-    }
-    else {
+    } else {
       setState(() {
         if (value.isNotEmpty) {
           form.control(genderKey).value = value.first;
         } else {
           form.control(genderKey).value = null;
           setState(() {
-            form
-                .control(genderKey)
-                .setErrors({'': true});
+            form.control(genderKey).setErrors({'': true});
           });
         }
       });
@@ -161,9 +162,9 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     DateTime before150Years = DateTime(now.year - 150, now.month, now.day);
 
     void validate(final form, final key, final fieldConfig) {
-      if (fieldConfig?['component'] != 'textField' &&
-          fieldConfig?['component'] != 'dateFormPicker' &&
-          fieldConfig?['component'] != 'dobPicker') {
+      if (fieldConfig?['attribute'] != 'textField' &&
+          fieldConfig?['attribute'] != 'dateFormPicker' &&
+          fieldConfig?['attribute'] != 'dobPicker') {
         if (form.control(key).value == null &&
             (fieldConfig?['isRequired'] ?? false) &&
             (fieldConfig?['isEnabled'] ?? false)) {
@@ -172,7 +173,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
           });
         }
       }
-      if (fieldConfig?['component'] == 'dobPicker') {
+      if (fieldConfig?['attribute'] == 'dobPicker') {
         final age = DigitDateUtils.calculateAge(
           form.control(key).value as DateTime?,
         );
@@ -189,7 +190,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     return Scaffold(
       body: ReactiveFormBuilder(
-        form: () => mapper.buildForm(bloc.state, context, getGenderOptions),
+        form: () => mapper.buildForm(
+            bloc.state, context, getGenderOptions, localizations),
         builder: (context, form, child) => BlocConsumer<
             BeneficiaryRegistrationBloc, BeneficiaryRegistrationState>(
           listener: (context, state) {
@@ -239,16 +241,21 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     return DigitElevatedButton(
                       onPressed: () async {
                         List<AdditionalField> fields = [];
-                        mapper.configs.forEach((key, fieldConfig) {
-                          validate(form, key, fieldConfig);
-                          if (fieldConfig['type'] == 'additionalField' &&
-                              fieldConfig['isEnabled'] == true) {
-                            fields.add(AdditionalField(
-                              key,
-                              form.control(key).value ?? '',
-                            ));
+                        for (var component in mapper.configs["components"]) {
+                          for (var fieldConfig in component["attributes"]) {
+                            var key = fieldConfig["name"];
+                            validate(form, key, fieldConfig);
+                            if (fieldConfig['type'] == 'additionalField' &&
+                                fieldConfig['isEnabled'] == true) {
+                              var val = form.control(key).value ?? '';
+                              fields.add(AdditionalField(
+                                key,
+                                val is List ? val.join("|")
+                                    .toString() : val.toString(),
+                              ));
+                            }
                           }
-                        });
+                        }
                         final userId =
                             RegistrationDeliverySingleton().loggedInUserUuid;
                         final projectId =
@@ -452,116 +459,104 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               ),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: kPadding),
-                          child: Text(
-                            localizations.translate(
-                              i18.individualDetails.individualsDetailsLabelText,
-                            ),
-                            style: theme.textTheme.displayMedium,
-                          ),
-                        ),
-                        Column(
-                            children: mapper.buildWidgetsFromConfig(WidgetConfigModel(
-                                config: mapper.configs, form: form,localizations: localizations, func: updateState),isHeadOfHousehold)),
-                        const SizedBox(height: 16),
-                        if ((RegistrationDeliverySingleton().beneficiaryType ==
-                                    BeneficiaryType.household &&
-                                widget.isHeadOfHousehold) ||
-                            (RegistrationDeliverySingleton().beneficiaryType ==
-                                BeneficiaryType.individual))
-                          BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                            buildWhen: (p, c) {
-                              return true;
-                            },
-                            builder: (context, state) => state
-                                    .qrCodes.isNotEmpty
-                                ? Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            MediaQuery.of(context).size.width /
-                                                3,
-                                        child: Text(
-                                          localizations.translate(
-                                            i18.deliverIntervention.voucherCode,
-                                          ),
-                                          style: theme.textTheme.headlineSmall,
+                  child: Column(
+                    children: [
+                      ...mapper.buildWidgetsFromConfig(
+                          WidgetConfigModel(
+                              config: mapper.configs,
+                              form: form,
+                              localizations: localizations,
+                              func: updateState),
+                          context),
+                      if ((RegistrationDeliverySingleton().beneficiaryType ==
+                                  BeneficiaryType.household &&
+                              widget.isHeadOfHousehold) ||
+                          (RegistrationDeliverySingleton().beneficiaryType ==
+                              BeneficiaryType.individual))
+                        BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                          buildWhen: (p, c) {
+                            return true;
+                          },
+                          builder: (context, state) => state.qrCodes.isNotEmpty
+                              ? Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.of(context).size.width / 3,
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.deliverIntervention.voucherCode,
                                         ),
-                                      ),
-                                      Flexible(
-                                        child: Text(
-                                          overflow: TextOverflow.ellipsis,
-                                          localizations
-                                              .translate(state.qrCodes.last),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          bottom: kPadding * 2,
-                                        ),
-                                        child: IconButton(
-                                          color: theme.colorScheme.secondary,
-                                          icon: const Icon(Icons.edit),
-                                          onPressed: () {
-                                            Navigator.of(context).push(
-                                              //[TODO: Add the route to auto_route]
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const DigitScannerPage(
-                                                  quantity: 1,
-                                                  isGS1code: false,
-                                                  singleValue: true,
-                                                  isEditEnabled: true,
-                                                ),
-                                                settings: const RouteSettings(
-                                                    name: '/qr-scanner'),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-
-                                    // ignore: no-empty-block
-                                  )
-                                : DigitOutlineIconButton(
-                                    buttonStyle: OutlinedButton.styleFrom(
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.zero,
+                                        style: theme.textTheme.headlineSmall,
                                       ),
                                     ),
-                                    onPressed: () {
-                                      Navigator.of(context).push(
-                                        // [TODO: Add the route to auto_route]
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const DigitScannerPage(
-                                            quantity: 1,
-                                            isGS1code: false,
-                                            singleValue: true,
-                                          ),
-                                          settings: const RouteSettings(
-                                              name: '/qr-scanner'),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icons.qr_code,
-                                    label: localizations.translate(
-                                      i18.individualDetails
-                                          .linkVoucherToIndividual,
+                                    Flexible(
+                                      child: Text(
+                                        overflow: TextOverflow.ellipsis,
+                                        localizations
+                                            .translate(state.qrCodes.last),
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        bottom: kPadding * 2,
+                                      ),
+                                      child: IconButton(
+                                        color: theme.colorScheme.secondary,
+                                        icon: const Icon(Icons.edit),
+                                        onPressed: () {
+                                          Navigator.of(context).push(
+                                            //[TODO: Add the route to auto_route]
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const DigitScannerPage(
+                                                quantity: 1,
+                                                isGS1code: false,
+                                                singleValue: true,
+                                                isEditEnabled: true,
+                                              ),
+                                              settings: const RouteSettings(
+                                                  name: '/qr-scanner'),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
+
+                                  // ignore: no-empty-block
+                                )
+                              : DigitOutlineIconButton(
+                                  buttonStyle: OutlinedButton.styleFrom(
+                                    shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.zero,
                                     ),
                                   ),
-                          ),
-                      ],
-                    ),
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      // [TODO: Add the route to auto_route]
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const DigitScannerPage(
+                                          quantity: 1,
+                                          isGS1code: false,
+                                          singleValue: true,
+                                        ),
+                                        settings: const RouteSettings(
+                                            name: '/qr-scanner'),
+                                      ),
+                                    );
+                                  },
+                                  icon: Icons.qr_code,
+                                  label: localizations.translate(
+                                    i18.individualDetails
+                                        .linkVoucherToIndividual,
+                                  ),
+                                ),
+                        ),
+                    ],
                   ),
                 ),
               ],
@@ -573,7 +568,8 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   }
 
   IndividualModel _getIndividualModel(
-    BuildContext context, List<AdditionalField> fields, {
+    BuildContext context,
+    List<AdditionalField> fields, {
     required FormGroup form,
     IndividualModel? oldIndividual,
   }) {
@@ -588,7 +584,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       clientReferenceId: IdGen.i.identifier,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
-      additionalFields: IndividualAdditionalFields(version: 1,fields: fields),
+      additionalFields: IndividualAdditionalFields(version: 1, fields: fields),
       auditDetails: AuditDetails(
         createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
@@ -608,7 +604,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       individualClientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
-      additionalFields: NameAdditionalFields(version: 1,fields: fields),
+      additionalFields: NameAdditionalFields(version: 1, fields: fields),
       auditDetails: AuditDetails(
         createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),
@@ -631,7 +627,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       clientReferenceId: individual.clientReferenceId,
       tenantId: RegistrationDeliverySingleton().tenantId,
       rowVersion: 1,
-        additionalFields: IdentifierAdditionalFields(version: 1,fields: fields),
+      additionalFields: IdentifierAdditionalFields(version: 1, fields: fields),
       auditDetails: AuditDetails(
         createdBy: RegistrationDeliverySingleton().loggedInUserUuid!,
         createdTime: context.millisecondsSinceEpoch(),

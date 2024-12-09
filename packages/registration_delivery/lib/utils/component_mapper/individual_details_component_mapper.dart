@@ -3,6 +3,8 @@ import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_reactive_search_dropdown.dart';
 import 'package:digit_components/widgets/atoms/digit_text_form_field.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
+import 'package:digit_components/widgets/atoms/text_block.dart';
+import 'package:digit_components/widgets/digit_card.dart';
 import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:digit_data_model/models/entities/individual.dart';
 import 'package:digit_data_model/utils/utils.dart';
@@ -35,301 +37,370 @@ class IndividualsDatailsComponentMapper {
   static const _genderKey = IndividualDetailsPageState.genderKey;
   static const _mobileNumberKey = IndividualDetailsPageState.mobileNumberKey;
   DateTime now = DateTime.now();
+  bool isHeadOfHousehold = false;
   static const maxLength = 200;
-  Map<String, Map<String, dynamic>> configs = {
-    'individualName': {
-      'isEnabled': true,
-      'readOnly': true,
-      'order': 1,
-    },
-    'idType': {
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': true,
-      'order': 2,
-    },
-    'idNumber': {
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': true,
-      'order': 3,
-    },
-    'dob': {
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': false,
-      'order': 4,
-    },
-    'gender': {
-      'isEnabled': false,
-      'readOnly': false,
-      'isRequired': true,
-      'order': 5,
-    },
-    'mobileNumber': {
-      'isEnabled': true,
-      'readOnly': false,
-      'order': 6,
-    },
-    'abcd': {
-      'type': 'additionalField',
-      'label': 'abcd',
-      'component': 'dobPicker',
-      'formDataType': 'DateTime',
-      'menuItems': ['a', 'b', 'c', 'd'],
-      'isEnabled': true,
-      'readOnly': false,
-      'isRequired': false,
-      'order': 5,
-    }
+
+  IndividualsDatailsComponentMapper({this.isHeadOfHousehold = false});
+
+  Map<String, dynamic> configs = {
+    "name": "IndividualDetails",
+    "type": "page",
+    "components": [
+      {
+        "title": "Individual Details",
+        // "description":
+        //     "Make sure the village name matches the one where you are today.",
+        "order": 1,
+        "attributes": [
+          {
+            'name': 'individualName',
+            'isEnabled': true,
+            'readOnly': true,
+            'attribute': 'textField',
+            'order': 1,
+          },
+          {
+            'name': 'idType',
+            'isEnabled': true,
+            'readOnly': false,
+            'attribute': 'dropdown',
+            'isRequired': true,
+            'order': 2,
+          },
+          {
+            'name': 'idNumber',
+            'isEnabled': true,
+            'readOnly': false,
+            'attribute': 'textField',
+            'isRequired': true,
+            'order': 3,
+          },
+          {
+            'name': 'dob',
+            'isEnabled': true,
+            'readOnly': false,
+            'isRequired': false,
+            'attribute': 'dobPicker',
+            'order': 4,
+          },
+          {
+            'name': 'gender',
+            'isEnabled': false,
+            'readOnly': false,
+            'isRequired': true,
+            'attribute': 'selectionbox',
+            'order': 5,
+          },
+          {
+            'name': 'mobileNumber',
+            'isEnabled': true,
+            'readOnly': false,
+            'attribute': 'textField',
+            'order': 6,
+          },
+          {
+            'name': 'abcd',
+            'type': 'additionalField',
+            'label': 'abcd',
+            'attribute': 'dobPicker',
+            'formDataType': 'DateTime',
+            'menuItems': ['a', 'b', 'c', 'd'],
+            'isEnabled': true,
+            'readOnly': false,
+            'isRequired': false,
+            'order': 5,
+          }
+        ]
+      }
+    ]
   };
 
   List<Widget> buildWidgetsFromConfig(
-      WidgetConfigModel model, bool isHeadOfHousehold) {
+      WidgetConfigModel model, BuildContext context) {
+    final theme = Theme.of(context);
+
+    // Sort components by order
+    model.config["components"]
+        .sort((a, b) => (a["order"] as int).compareTo(b["order"]));
+
+    // Sort attributes within each component by order
+    for (var component in model.config["components"]) {
+      if (component["attributes"] != null) {
+        (component["attributes"] as List)
+            .sort((a, b) => (a["order"] as int).compareTo(b["order"]));
+      }
+    }
+
     List<Widget> widgets = [];
     final localizations = model.localizations;
 
-    // Sort the config keys by the 'order' key
-    var sortedKeys = model.config.keys.toList();
-    sortedKeys.sort(
-        (a, b) => model.config[a]['order'].compareTo(model.config[b]['order']));
-
-    if (sortedKeys.isEmpty) {
-      Widget widget = const AlertDialog(
-        title: Text("Error"),
-        content: Text("Household location config not found"),
+    for (var component in model.config["components"]) {
+      Widget widget = DigitCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextBlock(
+                padding: const EdgeInsets.only(top: kPadding),
+                heading: localizations.translate(
+                  component['title'],
+                ),
+                headingStyle: theme.textTheme.displayMedium,
+                body: component['description'] != null
+                    ? localizations.translate(
+                  component['description'],
+                )
+                    : ""),
+            Column(
+                children: buildAttributesFromConfig(
+                    config: component['attributes'],
+                    form: model.form,
+                    localizations: localizations,
+                    func: model.func)),
+            const SizedBox(height: 16),
+          ],
+        ),
       );
       widgets.add(widget);
-    } else {
-      for (var key in sortedKeys) {
-        var fieldConfig = model.config[key];
+    }
 
-        if (fieldConfig['isEnabled'] == true) {
-          Widget widget;
-          Map<String, String Function(Object control)> validationMessages = {};
+    return widgets;
+  }
 
-          if (fieldConfig['validation'] != null) {
-            fieldConfig['validation'].forEach((element) {
-              validationMessages[element['key']] =
-                  (_) => element['errorMessage'];
-            });
-          }
+  List<Widget> buildAttributesFromConfig(
+      {dynamic config, dynamic form, dynamic localizations, dynamic func}) {
+    List<Widget> widgets = [];
 
-          // Generate the widget based on the fieldConfig['type'] using a switch case
-          switch (key) {
-            case _individualNameKey:
-              widget = DigitTextFormField(
-                formControlName: _individualNameKey,
-                label: localizations.translate(
-                  i18.individualDetails.nameLabelText,
-                ),
-                isRequired: fieldConfig['isRequired'] ?? false,
-                readOnly: fieldConfig['readOnly'] ?? false,
-                validationMessages: {
-                  'required': (object) => localizations.translate(
-                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                      ),
-                },
-              );
-              if (isHeadOfHousehold) {
-                widgets.add(widget);
-                widget = Offstage(
-                  offstage: !isHeadOfHousehold,
-                  child: DigitCheckbox(
-                    label: localizations.translate(
-                      i18.individualDetails.checkboxLabelText,
+    for (var fieldConfig in config) {
+      var key = fieldConfig['name'];
+
+      if (fieldConfig['isEnabled'] == true) {
+        Widget widget;
+        Map<String, String Function(Object control)> validationMessages = {};
+
+        if (fieldConfig['validation'] != null) {
+          fieldConfig['validation'].forEach((element) {
+            validationMessages[element['key']] =
+                (_) => localizations.translate(element['errorMessage']);
+          });
+        }
+
+        // Generate the widget based on the fieldConfig['type'] using a switch case
+        switch (key) {
+          case _individualNameKey:
+            widget = DigitTextFormField(
+              formControlName: _individualNameKey,
+              label: localizations.translate(
+                i18.individualDetails.nameLabelText,
+              ),
+              isRequired: fieldConfig['isRequired'] ?? false,
+              readOnly: fieldConfig['readOnly'] ?? false,
+              validationMessages: {
+                'required': (object) => localizations.translate(
+                      '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
                     ),
-                    value: isHeadOfHousehold,
+              },
+            );
+            if (isHeadOfHousehold) {
+              widgets.add(widget);
+              widget = Offstage(
+                offstage: !isHeadOfHousehold,
+                child: DigitCheckbox(
+                  label: localizations.translate(
+                    i18.individualDetails.checkboxLabelText,
                   ),
-                );
-              }
-              break;
-            case _idTypeKey:
-              widget = DigitReactiveSearchDropdown<String>(
-                enabled: (fieldConfig['readOnly'] ?? false) != true,
-                label: localizations.translate(
-                  i18.individualDetails.idTypeLabelText,
+                  value: isHeadOfHousehold,
                 ),
-                form: model.form,
-                menuItems: RegistrationDeliverySingleton().idTypeOptions!.map(
-                  (e) {
-                    return e;
-                  },
-                ).toList(),
-                formControlName: _idTypeKey,
-                valueMapper: (value) {
-                  return localizations.translate(value);
-                },
-                onSelected: (value) {
-                  model.func!(model.form, true, value);
-                },
-                isRequired: fieldConfig['isRequired'] ?? false,
-                validationMessage: model.form.control(_idTypeKey).hasErrors &&
-                        model.form.control(_idTypeKey).touched
-                    ? localizations.translate(
-                        i18.common.corecommonRequired,
-                      )
-                    : null,
-                emptyText: localizations.translate(i18.common.noMatchFound),
               );
-              break;
-            case _idNumberKey:
-              widget = model.form.control(_idTypeKey).value != 'DEFAULT'
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ReactiveFormConsumer(
-                          builder: (context, formGroup, child) {
-                            return DigitTextFormField(
-                              readOnly: fieldConfig['readOnly'] ?? false,
-                              isRequired: fieldConfig['isRequired'] ?? false,
-                              formControlName: _idNumberKey,
-                              label: localizations.translate(
-                                i18.individualDetails.idNumberLabelText,
-                              ),
-                              validationMessages: {
-                                'required': (object) => localizations.translate(
-                                      '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                                    ),
-                              },
-                              padding: const EdgeInsets.only(
-                                top: kPadding * 2,
-                                left: kPadding / 2,
-                                right: kPadding / 2,
-                              ),
-                            );
-                          },
-                        ),
-                      ],
+            }
+            break;
+          case _idTypeKey:
+            widget = DigitReactiveSearchDropdown<String>(
+              enabled: (fieldConfig['readOnly'] ?? false) != true,
+              label: localizations.translate(
+                i18.individualDetails.idTypeLabelText,
+              ),
+              form: form,
+              menuItems: RegistrationDeliverySingleton().idTypeOptions!.map(
+                (e) {
+                  return e;
+                },
+              ).toList(),
+              formControlName: _idTypeKey,
+              valueMapper: (value) {
+                return localizations.translate(value);
+              },
+              onSelected: (value) {
+                func!(form, true, value);
+              },
+              isRequired: fieldConfig['isRequired'] ?? false,
+              validationMessage: form.control(_idTypeKey).hasErrors &&
+                      form.control(_idTypeKey).touched
+                  ? localizations.translate(
+                      i18.common.corecommonRequired,
                     )
-                  : SizedBox(height: 16);
-              break;
-            case _dobKey:
-              DateTime before150Years =
-                  DateTime(now.year - 150, now.month, now.day);
-              widget = individualDetailsShowcaseData.dateOfBirth.buildWith(
-                child: AbsorbPointer(
-                  absorbing: fieldConfig['readOnly'] ?? false,
-                  child: Opacity(
-                    opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
-                    child: DigitDobPicker(
-                      datePickerFormControl: _dobKey,
-                      datePickerLabel: localizations.translate(
-                        i18.individualDetails.dobLabelText,
+                  : null,
+              emptyText: localizations.translate(i18.common.noMatchFound),
+            );
+            break;
+          case _idNumberKey:
+            widget = form.control(_idTypeKey).value != 'DEFAULT'
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ReactiveFormConsumer(
+                        builder: (context, formGroup, child) {
+                          return DigitTextFormField(
+                            readOnly: fieldConfig['readOnly'] ?? false,
+                            isRequired: fieldConfig['isRequired'] ?? false,
+                            formControlName: _idNumberKey,
+                            label: localizations.translate(
+                              i18.individualDetails.idNumberLabelText,
+                            ),
+                            validationMessages: {
+                              'required': (object) => localizations.translate(
+                                    '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                                  ),
+                            },
+                            padding: const EdgeInsets.only(
+                              top: kPadding * 2,
+                              left: kPadding / 2,
+                              right: kPadding / 2,
+                            ),
+                          );
+                        },
                       ),
-                      ageFieldLabel: localizations.translate(
-                        i18.individualDetails.ageLabelText,
-                      ),
-                      yearsHintLabel: localizations.translate(
-                        i18.individualDetails.yearsHintText,
-                      ),
-                      monthsHintLabel: localizations.translate(
-                        i18.individualDetails.monthsHintText,
-                      ),
-                      separatorLabel: localizations.translate(
-                        i18.individualDetails.separatorLabelText,
-                      ),
-                      yearsAndMonthsErrMsg: localizations.translate(
-                        i18.individualDetails.yearsAndMonthsErrorText,
-                      ),
-                      initialDate: before150Years,
-                      onChangeOfFormControl: (formControl) {
-                        // Handle changes to the control's value here
-                        final value = formControl.value;
-                        if (value == null) {
-                          formControl.setErrors({'': true});
-                        } else {
-                          DigitDOBAge age = DigitDateUtils.calculateAge(value);
-                          if ((age.years == 0 && age.months == 0) ||
-                              age.months > 11 ||
-                              (age.years >= 150 && age.months >= 0)) {
-                            formControl.setErrors({'': true});
-                          } else {
-                            formControl.removeError('');
-                          }
-                        }
-                      },
-                      cancelText:
-                          localizations.translate(i18.common.coreCommonCancel),
-                      confirmText:
-                          localizations.translate(i18.common.coreCommonOk),
-                    ),
-                  ),
-                ),
-              );
-              break;
-            case _genderKey:
-              widget = AbsorbPointer(
+                    ],
+                  )
+                : const SizedBox(height: 16);
+            break;
+          case _dobKey:
+            DateTime before150Years =
+                DateTime(now.year - 150, now.month, now.day);
+            widget = individualDetailsShowcaseData.dateOfBirth.buildWith(
+              child: AbsorbPointer(
                 absorbing: fieldConfig['readOnly'] ?? false,
                 child: Opacity(
-                  opacity: (fieldConfig['readOnly'] ?? false) ? 0.5 : 1,
-                  child: SelectionBox<String>(
-                    title: '${localizations.translate(
-                      i18.individualDetails.genderLabelText,
-                    )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
-                    allowMultipleSelection: false,
-                    width: 126,
-                    initialSelection:
-                        model.form.control(_genderKey).value != null
-                            ? [model.form.control(_genderKey).value]
-                            : [],
-                    options: RegistrationDeliverySingleton()
-                        .genderOptions!
-                        .map(
-                          (e) => e,
-                        )
-                        .toList(),
-                    onSelectionChanged: (value) {
-                      model.func!(model.form, false, value);
+                  opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
+                  child: DigitDobPicker(
+                    datePickerFormControl: _dobKey,
+                    datePickerLabel: localizations.translate(
+                      i18.individualDetails.dobLabelText,
+                    ),
+                    ageFieldLabel: localizations.translate(
+                      i18.individualDetails.ageLabelText,
+                    ),
+                    yearsHintLabel: localizations.translate(
+                      i18.individualDetails.yearsHintText,
+                    ),
+                    monthsHintLabel: localizations.translate(
+                      i18.individualDetails.monthsHintText,
+                    ),
+                    separatorLabel: localizations.translate(
+                      i18.individualDetails.separatorLabelText,
+                    ),
+                    yearsAndMonthsErrMsg: localizations.translate(
+                      i18.individualDetails.yearsAndMonthsErrorText,
+                    ),
+                    initialDate: before150Years,
+                    onChangeOfFormControl: (formControl) {
+                      // Handle changes to the control's value here
+                      final value = formControl.value;
+                      if (value == null) {
+                        formControl.setErrors({'': true});
+                      } else {
+                        DigitDOBAge age = DigitDateUtils.calculateAge(value);
+                        if ((age.years == 0 && age.months == 0) ||
+                            age.months > 11 ||
+                            (age.years >= 150 && age.months >= 0)) {
+                          formControl.setErrors({'': true});
+                        } else {
+                          formControl.removeError('');
+                        }
+                      }
                     },
-                    valueMapper: (value) {
-                      return localizations.translate(value);
-                    },
-                    errorMessage: model.form.control(_genderKey).hasErrors &&
-                            model.form.control(_genderKey).touched
-                        ? localizations.translate(i18.common.corecommonRequired)
-                        : null,
+                    cancelText:
+                        localizations.translate(i18.common.coreCommonCancel),
+                    confirmText:
+                        localizations.translate(i18.common.coreCommonOk),
                   ),
                 ),
-              );
-              break;
-            case _mobileNumberKey:
-              widget = individualDetailsShowcaseData.mobile.buildWith(
-                child: DigitTextFormField(
-                  isRequired: fieldConfig['isRequired'] ?? false,
-                  readOnly: fieldConfig['readOnly'] ?? false,
-                  keyboardType: TextInputType.number,
-                  formControlName: _mobileNumberKey,
-                  maxLength: 10,
-                  label: localizations.translate(
-                    i18.individualDetails.mobileNumberLabelText,
-                  ),
-                  validationMessages: {
-                    'required': (object) => localizations.translate(
-                          '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
-                        ),
+              ),
+            );
+            break;
+          case _genderKey:
+            widget = AbsorbPointer(
+              absorbing: fieldConfig['readOnly'] ?? false,
+              child: Opacity(
+                opacity: (fieldConfig['readOnly'] ?? false) ? 0.5 : 1,
+                child: SelectionBox<String>(
+                  title: '${localizations.translate(
+                    i18.individualDetails.genderLabelText,
+                  )}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+                  allowMultipleSelection: false,
+                  width: 126,
+                  initialSelection: form.control(_genderKey).value != null
+                      ? [form.control(_genderKey).value]
+                      : [],
+                  options: RegistrationDeliverySingleton()
+                      .genderOptions!
+                      .map(
+                        (e) => e,
+                      )
+                      .toList(),
+                  onSelectionChanged: (value) {
+                    func!(form, false, value);
                   },
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                  ],
+                  valueMapper: (value) {
+                    return localizations.translate(value);
+                  },
+                  errorMessage: form.control(_genderKey).hasErrors &&
+                          form.control(_genderKey).touched
+                      ? localizations.translate(i18.common.corecommonRequired)
+                      : null,
                 ),
-              );
-              break;
-            default:
-              widget = WidgetBuilderFactory.buildWidgetsFromConfig(
-                  key, fieldConfig,model.form, localizations);
-          }
-
-          widgets.add(widget);
+              ),
+            );
+            break;
+          case _mobileNumberKey:
+            widget = individualDetailsShowcaseData.mobile.buildWith(
+              child: DigitTextFormField(
+                isRequired: fieldConfig['isRequired'] ?? false,
+                readOnly: fieldConfig['readOnly'] ?? false,
+                keyboardType: TextInputType.number,
+                formControlName: _mobileNumberKey,
+                maxLength: 10,
+                label: localizations.translate(
+                  i18.individualDetails.mobileNumberLabelText,
+                ),
+                validationMessages: {
+                  'required': (object) => localizations.translate(
+                        '${i18.individualDetails.idNumberLabelText}_IS_REQUIRED',
+                      ),
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
+              ),
+            );
+            break;
+          default:
+            widget = WidgetBuilderFactory.buildWidgetsFromConfig(
+                key, fieldConfig, form, localizations);
         }
+
+        widgets.add(widget);
       }
     }
 
     return widgets;
   }
 
-  FormGroup buildForm(BeneficiaryRegistrationState state, BuildContext context,
-      Function getGenderOptions) {
+  FormGroup buildForm(
+      BeneficiaryRegistrationState state,
+      BuildContext context,
+      Function getGenderOptions,
+      RegistrationDeliveryLocalization localizations) {
     final individual = state.mapOrNull<IndividualModel>(
       editIndividual: (value) {
         if (value.projectBeneficiaryModel?.tag != null) {
@@ -393,13 +464,19 @@ class IndividualsDatailsComponentMapper {
     ];
 
     Map<String, AbstractControl<dynamic>> newControls = {};
-    configs.forEach((key, fieldConfig) {
-      if (!existingConfigs.contains(key)) {
-        newControls[key] = FormControlFactory.createFormControl(
-            type: fieldConfig['formDataType'],
-            initialValue: fieldConfig['initialValue'] ?? '');
+    // Iterate over components and attributes to add form controls
+    for (var component in configs["components"]) {
+      for (var attribute in component["attributes"]) {
+        String key = attribute["name"];
+        if (!existingConfigs.contains(key)) {
+          newControls[key] = FormControlFactory.createFormControl(
+            type: attribute["formDataType"],
+            initialValue: attribute["initialValue"] ?? '',
+            localizations: localizations,
+          );
+        }
       }
-    });
+    }
 
     formGroup.addAll(newControls);
 
@@ -409,53 +486,57 @@ class IndividualsDatailsComponentMapper {
   }
 
   void addValidators(final formGroup) {
-    configs.forEach((key, fieldConfig) {
-      final formControl = formGroup.control(key);
+    for (var component in configs["components"]) {
+      for (var fieldConfig in component["attributes"]) {
+        final key = fieldConfig["name"];
+        final formControl = formGroup.control(key);
 
-      // Get current validators
-      final currentValidators = formControl.validators;
+        // Get current validators
+        final currentValidators = formControl.validators;
 
-      List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
-          updatedValidators = currentValidators.where((validator) {
-        // Check if the validator is of the same type as Validators.required
-        return validator.runtimeType != Validators.required.runtimeType;
-      }).toList();
+        List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
+            updatedValidators = currentValidators.where((validator) {
+          // Check if the validator is of the same type as Validators.required
+          return validator.runtimeType != Validators.required.runtimeType;
+        }).toList();
 
-      if (fieldConfig['isRequired'] == true &&
-          fieldConfig['isEnabled'] == true) {
-        // Add the new validator to the list
-        updatedValidators = [
-          ...updatedValidators,
-          Validators.required // Example new validator
-        ];
-      }
+        if (fieldConfig['isRequired'] == true &&
+            fieldConfig['isEnabled'] == true) {
+          // Add the new validator to the list
+          updatedValidators = [
+            ...updatedValidators,
+            Validators.required // Example new validator
+          ];
+        }
 
-      // If JSON config has regex, add it as a validator
-      if (fieldConfig['isEnabled'] == true &&
-          fieldConfig.containsKey('validation') &&
-          fieldConfig['validation'] is List) {
-        List<dynamic> validationList = fieldConfig['validation'];
+        // If JSON config has regex, add it as a validator
+        if (fieldConfig['isEnabled'] == true &&
+            fieldConfig.containsKey('validation') &&
+            fieldConfig['validation'] is List) {
+          List<dynamic> validationList = fieldConfig['validation'];
 
-        validationList.asMap().forEach((index, regex) {
-          updatedValidators.add((control) {
-            final value = control.value?.toString() ??
-                ''; // Convert to string or default to empty
-            if (value.isNotEmpty && !RegExp(regex['pattern']).hasMatch(value)) {
-              // Ensure there's a matching error message for this index
-              return {
-                '${regex['key']}': regex['errorMessage']
-              }; // Use the correct error message for the index
-            }
-            return null;
+          validationList.asMap().forEach((index, regex) {
+            updatedValidators.add((control) {
+              final value = control.value?.toString() ??
+                  ''; // Convert to string or default to empty
+              if (value.isNotEmpty &&
+                  !RegExp(regex['pattern']).hasMatch(value)) {
+                // Ensure there's a matching error message for this index
+                return {
+                  '${regex['key']}': regex['errorMessage']
+                }; // Use the correct error message for the index
+              }
+              return null;
+            });
           });
-        });
+        }
+
+        // Set the updated validators back to the form control
+        formControl.setValidators(updatedValidators);
+
+        // Re-run validation with the new validators
+        formControl.updateValueAndValidity();
       }
-
-      // Set the updated validators back to the form control
-      formControl.setValidators(updatedValidators);
-
-      // Re-run validation with the new validators
-      formControl.updateValueAndValidity();
-    });
+    }
   }
 }

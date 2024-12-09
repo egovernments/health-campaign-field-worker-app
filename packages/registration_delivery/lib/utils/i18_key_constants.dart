@@ -18,6 +18,7 @@ const individualDetailsShowcase = IndividualDetailsShowcase();
 const householdOverviewShowcase = HouseholdOverviewShowcase();
 const deliverInterventionShowcase = DeliverInterventionShowcase();
 const checklist = Checklist();
+const formConfigKeys = FormConfigkeys();
 
 class Common {
   const Common();
@@ -884,4 +885,18 @@ class DeliverInterventionShowcase {
   String get deliveryComment {
     return 'DELIVER_INTERVENTION_SHOWCASE_DELIVERY_COMMENT';
   }
+}
+
+class FormConfigkeys {
+  const FormConfigkeys();
+
+  String get error {
+    return 'ERROR';
+  }
+
+  String get locationErrorMessage {
+    return 'HOUSEHOLD_LOCATION_CONFIG_NOT_FOUND';
+  }
+
+
 }

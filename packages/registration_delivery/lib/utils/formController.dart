@@ -1,18 +1,16 @@
-import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-import 'constants.dart';
 
 class FormControlFactory {
   // This static method generates a FormControl based on the given type.
   static FormControl createFormControl({
     required String type,
     dynamic initialValue = "",
+    dynamic localizations
   }) {
     switch (type) {
       case 'String':
         return FormControl<String>(
-          value: initialValue as String?,
+          value: localizations.translate(initialValue as String?),
         );
       case 'int':
         return FormControl<int>(
@@ -24,7 +22,7 @@ class FormControlFactory {
         );
       case 'bool':
         return FormControl<bool>(
-          value: initialValue != '' ? bool.tryParse(initialValue.toString()) : null,
+          value: initialValue != '' ? localizations.translate(bool.tryParse(initialValue.toString())) : null,
         );
       case 'DateTime':
         return FormControl<DateTime>(
@@ -36,7 +34,7 @@ class FormControlFactory {
         );
       case 'List<String>':
         return FormControl<List<String>>(
-            value: initialValue != '' ? initialValue as List<String>? : null,
+            value: (initialValue != '' && initialValue.length != 0) ? initialValue as List<String>? : null,
         );
       default:
         throw Exception("Unsupported type $type");

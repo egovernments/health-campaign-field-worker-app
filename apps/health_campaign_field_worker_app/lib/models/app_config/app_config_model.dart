@@ -99,8 +99,8 @@ class HCMWrapperModel with _$HCMWrapperModel {
     required List<FirebaseConfig>? firebaseConfig,
     @JsonKey(name: 'FORM_CONFIG')
     List<FormConfigModel>? formConfig,
-    // @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
-    // List<RegistrationDeliveryConfigModel>? registrationDeliveryConfig,
+    @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
+    List<RegistrationDeliveryConfigModel>? registrationDeliveryConfig,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(

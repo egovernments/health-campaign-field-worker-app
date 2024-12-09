@@ -80,9 +80,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
     final router = context.router;
 
     void validate(final form, final key, final fieldConfig) {
-      if (fieldConfig?['component'] != 'textField' &&
-          fieldConfig?['component'] != 'dateFormPicker' &&
-          fieldConfig?['component'] != 'dobPicker') {
+      if (fieldConfig?['attribute'] != 'textField' &&
+          fieldConfig?['attribute'] != 'dateFormPicker' &&
+          fieldConfig?['attribute'] != 'dobPicker') {
         if (form.control(key).value == null &&
             (fieldConfig?['isRequired'] ?? false) &&
             (fieldConfig?['isEnabled'] ?? false)) {
@@ -91,7 +91,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
           });
         }
       }
-      if (fieldConfig?['component'] == 'dobPicker') {
+      if (fieldConfig?['attribute'] == 'dobPicker') {
         final age = DigitDateUtils.calculateAge(
           form.control(key).value as DateTime?,
         );
@@ -160,16 +160,21 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                     return DigitElevatedButton(
                       onPressed: () {
                         List<AdditionalField> fields = [];
-                        mapper.configs.forEach((key, fieldConfig) {
-                          validate(form, key, fieldConfig);
-                          if (fieldConfig['type'] == 'additionalField' &&
-                              fieldConfig['isEnabled'] == true) {
-                            fields.add(AdditionalField(
-                              key,
-                              form.control(key).value ?? '',
-                            ));
+                        for (var component in mapper.configs["components"]) {
+                          for (var fieldConfig in component["attributes"]) {
+                            var key = fieldConfig["name"];
+                            validate(form, key, fieldConfig);
+                            if (fieldConfig['type'] == 'additionalField' &&
+                                fieldConfig['isEnabled'] == true) {
+                              var val = form.control(key).value ?? '';
+                              fields.add(AdditionalField(
+                                key,
+                                val is List ? val.join("|")
+                                    .toString() : val.toString(),
+                              ));
+                            }
                           }
-                        });
+                        }
                         form.markAllAsTouched();
                         if (!form.valid) return;
 
@@ -314,31 +319,43 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
               ),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextBlock(
-                            padding: const EdgeInsets.only(top: kPadding),
-                            heading: localizations.translate(
-                              i18.householdLocation.householdLocationLabelText,
-                            ),
-                            headingStyle: theme.textTheme.displayMedium,
-                            body: localizations.translate(
-                              i18.householdLocation
-                                  .householdLocationDescriptionText,
-                            )),
-                        Column(
-                            children: mapper.buildWidgetsFromConfig(
-                                WidgetConfigModel(
-                                    config: mapper.configs,
-                                    form: form,
-                                    localizations: localizations)))
-                      ],
-                    ),
+                  child: Column(
+                    children: mapper.buildWidgetsFromConfig(
+                        WidgetConfigModel(
+                          config: mapper.configs,
+                          form: form,
+                          localizations: localizations,
+                        ),
+                        context
+                        // children: [
+                        //   DigitCard(
+                        //     child: Column(
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       mainAxisSize: MainAxisSize.min,
+                        //       children: [
+                        //         TextBlock(
+                        //             padding: const EdgeInsets.only(top: kPadding),
+                        //             heading: localizations.translate(
+                        //               i18.householdLocation.householdLocationLabelText,
+                        //             ),
+                        //             headingStyle: theme.textTheme.displayMedium,
+                        //             body: localizations.translate(
+                        //               i18.householdLocation
+                        //                   .householdLocationDescriptionText,
+                        //             )),
+                        //         Column(
+                        //             children: mapper.buildWidgetsFromConfig(
+                        //                 WidgetConfigModel(
+                        //                     config: mapper.configs,
+                        //                     form: form,
+                        //                     localizations: localizations)))
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ],
+                        ),
                   ),
-                ),
+                )
               ],
             ),
           ),

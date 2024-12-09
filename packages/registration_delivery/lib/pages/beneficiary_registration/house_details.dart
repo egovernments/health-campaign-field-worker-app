@@ -47,7 +47,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
   void initState() {
     final registrationState = context.read<BeneficiaryRegistrationBloc>().state;
 
-    if(widget.widgetConfig != null) {
+    if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
       mapper.configs = converter.convertFields('Housedetails');
     }
@@ -55,17 +55,13 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
   }
 
   void updateState(dynamic form, bool flag, var values) {
-    if(flag) {
+    if (flag) {
       setState(() {
-        form
-            .control(householdStructureKey)
-            .setErrors({'': true});
+        form.control(householdStructureKey).setErrors({'': true});
       });
-    }
-    else {
+    } else {
       setState(() {
-        form.control(householdStructureKey).value =
-            values;
+        form.control(householdStructureKey).value = values;
       });
     }
   }
@@ -77,9 +73,9 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
     final router = context.router;
 
     void validate(final form, final key, final fieldConfig) {
-      if (fieldConfig?['component'] != 'textField' &&
-          fieldConfig?['component'] != 'dateFormPicker' &&
-          fieldConfig?['component'] != 'dobPicker') {
+      if (fieldConfig?['attribute'] != 'textField' &&
+          fieldConfig?['attribute'] != 'dateFormPicker' &&
+          fieldConfig?['attribute'] != 'dobPicker') {
         if (form.control(key).value == null &&
             (fieldConfig?['isRequired'] ?? false) &&
             (fieldConfig?['isEnabled'] ?? false)) {
@@ -88,7 +84,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
           });
         }
       }
-      if (fieldConfig?['component'] == 'dobPicker') {
+      if (fieldConfig?['attribute'] == 'dobPicker') {
         final age = DigitDateUtils.calculateAge(
           form.control(key).value as DateTime?,
         );
@@ -105,7 +101,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
 
     return Scaffold(
       body: ReactiveFormBuilder(
-          form: () => mapper.buildForm(bloc.state,localizations),
+          form: () => mapper.buildForm(bloc.state, localizations),
           builder: (_, form, __) => BlocBuilder<BeneficiaryRegistrationBloc,
                   BeneficiaryRegistrationState>(
                 builder: (context, registrationState) {
@@ -126,16 +122,21 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                       child: DigitElevatedButton(
                         onPressed: () {
                           List<AdditionalField> fields = [];
-                          mapper.configs.forEach((key, fieldConfig) {
-                            validate(form, key, fieldConfig);
-                            if (fieldConfig['type'] == 'additionalField' &&
-                                fieldConfig['isEnabled'] == true) {
-                              fields.add(AdditionalField(
-                                key,
-                                form.control(key).value ?? '',
-                              ));
+                          for (var component in mapper.configs["components"]) {
+                            for (var fieldConfig in component["attributes"]) {
+                              var key = fieldConfig["name"];
+                              validate(form, key, fieldConfig);
+                              if (fieldConfig['type'] == 'additionalField' &&
+                                  fieldConfig['isEnabled'] == true) {
+                                var val = form.control(key).value ?? '';
+                                fields.add(AdditionalField(
+                                  key,
+                                  val is List ? val.join("|")
+                                    .toString() : val.toString(),
+                                ));
+                              }
                             }
-                          });
+                          }
                           form.markAllAsTouched();
                           if (!form.valid) return;
                           selectedHouseStructureTypes =
@@ -230,7 +231,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                   additionalFields: HouseholdAdditionalFields(
                                       version: 1,
                                       fields: [
-                                        ...fields,
+                                    ...fields,
                                     ...?householdModel.additionalFields?.fields
                                         .where((e) =>
                                             e.key !=
@@ -274,30 +275,14 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                     ),
                     slivers: [
                       SliverToBoxAdapter(
-                        child: DigitCard(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    0, 0, 0, kPadding),
-                                child: Text(
-                                  localizations.translate(
-                                    i18.householdDetails.houseDetailsLabel,
-                                  ),
-                                  style: theme.textTheme.displayMedium,
-                                ),
-                              ),
-                              Column(
-                                  children: mapper.buildWidgetsFromConfig(
-                                      WidgetConfigModel(
-                                          config: mapper.configs,
-                                          form: form, func: updateState, localizations: localizations)))
-                            ],
-                          ),
-                        ),
-                      ),
+                              children: mapper.buildWidgetsFromConfig(
+                                  WidgetConfigModel(
+                                      config: mapper.configs,
+                                      form: form,
+                                      func: updateState,
+                                      localizations: localizations),
+                                  context))),
                     ],
                   );
                 },

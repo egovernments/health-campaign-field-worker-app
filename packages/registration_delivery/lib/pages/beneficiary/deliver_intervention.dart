@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_components/digit_components.dart';
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_stepper.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
@@ -17,6 +18,7 @@ import 'package:registration_delivery/utils/utils.dart';
 
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
+import '../../utils/component_mapper/deliver_intervention_component_mapper.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/beneficiary/resource_beneficiary_card.dart';
@@ -41,13 +43,15 @@ class DeliverInterventionPage extends LocalizedStatefulWidget {
 class DeliverInterventionPageState
     extends LocalizedState<DeliverInterventionPage> {
   // Constants for form control keys
-  static const _resourceDeliveredKey = 'resourceDelivered';
-  static const _quantityDistributedKey = 'quantityDistributed';
-  static const _deliveryCommentKey = 'deliveryComment';
-  static const _doseAdministrationKey = 'doseAdministered';
-  static const _dateOfAdministrationKey = 'dateOfAdministration';
+  static const resourceDeliveredKey = 'resourceDelivered';
+  static const quantityDistributedKey = 'quantityDistributed';
+  static const deliveryCommentKey = 'deliveryComment';
+  static const doseAdministrationKey = 'doseAdministered';
+  static const dateOfAdministrationKey = 'dateOfAdministration';
   final clickedStatus = ValueNotifier<bool>(false);
   bool? shouldSubmit = false;
+  DeliverInterventionComponentMapper mapper =
+      DeliverInterventionComponentMapper();
 
   // Variable to track dose administration status
   bool doseAdministered = false;
@@ -64,13 +68,29 @@ class DeliverInterventionPageState
     super.initState();
   }
 
+  void updateState(final form, final controllers, String task) async {
+    if (task == "delete") {
+      setState(() {
+        controllers;
+      });
+    } else {
+      addController(form);
+      setState(() {
+        controllers.add(
+          controllers.length,
+        );
+      });
+    }
+  }
+
   Future<void> handleCapturedLocationState(
       LocationState locationState,
       BuildContext context,
       DeliverInterventionState deliverInterventionState,
       FormGroup form,
       HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) async {
+      ProjectBeneficiaryModel projectBeneficiary, List<AdditionalField>
+  fields) async {
     final lat = locationState.latitude;
     final long = locationState.longitude;
     context.read<DeliverInterventionBloc>().add(
@@ -90,6 +110,7 @@ class DeliverInterventionPageState
                 address: householdMember.members?.first.address?.first,
                 latitude: lat,
                 longitude: long,
+                fields: fields
               ),
               isEditing: (deliverInterventionState.tasks ?? []).isNotEmpty &&
                       RegistrationDeliverySingleton().beneficiaryType ==
@@ -109,7 +130,8 @@ class DeliverInterventionPageState
       DeliverInterventionState deliverInterventionState,
       FormGroup form,
       HouseholdMemberWrapper householdMember,
-      ProjectBeneficiaryModel projectBeneficiary) {
+      ProjectBeneficiaryModel projectBeneficiary, List<AdditionalField>
+      fields) {
     if (context.mounted) {
       DigitComponentsUtils().showLocationCapturingDialog(
           context,
@@ -125,13 +147,41 @@ class DeliverInterventionPageState
             deliverInterventionState,
             form,
             householdMember,
-            projectBeneficiary);
+            projectBeneficiary,fields);
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    void validate(final form, final key, final fieldConfig) {
+      if (fieldConfig?['attribute'] == 'dropdown' ||
+          fieldConfig?['attribute'] == 'selectionbox' ||
+          fieldConfig?['attribute'] == 'integerFormPicker') {
+        print("${key}->>>>shashwat->>>>>>");
+        if (form.control(key).value == null &&
+            (fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false)) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+      if (fieldConfig?['attribute'] == 'dobPicker') {
+        final age = DigitDateUtils.calculateAge(
+          form.control(key).value as DateTime?,
+        );
+        if ((fieldConfig?['isRequired'] ?? false) &&
+            (fieldConfig?['isEnabled'] ?? false) &&
+            ((age.years == 0 && age.months == 0) ||
+                (age.years >= 150 && age.months > 0))) {
+          setState(() {
+            form.control(key).setErrors({'': true});
+          });
+        }
+      }
+    }
+
     final theme = Theme.of(context);
 
     List<StepsModel> generateSteps(int numberOfDoses) {
@@ -241,11 +291,12 @@ class DeliverInterventionPageState
                               );
 
                               return ReactiveFormBuilder(
-                                form: () => buildForm(
-                                  context,
-                                  productVariants,
-                                  variant,
-                                ),
+                                form: () => mapper.buildForm(
+                                    context,
+                                    productVariants,
+                                    variant,
+                                    localizations,
+                                    _controllers),
                                 builder: (context, form, child) {
                                   return ScrollableContent(
                                     enableFixedButton: true,
@@ -269,8 +320,46 @@ class DeliverInterventionPageState
                                                   onPressed: isClicked
                                                       ? null
                                                       : () async {
+                                                          List<AdditionalField>
+                                                              fields = [];
+                                                          for (var component
+                                                              in mapper.configs[
+                                                                  "components"]) {
+                                                            for (var fieldConfig
+                                                                in component[
+                                                                    "attributes"]) {
+                                                              var key =
+                                                                  fieldConfig[
+                                                                      "name"];
+                                                              validate(
+                                                                  form,
+                                                                  key,
+                                                                  fieldConfig);
+                                                              if (fieldConfig[
+                                                                          'type'] ==
+                                                                      'additionalField' &&
+                                                                  fieldConfig[
+                                                                          'isEnabled'] ==
+                                                                      true) {
+                                                                fields.add(
+                                                                    AdditionalField(
+                                                                  key,
+                                                                  form
+                                                                          .control(
+                                                                              key)
+                                                                          .value ??
+                                                                      '',
+                                                                ));
+                                                              }
+                                                            }
+                                                          }
+                                                          form.markAllAsTouched();
+                                                          if (!form.valid) {
+                                                            return;
+                                                          }
+
                                                           final deliveredProducts =
-                                                              ((form.control(_resourceDeliveredKey)
+                                                              ((form.control(resourceDeliveredKey)
                                                                           as FormArray)
                                                                       .value
                                                                   as List<
@@ -342,6 +431,7 @@ class DeliverInterventionPageState
                                                               householdMemberWrapper,
                                                               projectBeneficiary!
                                                                   .first,
+                                                              fields
                                                             );
                                                           }
                                                         },
@@ -367,220 +457,24 @@ class DeliverInterventionPageState
                                     ]),
                                     children: [
                                       Column(
-                                        children: [
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliverInterventionLabel,
-                                                  ),
-                                                  style: theme
-                                                      .textTheme.displayMedium,
-                                                ),
-                                                if (RegistrationDeliverySingleton()
-                                                        .beneficiaryType ==
-                                                    BeneficiaryType.individual)
-                                                  DigitTextFormField(
-                                                    readOnly: true,
-                                                    formControlName:
-                                                        _doseAdministrationKey,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    label: localizations
-                                                        .translate(i18
-                                                            .deliverIntervention
-                                                            .currentCycle),
-                                                  ),
-                                                if (numberOfDoses > 1)
-                                                  DigitStepper(
-                                                    activeStep:
-                                                        deliveryInterventionState
-                                                                .dose -
-                                                            1,
-                                                    stepRadius: 12.5,
-                                                    steps: steps,
-                                                    maxStepReached: 3,
-                                                    lineLength: (MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width -
-                                                            12.5 *
-                                                                2 *
-                                                                steps.length -
-                                                            50) /
-                                                        (steps.length - 1),
-                                                  ),
-                                                DigitDateFormPicker(
-                                                  isEnabled: false,
-                                                  formControlName:
-                                                      _dateOfAdministrationKey,
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.householdDetails
-                                                        .dateOfRegistrationLabel,
-                                                  ),
-                                                  confirmText:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonOk,
-                                                  ),
-                                                  cancelText:
-                                                      localizations.translate(
-                                                    i18.common.coreCommonCancel,
-                                                  ),
-                                                  isRequired: false,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                    top: kPadding,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliverInterventionResourceLabel,
-                                                  ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
-                                                ),
-                                                ..._controllers.map((e) =>
-                                                    ResourceBeneficiaryCard(
+                                          children: mapper
+                                              .buildWidgetsFromConfig(
+                                                  WidgetConfigModel(
+                                                      config: mapper.configs,
                                                       form: form,
-                                                      cardIndex: _controllers
-                                                          .indexOf(e),
-                                                      totalItems:
-                                                          _controllers.length,
-                                                      onDelete: (index) {
-                                                        (form.control(
-                                                          _resourceDeliveredKey,
-                                                        ) as FormArray)
-                                                            .removeAt(
-                                                          index,
-                                                        );
-                                                        (form.control(
-                                                          _quantityDistributedKey,
-                                                        ) as FormArray)
-                                                            .removeAt(
-                                                          index,
-                                                        );
-                                                        _controllers.removeAt(
-                                                          index,
-                                                        );
-                                                        setState(() {
-                                                          _controllers;
-                                                        });
-                                                      },
-                                                    )),
-                                                Center(
-                                                  child: DigitIconButton(
-                                                    onPressed: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? () async {
-                                                            addController(form);
-                                                            setState(() {
-                                                              _controllers.add(
-                                                                _controllers
-                                                                    .length,
-                                                              );
-                                                            });
-                                                          }
-                                                        : null,
-                                                    icon: Icons.add_circle,
-                                                    iconColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconTextColor: ((form.control(_resourceDeliveredKey)
-                                                                            as FormArray)
-                                                                        .value ??
-                                                                    [])
-                                                                .length <
-                                                            (productVariants ??
-                                                                    [])
-                                                                .length
-                                                        ? theme.colorScheme
-                                                            .secondary
-                                                        : theme.colorScheme
-                                                            .outline,
-                                                    iconText:
-                                                        localizations.translate(
-                                                      i18.deliverIntervention
-                                                          .resourceAddBeneficiary,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          DigitCard(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Text(
-                                                  localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryCommentHeading,
-                                                  ),
-                                                  style: theme
-                                                      .textTheme.headlineLarge,
-                                                ),
-                                                DigitReactiveSearchDropdown<
-                                                    String>(
-                                                  label:
-                                                      localizations.translate(
-                                                    i18.deliverIntervention
-                                                        .deliveryCommentLabel,
-                                                  ),
-                                                  form: form,
-                                                  menuItems:
-                                                      RegistrationDeliverySingleton()
-                                                          .deliveryCommentOptions!
-                                                          .map((e) {
-                                                    return localizations
-                                                        .translate(e);
-                                                  }).toList()
-                                                        ..sort((a, b) =>
-                                                            a.compareTo(b)),
-                                                  formControlName:
-                                                      _deliveryCommentKey,
-                                                  valueMapper: (value) => value,
-                                                  emptyText: localizations
-                                                      .translate(i18
-                                                          .common.noMatchFound),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
+                                                      localizations:
+                                                          localizations,
+                                                      func: updateState),
+                                                  {
+                                            "context": context,
+                                            "deliveryInterventionState":
+                                                deliveryInterventionState,
+                                            "numberOfDoses": numberOfDoses,
+                                            "steps": steps,
+                                            "productVariants": productVariants,
+                                            "form": form,
+                                            "controllers": _controllers,
+                                          })),
                                     ],
                                   );
                                 },
@@ -598,15 +492,15 @@ class DeliverInterventionPageState
   }
 
   addController(FormGroup form) {
-    (form.control(_resourceDeliveredKey) as FormArray)
+    (form.control(resourceDeliveredKey) as FormArray)
         .add(FormControl<ProductVariantModel>());
-    (form.control(_quantityDistributedKey) as FormArray)
+    (form.control(quantityDistributedKey) as FormArray)
         .add(FormControl<int>(value: 0, validators: [Validators.min(1)]));
   }
 
   bool hasEmptyOrZeroQuantity(FormGroup form) {
     final quantityDistributedArray =
-        form.control(_quantityDistributedKey) as FormArray;
+        form.control(quantityDistributedKey) as FormArray;
 
     // Check if any quantity is zero or null
     return quantityDistributedArray.value?.any((e) => e == 0 || e == null) ??
@@ -635,7 +529,7 @@ class DeliverInterventionPageState
   bool hasDuplicateResources(
       List<ProductVariantModel?> deliveredProducts, FormGroup form) {
     final resourceDeliveredArray =
-        form.control(_resourceDeliveredKey) as FormArray;
+        form.control(resourceDeliveredKey) as FormArray;
     final Set<String?> uniqueProductIds = {};
 
     for (int i = 0; i < resourceDeliveredArray.value!.length; i++) {
@@ -664,6 +558,8 @@ class DeliverInterventionPageState
     AddressModel? address,
     double? latitude,
     double? longitude,
+        List<AdditionalField>?
+        fields
   }) {
     // Initialize task with oldTask if available, or create a new one
     var task = oldTask;
@@ -688,9 +584,9 @@ class DeliverInterventionPageState
 
     // Extract productvariantList from the form
     final productvariantList =
-        ((form.control(_resourceDeliveredKey) as FormArray).value
+        ((form.control(resourceDeliveredKey) as FormArray).value
             as List<ProductVariantModel?>);
-    final deliveryComment = form.control(_deliveryCommentKey).value as String?;
+    final deliveryComment = form.control(deliveryCommentKey).value as String?;
     // Update the task with information from the form and other context
     task = task.copyWith(
       projectId: RegistrationDeliverySingleton().projectId,
@@ -703,7 +599,7 @@ class DeliverInterventionPageState
                 taskId: task?.id,
                 tenantId: RegistrationDeliverySingleton().tenantId,
                 rowVersion: oldTask?.rowVersion ?? 1,
-                quantity: (((form.control(_quantityDistributedKey) as FormArray)
+                quantity: (((form.control(quantityDistributedKey) as FormArray)
                         .value)?[productvariantList.indexOf(e)])
                     .toString(),
                 clientAuditDetails: ClientAuditDetails(
@@ -724,6 +620,7 @@ class DeliverInterventionPageState
       additionalFields: TaskAdditionalFields(
         version: task.additionalFields?.version ?? 1,
         fields: [
+          ...?fields,
           AdditionalField(
             RegistrationDeliveryEnums.name.toValue(),
             RegistrationDeliverySingleton().loggedInUser?.name,
@@ -773,107 +670,5 @@ class DeliverInterventionPageState
     );
 
     return task;
-  }
-
-// This method builds a form used for delivering interventions.
-
-  FormGroup buildForm(
-    BuildContext context,
-    List<DeliveryProductVariant>? productVariants,
-    List<ProductVariantModel>? variants,
-  ) {
-    final bloc = context.read<DeliverInterventionBloc>().state;
-    final overViewbloc = context.read<HouseholdOverviewBloc>().state;
-    _controllers.forEachIndexed((index, element) {
-      _controllers.removeAt(index);
-    });
-
-    // Add controllers for each product variant to the _controllers list.
-    if (_controllers.isEmpty) {
-      final int r = RegistrationDeliverySingleton()
-                  .selectedProject
-                  ?.additionalDetails
-                  ?.projectType
-                  ?.cycles ==
-              null
-          ? 1
-          : fetchProductVariant(
-                      RegistrationDeliverySingleton()
-                          .selectedProject
-                          ?.additionalDetails
-                          ?.projectType
-                          ?.cycles![bloc.cycle - 1]
-                          .deliveries?[bloc.dose - 1],
-                      overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)!
-                  .productVariants
-                  ?.length ??
-              0;
-
-      _controllers.addAll(List.generate(r, (index) => index)
-          .mapIndexed((index, element) => index));
-    }
-
-    return fb.group(<String, Object>{
-      _doseAdministrationKey: FormControl<String>(
-        value:
-            '${localizations.translate(i18.deliverIntervention.cycle)} ${bloc.cycle == 0 ? (bloc.cycle + 1) : bloc.cycle}'
-                .toString(),
-        validators: [],
-      ),
-      _deliveryCommentKey: FormControl<String>(
-        value: RegistrationDeliverySingleton().beneficiaryType !=
-                BeneficiaryType.individual
-            ? (bloc.tasks?.lastOrNull?.additionalFields?.fields
-                            .where((a) =>
-                                a.key ==
-                                AdditionalFieldsType.deliveryComment.toValue())
-                            .toList() ??
-                        [])
-                    .isNotEmpty
-                ? bloc.tasks?.lastOrNull?.additionalFields?.fields
-                    .where((a) =>
-                        a.key == AdditionalFieldsType.deliveryComment.toValue())
-                    .first
-                    .value
-                : ''
-            : null,
-        validators: [],
-      ),
-      _dateOfAdministrationKey:
-          FormControl<DateTime>(value: DateTime.now(), validators: []),
-      _resourceDeliveredKey: FormArray<ProductVariantModel>(
-        [
-          ..._controllers.map((e) => FormControl<ProductVariantModel>(
-                value: variants != null && variants.length < _controllers.length
-                    ? variants.last
-                    : (variants != null &&
-                            _controllers.indexOf(e) < variants.length
-                        ? variants.firstWhereOrNull(
-                            (element) =>
-                                element.id ==
-                                productVariants
-                                    ?.elementAt(_controllers.indexOf(e))
-                                    .productVariantId,
-                          )
-                        : null),
-              )),
-        ],
-      ),
-      _quantityDistributedKey: FormArray<int>([
-        ..._controllers.mapIndexed(
-          (i, e) => FormControl<int>(
-            value: RegistrationDeliverySingleton().beneficiaryType !=
-                    BeneficiaryType.individual
-                ? int.tryParse(
-                    bloc.tasks?.lastOrNull?.resources?.elementAt(i).quantity ??
-                        '0',
-                  )
-                : 0,
-            validators: [Validators.min(1)],
-          ),
-        ),
-      ]),
-    });
   }
 }

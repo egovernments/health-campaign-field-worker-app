@@ -20,7 +20,8 @@ class WidgetBuilderFactory {
 
     if (fieldConfig['validation'] != null) {
       fieldConfig['validation'].forEach((element) {
-        validationMessages[element['key']] = (_) => element['errorMessage'];
+        validationMessages[element['key']] =
+            (_) => localizations.translate(element['errorMessage']);
       });
     }
 
@@ -31,11 +32,11 @@ class WidgetBuilderFactory {
     }
 
     // Generate the widget based on the fieldConfig['type'] using a switch case
-    switch (fieldConfig['component']) {
+    switch (fieldConfig['attribute']) {
       case 'textField':
         widget = DigitTextFormField(
           formControlName: key,
-          label: fieldConfig['label'],
+          label: localizations.translate(fieldConfig['label']),
           readOnly: fieldConfig['readOnly'] ?? false,
           isRequired: fieldConfig['isRequired'] ?? false,
           keyboardType: fieldConfig['keyboardType'] == "number"
@@ -54,8 +55,8 @@ class WidgetBuilderFactory {
               maximum: fieldConfig['maximum'] ?? 100,
               form: form,
               formControlName: key,
-              label:
-                  '${fieldConfig['label']}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+              label: localizations.translate(
+                  '${fieldConfig['label']}${fieldConfig['isRequired'] ?? false ? '*' : ''}'),
               incrementer: true,
             ),
           ),
@@ -65,7 +66,7 @@ class WidgetBuilderFactory {
         widget = DigitDateFormPicker(
           isEnabled: (fieldConfig['readOnly'] ?? false) != true,
           formControlName: key,
-          label: fieldConfig['label'],
+          label: localizations.translate(fieldConfig['label']),
           isRequired: fieldConfig['isRequired'] ?? false,
           confirmText: localizations.translate(
             i18.common.coreCommonOk,
@@ -78,7 +79,7 @@ class WidgetBuilderFactory {
       case 'dropdown':
         widget = DigitReactiveSearchDropdown<String>(
           enabled: (fieldConfig['readOnly'] ?? false) != true,
-          label: fieldConfig['label'],
+          label: localizations.translate(fieldConfig['label']),
           form: form,
           menuItems: fieldConfig['menuItems'] ?? [],
           formControlName: key,
@@ -97,7 +98,7 @@ class WidgetBuilderFactory {
         break;
       case 'checkbox':
         widget = DigitCheckbox(
-          label: fieldConfig['label'],
+          label: localizations.translate(fieldConfig['label']),
           value: fieldConfig['initialValue'] ?? false,
         );
         break;
@@ -157,8 +158,8 @@ class WidgetBuilderFactory {
           child: Opacity(
             opacity: fieldConfig['readOnly'] ?? false ? 0.5 : 1,
             child: SelectionBox<String>(
-              title:
-                  '${fieldConfig['label']}${fieldConfig['isRequired'] ?? false ? '*' : ''}',
+              title: localizations.translate(
+                  '${fieldConfig['label']}${fieldConfig['isRequired'] ?? false ? '*' : ''}'),
               equalWidthOptions: true,
               allowMultipleSelection:
                   fieldConfig['allowMultipleSelection'] ?? false,
@@ -189,7 +190,7 @@ class WidgetBuilderFactory {
         break;
 
       default:
-        throw Exception("Unsupported widget type: ${fieldConfig['type']}");
+        throw Exception("Unsupported widget type: ${fieldConfig['attribute']}");
     }
 
     return widget;
