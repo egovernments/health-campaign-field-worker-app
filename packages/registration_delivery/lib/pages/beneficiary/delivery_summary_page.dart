@@ -338,7 +338,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                     children: [
                                       LabelValueList(
                                           heading: localizations.translate(
-                                              '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                              '${RegistrationDeliverySingleton().selectedProject?.projectType?.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                                           withDivider: true,
                                           labelFlex: 6,
                                           items: [
@@ -352,7 +352,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                                           .toValue()
                                                   ? i18.deliverIntervention
                                                   .reasonForRefusalLabel
-                                                  : '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.typeOfResourceUsed}'),
+                                                  : '${RegistrationDeliverySingleton().selectedProject?.projectType?.toUpperCase()}_${i18.deliverIntervention.typeOfResourceUsed}'),
                                               value: deliverState.oldTask?.status ==
                                                   Status.administeredFailed
                                                       .toValue() ||

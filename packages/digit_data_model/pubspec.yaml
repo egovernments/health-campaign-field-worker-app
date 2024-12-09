@@ -26,6 +26,7 @@ dependencies:
   dio: ^5.1.2
   mocktail: ^1.0.2
   collection: ^1.16.0
+  digit_components: ^1.0.2
 
 dev_dependencies:
   flutter_test:

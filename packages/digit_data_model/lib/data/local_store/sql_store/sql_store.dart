@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:digit_components/digit_components.dart';
 
 import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
@@ -108,7 +109,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.
@@ -121,6 +122,26 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
       // Return a `NativeDatabase` that uses the file for storage.
       return NativeDatabase(file, logStatements: true, setup: (data) {});
+    });
+  }
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(onCreate: (Migrator m) async {
+      await m.createAll();
+    }, onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 5) {
+        //Add column for projectType in Project Table
+        try {
+          AppLogger.instance.info('Applying migration $from to $to');
+          await m.addColumn(project, project.projectType);
+        } catch (e) {
+          AppLogger.instance.error(
+            title: 'migration',
+            message: e.toString(),
+          );
+        }
+      }
     });
   }
 }
