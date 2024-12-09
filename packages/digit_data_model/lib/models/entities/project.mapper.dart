@@ -69,6 +69,9 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
   static DateTime? _$endDateTime(ProjectSearchModel v) => v.endDateTime;
   static const Field<ProjectSearchModel, DateTime> _f$endDateTime =
       Field('endDateTime', _$endDateTime, mode: FieldMode.member);
+  static String? _$projectType(ProjectSearchModel v) => v.projectType;
+  static const Field<ProjectSearchModel, String> _f$projectType =
+      Field('projectType', _$projectType, mode: FieldMode.member);
 
   @override
   final MappableFields<ProjectSearchModel> fields = const {
@@ -88,6 +91,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
     #additionalFields: _f$additionalFields,
     #startDateTime: _f$startDateTime,
     #endDateTime: _f$endDateTime,
+    #projectType: _f$projectType,
   };
   @override
   final bool ignoreNull = true;
@@ -316,6 +320,9 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
   static List<TargetModel>? _$targets(ProjectModel v) => v.targets;
   static const Field<ProjectModel, List<TargetModel>> _f$targets =
       Field('targets', _$targets, opt: true);
+  static String? _$projectType(ProjectModel v) => v.projectType;
+  static const Field<ProjectModel, String> _f$projectType =
+      Field('projectType', _$projectType, opt: true);
   static List<DocumentModel>? _$documents(ProjectModel v) => v.documents;
   static const Field<ProjectModel, List<DocumentModel>> _f$documents =
       Field('documents', _$documents, opt: true);
@@ -366,6 +373,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
     #rowVersion: _f$rowVersion,
     #address: _f$address,
     #targets: _f$targets,
+    #projectType: _f$projectType,
     #documents: _f$documents,
     #additionalDetails: _f$additionalDetails,
     #startDate: _f$startDate,
@@ -406,6 +414,7 @@ class ProjectModelMapper extends SubClassMapperBase<ProjectModel> {
         rowVersion: data.dec(_f$rowVersion),
         address: data.dec(_f$address),
         targets: data.dec(_f$targets),
+        projectType: data.dec(_f$projectType),
         documents: data.dec(_f$documents),
         additionalDetails: data.dec(_f$additionalDetails),
         startDate: data.dec(_f$startDate),
@@ -502,6 +511,7 @@ abstract class ProjectModelCopyWith<$R, $In extends ProjectModel, $Out>
       int? rowVersion,
       AddressModel? address,
       List<TargetModel>? targets,
+      String? projectType,
       List<DocumentModel>? documents,
       ProjectAdditionalDetails? additionalDetails,
       int? startDate,
@@ -573,6 +583,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
           Object? rowVersion = $none,
           Object? address = $none,
           Object? targets = $none,
+          Object? projectType = $none,
           Object? documents = $none,
           Object? additionalDetails = $none,
           Object? startDate = $none,
@@ -599,6 +610,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
         if (rowVersion != $none) #rowVersion: rowVersion,
         if (address != $none) #address: address,
         if (targets != $none) #targets: targets,
+        if (projectType != $none) #projectType: projectType,
         if (documents != $none) #documents: documents,
         if (additionalDetails != $none) #additionalDetails: additionalDetails,
         if (startDate != $none) #startDate: startDate,
@@ -631,6 +643,7 @@ class _ProjectModelCopyWithImpl<$R, $Out>
       rowVersion: data.get(#rowVersion, or: $value.rowVersion),
       address: data.get(#address, or: $value.address),
       targets: data.get(#targets, or: $value.targets),
+      projectType: data.get(#projectType, or: $value.projectType),
       documents: data.get(#documents, or: $value.documents),
       additionalDetails:
           data.get(#additionalDetails, or: $value.additionalDetails),
