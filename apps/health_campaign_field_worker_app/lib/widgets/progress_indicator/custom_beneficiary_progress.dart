@@ -159,7 +159,7 @@ class CustomBeneficiaryProgressBarState
   @override
   Widget build(BuildContext context) {
     // Todo : verify this once as discussion going on
-    final target = context.isRegistrar ? 50.0 : 40.0;
+    final target = context.isRegistrar ? 50.0 : 325.0;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
