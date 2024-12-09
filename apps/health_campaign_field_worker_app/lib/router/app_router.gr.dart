@@ -55,6 +55,17 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomClosedHouseholdDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
+          orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomClosedHouseholdDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomClosedHouseholdSummaryRoute.name: (routeData) {
       final args = routeData.argsAs<CustomClosedHouseholdSummaryRouteArgs>(
           orElse: () => const CustomClosedHouseholdSummaryRouteArgs());
@@ -378,6 +389,45 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomClosedHouseholdDetailsPage]
+class CustomClosedHouseholdDetailsRoute
+    extends PageRouteInfo<CustomClosedHouseholdDetailsRouteArgs> {
+  CustomClosedHouseholdDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomClosedHouseholdDetailsRoute.name,
+          args: CustomClosedHouseholdDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomClosedHouseholdDetailsRoute';
+
+  static const PageInfo<CustomClosedHouseholdDetailsRouteArgs> page =
+      PageInfo<CustomClosedHouseholdDetailsRouteArgs>(name);
+}
+
+class CustomClosedHouseholdDetailsRouteArgs {
+  const CustomClosedHouseholdDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomClosedHouseholdDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 

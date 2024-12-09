@@ -34,6 +34,7 @@ import '../pages/beneficiary/custom_household_overview.dart';
 import '../pages/closed/custom_closed_household_summary.dart';
 import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered_verification.dart';
+import '../pages/closed/custom_closed_household_details.dart';
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -86,6 +87,10 @@ class AppRouter extends _$AppRouter {
               AutoRoute(
                 page: ClosedHouseholdDetailsRoute.page,
                 path: 'closed-household-details',
+              ),
+              AutoRoute(
+                page: CustomClosedHouseholdDetailsRoute.page,
+                path: 'custom-closed-household-details',
                 initial: true,
               ),
               AutoRoute(
