@@ -89,6 +89,10 @@ class DeliverIntervention {
   String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
   String get bednetScanLessThanCount => 'NET_SCANNED_LESS_THAN_COUNT_LABEL';
   String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get informationBulletOne => 'INFORMATION_BULLET_ONE';
+  String get informationBulletTwo => 'INFORMATION_BULLET_TWO';
+  String get informationBulletThree => 'INFORMATION_BULLET_THREE';
+  String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
 }
 
 class Common {
