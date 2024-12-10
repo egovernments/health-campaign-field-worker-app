@@ -52,6 +52,16 @@ class CustomValidator {
         : {'required': true};
   }
 
+  static Map<String, dynamic>? requiredMin3(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            control.value.toString().trim().length >= 3 ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'min3': true};
+  }
+
   static Map<String, dynamic>? validMobileNumber(
     AbstractControl<dynamic> control,
   ) {
