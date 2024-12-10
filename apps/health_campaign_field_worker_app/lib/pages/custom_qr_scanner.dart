@@ -24,6 +24,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
   final int quantity;
   final bool isGS1code;
   final bool isEditEnabled;
+  final bool manualEnabled;
 
   const CustomDigitScannerPage({
     super.key,
@@ -32,6 +33,7 @@ class CustomDigitScannerPage extends LocalizedStatefulWidget {
     required this.isGS1code,
     this.singleValue = false,
     this.isEditEnabled = false,
+    this.manualEnabled = true,
   });
 
   @override
@@ -501,12 +503,13 @@ class _CustomDigitScannerPageState
                                   const SizedBox(
                                     height: kPadding * 2,
                                   ),
-                                  DigitTextFormField(
-                                    formControlName: _manualCodeFormKey,
-                                    label: localizations.translate(
-                                      i18.scanner.resourceCode,
+                                  if (widget.manualEnabled)
+                                    DigitTextFormField(
+                                      formControlName: _manualCodeFormKey,
+                                      label: localizations.translate(
+                                        i18.scanner.resourceCode,
+                                      ),
                                     ),
-                                  ),
                                 ],
                               ),
                             );

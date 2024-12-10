@@ -596,6 +596,8 @@ class CustomDeliverInterventionPageState
                                                                               bednetCount < 2,
                                                                           isEditEnabled:
                                                                               true,
+                                                                          manualEnabled:
+                                                                              false,
                                                                         ),
                                                                         settings:
                                                                             const RouteSettings(name: '/qr-scanner'),
@@ -627,12 +629,18 @@ class CustomDeliverInterventionPageState
                                                                 MaterialPageRoute(
                                                                   builder:
                                                                       (context) =>
-                                                                          const CustomDigitScannerPage(
-                                                                    quantity: 1,
+                                                                          CustomDigitScannerPage(
+                                                                    quantity:
+                                                                        bednetCount,
                                                                     isGS1code:
-                                                                        false,
-                                                                    singleValue:
                                                                         true,
+                                                                    singleValue:
+                                                                        bednetCount <
+                                                                            2,
+                                                                    isEditEnabled:
+                                                                        true,
+                                                                    manualEnabled:
+                                                                        false,
                                                                   ),
                                                                   settings:
                                                                       const RouteSettings(
