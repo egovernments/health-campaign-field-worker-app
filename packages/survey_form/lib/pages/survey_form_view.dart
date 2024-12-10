@@ -1,27 +1,28 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
-import 'package:survey_form/survey_form.dart';
-import 'package:survey_form/utils/extensions/context_utility.dart';
-import 'package:digit_data_model/data_model.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:survey_form/utils/extensions/context_utility.dart';
 
 import '../router/survey_form_router.gm.dart';
 import '../utils/constants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class SurveyFormViewPage extends LocalizedStatefulWidget {
@@ -720,7 +721,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             return null;
                           },
                           builder: (field) => RadioList(
-                            radioButtons: item.values != null
+                            radioDigitButtons: item.values != null
                                 ? item.values!
                                     .where((e) =>
                                         e != i18.surveyForm.notSelectedKey)

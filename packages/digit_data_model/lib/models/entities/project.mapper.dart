@@ -47,6 +47,9 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
   static String? _$tenantId(ProjectSearchModel v) => v.tenantId;
   static const Field<ProjectSearchModel, String> _f$tenantId =
       Field('tenantId', _$tenantId, opt: true);
+  static String? _$projectType(ProjectSearchModel v) => v.projectType;
+  static const Field<ProjectSearchModel, String> _f$projectType =
+      Field('projectType', _$projectType, opt: true);
   static int? _$startDate(ProjectSearchModel v) => v.startDate;
   static const Field<ProjectSearchModel, int> _f$startDate =
       Field('startDate', _$startDate, opt: true);
@@ -69,9 +72,6 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
   static DateTime? _$endDateTime(ProjectSearchModel v) => v.endDateTime;
   static const Field<ProjectSearchModel, DateTime> _f$endDateTime =
       Field('endDateTime', _$endDateTime, mode: FieldMode.member);
-  static String? _$projectType(ProjectSearchModel v) => v.projectType;
-  static const Field<ProjectSearchModel, String> _f$projectType =
-      Field('projectType', _$projectType, mode: FieldMode.member);
 
   @override
   final MappableFields<ProjectSearchModel> fields = const {
@@ -84,6 +84,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
     #department: _f$department,
     #referenceId: _f$referenceId,
     #tenantId: _f$tenantId,
+    #projectType: _f$projectType,
     #startDate: _f$startDate,
     #endDate: _f$endDate,
     #boundaryCode: _f$boundaryCode,
@@ -91,7 +92,6 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
     #additionalFields: _f$additionalFields,
     #startDateTime: _f$startDateTime,
     #endDateTime: _f$endDateTime,
-    #projectType: _f$projectType,
   };
   @override
   final bool ignoreNull = true;
@@ -115,6 +115,7 @@ class ProjectSearchModelMapper extends SubClassMapperBase<ProjectSearchModel> {
         department: data.dec(_f$department),
         referenceId: data.dec(_f$referenceId),
         tenantId: data.dec(_f$tenantId),
+        projectType: data.dec(_f$projectType),
         startDate: data.dec(_f$startDate),
         endDate: data.dec(_f$endDate),
         boundaryCode: data.dec(_f$boundaryCode));
@@ -186,6 +187,7 @@ abstract class ProjectSearchModelCopyWith<$R, $In extends ProjectSearchModel,
       String? department,
       String? referenceId,
       String? tenantId,
+      String? projectType,
       int? startDate,
       int? endDate,
       String? boundaryCode});
@@ -212,6 +214,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           Object? department = $none,
           Object? referenceId = $none,
           Object? tenantId = $none,
+          Object? projectType = $none,
           Object? startDate = $none,
           Object? endDate = $none,
           Object? boundaryCode = $none}) =>
@@ -225,6 +228,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
         if (department != $none) #department: department,
         if (referenceId != $none) #referenceId: referenceId,
         if (tenantId != $none) #tenantId: tenantId,
+        if (projectType != $none) #projectType: projectType,
         if (startDate != $none) #startDate: startDate,
         if (endDate != $none) #endDate: endDate,
         if (boundaryCode != $none) #boundaryCode: boundaryCode
@@ -242,6 +246,7 @@ class _ProjectSearchModelCopyWithImpl<$R, $Out>
           department: data.get(#department, or: $value.department),
           referenceId: data.get(#referenceId, or: $value.referenceId),
           tenantId: data.get(#tenantId, or: $value.tenantId),
+          projectType: data.get(#projectType, or: $value.projectType),
           startDate: data.get(#startDate, or: $value.startDate),
           endDate: data.get(#endDate, or: $value.endDate),
           boundaryCode: data.get(#boundaryCode, or: $value.boundaryCode));

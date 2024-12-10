@@ -13,13 +13,13 @@ import 'package:registration_delivery/models/entities/additional_fields_type.dar
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/constants.dart';
-import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/component_wrapper/product_variant_bloc_wrapper.dart';
 import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
+import '../../utils/utils.dart';
 
 @RoutePage()
 class DeliverySummaryPage extends LocalizedStatefulWidget {
@@ -328,7 +328,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 ?.map((e) => TaskResourceInfo(
                                     productVariants
                                             .where((p) =>
-                                        p.id == e.productVariantId)
+                                                p.id == e.productVariantId)
                                             .firstOrNull
                                             ?.sku ??
                                         productVariants
