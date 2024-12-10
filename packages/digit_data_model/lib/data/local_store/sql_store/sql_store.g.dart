@@ -20618,9 +20618,12 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   static const VerificationMeta _beneficiaryTypeMeta =
       const VerificationMeta('beneficiaryType');
   @override
-  late final GeneratedColumn<String> beneficiaryType = GeneratedColumn<String>(
-      'beneficiary_type', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+  late final GeneratedColumnWithTypeConverter<BeneficiaryType?, int>
+      beneficiaryType = GeneratedColumn<int>(
+              'beneficiary_type', aliasedName, true,
+              type: DriftSqlType.int, requiredDuringInsert: false)
+          .withConverter<BeneficiaryType?>(
+              $TargetTable.$converterbeneficiaryTypen);
   static const VerificationMeta _additionalFieldsMeta =
       const VerificationMeta('additionalFields');
   @override
@@ -20745,12 +20748,7 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           rowVersion.isAcceptableOrUnknown(
               data['row_version']!, _rowVersionMeta));
     }
-    if (data.containsKey('beneficiary_type')) {
-      context.handle(
-          _beneficiaryTypeMeta,
-          beneficiaryType.isAcceptableOrUnknown(
-              data['beneficiary_type']!, _beneficiaryTypeMeta));
-    }
+    context.handle(_beneficiaryTypeMeta, const VerificationResult.success());
     if (data.containsKey('additional_fields')) {
       context.handle(
           _additionalFieldsMeta,
@@ -20798,8 +20796,9 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
           .read(DriftSqlType.bool, data['${effectivePrefix}is_deleted']),
       rowVersion: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}row_version']),
-      beneficiaryType: attachedDatabase.typeMapping.read(
-          DriftSqlType.string, data['${effectivePrefix}beneficiary_type']),
+      beneficiaryType: $TargetTable.$converterbeneficiaryTypen.fromSql(
+          attachedDatabase.typeMapping.read(
+              DriftSqlType.int, data['${effectivePrefix}beneficiary_type'])),
       additionalFields: attachedDatabase.typeMapping.read(
           DriftSqlType.string, data['${effectivePrefix}additional_fields']),
     );
@@ -20809,6 +20808,13 @@ class $TargetTable extends Target with TableInfo<$TargetTable, TargetData> {
   $TargetTable createAlias(String alias) {
     return $TargetTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<BeneficiaryType, int, int>
+      $converterbeneficiaryType =
+      const EnumIndexConverter<BeneficiaryType>(BeneficiaryType.values);
+  static JsonTypeConverter2<BeneficiaryType?, int?, int?>
+      $converterbeneficiaryTypen =
+      JsonTypeConverter2.asNullable($converterbeneficiaryType);
 }
 
 class TargetData extends DataClass implements Insertable<TargetData> {
@@ -20828,7 +20834,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
   final String? tenantId;
   final bool? isDeleted;
   final int? rowVersion;
-  final String? beneficiaryType;
+  final BeneficiaryType? beneficiaryType;
   final String? additionalFields;
   const TargetData(
       {required this.id,
@@ -20899,7 +20905,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       map['row_version'] = Variable<int>(rowVersion);
     }
     if (!nullToAbsent || beneficiaryType != null) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType);
+      map['beneficiary_type'] = Variable<int>(
+          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType));
     }
     if (!nullToAbsent || additionalFields != null) {
       map['additional_fields'] = Variable<String>(additionalFields);
@@ -20986,7 +20993,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       isDeleted: serializer.fromJson<bool?>(json['isDeleted']),
       rowVersion: serializer.fromJson<int?>(json['rowVersion']),
-      beneficiaryType: serializer.fromJson<String?>(json['beneficiaryType']),
+      beneficiaryType: $TargetTable.$converterbeneficiaryTypen
+          .fromJson(serializer.fromJson<int?>(json['beneficiaryType'])),
       additionalFields: serializer.fromJson<String?>(json['additionalFields']),
     );
   }
@@ -21010,7 +21018,8 @@ class TargetData extends DataClass implements Insertable<TargetData> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'isDeleted': serializer.toJson<bool?>(isDeleted),
       'rowVersion': serializer.toJson<int?>(rowVersion),
-      'beneficiaryType': serializer.toJson<String?>(beneficiaryType),
+      'beneficiaryType': serializer.toJson<int?>(
+          $TargetTable.$converterbeneficiaryTypen.toJson(beneficiaryType)),
       'additionalFields': serializer.toJson<String?>(additionalFields),
     };
   }
@@ -21032,7 +21041,7 @@ class TargetData extends DataClass implements Insertable<TargetData> {
           Value<String?> tenantId = const Value.absent(),
           Value<bool?> isDeleted = const Value.absent(),
           Value<int?> rowVersion = const Value.absent(),
-          Value<String?> beneficiaryType = const Value.absent(),
+          Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
           Value<String?> additionalFields = const Value.absent()}) =>
       TargetData(
         id: id ?? this.id,
@@ -21163,7 +21172,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
   final Value<String?> tenantId;
   final Value<bool?> isDeleted;
   final Value<int?> rowVersion;
-  final Value<String?> beneficiaryType;
+  final Value<BeneficiaryType?> beneficiaryType;
   final Value<String?> additionalFields;
   final Value<int> rowid;
   const TargetCompanion({
@@ -21225,7 +21234,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
     Expression<String>? tenantId,
     Expression<bool>? isDeleted,
     Expression<int>? rowVersion,
-    Expression<String>? beneficiaryType,
+    Expression<int>? beneficiaryType,
     Expression<String>? additionalFields,
     Expression<int>? rowid,
   }) {
@@ -21271,7 +21280,7 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       Value<String?>? tenantId,
       Value<bool?>? isDeleted,
       Value<int?>? rowVersion,
-      Value<String?>? beneficiaryType,
+      Value<BeneficiaryType?>? beneficiaryType,
       Value<String?>? additionalFields,
       Value<int>? rowid}) {
     return TargetCompanion(
@@ -21349,7 +21358,8 @@ class TargetCompanion extends UpdateCompanion<TargetData> {
       map['row_version'] = Variable<int>(rowVersion.value);
     }
     if (beneficiaryType.present) {
-      map['beneficiary_type'] = Variable<String>(beneficiaryType.value);
+      map['beneficiary_type'] = Variable<int>(
+          $TargetTable.$converterbeneficiaryTypen.toSql(beneficiaryType.value));
     }
     if (additionalFields.present) {
       map['additional_fields'] = Variable<String>(additionalFields.value);
@@ -42051,6 +42061,7 @@ typedef $$FacilityTableInsertCompanionBuilder = FacilityCompanion Function({
   Value<String?> auditModifiedBy,
   Value<int?> auditModifiedTime,
   Value<String?> tenantId,
+  Value<String?> name,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
@@ -42071,6 +42082,7 @@ typedef $$FacilityTableUpdateCompanionBuilder = FacilityCompanion Function({
   Value<String?> auditModifiedBy,
   Value<int?> auditModifiedTime,
   Value<String?> tenantId,
+  Value<String?> name,
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
@@ -42111,6 +42123,7 @@ class $$FacilityTableTableManager extends RootTableManager<
             Value<String?> auditModifiedBy = const Value.absent(),
             Value<int?> auditModifiedTime = const Value.absent(),
             Value<String?> tenantId = const Value.absent(),
+            Value<String?> name = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
@@ -42131,6 +42144,7 @@ class $$FacilityTableTableManager extends RootTableManager<
             auditModifiedBy: auditModifiedBy,
             auditModifiedTime: auditModifiedTime,
             tenantId: tenantId,
+            name: name,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
@@ -42151,6 +42165,7 @@ class $$FacilityTableTableManager extends RootTableManager<
             Value<String?> auditModifiedBy = const Value.absent(),
             Value<int?> auditModifiedTime = const Value.absent(),
             Value<String?> tenantId = const Value.absent(),
+            Value<String?> name = const Value.absent(),
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
@@ -42171,6 +42186,7 @@ class $$FacilityTableTableManager extends RootTableManager<
             auditModifiedBy: auditModifiedBy,
             auditModifiedTime: auditModifiedTime,
             tenantId: tenantId,
+            name: name,
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
@@ -42264,6 +42280,11 @@ class $$FacilityTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<String> get name => $state.composableBuilder(
+      column: $state.table.name,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<bool> get isDeleted => $state.composableBuilder(
       column: $state.table.isDeleted,
       builder: (column, joinBuilders) =>
@@ -42350,6 +42371,11 @@ class $$FacilityTableOrderingComposer
 
   ColumnOrderings<String> get tenantId => $state.composableBuilder(
       column: $state.table.tenantId,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get name => $state.composableBuilder(
+      column: $state.table.name,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -43054,6 +43080,7 @@ class $$ProductVariantTableOrderingComposer
 }
 
 typedef $$ProjectTableInsertCompanionBuilder = ProjectCompanion Function({
+  Value<String?> projectType,
   required String id,
   Value<String?> projectTypeId,
   Value<String?> projectNumber,
@@ -43083,6 +43110,7 @@ typedef $$ProjectTableInsertCompanionBuilder = ProjectCompanion Function({
   Value<int> rowid,
 });
 typedef $$ProjectTableUpdateCompanionBuilder = ProjectCompanion Function({
+  Value<String?> projectType,
   Value<String> id,
   Value<String?> projectTypeId,
   Value<String?> projectNumber,
@@ -43131,6 +43159,7 @@ class $$ProjectTableTableManager extends RootTableManager<
               $$ProjectTableOrderingComposer(ComposerState(db, table)),
           getChildManagerBuilder: (p) => $$ProjectTableProcessedTableManager(p),
           getUpdateCompanionBuilder: ({
+            Value<String?> projectType = const Value.absent(),
             Value<String> id = const Value.absent(),
             Value<String?> projectTypeId = const Value.absent(),
             Value<String?> projectNumber = const Value.absent(),
@@ -43160,6 +43189,7 @@ class $$ProjectTableTableManager extends RootTableManager<
             Value<int> rowid = const Value.absent(),
           }) =>
               ProjectCompanion(
+            projectType: projectType,
             id: id,
             projectTypeId: projectTypeId,
             projectNumber: projectNumber,
@@ -43189,6 +43219,7 @@ class $$ProjectTableTableManager extends RootTableManager<
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
+            Value<String?> projectType = const Value.absent(),
             required String id,
             Value<String?> projectTypeId = const Value.absent(),
             Value<String?> projectNumber = const Value.absent(),
@@ -43218,6 +43249,7 @@ class $$ProjectTableTableManager extends RootTableManager<
             Value<int> rowid = const Value.absent(),
           }) =>
               ProjectCompanion.insert(
+            projectType: projectType,
             id: id,
             projectTypeId: projectTypeId,
             projectNumber: projectNumber,
@@ -43264,6 +43296,11 @@ class $$ProjectTableProcessedTableManager extends ProcessedTableManager<
 class $$ProjectTableFilterComposer
     extends FilterComposer<_$LocalSqlDataStore, $ProjectTable> {
   $$ProjectTableFilterComposer(super.$state);
+  ColumnFilters<String> get projectType => $state.composableBuilder(
+      column: $state.table.projectType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnFilters<String> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -43398,6 +43435,11 @@ class $$ProjectTableFilterComposer
 class $$ProjectTableOrderingComposer
     extends OrderingComposer<_$LocalSqlDataStore, $ProjectTable> {
   $$ProjectTableOrderingComposer(super.$state);
+  ColumnOrderings<String> get projectType => $state.composableBuilder(
+      column: $state.table.projectType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
   ColumnOrderings<String> get id => $state.composableBuilder(
       column: $state.table.id,
       builder: (column, joinBuilders) =>
@@ -45303,7 +45345,7 @@ typedef $$ProjectTypeTableInsertCompanionBuilder = ProjectTypeCompanion
   Value<String?> name,
   Value<String?> code,
   Value<String?> group,
-  Value<String?> beneficiaryType,
+  Value<BeneficiaryType?> beneficiaryType,
   Value<String?> eligibilityCriteria,
   Value<String?> taskProcedure,
   Value<String?> auditCreatedBy,
@@ -45328,7 +45370,7 @@ typedef $$ProjectTypeTableUpdateCompanionBuilder = ProjectTypeCompanion
   Value<String?> name,
   Value<String?> code,
   Value<String?> group,
-  Value<String?> beneficiaryType,
+  Value<BeneficiaryType?> beneficiaryType,
   Value<String?> eligibilityCriteria,
   Value<String?> taskProcedure,
   Value<String?> auditCreatedBy,
@@ -45373,7 +45415,7 @@ class $$ProjectTypeTableTableManager extends RootTableManager<
             Value<String?> name = const Value.absent(),
             Value<String?> code = const Value.absent(),
             Value<String?> group = const Value.absent(),
-            Value<String?> beneficiaryType = const Value.absent(),
+            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
             Value<String?> eligibilityCriteria = const Value.absent(),
             Value<String?> taskProcedure = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -45421,7 +45463,7 @@ class $$ProjectTypeTableTableManager extends RootTableManager<
             Value<String?> name = const Value.absent(),
             Value<String?> code = const Value.absent(),
             Value<String?> group = const Value.absent(),
-            Value<String?> beneficiaryType = const Value.absent(),
+            Value<BeneficiaryType?> beneficiaryType = const Value.absent(),
             Value<String?> eligibilityCriteria = const Value.absent(),
             Value<String?> taskProcedure = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -45502,10 +45544,12 @@ class $$ProjectTypeTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get beneficiaryType => $state.composableBuilder(
-      column: $state.table.beneficiaryType,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnWithTypeConverterFilters<BeneficiaryType?, BeneficiaryType, int>
+      get beneficiaryType => $state.composableBuilder(
+          column: $state.table.beneficiaryType,
+          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
+              column,
+              joinBuilders: joinBuilders));
 
   ColumnFilters<String> get eligibilityCriteria => $state.composableBuilder(
       column: $state.table.eligibilityCriteria,
@@ -45611,7 +45655,7 @@ class $$ProjectTypeTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get beneficiaryType => $state.composableBuilder(
+  ColumnOrderings<int> get beneficiaryType => $state.composableBuilder(
       column: $state.table.beneficiaryType,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
@@ -46542,6 +46586,7 @@ typedef $$StockTableInsertCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
   Value<int?> auditCreatedTime,
@@ -46574,6 +46619,7 @@ typedef $$StockTableUpdateCompanionBuilder = StockCompanion Function({
   Value<String?> receiverType,
   Value<String?> senderId,
   Value<String?> senderType,
+  Value<int?> dateOfEntry,
   Value<String?> auditCreatedBy,
   Value<bool?> nonRecoverableError,
   Value<int?> auditCreatedTime,
@@ -46625,6 +46671,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
             Value<int?> auditCreatedTime = const Value.absent(),
@@ -46657,6 +46704,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
             auditCreatedTime: auditCreatedTime,
@@ -46689,6 +46737,7 @@ class $$StockTableTableManager extends RootTableManager<
             Value<String?> receiverType = const Value.absent(),
             Value<String?> senderId = const Value.absent(),
             Value<String?> senderType = const Value.absent(),
+            Value<int?> dateOfEntry = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
             Value<bool?> nonRecoverableError = const Value.absent(),
             Value<int?> auditCreatedTime = const Value.absent(),
@@ -46721,6 +46770,7 @@ class $$StockTableTableManager extends RootTableManager<
             receiverType: receiverType,
             senderId: senderId,
             senderType: senderType,
+            dateOfEntry: dateOfEntry,
             auditCreatedBy: auditCreatedBy,
             nonRecoverableError: nonRecoverableError,
             auditCreatedTime: auditCreatedTime,
@@ -46823,6 +46873,11 @@ class $$StockTableFilterComposer
 
   ColumnFilters<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<int> get dateOfEntry => $state.composableBuilder(
+      column: $state.table.dateOfEntry,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
@@ -46972,6 +47027,11 @@ class $$StockTableOrderingComposer
 
   ColumnOrderings<String> get senderType => $state.composableBuilder(
       column: $state.table.senderType,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<int> get dateOfEntry => $state.composableBuilder(
+      column: $state.table.dateOfEntry,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
@@ -49386,6 +49446,7 @@ typedef $$AttributesTableInsertCompanionBuilder = AttributesCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> additionalDetails,
   Value<int> rowid,
 });
 typedef $$AttributesTableUpdateCompanionBuilder = AttributesCompanion Function({
@@ -49411,6 +49472,7 @@ typedef $$AttributesTableUpdateCompanionBuilder = AttributesCompanion Function({
   Value<bool?> isDeleted,
   Value<int?> rowVersion,
   Value<String?> additionalFields,
+  Value<String?> additionalDetails,
   Value<int> rowid,
 });
 
@@ -49456,6 +49518,7 @@ class $$AttributesTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttributesCompanion(
@@ -49481,6 +49544,7 @@ class $$AttributesTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            additionalDetails: additionalDetails,
             rowid: rowid,
           ),
           getInsertCompanionBuilder: ({
@@ -49506,6 +49570,7 @@ class $$AttributesTableTableManager extends RootTableManager<
             Value<bool?> isDeleted = const Value.absent(),
             Value<int?> rowVersion = const Value.absent(),
             Value<String?> additionalFields = const Value.absent(),
+            Value<String?> additionalDetails = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               AttributesCompanion.insert(
@@ -49531,6 +49596,7 @@ class $$AttributesTableTableManager extends RootTableManager<
             isDeleted: isDeleted,
             rowVersion: rowVersion,
             additionalFields: additionalFields,
+            additionalDetails: additionalDetails,
             rowid: rowid,
           ),
         ));
@@ -49660,6 +49726,11 @@ class $$AttributesTableFilterComposer
       column: $state.table.additionalFields,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
 }
 
 class $$AttributesTableOrderingComposer
@@ -49772,6 +49843,11 @@ class $$AttributesTableOrderingComposer
 
   ColumnOrderings<String> get additionalFields => $state.composableBuilder(
       column: $state.table.additionalFields,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get additionalDetails => $state.composableBuilder(
+      column: $state.table.additionalDetails,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }

@@ -309,7 +309,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           },
                         );
                       },
-                    ),]
+                    ),
                   ]),
               slivers: [
                 SliverToBoxAdapter(
@@ -655,10 +655,10 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
   }
 
   IndividualModel _getIndividualModel(
-      BuildContext context, {
-        required FormGroup form,
-        IndividualModel? oldIndividual,
-      }) {
+    BuildContext context, {
+    required FormGroup form,
+    IndividualModel? oldIndividual,
+  }) {
     final dob = form.control(_dobKey).value as DateTime?;
     String? dobString;
     if (dob != null) {
@@ -733,7 +733,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       gender: form.control(_genderKey).value == null
           ? null
           : Gender.values
-          .byName(form.control(_genderKey).value.toString().toLowerCase()),
+              .byName(form.control(_genderKey).value.toString().toLowerCase()),
       mobileNumber: form.control(_mobileNumberKey).value,
       dateOfBirth: dobString,
       identifiers: [
@@ -791,13 +791,13 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
       _dobKey: FormControl<DateTime>(
         value: individual?.dateOfBirth != null
             ? DateFormat(Constants().dateFormat).parse(
-          individual!.dateOfBirth!,
-        )
+                individual!.dateOfBirth!,
+              )
             : null,
       ),
       _genderKey: FormControl<String>(value: getGenderOptions(individual)),
       _mobileNumberKey:
-      FormControl<String>(value: individual?.mobileNumber, validators: [
+          FormControl<String>(value: individual?.mobileNumber, validators: [
         Validators.pattern(Constants.mobileNumberRegExp,
             validationMessage:
                 localizations.translate(i18.common.coreCommonMobileNumber)),
@@ -811,6 +811,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
 
     return options?.map((e) => e).firstWhereOrNull(
           (element) => element.toLowerCase() == individual?.gender?.name,
-    );
+        );
   }
 }
