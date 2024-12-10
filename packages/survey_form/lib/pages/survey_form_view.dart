@@ -190,18 +190,23 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             : null,
                                     additionalFields:
                                         ServiceAttributesAdditionalFields(
-                                      version: 1,
-                                      fields: [
-                                        AdditionalField(
-                                          'latitude',
-                                          latitude,
-                                        ),
-                                        AdditionalField(
-                                          'longitude',
-                                          longitude,
-                                        ),
-                                      ],
-                                    ),
+                                            version: 1,
+                                            fields: [
+                                          AdditionalField(
+                                            'lat',
+                                            latitude,
+                                          ),
+                                          AdditionalField(
+                                            'lng',
+                                            longitude,
+                                          ),
+                                          AdditionalField(
+                                            'boundaryCode',
+                                            SurveyFormSingleton()
+                                                .boundary
+                                                ?.code,
+                                          ),
+                                        ]),
                                   ));
                                 }
 
@@ -379,7 +384,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                               textAlign: TextAlign.left,
                             ),
                           ),
-                          ...initialAttributes!.where((att) => att.isActive == true).map((
+                          ...initialAttributes!
+                              .where((att) => att.isActive == true)
+                              .map((
                             e,
                           ) {
                             int index = (initialAttributes ?? []).indexOf(e);
@@ -487,7 +494,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                         const EdgeInsets.only(
                                                             left: kPadding * 2),
                                                     child: DigitCheckboxTile(
-                                                      label: localizations.translate('${selectedServiceDefinition?.code}.${item}'),
+                                                      label: localizations
+                                                          .translate(
+                                                              '${selectedServiceDefinition?.code}.${item}'),
                                                       value: controller[index]
                                                           .text
                                                           .split('.')
@@ -765,43 +774,43 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             .where((e) => e != i18.surveyForm.notSelectedKey)
                             .toList()
                         : [],
-                    itemBuilder: (item) => RadioButtonBuilder(
-                        localizations.translate(
-                          '${selectedServiceDefinition?.code}.${item.trim()}',
-                        )
-                    ),
+                    itemBuilder: (item) =>
+                        RadioButtonBuilder(localizations.translate(
+                      '${selectedServiceDefinition?.code}.${item.trim()}',
+                    )),
                   );
                 },
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
                   return (controller[index].text == item.values?[1].trim() &&
-                      !(isHealthFacilityWorker &&
-                          widget.referralClientRefId != null) && item.dataType != 'SingleValueList')
+                          !(isHealthFacilityWorker &&
+                              widget.referralClientRefId != null) &&
+                          item.dataType != 'SingleValueList')
                       ? Padding(
-                    padding: const EdgeInsets.only(
-                      left: 4.0,
-                      right: 4.0,
-                      bottom: 16,
-                    ),
-                    child: DigitTextField(
-                      maxLength: 1000,
-                      isRequired: true,
-                      controller: additionalController[index],
-                      label: localizations.translate(
-                        '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
-                      ),
-                      validator: (value1) {
-                        if (value1 == null || value1 == '') {
-                          return localizations.translate(
-                            i18.common.coreCommonReasonRequired,
-                          );
-                        }
+                          padding: const EdgeInsets.only(
+                            left: 4.0,
+                            right: 4.0,
+                            bottom: 16,
+                          ),
+                          child: DigitTextField(
+                            maxLength: 1000,
+                            isRequired: true,
+                            controller: additionalController[index],
+                            label: localizations.translate(
+                              '${selectedServiceDefinition?.code}.${item.code}.ADDITIONAL_FIELD',
+                            ),
+                            validator: (value1) {
+                              if (value1 == null || value1 == '') {
+                                return localizations.translate(
+                                  i18.common.coreCommonReasonRequired,
+                                );
+                              }
 
-                        return null;
-                      },
-                    ),
-                  )
+                              return null;
+                            },
+                          ),
+                        )
                       : const SizedBox();
                 },
               ),
@@ -927,7 +936,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               return Column(
                 children: item.values!
                     .map((e) => DigitCheckboxTile(
-                          label: localizations.translate('${selectedServiceDefinition?.code}.${e}'),
+                          label: localizations.translate(
+                              '${selectedServiceDefinition?.code}.${e}'),
                           value: controller[index].text.split('.').contains(e),
                           onChanged: (value) {
                             context.read<ServiceBloc>().add(
