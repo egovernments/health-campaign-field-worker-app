@@ -219,20 +219,15 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                               ),
                                             );
 
-                                        if (shouldSubmit ?? false) {
-                                          submitSideEffects();
-                                        }
-                                      } else {
-                                        setState(() {
-                                          symptomsSelected = false;
-                                        });
-                                      }
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.common.coreCommonNext,
-                                        ),
+                                            if (shouldSubmit ?? false) {
+                                              submitSideEffects();
+                                            }
+                                          } else {
+                                            setState(() {
+                                              symptomsSelected = false;
+                                            });
+                                          }
+                                        },
                                       ),
                                     ]),
                                 slivers: [
