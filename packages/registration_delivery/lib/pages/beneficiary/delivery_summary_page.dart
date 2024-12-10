@@ -328,7 +328,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 ?.map((e) => TaskResourceInfo(
                                     productVariants
                                             .where((p) =>
-                                                p.id == e.productVariantId)
+                                        p.id == e.productVariantId)
                                             .firstOrNull
                                             ?.sku ??
                                         productVariants

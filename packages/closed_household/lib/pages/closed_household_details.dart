@@ -262,6 +262,7 @@ class ClosedHouseholdDetailsPageState
             CustomValidator.requiredMin,
           ),
           Validators.maxLength(200),
+          Validators.minLength(2),
         ],
       ),
       _latKey: FormControl<double>(validators: []),
