@@ -47,17 +47,17 @@ class MemberCard {
 class HouseholdOverView {
   const HouseholdOverView();
 
-  String get householdOverViewActionText => "HOUSEHOLD_OVERVIEW_ACTION_TEXT";
+  String get householdOverViewActionText => "HOUSEHOLD_OVER_VIEW_ACTION_TEXT";
 
   String get householdOverViewEditLabel => "HOUSEHOLD_OVERVIEW_EDIT_LABEL";
 
   String get householdOverViewEditIconText =>
       "HOUSEHOLD_OVERVIEW_EDIT_ICON_BUTTON";
 
-  String get householdOverViewLabel => "HOUSEHOLD_OVERVIEW_LABEL";
+  String get householdOverViewLabel => "HOUSEHOLD_OVER_VIEW_LABEL";
 
   String get householdOverViewHouseholdHeadNameLabel =>
-      "HOUSEHOLD_OVERVIEW_HOUSEHOLD_HEAD_NAME_LABEL";
+      "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL";
 
   String get householdOverViewActionCardTitle =>
       "HOUSEHOLD_OVERVIEW_PRIMARY_ACTION_CARD_TITLE";
@@ -93,6 +93,7 @@ class DeliverIntervention {
   String get informationBulletTwo => 'INFORMATION_BULLET_TWO';
   String get informationBulletThree => 'INFORMATION_BULLET_THREE';
   String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
 }
 
 class Common {
@@ -639,7 +640,7 @@ class ForgotPassword {
 class Home {
   const Home();
 
-  String get closedHouseHoldLabel => 'CLOSED_HOUSEHOLD_LABEL';
+  String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';

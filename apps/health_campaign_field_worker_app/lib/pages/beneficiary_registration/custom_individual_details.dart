@@ -414,9 +414,9 @@ class CustomIndividualDetailsPageState
                           ),
                           SelectionBox<String>(
                             isRequired: true,
-                            title: localizations.translate(
+                            title: '${localizations.translate(
                               i18.individualDetails.genderLabelText,
-                            ),
+                            )} *',
                             allowMultipleSelection: false,
                             width: 126,
                             initialSelection:

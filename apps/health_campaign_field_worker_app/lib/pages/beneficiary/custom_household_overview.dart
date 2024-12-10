@@ -223,13 +223,14 @@ class _HouseholdOverviewPageState
                                           localizations.translate(
                                             i18.householdLocation
                                                 .administrationAreaFormLabel,
-                                          ): state
-                                              .householdMemberWrapper
-                                              .headOfHousehold
-                                              ?.address
-                                              ?.first
-                                              .locality
-                                              ?.code,
+                                          ): localizations.translate(state
+                                                  .householdMemberWrapper
+                                                  .headOfHousehold
+                                                  ?.address
+                                                  ?.first
+                                                  .locality
+                                                  ?.code ??
+                                              i18.common.coreCommonNA),
                                           localizations.translate(
                                             i18.deliverIntervention
                                                 .memberCountText,
