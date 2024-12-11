@@ -4,6 +4,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -132,7 +133,7 @@ class BeneficiaryDetailsPageState
 
                     return Scaffold(
                       body: ScrollableContent(
-                        enableFixedButton: true,
+                        enableFixedDigitButton: true,
                         header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
@@ -150,13 +151,13 @@ class BeneficiaryDetailsPageState
                                             const EdgeInsets.only(top: spacer2),
                                         padding: const EdgeInsets.all(spacer2),
                                         children: [
-                                            Button(
+                                            DigitButton(
                                               label:
                                                   '${localizations.translate(i18.beneficiaryDetails.recordCycle)} '
                                                   '${(deliverState.cycle == 0 ? (deliverState.cycle + 1) : deliverState.cycle).toString()} ${localizations.translate(i18.deliverIntervention.dose)} '
                                                   '${(deliverState.dose).toString()}',
-                                              type: ButtonType.primary,
-                                              size: ButtonSize.large,
+                                              type: DigitButtonType.primary,
+                                              size: DigitButtonSize.large,
                                               mainAxisSize: MainAxisSize.max,
                                               onPressed: () async {
                                                 final selectedCycle = cycles
@@ -180,45 +181,49 @@ class BeneficiaryDetailsPageState
                                                           .selectedIndividual,
                                                     ),
                                                   );
-                                                  showPopup(
-                                                      context: context,
-                                                      title: localizations
-                                                          .translate(i18
-                                                              .beneficiaryDetails
-                                                              .resourcesTobeDelivered),
-                                                      type: PopUpType.simple,
-                                                      additionalWidgets: [
-                                                        buildTableContent(
-                                                            deliverState,
-                                                            context,
-                                                            variant,
-                                                            state
-                                                                .selectedIndividual,
-                                                            state
-                                                                .householdMemberWrapper
-                                                                .household),
-                                                      ],
-                                                      actions: [
-                                                        Button(
-                                                            label: localizations
-                                                                .translate(i18
-                                                                    .beneficiaryDetails
-                                                                    .ctaProceed),
-                                                            onPressed: () {
-                                                              Navigator.of(
-                                                                context,
-                                                                rootNavigator:
-                                                                    true,
-                                                              ).pop();
-                                                              router.push(
-                                                                DeliverInterventionRoute(),
-                                                              );
-                                                            },
-                                                            type: ButtonType
-                                                                .primary,
-                                                            size: ButtonSize
-                                                                .large),
-                                                      ]);
+                                                  showCustomPopup(
+                                                    context: context,
+                                                    builder: (popUpContext) => Popup(
+                                                        title: localizations
+                                                            .translate(i18
+                                                                .beneficiaryDetails
+                                                                .resourcesTobeDelivered),
+                                                        type: PopUpType.simple,
+                                                        additionalWidgets: [
+                                                          buildTableContent(
+                                                              deliverState,
+                                                              context,
+                                                              variant,
+                                                              state
+                                                                  .selectedIndividual,
+                                                              state
+                                                                  .householdMemberWrapper
+                                                                  .household),
+                                                        ],
+                                                        actions: [
+                                                          DigitButton(
+                                                              label: localizations
+                                                                  .translate(i18
+                                                                      .beneficiaryDetails
+                                                                      .ctaProceed),
+                                                              onPressed: () {
+                                                                Navigator.of(
+                                                                  context,
+                                                                  rootNavigator:
+                                                                      true,
+                                                                ).pop();
+                                                                router.push(
+                                                                  DeliverInterventionRoute(),
+                                                                );
+                                                              },
+                                                              type:
+                                                                  DigitButtonType
+                                                                      .primary,
+                                                              size:
+                                                                  DigitButtonSize
+                                                                      .large),
+                                                        ]),
+                                                  );
                                                 }
                                               },
                                             ),
@@ -228,12 +233,12 @@ class BeneficiaryDetailsPageState
                                     margin: const EdgeInsets.only(top: spacer2),
                                     padding: const EdgeInsets.all(spacer2),
                                     children: [
-                                        Button(
+                                        DigitButton(
                                           label: localizations.translate(i18
                                               .householdOverView
                                               .householdOverViewActionText),
-                                          type: ButtonType.primary,
-                                          size: ButtonSize.large,
+                                          type: DigitButtonType.primary,
+                                          size: DigitButtonSize.large,
                                           mainAxisSize: MainAxisSize.max,
                                           onPressed: () {
                                             context.router.push(

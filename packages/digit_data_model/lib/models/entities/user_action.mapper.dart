@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'user_action.dart';
@@ -111,10 +111,8 @@ mixin UserActionSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            UserActionSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as UserActionSearchModel, other));
+    return UserActionSearchModelMapper.ensureInitialized()
+        .equalsValue(this as UserActionSearchModel, other);
   }
 
   @override
@@ -336,10 +334,8 @@ mixin UserActionModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            UserActionModelMapper.ensureInitialized()
-                .isValueEqual(this as UserActionModel, other));
+    return UserActionModelMapper.ensureInitialized()
+        .equalsValue(this as UserActionModel, other);
   }
 
   @override
@@ -562,10 +558,8 @@ mixin UserActionAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            UserActionAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as UserActionAdditionalFields, other));
+    return UserActionAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as UserActionAdditionalFields, other);
   }
 
   @override

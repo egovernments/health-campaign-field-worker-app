@@ -108,7 +108,7 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
   /// The `schemaVersion` getter returns the schema version of the database.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.
@@ -121,6 +121,21 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
 
       // Return a `NativeDatabase` that uses the file for storage.
       return NativeDatabase(file, logStatements: true, setup: (data) {});
+    });
+  }
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(onCreate: (Migrator m) async {
+      await m.createAll();
+    }, onUpgrade: (Migrator m, int from, int to) async {
+      if (from < 5) {
+        //Add column for projectType in Project Table
+        try {
+          await m.addColumn(project, project.projectType);
+        } catch (e) {
+        }
+      }
     });
   }
 }

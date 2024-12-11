@@ -9,7 +9,6 @@ import '../../../widgets/localized.dart';
 
 @RoutePage()
 class ClosedHouseholdAcknowledgementPage extends LocalizedStatefulWidget {
-
   const ClosedHouseholdAcknowledgementPage({
     super.key,
     super.appLocalizations,
@@ -36,7 +35,7 @@ class _ClosedHouseholdAcknowledgementPageState
               i18.acknowledgementSuccess.acknowledgementDescriptionText,
             ),
             actions: [
-              Button(
+              DigitButton(
                 label: localizations
                     .translate(i18.acknowledgementSuccess.actionLabelText),
                 onPressed: () {
@@ -44,12 +43,11 @@ class _ClosedHouseholdAcknowledgementPageState
                   // Pop twice to navigate back to the previous screen
                   parent.popUntilRoot();
                 },
-                type: ButtonType.primary,
-                size: ButtonSize.large,
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
                 mainAxisSize: MainAxisSize.max,
               )
-            ]
-        ),
+            ]),
       ),
     );
   }

@@ -19,8 +19,8 @@ import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class SideEffectsPage extends LocalizedStatefulWidget {
@@ -85,12 +85,12 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                     margin: const EdgeInsets.only(top: spacer2),
                                     padding: const EdgeInsets.all(spacer2),
                                     children: [
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.common.coreCommonNext,
                                         ),
-                                        type: ButtonType.primary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.large,
                                         mainAxisSize: MainAxisSize.max,
                                         onPressed: () async {
                                           if (symptomsValues.any((e) => e)) {
@@ -112,7 +112,7 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                       .dialogContent,
                                                 ),
                                                 actions: [
-                                                  Button(
+                                                  DigitButton(
                                                       label: localizations
                                                           .translate(
                                                         i18.common
@@ -199,9 +199,11 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                           rootNavigator: true,
                                                         ).pop(true);
                                                       },
-                                                      type: ButtonType.primary,
-                                                      size: ButtonSize.large),
-                                                  Button(
+                                                      type: DigitButtonType
+                                                          .primary,
+                                                      size: DigitButtonSize
+                                                          .large),
+                                                  DigitButton(
                                                       label: localizations
                                                           .translate(
                                                         i18.common
@@ -212,27 +214,23 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                             context,
                                                             rootNavigator: true,
                                                           ).pop(false),
-                                                      type:
-                                                          ButtonType.secondary,
-                                                      size: ButtonSize.large)
+                                                      type: DigitButtonType
+                                                          .secondary,
+                                                      size:
+                                                          DigitButtonSize.large)
                                                 ],
                                               ),
                                             );
 
-                                        if (shouldSubmit ?? false) {
-                                          submitSideEffects();
-                                        }
-                                      } else {
-                                        setState(() {
-                                          symptomsSelected = false;
-                                        });
-                                      }
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.common.coreCommonNext,
-                                        ),
+                                            if (shouldSubmit ?? false) {
+                                              submitSideEffects();
+                                            }
+                                          } else {
+                                            setState(() {
+                                              symptomsSelected = false;
+                                            });
+                                          }
+                                        },
                                       ),
                                     ]),
                                 slivers: [

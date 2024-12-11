@@ -48,8 +48,8 @@ class _ReferralReasonChecklistPreviewPageState
                         cardType: CardType.primary,
                         padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                         children: [
-                            Button(
-                              size: ButtonSize.large,
+                            DigitButton(
+                              size: DigitButtonSize.large,
                               label: localizations
                                   .translate(i18.common.corecommonclose),
                               mainAxisSize: MainAxisSize.max,
@@ -63,7 +63,7 @@ class _ReferralReasonChecklistPreviewPageState
                                     SearchReferralReconciliationsRoute.name);
                                 context.router.maybePop();
                               },
-                              type: ButtonType.primary,
+                              type: DigitButtonType.primary,
                             )
                           ])
                     : const Offstage();
@@ -115,7 +115,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                   ),
                                                 ),
                                               ),
-                                              Button(
+                                              DigitButton(
                                                 label: localizations.translate(
                                                   i18.referralReconciliation
                                                       .iconLabel,
@@ -129,8 +129,8 @@ class _ReferralReasonChecklistPreviewPageState
                                                         ),
                                                       );
                                                 },
-                                                type: ButtonType.secondary,
-                                                size: ButtonSize.large,
+                                                type: DigitButtonType.secondary,
+                                                size: DigitButtonSize.large,
                                               ),
                                             ],
                                           ),

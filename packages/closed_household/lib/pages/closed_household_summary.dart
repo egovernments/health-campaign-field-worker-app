@@ -8,6 +8,7 @@ import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -51,87 +52,84 @@ class ClosedHouseholdSummaryPageState
         builder: (context, householdState) {
       return Scaffold(
           body: ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
                 showcaseButton: ShowcaseButton(),
               ),
               footer: DigitCard(
-                padding:
-                    EdgeInsets.all(theme.spacerTheme.spacer2),
-                children: [
-                  BlocBuilder<DigitScannerBloc, DigitScannerState>(
-                    builder: (context, scannerState) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Button(
-                        size: ButtonSize.large,
-                        type: ButtonType.secondary,
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            // [TODO: Add the route to auto_route]
-                            MaterialPageRoute(
-                              builder: (context) => const DigitScannerPage(
-                                quantity: 1,
-                                isGS1code: false,
-                                singleValue: true,
-                              ),
-                              settings:
-                                  const RouteSettings(name: '/qr-scanner'),
-                            ),
-                          );
-                        },
-                        prefixIcon: Icons.qr_code,
-                        label: localizations.translate(i18
-                            .closeHousehold.closeHouseholdVoucherScannerLabel),
-                      ),
-                      SizedBox(
-                        height: theme.spacerTheme.spacer3,
-                      ),
-                      Button(
-                        size: ButtonSize.large,
-                        type: ButtonType.primary,
-                        mainAxisSize: MainAxisSize.max,
-                        onPressed: () {
-                          context.read<ClosedHouseholdBloc>().add(
-                              ClosedHouseholdEvent.handleSubmit(
-                                  context: context,
-                                  householdHeadName:
-                                      householdState.householdHeadName,
-                                  locationAccuracy:
-                                      householdState.locationAccuracy,
-                                  longitude: householdState.longitude,
-                                  latitude: householdState.latitude,
-                                  tag: scannerState.qrCodes.isNotEmpty
-                                      ? scannerState.qrCodes.first
-                                      : null));
+                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                  children: [
+                    BlocBuilder<DigitScannerBloc, DigitScannerState>(
+                        builder: (context, scannerState) {
+                      return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          DigitButton(
+                            size: DigitButtonSize.large,
+                            type: DigitButtonType.secondary,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                // [TODO: Add the route to auto_route]
+                                MaterialPageRoute(
+                                  builder: (context) => const DigitScannerPage(
+                                    quantity: 1,
+                                    isGS1code: false,
+                                    singleValue: true,
+                                  ),
+                                  settings:
+                                      const RouteSettings(name: '/qr-scanner'),
+                                ),
+                              );
+                            },
+                            prefixIcon: Icons.qr_code,
+                            label: localizations.translate(i18.closeHousehold
+                                .closeHouseholdVoucherScannerLabel),
+                          ),
+                          SizedBox(
+                            height: theme.spacerTheme.spacer3,
+                          ),
+                          DigitButton(
+                            size: DigitButtonSize.large,
+                            type: DigitButtonType.primary,
+                            mainAxisSize: MainAxisSize.max,
+                            onPressed: () {
+                              context.read<ClosedHouseholdBloc>().add(
+                                  ClosedHouseholdEvent.handleSubmit(
+                                      context: context,
+                                      householdHeadName:
+                                          householdState.householdHeadName,
+                                      locationAccuracy:
+                                          householdState.locationAccuracy,
+                                      longitude: householdState.longitude,
+                                      latitude: householdState.latitude,
+                                      tag: scannerState.qrCodes.isNotEmpty
+                                          ? scannerState.qrCodes.first
+                                          : null));
 
-                          ///clear the scanner
-                          context.router
-                              .push(ClosedHouseholdAcknowledgementRoute());
-                        },
-                        label: localizations
+                              ///clear the scanner
+                              context.router
+                                  .push(ClosedHouseholdAcknowledgementRoute());
+                            },
+                            label: localizations
                                 .translate(i18.common.coreCommonSubmit),
-                      ),
-                    ],
-                  );
-                }),]
-              ),
+                          ),
+                        ],
+                      );
+                    }),
+                  ]),
               slivers: [
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  DigitCard(
-                    children: [
-                      LabelValueList(
-                      labelFlex: theme.spacerTheme.spacer2.toInt(),
+                  DigitCard(children: [
+                    LabelValueSummary(
                         heading: localizations.translate(
                             i18.closeHousehold.closeHouseholdSummaryLabel),
                         withDivider: false,
                         items: [
-                          LabelValuePair(
+                          LabelValueItem(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdDate),
                             value: (DigitDateUtils.getDateFromTimestamp(
@@ -139,7 +137,7 @@ class ClosedHouseholdSummaryPageState
                                     dateFormat: 'dd MMM yyyy'))
                                 .toString(),
                           ),
-                          LabelValuePair(
+                          LabelValueItem(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdVillageName),
                             value: ClosedHouseholdSingleton()
@@ -147,40 +145,38 @@ class ClosedHouseholdSummaryPageState
                                 .name
                                 .toString(),
                           ),
-                          LabelValuePair(
+                          LabelValueItem(
                             label: localizations.translate(
                                 i18.closeHousehold.closeHouseholdHeadName),
                             value: householdState.householdHeadName ??
                                 localizations
                                     .translate(i18.common.coreCommonNA),
                           ),
-                          LabelValuePair(
+                          LabelValueItem(
                             label: localizations.translate(i18
                                 .closeHousehold.closeHouseholdGpsAccuracyLabel),
                             value:
                                 '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}',
                           ),
                         ]),
-                    ]
-                  ),
+                  ]),
                   BlocBuilder<DigitScannerBloc, DigitScannerState>(
                       builder: (context, state) {
                     if (state.qrCodes.isNotEmpty) {
-                      return DigitCard(
-                        children: [LabelValueList(
-                          labelFlex: theme.spacerTheme.spacer2.toInt(),
+                      return DigitCard(children: [
+                        LabelValueSummary(
                           heading: localizations.translate(i18.closeHousehold
                               .closeHouseholdVoucherSummaryLabel),
                           withDivider: false,
                           items: [
-                            LabelValuePair(
+                            LabelValueItem(
                               label: localizations.translate(i18.closeHousehold
                                   .closeHouseholdVoucherCodeLabel),
                               value: state.qrCodes.first,
                             ),
                           ],
-                        ),]
-                      );
+                        ),
+                      ]);
                     } else {
                       return const SizedBox();
                     }

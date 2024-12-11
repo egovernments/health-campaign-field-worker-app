@@ -1,27 +1,27 @@
 import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
+import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
-import 'package:survey_form/survey_form.dart';
-import 'package:survey_form/utils/extensions/context_utility.dart';
-import 'package:digit_data_model/data_model.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:survey_form/utils/extensions/context_utility.dart';
 
 import '../router/survey_form_router.gm.dart';
 import '../utils/constants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../utils/i18_key_constants.dart' as i18;
 
 @RoutePage()
 class SurveyFormViewPage extends LocalizedStatefulWidget {
@@ -101,17 +101,17 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                         widget.referralClientRefId != null))
                       const BackNavigationHelpHeaderWidget(),
                   ]),
-                  enableFixedButton: true,
+                  enableFixedDigitButton: true,
                   footer: DigitCard(
                       cardType: CardType.primary,
                       margin: const EdgeInsets.only(top: spacer2),
                       padding: const EdgeInsets.all(spacer2),
                       children: [
-                        Button(
+                        DigitButton(
                           label: localizations
                               .translate(i18.common.coreCommonSubmit),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
                             final router = context.router;
@@ -159,192 +159,205 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             double? latitude = locationState.latitude;
                             double? longitude = locationState.longitude;
 
-                            showPopup(
-                                context: context,
-                                type: PopUpType.simple,
-                                title: localizations.translate(
-                                  i18.surveyForm.surveyFormDialogLabel,
-                                ),
-                                description: localizations.translate(
-                                  i18.surveyForm.surveyFormDialogDescription,
-                                ),
-                                actions: [
-                                  Button(
-                                      label: localizations.translate(
-                                        i18.surveyForm
-                                            .surveyFormDialogPrimaryAction,
-                                      ),
-                                      onPressed: () {
-                                        final referenceId = IdGen.i.identifier;
-                                        List<ServiceAttributesModel>
-                                            attributes = [];
-                                        for (int i = 0;
-                                            i < controller.length;
-                                            i++) {
-                                          final attribute = initialAttributes;
-                                          attributes.add(ServiceAttributesModel(
-                                            auditDetails: AuditDetails(
-                                              createdBy: SurveyFormSingleton()
-                                                  .loggedInUserUuid,
-                                              createdTime: context
-                                                  .millisecondsSinceEpoch(),
-                                            ),
-                                            attributeCode:
-                                                '${attribute?[i].code}',
-                                            dataType: attribute?[i].dataType,
-                                            clientReferenceId:
-                                                IdGen.i.identifier,
-                                            referenceId: isHealthFacilityWorker &&
-                                                    widget.referralClientRefId !=
-                                                        null
-                                                ? widget.referralClientRefId
-                                                : referenceId,
-                                            value: attribute?[i].dataType !=
-                                                    'SingleValueList'
-                                                ? controller[i]
-                                                        .text
-                                                        .toString()
-                                                        .trim()
-                                                        .isNotEmpty
-                                                    ? controller[i]
-                                                        .text
-                                                        .toString()
-                                                    : ''
-                                                : visibleSurveyFormIndexes
-                                                        .contains(i)
-                                                    ? controller[i]
-                                                        .text
-                                                        .toString()
-                                                    : i18.surveyForm
-                                                        .notSelectedKey,
-                                            rowVersion: 1,
-                                            tenantId: attribute?[i].tenantId,
-                                            additionalDetails: isHealthFacilityWorker &&
-                                                    widget.referralClientRefId !=
-                                                        null
-                                                ? null
-                                                : ((attribute?[i]
-                                                                    .values
-                                                                    ?.length ==
-                                                                2 ||
-                                                            attribute?[i]
-                                                                    .values
-                                                                    ?.length ==
-                                                                3) &&
-                                                        controller[i].text ==
-                                                            attribute?[i]
-                                                                .values?[1]
-                                                                .trim())
-                                                    ? additionalController[i]
-                                                            .text
-                                                            .toString()
-                                                            .isEmpty
-                                                        ? null
-                                                        : additionalController[
-                                                                i]
-                                                            .text
-                                                            .toString()
-                                                    : null,
-                                            additionalFields:
-                                                ServiceAttributesAdditionalFields(
-                                              version: 1,
-                                              fields: [
-                                                AdditionalField(
-                                                  'latitude',
-                                                  latitude,
-                                                ),
-                                                AdditionalField(
-                                                  'longitude',
-                                                  longitude,
-                                                ),
-                                              ],
-                                            ),
-                                          ));
-                                        }
-
-                                        context.read<ServiceBloc>().add(
-                                              ServiceCreateEvent(
-                                                serviceModel: ServiceModel(
-                                                  createdAt: DigitDateUtils
-                                                      .getDateFromTimestamp(
-                                                    DateTime.now()
-                                                        .toLocal()
-                                                        .millisecondsSinceEpoch,
-                                                    dateFormat: Constants
-                                                        .SurveyFormViewDateFormat,
-                                                  ),
-                                                  tenantId: value
-                                                      .selectedServiceDefinition!
-                                                      .tenantId,
-                                                  clientId: isHealthFacilityWorker &&
-                                                          widget.referralClientRefId !=
-                                                              null
-                                                      ? widget
-                                                          .referralClientRefId
-                                                          .toString()
-                                                      : referenceId,
-                                                  serviceDefId: value
-                                                      .selectedServiceDefinition
-                                                      ?.id,
-                                                  attributes: attributes,
-                                                  rowVersion: 1,
-                                                  accountId:
-                                                      SurveyFormSingleton()
-                                                          .projectId,
-                                                  auditDetails: AuditDetails(
-                                                    createdBy:
-                                                        SurveyFormSingleton()
-                                                            .loggedInUserUuid,
-                                                    createdTime: DateTime.now()
-                                                        .millisecondsSinceEpoch,
-                                                  ),
-                                                  clientAuditDetails:
-                                                      ClientAuditDetails(
-                                                    createdBy:
-                                                        SurveyFormSingleton()
-                                                            .loggedInUserUuid,
-                                                    createdTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                    lastModifiedBy:
-                                                        SurveyFormSingleton()
-                                                            .loggedInUserUuid,
-                                                    lastModifiedTime: context
-                                                        .millisecondsSinceEpoch(),
-                                                  ),
-                                                  additionalDetails: {
-                                                    "boundaryCode":
-                                                        SurveyFormSingleton()
-                                                            .boundary
-                                                            ?.code,
-                                                    'lat': latitude,
-                                                    'lng': longitude,
-                                                  },
-                                                ),
+                            showCustomPopup(
+                              context: context,
+                              builder: (popUpContext) => Popup(
+                                  type: PopUpType.simple,
+                                  title: localizations.translate(
+                                    i18.surveyForm.surveyFormDialogLabel,
+                                  ),
+                                  description: localizations.translate(
+                                    i18.surveyForm.surveyFormDialogDescription,
+                                  ),
+                                  actions: [
+                                    DigitButton(
+                                        label: localizations.translate(
+                                          i18.surveyForm
+                                              .surveyFormDialogPrimaryAction,
+                                        ),
+                                        onPressed: () {
+                                          final referenceId =
+                                              IdGen.i.identifier;
+                                          List<ServiceAttributesModel>
+                                              attributes = [];
+                                          for (int i = 0;
+                                              i < controller.length;
+                                              i++) {
+                                            final attribute = initialAttributes;
+                                            attributes
+                                                .add(ServiceAttributesModel(
+                                              auditDetails: AuditDetails(
+                                                createdBy: SurveyFormSingleton()
+                                                    .loggedInUserUuid,
+                                                createdTime: context
+                                                    .millisecondsSinceEpoch(),
                                               ),
-                                            );
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(true);
-                                        router.push(
-                                            SurveyFormAcknowledgementRoute());
-                                      },
-                                      type: ButtonType.primary,
-                                      size: ButtonSize.large),
-                                  Button(
-                                      label: localizations.translate(
-                                        i18.surveyForm
-                                            .surveyFormDialogSecondaryAction,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop(false);
-                                      },
-                                      type: ButtonType.secondary,
-                                      size: ButtonSize.large)
-                                ]);
+                                              attributeCode:
+                                                  '${attribute?[i].code}',
+                                              dataType: attribute?[i].dataType,
+                                              clientReferenceId:
+                                                  IdGen.i.identifier,
+                                              referenceId: isHealthFacilityWorker &&
+                                                      widget.referralClientRefId !=
+                                                          null
+                                                  ? widget.referralClientRefId
+                                                  : referenceId,
+                                              value: attribute?[i].dataType !=
+                                                      'SingleValueList'
+                                                  ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                          .trim()
+                                                          .isNotEmpty
+                                                      ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                      : ''
+                                                  : visibleSurveyFormIndexes
+                                                          .contains(i)
+                                                      ? controller[i]
+                                                          .text
+                                                          .toString()
+                                                      : i18.surveyForm
+                                                          .notSelectedKey,
+                                              rowVersion: 1,
+                                              tenantId: attribute?[i].tenantId,
+                                              additionalDetails: isHealthFacilityWorker &&
+                                                      widget.referralClientRefId !=
+                                                          null
+                                                  ? null
+                                                  : ((attribute?[i]
+                                                                      .values
+                                                                      ?.length ==
+                                                                  2 ||
+                                                              attribute?[i]
+                                                                      .values
+                                                                      ?.length ==
+                                                                  3) &&
+                                                          controller[i].text ==
+                                                              attribute?[i]
+                                                                  .values?[1]
+                                                                  .trim())
+                                                      ? additionalController[i]
+                                                              .text
+                                                              .toString()
+                                                              .isEmpty
+                                                          ? null
+                                                          : additionalController[
+                                                                  i]
+                                                              .text
+                                                              .toString()
+                                                      : null,
+                                              additionalFields:
+                                                  ServiceAttributesAdditionalFields(
+                                                version: 1,
+                                                fields: [
+                                                  AdditionalField(
+                                                    'latitude',
+                                                    latitude,
+                                                  ),
+                                                  AdditionalField(
+                                                    'longitude',
+                                                    longitude,
+                                                  ),
+                                                ],
+                                              ),
+                                            ));
+                                          }
+
+                                          context.read<ServiceBloc>().add(
+                                                ServiceCreateEvent(
+                                                  serviceModel: ServiceModel(
+                                                      createdAt: DigitDateUtils
+                                                          .getDateFromTimestamp(
+                                                        DateTime.now()
+                                                            .toLocal()
+                                                            .millisecondsSinceEpoch,
+                                                        dateFormat: Constants
+                                                            .SurveyFormViewDateFormat,
+                                                      ),
+                                                      tenantId: value
+                                                          .selectedServiceDefinition!
+                                                          .tenantId,
+                                                      clientId: isHealthFacilityWorker &&
+                                                              widget.referralClientRefId !=
+                                                                  null
+                                                          ? widget
+                                                              .referralClientRefId
+                                                              .toString()
+                                                          : referenceId,
+                                                      serviceDefId: value
+                                                          .selectedServiceDefinition
+                                                          ?.id,
+                                                      attributes: attributes,
+                                                      rowVersion: 1,
+                                                      accountId:
+                                                          SurveyFormSingleton()
+                                                              .projectId,
+                                                      auditDetails:
+                                                          AuditDetails(
+                                                        createdBy:
+                                                            SurveyFormSingleton()
+                                                                .loggedInUserUuid,
+                                                        createdTime: DateTime
+                                                                .now()
+                                                            .millisecondsSinceEpoch,
+                                                      ),
+                                                      clientAuditDetails:
+                                                          ClientAuditDetails(
+                                                        createdBy:
+                                                            SurveyFormSingleton()
+                                                                .loggedInUserUuid,
+                                                        createdTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                        lastModifiedBy:
+                                                            SurveyFormSingleton()
+                                                                .loggedInUserUuid,
+                                                        lastModifiedTime: context
+                                                            .millisecondsSinceEpoch(),
+                                                      ),
+                                                      additionalFields:
+                                                          ServiceAdditionalFields(
+                                                              version: 1,
+                                                              fields: [
+                                                            AdditionalField(
+                                                                'lng',
+                                                                longitude),
+                                                            AdditionalField(
+                                                                'lat',
+                                                                latitude),
+                                                            AdditionalField(
+                                                                'boundaryCode',
+                                                                SurveyFormSingleton()
+                                                                    .boundary
+                                                                    ?.code)
+                                                          ])),
+                                                ),
+                                              );
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(true);
+                                          router.push(
+                                              SurveyFormAcknowledgementRoute());
+                                        },
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.large),
+                                    DigitButton(
+                                        label: localizations.translate(
+                                          i18.surveyForm
+                                              .surveyFormDialogSecondaryAction,
+                                        ),
+                                        onPressed: () {
+                                          Navigator.of(
+                                            context,
+                                            rootNavigator: true,
+                                          ).pop(false);
+                                        },
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large)
+                                  ]),
+                            );
                           },
                         ),
                       ]),
@@ -714,7 +727,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             return null;
                           },
                           builder: (field) => RadioList(
-                            radioButtons: item.values != null
+                            radioDigitButtons: item.values != null
                                 ? item.values!
                                     .where((e) =>
                                         e != i18.surveyForm.notSelectedKey)
@@ -1119,7 +1132,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
           i18.surveyForm.surveyFormBackDialogDescription,
         ),
         actions: [
-          Button(
+          DigitButton(
               label: localizations
                   .translate(i18.surveyForm.surveyFormBackDialogPrimaryAction),
               onPressed: () {
@@ -1128,9 +1141,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   rootNavigator: true,
                 ).pop(true);
               },
-              type: ButtonType.primary,
-              size: ButtonSize.large),
-          Button(
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large),
+          DigitButton(
               label: localizations.translate(
                   i18.surveyForm.surveyFormBackDialogSecondaryAction),
               onPressed: () {
@@ -1139,8 +1152,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   rootNavigator: true,
                 ).pop(false);
               },
-              type: ButtonType.secondary,
-              size: ButtonSize.large)
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.large)
         ],
       ),
     );
