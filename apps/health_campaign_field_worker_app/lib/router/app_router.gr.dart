@@ -55,6 +55,18 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomBeneficiaryAcknowledgementRoute.name: (routeData) {
+      final args = routeData.argsAs<CustomBeneficiaryAcknowledgementRouteArgs>(
+          orElse: () => const CustomBeneficiaryAcknowledgementRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomBeneficiaryAcknowledgementPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+          enableViewHousehold: args.enableViewHousehold,
+        ),
+      );
+    },
     CustomClosedHouseholdDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomClosedHouseholdDetailsRouteArgs>(
           orElse: () => const CustomClosedHouseholdDetailsRouteArgs());
@@ -389,6 +401,50 @@ class BoundarySelectionRouteArgs {
   @override
   String toString() {
     return 'BoundarySelectionRouteArgs{key: $key, appLocalizations: $appLocalizations}';
+  }
+}
+
+/// generated route for
+/// [CustomBeneficiaryAcknowledgementPage]
+class CustomBeneficiaryAcknowledgementRoute
+    extends PageRouteInfo<CustomBeneficiaryAcknowledgementRouteArgs> {
+  CustomBeneficiaryAcknowledgementRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    bool? enableViewHousehold,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomBeneficiaryAcknowledgementRoute.name,
+          args: CustomBeneficiaryAcknowledgementRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+            enableViewHousehold: enableViewHousehold,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomBeneficiaryAcknowledgementRoute';
+
+  static const PageInfo<CustomBeneficiaryAcknowledgementRouteArgs> page =
+      PageInfo<CustomBeneficiaryAcknowledgementRouteArgs>(name);
+}
+
+class CustomBeneficiaryAcknowledgementRouteArgs {
+  const CustomBeneficiaryAcknowledgementRouteArgs({
+    this.key,
+    this.appLocalizations,
+    this.enableViewHousehold,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  final bool? enableViewHousehold;
+
+  @override
+  String toString() {
+    return 'CustomBeneficiaryAcknowledgementRouteArgs{key: $key, appLocalizations: $appLocalizations, enableViewHousehold: $enableViewHousehold}';
   }
 }
 

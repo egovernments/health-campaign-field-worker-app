@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
+import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
@@ -247,6 +248,10 @@ class AppRouter extends _$AppRouter {
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: CustomBeneficiaryAcknowledgementRoute.page,
+                    path: 'custom-beneficiary-acknowledgement',
+                  )
                 ],
               ),
               AutoRoute(

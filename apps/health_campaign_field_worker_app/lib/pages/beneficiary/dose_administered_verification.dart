@@ -113,7 +113,7 @@ class _DoseAdministeredVerificationPageState
                                           ),
                                         );
                                     context.router.popAndPush(
-                                        BeneficiaryAcknowledgementRoute(
+                                        CustomBeneficiaryAcknowledgementRoute(
                                             enableViewHousehold: true));
                                   }
                                 },
