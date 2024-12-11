@@ -72,9 +72,9 @@ class _ViewReferralCardState extends LocalizedState<ViewReferralCard> {
             ),
           ),
           Flexible(
-            child: Button(
-              size: ButtonSize.large,
-              type: ButtonType.secondary,
+            child: DigitButton(
+              size: DigitButtonSize.large,
+              type: DigitButtonType.secondary,
               label:
                   localizations.translate(i18.referralReconciliation.iconLabel),
               onPressed: widget.onOpenPressed ?? () {},
