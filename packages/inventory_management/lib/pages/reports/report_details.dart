@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -117,17 +119,16 @@ class InventoryReportDetailsPageState
       ),
       child: Scaffold(
         bottomNavigationBar: DigitCard(
-          padding: const EdgeInsets.all(8.0),
-          child: DigitElevatedButton(
-            onPressed: () => context.router.popUntilRoot(),
-            child: Text(
-              localizations.translate(
+          children: [
+            DigitButton(
+              size: DigitButtonSize.large,
+              type: DigitButtonType.secondary,
+              onPressed: () => context.router.popUntilRoot(),
+              label:  localizations.translate(
                 i18.inventoryReportDetails.backToHomeButtonLabel,
               ),
-              textAlign: TextAlign.center,
-              maxLines: 1,
             ),
-          ),
+          ],
         ),
         body: BlocBuilder<InventoryReportBloc, InventoryReportState>(
           builder: (context, inventoryReportState) {
@@ -146,7 +147,7 @@ class InventoryReportDetailsPageState
               children: [
                 const BackNavigationHelpHeaderWidget(),
                 Container(
-                  padding: const EdgeInsets.all(kPadding),
+                  padding: const EdgeInsets.all(spacer2),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -189,7 +190,6 @@ class InventoryReportDetailsPageState
                                 return Column(
                                   children: [
                                     DigitCard(
-                                      child: Column(
                                         children: [
                                           if (isWareHouseManager)
                                             BlocConsumer<FacilityBloc,
@@ -218,29 +218,20 @@ class InventoryReportDetailsPageState
                                                         form, facilities);
                                                   },
                                                   child: IgnorePointer(
-                                                    child: DigitTextFormField(
-                                                      key: const Key(
-                                                          _facilityKey),
-                                                      label: localizations
-                                                          .translate(
-                                                        i18.stockReconciliationDetails
-                                                            .facilityLabel,
-                                                      ),
-                                                      suffix: const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child:
-                                                            Icon(Icons.search),
-                                                      ),
-                                                      formControlName:
-                                                          _facilityKey,
-                                                      readOnly: false,
-                                                      isRequired: true,
-                                                      onTap: () {
-                                                        handleFacilitySelection(
-                                                            form, facilities);
-                                                      },
-                                                    ),
+                                                    child: ReactiveWrapperField(
+                                                    formControlName: _facilityKey,
+                                                    builder: (field){
+                                                      return InputField(
+                                                        type: InputType.search,
+                                                        isRequired: true,
+                                                        label: localizations
+                                                            .translate(
+                                                          i18.stockReconciliationDetails
+                                                              .facilityLabel,
+                                                        ),
+                                                      );
+                                                    },
+                                                  ),
                                                   ),
                                                 );
                                               },
@@ -262,48 +253,62 @@ class InventoryReportDetailsPageState
                                                   ),
                                                 ),
                                                 fetched: (productVariants) {
-                                                  return DigitReactiveSearchDropdown<
-                                                      ProductVariantModel>(
-                                                    key: const Key(
-                                                        _productVariantKey),
-                                                    label:
-                                                        localizations.translate(
-                                                      i18.stockReconciliationDetails
-                                                          .productLabel,
-                                                    ),
-                                                    form: form,
-                                                    menuItems: productVariants,
+                                                  return ReactiveWrapperField(
                                                     formControlName:
-                                                        _productVariantKey,
-                                                    isRequired: true,
-                                                    valueMapper: (value) {
-                                                      return localizations
-                                                          .translate(
-                                                        value.sku ?? value.id,
+                                                    _productVariantKey,
+                                                    validationMessages: {
+                                                      'required': (object) =>
+                                                          localizations.translate(
+                                                            i18.common
+                                                                .corecommonRequired,
+                                                          ),
+                                                    },
+                                                    builder: (field) {
+                                                      return LabeledField(
+                                                        isRequired: true,
+                                                        label:
+                                                        localizations.translate(
+                                                          i18.stockReconciliationDetails
+                                                              .productLabel,
+                                                        ),
+                                                        child: DigitDropdown(
+                                                          emptyItemText:
+                                                          localizations.translate(
+                                                            i18.common.noMatchFound,
+                                                          ),
+                                                          items: productVariants.map((
+                                                              variant) {
+                                                            return DropdownItem(
+                                                              name: localizations
+                                                                  .translate(
+                                                                variant.sku ??
+                                                                    variant.id,
+                                                              ),
+                                                              code: variant.id,
+                                                            );
+                                                          }).toList(),
+                                                          onSelect: (value) {
+                                                            /// Find the selected product variant model by matching the id
+                                                            final selectedVariant = productVariants.firstWhere(
+                                                                  (variant) => variant.id == value.code,
+                                                            );
+                                                            /// Update the form control with the selected product variant model
+                                                            field.control.value = selectedVariant;
+
+                                                            handleSelection(
+                                                                form,
+                                                                context.read<
+                                                                    InventoryReportBloc>());
+                                                          },
+                                                        ),
                                                       );
                                                     },
-                                                    onSelected: (value) {
-                                                      handleSelection(
-                                                          form,
-                                                          context.read<
-                                                              InventoryReportBloc>());
-                                                    },
-                                                    validationMessage:
-                                                        localizations.translate(
-                                                      i18.common
-                                                          .corecommonRequired,
-                                                    ),
-                                                    emptyText:
-                                                        localizations.translate(
-                                                      i18.common.noMatchFound,
-                                                    ),
                                                   );
                                                 },
                                               );
                                             },
                                           ),
                                         ],
-                                      ),
                                     ),
                                     Expanded(
                                       child: Align(
@@ -323,7 +328,7 @@ class InventoryReportDetailsPageState
                                             if (data.isEmpty) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(
-                                                  kPadding * 2,
+                                                  spacer4
                                                 ),
                                                 child: _NoReportContent(
                                                   title: title,
@@ -433,7 +438,7 @@ class InventoryReportDetailsPageState
                                             if (data.isEmpty) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(
-                                                  kPadding * 2,
+                                                  spacer4
                                                 ),
                                                 child: _NoReportContent(
                                                   title: title,
@@ -766,12 +771,12 @@ class _ReportDetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(kPadding),
+      padding: const EdgeInsets.all(spacer2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: kPadding * 2),
+          const SizedBox(height: spacer4),
           Flexible(
             child: ReadonlyDigitGrid(
               data: data,
@@ -800,7 +805,7 @@ class _NoReportContent extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(
-          height: kPadding * 2,
+          height: spacer4,
           width: double.maxFinite,
         ),
         Center(

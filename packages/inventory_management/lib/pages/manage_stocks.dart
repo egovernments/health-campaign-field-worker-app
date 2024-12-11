@@ -1,5 +1,7 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 
@@ -39,7 +41,7 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(
-                    kPadding * 2, kPadding, kPadding * 2, kPadding),
+                    spacer4, spacer2,  spacer4, spacer2),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -50,14 +52,13 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
               ),
               Column(children: [
-                DigitListView(
-                  title: localizations
+                MenuCard(
+                  heading: localizations
                       .translate(i18.manageStock.recordStockReceiptLabel),
                   description: localizations
                       .translate(i18.manageStock.recordStockReceiptDescription),
-                  prefixIcon: Icons.file_download_outlined,
-                  sufixIcon: Icons.arrow_circle_right,
-                  onPressed: () {
+                  icon: Icons.file_download_outlined,
+                  onTap: () {
                     context.router.push(
                       RecordStockWrapperRoute(
                         type: StockRecordEntryType.receipt,
@@ -65,53 +66,49 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                     );
                   },
                 ),
-                DigitListView(
-                    title: localizations
+                MenuCard(
+                    heading: localizations
                         .translate(i18.manageStock.recordStockIssuedLabel),
                     description: localizations.translate(
                         i18.manageStock.recordStockIssuedDescription),
-                    prefixIcon: Icons.file_upload_outlined,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => context.router.push(
+                    icon: Icons.file_upload_outlined,
+                    onTap: () => context.router.push(
                           RecordStockWrapperRoute(
                             type: StockRecordEntryType.dispatch,
                           ),
                         )),
-                DigitListView(
-                    title: localizations
+                MenuCard(
+                    heading: localizations
                         .translate(i18.manageStock.recordStockReturnedLabel),
                     description: localizations.translate(
                       i18.manageStock.recordStockReturnedDescription,
                     ),
-                    prefixIcon: Icons.settings_backup_restore,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => context.router.push(
+                    icon: Icons.settings_backup_restore,
+                    onTap: () => context.router.push(
                           RecordStockWrapperRoute(
                             type: StockRecordEntryType.returned,
                           ),
                         )),
-                DigitListView(
-                    title: localizations
+                MenuCard(
+                    heading: localizations
                         .translate(i18.manageStock.recordStockDamagedLabel),
                     description: localizations.translate(
                       i18.manageStock.recordStockDamagedDescription,
                     ),
-                    prefixIcon: Icons.store,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => context.router.push(
+                    icon: Icons.store,
+                    onTap: () => context.router.push(
                           RecordStockWrapperRoute(
                             type: StockRecordEntryType.damaged,
                           ),
                         )),
-                DigitListView(
-                    title: localizations
+                MenuCard(
+                    heading: localizations
                         .translate(i18.manageStock.recordStockLossLabel),
                     description: localizations.translate(
                       i18.manageStock.recordStockDamagedDescription,
                     ),
-                    prefixIcon: Icons.store,
-                    sufixIcon: Icons.arrow_circle_right,
-                    onPressed: () => context.router.push(
+                    icon: Icons.store,
+                    onTap: () => context.router.push(
                           RecordStockWrapperRoute(
                             type: StockRecordEntryType.loss,
                           ),
