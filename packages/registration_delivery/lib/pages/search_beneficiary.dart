@@ -123,6 +123,7 @@ class _SearchBeneficiaryPageState
                       BlocBuilder<LocationBloc, LocationState>(
                         builder: (context, locationState) {
                           return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               locationState.latitude != null
                                   ? Padding(
