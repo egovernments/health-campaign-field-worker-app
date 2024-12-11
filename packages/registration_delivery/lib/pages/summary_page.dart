@@ -101,7 +101,6 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
               ]),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
@@ -205,6 +204,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
+                              padding: EdgeInsets.zero,
                                 heading: localizations.translate(i18
                                     .householdLocation
                                     .householdLocationLabelText),
@@ -216,7 +216,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               ?.address?.locality?.code ??
                                           localizations.translate(
                                               i18.common.coreCommonNA),
-                                      isInline: true),
+                                      isInline: true,
+                                     labelFlex: 5,
+                                  ),
                                   LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdLocation.landmarkFormLabel),
@@ -224,13 +226,16 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               ?.address?.landmark ??
                                           localizations.translate(
                                               i18.common.coreCommonNA),
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                 ]),
                           ]),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.householdDetailsLabel),
                                 items: [
@@ -241,7 +246,8 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               .householdModel?.memberCount
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,),
                                   LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdDetails
@@ -257,7 +263,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               ?.value
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                   LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdDetails
@@ -272,13 +280,16 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               ?.value
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                 ]),
                           ]),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
                                 items: [
@@ -295,7 +306,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               ?.value
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                   LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdDetails.typeOfStructure),
@@ -315,13 +328,16 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                               getLocalizedMessage(item))
                                           .toList()
                                           .join(', '),
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                 ]),
                           ]),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
+                              padding: EdgeInsets.zero,
                                 heading: localizations.translate(i18
                                     .individualDetails
                                     .individualsDetailsLabelText),
@@ -344,7 +360,9 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                         ) =>
                                             individualModel?.name?.givenName ??
                                             localizations.translate(
-                                                i18.common.coreCommonNA)),
+                                                i18.common.coreCommonNA)
+                                    ),
+                                    labelFlex: 5,
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -374,6 +392,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                     .toString()
                                                 : localizations.translate(
                                                     i18.common.coreCommonNA)),
+                                    labelFlex: 5,
                                   ),
                                   LabelValueItem(
                                     label: localizations.translate(
@@ -399,6 +418,7 @@ class SummaryPageState extends LocalizedState<SummaryPage> {
                                                         '')
                                                 : localizations.translate(
                                                     i18.common.coreCommonNA)),
+                                    labelFlex: 5,
                                   ),
                                 ]),
                           ]),

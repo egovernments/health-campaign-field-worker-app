@@ -88,7 +88,6 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                 enableFixedDigitButton: true,
                 footer: DigitCard(
                     margin: const EdgeInsets.only(top: spacer2),
-                    padding: const EdgeInsets.all(spacer2),
                     children: [
                       DigitButton(
                         label: registrationState.mapOrNull(
@@ -361,9 +360,11 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
                     ]),
                 slivers: [
                   SliverToBoxAdapter(
-                    child: DigitCard(children: [
+                    child: DigitCard(
+                      margin: const EdgeInsets.all(spacer2),
+                        children: [
                       DigitTextBlock(
-                        padding: const EdgeInsets.all(spacer2),
+                        padding: const EdgeInsets.all(0),
                         heading: localizations.translate(
                           i18.householdDetails.householdDetailsLabel,
                         ),
