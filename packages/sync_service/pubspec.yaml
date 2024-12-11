@@ -28,7 +28,11 @@ dependencies:
   provider: ^6.1.2
   flutter_secure_storage: ^9.2.2
   digit_data_model: ^1.0.4
-  digit_ui_components: 0.0.2-dev.2
+  digit_ui_components:
+    git:
+      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
+      ref: version_update
+      path: ./flutter/digit-ui-components/digit_components
   super_annotations: ^0.8.1
 
 dev_dependencies:

@@ -37,6 +37,11 @@ dependencies:
   cupertino_icons: ^1.0.2
   complaints:
     path : ../
+  digit_ui_components:
+    git:
+      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
+      ref: version_update
+      path: ./flutter/digit-ui-components/digit_components
 
 
 
