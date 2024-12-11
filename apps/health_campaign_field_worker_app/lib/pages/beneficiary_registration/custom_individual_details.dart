@@ -5,32 +5,29 @@ import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_components/widgets/atoms/digit_checkbox.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_components/widgets/atoms/selection_card.dart';
-import 'package:digit_components/widgets/digit_dob_picker.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-import 'package:registration_delivery/blocs/search_households/search_households.dart';
-import 'package:registration_delivery/utils/constants.dart';
-import 'package:registration_delivery/utils/extensions/extensions.dart';
 
-import 'package:registration_delivery/blocs/beneficiary_registration/beneficiary_registration.dart';
-import 'package:registration_delivery/blocs/household_overview/household_overview.dart';
+import 'package:registration_delivery/utils/constants.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
 import 'package:registration_delivery/utils/i18_key_constants.dart' as i18;
 import 'package:registration_delivery/utils/utils.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/showcase/config/showcase_constants.dart';
-import 'package:registration_delivery/widgets/showcase/showcase_button.dart';
 
 import '../../router/app_router.dart';
 import '../../widgets/custom_digit_dob_picker.dart';
 import '../custom_qr_scanner.dart';
+import '../../utils/utils.dart' as utilsLocal;
+import '../../utils/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
 class CustomIndividualDetailsPage extends LocalizedStatefulWidget {
@@ -355,6 +352,14 @@ class CustomIndividualDetailsPageState
                                 'maxLength': (object) => localizations
                                     .translate(i18.common.maxCharsRequired)
                                     .replaceAll('{}', maxLength.toString()),
+                                "min3": (object) => localizations.translate(
+                                      i18Local.common.min3CharsRequired,
+                                    ),
+                                "validName": (object) =>
+                                    localizations.translate(
+                                      i18Local.individualDetails
+                                          .individualNameValidation,
+                                    )
                               },
                             ),
                           ),
@@ -675,8 +680,9 @@ class CustomIndividualDetailsPageState
       _individualNameKey: FormControl<String>(
         validators: [
           Validators.required,
-          CustomValidator.requiredMin,
+          utilsLocal.CustomValidator.requiredMin3,
           Validators.maxLength(200),
+          utilsLocal.CustomValidator.validIndividualName,
         ],
         value: individual?.name?.givenName ?? searchQuery?.trim(),
       ),
