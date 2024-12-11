@@ -3,10 +3,11 @@ import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:camera/camera.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mlkit_barcode_scanning/google_mlkit_barcode_scanning.dart';
@@ -96,8 +97,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           ),
                         ),
                         Positioned(
-                          top: kPadding * 1.5,
-                          left: kPadding,
+                          top: spacer1 * 1.5,
+                          left: spacer1,
                           child: SizedBox(
                             child: InkWell(
                               onTap: () async {
@@ -165,7 +166,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.only(top: kPadding),
+                                  padding: const EdgeInsets.only(top: spacer1),
                                   child: Text(
                                     localizations.translate(
                                       i18.scanner.manualScan,
@@ -190,7 +191,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                   },
                                   child: Padding(
                                     padding:
-                                        const EdgeInsets.only(top: kPadding),
+                                        const EdgeInsets.only(top: spacer1),
                                     child: Text(
                                       localizations.translate(
                                         i18.scanner.enterManualCode,
@@ -212,37 +213,42 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           bottom: 0,
                           width: MediaQuery.of(context).size.width,
                           child: DigitCard(
-                            margin: const EdgeInsets.only(top: kPadding),
+                            margin: const EdgeInsets.only(top: spacer1),
                             padding: const EdgeInsets.fromLTRB(
-                                kPadding, 0, kPadding, 0),
-                            child: DigitElevatedButton(
-                              child: Text(localizations
-                                  .translate(i18.common.coreCommonSubmit)),
-                              onPressed: () async {
-                                if (widget.isGS1code &&
-                                    result.length < widget.quantity) {
-                                  DigitScannerUtils().buildDialog(
-                                    context,
-                                    localizations,
-                                    widget.quantity,
-                                  );
-                                } else {
-                                  final bloc = context.read<DigitScannerBloc>();
-                                  bloc.add(DigitScannerEvent.handleScanner(
-                                    barCode: state.barCodes,
-                                    qrCode: state.qrCodes,
-                                  ));
-                                  Navigator.of(
-                                    context,
-                                  ).pop();
-                                }
-                              },
-                            ),
+                                spacer1, 0, spacer1, 0),
+                            children: [
+                              DigitButton(
+                                label: localizations
+                                    .translate(i18.common.coreCommonSubmit),
+                                size: DigitButtonSize.large,
+                                type: DigitButtonType.primary,
+                                onPressed: () async {
+                                  if (widget.isGS1code &&
+                                      result.length < widget.quantity) {
+                                    DigitScannerUtils().buildDialog(
+                                      context,
+                                      localizations,
+                                      widget.quantity,
+                                    );
+                                  } else {
+                                    final bloc =
+                                        context.read<DigitScannerBloc>();
+                                    bloc.add(DigitScannerEvent.handleScanner(
+                                      barCode: state.barCodes,
+                                      qrCode: state.qrCodes,
+                                    ));
+                                    Navigator.of(
+                                      context,
+                                    ).pop();
+                                  }
+                                },
+                              ),
+                            ],
                           ),
                         ),
 
                         Positioned(
-                          bottom: (kPadding * 7.5),
+                          bottom: (spacer1 * 7.5),
                           height: widget.isGS1code
                               ? state.barCodes.length < 3
                                   ? (state.barCodes.length * 60) + 80
@@ -257,8 +263,8 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                             decoration: BoxDecoration(
                               color: theme.colorScheme.onError,
                               borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(kPadding + 4),
-                                topRight: Radius.circular(kPadding + 4),
+                                topLeft: Radius.circular(spacer1 + 4),
+                                topRight: Radius.circular(spacer1 + 4),
                               ),
                             ),
                             child: Column(
@@ -269,14 +275,14 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                   decoration: BoxDecoration(
                                     color: theme.colorScheme.onError,
                                     borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(kPadding * 2),
-                                      topRight: Radius.circular(kPadding * 2),
+                                      topLeft: Radius.circular(spacer2),
+                                      topRight: Radius.circular(spacer2),
                                     ),
                                   ),
                                   padding: const EdgeInsets.only(
-                                    bottom: kPadding * 2,
-                                    top: kPadding * 2,
-                                    left: kPadding * 3,
+                                    bottom: spacer2,
+                                    top: spacer2,
+                                    left: spacer3,
                                   ),
                                   width: MediaQuery.of(context).size.width,
                                   child: widget.isGS1code
@@ -300,13 +306,13 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                         shape: const Border(),
                                         title: Container(
                                           margin: const EdgeInsets.only(
-                                            left: kPadding,
-                                            right: kPadding,
+                                            left: spacer1,
+                                            right: spacer1,
                                           ),
-                                          height: kPadding * 6,
+                                          height: spacer6,
                                           decoration: BoxDecoration(
-                                            color: DigitTheme.instance
-                                                .colorScheme.surface,
+                                            color: DigitTheme
+                                                .instance.colorScheme.surface,
                                             border: Border.all(
                                               color: DigitTheme
                                                   .instance.colorScheme.outline,
@@ -318,7 +324,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                             ),
                                           ),
                                           padding:
-                                              const EdgeInsets.all(kPadding),
+                                              const EdgeInsets.all(spacer1),
                                           child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.end,
@@ -408,91 +414,99 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           form: () => buildForm(),
                           builder: (context, form, child) {
                             return DigitCard(
-                              child: ScrollableContent(
-                                backgroundColor: theme.colorScheme.onError,
-                                header: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      manualCode = false;
-                                      initializeCameras();
-                                    });
-                                  },
-                                  child: const Align(
-                                    alignment: Alignment.topRight,
-                                    child: Icon(Icons.close),
-                                  ),
-                                ),
-                                footer: DigitElevatedButton(
-                                  onPressed: () async {
-                                    if (form
-                                                .control(_manualCodeFormKey)
-                                                .value ==
-                                            null ||
-                                        form
-                                            .control(_manualCodeFormKey)
-                                            .value
-                                            .toString()
-                                            .trim()
-                                            .isEmpty) {
-                                      DigitToast.show(context,
-                                          options: DigitToastOptions(
-                                            localizations.translate(
-                                                i18.scanner.enterManualCode),
-                                            true,
-                                            theme,
-                                          ));
-                                    } else {
-                                      final bloc =
-                                          context.read<DigitScannerBloc>();
-                                      codes.add(form
-                                          .control(_manualCodeFormKey)
-                                          .value);
-                                      bloc.add(
-                                        DigitScannerEvent.handleScanner(
-                                          barCode: state.barCodes,
-                                          qrCode: codes,
-                                        ),
-                                      );
-                                      if (widget.isGS1code &&
-                                          result.length < widget.quantity) {
-                                        DigitScannerUtils().buildDialog(
-                                          context,
-                                          localizations,
-                                          widget.quantity,
-                                        );
-                                      }
-
+                              children: [
+                                ScrollableContent(
+                                  backgroundColor: theme.colorScheme.onError,
+                                  header: GestureDetector(
+                                    onTap: () {
                                       setState(() {
                                         manualCode = false;
                                         initializeCameras();
                                       });
-                                    }
-                                  },
-                                  child: Text(localizations.translate(
-                                    i18.common.coreCommonSubmit,
-                                  )),
-                                ),
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      localizations.translate(
-                                        i18.scanner.enterManualCode,
-                                      ),
-                                      style: theme.textTheme.headlineLarge,
+                                    },
+                                    child: const Align(
+                                      alignment: Alignment.topRight,
+                                      child: Icon(Icons.close),
                                     ),
                                   ),
-                                  const SizedBox(
-                                    height: kPadding * 2,
-                                  ),
-                                  DigitTextFormField(
-                                    formControlName: _manualCodeFormKey,
+                                  footer: DigitButton(
+                                    onPressed: () async {
+                                      if (form
+                                                  .control(_manualCodeFormKey)
+                                                  .value ==
+                                              null ||
+                                          form
+                                              .control(_manualCodeFormKey)
+                                              .value
+                                              .toString()
+                                              .trim()
+                                              .isEmpty) {
+                                        Toast.showToast(
+                                          context,
+                                          type: ToastType.error,
+                                          message: localizations.translate(
+                                              i18.scanner.enterManualCode),
+                                        );
+                                      } else {
+                                        final bloc =
+                                            context.read<DigitScannerBloc>();
+                                        codes.add(form
+                                            .control(_manualCodeFormKey)
+                                            .value);
+                                        bloc.add(
+                                          DigitScannerEvent.handleScanner(
+                                            barCode: state.barCodes,
+                                            qrCode: codes,
+                                          ),
+                                        );
+                                        if (widget.isGS1code &&
+                                            result.length < widget.quantity) {
+                                          DigitScannerUtils().buildDialog(
+                                            context,
+                                            localizations,
+                                            widget.quantity,
+                                          );
+                                        }
+
+                                        setState(() {
+                                          manualCode = false;
+                                          initializeCameras();
+                                        });
+                                      }
+                                    },
+                                    type: DigitButtonType.primary,
+                                    size: DigitButtonSize.large,
                                     label: localizations.translate(
-                                      i18.scanner.resourceCode,
+                                      i18.common.coreCommonSubmit,
                                     ),
                                   ),
-                                ],
-                              ),
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.topLeft,
+                                      child: Text(
+                                        localizations.translate(
+                                          i18.scanner.enterManualCode,
+                                        ),
+                                        style: theme.textTheme.headlineLarge,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: spacer2,
+                                    ),
+                                    ReactiveWrapperField(
+                                      formControlName: _manualCodeFormKey,
+                                      builder: (field) {
+                                        return InputField(
+                                          label: localizations.translate(
+                                            i18.scanner.resourceCode,
+                                          ),
+                                          type: InputType.text,
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                )
+                              ],
                             );
                           });
                     })
