@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:closed_household/closed_household.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/text_block.dart';
@@ -12,6 +12,7 @@ import 'package:reactive_forms/reactive_forms.dart';
 
 import '../../utils/i18_key_constants.dart' as i18;
 import '../router/closed_household_router.gm.dart';
+import '../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
 
@@ -86,7 +87,7 @@ class ClosedHouseholdDetailsPageState
           child: BlocBuilder<ClosedHouseholdBloc, ClosedHouseholdState>(
               builder: (context, state) {
             return ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: const Column(
                 children: [
                   BackNavigationHelpHeaderWidget(
@@ -99,9 +100,9 @@ class ClosedHouseholdDetailsPageState
                   children: [
                     BlocBuilder<LocationBloc, LocationState>(
                       builder: (context, locationState) {
-                        return Button(
-                          size: ButtonSize.large,
-                          type: ButtonType.primary,
+                        return DigitButton(
+                          size: DigitButtonSize.large,
+                          type: DigitButtonType.primary,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () {
                             if (!form.valid &&
