@@ -234,8 +234,8 @@ class _SearchReferralReconciliationsPageState
                               const SearchReferralsClearEvent(),
                             );
                           };
-                          return Button(
-                            size: ButtonSize.large,
+                          return DigitButton(
+                            size: DigitButtonSize.large,
                             label: localizations.translate(
                               i18.referralReconciliation.createReferralLabel,
                             ),
@@ -247,15 +247,15 @@ class _SearchReferralReconciliationsPageState
                                 onPressed();
                               }
                             },
-                            type: ButtonType.primary,
+                            type: DigitButtonType.primary,
                           );
                         },
                       ),
                       SizedBox(
                         height: theme.spacerTheme.spacer2,
                       ),
-                      Button(
-                        size: ButtonSize.large,
+                      DigitButton(
+                        size: DigitButtonSize.large,
                         label: localizations
                             .translate(i18.referralReconciliation.scannerLabel),
                         onPressed: () async {
@@ -268,7 +268,7 @@ class _SearchReferralReconciliationsPageState
                             singleValue: true,
                           ));
                         },
-                        type: ButtonType.secondary,
+                        type: DigitButtonType.secondary,
                         prefixIcon: Icons.qr_code,
                         mainAxisSize: MainAxisSize.max,
                       ),
