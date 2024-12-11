@@ -11,7 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  digit_ui_components: 0.0.1+7
+  digit_ui_components:
+    git:
+      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
+      ref: version_update
+      path: ./flutter/digit-ui-components/digit_components
   flutter_bloc: ^8.1.5
   freezed_annotation: ^2.4.1
   reactive_forms: ^17.0.0
@@ -32,12 +36,18 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.2
   drift_db_viewer: ^2.0.0
-  digit_scanner: ^1.0.2
+  digit_scanner:
+    path:
+      ../digit_scanner
   group_radio_button: ^1.3.0
   flutter_keyboard_visibility: ^5.4.1
-  digit_data_model: ^1.0.5-dev.1
+  digit_data_model:
+    path:
+      ../digit_data_model
   stream_transform: ^2.1.0
-  survey_form: ^0.0.1-dev.2
+  survey_form:
+    path:
+      ../survey_form
 
 
 dev_dependencies:
