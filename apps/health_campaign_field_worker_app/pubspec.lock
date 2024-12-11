@@ -520,10 +520,11 @@ packages:
   digit_dss:
     dependency: "direct main"
     description:
-      path: "../../packages/digit_dss"
-      relative: true
-    source: path
-    version: "1.0.2"
+      name: digit_dss
+      sha256: "32e2173ae52e7fd9fb53fa435fb21466248029366584f44a0c0f2c6836267a98"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   digit_firebase_services:
     dependency: "direct main"
     description:
