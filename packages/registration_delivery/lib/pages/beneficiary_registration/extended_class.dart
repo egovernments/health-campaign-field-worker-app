@@ -18,7 +18,6 @@ class _ExtendedFormPageState extends HouseholdLocationPageState {
   _ExtendedFormPageState() : super();
   @override
   void initState() {
-    print('initState ->>>>>>>>>>>> ${RegistrationDeliverySingleton().registrationFormConfig?[0].name}');
     super.initState();
   }
 

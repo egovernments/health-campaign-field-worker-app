@@ -42,9 +42,9 @@ class HouseholdLocationComponentMapper {
           {
             'name': 'administrationArea',
             'type': 'field',
-            'isEnabled': true,
+            'isEnabled': false,
             'attribute': 'textField',
-            'readOnly': false,
+            'readOnly': "true",
             'isRequired': false,
             'order': 1,
           },
