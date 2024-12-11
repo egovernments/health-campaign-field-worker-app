@@ -79,8 +79,7 @@ class CustomResourceBeneficiaryCardState
             label: localizations.translate(
               i18.deliverIntervention.quantityDistributedLabel,
             ),
-            minimum: 0,
-            maximum: 3,
+            minimum: 1,
             buttonWidth: 50,
           ),
           SizedBox(
