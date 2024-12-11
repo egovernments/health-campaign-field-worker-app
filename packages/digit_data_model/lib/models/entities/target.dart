@@ -1,7 +1,9 @@
 // Generated using mason. Do not modify by hand
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:drift/driftt';
+import 'package:drift/drift.dart';
+
+part 'target.mapper.dart';
 
 @MappableClass(ignoreNull: true, discriminatorValue: MappableClass.useAsDefault)
 class TargetSearchModel extends EntitySearchModel
@@ -83,15 +85,3 @@ class TargetAdditionalFields extends AdditionalFields
     super.fields,
   });
 }
-class TargetSearchModel extends EntitySearchModel
-    with TargetSearchModelMappable {
-
-  }) : super();
-  }) : super(isDeleted: false);
-  final String? beneficiaryType;
-    super.auditDetails,
-    super.clientAuditDetails,
-  }) : super();
-    );
-class TargetAdditionalFields extends AdditionalFields
-    with TargetAdditionalFieldsMappable {

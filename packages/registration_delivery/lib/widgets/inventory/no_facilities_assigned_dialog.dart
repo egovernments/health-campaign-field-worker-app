@@ -22,11 +22,11 @@ class NoFacilitiesAssignedDialog {
         description: RegistrationDeliveryLocalization.of(context)
             .translate(i18.referBeneficiary.noFacilityAssignedDescription),
         actions: [
-          Button(
+          DigitButton(
             label: RegistrationDeliveryLocalization.of(context)
                 .translate(i18.common.corecommonclose),
-            type: ButtonType.primary,
-            size: ButtonSize.large,
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
             onPressed: () {
               Navigator.of(context, rootNavigator: true).pop();
               context.router.maybePop();

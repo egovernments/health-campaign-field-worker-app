@@ -1,8 +1,8 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_stepper.dart';
@@ -247,7 +247,7 @@ class DeliverInterventionPageState
                                 ),
                                 builder: (context, form, child) {
                                   return ScrollableContent(
-                                    enableFixedButton: true,
+                                    enableFixedDigitButton: true,
                                     footer: BlocBuilder<DeliverInterventionBloc,
                                         DeliverInterventionState>(
                                       builder: (context, state) {
@@ -266,14 +266,16 @@ class DeliverInterventionPageState
                                                           LocationState>(
                                                       builder: (context,
                                                           locationState) {
-                                                    return Button(
+                                                    return DigitButton(
                                                       label: localizations
                                                           .translate(
                                                         i18.common
                                                             .coreCommonSubmit,
                                                       ),
-                                                      type: ButtonType.primary,
-                                                      size: ButtonSize.large,
+                                                      type: DigitButtonType
+                                                          .primary,
+                                                      size:
+                                                          DigitButtonSize.large,
                                                       mainAxisSize:
                                                           MainAxisSize.max,
                                                       isDisabled: isClicked,
@@ -476,14 +478,16 @@ class DeliverInterventionPageState
                                                       },
                                                     )),
                                                 Center(
-                                                  child: Button(
+                                                  child: DigitButton(
                                                     label:
                                                         localizations.translate(
                                                       i18.deliverIntervention
                                                           .resourceAddBeneficiary,
                                                     ),
-                                                    type: ButtonType.tertiary,
-                                                    size: ButtonSize.medium,
+                                                    type: DigitButtonType
+                                                        .tertiary,
+                                                    size:
+                                                        DigitButtonSize.medium,
                                                     isDisabled: ((form.control(_resourceDeliveredKey)
                                                                             as FormArray)
                                                                         .value ??

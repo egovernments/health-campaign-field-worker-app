@@ -44,14 +44,14 @@ class _AcknowledgementPageState
                 i18.acknowledgementSuccess.acknowledgementDescriptionText,
               ),
           actions: [
-            Button(
+            DigitButton(
               label: localizations
                   .translate(i18.acknowledgementSuccess.actionLabelText),
               onPressed: () {
                 context.router.popUntilRoot();
               },
-              type: ButtonType.primary,
-              size: ButtonSize.large,
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
               mainAxisSize: MainAxisSize.max,
             )
           ]),
@@ -62,9 +62,9 @@ class _AcknowledgementPageState
           height: 150,
           child: Column(
             children: [
-              Button(
-                size: ButtonSize.large,
-                type: ButtonType.primary,
+              DigitButton(
+                size: DigitButtonSize.large,
+                type: DigitButtonType.primary,
                 mainAxisSize: MainAxisSize.max,
                 label: localizations
                     .translate(i18.acknowledgementSuccess.goToHome),
@@ -75,9 +75,9 @@ class _AcknowledgementPageState
               const SizedBox(
                 height: 12,
               ),
-              Button(
-                size: ButtonSize.large,
-                type: ButtonType.secondary,
+              DigitButton(
+                size: DigitButtonSize.large,
+                type: DigitButtonType.secondary,
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () {
                   context.router.popUntilRoot();

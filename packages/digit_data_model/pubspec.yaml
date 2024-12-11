@@ -25,6 +25,11 @@ dependencies:
   dio: ^5.4.3+1
   mocktail: ^1.0.3
   collection: ^1.18.0
+  digit_ui_components:
+    git:
+      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
+      ref: version_update
+      path: ./flutter/digit-ui-components/digit_components
 
 dev_dependencies:
   flutter_test:

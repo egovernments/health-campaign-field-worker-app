@@ -55,7 +55,7 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
               BlocBuilder<HouseholdOverviewBloc, HouseholdOverviewState>(
                 builder: (context, registrationState) {
                   return ScrollableContent(
-                    enableFixedButton: true,
+                    enableFixedDigitButton: true,
                     header: const Column(
                       children: [
                         BackNavigationHelpHeaderWidget(
@@ -68,12 +68,12 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                         margin: const EdgeInsets.only(top: spacer2),
                         padding: const EdgeInsets.all(spacer2),
                         children: [
-                          Button(
+                          DigitButton(
                             label: localizations.translate(
                               i18.householdLocation.actionLabel,
                             ),
-                            type: ButtonType.primary,
-                            size: ButtonSize.large,
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
                             mainAxisSize: MainAxisSize.max,
                             onPressed: () {
                               form.markAllAsTouched();

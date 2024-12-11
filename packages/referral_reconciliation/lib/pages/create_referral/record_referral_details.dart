@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/dropdown_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -96,7 +97,7 @@ class _RecordReferralDetailsPageState
                             : null,
                       );
                       return ScrollableContent(
-                        enableFixedButton: true,
+                        enableFixedDigitButton: true,
                         header: const Column(children: [
                           BackNavigationHelpHeaderWidget(),
                         ]),
@@ -111,9 +112,9 @@ class _RecordReferralDetailsPageState
                                     ValueListenableBuilder(
                                       valueListenable: clickedStatus,
                                       builder: (context, bool isClicked, _) {
-                                        return Button(
-                                          size: ButtonSize.large,
-                                          type: ButtonType.primary,
+                                        return DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.primary,
                                           mainAxisSize: MainAxisSize.max,
                                           label: localizations
                                               .translate(recordState.mapOrNull(
@@ -433,9 +434,9 @@ class _RecordReferralDetailsPageState
                                       ValueListenableBuilder(
                                         valueListenable: clickedStatus,
                                         builder: (context, bool isClicked, _) {
-                                          return Button(
-                                            size: ButtonSize.large,
-                                            type: ButtonType.primary,
+                                          return DigitButton(
+                                            size: DigitButtonSize.large,
+                                            type: DigitButtonType.primary,
                                             mainAxisSize: MainAxisSize.max,
                                             label: localizations.translate(
                                                 recordState.mapOrNull(
@@ -1144,7 +1145,7 @@ class _RecordReferralDetailsPageState
                                                         "",
                                                     errorMessage:
                                                         field.errorText,
-                                                    radioButtons:
+                                                    radioDigitButtons:
                                                         ReferralReconSingleton()
                                                             .referralReasons
                                                             .map((r) {
