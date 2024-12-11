@@ -33,6 +33,45 @@ class FormConfigFieldModel {
   late String? errorMessage;
 }
 
+class RegistrationDeliveryConfigModel {
+  late String name = '';
+  late String type = '';
+  late List<ComponentModel> components;
+}
+
+class ComponentModel {
+  late String title;
+  late String description;
+  late int order;
+  late List<AttributeModel> attributes;
+}
+
+class AttributeModel {
+  late String name;
+  late String type;
+  late bool isEnabled;
+  late String attribute; // Maps to `attribute` in JSON
+  late bool readOnly;
+  late bool isRequired;
+  late int order;
+  late String? label; // Nullable for additional fields
+  late String? formDataType; // Nullable for additional fields
+  late String? keyboardType; // Nullable for specific fields
+  late List<ValidationRuleModel>? validation; // Nullable
+  late List<String>? menuItems; // Nullable for dropdown and selection boxes
+  late bool? allowMultipleSelection; // Nullable for selection boxes
+  late int? initialValue; // Nullable for integer picker
+  late int? minimum; // Nullable for integer picker
+  late int? maximum; // Nullable for integer picker
+}
+
+class ValidationRuleModel {
+  late String pattern;
+  late String key;
+  late String errorMessage;
+}
+
+
 class FieldConfig {
   final bool isEnabled;
   final bool readOnly;
@@ -94,17 +133,19 @@ class config {
 class Components {
   String? title;
   String? description;
+  int? order;
   List<Attributes>? attributes;
 
-  Components({this.title, this.description, this.attributes});
+  Components({this.title, this.description, this.order, this.attributes});
 
   Components.fromJson(Map<String, dynamic> json) {
     title = json['title'];
     description = json['description'];
+    order = json['order'];
     if (json['attributes'] != null) {
       attributes = <Attributes>[];
       json['attributes'].forEach((v) {
-        attributes!.add(new Attributes.fromJson(v));
+        attributes!.add(Attributes.fromJson(v));
       });
     }
   }
@@ -113,6 +154,7 @@ class Components {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['title'] = this.title;
     data['description'] = this.description;
+    data['order'] = this.order;
     if (this.attributes != null) {
       data['attributes'] = this.attributes!.map((v) => v.toJson()).toList();
     }
@@ -124,7 +166,7 @@ class Attributes {
   String? name;
   String? type;
   String? label;
-  String? component;
+  String? attribute;
   String? formDataType;
   bool? isEnabled;
   bool? readOnly;
@@ -142,7 +184,7 @@ class Attributes {
       {this.name,
         this.type,
         this.label,
-        this.component,
+        this.attribute,
         this.formDataType,
         this.isEnabled,
         this.readOnly,
@@ -160,7 +202,7 @@ class Attributes {
     name = json['name'];
     type = json['type'];
     label = json['label'];
-    component = json['component'];
+    attribute = json['attribute'];
     formDataType = json['formDataType'];
     isEnabled = json['isEnabled'];
     readOnly = json['readOnly'];
@@ -185,7 +227,7 @@ class Attributes {
     data['name'] = this.name;
     data['type'] = this.type;
     data['label'] = this.label;
-    data['component'] = this.component;
+    data['attribute'] = this.attribute;
     data['formDataType'] = this.formDataType;
     data['isEnabled'] = this.isEnabled;
     data['readOnly'] = this.readOnly;

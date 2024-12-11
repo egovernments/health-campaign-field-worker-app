@@ -158,8 +158,8 @@ _$HCMWrapperModelImpl _$$HCMWrapperModelImplFromJson(
           .toList(),
       registrationDeliveryConfig:
           (json['REGISTRATION_DELIVERY_CONFIGS'] as List<dynamic>?)
-              ?.map((e) => RegistrationDeliveryConfigModel.fromJson(
-                  e as Map<String, dynamic>))
+              ?.map((e) =>
+                  RegistrationConfigModel.fromJson(e as Map<String, dynamic>))
               .toList(),
     );
 
@@ -393,65 +393,81 @@ Map<String, dynamic> _$$BackendInterfaceImplToJson(
       'interfaces': instance.interface,
     };
 
-_$RegistrationDeliveryConfigModelImpl
-    _$$RegistrationDeliveryConfigModelImplFromJson(Map<String, dynamic> json) =>
-        _$RegistrationDeliveryConfigModelImpl(
-          name: json['name'] as String,
-          type: json['type'] as String,
-          fields: (json['fields'] as List<dynamic>?)
-              ?.map((e) => RegistrationDeliveryConfigFieldModel.fromJson(
-                  e as Map<String, dynamic>))
-              .toList(),
-        );
+_$RegistrationConfigModelImpl _$$RegistrationConfigModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$RegistrationConfigModelImpl(
+      name: json['name'] as String,
+      type: json['type'] as String,
+      components: (json['components'] as List<dynamic>)
+          .map((e) => ComponentModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
-Map<String, dynamic> _$$RegistrationDeliveryConfigModelImplToJson(
-        _$RegistrationDeliveryConfigModelImpl instance) =>
+Map<String, dynamic> _$$RegistrationConfigModelImplToJson(
+        _$RegistrationConfigModelImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'type': instance.type,
-      'fields': instance.fields,
+      'components': instance.components,
     };
 
-_$RegistrationDeliveryConfigFieldModelImpl
-    _$$RegistrationDeliveryConfigFieldModelImplFromJson(
-            Map<String, dynamic> json) =>
-        _$RegistrationDeliveryConfigFieldModelImpl(
-          name: json['name'] as String,
-          type: json['type'] as String,
-          label: json['label'] as String,
-          component: json['component'] as String,
-          formDataType: json['formDataType'] as String,
-          order: (json['order'] as num).toInt(),
-          isRequired: json['isRequired'] as bool,
-          isEnabled: json['isEnabled'] as bool,
-          readOnly: json['readOnly'] as bool,
-          keyboardType: json['keyboardType'] as String?,
-          validation: (json['validation'] as List<dynamic>?)
-              ?.map((e) => ValidationRule.fromJson(e as Map<String, dynamic>))
-              .toList(),
-          menuItems: (json['menuItems'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList(),
-          allowMultipleSelection: json['allowMultipleSelection'] as bool?,
-          initialValue: (json['initialValue'] as num?)?.toInt(),
-          minimum: (json['minimum'] as num?)?.toInt(),
-          maximum: (json['maximum'] as num?)?.toInt(),
-        );
+_$ComponentModelImpl _$$ComponentModelImplFromJson(Map<String, dynamic> json) =>
+    _$ComponentModelImpl(
+      title: json['title'] as String,
+      description: json['description'] as String,
+      order: (json['order'] as num).toInt(),
+      attributes: (json['attributes'] as List<dynamic>)
+          .map((e) => AttributeModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
 
-Map<String, dynamic> _$$RegistrationDeliveryConfigFieldModelImplToJson(
-        _$RegistrationDeliveryConfigFieldModelImpl instance) =>
+Map<String, dynamic> _$$ComponentModelImplToJson(
+        _$ComponentModelImpl instance) =>
+    <String, dynamic>{
+      'title': instance.title,
+      'description': instance.description,
+      'order': instance.order,
+      'attributes': instance.attributes,
+    };
+
+_$AttributeModelImpl _$$AttributeModelImplFromJson(Map<String, dynamic> json) =>
+    _$AttributeModelImpl(
+      name: json['name'] as String,
+      type: json['type'] as String,
+      isEnabled: json['isEnabled'] as bool,
+      attribute: json['attribute'] as String,
+      readOnly: json['readOnly'] as bool,
+      isRequired: json['isRequired'] as bool,
+      order: (json['order'] as num).toInt(),
+      keyboardType: json['keyboardType'] as String?,
+      validation: (json['validation'] as List<dynamic>?)
+          ?.map((e) => ValidationRule.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      label: json['label'] as String?,
+      formDataType: json['formDataType'] as String?,
+      menuItems: (json['menuItems'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      allowMultipleSelection: json['allowMultipleSelection'] as bool?,
+      initialValue: (json['initialValue'] as num?)?.toInt(),
+      minimum: (json['minimum'] as num?)?.toInt(),
+      maximum: (json['maximum'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$$AttributeModelImplToJson(
+        _$AttributeModelImpl instance) =>
     <String, dynamic>{
       'name': instance.name,
       'type': instance.type,
-      'label': instance.label,
-      'component': instance.component,
-      'formDataType': instance.formDataType,
-      'order': instance.order,
-      'isRequired': instance.isRequired,
       'isEnabled': instance.isEnabled,
+      'attribute': instance.attribute,
       'readOnly': instance.readOnly,
+      'isRequired': instance.isRequired,
+      'order': instance.order,
       'keyboardType': instance.keyboardType,
       'validation': instance.validation,
+      'label': instance.label,
+      'formDataType': instance.formDataType,
       'menuItems': instance.menuItems,
       'allowMultipleSelection': instance.allowMultipleSelection,
       'initialValue': instance.initialValue,

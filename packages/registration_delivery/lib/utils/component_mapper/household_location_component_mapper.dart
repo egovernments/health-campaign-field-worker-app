@@ -44,7 +44,7 @@ class HouseholdLocationComponentMapper {
             'type': 'field',
             'isEnabled': true,
             'attribute': 'textField',
-            'readOnly': true,
+            'readOnly': false,
             'isRequired': false,
             'order': 1,
           },
@@ -135,17 +135,6 @@ class HouseholdLocationComponentMapper {
             "order": 3
           },
           {
-            "name": "dobPicker",
-            "type": "additionalField",
-            "label": "dobPicker",
-            "attribute": "dobPicker",
-            "formDataType": "DateTime",
-            "isEnabled": true,
-            "readOnly": false,
-            "isRequired": false,
-            "order": 4
-          },
-          {
             "name": "integerFormPicker",
             "type": "additionalField",
             "label": "integerFormPicker",
@@ -160,7 +149,7 @@ class HouseholdLocationComponentMapper {
             "order": 6
           }
         ]
-      }
+      },
     ]
   };
 
@@ -419,63 +408,8 @@ class HouseholdLocationComponentMapper {
 
     formGroup.addAll(newControls);
 
-    addValidators(formGroup);
+    addValidators(formGroup,configs);
 
     return formGroup;
-  }
-
-  void addValidators(final formGroup) {
-    for (var component in configs["components"]) {
-      for (var fieldConfig in component["attributes"]) {
-        final key = fieldConfig["name"];
-        final formControl = formGroup.control(key);
-
-        // Get current validators
-        final currentValidators = formControl.validators;
-
-        List<Map<String, dynamic>? Function(AbstractControl<dynamic>)>
-            updatedValidators = currentValidators.where((validator) {
-          // Check if the validator is of the same type as Validators.required
-          return validator.runtimeType != Validators.required.runtimeType;
-        }).toList();
-
-        if (fieldConfig['isRequired'] == true &&
-            fieldConfig['isEnabled'] == true) {
-          // Add the new validator to the list
-          updatedValidators = [
-            ...updatedValidators,
-            Validators.required // Example new validator
-          ];
-        }
-
-        // If JSON config has regex, add it as a validator
-        if (fieldConfig['isEnabled'] == true &&
-            fieldConfig.containsKey('validation') &&
-            fieldConfig['validation'] is List) {
-          List<dynamic> validationList = fieldConfig['validation'];
-
-          validationList.asMap().forEach((index, regex) {
-            updatedValidators.add((control) {
-              final value = control.value?.toString() ??
-                  ''; // Convert to string or default to empty
-              if (value.isNotEmpty &&
-                  !RegExp(regex['pattern']).hasMatch(value)) {
-                // Ensure there's a matching error message for this index
-                return {
-                  '${regex['key']}': regex['errorMessage']
-                }; // Use the correct error message for the index
-              }
-              return null;
-            });
-          });
-        }
-
-        // Set the updated validators back to the form control
-        formControl.setValidators(updatedValidators);
-
-        // Re-run validation with the new validators
-        formControl.updateValueAndValidity();
-      }
-    }
   }
 }

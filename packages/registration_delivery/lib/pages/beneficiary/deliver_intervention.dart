@@ -19,6 +19,7 @@ import 'package:registration_delivery/utils/utils.dart';
 import '../../models/entities/additional_fields_type.dart';
 import '../../models/entities/status.dart';
 import '../../utils/component_mapper/deliver_intervention_component_mapper.dart';
+import '../../utils/convert_to_map.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../widgets/back_navigation_help_header.dart';
 import '../../widgets/beneficiary/resource_beneficiary_card.dart';
@@ -27,9 +28,11 @@ import '../../widgets/localized.dart';
 
 @RoutePage()
 class DeliverInterventionPage extends LocalizedStatefulWidget {
+  final List<config>? widgetConfig;
   final bool isEditing;
 
   const DeliverInterventionPage({
+    this.widgetConfig,
     super.key,
     super.appLocalizations,
     this.isEditing = false,
@@ -65,6 +68,10 @@ class DeliverInterventionPageState
   @override
   void initState() {
     context.read<LocationBloc>().add(const LoadLocationEvent());
+    if (widget.widgetConfig != null) {
+      final converter = FieldConverter(widget.widgetConfig);
+      mapper.configs = converter.convertWidgetConfigToJsonByName(DeliverInterventionRoute.name)!;
+    }
     super.initState();
   }
 

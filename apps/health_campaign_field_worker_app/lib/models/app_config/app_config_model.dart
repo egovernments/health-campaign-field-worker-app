@@ -100,7 +100,7 @@ class HCMWrapperModel with _$HCMWrapperModel {
     @JsonKey(name: 'FORM_CONFIG')
     List<FormConfigModel>? formConfig,
     @JsonKey(name: 'REGISTRATION_DELIVERY_CONFIGS')
-    List<RegistrationDeliveryConfigModel>? registrationDeliveryConfig,
+    List<RegistrationConfigModel>? registrationDeliveryConfig,
   }) = _HCMWrapperModel;
 
   factory HCMWrapperModel.fromJson(
@@ -269,41 +269,53 @@ class BackendInterface with _$BackendInterface {
 }
 
 @freezed
-class RegistrationDeliveryConfigModel with _$RegistrationDeliveryConfigModel {
-  factory RegistrationDeliveryConfigModel({
+class RegistrationConfigModel with _$RegistrationConfigModel {
+  factory RegistrationConfigModel({
     required String name,
     required String type,
-    @JsonKey(name: 'fields')
-    List<RegistrationDeliveryConfigFieldModel>? fields
-  }) = _RegistrationDeliveryConfigModel;
+    required List<ComponentModel> components,
+  }) = _RegistrationConfigModel;
 
-  factory RegistrationDeliveryConfigModel.fromJson(Map<String, dynamic> json) =>
-      _$RegistrationDeliveryConfigModelFromJson(json);
+  factory RegistrationConfigModel.fromJson(Map<String, dynamic> json) =>
+      _$RegistrationConfigModelFromJson(json);
 }
 
 @freezed
-class RegistrationDeliveryConfigFieldModel with _$RegistrationDeliveryConfigFieldModel {
-  factory RegistrationDeliveryConfigFieldModel({
+class ComponentModel with _$ComponentModel {
+  factory ComponentModel({
+    required String title,
+    required String description,
+    required int order,
+    required List<AttributeModel> attributes,
+  }) = _ComponentModel;
+
+  factory ComponentModel.fromJson(Map<String, dynamic> json) =>
+      _$ComponentModelFromJson(json);
+}
+
+@freezed
+class AttributeModel with _$AttributeModel {
+  factory AttributeModel({
     required String name,
     required String type,
-    required String label,
-    required String component,
-    required String formDataType,
-    required int order,
-    required bool isRequired,
     required bool isEnabled,
+    required String attribute,
     required bool readOnly,
+    required bool isRequired,
+    required int order,
     String? keyboardType,
     List<ValidationRule>? validation,
+    String? label,
+    String? formDataType,
     List<String>? menuItems,
     bool? allowMultipleSelection,
     int? initialValue,
     int? minimum,
     int? maximum,
-  }) = _RegistrationDeliveryConfigFieldModel;
+  }) = _AttributeModel;
 
-  factory RegistrationDeliveryConfigFieldModel.fromJson(Map<String, dynamic> json) =>
-      _$RegistrationDeliveryConfigFieldModelFromJson(json);
+  factory AttributeModel.fromJson(Map<String, dynamic> json) =>
+      _$AttributeModelFromJson(json);
 }
 
 @freezed

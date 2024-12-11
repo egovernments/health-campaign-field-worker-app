@@ -5,10 +5,10 @@ import '../../utils/utils.dart';
 
 @RoutePage()
 class ExtendedFormPage extends HouseholdLocationPage {
-  ExtendedFormPage({super.key});
-    //   : super(
-    // widgetConfig: RegistrationDeliverySingleton().formConfig,
-    //     );
+  ExtendedFormPage({super.key})
+      : super(
+    widgetConfig: RegistrationDeliverySingleton().registrationFormConfig,
+        );
 
   @override
   _ExtendedFormPageState createState() => _ExtendedFormPageState();
@@ -18,6 +18,7 @@ class _ExtendedFormPageState extends HouseholdLocationPageState {
   _ExtendedFormPageState() : super();
   @override
   void initState() {
+    print('initState ->>>>>>>>>>>> ${RegistrationDeliverySingleton().registrationFormConfig?[0].name}');
     super.initState();
   }
 

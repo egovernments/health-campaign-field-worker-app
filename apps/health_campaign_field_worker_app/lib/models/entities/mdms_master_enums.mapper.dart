@@ -75,6 +75,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return MasterEnums.dashboardConfig;
       case "FORM_CONFIG":
         return MasterEnums.formConfig;
+      case "REGISTRATION_DELIVERY_CONFIGS":
+        return MasterEnums.registrationDeliveryConfigs;
       default:
         throw MapperException.unknownEnumValue(value);
     }
@@ -133,6 +135,8 @@ class MasterEnumsMapper extends EnumMapper<MasterEnums> {
         return "dashboardConfig";
       case MasterEnums.formConfig:
         return "FORM_CONFIG";
+      case MasterEnums.registrationDeliveryConfigs:
+        return "REGISTRATION_DELIVERY_CONFIGS";
     }
   }
 }

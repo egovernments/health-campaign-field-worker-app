@@ -33,7 +33,7 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class IndividualDetailsPage extends LocalizedStatefulWidget {
-  final List<FormConfigModel>? widgetConfig;
+  final List<config>? widgetConfig;
   final bool isHeadOfHousehold;
 
   const IndividualDetailsPage({
@@ -65,7 +65,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
         isHeadOfHousehold: widget.isHeadOfHousehold);
     if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
-      mapper.configs = converter.convertFields('IndividualDetails');
+      mapper.configs = converter.convertWidgetConfigToJsonByName(IndividualDetailsRoute.name)!;
     }
     super.initState();
   }

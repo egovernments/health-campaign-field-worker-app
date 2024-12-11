@@ -122,59 +122,65 @@ const AppConfigurationSchema = CollectionSchema(
       name: r'PROXIMITY_SEARCH_RANGE',
       type: IsarType.double,
     ),
-    r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
+    r'REGISTRATION_DELIVERY_CONFIGS': PropertySchema(
       id: 18,
+      name: r'REGISTRATION_DELIVERY_CONFIGS',
+      type: IsarType.objectList,
+      target: r'RegistrationDeliveryConfig',
+    ),
+    r'SEARCH_HOUSEHOLD_FILTERS': PropertySchema(
+      id: 19,
       name: r'SEARCH_HOUSEHOLD_FILTERS',
       type: IsarType.objectList,
       target: r'SearchHouseHoldFilters',
     ),
     r'SYNC_METHOD': PropertySchema(
-      id: 19,
+      id: 20,
       name: r'SYNC_METHOD',
       type: IsarType.string,
     ),
     r'SYNC_TRIGGER': PropertySchema(
-      id: 20,
+      id: 21,
       name: r'SYNC_TRIGGER',
       type: IsarType.string,
     ),
     r'TENANT_ID': PropertySchema(
-      id: 21,
+      id: 22,
       name: r'TENANT_ID',
       type: IsarType.string,
     ),
     r'TRANSPORT_TYPES': PropertySchema(
-      id: 22,
+      id: 23,
       name: r'TRANSPORT_TYPES',
       type: IsarType.objectList,
       target: r'TransportTypes',
     ),
     r'houseStructureTypes': PropertySchema(
-      id: 23,
+      id: 24,
       name: r'houseStructureTypes',
       type: IsarType.objectList,
       target: r'HouseStructureTypes',
     ),
     r'privacyPolicyConfig': PropertySchema(
-      id: 24,
+      id: 25,
       name: r'privacyPolicyConfig',
       type: IsarType.object,
       target: r'PrivacyPolicy',
     ),
     r'referralReasons': PropertySchema(
-      id: 25,
+      id: 26,
       name: r'referralReasons',
       type: IsarType.objectList,
       target: r'ReferralReasons',
     ),
     r'refusalReasons': PropertySchema(
-      id: 26,
+      id: 27,
       name: r'refusalReasons',
       type: IsarType.objectList,
       target: r'RefusalReasons',
     ),
     r'symptomsTypes': PropertySchema(
-      id: 27,
+      id: 28,
       name: r'symptomsTypes',
       type: IsarType.objectList,
       target: r'SymptomsTypes',
@@ -194,6 +200,10 @@ const AppConfigurationSchema = CollectionSchema(
     r'Config': ConfigSchema,
     r'FormConfig': FormConfigSchema,
     r'FormConfigField': FormConfigFieldSchema,
+    r'RegistrationDeliveryConfig': RegistrationDeliveryConfigSchema,
+    r'Component': ComponentSchema,
+    r'Attribute': AttributeSchema,
+    r'ValidationRule': ValidationRuleSchema,
     r'GenderOptions': GenderOptionsSchema,
     r'HouseholdDeletionReasonOptions': HouseholdDeletionReasonOptionsSchema,
     r'HouseholdMemberDeletionReasonOptions':
@@ -434,6 +444,20 @@ int _appConfigurationEstimateSize(
     }
   }
   {
+    final list = object.registrationDeliveryConfigs;
+    if (list != null) {
+      bytesCount += 3 + list.length * 3;
+      {
+        final offsets = allOffsets[RegistrationDeliveryConfig]!;
+        for (var i = 0; i < list.length; i++) {
+          final value = list[i];
+          bytesCount += RegistrationDeliveryConfigSchema.estimateSize(
+              value, offsets, allOffsets);
+        }
+      }
+    }
+  }
+  {
     final list = object.searchHouseHoldFilters;
     if (list != null) {
       bytesCount += 3 + list.length * 3;
@@ -645,47 +669,53 @@ void _appConfigurationSerialize(
   writer.writeString(offsets[15], object.networkDetection);
   writer.writeString(offsets[16], object.persistenceMode);
   writer.writeDouble(offsets[17], object.maxRadius);
-  writer.writeObjectList<SearchHouseHoldFilters>(
+  writer.writeObjectList<RegistrationDeliveryConfig>(
     offsets[18],
+    allOffsets,
+    RegistrationDeliveryConfigSchema.serialize,
+    object.registrationDeliveryConfigs,
+  );
+  writer.writeObjectList<SearchHouseHoldFilters>(
+    offsets[19],
     allOffsets,
     SearchHouseHoldFiltersSchema.serialize,
     object.searchHouseHoldFilters,
   );
-  writer.writeString(offsets[19], object.syncMethod);
-  writer.writeString(offsets[20], object.syncTrigger);
-  writer.writeString(offsets[21], object.tenantId);
+  writer.writeString(offsets[20], object.syncMethod);
+  writer.writeString(offsets[21], object.syncTrigger);
+  writer.writeString(offsets[22], object.tenantId);
   writer.writeObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     allOffsets,
     TransportTypesSchema.serialize,
     object.transportTypes,
   );
   writer.writeObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     allOffsets,
     HouseStructureTypesSchema.serialize,
     object.houseStructureTypes,
   );
   writer.writeObject<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     allOffsets,
     PrivacyPolicySchema.serialize,
     object.privacyPolicyConfig,
   );
   writer.writeObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     allOffsets,
     ReferralReasonsSchema.serialize,
     object.referralReasons,
   );
   writer.writeObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     allOffsets,
     RefusalReasonsSchema.serialize,
     object.refusalReasons,
   );
   writer.writeObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     allOffsets,
     SymptomsTypesSchema.serialize,
     object.symptomsTypes,
@@ -792,47 +822,54 @@ AppConfiguration _appConfigurationDeserialize(
   object.networkDetection = reader.readStringOrNull(offsets[15]);
   object.persistenceMode = reader.readStringOrNull(offsets[16]);
   object.maxRadius = reader.readDoubleOrNull(offsets[17]);
-  object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
+  object.registrationDeliveryConfigs =
+      reader.readObjectList<RegistrationDeliveryConfig>(
     offsets[18],
+    RegistrationDeliveryConfigSchema.deserialize,
+    allOffsets,
+    RegistrationDeliveryConfig(),
+  );
+  object.searchHouseHoldFilters = reader.readObjectList<SearchHouseHoldFilters>(
+    offsets[19],
     SearchHouseHoldFiltersSchema.deserialize,
     allOffsets,
     SearchHouseHoldFilters(),
   );
-  object.syncMethod = reader.readStringOrNull(offsets[19]);
-  object.syncTrigger = reader.readStringOrNull(offsets[20]);
-  object.tenantId = reader.readStringOrNull(offsets[21]);
+  object.syncMethod = reader.readStringOrNull(offsets[20]);
+  object.syncTrigger = reader.readStringOrNull(offsets[21]);
+  object.tenantId = reader.readStringOrNull(offsets[22]);
   object.transportTypes = reader.readObjectList<TransportTypes>(
-    offsets[22],
+    offsets[23],
     TransportTypesSchema.deserialize,
     allOffsets,
     TransportTypes(),
   );
   object.houseStructureTypes = reader.readObjectList<HouseStructureTypes>(
-    offsets[23],
+    offsets[24],
     HouseStructureTypesSchema.deserialize,
     allOffsets,
     HouseStructureTypes(),
   );
   object.id = id;
   object.privacyPolicyConfig = reader.readObjectOrNull<PrivacyPolicy>(
-    offsets[24],
+    offsets[25],
     PrivacyPolicySchema.deserialize,
     allOffsets,
   );
   object.referralReasons = reader.readObjectList<ReferralReasons>(
-    offsets[25],
+    offsets[26],
     ReferralReasonsSchema.deserialize,
     allOffsets,
     ReferralReasons(),
   );
   object.refusalReasons = reader.readObjectList<RefusalReasons>(
-    offsets[26],
+    offsets[27],
     RefusalReasonsSchema.deserialize,
     allOffsets,
     RefusalReasons(),
   );
   object.symptomsTypes = reader.readObjectList<SymptomsTypes>(
-    offsets[27],
+    offsets[28],
     SymptomsTypesSchema.deserialize,
     allOffsets,
     SymptomsTypes(),
@@ -956,53 +993,60 @@ P _appConfigurationDeserializeProp<P>(
     case 17:
       return (reader.readDoubleOrNull(offset)) as P;
     case 18:
+      return (reader.readObjectList<RegistrationDeliveryConfig>(
+        offset,
+        RegistrationDeliveryConfigSchema.deserialize,
+        allOffsets,
+        RegistrationDeliveryConfig(),
+      )) as P;
+    case 19:
       return (reader.readObjectList<SearchHouseHoldFilters>(
         offset,
         SearchHouseHoldFiltersSchema.deserialize,
         allOffsets,
         SearchHouseHoldFilters(),
       )) as P;
-    case 19:
-      return (reader.readStringOrNull(offset)) as P;
     case 20:
       return (reader.readStringOrNull(offset)) as P;
     case 21:
       return (reader.readStringOrNull(offset)) as P;
     case 22:
+      return (reader.readStringOrNull(offset)) as P;
+    case 23:
       return (reader.readObjectList<TransportTypes>(
         offset,
         TransportTypesSchema.deserialize,
         allOffsets,
         TransportTypes(),
       )) as P;
-    case 23:
+    case 24:
       return (reader.readObjectList<HouseStructureTypes>(
         offset,
         HouseStructureTypesSchema.deserialize,
         allOffsets,
         HouseStructureTypes(),
       )) as P;
-    case 24:
+    case 25:
       return (reader.readObjectOrNull<PrivacyPolicy>(
         offset,
         PrivacyPolicySchema.deserialize,
         allOffsets,
       )) as P;
-    case 25:
+    case 26:
       return (reader.readObjectList<ReferralReasons>(
         offset,
         ReferralReasonsSchema.deserialize,
         allOffsets,
         ReferralReasons(),
       )) as P;
-    case 26:
+    case 27:
       return (reader.readObjectList<RefusalReasons>(
         offset,
         RefusalReasonsSchema.deserialize,
         allOffsets,
         RefusalReasons(),
       )) as P;
-    case 27:
+    case 28:
       return (reader.readObjectList<SymptomsTypes>(
         offset,
         SymptomsTypesSchema.deserialize,
@@ -2839,6 +2883,113 @@ extension AppConfigurationQueryFilter
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'REGISTRATION_DELIVERY_CONFIGS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'REGISTRATION_DELIVERY_CONFIGS',
+      ));
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'REGISTRATION_DELIVERY_CONFIGS',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'REGISTRATION_DELIVERY_CONFIGS',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'REGISTRATION_DELIVERY_CONFIGS',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'REGISTRATION_DELIVERY_CONFIGS',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'REGISTRATION_DELIVERY_CONFIGS',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'REGISTRATION_DELIVERY_CONFIGS',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       searchHouseHoldFiltersIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -4127,6 +4278,14 @@ extension AppConfigurationQueryObject
   }
 
   QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
+      registrationDeliveryConfigsElement(
+          FilterQuery<RegistrationDeliveryConfig> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'REGISTRATION_DELIVERY_CONFIGS');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, AppConfiguration, QAfterFilterCondition>
       searchHouseHoldFiltersElement(FilterQuery<SearchHouseHoldFilters> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'SEARCH_HOUSEHOLD_FILTERS');
@@ -4544,6 +4703,13 @@ extension AppConfigurationQueryProperty
       maxRadiusProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'PROXIMITY_SEARCH_RANGE');
+    });
+  }
+
+  QueryBuilder<AppConfiguration, List<RegistrationDeliveryConfig>?,
+      QQueryOperations> registrationDeliveryConfigsProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'REGISTRATION_DELIVERY_CONFIGS');
     });
   }
 
@@ -5157,11 +5323,11 @@ const RegistrationDeliveryConfigSchema = Schema(
   name: r'RegistrationDeliveryConfig',
   id: 2092571550061030803,
   properties: {
-    r'fields': PropertySchema(
+    r'components': PropertySchema(
       id: 0,
-      name: r'fields',
+      name: r'components',
       type: IsarType.objectList,
-      target: r'RegistrationDeliveryConfigField',
+      target: r'Component',
     ),
     r'name': PropertySchema(
       id: 1,
@@ -5186,18 +5352,12 @@ int _registrationDeliveryConfigEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.components.length * 3;
   {
-    final list = object.fields;
-    if (list != null) {
-      bytesCount += 3 + list.length * 3;
-      {
-        final offsets = allOffsets[RegistrationDeliveryConfigField]!;
-        for (var i = 0; i < list.length; i++) {
-          final value = list[i];
-          bytesCount += RegistrationDeliveryConfigFieldSchema.estimateSize(
-              value, offsets, allOffsets);
-        }
-      }
+    final offsets = allOffsets[Component]!;
+    for (var i = 0; i < object.components.length; i++) {
+      final value = object.components[i];
+      bytesCount += ComponentSchema.estimateSize(value, offsets, allOffsets);
     }
   }
   bytesCount += 3 + object.name.length * 3;
@@ -5211,11 +5371,11 @@ void _registrationDeliveryConfigSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeObjectList<RegistrationDeliveryConfigField>(
+  writer.writeObjectList<Component>(
     offsets[0],
     allOffsets,
-    RegistrationDeliveryConfigFieldSchema.serialize,
-    object.fields,
+    ComponentSchema.serialize,
+    object.components,
   );
   writer.writeString(offsets[1], object.name);
   writer.writeString(offsets[2], object.type);
@@ -5228,12 +5388,13 @@ RegistrationDeliveryConfig _registrationDeliveryConfigDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = RegistrationDeliveryConfig();
-  object.fields = reader.readObjectList<RegistrationDeliveryConfigField>(
-    offsets[0],
-    RegistrationDeliveryConfigFieldSchema.deserialize,
-    allOffsets,
-    RegistrationDeliveryConfigField(),
-  );
+  object.components = reader.readObjectList<Component>(
+        offsets[0],
+        ComponentSchema.deserialize,
+        allOffsets,
+        Component(),
+      ) ??
+      [];
   object.name = reader.readString(offsets[1]);
   object.type = reader.readString(offsets[2]);
   return object;
@@ -5247,12 +5408,13 @@ P _registrationDeliveryConfigDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readObjectList<RegistrationDeliveryConfigField>(
-        offset,
-        RegistrationDeliveryConfigFieldSchema.deserialize,
-        allOffsets,
-        RegistrationDeliveryConfigField(),
-      )) as P;
+      return (reader.readObjectList<Component>(
+            offset,
+            ComponentSchema.deserialize,
+            allOffsets,
+            Component(),
+          ) ??
+          []) as P;
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
@@ -5265,28 +5427,10 @@ P _registrationDeliveryConfigDeserializeProp<P>(
 extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
     RegistrationDeliveryConfig, RegistrationDeliveryConfig, QFilterCondition> {
   QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'fields',
-      ));
-    });
-  }
-
-  QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'fields',
-      ));
-    });
-  }
-
-  QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsLengthEqualTo(int length) {
+      QAfterFilterCondition> componentsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'fields',
+        r'components',
         length,
         true,
         length,
@@ -5296,10 +5440,10 @@ extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsIsEmpty() {
+      QAfterFilterCondition> componentsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'fields',
+        r'components',
         0,
         true,
         0,
@@ -5309,10 +5453,10 @@ extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsIsNotEmpty() {
+      QAfterFilterCondition> componentsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'fields',
+        r'components',
         0,
         false,
         999999,
@@ -5322,13 +5466,13 @@ extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsLengthLessThan(
+      QAfterFilterCondition> componentsLengthLessThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'fields',
+        r'components',
         0,
         true,
         length,
@@ -5338,13 +5482,13 @@ extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsLengthGreaterThan(
+      QAfterFilterCondition> componentsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'fields',
+        r'components',
         length,
         include,
         999999,
@@ -5354,7 +5498,7 @@ extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
   }
 
   QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-      QAfterFilterCondition> fieldsLengthBetween(
+      QAfterFilterCondition> componentsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -5362,7 +5506,7 @@ extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
-        r'fields',
+        r'components',
         lower,
         includeLower,
         upper,
@@ -5651,10 +5795,9 @@ extension RegistrationDeliveryConfigQueryFilter on QueryBuilder<
 extension RegistrationDeliveryConfigQueryObject on QueryBuilder<
     RegistrationDeliveryConfig, RegistrationDeliveryConfig, QFilterCondition> {
   QueryBuilder<RegistrationDeliveryConfig, RegistrationDeliveryConfig,
-          QAfterFilterCondition>
-      fieldsElement(FilterQuery<RegistrationDeliveryConfigField> q) {
+      QAfterFilterCondition> componentsElement(FilterQuery<Component> q) {
     return QueryBuilder.apply(this, (query) {
-      return query.object(q, r'fields');
+      return query.object(q, r'components');
     });
   }
 }
@@ -5662,18 +5805,554 @@ extension RegistrationDeliveryConfigQueryObject on QueryBuilder<
 // coverage:ignore-file
 // ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
-const RegistrationDeliveryConfigFieldSchema = Schema(
-  name: r'RegistrationDeliveryConfigField',
-  id: 4727586305247552354,
+const ComponentSchema = Schema(
+  name: r'Component',
+  id: -8356918290272001147,
+  properties: {
+    r'attributes': PropertySchema(
+      id: 0,
+      name: r'attributes',
+      type: IsarType.objectList,
+      target: r'Attribute',
+    ),
+    r'description': PropertySchema(
+      id: 1,
+      name: r'description',
+      type: IsarType.string,
+    ),
+    r'order': PropertySchema(
+      id: 2,
+      name: r'order',
+      type: IsarType.long,
+    ),
+    r'title': PropertySchema(
+      id: 3,
+      name: r'title',
+      type: IsarType.string,
+    )
+  },
+  estimateSize: _componentEstimateSize,
+  serialize: _componentSerialize,
+  deserialize: _componentDeserialize,
+  deserializeProp: _componentDeserializeProp,
+);
+
+int _componentEstimateSize(
+  Component object,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  var bytesCount = offsets.last;
+  bytesCount += 3 + object.attributes.length * 3;
+  {
+    final offsets = allOffsets[Attribute]!;
+    for (var i = 0; i < object.attributes.length; i++) {
+      final value = object.attributes[i];
+      bytesCount += AttributeSchema.estimateSize(value, offsets, allOffsets);
+    }
+  }
+  bytesCount += 3 + object.description.length * 3;
+  bytesCount += 3 + object.title.length * 3;
+  return bytesCount;
+}
+
+void _componentSerialize(
+  Component object,
+  IsarWriter writer,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  writer.writeObjectList<Attribute>(
+    offsets[0],
+    allOffsets,
+    AttributeSchema.serialize,
+    object.attributes,
+  );
+  writer.writeString(offsets[1], object.description);
+  writer.writeLong(offsets[2], object.order);
+  writer.writeString(offsets[3], object.title);
+}
+
+Component _componentDeserialize(
+  Id id,
+  IsarReader reader,
+  List<int> offsets,
+  Map<Type, List<int>> allOffsets,
+) {
+  final object = Component();
+  object.attributes = reader.readObjectList<Attribute>(
+        offsets[0],
+        AttributeSchema.deserialize,
+        allOffsets,
+        Attribute(),
+      ) ??
+      [];
+  object.description = reader.readString(offsets[1]);
+  object.order = reader.readLong(offsets[2]);
+  object.title = reader.readString(offsets[3]);
+  return object;
+}
+
+P _componentDeserializeProp<P>(
+  IsarReader reader,
+  int propertyId,
+  int offset,
+  Map<Type, List<int>> allOffsets,
+) {
+  switch (propertyId) {
+    case 0:
+      return (reader.readObjectList<Attribute>(
+            offset,
+            AttributeSchema.deserialize,
+            allOffsets,
+            Attribute(),
+          ) ??
+          []) as P;
+    case 1:
+      return (reader.readString(offset)) as P;
+    case 2:
+      return (reader.readLong(offset)) as P;
+    case 3:
+      return (reader.readString(offset)) as P;
+    default:
+      throw IsarError('Unknown property with id $propertyId');
+  }
+}
+
+extension ComponentQueryFilter
+    on QueryBuilder<Component, Component, QFilterCondition> {
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      attributesLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attributes',
+        length,
+        true,
+        length,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      attributesIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attributes',
+        0,
+        true,
+        0,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      attributesIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attributes',
+        0,
+        false,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      attributesLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attributes',
+        0,
+        true,
+        length,
+        include,
+      );
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      attributesLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attributes',
+        length,
+        include,
+        999999,
+        true,
+      );
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      attributesLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.listLength(
+        r'attributes',
+        lower,
+        includeLower,
+        upper,
+        includeUpper,
+      );
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> descriptionEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      descriptionGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> descriptionLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> descriptionBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'description',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      descriptionStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> descriptionEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> descriptionContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'description',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> descriptionMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'description',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      descriptionIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'description',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition>
+      descriptionIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'description',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> orderEqualTo(
+      int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> orderGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> orderLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'order',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> orderBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'order',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'title',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'title',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'title',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'title',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Component, Component, QAfterFilterCondition> titleIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'title',
+        value: '',
+      ));
+    });
+  }
+}
+
+extension ComponentQueryObject
+    on QueryBuilder<Component, Component, QFilterCondition> {
+  QueryBuilder<Component, Component, QAfterFilterCondition> attributesElement(
+      FilterQuery<Attribute> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.object(q, r'attributes');
+    });
+  }
+}
+
+// coverage:ignore-file
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
+
+const AttributeSchema = Schema(
+  name: r'Attribute',
+  id: 7545206588480797890,
   properties: {
     r'allowMultipleSelection': PropertySchema(
       id: 0,
       name: r'allowMultipleSelection',
       type: IsarType.bool,
     ),
-    r'component': PropertySchema(
+    r'attribute': PropertySchema(
       id: 1,
-      name: r'component',
+      name: r'attribute',
       type: IsarType.string,
     ),
     r'formDataType': PropertySchema(
@@ -5748,27 +6427,37 @@ const RegistrationDeliveryConfigFieldSchema = Schema(
       target: r'ValidationRule',
     )
   },
-  estimateSize: _registrationDeliveryConfigFieldEstimateSize,
-  serialize: _registrationDeliveryConfigFieldSerialize,
-  deserialize: _registrationDeliveryConfigFieldDeserialize,
-  deserializeProp: _registrationDeliveryConfigFieldDeserializeProp,
+  estimateSize: _attributeEstimateSize,
+  serialize: _attributeSerialize,
+  deserialize: _attributeDeserialize,
+  deserializeProp: _attributeDeserializeProp,
 );
 
-int _registrationDeliveryConfigFieldEstimateSize(
-  RegistrationDeliveryConfigField object,
+int _attributeEstimateSize(
+  Attribute object,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
-  bytesCount += 3 + object.component.length * 3;
-  bytesCount += 3 + object.formDataType.length * 3;
+  bytesCount += 3 + object.attribute.length * 3;
+  {
+    final value = object.formDataType;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final value = object.keyboardType;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.label.length * 3;
+  {
+    final value = object.label;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   {
     final list = object.menuItems;
     if (list != null) {
@@ -5800,14 +6489,14 @@ int _registrationDeliveryConfigFieldEstimateSize(
   return bytesCount;
 }
 
-void _registrationDeliveryConfigFieldSerialize(
-  RegistrationDeliveryConfigField object,
+void _attributeSerialize(
+  Attribute object,
   IsarWriter writer,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeBool(offsets[0], object.allowMultipleSelection);
-  writer.writeString(offsets[1], object.component);
+  writer.writeString(offsets[1], object.attribute);
   writer.writeString(offsets[2], object.formDataType);
   writer.writeLong(offsets[3], object.initialValue);
   writer.writeBool(offsets[4], object.isEnabled);
@@ -5829,21 +6518,21 @@ void _registrationDeliveryConfigFieldSerialize(
   );
 }
 
-RegistrationDeliveryConfigField _registrationDeliveryConfigFieldDeserialize(
+Attribute _attributeDeserialize(
   Id id,
   IsarReader reader,
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = RegistrationDeliveryConfigField();
+  final object = Attribute();
   object.allowMultipleSelection = reader.readBoolOrNull(offsets[0]);
-  object.component = reader.readString(offsets[1]);
-  object.formDataType = reader.readString(offsets[2]);
+  object.attribute = reader.readString(offsets[1]);
+  object.formDataType = reader.readStringOrNull(offsets[2]);
   object.initialValue = reader.readLongOrNull(offsets[3]);
   object.isEnabled = reader.readBool(offsets[4]);
   object.isRequired = reader.readBool(offsets[5]);
   object.keyboardType = reader.readStringOrNull(offsets[6]);
-  object.label = reader.readString(offsets[7]);
+  object.label = reader.readStringOrNull(offsets[7]);
   object.maximum = reader.readLongOrNull(offsets[8]);
   object.menuItems = reader.readStringList(offsets[9]);
   object.minimum = reader.readLongOrNull(offsets[10]);
@@ -5860,7 +6549,7 @@ RegistrationDeliveryConfigField _registrationDeliveryConfigFieldDeserialize(
   return object;
 }
 
-P _registrationDeliveryConfigFieldDeserializeProp<P>(
+P _attributeDeserializeProp<P>(
   IsarReader reader,
   int propertyId,
   int offset,
@@ -5872,7 +6561,7 @@ P _registrationDeliveryConfigFieldDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 3:
       return (reader.readLongOrNull(offset)) as P;
     case 4:
@@ -5882,7 +6571,7 @@ P _registrationDeliveryConfigFieldDeserializeProp<P>(
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 8:
       return (reader.readLongOrNull(offset)) as P;
     case 9:
@@ -5909,12 +6598,10 @@ P _registrationDeliveryConfigFieldDeserializeProp<P>(
   }
 }
 
-extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
-    RegistrationDeliveryConfigField,
-    RegistrationDeliveryConfigField,
-    QFilterCondition> {
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> allowMultipleSelectionIsNull() {
+extension AttributeQueryFilter
+    on QueryBuilder<Attribute, Attribute, QFilterCondition> {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      allowMultipleSelectionIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'allowMultipleSelection',
@@ -5922,8 +6609,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> allowMultipleSelectionIsNotNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      allowMultipleSelectionIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'allowMultipleSelection',
@@ -5931,8 +6618,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> allowMultipleSelectionEqualTo(bool? value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      allowMultipleSelectionEqualTo(bool? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'allowMultipleSelection',
@@ -5941,22 +6628,21 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentEqualTo(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'component',
+        property: r'attribute',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      attributeGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -5964,15 +6650,14 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
-        property: r'component',
+        property: r'attribute',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -5980,15 +6665,14 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
-        property: r'component',
+        property: r'attribute',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -5997,7 +6681,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
-        property: r'component',
+        property: r'attribute',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -6007,81 +6691,95 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentStartsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'component',
+        property: r'attribute',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentEndsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'component',
+        property: r'attribute',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      componentContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
-        property: r'component',
+        property: r'attribute',
         value: value,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      componentMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
-        property: r'component',
+        property: r'attribute',
         wildcard: pattern,
         caseSensitive: caseSensitive,
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> attributeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'component',
+        property: r'attribute',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> componentIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      attributeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'component',
+        property: r'attribute',
         value: '',
       ));
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeEqualTo(
-    String value, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'formDataType',
+      ));
+    });
+  }
+
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'formDataType',
+      ));
+    });
+  }
+
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> formDataTypeEqualTo(
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -6093,9 +6791,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeGreaterThan(
-    String value, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeGreaterThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -6109,9 +6807,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeLessThan(
-    String value, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeLessThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -6125,10 +6823,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> formDataTypeBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -6145,8 +6842,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeStartsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6159,8 +6856,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeEndsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6173,8 +6870,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
       formDataTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -6185,9 +6881,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      formDataTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> formDataTypeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'formDataType',
@@ -6197,8 +6893,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'formDataType',
@@ -6207,8 +6903,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> formDataTypeIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      formDataTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'formDataType',
@@ -6217,8 +6913,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> initialValueIsNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      initialValueIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'initialValue',
@@ -6226,8 +6922,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> initialValueIsNotNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      initialValueIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'initialValue',
@@ -6235,8 +6931,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> initialValueEqualTo(int? value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> initialValueEqualTo(
+      int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'initialValue',
@@ -6245,8 +6941,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> initialValueGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      initialValueGreaterThan(
     int? value, {
     bool include = false,
   }) {
@@ -6259,8 +6955,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> initialValueLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      initialValueLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -6273,8 +6969,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> initialValueBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> initialValueBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -6291,8 +6986,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> isEnabledEqualTo(bool value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> isEnabledEqualTo(
+      bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isEnabled',
@@ -6301,8 +6996,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> isRequiredEqualTo(bool value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> isRequiredEqualTo(
+      bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'isRequired',
@@ -6311,8 +7006,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeIsNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'keyboardType',
@@ -6320,8 +7015,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeIsNotNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'keyboardType',
@@ -6329,8 +7024,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeEqualTo(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> keyboardTypeEqualTo(
     String? value, {
     bool caseSensitive = true,
   }) {
@@ -6343,8 +7037,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeGreaterThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -6359,8 +7053,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeLessThan(
     String? value, {
     bool include = false,
     bool caseSensitive = true,
@@ -6375,8 +7069,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> keyboardTypeBetween(
     String? lower,
     String? upper, {
     bool includeLower = true,
@@ -6395,8 +7088,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeStartsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6409,8 +7102,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeEndsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6423,8 +7116,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
       keyboardTypeContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -6435,9 +7127,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      keyboardTypeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> keyboardTypeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'keyboardType',
@@ -6447,8 +7139,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'keyboardType',
@@ -6457,8 +7149,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> keyboardTypeIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      keyboardTypeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'keyboardType',
@@ -6467,9 +7159,24 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelEqualTo(
-    String value, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'label',
+      ));
+    });
+  }
+
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'label',
+      ));
+    });
+  }
+
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelEqualTo(
+    String? value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -6481,9 +7188,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelGreaterThan(
-    String value, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelGreaterThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -6497,9 +7203,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelLessThan(
-    String value, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelLessThan(
+    String? value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -6513,10 +7218,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelBetween(
-    String lower,
-    String upper, {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelBetween(
+    String? lower,
+    String? upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -6533,8 +7237,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelStartsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6547,8 +7250,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelEndsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6561,9 +7263,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      labelContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'label',
@@ -6573,9 +7275,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      labelMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'label',
@@ -6585,8 +7287,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'label',
@@ -6595,8 +7296,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> labelIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> labelIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'label',
@@ -6605,8 +7305,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> maximumIsNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> maximumIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'maximum',
@@ -6614,8 +7313,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> maximumIsNotNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> maximumIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'maximum',
@@ -6623,8 +7321,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> maximumEqualTo(int? value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> maximumEqualTo(
+      int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'maximum',
@@ -6633,8 +7331,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> maximumGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> maximumGreaterThan(
     int? value, {
     bool include = false,
   }) {
@@ -6647,8 +7344,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> maximumLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> maximumLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -6661,8 +7357,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> maximumBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> maximumBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -6679,8 +7374,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsIsNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> menuItemsIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'menuItems',
@@ -6688,8 +7382,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsIsNotNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'menuItems',
@@ -6697,8 +7391,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementEqualTo(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6711,8 +7405,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -6727,8 +7421,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -6743,8 +7437,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -6763,8 +7457,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementStartsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6777,8 +7471,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementEndsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -6791,8 +7485,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
       menuItemsElementContains(String value, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
@@ -6803,8 +7496,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
       menuItemsElementMatches(String pattern, {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
@@ -6815,8 +7507,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'menuItems',
@@ -6825,8 +7517,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsElementIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsElementIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'menuItems',
@@ -6835,8 +7527,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsLengthEqualTo(int length) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'menuItems',
@@ -6848,8 +7540,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> menuItemsIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'menuItems',
@@ -6861,8 +7552,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'menuItems',
@@ -6874,8 +7565,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsLengthLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -6890,8 +7581,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsLengthGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
@@ -6906,8 +7597,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> menuItemsLengthBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      menuItemsLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -6924,8 +7615,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> minimumIsNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> minimumIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'minimum',
@@ -6933,8 +7623,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> minimumIsNotNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> minimumIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'minimum',
@@ -6942,8 +7631,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> minimumEqualTo(int? value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> minimumEqualTo(
+      int? value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'minimum',
@@ -6952,8 +7641,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> minimumGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> minimumGreaterThan(
     int? value, {
     bool include = false,
   }) {
@@ -6966,8 +7654,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> minimumLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> minimumLessThan(
     int? value, {
     bool include = false,
   }) {
@@ -6980,8 +7667,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> minimumBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> minimumBetween(
     int? lower,
     int? upper, {
     bool includeLower = true,
@@ -6998,8 +7684,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameEqualTo(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -7012,8 +7697,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -7028,8 +7712,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -7044,8 +7727,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -7064,8 +7746,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameStartsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -7078,8 +7759,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameEndsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -7092,9 +7772,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      nameContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'name',
@@ -7104,9 +7784,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      nameMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'name',
@@ -7116,8 +7796,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'name',
@@ -7126,8 +7805,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> nameIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> nameIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'name',
@@ -7136,8 +7814,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> orderEqualTo(int value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> orderEqualTo(
+      int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'order',
@@ -7146,8 +7824,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> orderGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> orderGreaterThan(
     int value, {
     bool include = false,
   }) {
@@ -7160,8 +7837,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> orderLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> orderLessThan(
     int value, {
     bool include = false,
   }) {
@@ -7174,8 +7850,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> orderBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> orderBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -7192,8 +7867,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> readOnlyEqualTo(bool value) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> readOnlyEqualTo(
+      bool value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'readOnly',
@@ -7202,8 +7877,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeEqualTo(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeEqualTo(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -7216,8 +7890,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeGreaterThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -7232,8 +7905,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeLessThan(
     String value, {
     bool include = false,
     bool caseSensitive = true,
@@ -7248,8 +7920,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeBetween(
     String lower,
     String upper, {
     bool includeLower = true,
@@ -7268,8 +7939,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeStartsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeStartsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -7282,8 +7952,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeEndsWith(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeEndsWith(
     String value, {
     bool caseSensitive = true,
   }) {
@@ -7296,9 +7965,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      typeContains(String value, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeContains(
+      String value,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.contains(
         property: r'type',
@@ -7308,9 +7977,9 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-          QAfterFilterCondition>
-      typeMatches(String pattern, {bool caseSensitive = true}) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.matches(
         property: r'type',
@@ -7320,8 +7989,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'type',
@@ -7330,8 +7998,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> typeIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> typeIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'type',
@@ -7340,8 +8007,7 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationIsNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> validationIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
         property: r'validation',
@@ -7349,8 +8015,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationIsNotNull() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      validationIsNotNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNotNull(
         property: r'validation',
@@ -7358,8 +8024,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationLengthEqualTo(int length) {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      validationLengthEqualTo(int length) {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'validation',
@@ -7371,8 +8037,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationIsEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      validationIsEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'validation',
@@ -7384,8 +8050,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationIsNotEmpty() {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      validationIsNotEmpty() {
     return QueryBuilder.apply(this, (query) {
       return query.listLength(
         r'validation',
@@ -7397,8 +8063,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationLengthLessThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      validationLengthLessThan(
     int length, {
     bool include = false,
   }) {
@@ -7413,8 +8079,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationLengthGreaterThan(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      validationLengthGreaterThan(
     int length, {
     bool include = false,
   }) {
@@ -7429,8 +8095,8 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
     });
   }
 
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationLengthBetween(
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition>
+      validationLengthBetween(
     int lower,
     int upper, {
     bool includeLower = true,
@@ -7448,12 +8114,10 @@ extension RegistrationDeliveryConfigFieldQueryFilter on QueryBuilder<
   }
 }
 
-extension RegistrationDeliveryConfigFieldQueryObject on QueryBuilder<
-    RegistrationDeliveryConfigField,
-    RegistrationDeliveryConfigField,
-    QFilterCondition> {
-  QueryBuilder<RegistrationDeliveryConfigField, RegistrationDeliveryConfigField,
-      QAfterFilterCondition> validationElement(FilterQuery<ValidationRule> q) {
+extension AttributeQueryObject
+    on QueryBuilder<Attribute, Attribute, QFilterCondition> {
+  QueryBuilder<Attribute, Attribute, QAfterFilterCondition> validationElement(
+      FilterQuery<ValidationRule> q) {
     return QueryBuilder.apply(this, (query) {
       return query.object(q, r'validation');
     });

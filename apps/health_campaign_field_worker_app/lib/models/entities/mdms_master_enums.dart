@@ -55,6 +55,6 @@ enum MasterEnums {
   dashboardConfig,
   @MappableValue("FORM_CONFIG")
   formConfig,
-  // @MappableValue("REGISTRATION_DELIVERY_CONFIGS")
-  // registrationDeliveryConfigs,
+  @MappableValue("REGISTRATION_DELIVERY_CONFIGS")
+  registrationDeliveryConfigs,
 }

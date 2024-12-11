@@ -107,28 +107,35 @@ class RegistrationDeliveryConfig {
   @Name("name")
   late String name;
   late String type;
-  @Name('fields')
-  late List<RegistrationDeliveryConfigField>? fields;
+  late List<Component> components;
 }
 
 @embedded
-class RegistrationDeliveryConfigField {
+class Component {
+  late String title;
+  late String description;
+  late int order;
+  late List<Attribute> attributes;
+}
+
+@embedded
+class Attribute {
   late String name;
   late String type;
-  late String label;
-  late String component;
-  late String formDataType;
-  late int order;
-  late bool isRequired;
   late bool isEnabled;
+  late String attribute; // Maps to `attribute` in JSON
   late bool readOnly;
-  late String? keyboardType;
-  late List<ValidationRule>? validation;
-  late List<String>? menuItems;
-  late bool? allowMultipleSelection;
-  late int? initialValue;
-  late int? minimum;
-  late int? maximum;
+  late bool isRequired;
+  late int order;
+  late String? label; // Nullable for additional fields
+  late String? formDataType; // Nullable for additional fields
+  late String? keyboardType; // Nullable for specific fields
+  late List<ValidationRule>? validation; // Nullable
+  late List<String>? menuItems; // Nullable for dropdown and selection boxes
+  late bool? allowMultipleSelection; // Nullable for selection boxes
+  late int? initialValue; // Nullable for integer picker
+  late int? minimum; // Nullable for integer picker
+  late int? maximum; // Nullable for integer picker
 }
 
 @embedded

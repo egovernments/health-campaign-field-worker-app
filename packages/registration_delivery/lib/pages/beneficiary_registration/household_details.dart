@@ -27,7 +27,7 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseHoldDetailsPage extends LocalizedStatefulWidget {
-  final List<FormConfigModel>? widgetConfig;
+  final List<config>? widgetConfig;
 
   const HouseHoldDetailsPage({
     this.widgetConfig,
@@ -50,7 +50,7 @@ class HouseHoldDetailsPageState extends LocalizedState<HouseHoldDetailsPage> {
   void initState() {
     if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
-      mapper.configs = converter.convertFields('HouseholdDetails');
+      mapper.configs = converter.convertWidgetConfigToJsonByName(HouseHoldDetailsRoute.name)!;
     }
     super.initState();
   }

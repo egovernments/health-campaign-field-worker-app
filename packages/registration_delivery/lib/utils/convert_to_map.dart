@@ -1,35 +1,21 @@
 import 'models/widget_config_model.dart';
 
 class FieldConverter {
-  final List<FormConfigModel>? data;
+  final List<config>? widgetConfig;
 
-  FieldConverter(this.data);
+  FieldConverter(this.widgetConfig);
 
-  Map<String, Map<String, dynamic>> convertFields(String pageName) {
-    final FormConfigModel page = data?.firstWhere(
-          (element) => pageName.toLowerCase().contains(element.name.toLowerCase()),
-      orElse: () => FormConfigModel(), // Provide a default instance
-    ) ?? FormConfigModel(); // Handle null safety if data is null
-
-    if (page.name.isEmpty) {
-      return {}; // Handle case where no valid page is found
+  Map<String, dynamic>? convertWidgetConfigToJsonByName(
+     String nameToFind) {
+    if (widgetConfig == null || widgetConfig!.isEmpty) {
+      return null; // Return null if the list is empty or null
     }
 
-    final List<FormConfigFieldModel>? fields = page.fields;
-    final Map<String, Map<String, dynamic>> convertedFields = {};
+    // Find the config with the specified name
+    final config? foundConfig =
+    widgetConfig?.firstWhere((config) => nameToFind.toLowerCase().contains(config.name?.toLowerCase() as Pattern), orElse: () => config());
 
-    fields?.forEach((field) {
-      final config = FieldConfig(
-        isEnabled: field.isEnabled ?? false,
-        readOnly: field.readOnly ?? false,
-        isRequired: field.isRequired ?? false,
-        order: field.order ?? 0,
-        regex: field.regex?.cast<String>(),
-        errorMessage: field.errorMessage,
-      );
-      convertedFields[field.name] = config.toMap();
-    });
-
-    return convertedFields;
-  }
+    // Convert to JSON if found
+    return foundConfig?.toJson();
+    }
 }

@@ -1,7 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/text_block.dart';
 import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_data_model/models/entities/address_type.dart';
@@ -23,7 +22,7 @@ import '../../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class HouseholdLocationPage extends LocalizedStatefulWidget {
-  final List<FormConfigModel>? widgetConfig;
+  final List<config>? widgetConfig;
 
   const HouseholdLocationPage({
     this.widgetConfig,
@@ -68,7 +67,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
 
     if (widget.widgetConfig != null) {
       final converter = FieldConverter(widget.widgetConfig);
-      mapper.configs = converter.convertFields(HouseholdLocationRoute.name);
+      mapper.configs = converter.convertWidgetConfigToJsonByName(HouseholdLocationRoute.name)!;
     }
     super.initState();
   }

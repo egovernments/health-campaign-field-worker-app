@@ -132,6 +132,63 @@ class MdmsRepository {
     final element = result.hcmWrapperModel;
     final appConfig = result.hcmWrapperModel?.appConfig.first;
     final formConfigResult = result.hcmWrapperModel?.formConfig;
+    final registrationConfigResult = result.hcmWrapperModel?.registrationDeliveryConfig;
+
+    final List<RegistrationDeliveryConfig> registrationConfigList = [];
+    for (final element in registrationConfigResult ?? <app_configuration.RegistrationConfigModel>[]) {
+      // Transform components
+      List<Component> componentList = [];
+      for (final component in element.components ?? <app_configuration.ComponentModel>[]) {
+        // Transform attributes
+        List<Attribute> attributeList = [];
+        for (final attribute in component.attributes ?? <app_configuration.AttributeModel>[]) {
+          // Transform validation rules
+          List<ValidationRule> validationRules = [];
+          for (final rule in attribute.validation ?? <app_configuration.ValidationRule>[]) {
+            final validationRule = ValidationRule()
+              ..pattern = rule.pattern
+              ..key = rule.key
+              ..errorMessage = rule.errorMessage;
+            validationRules.add(validationRule);
+          }
+
+          final transformedAttribute = Attribute()
+            ..name = attribute.name
+            ..type = attribute.type
+            ..isEnabled = attribute.isEnabled
+            ..attribute = attribute.attribute
+            ..readOnly = attribute.readOnly
+            ..isRequired = attribute.isRequired
+            ..order = attribute.order
+            ..keyboardType = attribute.keyboardType
+            ..validation = validationRules.isNotEmpty ? validationRules : null
+            ..label = attribute.label
+            ..formDataType = attribute.formDataType
+            ..menuItems = attribute.menuItems
+            ..allowMultipleSelection = attribute.allowMultipleSelection
+            ..initialValue = attribute.initialValue
+            ..minimum = attribute.minimum
+            ..maximum = attribute.maximum;
+
+          attributeList.add(transformedAttribute);
+        }
+
+        final transformedComponent = Component()
+          ..title = component.title
+          ..description = component.description
+          ..order = component.order
+          ..attributes = attributeList;
+
+        componentList.add(transformedComponent);
+      }
+
+      final transformedPageConfig = RegistrationDeliveryConfig()
+      ..name = element.name
+      ..type = element.type
+      ..components = componentList;
+
+      registrationConfigList.add(transformedPageConfig);
+    }
 
     final List<FormConfig> formConfigList = [];
     for (final element in formConfigResult ?? <app_configuration.FormConfigModel>[]) {
@@ -177,7 +234,8 @@ class MdmsRepository {
       ..maxRadius = appConfig?.maxRadius
       ..backgroundServiceConfig = backgroundServiceConfig
       ..firebaseConfig = firebaseConfig
-      ..formConfig = formConfigList;
+      ..formConfig = formConfigList
+      ..registrationDeliveryConfigs = registrationConfigList;
 
     final List<Languages>? languageList =
         commonMasters?.stateInfo.first.languages.map((element) {

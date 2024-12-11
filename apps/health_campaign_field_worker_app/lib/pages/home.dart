@@ -650,19 +650,51 @@ void setPackagesSingleton(BuildContext context) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
         RegistrationDeliverySingleton().setInitialData(
-          // formConfig: appConfiguration.formConfig?.map((e) => FormConfigModel()
-          //   ..name = e.name
-          //   ..type = e.type
-          //   ..fields = e.fields?.map((field) => FormConfigFieldModel()
-          //     ..name = field.name
-          //     ..isEnabled = field.isEnabled
-          //     ..readOnly = field.readOnly
-          //     ..isRequired = field.isRequired
-          //     ..order = field.order
-          //     ..regex = field.regex
-          //     ..errorMessage = field.errorMessage,
-          //   ).toList()
-          // ).toList(),
+          registrationFormConfig: appConfiguration.registrationDeliveryConfigs?.map((element) => config()
+          ..name = element.name
+          ..type = element.type
+          ..components = element.components.map((component) => Components()
+            ..title = component.title
+            ..description = component.description
+            ..order = component.order
+            ..attributes = component.attributes.map((attribute) => Attributes()
+              ..name = attribute.name
+              ..type = attribute.type
+              ..isEnabled = attribute.isEnabled
+              ..attribute = attribute.attribute
+              ..readOnly = attribute.readOnly
+              ..isRequired = attribute.isRequired
+              ..order = attribute.order
+              ..keyboardType = attribute.keyboardType
+              ..validation = attribute.validation?.map((rule) => Validation()
+                ..pattern = rule.pattern
+                ..key = rule.key
+                ..errorMessage = rule.errorMessage,
+              ).toList()
+              ..label = attribute.label
+              ..formDataType = attribute.formDataType
+              ..menuItems = attribute.menuItems
+              ..allowMultipleSelection = attribute.allowMultipleSelection
+              ..initialValue = attribute.initialValue
+              ..minimum = attribute.minimum
+              ..maximum = attribute.maximum,
+            ).toList(),
+          ).toList(),
+        ).toList(),
+
+        formConfig: appConfiguration.formConfig?.map((e) => FormConfigModel()
+            ..name = e.name
+            ..type = e.type
+            ..fields = e.fields?.map((field) => FormConfigFieldModel()
+              ..name = field.name
+              ..isEnabled = field.isEnabled
+              ..readOnly = field.readOnly
+              ..isRequired = field.isRequired
+              ..order = field.order
+              ..regex = field.regex
+              ..errorMessage = field.errorMessage,
+            ).toList()
+          ).toList(),
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
           maxRadius: appConfiguration.maxRadius!,
