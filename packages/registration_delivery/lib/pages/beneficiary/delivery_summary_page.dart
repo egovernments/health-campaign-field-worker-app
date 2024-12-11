@@ -4,6 +4,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:recase/recase.dart';
@@ -49,7 +50,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
         },
         builder: (context, deliverState) {
           return ScrollableContent(
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               header: Column(children: [
                 const BackNavigationHelpHeaderWidget(
                   showHelp: false,
@@ -76,11 +77,11 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
                       builder: (context, bool isClicked, _) {
-                        return Button(
+                        return DigitButton(
                           label: localizations
                               .translate(i18.common.coreCommonNext),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           isDisabled: isClicked ? true : false,
                           onPressed: () async {
@@ -92,7 +93,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 description: localizations.translate(
                                     i18.deliverIntervention.dialogContent),
                                 actions: [
-                                  Button(
+                                  DigitButton(
                                       label: localizations.translate(
                                           i18.common.coreCommonSubmit),
                                       onPressed: () {
@@ -101,16 +102,16 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                                 rootNavigator: true)
                                             .pop(true);
                                       },
-                                      type: ButtonType.primary,
-                                      size: ButtonSize.large),
-                                  Button(
+                                      type: DigitButtonType.primary,
+                                      size: DigitButtonSize.large),
+                                  DigitButton(
                                       label: localizations.translate(
                                           i18.common.coreCommonCancel),
                                       onPressed: () => Navigator.of(context,
                                               rootNavigator: true)
                                           .pop(false),
-                                      type: ButtonType.secondary,
-                                      size: ButtonSize.large),
+                                      type: DigitButtonType.secondary,
+                                      size: DigitButtonSize.large),
                                 ],
                               ),
                             );
@@ -180,14 +181,13 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
-                            LabelValueList(
+                            LabelValueSummary(
                                 heading: localizations.translate(i18
                                     .householdLocation
                                     .householdLocationLabelText),
                                 withDivider: true,
-                                labelFlex: 6,
                                 items: [
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdLocation.villageLabel),
                                       value: deliverState
@@ -202,7 +202,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                           localizations.translate(
                                               i18.common.coreCommonNA),
                                       isInline: true),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdLocation.landmarkFormLabel),
                                       value: deliverState.householdMemberWrapper
@@ -215,13 +215,12 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
-                            LabelValueList(
+                            LabelValueSummary(
                                 heading: localizations.translate(
                                     i18.householdDetails.householdDetailsLabel),
                                 withDivider: true,
-                                labelFlex: 6,
                                 items: [
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(
                                           i18.beneficiaryDetails.totalMembers),
                                       value: deliverState.householdMemberWrapper
@@ -229,7 +228,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               .toString() ??
                                           '0',
                                       isInline: true),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdDetails
                                           .noOfPregnantWomenCountLabel),
@@ -248,7 +247,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               .toString() ??
                                           '0',
                                       isInline: true),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdDetails
                                           .noOfChildrenBelow5YearsLabel),
@@ -271,13 +270,12 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
-                            LabelValueList(
+                            LabelValueSummary(
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
                                 withDivider: true,
-                                labelFlex: 6,
                                 items: [
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdDetails.noOfRoomsLabel),
                                       value: deliverState
@@ -294,7 +292,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               .toString() ??
                                           '0',
                                       isInline: true),
-                                  LabelValuePair(
+                                  LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdDetails.typeOfStructure),
                                       value: (deliverState
@@ -345,13 +343,12 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                         return DigitCard(
                             margin: const EdgeInsets.all(spacer2),
                             children: [
-                              LabelValueList(
+                              LabelValueSummary(
                                   heading: localizations.translate(
                                       '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                                   withDivider: true,
-                                  labelFlex: 6,
                                   items: [
-                                    LabelValuePair(
+                                    LabelValueItem(
                                       label: localizations.translate(deliverState
                                                       .oldTask?.status ==
                                                   Status.administeredFailed

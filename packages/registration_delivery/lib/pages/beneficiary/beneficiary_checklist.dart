@@ -5,6 +5,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -103,16 +104,16 @@ class _BeneficiaryChecklistPageState
                       },
                     ),
                   ]),
-                  enableFixedButton: true,
+                  enableFixedDigitButton: true,
                   footer: DigitCard(
                       margin: const EdgeInsets.only(top: spacer2),
                       padding: const EdgeInsets.all(spacer2),
                       children: [
-                        Button(
+                        DigitButton(
                           label: localizations
                               .translate(i18.common.coreCommonSubmit),
-                          type: ButtonType.primary,
-                          size: ButtonSize.large,
+                          type: DigitButtonType.primary,
+                          size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
                             // TODO: Submit checklist
@@ -224,43 +225,44 @@ class _BeneficiaryChecklistPageState
                                   ),
                                 );
 
-                            showPopup(
+                            showCustomPopup(
                                 context: context,
-                                title: localizations.translate(i18
-                                    .deliverIntervention
-                                    .beneficiaryChecklistDialogTitle),
-                                type: PopUpType.simple,
-                                actions: [
-                                  Button(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonYes,
-                                      ),
-                                      onPressed: () {
-                                        context.router.push(
-                                          DeliverInterventionRoute(),
-                                        );
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pop();
-                                      },
-                                      type: ButtonType.primary,
-                                      size: ButtonSize.large),
-                                  Button(
-                                      label: localizations.translate(
-                                        i18.common.coreCommonNo,
-                                      ),
-                                      onPressed: () {
-                                        context.router.push(
-                                          RefusedDeliveryRoute(),
-                                        );
-                                        Navigator.of(
-                                          context,
-                                          rootNavigator: true,
-                                        ).pop();
-                                      },
-                                      type: ButtonType.secondary,
-                                      size: ButtonSize.large)
-                                ]);
+                                builder: (popUpContext) => Popup(
+                                        title: localizations.translate(i18
+                                            .deliverIntervention
+                                            .beneficiaryChecklistDialogTitle),
+                                        type: PopUpType.simple,
+                                        actions: [
+                                          DigitButton(
+                                              label: localizations.translate(
+                                                i18.common.coreCommonYes,
+                                              ),
+                                              onPressed: () {
+                                                context.router.push(
+                                                  DeliverInterventionRoute(),
+                                                );
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pop();
+                                              },
+                                              type: DigitButtonType.primary,
+                                              size: DigitButtonSize.large),
+                                          DigitButton(
+                                              label: localizations.translate(
+                                                i18.common.coreCommonNo,
+                                              ),
+                                              onPressed: () {
+                                                context.router.push(
+                                                  RefusedDeliveryRoute(),
+                                                );
+                                                Navigator.of(
+                                                  context,
+                                                  rootNavigator: true,
+                                                ).pop();
+                                              },
+                                              type: DigitButtonType.secondary,
+                                              size: DigitButtonSize.large)
+                                        ]));
                           },
                         ),
                       ]),
