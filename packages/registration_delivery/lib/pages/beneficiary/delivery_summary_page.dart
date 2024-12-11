@@ -72,7 +72,6 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
               ]),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
@@ -182,6 +181,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(i18
                                     .householdLocation
                                     .householdLocationLabelText),
@@ -201,7 +201,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               .titleCase ??
                                           localizations.translate(
                                               i18.common.coreCommonNA),
-                                      isInline: true),
+                                      isInline: true,
+                                       labelFlex: 5,
+                                  ),
                                   LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdLocation.landmarkFormLabel),
@@ -209,13 +211,16 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               ?.household?.address?.landmark ??
                                           localizations.translate(
                                               i18.common.coreCommonNA),
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                 ]),
                           ]),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.householdDetailsLabel),
                                 withDivider: true,
@@ -227,7 +232,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               ?.household?.memberCount
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                   LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdDetails
@@ -246,7 +253,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               ?.value
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                   LabelValueItem(
                                       label: localizations.translate(i18
                                           .householdDetails
@@ -264,13 +273,16 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               ?.value
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                 ]),
                           ]),
                       DigitCard(
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
+                              padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
                                 withDivider: true,
@@ -291,7 +303,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               ?.value
                                               .toString() ??
                                           '0',
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                   LabelValueItem(
                                       label: localizations.translate(
                                           i18.householdDetails.typeOfStructure),
@@ -314,7 +328,9 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                               getLocalizedMessage(item))
                                           .toList()
                                           .join(', '),
-                                      isInline: true),
+                                      isInline: true,
+                                    labelFlex: 5,
+                                  ),
                                 ]),
                           ]),
                       BlocBuilder<ProductVariantBloc, ProductVariantState>(
@@ -344,6 +360,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                             margin: const EdgeInsets.all(spacer2),
                             children: [
                               LabelValueSummary(
+                                  padding: EdgeInsets.zero,
                                   heading: localizations.translate(
                                       '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                                   withDivider: true,
@@ -386,6 +403,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                                   .join('\n') ??
                                               localizations.translate(
                                                   i18.common.coreCommonNA),
+                                      labelFlex: 5,
                                     ),
                                   ]),
                             ]);

@@ -282,7 +282,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         projectBeneficiary?.clientReferenceId);
 
     return DigitCard(
-        margin: const EdgeInsets.only(top: spacer2, bottom: spacer2),
+        margin: const EdgeInsets.all(spacer2),
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -328,6 +328,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
               ),
             ],
           ),
+          if(isCardExpanded)
           Offstage(
             offstage: !isCardExpanded,
             child: DigitTable(

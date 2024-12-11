@@ -39,7 +39,6 @@ class SurveyFormBoundaryViewPageState
         footer: DigitCard(
             cardType: CardType.primary,
             margin: const EdgeInsets.only(top: spacer2),
-            padding: const EdgeInsets.all(spacer2),
             children: [
               DigitButton(
                 type: DigitButtonType.primary,
@@ -52,7 +51,9 @@ class SurveyFormBoundaryViewPageState
               ),
             ]),
         children: [
-          DigitCard(cardType: CardType.primary, children: [
+          DigitCard(
+              margin: const EdgeInsets.all(spacer2),
+              cardType: CardType.primary, children: [
             Text(
               localizations.translate(
                 i18.surveyForm.surveyFormDetailLabel,

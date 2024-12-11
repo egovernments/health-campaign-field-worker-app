@@ -124,6 +124,7 @@ class _SearchBeneficiaryPageState
                         builder: (context, locationState) {
                           return Column(
                             mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               locationState.latitude != null
                                   ? Padding(
@@ -238,13 +239,17 @@ class _SearchBeneficiaryPageState
                       ),
                       if (searchHouseholdsState.resultsNotFound &&
                           !searchHouseholdsState.loading)
-                        InfoCard(
-                          type: InfoType.info,
-                          description: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoDescription,
-                          ),
-                          title: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoTitle,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: spacer2, top: spacer2, right: spacer2),
+                          child: InfoCard(
+                            type: InfoType.info,
+                            description: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoDescription,
+                            ),
+                            title: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoTitle,
+                            ),
                           ),
                         ),
                     ],
@@ -359,7 +364,7 @@ class _SearchBeneficiaryPageState
         ),
         bottomNavigationBar: DigitCard(
             margin: const EdgeInsets.only(top: spacer2),
-            padding: const EdgeInsets.all(spacer2),
+            padding: const EdgeInsets.all(spacer4),
             children: [
               DigitButton(
                 label: localizations.translate(

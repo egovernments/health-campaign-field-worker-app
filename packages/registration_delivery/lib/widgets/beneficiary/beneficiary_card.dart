@@ -35,6 +35,7 @@ class BeneficiaryCard extends StatelessWidget {
             style: theme.textTheme.headlineSmall,
           ),
         ),
+        if(status != null)
         Offstage(
           offstage: status == null,
           child: status == Status.visited.toValue() ||

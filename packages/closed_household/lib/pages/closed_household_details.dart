@@ -96,7 +96,7 @@ class ClosedHouseholdDetailsPageState
                 ],
               ),
               footer: DigitCard(
-                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                  margin: const EdgeInsets.only(top: spacer2),
                   children: [
                     BlocBuilder<LocationBloc, LocationState>(
                       builder: (context, locationState) {
@@ -143,8 +143,11 @@ class ClosedHouseholdDetailsPageState
                   ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(children: [
+                  child: DigitCard(
+                    margin: const EdgeInsets.all(spacer2),
+                      children: [
                     DigitTextBlock(
+                      padding: const EdgeInsets.all(0),
                       heading: localizations.translate(
                         i18.closeHousehold.closeHouseHoldDetailLabel,
                       ),
@@ -153,7 +156,6 @@ class ClosedHouseholdDetailsPageState
                         i18.closeHousehold.closeHouseHoldDetailDescLabel,
                       ),
                     ),
-                    DigitCard(children: [
                       ReactiveWrapperField<String>(
                           formControlName: _administrationAreaKey,
                           showErrors: (control) =>
@@ -238,7 +240,6 @@ class ClosedHouseholdDetailsPageState
                               ),
                             );
                           }),
-                    ]),
                   ]),
                 ),
               ],
