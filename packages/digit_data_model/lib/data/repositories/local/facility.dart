@@ -54,6 +54,7 @@ class FacilityLocalRepository
           isPermanent: facility.isPermanent,
           storageCapacity: facility.storageCapacity,
           usage: facility.usage,
+          name: facility.name,
           address: address == null
               ? null
               : AddressModel(
