@@ -1,6 +1,7 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -56,11 +57,11 @@ class ComplaintsInboxSortPageState
                           children: [
                             Padding(
                               padding: EdgeInsets.zero,
-                              child: Button(
+                              child: DigitButton(
                                   label: "",
                                   onPressed: () => context.router.pop(),
-                                  type: ButtonType.tertiary,
-                                  size: ButtonSize.large,
+                                  type: DigitButtonType.tertiary,
+                                  size: DigitButtonSize.large,
                                   prefixIcon: Icons.close,
                               ),
                             ),
@@ -87,9 +88,9 @@ class ComplaintsInboxSortPageState
                       cardType: CardType.primary,
                       margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
                       padding: const EdgeInsets.all(spacer2),
-                      children: [Button(
-                        type: ButtonType.primary,
-                        size: ButtonSize.large,
+                      children: [DigitButton(
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
                         label: localizations
                             .translate(i18.complaints.sortCTA),
                         mainAxisSize: MainAxisSize.max,
@@ -120,7 +121,7 @@ class ComplaintsInboxSortPageState
                           return Padding(
                             padding: const EdgeInsets.only(top: spacer2),
                             child: RadioList(
-                              radioButtons: sortOrders
+                              radioDigitButtons: sortOrders
                                 .asMap()
                                 .entries
                                 .map(

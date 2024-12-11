@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -78,7 +78,7 @@ class ComplaintsLocationPageState
               ComplaintsRegistrationState>(
             builder: (context, state) {
               return ScrollableContent(
-                enableFixedButton: true,
+                enableFixedDigitButton: true,
                 header: const Column(
                   children: [
                     BackNavigationHelpHeaderWidget(),
@@ -89,11 +89,11 @@ class ComplaintsLocationPageState
                     margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
                     padding: const EdgeInsets.all(spacer2),
                     children: [
-                      Button(
+                      DigitButton(
                         label:
                             localizations.translate(i18.complaints.actionLabel),
-                        type: ButtonType.primary,
-                        size: ButtonSize.large,
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () {
                           form.markAllAsTouched();
@@ -252,7 +252,8 @@ class ComplaintsLocationPageState
         value: addressModel?.buildingName,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -260,7 +261,8 @@ class ComplaintsLocationPageState
         value: addressModel?.street,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -268,7 +270,8 @@ class ComplaintsLocationPageState
         value: addressModel?.landmark,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -276,14 +279,16 @@ class ComplaintsLocationPageState
         value: addressModel?.pincode,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(6),
         ],
       ),
       _latKey: FormControl<double>(
         value: addressModel?.geoLocation?.latitude,
         validators: [
-          CustomValidator.requiredMin,
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
         ],
       ),
       _lngKey: FormControl<double>(

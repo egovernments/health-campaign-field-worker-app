@@ -3,6 +3,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/label_value_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:recase/recase.dart';
 
@@ -68,49 +69,49 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             child: DigitCard(
                 cardType: CardType.primary,
                 children: [
-              LabelValueList(
+              LabelValueSummary(
                 padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-                  labelFlex: 6,
+                  // labelFlex: 6,
                   items: [
-                    LabelValuePair(
+                    LabelValueItem(
                         label: localizations.translate(i18.complaints.inboxNumberLabel),
                         value: complaint.serviceRequestId ??
                             "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
                         valueTextStyle: complaint.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
                     ),
-                    LabelValuePair(
+                    LabelValueItem(
                         label: localizations.translate(i18.complaints.inboxTypeLabel),
                         value: localizations.translate(
                           complaint.serviceCode.snakeCase.toUpperCase().trim(),
                         )
                     ),
-                    LabelValuePair(
+                    LabelValueItem(
                         label: localizations.translate(i18.complaints.inboxDateLabel),
                         value: complaint.auditDetails?.createdTime.toDateTime
                             .getFormattedDate() ??
                             "",
                     ),
-                    LabelValuePair(
+                    LabelValueItem(
                       label: localizations.translate(i18.complaints.complainantName),
                       value: complaint.user.name ?? "",
                     ),
-                    LabelValuePair(
+                    LabelValueItem(
                       label: localizations.translate(i18.complaints.inboxAreaLabel),
                       value: complaint.address.locality?.name ?? "",
                     ),
-                    LabelValuePair(
+                    LabelValueItem(
                       label: localizations.translate(
                         i18.complaints.complainantContactNumber,
                       ),
                       value: complaint.user.mobileNumber ?? "",
                     ),
-                    LabelValuePair(
+                    LabelValueItem(
                       label: localizations.translate(i18.complaints.inboxStatusLabel),
                       value: localizations.translate(
                         "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
                       ),
                     ),
-                    LabelValuePair(
+                    LabelValueItem(
                       label: localizations
                           .translate(i18.complaints.complaintDescription),
                       value: localizations.translate(
