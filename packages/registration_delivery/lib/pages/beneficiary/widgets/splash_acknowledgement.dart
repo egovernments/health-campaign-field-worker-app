@@ -7,8 +7,8 @@ import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
 
 import '../../../router/registration_delivery_router.gm.dart';
-import '../../../widgets/localized.dart';
 import '../../../utils/i18_key_constants.dart' as i18;
+import '../../../widgets/localized.dart';
 
 @RoutePage()
 class SplashAcknowledgementPage extends LocalizedStatefulWidget {
@@ -48,11 +48,12 @@ class SplashAcknowledgementPageState
       body: PanelCard(
         type: PanelType.success,
         actions: [
-          Button(
-            label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
-            type: ButtonType.primary,
-            size: ButtonSize.large,
-            onPressed: (){
+          DigitButton(
+            label: localizations
+                .translate(i18.acknowledgementSuccess.actionLabelText),
+            type: DigitButtonType.primary,
+            size: DigitButtonSize.large,
+            onPressed: () {
               context.router.maybePop();
             },
           ),

@@ -2,16 +2,15 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
-import 'package:digit_ui_components/widgets/helper_widget/button_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../router/survey_form_router.gm.dart';
 import '../utils/constants.dart';
+import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/back_navigation_help_header.dart';
 import '../widgets/localized.dart';
-import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/no_result_card.dart';
 
 @RoutePage()
@@ -78,12 +77,9 @@ class SurveyFormPageState extends State<SurveyformPage> {
                   return Column(
                     children: values
                         .map((e) => Padding(
-                          padding: const EdgeInsets.only(
-                              left: spacer4,
-                              right: spacer4,
-                              top: spacer4
-                          ),
-                          child: MenuCard(
+                              padding: const EdgeInsets.only(
+                                  left: spacer4, right: spacer4, top: spacer4),
+                              child: MenuCard(
                                 icon: Icons.article,
                                 heading: localizations.translate('${e.code}'),
                                 onTap: () {
@@ -92,18 +88,18 @@ class SurveyFormPageState extends State<SurveyformPage> {
                                       .add(ServiceDefinitionSelectionEvent(
                                         serviceDefinition: e,
                                       ));
-                          
+
                                   showDialog(
                                     context: context,
-                                    builder: (ctx)=>ActionCard(
-                                      onOutsideTap: (){
+                                    builder: (ctx) => DigitActionCard(
+                                      onOutsideTap: () {
                                         Navigator.of(
                                           context,
                                           rootNavigator: true,
                                         ).pop();
                                       },
                                       actions: [
-                                        Button(
+                                        DigitButton(
                                           label: localizations.translate(i18
                                               .surveyForm
                                               .surveyFormCreateActionLabel),
@@ -116,11 +112,11 @@ class SurveyFormPageState extends State<SurveyformPage> {
                                               rootNavigator: true,
                                             ).pop();
                                           },
-                                          type: ButtonType.secondary,
-                                          size: ButtonSize.large,
+                                          type: DigitButtonType.secondary,
+                                          size: DigitButtonSize.large,
                                           prefixIcon: Icons.edit_calendar,
                                         ),
-                                        Button(
+                                        DigitButton(
                                           label: localizations.translate(i18
                                               .surveyForm
                                               .surveyFormViewActionLabel),
@@ -141,8 +137,8 @@ class SurveyFormPageState extends State<SurveyformPage> {
                                               rootNavigator: true,
                                             ).pop();
                                           },
-                                          type: ButtonType.secondary,
-                                          size: ButtonSize.large,
+                                          type: DigitButtonType.secondary,
+                                          size: DigitButtonSize.large,
                                           prefixIcon: Icons.visibility,
                                         )
                                       ],
@@ -150,7 +146,7 @@ class SurveyFormPageState extends State<SurveyformPage> {
                                   );
                                 },
                               ),
-                        ))
+                            ))
                         .toList(),
                   );
                 },

@@ -28,7 +28,11 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  digit_ui_components: ^0.0.2-dev
+  digit_ui_components:
+    git:
+      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
+      ref: version_update
+      path: ./flutter/digit-ui-components/digit_components
   survey_form:
     path: ../
 

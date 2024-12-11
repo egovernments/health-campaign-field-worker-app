@@ -41,7 +41,7 @@ class BeneficiaryCard extends StatelessWidget {
                   status == Status.registered.toValue() ||
                   status == Status.administeredSuccess.toValue() ||
                   status == Status.delivered.toValue()
-              ? Button(
+              ? DigitButton(
                   prefixIcon: Icons.check_circle,
                   label: RegistrationDeliveryLocalization.of(context)
                       .translate(status.toString()),
@@ -49,17 +49,17 @@ class BeneficiaryCard extends StatelessWidget {
                   iconColor: theme.colorScheme.onSurfaceVariant,
                   isDisabled: true,
                   onPressed: () {},
-                  type: ButtonType.tertiary,
-                  size: ButtonSize.medium,
+                  type: DigitButtonType.tertiary,
+                  size: DigitButtonSize.medium,
                 )
-              : Button(
+              : DigitButton(
                   prefixIcon: Icons.info_rounded,
                   label: RegistrationDeliveryLocalization.of(context)
                       .translate(status.toString()),
                   textColor: theme.colorScheme.error,
                   iconColor: theme.colorScheme.error,
-                  type: ButtonType.tertiary,
-                  size: ButtonSize.medium,
+                  type: DigitButtonType.tertiary,
+                  size: DigitButtonSize.medium,
                   isDisabled: true,
                   onPressed: () {},
                 ),
