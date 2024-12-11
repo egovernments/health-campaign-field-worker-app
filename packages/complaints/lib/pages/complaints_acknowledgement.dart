@@ -50,12 +50,12 @@ class ComplaintsAcknowledgementPageState
             i18.complaints.acknowledgementDescription,
           ),
           actions: [
-            Button(
+            DigitButton(
               label: localizations.translate(
                   i18.complaints.acknowledgementAction),
               onPressed: () => context.router.maybePop(),
-              type: ButtonType.primary,
-              size: ButtonSize.large,
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
             )
           ],
       ),

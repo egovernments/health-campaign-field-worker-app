@@ -3,6 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -55,17 +56,17 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               footer: DigitCard(
                   cardType: CardType.primary,
                   margin: const EdgeInsets.only(top: spacer2),
                   padding: const EdgeInsets.all(spacer2),
                   children: [
-                    Button(
+                    DigitButton(
                       mainAxisSize: MainAxisSize.max,
                       label: localizations.translate(i18.complaints.actionLabel),
-                      type: ButtonType.primary,
-                      size: ButtonSize.large,
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
                       onPressed: () async {
                         var complaintType = form.control(_complaintType).value;
                         var otherComplaintTypeValue =
@@ -129,7 +130,7 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         i18.complaints.complaintsTypeLabel,
                       ),
                       child: RadioList(
-                        radioButtons: (ComplaintsSingleton().complaintTypes?.isNotEmpty ?? false)
+                        radioDigitButtons: (ComplaintsSingleton().complaintTypes?.isNotEmpty ?? false)
                             ? ComplaintsSingleton().complaintTypes!
                             .map<RadioButtonModel>(
                               (item) => RadioButtonModel(

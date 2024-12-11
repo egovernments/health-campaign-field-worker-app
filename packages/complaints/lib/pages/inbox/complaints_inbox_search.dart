@@ -51,11 +51,11 @@ class ComplaintsInboxSearchPageState
                       children: [
                         Padding(
                           padding: EdgeInsets.zero,
-                          child: Button(
+                          child: DigitButton(
                               label: "",
                               onPressed: () => context.router.pop(),
-                              type: ButtonType.tertiary,
-                              size: ButtonSize.large,
+                              type: DigitButtonType.tertiary,
+                              size: DigitButtonSize.large,
                               prefixIcon: Icons.close,
                           ),
                         )
@@ -83,10 +83,10 @@ class ComplaintsInboxSearchPageState
                     margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
                     padding: const EdgeInsets.all(spacer2),
                     children: [
-                      Button(
+                      DigitButton(
                         mainAxisSize: MainAxisSize.max,
-                        type: ButtonType.primary,
-                        size: ButtonSize.large,
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
                         label: localizations
                             .translate(i18.complaints.searchCTA),
                         onPressed: () {
@@ -192,7 +192,8 @@ class ComplaintsInboxSearchPageState
         value: state.searchKeys?.complaintNumber,
       ),
       _mobileNumber: FormControl<String>(
-        validators: [CustomValidator.validMobileNumber],
+        validators: [Validators.delegate(
+                (validator) => CustomValidator.validMobileNumber(validator))],
         value: state.searchKeys?.complainantMobileNumber,
       ),
     });

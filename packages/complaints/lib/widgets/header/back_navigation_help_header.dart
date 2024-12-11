@@ -37,8 +37,8 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: EdgeInsets.all(spacer2),
-                      child: BackNavigationButton(
+                      padding: const EdgeInsets.all(spacer2),
+                      child: DigitBackButton(
                         handleBack: () {
                           context.router.maybePop();
                           handleBack != null ? handleBack!() : null;

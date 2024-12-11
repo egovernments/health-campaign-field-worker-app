@@ -3,7 +3,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +81,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                   i18.complaints.raisedForMyself;
 
               return ScrollableContent(
-                enableFixedButton: true,
+                enableFixedDigitButton: true,
                 header: const Column(
                   children: [
                     BackNavigationHelpHeaderWidget(),
@@ -90,14 +92,14 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                     margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
                     padding: const EdgeInsets.all(spacer2),
                     children: [
-                      Button(
+                      DigitButton(
                         label: form.control(_complaintDetailsForm).disabled
                             ? localizations
                                 .translate(i18.complaints.backToInbox)
                             : localizations
                                 .translate(i18.common.coreCommonSubmit),
-                        type: ButtonType.primary,
-                        size: ButtonSize.large,
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
                         mainAxisSize: MainAxisSize.max,
                         onPressed: () async {
                           setState(() {
@@ -176,45 +178,47 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
 
                           final userId = ComplaintsSingleton().loggedInUserUuid;
 
-                          showPopup(
-                              context: context,
-                              title: localizations.translate(
-                                i18.complaints.dialogTitle,
-                              ),
-                              type: PopUpType.simple,
-                              description: localizations.translate(
-                                i18.complaints.dialogContent,
-                              ),
-                              actions: [
-                                Button(
-                                  label: localizations.translate(
-                                    i18.common.coreCommonSubmit,
-                                  ),
-                                  onPressed: () {
-                                    bloc.add(
-                                      ComplaintsRegistrationSubmitComplaintEvent(
-                                        userId: userId,
-                                      ),
-                                    );
-                                    Navigator.of(context, rootNavigator: true)
-                                        .pop();
-                                  },
-                                  type: ButtonType.primary,
-                                  size: ButtonSize.large,
+                          showCustomPopup(
+                            context: context,
+                            builder: (popupContext) => Popup(
+                                title: localizations.translate(
+                                  i18.complaints.dialogTitle,
                                 ),
-                                Button(
+                                type: PopUpType.simple,
+                                description: localizations.translate(
+                                  i18.complaints.dialogContent,
+                                ),
+                                actions: [
+                                  DigitButton(
                                     label: localizations.translate(
-                                      i18.common.coreCommonCancel,
+                                      i18.common.coreCommonSubmit,
                                     ),
                                     onPressed: () {
-                                      Navigator.of(
-                                        context,
-                                        rootNavigator: true,
-                                      ).pop();
+                                      bloc.add(
+                                        ComplaintsRegistrationSubmitComplaintEvent(
+                                          userId: userId,
+                                        ),
+                                      );
+                                      Navigator.of(context, rootNavigator: true)
+                                          .pop();
                                     },
-                                    type: ButtonType.secondary,
-                                    size: ButtonSize.large),
-                              ]);
+                                    type: DigitButtonType.primary,
+                                    size: DigitButtonSize.large,
+                                  ),
+                                  DigitButton(
+                                      label: localizations.translate(
+                                        i18.common.coreCommonCancel,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(
+                                          context,
+                                          rootNavigator: true,
+                                        ).pop();
+                                      },
+                                      type: DigitButtonType.secondary,
+                                      size: DigitButtonSize.large),
+                                ]),
+                          );
                         },
                       ),
                     ]),
@@ -264,7 +268,7 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
                           Align(
                             alignment: AlignmentDirectional.topStart,
                             child: RadioList(
-                              radioButtons: complainantRaisedFor
+                              radioDigitButtons: complainantRaisedFor
                                   .map((item) => RadioButtonModel(
                                         code: item,
                                         name:
@@ -514,7 +518,8 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
         disabled: shouldDisableForm,
         validators: [
           Validators.required,
-          CustomValidator.validMobileNumber,
+          Validators.delegate(
+                  (validator) => CustomValidator.validMobileNumber(validator)),
           Validators.minLength(10),
           Validators.maxLength(10)
         ],
@@ -528,7 +533,8 @@ class ComplaintsDetailsPageState extends LocalizedState<ComplaintsDetailsPage> {
         value: complaintDetails?.supervisorContactNumber,
         disabled: shouldDisableForm,
         validators: [
-          CustomValidator.validMobileNumber,
+          Validators.delegate(
+                  (validator) => CustomValidator.validMobileNumber(validator)),
           Validators.maxLength(10),
           Validators.minLength(10),
         ],

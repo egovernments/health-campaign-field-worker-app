@@ -2,6 +2,7 @@ import 'dart:collection';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/models/entities/pgr_application_status.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -78,10 +79,10 @@ class ComplaintsInboxFilterPageState
                       children: [
                         Padding(
                           padding: EdgeInsets.zero,
-                          child: Button(
+                          child: DigitButton(
                             label: "",
-                            type: ButtonType.tertiary,
-                            size: ButtonSize.large,
+                            type: DigitButtonType.tertiary,
+                            size: DigitButtonSize.large,
                             onPressed: () => context.router.maybePop(),
                             prefixIcon: Icons.close,
                           ),
@@ -106,10 +107,10 @@ class ComplaintsInboxFilterPageState
                           ),
                           Padding(
                               padding: const EdgeInsets.only(left: spacer1),
-                              child: Button(
+                              child: DigitButton(
                                 label: "",
-                                type: ButtonType.tertiary,
-                                size: ButtonSize.large,
+                                type: DigitButtonType.tertiary,
+                                size: DigitButtonSize.large,
                                 onPressed: () {
                                   clearFilters(formGroup);
                                 },
@@ -120,7 +121,7 @@ class ComplaintsInboxFilterPageState
                     ),
                   ],
                 ),
-                enableFixedButton: true,
+                enableFixedDigitButton: true,
                 footer: DigitCard(
                     cardType: CardType.primary,
                     margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
@@ -132,9 +133,9 @@ class ComplaintsInboxFilterPageState
                         children: [
                           Expanded(
                             flex: 1,
-                            child: Button(
-                              type: ButtonType.secondary,
-                              size: ButtonSize.large,
+                            child: DigitButton(
+                              type: DigitButtonType.secondary,
+                              size: DigitButtonSize.large,
                               label: localizations.translate(
                                 i18.complaints.complaintsFilterClearAll,
                               ),
@@ -146,11 +147,11 @@ class ComplaintsInboxFilterPageState
                           const SizedBox(width: 10),
                           Expanded(
                             flex: 1,
-                            child: Button(
+                            child: DigitButton(
                               label: localizations
                                   .translate(i18.complaints.filterCTA),
-                              type: ButtonType.primary,
-                              size: ButtonSize.large,
+                              type: DigitButtonType.primary,
+                              size: DigitButtonSize.large,
                               onPressed: () {
                                 if (!formGroup.valid) return;
 
@@ -244,7 +245,7 @@ class ComplaintsInboxFilterPageState
                                     return Align(
                                       alignment: Alignment.topLeft,
                                       child: RadioList(
-                                        radioButtons: _complaintAssignmentTypes
+                                        radioDigitButtons: _complaintAssignmentTypes
                                             .asMap()
                                             .entries
                                             .map((item) => RadioButtonModel(
