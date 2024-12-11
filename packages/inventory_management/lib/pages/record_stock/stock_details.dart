@@ -1,10 +1,15 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gs1_barcode_parser/gs1_barcode_parser.dart';
@@ -46,6 +51,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   List<InventoryTransportTypes> transportTypes = [];
 
   List<GS1Barcode> scannedResources = [];
+  TextEditingController controller1 = TextEditingController();
 
   FormGroup _form(StockRecordEntryType stockType) {
     return fb.group({
@@ -199,87 +205,78 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                             },
                           ),
                         ]),
-                        enableFixedButton: true,
+                        enableFixedDigitButton: true,
                         footer: DigitCard(
-                          margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                          padding: const EdgeInsets.fromLTRB(
-                            kPadding,
-                            0,
-                            kPadding,
-                            0,
-                          ),
-                          child: ReactiveFormConsumer(
-                              builder: (context, form, child) {
-                            if (form
-                                    .control(_deliveryTeamKey)
-                                    .value
-                                    .toString()
-                                    .isEmpty ||
-                                form.control(_deliveryTeamKey).value == null ||
-                                scannerState.qrCodes.isNotEmpty) {
-                              form.control(_deliveryTeamKey).value =
-                                  scannerState.qrCodes.isNotEmpty
-                                      ? scannerState.qrCodes.last
-                                      : '';
-                            }
-                            return DigitElevatedButton(
-                              onPressed: !form.valid
-                                  ? null
-                                  : () async {
+                          margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                          children: [
+                            ReactiveFormConsumer(
+                                builder: (context, form, child) {
+                                  if (form
+                                      .control(_deliveryTeamKey)
+                                      .value
+                                      .toString()
+                                      .isEmpty ||
+                                      form.control(_deliveryTeamKey).value == null ||
+                                      scannerState.qrCodes.isNotEmpty) {
+                                    form.control(_deliveryTeamKey).value =
+                                    scannerState.qrCodes.isNotEmpty
+                                        ? scannerState.qrCodes.last
+                                        : '';
+                                  }
+                                  return DigitButton(
+                                    type: DigitButtonType.primary,
+                                    size: DigitButtonSize.large,
+                                    onPressed: !form.valid
+                                        ? (){}
+                                        : () async {
                                       form.markAllAsTouched();
                                       if (!form.valid) {
                                         return;
                                       }
                                       final primaryId =
                                           BlocProvider.of<RecordStockBloc>(
-                                        context,
-                                      ).state.primaryId;
+                                            context,
+                                          ).state.primaryId;
                                       final secondaryParty =
-                                          selectedFacilityId != null
-                                              ? FacilityModel(
-                                                  id: selectedFacilityId
-                                                      .toString(),
-                                                )
-                                              : null;
+                                      selectedFacilityId != null
+                                          ? FacilityModel(
+                                        id: selectedFacilityId
+                                            .toString(),
+                                      )
+                                          : null;
                                       final deliveryTeamName = form
                                           .control(_deliveryTeamKey)
                                           .value as String?;
 
                                       if (deliveryTeamSelected &&
                                           (form
-                                                      .control(
-                                                        _deliveryTeamKey,
-                                                      )
-                                                      .value ==
-                                                  null ||
+                                              .control(
+                                            _deliveryTeamKey,
+                                          )
+                                              .value ==
+                                              null ||
                                               form
                                                   .control(_deliveryTeamKey)
                                                   .value
                                                   .toString()
                                                   .trim()
                                                   .isEmpty)) {
-                                        DigitToast.show(
+                                        Toast.showToast(
                                           context,
-                                          options: DigitToastOptions(
-                                            localizations.translate(
-                                              i18.stockDetails.teamCodeRequired,
-                                            ),
-                                            true,
-                                            theme,
+                                          type: ToastType.error,
+                                          message: localizations.translate(
+                                            i18.stockDetails.teamCodeRequired,
                                           ),
                                         );
                                       } else if ((primaryId ==
-                                              secondaryParty?.id) ||
+                                          secondaryParty?.id) ||
                                           (primaryId == deliveryTeamName)) {
-                                        DigitToast.show(
+                                        Toast.showToast(
                                           context,
-                                          options: DigitToastOptions(
-                                            localizations.translate(
-                                              i18.stockDetails
-                                                  .senderReceiverValidation,
-                                            ),
-                                            true,
-                                            theme,
+                                          type: ToastType.error,
+                                          message: localizations.translate(
+                                            i18.stockDetails
+                                                .senderReceiverValidation,
                                           ),
                                         );
                                       } else {
@@ -288,293 +285,295 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         context
                                             .read<LocationBloc>()
                                             .add(const LoadLocationEvent());
-                                        DigitComponentsUtils()
-                                            .showLocationCapturingDialog(
-                                                context,
-                                                localizations.translate(i18
-                                                    .common.locationCapturing),
-                                                DigitSyncDialogType.inProgress);
+                                        DigitComponentsUtils
+                                            .showDialog(
+                                            context,
+                                            localizations.translate(i18
+                                                .common.locationCapturing),
+                                            DialogType.inProgress);
                                         Future.delayed(
                                             const Duration(seconds: 2),
-                                            () async {
-                                          DigitComponentsUtils()
-                                              .hideDialog(context);
-                                          final bloc =
+                                                () async {
+                                              DigitComponentsUtils
+                                                  .hideDialog(context);
+                                              final bloc =
                                               context.read<RecordStockBloc>();
 
-                                          final productVariant = form
-                                              .control(_productVariantKey)
-                                              .value as ProductVariantModel;
+                                              final productVariant = form
+                                                  .control(_productVariantKey)
+                                                  .value as ProductVariantModel;
 
-                                          switch (entryType) {
-                                            case StockRecordEntryType.receipt:
-                                              transactionReason =
-                                                  TransactionReason.received
-                                                      .toValue();
-                                              break;
-                                            case StockRecordEntryType.dispatch:
-                                              transactionReason = null;
-                                              break;
-                                            case StockRecordEntryType.returned:
-                                              transactionReason =
-                                                  TransactionReason.returned
-                                                      .toValue();
-                                              break;
-                                            default:
-                                              transactionReason = form
-                                                  .control(
+                                              switch (entryType) {
+                                                case StockRecordEntryType.receipt:
+                                                  transactionReason =
+                                                      TransactionReason.received
+                                                          .toValue();
+                                                  break;
+                                                case StockRecordEntryType.dispatch:
+                                                  transactionReason = null;
+                                                  break;
+                                                case StockRecordEntryType.returned:
+                                                  transactionReason =
+                                                      TransactionReason.returned
+                                                          .toValue();
+                                                  break;
+                                                default:
+                                                  transactionReason = form
+                                                      .control(
                                                     _transactionReasonKey,
                                                   )
+                                                      .value as String?;
+                                                  break;
+                                              }
+
+                                              final quantity = form
+                                                  .control(_transactionQuantityKey)
+                                                  .value;
+
+                                              final waybillNumber = form
+                                                  .control(_waybillNumberKey)
                                                   .value as String?;
-                                              break;
-                                          }
 
-                                          final quantity = form
-                                              .control(_transactionQuantityKey)
-                                              .value;
+                                              final waybillQuantity = form
+                                                  .control(_waybillQuantityKey)
+                                                  .value as String?;
 
-                                          final waybillNumber = form
-                                              .control(_waybillNumberKey)
-                                              .value as String?;
+                                              final vehicleNumber = form
+                                                  .control(_vehicleNumberKey)
+                                                  .value as String?;
 
-                                          final waybillQuantity = form
-                                              .control(_waybillQuantityKey)
-                                              .value as String?;
+                                              final lat = locationState.latitude;
+                                              final lng = locationState.longitude;
 
-                                          final vehicleNumber = form
-                                              .control(_vehicleNumberKey)
-                                              .value as String?;
+                                              final hasLocationData =
+                                                  lat != null && lng != null;
 
-                                          final lat = locationState.latitude;
-                                          final lng = locationState.longitude;
+                                              final comments = form
+                                                  .control(_commentsKey)
+                                                  .value as String?;
 
-                                          final hasLocationData =
-                                              lat != null && lng != null;
+                                              final deliveryTeamName = form
+                                                  .control(_deliveryTeamKey)
+                                                  .value as String?;
 
-                                          final comments = form
-                                              .control(_commentsKey)
-                                              .value as String?;
+                                              String? senderId;
+                                              String? senderType;
+                                              String? receiverId;
+                                              String? receiverType;
 
-                                          final deliveryTeamName = form
-                                              .control(_deliveryTeamKey)
-                                              .value as String?;
+                                              final primaryType =
+                                                  BlocProvider.of<RecordStockBloc>(
+                                                    context,
+                                                  ).state.primaryType;
 
-                                          String? senderId;
-                                          String? senderType;
-                                          String? receiverId;
-                                          String? receiverType;
+                                              final primaryId =
+                                                  BlocProvider.of<RecordStockBloc>(
+                                                    context,
+                                                  ).state.primaryId;
 
-                                          final primaryType =
-                                              BlocProvider.of<RecordStockBloc>(
-                                            context,
-                                          ).state.primaryType;
+                                              switch (entryType) {
+                                                case StockRecordEntryType.receipt:
+                                                case StockRecordEntryType.loss:
+                                                case StockRecordEntryType.damaged:
+                                                case StockRecordEntryType.returned:
+                                                  if (deliveryTeamSelected) {
+                                                    senderId = deliveryTeamName;
+                                                    senderType = "STAFF";
+                                                  } else {
+                                                    senderId = secondaryParty?.id;
+                                                    senderType = "WAREHOUSE";
+                                                  }
+                                                  receiverId = primaryId;
+                                                  receiverType = primaryType;
 
-                                          final primaryId =
-                                              BlocProvider.of<RecordStockBloc>(
-                                            context,
-                                          ).state.primaryId;
-
-                                          switch (entryType) {
-                                            case StockRecordEntryType.receipt:
-                                            case StockRecordEntryType.loss:
-                                            case StockRecordEntryType.damaged:
-                                            case StockRecordEntryType.returned:
-                                              if (deliveryTeamSelected) {
-                                                senderId = deliveryTeamName;
-                                                senderType = "STAFF";
-                                              } else {
-                                                senderId = secondaryParty?.id;
-                                                senderType = "WAREHOUSE";
+                                                  break;
+                                                case StockRecordEntryType.dispatch:
+                                                  if (deliveryTeamSelected) {
+                                                    receiverId = deliveryTeamName;
+                                                    receiverType = "STAFF";
+                                                  } else {
+                                                    receiverId = secondaryParty?.id;
+                                                    receiverType = "WAREHOUSE";
+                                                  }
+                                                  senderId = primaryId;
+                                                  senderType = primaryType;
+                                                  break;
                                               }
-                                              receiverId = primaryId;
-                                              receiverType = primaryType;
 
-                                              break;
-                                            case StockRecordEntryType.dispatch:
-                                              if (deliveryTeamSelected) {
-                                                receiverId = deliveryTeamName;
-                                                receiverType = "STAFF";
-                                              } else {
-                                                receiverId = secondaryParty?.id;
-                                                receiverType = "WAREHOUSE";
-                                              }
-                                              senderId = primaryId;
-                                              senderType = primaryType;
-                                              break;
-                                          }
-
-                                          final stockModel = StockModel(
-                                            clientReferenceId:
+                                              final stockModel = StockModel(
+                                                clientReferenceId:
                                                 IdGen.i.identifier,
-                                            productVariantId: productVariant.id,
-                                            transactionReason:
+                                                productVariantId: productVariant.id,
+                                                transactionReason:
                                                 transactionReason,
-                                            transactionType: transactionType,
-                                            referenceId: stockState.projectId,
-                                            referenceIdType: 'PROJECT',
-                                            quantity: quantity.toString(),
-                                            wayBillNumber: waybillNumber,
-                                            receiverId: receiverId,
-                                            receiverType: receiverType,
-                                            senderId: senderId,
-                                            senderType: senderType,
-                                            auditDetails: AuditDetails(
-                                              createdBy: InventorySingleton()
-                                                  .loggedInUserUuid,
-                                              createdTime: context
-                                                  .millisecondsSinceEpoch(),
-                                            ),
-                                            clientAuditDetails:
+                                                transactionType: transactionType,
+                                                referenceId: stockState.projectId,
+                                                referenceIdType: 'PROJECT',
+                                                quantity: quantity.toString(),
+                                                wayBillNumber: waybillNumber,
+                                                receiverId: receiverId,
+                                                receiverType: receiverType,
+                                                senderId: senderId,
+                                                senderType: senderType,
+                                                auditDetails: AuditDetails(
+                                                  createdBy: InventorySingleton()
+                                                      .loggedInUserUuid,
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                ),
+                                                clientAuditDetails:
                                                 ClientAuditDetails(
-                                              createdBy: InventorySingleton()
-                                                  .loggedInUserUuid,
-                                              createdTime: context
-                                                  .millisecondsSinceEpoch(),
-                                              lastModifiedBy:
+                                                  createdBy: InventorySingleton()
+                                                      .loggedInUserUuid,
+                                                  createdTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                  lastModifiedBy:
                                                   InventorySingleton()
                                                       .loggedInUserUuid,
-                                              lastModifiedTime: context
-                                                  .millisecondsSinceEpoch(),
-                                            ),
-                                            additionalFields: [
-                                                      waybillQuantity,
-                                                      vehicleNumber,
-                                                      comments,
-                                                    ].any((element) =>
-                                                        element != null) ||
+                                                  lastModifiedTime: context
+                                                      .millisecondsSinceEpoch(),
+                                                ),
+                                                additionalFields: [
+                                                  waybillQuantity,
+                                                  vehicleNumber,
+                                                  comments,
+                                                ].any((element) =>
+                                                element != null) ||
                                                     hasLocationData
-                                                ? StockAdditionalFields(
-                                                    version: 1,
-                                                    fields: [
+                                                    ? StockAdditionalFields(
+                                                  version: 1,
+                                                  fields: [
+                                                    AdditionalField(
+                                                      InventoryManagementEnums
+                                                          .name
+                                                          .toValue(),
+                                                      InventorySingleton()
+                                                          .loggedInUser
+                                                          ?.name,
+                                                    ),
+                                                    if (waybillQuantity !=
+                                                        null &&
+                                                        waybillQuantity
+                                                            .trim()
+                                                            .isNotEmpty)
                                                       AdditionalField(
-                                                        InventoryManagementEnums
-                                                            .name
-                                                            .toValue(),
-                                                        InventorySingleton()
-                                                            .loggedInUser
-                                                            ?.name,
+                                                        'waybill_quantity',
+                                                        waybillQuantity,
                                                       ),
-                                                      if (waybillQuantity !=
-                                                              null &&
-                                                          waybillQuantity
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'waybill_quantity',
-                                                          waybillQuantity,
-                                                        ),
-                                                      if (vehicleNumber !=
-                                                              null &&
-                                                          vehicleNumber
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'vehicle_number',
-                                                          vehicleNumber,
-                                                        ),
-                                                      if (comments != null &&
-                                                          comments
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'comments',
-                                                          comments,
-                                                        ),
-                                                      if (deliveryTeamName !=
-                                                              null &&
-                                                          deliveryTeamName
-                                                              .trim()
-                                                              .isNotEmpty)
-                                                        AdditionalField(
-                                                          'deliveryTeam',
-                                                          deliveryTeamName,
-                                                        ),
-                                                      if (hasLocationData) ...[
-                                                        AdditionalField(
-                                                          'lat',
-                                                          lat,
-                                                        ),
-                                                        AdditionalField(
-                                                          'lng',
-                                                          lng,
-                                                        ),
-                                                      ],
-                                                      if (scannerState
-                                                          .barCodes.isNotEmpty)
-                                                        addBarCodesToFields(
-                                                            scannerState
-                                                                .barCodes),
+                                                    if (vehicleNumber !=
+                                                        null &&
+                                                        vehicleNumber
+                                                            .trim()
+                                                            .isNotEmpty)
+                                                      AdditionalField(
+                                                        'vehicle_number',
+                                                        vehicleNumber,
+                                                      ),
+                                                    if (comments != null &&
+                                                        comments
+                                                            .trim()
+                                                            .isNotEmpty)
+                                                      AdditionalField(
+                                                        'comments',
+                                                        comments,
+                                                      ),
+                                                    if (deliveryTeamName !=
+                                                        null &&
+                                                        deliveryTeamName
+                                                            .trim()
+                                                            .isNotEmpty)
+                                                      AdditionalField(
+                                                        'deliveryTeam',
+                                                        deliveryTeamName,
+                                                      ),
+                                                    if (hasLocationData) ...[
+                                                      AdditionalField(
+                                                        'lat',
+                                                        lat,
+                                                      ),
+                                                      AdditionalField(
+                                                        'lng',
+                                                        lng,
+                                                      ),
                                                     ],
-                                                  )
-                                                : null,
-                                          );
+                                                    if (scannerState
+                                                        .barCodes.isNotEmpty)
+                                                      addBarCodesToFields(
+                                                          scannerState
+                                                              .barCodes),
+                                                  ],
+                                                )
+                                                    : null,
+                                              );
 
-                                          bloc.add(
-                                            RecordStockSaveStockDetailsEvent(
-                                              stockModel: stockModel,
-                                            ),
-                                          );
-
-                                          final submit =
-                                              await DigitDialog.show<bool>(
-                                            context,
-                                            options: DigitDialogOptions(
-                                              key: const Key('submitDialog'),
-                                              titleText:
-                                                  localizations.translate(
-                                                i18.stockDetails.dialogTitle,
-                                              ),
-                                              contentText:
-                                                  localizations.translate(
-                                                i18.stockDetails.dialogContent,
-                                              ),
-                                              primaryAction: DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonSubmit,
+                                              bloc.add(
+                                                RecordStockSaveStockDetailsEvent(
+                                                  stockModel: stockModel,
                                                 ),
-                                                action: (context) {
-                                                  Navigator.of(
-                                                    context,
-                                                    rootNavigator: true,
-                                                  ).pop(true);
-                                                },
-                                              ),
-                                              secondaryAction:
-                                                  DigitDialogActions(
-                                                label: localizations.translate(
-                                                  i18.common.coreCommonCancel,
-                                                ),
-                                                action: (context) =>
-                                                    Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop(false),
-                                              ),
-                                            ),
-                                          );
+                                              );
 
-                                          if (submit ?? false) {
-                                            bloc.add(
-                                              const RecordStockCreateStockEntryEvent(),
-                                            );
-                                          }
-                                        });
+                                              final submit =
+                                              showCustomPopup(
+                                                context: context,
+                                                builder: (popupContext) => Popup(
+                                                  title:localizations.translate(
+                                                          i18.stockDetails.dialogTitle,
+                                                        ),
+                                                  onOutsideTap: () {
+                                                    Navigator.of(popupContext).pop(false);
+                                                  },
+                                                  description:localizations.translate(
+                                                          i18.stockDetails.dialogContent,
+                                                        ),
+                                                  type: PopUpType.simple,
+                                                  actions: [
+                                                    DigitButton(
+                                                      label: localizations.translate(
+                                                        i18.common.coreCommonSubmit,
+                                                      ),
+                                                      onPressed: () {
+                                                            Navigator.of(
+                                                                      popupContext,
+                                                                      rootNavigator: true,
+                                                                    ).pop(true);
+                                                      },
+                                                      type: DigitButtonType.primary,
+                                                      size: DigitButtonSize.large,
+                                                    ),
+                                                    DigitButton(
+                                                      label: localizations.translate(
+                                                          i18.common.coreCommonCancel,
+                                                        ),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                                        popupContext,
+                                                                        rootNavigator: true,
+                                                                      ).pop(false);
+                                                      },
+                                                      type: DigitButtonType.primary,
+                                                      size: DigitButtonSize.large,
+                                                    ),
+                                                  ],
+                                                ),
+                                              ) as bool;
+
+                                              if (submit ?? false) {
+                                                bloc.add(
+                                                  const RecordStockCreateStockEntryEvent(),
+                                                );
+                                              }
+                                            });
                                       }
                                     },
-                              child: Center(
-                                child: Text(
-                                  localizations
-                                      .translate(i18.common.coreCommonSubmit),
-                                ),
-                              ),
-                            );
-                          }),
+                                    isDisabled: !form.valid,
+                                    label: localizations
+                                        .translate(i18.common.coreCommonSubmit),
+                                  );
+                                })
+                          ],
                         ),
                         children: [
                           DigitCard(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
                                   localizations.translate(pageTitle),
@@ -594,23 +593,50 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                         )),
                                       ),
                                       fetched: (productVariants) {
-                                        return DigitReactiveDropdown<
-                                            ProductVariantModel>(
-                                          key: const Key(_productVariantKey),
+                                        return ReactiveWrapperField(
                                           formControlName: _productVariantKey,
-                                          label: localizations.translate(
-                                            module.selectProductLabel,
-                                          ),
-                                          isRequired: true,
-                                          valueMapper: (value) {
-                                            return localizations.translate(
-                                              value.sku ?? value.id,
-                                            );
-                                          },
-                                          menuItems: productVariants,
                                           validationMessages: {
                                             'required': (object) =>
-                                                '${module.selectProductLabel}_IS_REQUIRED',
+                                            '${module.selectProductLabel}_IS_REQUIRED',
+                                          },
+                                          showErrors: (control) => control.invalid && control.touched,
+                                          builder: (field) {
+                                            return LabeledField(
+                                              label: localizations.translate(
+                                                module.selectProductLabel,
+                                              ),
+                                              isRequired: true,
+                                              child: DigitDropdown(
+                                                errorMessage: field.errorText,
+                                                emptyItemText:
+                                                localizations.translate(
+                                                  i18.common.noMatchFound,
+                                                ),
+                                                items: productVariants
+                                                    .map((variant) {
+                                                  return DropdownItem(
+                                                    name:
+                                                    localizations.translate(
+                                                      variant.sku ?? variant.id,
+                                                    ),
+                                                    code: variant.id,
+                                                  );
+                                                }).toList(),
+                                                onSelect: (value) {
+                                                  /// Find the selected product variant model by matching the id
+                                                  final selectedVariant =
+                                                  productVariants
+                                                      .firstWhere(
+                                                        (variant) =>
+                                                    variant.id ==
+                                                        value.code,
+                                                  );
+                                                  /// Update the form control with the selected product variant model
+                                                  field.control.value =
+                                                      selectedVariant;
+                                                },
+                                              ),
+                                            );
                                           },
                                         );
                                       },
@@ -621,16 +647,42 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                   StockRecordEntryType.loss,
                                   StockRecordEntryType.damaged,
                                 ].contains(entryType))
-                                  DigitReactiveDropdown<String>(
-                                    key: const Key(_transactionReasonKey),
-                                    label: localizations.translate(
-                                      transactionReasonLabel ?? 'Reason',
-                                    ),
-                                    menuItems: reasons ?? [],
+                                  ReactiveWrapperField(
                                     formControlName: _transactionReasonKey,
-                                    valueMapper: (value) =>
-                                        localizations.translate(value),
-                                    isRequired: true,
+                                    builder: (field) {
+                                      return LabeledField(
+                                        label: localizations.translate(
+                                          transactionReasonLabel ?? 'Reason',
+                                        ),
+                                        isRequired: true,
+                                        child: DigitDropdown(
+                                          emptyItemText:
+                                          localizations.translate(
+                                            i18.common.noMatchFound,
+                                          ),
+                                          items:
+                                          reasons!.map((reason) {
+                                            return
+                                                DropdownItem(
+                                              name: localizations
+                                                  .translate(reason),
+                                              code: reason.toString(),
+                                            );
+                                          }).toList(),
+                                          onSelect: (value) {
+                                            final selectedReason =
+                                            reasons
+                                                ?.firstWhere(
+                                                  (reason) =>
+                                              reason.toString() ==
+                                                  value.code,
+                                            );
+                                            field.control.value =
+                                                selectedReason;
+                                          },
+                                        ),
+                                      );
+                                    },
                                   ),
                                 BlocBuilder<FacilityBloc, FacilityState>(
                                   builder: (context, state) {
@@ -641,86 +693,34 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   CircularProgressIndicator(),
                                             ),
                                         fetched: (facilities, allFacilities) {
-                                          return InkWell(
-                                            onTap: () async {
-                                              clearQRCodes();
-                                              form
-                                                  .control(_deliveryTeamKey)
-                                                  .value = '';
-
-                                              final facility =
-                                                  await context.router.push(
-                                                          InventoryFacilitySelectionRoute(
-                                                              facilities:
-                                                                  allFacilities))
-                                                      as FacilityModel?;
-
-                                              if (facility == null) return;
-                                              form
-                                                      .control(_secondaryPartyKey)
-                                                      .value =
-                                                  localizations.translate(
-                                                'FAC_${facility.id}',
-                                              );
-
-                                              setState(() {
-                                                selectedFacilityId =
-                                                    facility.id;
-                                              });
-                                              if (facility.id ==
-                                                  'Delivery Team') {
-                                                setState(() {
-                                                  deliveryTeamSelected = true;
-                                                });
-                                              } else {
-                                                setState(() {
-                                                  deliveryTeamSelected = false;
-                                                });
-                                              }
-                                            },
-                                            child: IgnorePointer(
-                                              child: DigitTextFormField(
-                                                key: const Key(
-                                                    _secondaryPartyKey),
-                                                hideKeyboard: true,
-                                                label: localizations.translate(
-                                                  '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
-                                                ),
-                                                isRequired: true,
-                                                validationMessages: {
-                                                  'required': (object) =>
-                                                      localizations.translate(
-                                                        '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
-                                                      ),
-                                                },
-                                                suffix: const Padding(
-                                                  padding: EdgeInsets.all(8.0),
-                                                  child: Icon(Icons.search),
-                                                ),
-                                                formControlName:
-                                                    _secondaryPartyKey,
+                                          return Column(
+                                            children: [
+                                              const SizedBox(height: spacer4,),
+                                              InkWell(
                                                 onTap: () async {
                                                   clearQRCodes();
                                                   form
                                                       .control(_deliveryTeamKey)
                                                       .value = '';
 
-                                                  final facility =
-                                                      await context.router.push(
-                                                    InventoryFacilitySelectionRoute(
-                                                      facilities: allFacilities,
-                                                    ),
-                                                  ) as FacilityModel?;
+                                                  final facility = await context
+                                                      .router
+                                                      .push(
+                                                      InventoryFacilitySelectionRoute(
+                                                          facilities:
+                                                          facilities))
+                                                  as FacilityModel?;
 
                                                   if (facility == null) return;
                                                   form
-                                                          .control(
-                                                              _secondaryPartyKey)
-                                                          .value =
+                                                      .control(_secondaryPartyKey)
+                                                      .value =
                                                       localizations.translate(
-                                                    'FAC_${facility.id}',
-                                                  );
-
+                                                        'FAC_${facility.id}',
+                                                      );
+                                                  controller1.text =
+                                                      localizations.translate(
+                                                          'FAC_${facility.id}');
                                                   setState(() {
                                                     selectedFacilityId =
                                                         facility.id;
@@ -728,208 +728,303 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                   if (facility.id ==
                                                       'Delivery Team') {
                                                     setState(() {
-                                                      deliveryTeamSelected =
-                                                          true;
+                                                      deliveryTeamSelected = true;
                                                     });
                                                   } else {
                                                     setState(() {
-                                                      deliveryTeamSelected =
-                                                          false;
+                                                      deliveryTeamSelected = false;
                                                     });
                                                   }
                                                 },
+                                                child: IgnorePointer(
+                                                  child: ReactiveWrapperField(
+                                                      formControlName:
+                                                      _secondaryPartyKey,
+                                                      validationMessages: {
+                                                        'required': (object) =>
+                                                            localizations
+                                                                .translate(
+                                                              '${i18.individualDetails.nameLabelText}_IS_REQUIRED',
+                                                            ),
+                                                      },
+                                                      showErrors: (control) => control.invalid && control.touched,
+                                                      builder: (field) {
+                                                        return InputField(
+                                                          type: InputType.search,
+                                                          isRequired: true,
+                                                          label: localizations
+                                                              .translate(
+                                                            '${pageTitle}_${i18.stockReconciliationDetails.stockLabel}',
+                                                          ),
+                                                          onChange: (value) {
+                                                            field.control.markAsTouched();
+                                                          },
+                                                          controller: controller1,
+                                                          errorMessage: field.errorText,
+                                                        );
+                                                      }),
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           );
                                         });
                                   },
                                 ),
+                                // TODO: as this case i need to set when occurring
                                 Visibility(
                                   visible: deliveryTeamSelected,
-                                  child: DigitTextFormField(
-                                    label: localizations.translate(
-                                      i18.stockReconciliationDetails
-                                          .teamCodeLabel,
-                                    ),
-                                    onChanged: (val) {
-                                      String? value = val.value as String?;
-                                      if (value != null &&
-                                          value.trim().isNotEmpty) {
-                                        context.read<DigitScannerBloc>().add(
-                                              DigitScannerEvent.handleScanner(
-                                                barCode: [],
-                                                qrCode: [value],
-                                                manualCode: value,
+                                  child: ReactiveWrapperField(
+                                      formControlName: _deliveryTeamKey,
+                                      builder: (field) {
+                                        return InputField(
+                                          type: InputType.text,
+                                          label: localizations.translate(
+                                            i18.stockReconciliationDetails
+                                                .teamCodeLabel,
+                                          ),
+                                          isRequired: deliveryTeamSelected,
+                                          suffixIcon: Icons.qr_code_2,
+                                          onSuffixTap: (value){
+                                            //[TODO: Add route to auto_route]
+                                            Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                const DigitScannerPage(
+                                                  quantity: 5,
+                                                  isGS1code: false,
+                                                  singleValue: false,
+                                                ),
+                                                settings: const RouteSettings(
+                                                    name: '/qr-scanner'),
                                               ),
                                             );
-                                      } else {
-                                        clearQRCodes();
-                                      }
-                                    },
-                                    suffix: IconButton(
-                                      onPressed: () {
-                                        //[TODO: Add route to auto_route]
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const DigitScannerPage(
-                                              quantity: 5,
-                                              isGS1code: false,
-                                              singleValue: false,
-                                            ),
-                                            settings: const RouteSettings(
-                                                name: '/qr-scanner'),
-                                          ),
+                                          },
+                                          onChange: (val) {
+                                            String? value = val;
+                                            if (value != null &&
+                                                value.trim().isNotEmpty) {
+                                              context.read<DigitScannerBloc>().add(
+                                                DigitScannerEvent.handleScanner(
+                                                  barCode: [],
+                                                  qrCode: [value],
+                                                  manualCode: value,
+                                                ),
+                                              );
+                                            } else {
+                                              clearQRCodes();
+                                            }
+                                          },
                                         );
-                                      },
-                                      icon: Icon(
-                                        Icons.qr_code_2,
-                                        color: theme.colorScheme.secondary,
-                                      ),
-                                    ),
-                                    isRequired: deliveryTeamSelected,
-                                    maxLines: 3,
-                                    formControlName: _deliveryTeamKey,
-                                  ),
+                                      }),
+                                  // DigitTextFormField(
+                                  //   label: localizations.translate(
+                                  //     i18.stockReconciliationDetails
+                                  //         .teamCodeLabel,
+                                  //   ),
+                                  //   onChanged: (val) {
+                                  //     String? value = val.value as String?;
+                                  //     if (value != null &&
+                                  //         value.trim().isNotEmpty) {
+                                  //       context.read<DigitScannerBloc>().add(
+                                  //             DigitScannerEvent.handleScanner(
+                                  //               barCode: [],
+                                  //               qrCode: [value],
+                                  //               manualCode: value,
+                                  //             ),
+                                  //           );
+                                  //     } else {
+                                  //       clearQRCodes();
+                                  //     }
+                                  //   },
+                                  //   suffix: IconButton(
+                                  //     onPressed: () {
+                                  //       //[TODO: Add route to auto_route]
+                                  //       Navigator.of(context).push(
+                                  //         MaterialPageRoute(
+                                  //           builder: (context) =>
+                                  //               const DigitScannerPage(
+                                  //             quantity: 5,
+                                  //             isGS1code: false,
+                                  //             singleValue: false,
+                                  //           ),
+                                  //           settings: const RouteSettings(
+                                  //               name: '/qr-scanner'),
+                                  //         ),
+                                  //       );
+                                  //     },
+                                  //     icon: Icon(
+                                  //       Icons.qr_code_2,
+                                  //       color: theme.colorScheme.secondary,
+                                  //     ),
+                                  //   ),
+                                  //   isRequired: deliveryTeamSelected,
+                                  //   maxLines: 3,
+                                  //   formControlName: _deliveryTeamKey,
+                                  // ),
                                 ),
-                                DigitTextFormField(
-                                  key: const Key(_transactionQuantityKey),
-                                  formControlName: _transactionQuantityKey,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                    decimal: true,
-                                  ),
-                                  isRequired: true,
-                                  validationMessages: {
-                                    "number": (object) =>
-                                        localizations.translate(
-                                          '${quantityCountLabel}_ERROR',
+                                ReactiveWrapperField(
+                                    formControlName: _transactionQuantityKey,
+                                    validationMessages: {
+                                      "number": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_ERROR',
+                                          ),
+                                      "max": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_MAX_ERROR',
+                                          ),
+                                      "min": (object) =>
+                                          localizations.translate(
+                                            '${quantityCountLabel}_MIN_ERROR',
+                                          ),
+                                    },
+                                    showErrors: (control) => control.invalid && control.touched,
+                                    builder: (field) {
+                                      return LabeledField(
+                                        label: localizations.translate(
+                                          quantityCountLabel,
                                         ),
-                                    "max": (object) => localizations.translate(
-                                          '${quantityCountLabel}_MAX_ERROR',
+                                        isRequired: true,
+                                        child: BaseDigitFormInput(
+                                          errorMessage: field.errorText,
+                                          keyboardType: const TextInputType
+                                              .numberWithOptions(
+                                            decimal: true,
+                                          ),
+                                          onChange: (val) {
+                                            field.control.markAsTouched();
+                                            if (int.parse(val) > 10000000000) {
+                                              field.control.value = 10000;
+                                            } else {
+                                              if(val !=''){
+                                                field.control.value =
+                                                    int.parse(val);
+                                              }else{
+                                                field.control.value = null;
+                                              }
+                                            }
+                                          },
                                         ),
-                                    "min": (object) => localizations.translate(
-                                          '${quantityCountLabel}_MIN_ERROR',
-                                        ),
-                                  },
-                                  onChanged: (val) {
-                                    if (val.value != null) {
-                                      if (val.value > 10000000000) {
-                                        form
-                                            .control(_transactionQuantityKey)
-                                            .value = 10000;
-                                      }
-                                    }
-                                  },
-                                  label: localizations.translate(
-                                    quantityCountLabel,
-                                  ),
-                                ),
+                                      );
+                                    }),
                                 if (isWareHouseMgr)
-                                  DigitTextFormField(
-                                      key: const Key(_waybillNumberKey),
-                                      label: localizations.translate(
-                                        i18.stockDetails.waybillNumberLabel,
-                                      ),
+                                  ReactiveWrapperField(
                                       formControlName: _waybillNumberKey,
-                                      keyboardType:
-                                          const TextInputType.numberWithOptions(
-                                        decimal: true,
-                                      ),
-                                      validationMessages: {
-                                        'maxLength': (object) => localizations
-                                            .translate(
-                                                i18.common.maxCharsRequired)
-                                            .replaceAll('{}', '200'),
-                                        'minLength': (object) => localizations
-                                            .translate(
-                                                i18.common.min2CharsRequired)
-                                            .replaceAll('{}', ''),
+                                      builder: (field) {
+                                        return InputField(
+                                          type: InputType.text,
+                                          label: localizations.translate(
+                                            i18.stockDetails.waybillNumberLabel,
+                                          ),
+                                          onChange: (val) {
+                                            field.control.value = val;
+                                          },
+                                        );
                                       }),
                                 if (isWareHouseMgr)
-                                  DigitTextFormField(
-                                      label: localizations.translate(
-                                        i18.stockDetails
-                                            .quantityOfProductIndicatedOnWaybillLabel,
-                                      ),
+                                  ReactiveWrapperField(
                                       formControlName: _waybillQuantityKey,
-                                      onChanged: (val) {
-                                        if (val.toString().isEmpty ||
-                                            val.value == null) {
-                                          form
-                                              .control(_waybillQuantityKey)
-                                              .value = '0';
-                                        }
+                                      builder: (field) {
+                                        return InputField(
+                                          type: InputType.text,
+                                          label: localizations.translate(
+                                            i18.stockDetails
+                                                .quantityOfProductIndicatedOnWaybillLabel,
+                                          ),
+                                          initialValue: '0',
+                                          onChange: (val) {
+                                            if (val == '') {
+                                              field.control.value = '0';
+                                            } else {
+                                              field.control.value = val;
+                                            }
+                                          },
+                                        );
                                       }),
                                 if (isWareHouseMgr)
                                   transportTypes.isNotEmpty
-                                      ? DigitReactiveDropdown<String>(
-                                          key: const Key(_typeOfTransportKey),
-                                          isRequired: false,
-                                          label: localizations.translate(
-                                            i18.stockDetails.transportTypeLabel,
+                                      ? ReactiveWrapperField(
+                                    formControlName: _typeOfTransportKey,
+                                    builder: (field) {
+                                      return LabeledField(
+                                        label: localizations.translate(
+                                          i18.stockDetails
+                                              .transportTypeLabel,
+                                        ),
+                                        child: DigitDropdown(
+                                          emptyItemText:
+                                          localizations.translate(
+                                            i18.common.noMatchFound,
                                           ),
-                                          valueMapper: (e) => e,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              form.control(
-                                                _typeOfTransportKey,
-                                              );
-                                            });
+                                          items:
+                                          transportTypes.map((type) {
+                                            return DropdownItem(
+                                              name: localizations
+                                                  .translate(type.name),
+                                              code: type.code,
+                                            );
+                                          }).toList(),
+                                          onSelect: (value) {
+                                            field.control.value =
+                                                value.name;
                                           },
-                                          initialValue:
-                                              transportTypes.firstOrNull?.name,
-                                          menuItems: transportTypes.map(
-                                            (e) {
-                                              return localizations
-                                                  .translate(e.name);
-                                            },
-                                          ).toList(),
-                                          formControlName: _typeOfTransportKey,
-                                        )
+                                        ),
+                                      );
+                                    },
+                                  )
                                       : const Offstage(),
                                 if (isWareHouseMgr)
-                                  DigitTextFormField(
-                                    label: localizations.translate(
-                                      i18.stockDetails.vehicleNumberLabel,
-                                    ),
-                                    formControlName: _vehicleNumberKey,
-                                  ),
-                                DigitTextFormField(
-                                  label: localizations.translate(
-                                    i18.stockDetails.commentsLabel,
-                                  ),
-                                  minLines: 2,
-                                  maxLines: 3,
-                                  formControlName: _commentsKey,
-                                ),
-                                scannerState.barCodes.isEmpty
-                                    ? DigitOutlineIconButton(
-                                        buttonStyle: OutlinedButton.styleFrom(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.zero,
+                                  ReactiveWrapperField(
+                                      formControlName: _vehicleNumberKey,
+                                      builder: (field) {
+                                        return InputField(
+                                          type: InputType.text,
+                                          label: localizations.translate(
+                                            i18.stockDetails.vehicleNumberLabel,
                                           ),
-                                        ),
-                                        onPressed: () {
-                                          //[TODO: Add route to auto_route]
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const DigitScannerPage(
-                                                quantity: 5,
-                                                isGS1code: true,
-                                                singleValue: false,
-                                              ),
-                                              settings: const RouteSettings(
-                                                  name: '/qr-scanner'),
-                                            ),
-                                          );
-                                        },
-                                        icon: Icons.qr_code,
+                                          onChange: (val) {
+                                            field.control.value = val;
+                                          },
+                                        );
+                                      }),
+                                ReactiveWrapperField(
+                                    formControlName: _commentsKey,
+                                    builder: (field) {
+                                      return InputField(
+                                        type: InputType.textArea,
                                         label: localizations.translate(
-                                          i18.common.scanBales,
+                                          i18.stockDetails.commentsLabel,
                                         ),
-                                      )
+                                        onChange: (val) {
+                                          field.control.value = val;
+                                        },
+                                      );
+                                    }),
+                                scannerState.barCodes.isEmpty
+                                    ? DigitButton(
+                                  mainAxisSize: MainAxisSize.max,
+                                  size: DigitButtonSize.large,
+                                  type: DigitButtonType.secondary,
+                                  onPressed: () {
+                                    //[TODO: Add route to auto_route]
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                        const DigitScannerPage(
+                                          quantity: 5,
+                                          isGS1code: true,
+                                          singleValue: false,
+                                        ),
+                                        settings: const RouteSettings(
+                                            name: '/qr-scanner'),
+                                      ),
+                                    );
+                                  },
+                                  prefixIcon: Icons.qr_code,
+                                  label: localizations.translate(
+                                    i18.common.scanBales,
+                                  ),
+                                )
                                     : Column(children: [
                                         Row(
                                           mainAxisAlignment:
@@ -950,7 +1045,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                bottom: kPadding * 2,
+                                                bottom: spacer4,
                                               ),
                                               child: IconButton(
                                                 alignment:
@@ -988,7 +1083,6 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                       ])
                               ],
                             ),
-                          ),
                         ],
                       );
                     });
