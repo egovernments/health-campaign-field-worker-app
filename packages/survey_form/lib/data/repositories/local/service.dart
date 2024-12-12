@@ -115,16 +115,19 @@ class ServiceLocalRepository
           final attribute = e.readTableOrNull(sql.serviceAttributes);
           if (attribute != null) {
             return ServiceAttributesModel(
-              clientReferenceId: attribute.clientReferenceId,
-              attributeCode: attribute.attributeCode,
-              value: attribute.value,
-              referenceId: attribute.referenceId,
-              dataType: attribute.dataType,
-              additionalDetails: attribute.additionalDetails,
-              tenantId: attribute.tenantId,
-              isDeleted: attribute.isDeleted,
-              rowVersion: attribute.rowVersion,
-            );
+                clientReferenceId: attribute.clientReferenceId,
+                attributeCode: attribute.attributeCode,
+                value: attribute.value,
+                referenceId: attribute.referenceId,
+                dataType: attribute.dataType,
+                additionalDetails: attribute.additionalDetails,
+                tenantId: attribute.tenantId,
+                isDeleted: attribute.isDeleted,
+                rowVersion: attribute.rowVersion,
+                additionalFields: attribute.additionalFields != null
+                    ? ServiceAttributesAdditionalFieldsMapper.fromJson(
+                    attribute.additionalFields!)
+                    : null);
           }
         }).toList();
 

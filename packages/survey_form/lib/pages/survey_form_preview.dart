@@ -37,6 +37,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
         header: const Column(children: [
           BackNavigationHelpHeaderWidget(),
         ]),
+        enableFixedDigitButton: true,
         footer: BlocBuilder<ServiceBloc, ServiceState>(
           builder: (context, state) {
             return state.maybeWhen(
@@ -199,7 +200,7 @@ class SurveyFormPreviewPageState extends LocalizedState<SurveyFormPreviewPage> {
                                                             'SingleValueList'
                                                         ? localizations
                                                             .translate(
-                                                            'CORE_COMMON_${e.value.toString().toUpperCase()}',
+                                                            '${item2?.code ?? ''}.${e.value.toString().toUpperCase()}',
                                                           )
                                                         : e.value ?? "",
                                                     isInline: false,

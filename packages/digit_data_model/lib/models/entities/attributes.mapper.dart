@@ -36,8 +36,8 @@ class AttributesSearchModelMapper
   static String? _$code(AttributesSearchModel v) => v.code;
   static const Field<AttributesSearchModel, String> _f$code =
       Field('code', _$code, opt: true);
-  static String? _$isActive(AttributesSearchModel v) => v.isActive;
-  static const Field<AttributesSearchModel, String> _f$isActive =
+  static bool? _$isActive(AttributesSearchModel v) => v.isActive;
+  static const Field<AttributesSearchModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
   static bool? _$required(AttributesSearchModel v) => v.required;
   static const Field<AttributesSearchModel, bool> _f$required =
@@ -165,7 +165,7 @@ abstract class AttributesSearchModelCopyWith<
       String? referenceId,
       String? tenantId,
       String? code,
-      String? isActive,
+      bool? isActive,
       bool? required,
       String? regex,
       int? order,
@@ -268,8 +268,8 @@ class AttributesModelMapper extends SubClassMapperBase<AttributesModel> {
   static List<String>? _$values(AttributesModel v) => v.values;
   static const Field<AttributesModel, List<String>> _f$values =
       Field('values', _$values, opt: true);
-  static String? _$isActive(AttributesModel v) => v.isActive;
-  static const Field<AttributesModel, String> _f$isActive =
+  static bool? _$isActive(AttributesModel v) => v.isActive;
+  static const Field<AttributesModel, bool> _f$isActive =
       Field('isActive', _$isActive, opt: true);
   static bool? _$required(AttributesModel v) => v.required;
   static const Field<AttributesModel, bool> _f$required =
@@ -425,7 +425,7 @@ abstract class AttributesModelCopyWith<$R, $In extends AttributesModel, $Out>
       String? tenantId,
       String? code,
       List<String>? values,
-      String? isActive,
+      bool? isActive,
       bool? required,
       String? regex,
       int? order,

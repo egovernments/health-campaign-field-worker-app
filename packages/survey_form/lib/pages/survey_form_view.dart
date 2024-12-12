@@ -47,7 +47,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
   ServiceDefinitionModel? selectedServiceDefinition;
   bool isControllersInitialized = false;
   List<int> visibleSurveyFormIndexes = [];
-  GlobalKey<FormState> surveyFormFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> surveyFormKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -367,7 +367,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                       ]),
                   children: [
                     Form(
-                      key: surveyFormFormKey, //assigning key to form
+                      key: surveyFormKey, //assigning key to form
                       child: DigitCard(cardType: CardType.primary, children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: spacer2),
@@ -378,7 +378,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             style: textTheme.headingXl,
                           ),
                         ),
-                        ...initialAttributes!.map((
+                        ...initialAttributes!
+                              .where((att) => att.isActive == true)
+                              .map((
                           e,
                         ) {
                           int index = (initialAttributes ?? []).indexOf(e);
@@ -495,7 +497,9 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         return Column(
                                           children: e.values!
                                               .map((e) => DigitCheckbox(
-                                                    label: e,
+                                                    label: localizations
+                                                        .translate(
+                                                        '${selectedServiceDefinition?.code}.${item}'),
                                                     value: controller[index]
                                                         .text
                                                         .split('.')
@@ -530,6 +534,15 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                           text: ele,
                                                         ),
                                                       ).value;
+
+                                                      // If the field is required and no option is selected, trigger validation
+                                                      if (e.required ==
+                                                          true &&
+                                                          val.isEmpty) {
+                                                        submitTriggered =
+                                                        true;
+                                                      }
+                                                      
                                                     },
                                                   ))
                                               .toList(),
@@ -786,11 +799,18 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                               }
                             }
 
-                            // Remove corresponding controllers based on the removed attributes
-                          });
-                        },
-                      ),
-                    ),
+                        // Remove corresponding controllers based on the removed attributes
+                      });
+                    },
+                    items: item.values != null
+                        ? item.values!
+                            .where((e) => e != i18.surveyForm.notSelectedKey)
+                            .toList()
+                        : [],
+                    itemBuilder: (item) =>
+                        RadioButtonBuilder(localizations.translate(
+                      '${selectedServiceDefinition?.code}.${item.trim()}',
+                    )),
                   );
                 },
               ),
@@ -798,7 +818,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 builder: (context, state) {
                   return (controller[index].text == item.values?[1].trim() &&
                           !(isHealthFacilityWorker &&
-                              widget.referralClientRefId != null))
+                              widget.referralClientRefId != null) &&
+                          item.dataType != 'SingleValueList')
                       ? Padding(
                           padding: const EdgeInsets.only(
                             left: spacer1,
@@ -950,7 +971,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                 return Column(
                   children: item.values!
                       .map((e) => DigitCheckbox(
-                            label: e,
+                            label: localizations.translate(
+                              '${selectedServiceDefinition?.code}.${e}'),
                             value:
                                 controller[index].text.split('.').contains(e),
                             onChanged: (value) {
