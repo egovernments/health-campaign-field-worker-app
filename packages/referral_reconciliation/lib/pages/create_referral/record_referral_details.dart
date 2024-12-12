@@ -317,7 +317,7 @@ class _RecordReferralDetailsPageState
                                                               HFReferralAdditionalFields(
                                                             version: 1,
                                                             fields: [
-                                                              if (hfCoordinator !=
+                                                              AdditionalField("boundaryCode",ReferralReconSingleton().boundary?.code),if (hfCoordinator !=
                                                                       null &&
                                                                   hfCoordinator
                                                                       .toString()
@@ -664,7 +664,7 @@ class _RecordReferralDetailsPageState
                                                                 HFReferralAdditionalFields(
                                                               version: 1,
                                                               fields: [
-                                                                if (hfCoordinator !=
+                                                                AdditionalField("boundaryCode",ReferralReconSingleton().boundary?.code),if (hfCoordinator !=
                                                                         null &&
                                                                     hfCoordinator
                                                                         .toString()
@@ -952,6 +952,17 @@ class _RecordReferralDetailsPageState
                                           }),
                                       ReactiveWrapperField<int>(
                                           formControlName: _ageKey,
+                                          label: localizations.translate(
+                                            i18.common.ageInMonths,
+                                          ),
+                                          readOnly: viewOnly,
+                                          keyboardType: TextInputType.number,
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter
+                                                .digitsOnly,
+                                            LengthLimitingTextInputFormatter(4)
+                                          ],
+                                          isRequired: true,
                                           validationMessages: {
                                             'required': (_) =>
                                                 localizations.translate(
