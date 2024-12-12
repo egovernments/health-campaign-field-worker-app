@@ -60,7 +60,6 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
               footer: DigitCard(
                   cardType: CardType.primary,
                   margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     DigitButton(
                       mainAxisSize: MainAxisSize.max,
@@ -115,21 +114,21 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                   ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(cardType: CardType.primary, children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: spacer2),
-                      child: Text(
-                        localizations.translate(
-                          i18.complaints.complaintsTypeHeading,
-                        ),
-                        style: textTheme.headingXl,
+                  child: DigitCard(
+                    margin: const EdgeInsets.all(spacer2),
+                      cardType: CardType.primary, children: [
+                    Text(
+                      localizations.translate(
+                        i18.complaints.complaintsTypeHeading,
                       ),
+                      style: textTheme.headingXl,
                     ),
                     LabeledField(
                       label: localizations.translate(
                         i18.complaints.complaintsTypeLabel,
                       ),
                       child: RadioList(
+                        containerPadding: const EdgeInsets.only(bottom: spacer4),
                         radioDigitButtons: (ComplaintsSingleton().complaintTypes?.isNotEmpty ?? false)
                             ? ComplaintsSingleton().complaintTypes!
                             .map<RadioButtonModel>(
@@ -174,23 +173,16 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
                         form.control(_complaintType).invalid) ...[
                       Align(
                         alignment: Alignment.topLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            top: spacer1,
-                            bottom: spacer1,
+                        child: Text(
+                          localizations.translate(
+                            i18.complaints.validationRadioRequiredError,
                           ),
-                          child: Text(
-                            localizations.translate(
-                              i18.complaints.validationRadioRequiredError,
-                            ),
-                            style: TextStyle(
-                              color: theme.colorTheme.alert.error,
-                            ),
+                          style: TextStyle(
+                            color: theme.colorTheme.alert.error,
                           ),
                         ),
                       ),
                     ],
-                    const SizedBox(height: spacer4),
                   ]),
                 ),
               ],

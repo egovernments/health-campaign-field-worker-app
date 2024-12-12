@@ -81,7 +81,6 @@ class ComplaintsInboxSearchPageState
                 footer: DigitCard(
                     cardType: CardType.primary,
                     margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                    padding: const EdgeInsets.all(spacer2),
                     children: [
                       DigitButton(
                         mainAxisSize: MainAxisSize.max,
