@@ -16,5 +16,4 @@ import 'package:sync_service/data/sync_service_annotation.dart';
   'referral',
   'hFReferral',
 ])
-class SyncModule {
-}
+class SyncModule {}
