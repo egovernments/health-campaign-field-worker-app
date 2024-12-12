@@ -30,19 +30,20 @@ Future<List<UserActionModel>> parseLocationData(List<String> logs) async {
 
   for (var log in logs) {
     final pattern = RegExp(
-        r'Latitude:\s*(\d+\.\d+),\s*Longitude:\s*(\d+\.\d+),\s*isSync:\s*(\w+),\s*timestamp:\s*(\d+)');
+        r'Latitude:\s*(-?\d+\.\d+),\s*Longitude:\s*(-?\d+\.\d+),\s*Accuracy:\s*(\d+\.\d+),\s*isSync:\s*(\w+),\s*timestamp:\s*(\d+)');
 
     final match = pattern.firstMatch(log);
     if (match != null) {
       final latitude = double.parse(match.group(1)!);
       final longitude = double.parse(match.group(2)!);
-      final isSync = match.group(3)!.toLowerCase() == 'true';
-      final timestamp = int.parse(match.group(4)!);
+      final accuracy = double.parse(match.group(3)!);
+      final isSync = match.group(4)!.toLowerCase() == 'true';
+      final timestamp = int.parse(match.group(5)!);
 
       locationDataList.add(UserActionModel(
         latitude: latitude,
         longitude: longitude,
-        locationAccuracy: 1.3,
+        locationAccuracy: accuracy,
         tenantId: LocationTrackerSingleton().tenantId,
         clientReferenceId: IdGen.instance.identifier,
         isSync: isSync,

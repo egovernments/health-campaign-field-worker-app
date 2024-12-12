@@ -20,11 +20,17 @@ class MainActivity : FlutterActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val latitude = intent?.getDoubleExtra("latitude", 0.0)
             val longitude = intent?.getDoubleExtra("longitude", 0.0)
+            val accuracy = intent?.getFloatExtra("accuracy", 0.0f) // Retrieve accuracy here
+
             // Handle the location data here
-            Toast.makeText(context, "Latitude: $latitude, Longitude: $longitude", Toast.LENGTH_LONG).show()
+            Toast.makeText(context, "Latitude: $latitude, Longitude: $longitude, Accuracy: $accuracy", Toast.LENGTH_LONG).show()
             // Optionally, you can send this data to Flutter via MethodChannel
             flutterEngine?.dartExecutor?.binaryMessenger?.let {
-                MethodChannel(it, CHANNEL).invokeMethod("locationUpdate", mapOf("latitude" to latitude, "longitude" to longitude))
+                MethodChannel(it, CHANNEL).invokeMethod("locationUpdate", mapOf(
+                    "latitude" to latitude,
+                    "longitude" to longitude,
+                    "accuracy" to accuracy
+                ))
             }
         }
     }

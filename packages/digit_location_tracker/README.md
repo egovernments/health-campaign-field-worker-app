@@ -34,6 +34,8 @@ triggerLocationTracker(
             now.add(const Duration(hours: 8)).millisecondsSinceEpoch,
       );
       
-## Additional information
+## Additional Required information
 
-Create location service file in your android folder and replace main activity similar to this https://github.com/egovernments/health-campaign-field-worker-app/blob/location_tracker/apps/health_campaign_field_worker_app/android/app/src/main/kotlin/com/digit/hcm/MainActivity.kt and https://github.com/egovernments/health-campaign-field-worker-app/blob/location_tracker/apps/health_campaign_field_worker_app/android/app/src/main/kotlin/com/digit/hcm/location_service.kt
+Create location service file in your android folder and replace main activity similar to this 
+1. https://github.com/egovernments/health-campaign-field-worker-app/blob/location_tracker/apps/health_campaign_field_worker_app/android/app/src/main/kotlin/com/digit/hcm/MainActivity.kt 
+2. https://github.com/egovernments/health-campaign-field-worker-app/blob/location_tracker/apps/health_campaign_field_worker_app/android/app/src/main/kotlin/com/digit/hcm/location_service.kt
