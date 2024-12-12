@@ -38,7 +38,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
             Align(
               alignment: Alignment.centerLeft,
               child: Padding(
-                padding: const EdgeInsets.only(left: spacer2, top: spacer5),
+                padding: const EdgeInsets.only(left: spacer2, top: spacer2, bottom: spacer2),
                 child: Text(
                   localizations
                       .translate(i18.complaints.complaintsDetailsLabel),
@@ -50,8 +50,7 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
         ),
         footer: DigitCard(
             cardType: CardType.primary,
-            margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-            padding: const EdgeInsets.all(spacer2),
+            margin: const EdgeInsets.only(top: spacer2),
             children: [
               DigitButton(
                 onPressed: () {
@@ -64,64 +63,69 @@ class ComplaintsDetailsViewPage extends StatelessWidget {
               ),
             ]),
         children: [
-          Padding(
-            padding: const EdgeInsets.only(top: spacer4),
-            child: DigitCard(
-                cardType: CardType.primary,
-                children: [
-              LabelValueSummary(
-                padding: const EdgeInsets.only(top: spacer4, bottom: spacer4),
-                  // labelFlex: 6,
-                  items: [
-                    LabelValueItem(
-                        label: localizations.translate(i18.complaints.inboxNumberLabel),
-                        value: complaint.serviceRequestId ??
-                            "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                        valueTextStyle: complaint.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
-                    ),
-                    LabelValueItem(
-                        label: localizations.translate(i18.complaints.inboxTypeLabel),
-                        value: localizations.translate(
-                          complaint.serviceCode.snakeCase.toUpperCase().trim(),
-                        )
-                    ),
-                    LabelValueItem(
-                        label: localizations.translate(i18.complaints.inboxDateLabel),
-                        value: complaint.auditDetails?.createdTime.toDateTime
-                            .getFormattedDate() ??
-                            "",
-                    ),
-                    LabelValueItem(
-                      label: localizations.translate(i18.complaints.complainantName),
-                      value: complaint.user.name ?? "",
-                    ),
-                    LabelValueItem(
-                      label: localizations.translate(i18.complaints.inboxAreaLabel),
-                      value: complaint.address.locality?.name ?? "",
-                    ),
-                    LabelValueItem(
-                      label: localizations.translate(
-                        i18.complaints.complainantContactNumber,
-                      ),
-                      value: complaint.user.mobileNumber ?? "",
-                    ),
-                    LabelValueItem(
-                      label: localizations.translate(i18.complaints.inboxStatusLabel),
+          DigitCard(
+            margin: const EdgeInsets.all(spacer2),
+              cardType: CardType.primary,
+              children: [
+            LabelValueSummary(
+              padding: EdgeInsets.zero,
+                items: [
+                  LabelValueItem(
+                      label: localizations.translate(i18.complaints.inboxNumberLabel),
+                      value: complaint.serviceRequestId ??
+                          "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+                      valueTextStyle: complaint.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
+                    labelFlex: 5,
+                  ),
+                  LabelValueItem(
+                      label: localizations.translate(i18.complaints.inboxTypeLabel),
                       value: localizations.translate(
-                        "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
+                        complaint.serviceCode.snakeCase.toUpperCase().trim(),
                       ),
+                    labelFlex: 5,
+                  ),
+                  LabelValueItem(
+                      label: localizations.translate(i18.complaints.inboxDateLabel),
+                      value: complaint.auditDetails?.createdTime.toDateTime
+                          .getFormattedDate() ??
+                          "",
+                    labelFlex: 5,
+                  ),
+                  LabelValueItem(
+                    label: localizations.translate(i18.complaints.complainantName),
+                    value: complaint.user.name ?? "",
+                    labelFlex: 5,
+                  ),
+                  LabelValueItem(
+                    label: localizations.translate(i18.complaints.inboxAreaLabel),
+                    value: complaint.address.locality?.name ?? "",
+                    labelFlex: 5,
+                  ),
+                  LabelValueItem(
+                    label: localizations.translate(
+                      i18.complaints.complainantContactNumber,
                     ),
-                    LabelValueItem(
-                      label: localizations
-                          .translate(i18.complaints.complaintDescription),
-                      value: localizations.translate(
-                        complaint.description,
-                      ),
+                    value: complaint.user.mobileNumber ?? "",
+                    labelFlex: 5,
+                  ),
+                  LabelValueItem(
+                    label: localizations.translate(i18.complaints.inboxStatusLabel),
+                    value: localizations.translate(
+                      "COMPLAINTS_STATUS_${complaint.applicationStatus.name.snakeCase.toUpperCase()}",
                     ),
-                  ]
-              )
-            ]),
-          ),
+                    labelFlex: 5,
+                  ),
+                  LabelValueItem(
+                    label: localizations
+                        .translate(i18.complaints.complaintDescription),
+                    value: localizations.translate(
+                      complaint.description,
+                    ),
+                    labelFlex: 5,
+                  ),
+                ]
+            )
+          ]),
         ],
       ),
     );

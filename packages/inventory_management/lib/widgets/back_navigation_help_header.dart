@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
 
@@ -33,25 +36,22 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             child: Row(
               children: [
                 if (showBackNavigation)
-                  Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        context.router.maybePop();
-                        handleBack != null ? handleBack!() : null;
-                      },
-                      icon: const Icon(Icons.arrow_left_sharp),
-                      label: Text(
-                        InventoryLocalization.of(context).translate(
-                          i18.common.coreCommonBack,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                  DigitBackButton(label: InventoryLocalization.of(context).translate(
+                    i18.common.coreCommonBack,
+                  ),
+                    digitBackButtonThemeData:
+                    const DigitBackButtonThemeData().copyWith(
+                      context: context,
+                      backDigitButtonIcon: Icon(
+                        Icons.arrow_left,
+                        size:Theme.of(context).spacerTheme.spacer5,
                       ),
                     ),
-                  ),
+                    handleBack: () {
+                      context.router.maybePop();
+                      handleBack != null ? handleBack!() : null;
+                    },
+                  )
               ],
             ),
           ),

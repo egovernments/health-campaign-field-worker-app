@@ -40,8 +40,7 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(
-                    spacer4, spacer2,  spacer4, spacer2),
+                padding: const EdgeInsets.only(left: spacer2, right: spacer2, bottom: spacer4),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Text(
@@ -52,69 +51,88 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                 ),
               ),
               Column(children: [
-                MenuCard(
-                  heading: localizations
-                      .translate(i18.manageStock.recordStockReceiptLabel),
-                  description: localizations
-                      .translate(i18.manageStock.recordStockReceiptDescription),
-                  icon: Icons.file_download_outlined,
-                  onTap: () {
-                    context.router.push(
-                      RecordStockWrapperRoute(
-                        type: StockRecordEntryType.receipt,
-                      ),
-                    );
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2),
+                  child: MenuCard(
+                    heading: localizations
+                        .translate(i18.manageStock.recordStockReceiptLabel),
+                    description: localizations
+                        .translate(i18.manageStock.recordStockReceiptDescription),
+                    icon: Icons.file_download_outlined,
+                    onTap: () {
+                      context.router.push(
+                        RecordStockWrapperRoute(
+                          type: StockRecordEntryType.receipt,
+                        ),
+                      );
+                    },
+                  ),
                 ),
-                MenuCard(
-                    heading: localizations
-                        .translate(i18.manageStock.recordStockIssuedLabel),
-                    description: localizations.translate(
-                        i18.manageStock.recordStockIssuedDescription),
-                    icon: Icons.file_upload_outlined,
-                    onTap: () => context.router.push(
-                          RecordStockWrapperRoute(
-                            type: StockRecordEntryType.dispatch,
-                          ),
-                        )),
-                MenuCard(
-                    heading: localizations
-                        .translate(i18.manageStock.recordStockReturnedLabel),
-                    description: localizations.translate(
-                      i18.manageStock.recordStockReturnedDescription,
-                    ),
-                    icon: Icons.settings_backup_restore,
-                    onTap: () => context.router.push(
-                          RecordStockWrapperRoute(
-                            type: StockRecordEntryType.returned,
-                          ),
-                        )),
-                MenuCard(
-                    heading: localizations
-                        .translate(i18.manageStock.recordStockDamagedLabel),
-                    description: localizations.translate(
-                      i18.manageStock.recordStockDamagedDescription,
-                    ),
-                    icon: Icons.store,
-                    onTap: () => context.router.push(
-                          RecordStockWrapperRoute(
-                            type: StockRecordEntryType.damaged,
-                          ),
-                        )),
-                MenuCard(
-                    heading: localizations
-                        .translate(i18.manageStock.recordStockLossLabel),
-                    description: localizations.translate(
-                      i18.manageStock.recordStockDamagedDescription,
-                    ),
-                    icon: Icons.store,
-                    onTap: () => context.router.push(
-                          RecordStockWrapperRoute(
-                            type: StockRecordEntryType.loss,
-                          ),
-                        )),
+                const SizedBox(height: spacer4,),
+                Padding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2),
+                  child: MenuCard(
+                      heading: localizations
+                          .translate(i18.manageStock.recordStockIssuedLabel),
+                      description: localizations.translate(
+                          i18.manageStock.recordStockIssuedDescription),
+                      icon: Icons.file_upload_outlined,
+                      onTap: () => context.router.push(
+                            RecordStockWrapperRoute(
+                              type: StockRecordEntryType.dispatch,
+                            ),
+                          )),
+                ),
+                const SizedBox(height: spacer4,),
+                Padding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2),
+                  child: MenuCard(
+                      heading: localizations
+                          .translate(i18.manageStock.recordStockReturnedLabel),
+                      description: localizations.translate(
+                        i18.manageStock.recordStockReturnedDescription,
+                      ),
+                      icon: Icons.settings_backup_restore,
+                      onTap: () => context.router.push(
+                            RecordStockWrapperRoute(
+                              type: StockRecordEntryType.returned,
+                            ),
+                          )),
+                ),
+                const SizedBox(height: spacer4,),
+                Padding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2),
+                  child: MenuCard(
+                      heading: localizations
+                          .translate(i18.manageStock.recordStockDamagedLabel),
+                      description: localizations.translate(
+                        i18.manageStock.recordStockDamagedDescription,
+                      ),
+                      icon: Icons.store,
+                      onTap: () => context.router.push(
+                            RecordStockWrapperRoute(
+                              type: StockRecordEntryType.damaged,
+                            ),
+                          )),
+                ),
+                const SizedBox(height: spacer4,),
+                Padding(
+                  padding: const EdgeInsets.only(left: spacer2, right: spacer2),
+                  child: MenuCard(
+                      heading: localizations
+                          .translate(i18.manageStock.recordStockLossLabel),
+                      description: localizations.translate(
+                        i18.manageStock.recordStockDamagedDescription,
+                      ),
+                      icon: Icons.store,
+                      onTap: () => context.router.push(
+                            RecordStockWrapperRoute(
+                              type: StockRecordEntryType.loss,
+                            ),
+                          )),
+                ),
               ]),
-              const SizedBox(height: 16),
+              const SizedBox(height: spacer4),
             ],
           ),
         ],

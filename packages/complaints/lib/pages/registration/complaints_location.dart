@@ -87,7 +87,6 @@ class ComplaintsLocationPageState
                 footer: DigitCard(
                     cardType: CardType.primary,
                     margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                    padding: const EdgeInsets.all(spacer2),
                     children: [
                       DigitButton(
                         label:
@@ -138,15 +137,14 @@ class ComplaintsLocationPageState
                       ),
                     ]),
                 children: [
-                  DigitCard(cardType: CardType.primary, children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: spacer2),
-                      child: Text(
-                        localizations.translate(
-                          i18.complaints.complaintsLocationLabel,
-                        ),
-                        style: textTheme.headingXl,
+                  DigitCard(
+                    margin: const EdgeInsets.all(spacer2),
+                      cardType: CardType.primary, children: [
+                    Text(
+                      localizations.translate(
+                        i18.complaints.complaintsLocationLabel,
                       ),
+                      style: textTheme.headingXl,
                     ),
                     ReactiveWrapperField<String>(
                         formControlName: _addressLine1Key,
