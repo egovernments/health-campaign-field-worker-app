@@ -1,17 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:attendance_management/attendance_management.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_data_model/data_model.dart';
-import 'package:inventory_management/inventory_management.dart';
-import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-import 'package:sync_service/data/sync_entity_mapper_listener.dart';
 import 'package:sync_service/data/repositories/sync/remote_type.dart';
+import 'package:sync_service/data/sync_entity_mapper_listener.dart';
 
 import '../sync_annotation_module.sync.dart';
-import '../utils/environment_config.dart';
 
 class SyncServiceMapper extends SyncEntityMapperListener {
   @override
@@ -121,6 +117,7 @@ class SyncServiceMapper extends SyncEntityMapperListener {
           case DataModelType.referral:
           case DataModelType.hFReferral:
           case DataModelType.attendance:
+          case DataModelType.userLocation:
             return true;
           default:
             return false;
