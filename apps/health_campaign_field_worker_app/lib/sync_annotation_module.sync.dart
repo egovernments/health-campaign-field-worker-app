@@ -45,7 +45,9 @@ class SyncDownEntity {
                 })
                 .whereNotNull()
                 .toList();
-            additionalIds.addAll(addressAdditionalIds ?? []);
+            if (addressAdditionalIds != null) {
+              additionalIds.addAll(addressAdditionalIds ?? []);
+            }
             final identifiersAdditionalIds = responseEntity?.identifiers
                 ?.map((e) {
                   final id = e.id;
@@ -57,7 +59,9 @@ class SyncDownEntity {
                 })
                 .whereNotNull()
                 .toList();
-            additionalIds.addAll(identifiersAdditionalIds ?? []);
+            if (identifiersAdditionalIds != null) {
+              additionalIds.addAll(identifiersAdditionalIds ?? []);
+            }
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
@@ -98,13 +102,15 @@ class SyncDownEntity {
           final rowVersion = responseEntity?.rowVersion;
           if (serverGeneratedId != null) {
             final additionalIds = <AdditionalId>[];
-            final addressAdditionalIds = responseEntity?.address != null
+            final addressAdditionalIds = responseEntity?.address!.id == null
                 ? null
                 : AdditionalId(
                     idType: "householdAddressId",
                     id: responseEntity!.address!.id!,
                   );
-            additionalIds.addAll([addressAdditionalIds!] ?? []);
+            if (addressAdditionalIds != null) {
+              additionalIds.addAll([addressAdditionalIds!] ?? []);
+            }
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,
@@ -316,7 +322,9 @@ class SyncDownEntity {
                 })
                 .whereNotNull()
                 .toList();
-            additionalIds.addAll(resourcesAdditionalIds ?? []);
+            if (resourcesAdditionalIds != null) {
+              additionalIds.addAll(resourcesAdditionalIds ?? []);
+            }
             await local.opLogManager.updateServerGeneratedIds(
               model: UpdateServerGeneratedIdModel(
                 clientReferenceId: entity.clientReferenceId,

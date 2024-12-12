@@ -35,7 +35,7 @@ import 'package:super_annotations/super_annotations.dart';
 ///  'task.resource_s',
 /// ])]
 /// class Example {
-      // Class implementation
+// Class implementation
 /// }
 
 class SyncServiceAnnotation extends ClassAnnotation {
@@ -109,11 +109,11 @@ class SyncServiceAnnotation extends ClassAnnotation {
               ..writeln('            );')
               ..writeln('          }).whereNotNull().toList();')
               ..writeln(
-                  '          additionalIds.addAll(${removePluralSuffix(part)}AdditionalIds ?? []);');
+                  '          if(${removePluralSuffix(part)}AdditionalIds!=null){ additionalIds.addAll(${removePluralSuffix(part)}AdditionalIds ?? []);}');
           } else {
             methodBuffer
               ..writeln(
-                  '          final ${part}AdditionalIds = responseEntity?.${part} != null')
+                  '          final ${part}AdditionalIds = responseEntity?.${part}!.id == null')
               ..writeln('            ? null')
               ..writeln('            : AdditionalId(')
               ..writeln(
@@ -121,7 +121,7 @@ class SyncServiceAnnotation extends ClassAnnotation {
               ..writeln('              id: responseEntity!.${part}!.id!,')
               ..writeln('            );')
               ..writeln(
-                  '          additionalIds.addAll([${part}AdditionalIds!] ?? []);');
+                  '         if(${part}AdditionalIds != null) { additionalIds.addAll([${part}AdditionalIds!] ?? []); }');
           }
         }
       }
