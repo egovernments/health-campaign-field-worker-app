@@ -133,6 +133,7 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                     builder: (context, form, child) {
                                       return DigitButton(
                                         type: DigitButtonType.primary,
+                                        mainAxisSize: MainAxisSize.max,
                                         size: DigitButtonSize.large,
                                         isDisabled: !form.valid,
                                         label: localizations.translate(
@@ -237,6 +238,7 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                             ),
                             children: [
                               DigitCard(
+                                margin: const EdgeInsets.all(spacer2),
                                   children: [
                                     Text(
                                       InventorySingleton().isDistributor! &&
@@ -252,109 +254,106 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                             ),
                                       style: theme.textTheme.displayMedium,
                                     ),
-                                    Column(children: [
-                                      ReactiveWrapperField(
-                                          formControlName: _dateOfEntryKey,
-                                          builder: (field) {
-                                            return InputField(
-                                              type: InputType.date,
-                                              label: localizations.translate(
-                                                i18.warehouseDetails
-                                                    .dateOfReceipt,
-                                              ),
-                                              confirmText: localizations.translate(
-                                                i18.common.coreCommonOk,
-                                              ),
-                                              cancelText: localizations.translate(
-                                                i18.common.coreCommonCancel,
-                                              ),
-                                              initialValue: DateFormat(
-                                                  'dd/MM/yy')
-                                                  .format(
-                                                  field.control.value),
-                                              readOnly: true,
-                                            );
-                                          }),
-                                      ReactiveWrapperField(
-                                          formControlName: _administrativeUnitKey,
-                                          builder: (field) {
-                                            return InputField(
-                                              type: InputType.text,
-                                              label: localizations.translate(
-                                                i18.warehouseDetails
-                                                    .administrativeUnit,
-                                              ),
-                                              initialValue: field.control.value,
-                                              readOnly: true,
-                                            );
-                                          }
-                                      ),
-                                    ]),
-                                    ]),
-                                    InkWell(
-                                onTap: () async {
-                                  clearQRCodes();
-                                  form.control(_teamCodeKey).value = '';
-
-                                  final facility =
-                                  await Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          InventoryFacilitySelectionPage(
-                                            facilities: facilities,
-                                          ),
-                                    ),
-                                  );
-
-                                  if (facility == null) return;
-                                  form.control(_warehouseKey).value =
-                                      localizations.translate(
-                                          'FAC_${facility.id}');
-                                  controller1.text = localizations.translate(
-                                      'FAC_${facility.id}');
-
-                                  setState(() {
-                                    selectedFacilityId = facility.id;
-                                  });
-                                  if (facility.id == 'Delivery Team') {
-                                    setState(() {
-                                      deliveryTeamSelected = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      deliveryTeamSelected = false;
-                                    });
-                                  }
-                                },
-                                child: IgnorePointer(
-                                  child: ReactiveWrapperField(
-                                      formControlName: _warehouseKey,
-                                      validationMessages: {
-                                        'required': (object) =>
-                                            localizations.translate(
-                                              '${i18.individualDetails
-                                                  .nameLabelText}_IS_REQUIRED',
+                                    ReactiveWrapperField(
+                                        formControlName: _dateOfEntryKey,
+                                        builder: (field) {
+                                          return InputField(
+                                            type: InputType.date,
+                                            label: localizations.translate(
+                                              i18.warehouseDetails
+                                                  .dateOfReceipt,
                                             ),
-                                      },
-                                      showErrors: (control) => control.invalid && control.touched,
-                                      builder: (field) {
-                                        return InputField(
-                                          type: InputType.search,
-                                          label: localizations.translate(
-                                            i18.stockReconciliationDetails
-                                                .facilityLabel,
+                                            confirmText: localizations.translate(
+                                              i18.common.coreCommonOk,
+                                            ),
+                                            cancelText: localizations.translate(
+                                              i18.common.coreCommonCancel,
+                                            ),
+                                            initialValue: DateFormat(
+                                                'dd/MM/yy')
+                                                .format(
+                                                field.control.value),
+                                            readOnly: true,
+                                          );
+                                        }),
+                                    ReactiveWrapperField(
+                                        formControlName: _administrativeUnitKey,
+                                        builder: (field) {
+                                          return InputField(
+                                            type: InputType.text,
+                                            label: localizations.translate(
+                                              i18.warehouseDetails
+                                                  .administrativeUnit,
+                                            ),
+                                            initialValue: field.control.value,
+                                            readOnly: true,
+                                          );
+                                        }
+                                    ),
+                                    InkWell(
+                                      onTap: () async {
+                                        clearQRCodes();
+                                        form.control(_teamCodeKey).value = '';
+
+                                        final facility =
+                                        await Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                InventoryFacilitySelectionPage(
+                                                  facilities: facilities,
+                                                ),
                                           ),
-                                          controller: controller1,
-                                          isRequired: true,
-                                          errorMessage: field.errorText,
-                                          onChange: (value) {
-                                            field.control.markAsTouched();
-                                          },
                                         );
-                                      }
-                                  ),
-                                ),
-                              ),
+
+                                        if (facility == null) return;
+                                        form.control(_warehouseKey).value =
+                                            localizations.translate(
+                                                'FAC_${facility.id}');
+                                        controller1.text = localizations.translate(
+                                            'FAC_${facility.id}');
+
+                                        setState(() {
+                                          selectedFacilityId = facility.id;
+                                        });
+                                        if (facility.id == 'Delivery Team') {
+                                          setState(() {
+                                            deliveryTeamSelected = true;
+                                          });
+                                        } else {
+                                          setState(() {
+                                            deliveryTeamSelected = false;
+                                          });
+                                        }
+                                      },
+                                      child: IgnorePointer(
+                                        child: ReactiveWrapperField(
+                                            formControlName: _warehouseKey,
+                                            validationMessages: {
+                                              'required': (object) =>
+                                                  localizations.translate(
+                                                    '${i18.individualDetails
+                                                        .nameLabelText}_IS_REQUIRED',
+                                                  ),
+                                            },
+                                            showErrors: (control) => control.invalid && control.touched,
+                                            builder: (field) {
+                                              return InputField(
+                                                type: InputType.search,
+                                                label: localizations.translate(
+                                                  i18.stockReconciliationDetails
+                                                      .facilityLabel,
+                                                ),
+                                                controller: controller1,
+                                                isRequired: true,
+                                                errorMessage: field.errorText,
+                                                onChange: (value) {
+                                                  field.control.markAsTouched();
+                                                },
+                                              );
+                                            }
+                                        ),
+                                      ),
+                                    ),
                                     if (deliveryTeamSelected)
                                       ReactiveWrapperField(
                                           formControlName: _teamCodeKey,
@@ -401,6 +400,8 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                               },
                                             );
                                           })
+                                    ]),
+
                             ],
                           );
                         },

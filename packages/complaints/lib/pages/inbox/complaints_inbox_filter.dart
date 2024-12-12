@@ -125,7 +125,6 @@ class ComplaintsInboxFilterPageState
                 footer: DigitCard(
                     cardType: CardType.primary,
                     margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                    padding: const EdgeInsets.all(spacer2),
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -245,6 +244,7 @@ class ComplaintsInboxFilterPageState
                                     return Align(
                                       alignment: Alignment.topLeft,
                                       child: RadioList(
+                                        containerPadding: const EdgeInsets.only(bottom: spacer4),
                                         radioDigitButtons: _complaintAssignmentTypes
                                             .asMap()
                                             .entries
@@ -271,38 +271,35 @@ class ComplaintsInboxFilterPageState
                                     );
                                   },
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: spacer2),
-                                  child: LabeledField(
-                                    label: localizations.translate(
-                                      i18.complaints.complaintsTypeHeading,
-                                    ),
-                                    child: DigitDropdown<String>(
-                                      items: complaintTypes
-                                          .toList()
-                                          .asMap()
-                                          .entries
-                                          .map((item) => DropdownItem(
-                                                name: localizations.translate(
-                                                    item.value
-                                                        .toString()
-                                                        .trim()
-                                                        .snakeCase
-                                                        .toUpperCase()),
-                                                code: item.value,
-                                              ))
-                                          .toList(),
-                                      emptyItemText: localizations
-                                          .translate(i18.common.noMatchFound),
-                                      isSearchable: true,
-                                      onSelect: (value) => formGroup
-                                          .control(_complaintType)
-                                          .value = value.code,
-                                    ),
+                                LabeledField(
+                                  label: localizations.translate(
+                                    i18.complaints.complaintsTypeHeading,
+                                  ),
+                                  child: DigitDropdown<String>(
+                                    items: complaintTypes
+                                        .toList()
+                                        .asMap()
+                                        .entries
+                                        .map((item) => DropdownItem(
+                                              name: localizations.translate(
+                                                  item.value
+                                                      .toString()
+                                                      .trim()
+                                                      .snakeCase
+                                                      .toUpperCase()),
+                                              code: item.value,
+                                            ))
+                                        .toList(),
+                                    emptyItemText: localizations
+                                        .translate(i18.common.noMatchFound),
+                                    isSearchable: true,
+                                    onSelect: (value) => formGroup
+                                        .control(_complaintType)
+                                        .value = value.code,
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: spacer2),
+                                  padding: const EdgeInsets.only(top: spacer4),
                                   child: LabeledField(
                                     label: localizations
                                         .translate(i18.complaints.locality),
@@ -328,36 +325,39 @@ class ComplaintsInboxFilterPageState
                                   ),
                                 ),
                                 if (uniqueStatuses.isNotEmpty) ...[
-                                  LabeledField(
-                                    label: localizations.translate(
-                                      i18.complaints.inboxStatusLabel,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        ...uniqueStatuses.map((e) => Padding(
-                                              padding: const EdgeInsets.only(
-                                                top: spacer4,
-                                              ),
-                                              child: DigitCheckbox(
-                                                label:
-                                                    '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
-                                                value: selected[e] ?? false,
-                                                onChanged: (value) {
-                                                  setState(() {
-                                                    if (selected[e]!) {
-                                                      statuses.remove(e);
-                                                      selected[e] = false;
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: spacer4),
+                                    child: LabeledField(
+                                      label: localizations.translate(
+                                        i18.complaints.inboxStatusLabel,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          ...uniqueStatuses.map((e) => Padding(
+                                                padding: const EdgeInsets.only(
+                                                  top: spacer2,
+                                                ),
+                                                child: DigitCheckbox(
+                                                  label:
+                                                      '${localizations.translate('COMPLAINTS_STATUS_${e.name.snakeCase.toUpperCase()}')} (${statusCount[e.index]})',
+                                                  value: selected[e] ?? false,
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      if (selected[e]!) {
+                                                        statuses.remove(e);
+                                                        selected[e] = false;
 
-                                                      return;
-                                                    }
+                                                        return;
+                                                      }
 
-                                                    selected[e] = true;
-                                                    statuses.add(e);
-                                                  });
-                                                },
-                                              ),
-                                            )),
-                                      ],
+                                                      selected[e] = true;
+                                                      statuses.add(e);
+                                                    });
+                                                  },
+                                                ),
+                                              )),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],
