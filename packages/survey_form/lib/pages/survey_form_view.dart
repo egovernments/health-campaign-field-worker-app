@@ -123,7 +123,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                   ),
                                 );
                             final isValid =
-                                surveyFormFormKey.currentState?.validate();
+                                surveyFormKey.currentState?.validate();
                             if (!isValid!) {
                               return;
                             }
@@ -379,8 +379,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                           ),
                         ),
                         ...initialAttributes!
-                              .where((att) => att.isActive == true)
-                              .map((
+                            .where((att) => att.isActive == true)
+                            .map((
                           e,
                         ) {
                           int index = (initialAttributes ?? []).indexOf(e);
@@ -417,7 +417,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                           onChange: (value) {
                                             field.didChange(value);
                                             controller[index].text = value;
-                                            surveyFormFormKey.currentState
+                                            surveyFormKey.currentState
                                                 ?.validate();
                                           },
                                           errorMessage: field.errorText,
@@ -465,7 +465,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         onChange: (value) {
                                           field.didChange(value);
                                           controller[index].text = value;
-                                          surveyFormFormKey.currentState
+                                          surveyFormKey.currentState
                                               ?.validate();
                                         },
                                         errorMessage: field.errorText,
@@ -496,9 +496,8 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                       builder: (context, state) {
                                         return Column(
                                           children: e.values!
-                                              .map((e) => DigitCheckbox(
-                                                    label: localizations
-                                                        .translate(
+                                              .map((item) => DigitCheckbox(
+                                                    label: localizations.translate(
                                                         '${selectedServiceDefinition?.code}.${item}'),
                                                     value: controller[index]
                                                         .text
@@ -536,13 +535,10 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                                       ).value;
 
                                                       // If the field is required and no option is selected, trigger validation
-                                                      if (e.required ==
-                                                          true &&
+                                                      if (e.required == true &&
                                                           val.isEmpty) {
-                                                        submitTriggered =
-                                                        true;
+                                                        submitTriggered = true;
                                                       }
-                                                      
                                                     },
                                                   ))
                                               .toList(),
@@ -727,91 +723,87 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
               BlocBuilder<ServiceBloc, ServiceState>(
                 builder: (context, state) {
                   return Align(
-                    alignment: Alignment.topLeft,
-                    child: FormField(
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                      validator: (value1) {
-                        if (item.required == true &&
-                            (controller[index].text == null ||
-                                controller[index].text == '')) {
-                          return localizations.translate(
-                            i18.common.coreCommonReasonRequired,
-                          );
-                        }
-
-                        return null;
-                      },
-                      builder: (field) => RadioList(
-                        radioDigitButtons: item.values != null
-                            ? item.values!
-                                .where(
-                                    (e) => e != i18.surveyForm.notSelectedKey)
-                                .toList()
-                                .map((item) => RadioButtonModel(
-                                      code: item,
-                                      name: localizations.translate(
-                                        'CORE_COMMON_${item.trim().toUpperCase()}',
-                                      ),
-                                    ))
-                                .toList()
-                            : [],
-                        errorMessage: field.errorText,
-                        groupValue: controller[index].text.trim(),
-                        onChanged: (value) {
-                          field.didChange(value);
-                          context.read<ServiceBloc>().add(
-                                ServiceSurveyFormEvent(
-                                  value: Random().nextInt(100).toString(),
-                                  submitTriggered: submitTriggered,
-                                ),
+                      alignment: Alignment.topLeft,
+                      child: FormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          validator: (value1) {
+                            if (item.required == true &&
+                                (controller[index].text == null ||
+                                    controller[index].text == '')) {
+                              return localizations.translate(
+                                i18.common.coreCommonReasonRequired,
                               );
-                          setState(() {
-                            // Clear child controllers and update visibility
-                            for (final matchingChildItem in childItems) {
-                              final childIndex =
-                                  initialAttributes?.indexOf(matchingChildItem);
-                              if (childIndex != null) {
-                                // controller[childIndex].clear();
-                                visibleSurveyFormIndexes
-                                    .removeWhere((v) => v == childIndex);
-                              }
                             }
 
-                            // Update the current controller's value
-                            controller[index].value =
-                                TextEditingController.fromValue(
-                              TextEditingValue(
-                                text: value!.code,
-                              ),
-                            ).value;
+                            return null;
+                          },
+                          builder: (field) => RadioList(
+                                radioDigitButtons: item.values != null
+                                    ? item.values!
+                                        .where((e) =>
+                                            e != i18.surveyForm.notSelectedKey)
+                                        .toList()
+                                        .map((item) => RadioButtonModel(
+                                              code: item,
+                                              name: localizations.translate(
+                                                'CORE_COMMON_${item.trim().toUpperCase()}',
+                                              ),
+                                            ))
+                                        .toList()
+                                    : [],
+                                errorMessage: field.errorText,
+                                groupValue: controller[index].text.trim(),
+                                onChanged: (value) {
+                                  field.didChange(value);
+                                  context.read<ServiceBloc>().add(
+                                        ServiceSurveyFormEvent(
+                                          value:
+                                              Random().nextInt(100).toString(),
+                                          submitTriggered: submitTriggered,
+                                        ),
+                                      );
+                                  setState(() {
+                                    // Clear child controllers and update visibility
+                                    for (final matchingChildItem
+                                        in childItems) {
+                                      final childIndex = initialAttributes
+                                          ?.indexOf(matchingChildItem);
+                                      if (childIndex != null) {
+                                        // controller[childIndex].clear();
+                                        visibleSurveyFormIndexes.removeWhere(
+                                            (v) => v == childIndex);
+                                      }
+                                    }
 
-                            if (excludedIndexes.isNotEmpty) {
-                              for (int i = 0; i < excludedIndexes.length; i++) {
-                                // Clear excluded child controllers
-                                if (item.dataType != 'SingleValueList') {
-                                  // controller[excludedIndexes[i]].value =
-                                  //     TextEditingController.fromValue(
-                                  //   const TextEditingValue(
-                                  //     text: '',
-                                  //   ),
-                                  // ).value;
-                                }
-                              }
-                            }
+                                    // Update the current controller's value
+                                    controller[index].value =
+                                        TextEditingController.fromValue(
+                                      TextEditingValue(
+                                        text: value!.code,
+                                      ),
+                                    ).value;
 
-                        // Remove corresponding controllers based on the removed attributes
-                      });
-                    },
-                    items: item.values != null
-                        ? item.values!
-                            .where((e) => e != i18.surveyForm.notSelectedKey)
-                            .toList()
-                        : [],
-                    itemBuilder: (item) =>
-                        RadioButtonBuilder(localizations.translate(
-                      '${selectedServiceDefinition?.code}.${item.trim()}',
-                    )),
-                  );
+                                    if (excludedIndexes.isNotEmpty) {
+                                      for (int i = 0;
+                                          i < excludedIndexes.length;
+                                          i++) {
+                                        // Clear excluded child controllers
+                                        if (item.dataType !=
+                                            'SingleValueList') {
+                                          // controller[excludedIndexes[i]].value =
+                                          //     TextEditingController.fromValue(
+                                          //   const TextEditingValue(
+                                          //     text: '',
+                                          //   ),
+                                          // ).value;
+                                        }
+                                      }
+                                    }
+
+                                    // Remove corresponding controllers based on the removed attributes
+                                  });
+                                },
+                              )));
                 },
               ),
               BlocBuilder<ServiceBloc, ServiceState>(
@@ -972,7 +964,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                   children: item.values!
                       .map((e) => DigitCheckbox(
                             label: localizations.translate(
-                              '${selectedServiceDefinition?.code}.${e}'),
+                                '${selectedServiceDefinition?.code}.${e}'),
                             value:
                                 controller[index].text.split('.').contains(e),
                             onChanged: (value) {

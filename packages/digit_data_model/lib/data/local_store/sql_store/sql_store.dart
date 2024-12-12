@@ -111,17 +111,17 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
   int get schemaVersion => 5; // Increment schema version
 
   @override
-  MigrationStrategy get migration => MigrationStrategy(
-    onUpgrade: (migrator, from, to) async {
-      if (from < 5) {
-        //Add column for projectType in Project Table
-        try {
-          await m.addColumn(project, project.projectType);
-        } catch (e) {
-        }
-      }
-      if (from < 5) {
-        await customStatement('''
+  MigrationStrategy get migration =>
+      MigrationStrategy(
+        onUpgrade: (migrator, from, to) async {
+          if (from < 5) {
+            //Add column for projectType in Project Table
+            try {
+              await migrator.addColumn(project, project.projectType);
+            } catch (e) {}
+          }
+          if (from < 5) {
+            await customStatement('''
         CREATE TABLE attributes_temp (
           id TEXT,
           dataType TEXT,
@@ -149,8 +149,8 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         );
       ''');
 
-        // Step 2: Copy data from the old table to the new table
-        await customStatement('''
+            // Step 2: Copy data from the old table to the new table
+            await customStatement('''
         INSERT INTO attributes_temp (
           id, dataType, referenceId, tenantId, code, values, isActive, required, regex, "order",
           auditCreatedBy, nonRecoverableError, auditCreatedTime, clientCreatedTime,
@@ -167,14 +167,15 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
         FROM attributes;
       ''');
 
-        // Step 3: Drop the old table
-        await migrator.deleteTable('attributes');
+            // Step 3: Drop the old table
+            await migrator.deleteTable('attributes');
 
-        // Step 4: Rename the new table to the old table's name
-        await customStatement('ALTER TABLE attributes_temp RENAME TO attributes;');
-      }
-    },
-  );
+            // Step 4: Rename the new table to the old table's name
+            await customStatement(
+                'ALTER TABLE attributes_temp RENAME TO attributes;');
+          }
+        },
+      );
 
   /// The `_openConnection` method opens a connection to the database.
   /// It returns a `LazyDatabase` that opens the database when it is first accessed.
