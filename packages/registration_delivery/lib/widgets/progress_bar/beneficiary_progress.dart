@@ -75,7 +75,8 @@ class BeneficiaryProgressBarState extends State<BeneficiaryProgressBar> {
   @override
   Widget build(BuildContext context) {
     final selectedProject = RegistrationDeliverySingleton().selectedProject!;
-    final beneficiaryType = RegistrationDeliverySingleton().beneficiaryType;
+    final beneficiaryType =
+        RegistrationDeliverySingleton().beneficiaryType.toString();
 
     final targetModel = selectedProject.targets?.firstWhereOrNull(
       (element) => element.beneficiaryType == beneficiaryType,

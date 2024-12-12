@@ -1,14 +1,21 @@
+## 1.0.4-dev.5-search-fix
+
+* Added facility name in facility local repo
+* Updated type check in progress for beneficiary type
+
 ## 1.0.4-dev.4-search-fix
+
 * Changed additionalDetails of ServiceModel to Map<String, dynamic>
 
 ## 1.0.4
+
 * Bug Fix -
     * Updated query search for beneficiary referred status
 
 ## 1.0.4-dev.3-search-fix
 
 * Bug Fix -
-  * Individual, Household search for child query fix
+    * Individual, Household search for child query fix
 
 ## 1.0.4-dev.2-uniqueId
 
@@ -23,14 +30,14 @@
 ## 1.0.3+2
 
 * Bug Fix -
-  * fixed wrong status map of beneficiaryRefused in utils
+    * fixed wrong status map of beneficiaryRefused in utils
 * Sorting tasks based on createTime
 
 ## 1.0.3+1
 
 * Bug Fixes -
-  * Reload fix after edit
-  * Project Beneficiary create for all members if not registered for campaign
+    * Reload fix after edit
+    * Project Beneficiary create for all members if not registered for campaign
 * Updated digit_scanner package, digit_components, digit_data_model
 
 ## 1.0.3
@@ -49,11 +56,11 @@
 
 ## 1.0.3-dev.10
 
-* Removed stepper if number of deliveries is greater than 1 
+* Removed stepper if number of deliveries is greater than 1
 
 ## 1.0.3-dev.9
 
-* Updated localization key 
+* Updated localization key
 * Resolved taskStatus key from task table entity
 
 ## 1.0.3-dev.8
@@ -70,7 +77,7 @@
 
 ## 1.0.3-dev.5
 
-* Added count for filter search 
+* Added count for filter search
 * Bug fixes
 
 ## 1.0.3-dev.4
@@ -80,7 +87,6 @@
 ## 1.0.3-dev.3
 
 * Closed household flow change
-
 
 ## 1.0.3-dev.2
 
@@ -157,7 +163,7 @@
 
 ## 0.0.0-dev.2
 
-* Boundary v2 Integrated, to use Boundary v1  0.0.0-dev.1 version can be used
+* Boundary v2 Integrated, to use Boundary v1 0.0.0-dev.1 version can be used
 
 ## 0.0.0-dev.1
 
