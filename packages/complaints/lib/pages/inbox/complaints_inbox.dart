@@ -69,53 +69,56 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
                     ),
                     ...[
                       SliverToBoxAdapter(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: spacer2 * 2),
-                              child: DigitButton(
-                                type: DigitButtonType.tertiary,
-                                size: DigitButtonSize.medium,
-                                prefixIcon: Icons.search,
-                                label: localizations.translate(
-                                  i18.complaints.searchCTA,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: spacer2),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: spacer2 * 2),
+                                child: DigitButton(
+                                  type: DigitButtonType.tertiary,
+                                  size: DigitButtonSize.medium,
+                                  prefixIcon: Icons.search,
+                                  label: localizations.translate(
+                                    i18.complaints.searchCTA,
+                                  ),
+                                  onPressed: () {
+                                    router.push(ComplaintsInboxSearchRoute());
+                                  },
                                 ),
-                                onPressed: () {
-                                  router.push(ComplaintsInboxSearchRoute());
-                                },
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.zero,
-                              child: DigitButton(
-                                type: DigitButtonType.tertiary,
-                                size: DigitButtonSize.medium,
-                                label: localizations.translate(
-                                  i18.complaints.filterCTA,
+                              Padding(
+                                padding: EdgeInsets.zero,
+                                child: DigitButton(
+                                  type: DigitButtonType.tertiary,
+                                  size: DigitButtonSize.medium,
+                                  label: localizations.translate(
+                                    i18.complaints.filterCTA,
+                                  ),
+                                  prefixIcon: Icons.filter_list_alt,
+                                  onPressed: () {
+                                    router.push(ComplaintsInboxFilterRoute());
+                                  },
                                 ),
-                                prefixIcon: Icons.filter_list_alt,
-                                onPressed: () {
-                                  router.push(ComplaintsInboxFilterRoute());
-                                },
                               ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(right: spacer2 * 2),
-                              child: DigitButton(
-                                type: DigitButtonType.tertiary,
-                                size: DigitButtonSize.medium,
-                                label: localizations.translate(
-                                  i18.complaints.sortCTA,
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(right: spacer2 * 2),
+                                child: DigitButton(
+                                  type: DigitButtonType.tertiary,
+                                  size: DigitButtonSize.medium,
+                                  label: localizations.translate(
+                                    i18.complaints.sortCTA,
+                                  ),
+                                  prefixIcon: Icons.segment,
+                                  onPressed: () {
+                                    router.push(ComplaintsInboxSortRoute());
+                                  },
                                 ),
-                                prefixIcon: Icons.segment,
-                                onPressed: () {
-                                  router.push(ComplaintsInboxSortRoute());
-                                },
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                       SliverList(
@@ -153,7 +156,6 @@ class ComplaintsInboxPageState extends LocalizedState<ComplaintsInboxPage> {
               DigitCard(
                   cardType: CardType.primary,
                   margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     DigitButton(
                       label: localizations.translate(
@@ -209,68 +211,64 @@ class _ComplaintsInboxItem extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.digitTextTheme(context);
 
-    return Padding(
-      padding: const EdgeInsets.only(top: spacer3),
-      child: DigitCard(cardType: CardType.primary, children: [
-        Padding(
-            padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
-            child: LabelValueSummary(
-              padding: const EdgeInsets.only(top: spacer2, bottom: spacer2),
-              // labelFlex: 5,
-              items: [
-                LabelValueItem(
-                    label: localizations
-                        .translate(i18.complaints.inboxNumberLabel),
-                    value: item.serviceRequestId ??
-                        "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
-                  valueTextStyle: item.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
-                ),
-                LabelValueItem(
-                  label: localizations.translate(i18.complaints.inboxTypeLabel),
-                  value: localizations.translate(
-                    item.serviceCode.snakeCase.toUpperCase().trim(),
-                  ),
-                ),
-                LabelValueItem(
-                    label:
-                        localizations.translate(i18.complaints.inboxDateLabel),
-                    value: item.auditDetails?.createdTime.toDateTime
-                            .getFormattedDate() ??
-                        ""),
-                LabelValueItem(
-                    label:
-                        localizations.translate(i18.complaints.inboxAreaLabel),
-                    value: item.address.locality?.name ?? ""),
-                LabelValueItem(
-                    label: localizations
-                        .translate(i18.complaints.inboxStatusLabel),
-                    value: localizations.translate(
-                      "COMPLAINTS_STATUS_${item.applicationStatus.name.snakeCase.toUpperCase()}",
-                    )),
-              ],
-            )),
-        Padding(
-          padding: const EdgeInsets.only(top: spacer2 * 2),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1,
-                child: DigitButton(
-                  label:
-                      localizations.translate(i18.searchBeneficiary.iconLabel),
-                  type: DigitButtonType.secondary,
-                  size: DigitButtonSize.large,
-                  onPressed: () {
-                    context.router.push(ComplaintsDetailsViewRoute(
-                      complaint: item,
-                    ));
-                  },
-                ),
-              ),
-            ],
+    return DigitCard(
+      margin: const EdgeInsets.all(spacer2),
+        cardType: CardType.primary, children: [
+      LabelValueSummary(
+        padding: EdgeInsets.zero,
+        items: [
+          LabelValueItem(
+              label: localizations
+                  .translate(i18.complaints.inboxNumberLabel),
+              value: item.serviceRequestId ??
+                  "${localizations.translate(i18.complaints.inboxNotGeneratedLabel)}\n${localizations.translate(i18.complaints.inboxSyncRequiredLabel)}",
+            valueTextStyle: item.serviceRequestId !=null ? textTheme.bodyS.copyWith(color: theme.colorTheme.primary.primary1) : null ,
+            labelFlex: 5,
           ),
-        ),
-      ]),
-    );
+          LabelValueItem(
+            label: localizations.translate(i18.complaints.inboxTypeLabel),
+            value: localizations.translate(
+              item.serviceCode.snakeCase.toUpperCase().trim(),
+            ),
+            labelFlex: 5,
+          ),
+          LabelValueItem(
+              label:
+                  localizations.translate(i18.complaints.inboxDateLabel),
+              value: item.auditDetails?.createdTime.toDateTime
+                      .getFormattedDate() ??
+                  "",
+            labelFlex: 5,
+          ),
+
+          LabelValueItem(
+              label:
+                  localizations.translate(i18.complaints.inboxAreaLabel),
+              value: item.address.locality?.name ?? "",
+            labelFlex: 5,
+          ),
+          LabelValueItem(
+              label: localizations
+                  .translate(i18.complaints.inboxStatusLabel),
+              value: localizations.translate(
+                "COMPLAINTS_STATUS_${item.applicationStatus.name.snakeCase.toUpperCase()}",
+              ),
+            labelFlex: 5,
+          ),
+        ],
+      ),
+      DigitButton(
+        label:
+            localizations.translate(i18.searchBeneficiary.iconLabel),
+        type: DigitButtonType.secondary,
+        size: DigitButtonSize.large,
+        mainAxisSize: MainAxisSize.max,
+        onPressed: () {
+          context.router.push(ComplaintsDetailsViewRoute(
+            complaint: item,
+          ));
+        },
+      ),
+    ]);
   }
 }
