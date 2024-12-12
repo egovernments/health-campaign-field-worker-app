@@ -788,8 +788,8 @@ class DeliverInterventionPageState
                           ?.cycles![bloc.cycle - 1]
                           .deliveries?[bloc.dose - 1],
                       overViewbloc.selectedIndividual,
-                      overViewbloc.householdMemberWrapper.household)!
-                  .productVariants
+                      overViewbloc.householdMemberWrapper.household)
+                  ?.productVariants
                   ?.length ??
               0;
 

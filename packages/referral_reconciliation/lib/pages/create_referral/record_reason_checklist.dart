@@ -216,7 +216,34 @@ class _ReferralReasonChecklistPageState
                                                     accountId:
                                                         ReferralReconSingleton()
                                                             .projectId,
-                                                    additionalDetails: {
+                                                    auditDetails:
+                                          AuditDetails(
+                                            createdBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            lastModifiedTime:
+                                            context
+                                                .millisecondsSinceEpoch(),
+                                          ),
+                                          clientAuditDetails:
+                                          ClientAuditDetails(
+                                            createdBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            createdTime: context
+                                                .millisecondsSinceEpoch(),
+                                            lastModifiedBy:
+                                            ReferralReconSingleton()
+                                                .userUUid,
+                                            lastModifiedTime:
+                                            context
+                                                .millisecondsSinceEpoch(),
+                                          ),additionalDetails: {
                                                       "boundaryCode":
                                                           ReferralReconSingleton()
                                                               .boundary
@@ -606,8 +633,6 @@ class _ReferralReasonChecklistPageState
         padding: const EdgeInsets.all(8.0),
         child: FormField<String>(
           validator: (value) {
-            print(value);
-            print(controller[index].text);
             // Custom validation logic
             if (((controller[index].text == '') && item.required == true)) {
               return localizations.translate("${item.code}_REQUIRED");
