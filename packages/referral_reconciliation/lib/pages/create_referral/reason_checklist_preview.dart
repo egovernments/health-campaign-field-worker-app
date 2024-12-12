@@ -3,11 +3,11 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
 import '../../router/referral_reconciliation_router.gm.dart';
@@ -214,7 +214,9 @@ class _ReferralReasonChecklistPreviewPageState
                                                                     'SingleValueList'
                                                                 ? localizations
                                                                     .translate(
-                                                                    e.value.toString().toUpperCase(),
+                                                                    e.value
+                                                                        .toString()
+                                                                        .toUpperCase(),
                                                                   )
                                                                 : e.value ?? "",
                                                           ),

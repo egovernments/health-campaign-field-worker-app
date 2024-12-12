@@ -49433,7 +49433,7 @@ typedef $$AttributesTableInsertCompanionBuilder = AttributesCompanion Function({
   Value<String?> tenantId,
   Value<String?> code,
   Value<String?> values,
-  Value<String?> isActive,
+  Value<bool?> isActive,
   Value<bool?> required,
   Value<String?> regex,
   Value<int?> order,
@@ -49459,7 +49459,7 @@ typedef $$AttributesTableUpdateCompanionBuilder = AttributesCompanion Function({
   Value<String?> tenantId,
   Value<String?> code,
   Value<String?> values,
-  Value<String?> isActive,
+  Value<bool?> isActive,
   Value<bool?> required,
   Value<String?> regex,
   Value<int?> order,
@@ -49505,7 +49505,7 @@ class $$AttributesTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<String?> code = const Value.absent(),
             Value<String?> values = const Value.absent(),
-            Value<String?> isActive = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
             Value<bool?> required = const Value.absent(),
             Value<String?> regex = const Value.absent(),
             Value<int?> order = const Value.absent(),
@@ -49557,7 +49557,7 @@ class $$AttributesTableTableManager extends RootTableManager<
             Value<String?> tenantId = const Value.absent(),
             Value<String?> code = const Value.absent(),
             Value<String?> values = const Value.absent(),
-            Value<String?> isActive = const Value.absent(),
+            Value<bool?> isActive = const Value.absent(),
             Value<bool?> required = const Value.absent(),
             Value<String?> regex = const Value.absent(),
             Value<int?> order = const Value.absent(),
@@ -49650,7 +49650,7 @@ class $$AttributesTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
-  ColumnFilters<String> get isActive => $state.composableBuilder(
+  ColumnFilters<bool> get isActive => $state.composableBuilder(
       column: $state.table.isActive,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
@@ -49769,7 +49769,7 @@ class $$AttributesTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 
-  ColumnOrderings<String> get isActive => $state.composableBuilder(
+  ColumnOrderings<bool> get isActive => $state.composableBuilder(
       column: $state.table.isActive,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
