@@ -1,5 +1,4 @@
 import 'package:attendance_management/attendance_management.dart';
-import 'package:survey_form/survey_form.dart';
 import 'package:closed_household/blocs/closed_household.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/digit_components.dart';
@@ -19,8 +18,7 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
-import 'package:sync_service/data/sync_service.dart';
-import 'package:sync_service/data/sync_service_annotation.dart';
+import 'package:survey_form/survey_form.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -186,13 +184,8 @@ class MainApplicationState extends State<MainApplication>
                                   widget.sql)
                                 ..add(
                                   LocalizationEvent.onLoadLocalization(
-                                    module: localizationModulesList.interfaces
-                                        .where((element) =>
-                                            element.type ==
-                                            Modules.localizationModule)
-                                        .map((e) => e.name.toString())
-                                        .join(',')
-                                        .toString(),
+                                    module:
+                                        "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                     tenantId: appConfig.tenantId.toString(),
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,

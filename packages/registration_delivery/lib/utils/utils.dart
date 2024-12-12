@@ -168,8 +168,8 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     if (individualModel != null) {
       final individualAge = DigitDateUtils.calculateAge(
         DigitDateUtils.getFormattedDateToDateTime(
-          individualModel.dateOfBirth!,
-        ) ??
+              individualModel.dateOfBirth!,
+            ) ??
             DateTime.now(),
       );
       individualAgeInMonths = individualAge.years * 12 + individualAge.months;
@@ -179,14 +179,14 @@ DeliveryDoseCriteria? fetchProductVariant(ProjectCycleDelivery? currentDelivery,
     if (householdModel != null && householdModel.additionalFields != null) {
       memberCount = householdModel.memberCount;
       roomCount = int.tryParse(householdModel.additionalFields?.fields
-          .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
-          .firstOrNull
-          ?.value
-          .toString() ??
+              .where((h) => h.key == AdditionalFieldsType.noOfRooms.toValue())
+              .firstOrNull
+              ?.value
+              .toString() ??
           '1')!;
       structureType = householdModel.additionalFields?.fields
           .where((h) =>
-      h.key == AdditionalFieldsType.houseStructureTypes.toValue())
+              h.key == AdditionalFieldsType.houseStructureTypes.toValue())
           .firstOrNull
           ?.value
           .toString();
@@ -236,13 +236,14 @@ String maskString(String input) {
 
   return maskedString;
 }
+
 class CustomFormulaParser {
   // Modify the function to accept stringKeys as nullable
   static Map<String, dynamic> parseCondition(
-      String condition,
-      Map<String, dynamic> variables, {
-        List<String>? stringKeys,
-      } // Accept stringKeys as nullable
+    String condition,
+    Map<String, dynamic> variables, {
+    List<String>? stringKeys,
+  } // Accept stringKeys as nullable
       ) {
     // If stringKeys is null or empty, default to FormulaParser for all conditions
     if (stringKeys == null || stringKeys.isEmpty) {
