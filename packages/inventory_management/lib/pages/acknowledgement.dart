@@ -3,6 +3,7 @@ import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/panel_cards.dart';
 import 'package:flutter/material.dart';
+
 import '../utils/i18_key_constants.dart' as i18;
 import '../widgets/localized.dart';
 
@@ -12,6 +13,7 @@ class InventoryAcknowledgementPage extends LocalizedStatefulWidget {
   final String? label;
   final String? description;
   final Map<String, dynamic>? descriptionTableData;
+
   const InventoryAcknowledgementPage({
     super.key,
     super.appLocalizations,
@@ -34,7 +36,7 @@ class AcknowledgementPageState
 
     return Scaffold(
       body: PanelCard(
-        title:  widget.label ??
+        title: widget.label ??
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementLabelText,
             ),
@@ -43,6 +45,7 @@ class AcknowledgementPageState
             localizations.translate(
               i18.acknowledgementSuccess.acknowledgementDescriptionText,
             ),
+
         /// TODO: need to update this as listview card
         // additionWidgets: widget.isDataRecordSuccess
         //     ? DigitTableCard(
@@ -51,23 +54,24 @@ class AcknowledgementPageState
         //     : null,
         actions: [
           DigitButton(
-              label: localizations.translate(i18.acknowledgementSuccess.actionLabelText),
+              label: localizations.translate(
+                  i18.acknowledgementSuccess.acknowledgementLabelText),
               onPressed: () {
                 context.router.maybePop();
               },
               type: DigitButtonType.primary,
               size: DigitButtonSize.large),
-          if(!widget.isDataRecordSuccess)
-          DigitButton(
-              label: localizations
-                  .translate(i18.acknowledgementSuccess.actionLabelText),
-              onPressed: () {
-                final parent = context.router.parent() as StackRouter;
-                // Pop twice to navigate back to the previous screen
-                parent.popUntilRoot();
-              },
-              type: DigitButtonType.secondary,
-              size: DigitButtonSize.large),
+          if (!widget.isDataRecordSuccess)
+            DigitButton(
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.actionLabelText),
+                onPressed: () {
+                  final parent = context.router.parent() as StackRouter;
+                  // Pop twice to navigate back to the previous screen
+                  parent.popUntilRoot();
+                },
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large),
         ],
         // action: () {
         //   context.router.maybePop();
@@ -84,31 +88,31 @@ class AcknowledgementPageState
           child: DigitCard(
             margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
             children: [
-                DigitButton(
-                  size: DigitButtonSize.large,
-                  type: DigitButtonType.secondary,
-                  label: localizations
-              .translate(i18.acknowledgementSuccess.goToHome),
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
-                ),
-                const SizedBox(
-                  height: 12,
-                ),
-                DigitButton(
-                  size: DigitButtonSize.large,
-                  type: DigitButtonType.primary,
-                  onPressed: () {
-                    context.router.popUntilRoot();
-                  },
-                  label: localizations
-                      .translate(i18.acknowledgementSuccess.downloadmoredata),
-                ),
-              ],
-            ),
+              DigitButton(
+                size: DigitButtonSize.large,
+                type: DigitButtonType.secondary,
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.goToHome),
+                onPressed: () {
+                  context.router.popUntilRoot();
+                },
+              ),
+              const SizedBox(
+                height: 12,
+              ),
+              DigitButton(
+                size: DigitButtonSize.large,
+                type: DigitButtonType.primary,
+                onPressed: () {
+                  context.router.popUntilRoot();
+                },
+                label: localizations
+                    .translate(i18.acknowledgementSuccess.downloadmoredata),
+              ),
+            ],
           ),
         ),
+      ),
     );
   }
 }
