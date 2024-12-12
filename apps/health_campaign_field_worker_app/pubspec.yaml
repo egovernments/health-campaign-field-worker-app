@@ -51,7 +51,7 @@ dependencies:
   flutter_portal: ^1.1.4
   flutter_background_service: ^5.0.5
   flutter_local_notifications: ^17.1.2
-  device_info_plus: ^10.1.0
+  device_info_plus: ^9.1.2
   battery_plus: ^6.0.1
   workmanager: ^0.5.2
   digit_firebase_services: ^0.0.1
