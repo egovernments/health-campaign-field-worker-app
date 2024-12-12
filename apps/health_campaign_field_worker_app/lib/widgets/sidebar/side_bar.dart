@@ -34,13 +34,12 @@ class SideBar extends StatelessWidget {
         : false;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      return Column(
-        children: [
+      return SingleChildScrollView(
+        child: Column(children: [
           Container(
             color: theme.colorScheme.secondary.withOpacity(0.12),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 280,
               child: state.maybeMap(
                 authenticated: (value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -235,7 +234,7 @@ class SideBar extends StatelessWidget {
           PoweredByDigit(
             version: Constants().version,
           ),
-        ],
+        ]),
       );
     });
   }

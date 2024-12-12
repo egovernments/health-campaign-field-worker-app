@@ -25215,9 +25215,12 @@ class $AttributesTable extends Attributes
   static const VerificationMeta _isActiveMeta =
       const VerificationMeta('isActive');
   @override
-  late final GeneratedColumn<String> isActive = GeneratedColumn<String>(
+  late final GeneratedColumn<bool> isActive = GeneratedColumn<bool>(
       'is_active', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_active" IN (0, 1))'));
   static const VerificationMeta _requiredMeta =
       const VerificationMeta('required');
   @override
@@ -25498,7 +25501,7 @@ class $AttributesTable extends Attributes
       values: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}values']),
       isActive: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}is_active']),
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_active']),
       required: attachedDatabase.typeMapping
           .read(DriftSqlType.bool, data['${effectivePrefix}required']),
       regex: attachedDatabase.typeMapping
@@ -25547,7 +25550,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
   final String? tenantId;
   final String? code;
   final String? values;
-  final String? isActive;
+  final bool? isActive;
   final bool? required;
   final String? regex;
   final int? order;
@@ -25610,7 +25613,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       map['values'] = Variable<String>(values);
     }
     if (!nullToAbsent || isActive != null) {
-      map['is_active'] = Variable<String>(isActive);
+      map['is_active'] = Variable<bool>(isActive);
     }
     if (!nullToAbsent || required != null) {
       map['required'] = Variable<bool>(required);
@@ -25740,7 +25743,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       tenantId: serializer.fromJson<String?>(json['tenantId']),
       code: serializer.fromJson<String?>(json['code']),
       values: serializer.fromJson<String?>(json['values']),
-      isActive: serializer.fromJson<String?>(json['isActive']),
+      isActive: serializer.fromJson<bool?>(json['isActive']),
       required: serializer.fromJson<bool?>(json['required']),
       regex: serializer.fromJson<String?>(json['regex']),
       order: serializer.fromJson<int?>(json['order']),
@@ -25771,7 +25774,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
       'tenantId': serializer.toJson<String?>(tenantId),
       'code': serializer.toJson<String?>(code),
       'values': serializer.toJson<String?>(values),
-      'isActive': serializer.toJson<String?>(isActive),
+      'isActive': serializer.toJson<bool?>(isActive),
       'required': serializer.toJson<bool?>(required),
       'regex': serializer.toJson<String?>(regex),
       'order': serializer.toJson<int?>(order),
@@ -25798,7 +25801,7 @@ class Attribute extends DataClass implements Insertable<Attribute> {
           Value<String?> tenantId = const Value.absent(),
           Value<String?> code = const Value.absent(),
           Value<String?> values = const Value.absent(),
-          Value<String?> isActive = const Value.absent(),
+          Value<bool?> isActive = const Value.absent(),
           Value<bool?> required = const Value.absent(),
           Value<String?> regex = const Value.absent(),
           Value<int?> order = const Value.absent(),
@@ -25953,7 +25956,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
   final Value<String?> tenantId;
   final Value<String?> code;
   final Value<String?> values;
-  final Value<String?> isActive;
+  final Value<bool?> isActive;
   final Value<bool?> required;
   final Value<String?> regex;
   final Value<int?> order;
@@ -26030,7 +26033,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
     Expression<String>? tenantId,
     Expression<String>? code,
     Expression<String>? values,
-    Expression<String>? isActive,
+    Expression<bool>? isActive,
     Expression<bool>? required,
     Expression<String>? regex,
     Expression<int>? order,
@@ -26086,7 +26089,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       Value<String?>? tenantId,
       Value<String?>? code,
       Value<String?>? values,
-      Value<String?>? isActive,
+      Value<bool?>? isActive,
       Value<bool?>? required,
       Value<String?>? regex,
       Value<int?>? order,
@@ -26154,7 +26157,7 @@ class AttributesCompanion extends UpdateCompanion<Attribute> {
       map['values'] = Variable<String>(values.value);
     }
     if (isActive.present) {
-      map['is_active'] = Variable<String>(isActive.value);
+      map['is_active'] = Variable<bool>(isActive.value);
     }
     if (required.present) {
       map['required'] = Variable<bool>(required.value);
