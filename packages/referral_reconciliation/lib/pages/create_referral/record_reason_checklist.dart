@@ -13,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:referral_reconciliation/utils/constants.dart';
+import 'package:referral_reconciliation/utils/extensions/extensions.dart';
 import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/referral_recon_service_definition.dart';
@@ -24,6 +25,7 @@ import '../../widgets/localized.dart';
 @RoutePage()
 class ReferralReasonChecklistPage extends LocalizedStatefulWidget {
   final String? referralClientRefId;
+
   const ReferralReasonChecklistPage({
     super.key,
     this.referralClientRefId,
@@ -216,34 +218,32 @@ class _ReferralReasonChecklistPageState
                                                     accountId:
                                                         ReferralReconSingleton()
                                                             .projectId,
-                                                    auditDetails:
-                                          AuditDetails(
-                                            createdBy:
-                                            ReferralReconSingleton()
-                                                .userUUid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                            ReferralReconSingleton()
-                                                .userUUid,
-                                            lastModifiedTime:
-                                            context
-                                                .millisecondsSinceEpoch(),
-                                          ),
-                                          clientAuditDetails:
-                                          ClientAuditDetails(
-                                            createdBy:
-                                            ReferralReconSingleton()
-                                                .userUUid,
-                                            createdTime: context
-                                                .millisecondsSinceEpoch(),
-                                            lastModifiedBy:
-                                            ReferralReconSingleton()
-                                                .userUUid,
-                                            lastModifiedTime:
-                                            context
-                                                .millisecondsSinceEpoch(),
-                                          ),additionalDetails: {
+                                                    auditDetails: AuditDetails(
+                                                      createdBy:
+                                                          ReferralReconSingleton()
+                                                              .userUUid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                      lastModifiedBy:
+                                                          ReferralReconSingleton()
+                                                              .userUUid,
+                                                      lastModifiedTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    clientAuditDetails:
+                                                        ClientAuditDetails(
+                                                      createdBy:
+                                                          ReferralReconSingleton()
+                                                              .userUUid,
+                                                      createdTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                      lastModifiedBy:
+                                                          ReferralReconSingleton()
+                                                              .userUUid,
+                                                      lastModifiedTime: context
+                                                          .millisecondsSinceEpoch(),
+                                                    ),
+                                                    additionalDetails: {
                                                       "boundaryCode":
                                                           ReferralReconSingleton()
                                                               .boundary
@@ -791,8 +791,8 @@ class _ReferralReasonChecklistPageState
                 : theme.colorTheme.paper.secondary,
             child: _buildChecklist(
               matchingChildItem,
-              initialAttributes?.indexOf(matchingChildItem) ??
-                  parentIndex, // Pass parentIndex here as we're building at the same level
+              initialAttributes?.indexOf(matchingChildItem) ?? parentIndex,
+              // Pass parentIndex here as we're building at the same level
               selectedServiceDefinition,
               context,
             ),

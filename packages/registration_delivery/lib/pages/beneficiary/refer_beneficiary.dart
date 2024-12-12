@@ -180,7 +180,12 @@ class ReferBeneficiaryPageState extends LocalizedState<ReferBeneficiaryPage> {
                                   additionalFields: ReferralAdditionalFields(
                                     version: 1,
                                     fields: [
-                                      AdditionalField("boundaryCode",RegistrationDeliverySingleton().boundary?.code),if (referralComment != null &&
+                                      AdditionalField(
+                                          "boundaryCode",
+                                          RegistrationDeliverySingleton()
+                                              .boundary
+                                              ?.code),
+                                      if (referralComment != null &&
                                           referralComment
                                               .toString()
                                               .trim()
