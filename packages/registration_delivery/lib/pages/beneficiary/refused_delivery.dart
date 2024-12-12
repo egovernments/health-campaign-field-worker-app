@@ -162,15 +162,14 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                         ]),
                     slivers: [
                       SliverToBoxAdapter(
-                        child: DigitCard(children: [
-                          Padding(
-                            padding: const EdgeInsets.all(spacer2),
-                            child: Text(
-                              localizations.translate(
-                                i18.deliverIntervention.refusedDeliveryLabel,
-                              ),
-                              style: textTheme.headingXl,
+                        child: DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                            children: [
+                          Text(
+                            localizations.translate(
+                              i18.deliverIntervention.refusedDeliveryLabel,
                             ),
+                            style: textTheme.headingXl,
                           ),
                           refusedDeliveryShowcaseData.dateOfVisit.buildWith(
                             child: ReactiveWrapperField(
@@ -201,8 +200,9 @@ class RefusedDeliveryPageState extends LocalizedState<RefusedDeliveryPage> {
                               title: localizations.translate(
                                 i18.deliverIntervention.reasonForRefusalLabel,
                               ),
+                              showParentContainer: true,
                               isRequired: true,
-                              width: MediaQuery.of(context).size.width * .36,
+                              width: MediaQuery.of(context).size.width * .34,
                               allowMultipleSelection: false,
                               options: RegistrationDeliverySingleton()
                                       .refusalReasons ??

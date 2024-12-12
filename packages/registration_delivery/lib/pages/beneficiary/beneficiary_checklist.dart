@@ -107,7 +107,6 @@ class _BeneficiaryChecklistPageState
                   enableFixedDigitButton: true,
                   footer: DigitCard(
                       margin: const EdgeInsets.only(top: spacer2),
-                      padding: const EdgeInsets.all(spacer2),
                       children: [
                         DigitButton(
                           label: localizations
@@ -269,7 +268,9 @@ class _BeneficiaryChecklistPageState
                   children: [
                     Form(
                       key: checklistFormKey, //assigning key to form
-                      child: DigitCard(padding: EdgeInsets.zero, children: [
+                      child: DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                          children: [
                         ...initialAttributes!.map((
                           e,
                         ) {
@@ -423,12 +424,12 @@ class _BeneficiaryChecklistPageState
                               ),
                             ] else if (e.dataType == 'Boolean') ...[
                               if (!(e.code ?? '').contains('.'))
-                                DigitCard(children: [
                                   BlocBuilder<ServiceBloc, ServiceState>(
                                     builder: (context, state) {
                                       return Align(
                                         alignment: Alignment.topLeft,
                                         child: SelectionCard<bool>(
+                                          showParentContainer: true,
                                           title: localizations.translate(
                                             '${selectedServiceDefinition?.code}.${e.code}',
                                           ),
@@ -486,13 +487,9 @@ class _BeneficiaryChecklistPageState
                                       );
                                     },
                                   ),
-                                ]),
                             ],
                           ]);
                         }),
-                        const SizedBox(
-                          height: 15,
-                        ),
                       ]),
                     ),
                   ],

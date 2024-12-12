@@ -8,6 +8,7 @@ import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_action_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
+import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
@@ -93,7 +94,6 @@ class _HouseholdOverviewPageState
                                 DeliverInterventionState>(
                           builder: (ctx, deliverInterventionState) => DigitCard(
                               margin: const EdgeInsets.only(top: spacer2),
-                              padding: const EdgeInsets.all(spacer2),
                               children: [
                                 state.householdMemberWrapper.tasks?.lastOrNull
                                             ?.status ==
@@ -207,7 +207,9 @@ class _HouseholdOverviewPageState
                     ),
                     slivers: [
                       SliverToBoxAdapter(
-                        child: DigitCard(children: [
+                        child: DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                            children: [
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.max,
