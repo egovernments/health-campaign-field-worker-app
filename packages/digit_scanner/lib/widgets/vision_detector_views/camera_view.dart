@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:camera/camera.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_scanner/blocs/app_localization.dart';
 import 'package:digit_scanner/utils/i18_key_constants.dart' as i18;
 import 'package:digit_scanner/widgets/localized.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -75,13 +76,14 @@ class _CameraViewState extends State<CameraView> {
   }
 
   Widget _liveFeedBody(BuildContext context) {
+    final theme = Theme.of(context);
     final localizations = ScannerLocalization.of(context);
 
     if (_cameras.isEmpty) return Container();
     if (_controller == null) return Container();
     if (_controller?.value.isInitialized == false) return Container();
     return Container(
-      color: DigitTheme.instance.colorScheme.onSurface,
+      color: theme.colorTheme.generic.background,
       child: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -116,10 +118,11 @@ class _CameraViewState extends State<CameraView> {
           child: FloatingActionButton(
             heroTag: Object(),
             onPressed: () => Navigator.of(context).pop(),
-            backgroundColor: DigitTheme.instance.colorScheme.onSurface,
-            child: const Icon(
+            backgroundColor: Theme.of(context).colorTheme.generic.background,
+            child:  Icon(
               Icons.arrow_back_ios_outlined,
               size: 20,
+              color: Theme.of(context).colorTheme.text.primary,
             ),
           ),
         ),
@@ -181,7 +184,7 @@ class _CameraViewState extends State<CameraView> {
                     min: _minAvailableZoom,
                     max: _maxAvailableZoom,
                     activeColor: DigitTheme.instance.colorScheme.onPrimary,
-                    inactiveColor: const DigitColors().seaShellGray,
+                    inactiveColor: const DigitColors().light.genericBackground,
                     onChanged: (value) async {
                       setState(() {
                         _currentZoomLevel = value;
@@ -201,7 +204,7 @@ class _CameraViewState extends State<CameraView> {
                     child: Center(
                       child: Text(
                         '${_currentZoomLevel.toStringAsFixed(1)}x',
-                        style: TextStyle(color: const DigitColors().white),
+                        style: TextStyle(color: const DigitColors().light.paperPrimary),
                       ),
                     ),
                   ),
@@ -227,7 +230,7 @@ class _CameraViewState extends State<CameraView> {
                 padding: const EdgeInsets.all(3.0),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    width: kPadding / 2,
+                    width: spacer1,
                     color: DigitTheme.instance.colorScheme.error,
                   ),
                 ),

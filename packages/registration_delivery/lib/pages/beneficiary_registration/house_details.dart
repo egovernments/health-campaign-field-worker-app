@@ -64,7 +64,6 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                     ),
                     footer: DigitCard(
                         margin: const EdgeInsets.only(top: spacer2),
-                        padding: const EdgeInsets.all(spacer2),
                         children: [
                           DigitButton(
                             onPressed: () {
@@ -220,9 +219,11 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                         ]),
                     slivers: [
                       SliverToBoxAdapter(
-                        child: DigitCard(children: [
+                        child: DigitCard(
+                          margin: const EdgeInsets.all(spacer2),
+                            children: [
                           Padding(
-                            padding: const EdgeInsets.all(spacer2),
+                            padding: const EdgeInsets.all(0),
                             child: Text(
                               localizations.translate(
                                 i18.householdDetails.houseDetailsLabel,
@@ -232,6 +233,7 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                           ),
                           houseShowcaseData.typeOfStructure.buildWith(
                             child: SelectionCard<String>(
+                              showParentContainer: true,
                               isRequired: true,
                               title: localizations.translate(
                                   i18.householdDetails.typeOfStructure),

@@ -105,7 +105,6 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
               ]),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     ValueListenableBuilder(
                       valueListenable: clickedStatus,
@@ -313,15 +312,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                   ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: spacer2),
-                      child: Text(
-                        localizations.translate(
-                          i18.individualDetails.individualsDetailsLabelText,
-                        ),
-                        style: textTheme.headingXl,
+                  child: DigitCard(
+                      margin: const EdgeInsets.all(spacer2),
+                      children: [
+                    Text(
+                      localizations.translate(
+                        i18.individualDetails.individualsDetailsLabelText,
                       ),
+                      style: textTheme.headingXl,
                     ),
                     individualDetailsShowcaseData.nameOfIndividual.buildWith(
                       child: ReactiveWrapperField(
@@ -495,6 +493,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                     ),
                     SelectionCard<String>(
                       isRequired: true,
+                      showParentContainer: true,
                       title: localizations.translate(
                         i18.individualDetails.genderLabelText,
                       ),
@@ -558,7 +557,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    // const SizedBox(height: spacer4),
                     if ((RegistrationDeliverySingleton().beneficiaryType ==
                                 BeneficiaryType.household &&
                             widget.isHeadOfHousehold) ||

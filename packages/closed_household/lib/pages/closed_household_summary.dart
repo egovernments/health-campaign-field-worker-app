@@ -58,7 +58,7 @@ class ClosedHouseholdSummaryPageState
                 showcaseButton: ShowcaseButton(),
               ),
               footer: DigitCard(
-                  padding: EdgeInsets.all(theme.spacerTheme.spacer2),
+                  margin: const EdgeInsets.only(top: spacer2),
                   children: [
                     BlocBuilder<DigitScannerBloc, DigitScannerState>(
                         builder: (context, scannerState) {
@@ -123,8 +123,11 @@ class ClosedHouseholdSummaryPageState
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  DigitCard(children: [
+                  DigitCard(
+                      margin: const EdgeInsets.all(spacer2),
+                      children: [
                     LabelValueSummary(
+                      padding: EdgeInsets.zero,
                         heading: localizations.translate(
                             i18.closeHousehold.closeHouseholdSummaryLabel),
                         withDivider: false,
@@ -136,6 +139,7 @@ class ClosedHouseholdSummaryPageState
                                     DateTime.now().millisecondsSinceEpoch,
                                     dateFormat: 'dd MMM yyyy'))
                                 .toString(),
+                            labelFlex: 5,
                           ),
                           LabelValueItem(
                             label: localizations.translate(
@@ -144,6 +148,7 @@ class ClosedHouseholdSummaryPageState
                                 .boundary!
                                 .name
                                 .toString(),
+                            labelFlex: 5,
                           ),
                           LabelValueItem(
                             label: localizations.translate(
@@ -151,19 +156,23 @@ class ClosedHouseholdSummaryPageState
                             value: householdState.householdHeadName ??
                                 localizations
                                     .translate(i18.common.coreCommonNA),
+                            labelFlex: 5,
                           ),
                           LabelValueItem(
                             label: localizations.translate(i18
                                 .closeHousehold.closeHouseholdGpsAccuracyLabel),
                             value:
                                 '${householdState.locationAccuracy.toStringAsFixed(2)} ${localizations.translate(i18.common.coreCommonMeters)}',
+                            labelFlex: 5,
                           ),
                         ]),
                   ]),
                   BlocBuilder<DigitScannerBloc, DigitScannerState>(
                       builder: (context, state) {
                     if (state.qrCodes.isNotEmpty) {
-                      return DigitCard(children: [
+                      return DigitCard(
+                        margin: const EdgeInsets.all(spacer2),
+                          children: [
                         LabelValueSummary(
                           heading: localizations.translate(i18.closeHousehold
                               .closeHouseholdVoucherSummaryLabel),
@@ -173,6 +182,7 @@ class ClosedHouseholdSummaryPageState
                               label: localizations.translate(i18.closeHousehold
                                   .closeHouseholdVoucherCodeLabel),
                               value: state.qrCodes.first,
+                              labelFlex: 5,
                             ),
                           ],
                         ),

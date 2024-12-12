@@ -6,6 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:digit_scanner/utils/scanner_utils.dart';
 import 'package:digit_scanner/widgets/localized.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -215,12 +216,13 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           child: DigitCard(
                             margin: const EdgeInsets.only(top: spacer1),
                             padding: const EdgeInsets.fromLTRB(
-                                spacer1, 0, spacer1, 0),
+                                spacer3, spacer1, spacer3, 0),
                             children: [
                               DigitButton(
                                 label: localizations
                                     .translate(i18.common.coreCommonSubmit),
                                 size: DigitButtonSize.large,
+                                mainAxisSize: MainAxisSize.max,
                                 type: DigitButtonType.primary,
                                 onPressed: () async {
                                   if (widget.isGS1code &&
@@ -248,7 +250,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                         ),
 
                         Positioned(
-                          bottom: (spacer1 * 7.5),
+                          bottom: (spacer1 * 10),
                           height: widget.isGS1code
                               ? state.barCodes.length < 3
                                   ? (state.barCodes.length * 60) + 80
@@ -413,99 +415,102 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                       return ReactiveFormBuilder(
                           form: () => buildForm(),
                           builder: (context, form, child) {
-                            return DigitCard(
-                              children: [
-                                ScrollableContent(
-                                  backgroundColor: theme.colorScheme.onError,
-                                  header: GestureDetector(
-                                    onTap: () {
+                            return ScrollableContent(
+                              backgroundColor: theme.colorScheme.onError,
+                              header: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    manualCode = false;
+                                    initializeCameras();
+                                  });
+                                },
+                                child:  Align(
+                                  alignment: Alignment.topRight,
+                                  child: Icon(Icons.close, color: Theme.of(context).colorTheme.text.primary,),
+                                ),
+                              ),
+                              footer: Padding(
+                                padding: const EdgeInsets.all(spacer4),
+                                child: DigitButton(
+                                  mainAxisSize: MainAxisSize.max,
+                                  onPressed: () async {
+                                    if (form
+                                                .control(_manualCodeFormKey)
+                                                .value ==
+                                            null ||
+                                        form
+                                            .control(_manualCodeFormKey)
+                                            .value
+                                            .toString()
+                                            .trim()
+                                            .isEmpty) {
+                                      Toast.showToast(
+                                        context,
+                                        type: ToastType.error,
+                                        message: localizations.translate(
+                                            i18.scanner.enterManualCode),
+                                      );
+                                    } else {
+                                      final bloc =
+                                          context.read<DigitScannerBloc>();
+                                      codes.add(form
+                                          .control(_manualCodeFormKey)
+                                          .value);
+                                      bloc.add(
+                                        DigitScannerEvent.handleScanner(
+                                          barCode: state.barCodes,
+                                          qrCode: codes,
+                                        ),
+                                      );
+                                      if (widget.isGS1code &&
+                                          result.length < widget.quantity) {
+                                        DigitScannerUtils().buildDialog(
+                                          context,
+                                          localizations,
+                                          widget.quantity,
+                                        );
+                                      }
+
                                       setState(() {
                                         manualCode = false;
                                         initializeCameras();
                                       });
-                                    },
-                                    child: const Align(
-                                      alignment: Alignment.topRight,
-                                      child: Icon(Icons.close),
-                                    ),
+                                    }
+                                  },
+                                  type: DigitButtonType.primary,
+                                  size: DigitButtonSize.large,
+                                  label: localizations.translate(
+                                    i18.common.coreCommonSubmit,
                                   ),
-                                  footer: DigitButton(
-                                    onPressed: () async {
-                                      if (form
-                                                  .control(_manualCodeFormKey)
-                                                  .value ==
-                                              null ||
-                                          form
-                                              .control(_manualCodeFormKey)
-                                              .value
-                                              .toString()
-                                              .trim()
-                                              .isEmpty) {
-                                        Toast.showToast(
-                                          context,
-                                          type: ToastType.error,
-                                          message: localizations.translate(
-                                              i18.scanner.enterManualCode),
-                                        );
-                                      } else {
-                                        final bloc =
-                                            context.read<DigitScannerBloc>();
-                                        codes.add(form
-                                            .control(_manualCodeFormKey)
-                                            .value);
-                                        bloc.add(
-                                          DigitScannerEvent.handleScanner(
-                                            barCode: state.barCodes,
-                                            qrCode: codes,
-                                          ),
-                                        );
-                                        if (widget.isGS1code &&
-                                            result.length < widget.quantity) {
-                                          DigitScannerUtils().buildDialog(
-                                            context,
-                                            localizations,
-                                            widget.quantity,
-                                          );
-                                        }
-
-                                        setState(() {
-                                          manualCode = false;
-                                          initializeCameras();
-                                        });
-                                      }
-                                    },
-                                    type: DigitButtonType.primary,
-                                    size: DigitButtonSize.large,
-                                    label: localizations.translate(
-                                      i18.common.coreCommonSubmit,
-                                    ),
-                                  ),
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.topLeft,
-                                      child: Text(
-                                        localizations.translate(
-                                          i18.scanner.enterManualCode,
-                                        ),
-                                        style: theme.textTheme.headlineLarge,
+                                ),
+                              ),
+                              children: [
+                                DigitCard(children: [
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      localizations.translate(
+                                        i18.scanner.enterManualCode,
                                       ),
+                                      style: theme.textTheme.headlineLarge,
                                     ),
-                                    const SizedBox(
-                                      height: spacer2,
-                                    ),
-                                    ReactiveWrapperField(
-                                      formControlName: _manualCodeFormKey,
-                                      builder: (field) {
-                                        return InputField(
-                                          label: localizations.translate(
-                                            i18.scanner.resourceCode,
-                                          ),
-                                          type: InputType.text,
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                )
+                                  ),
+                                  const SizedBox(
+                                    height: spacer2,
+                                  ),
+                                  ReactiveWrapperField(
+                                    formControlName: _manualCodeFormKey,
+                                    builder: (field) {
+                                      return InputField(
+                                        label: localizations.translate(
+                                          i18.scanner.resourceCode,
+                                        ),
+                                        type: InputType.text,
+                                      );
+                                    },
+                                  ),
+                                ])
+
                               ],
                             );
                           });

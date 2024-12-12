@@ -118,7 +118,6 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
               ),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
-                  padding: const EdgeInsets.all(spacer2),
                   children: [
                     BlocBuilder<LocationBloc, LocationState>(
                       builder: (context, locationState) {
@@ -267,7 +266,9 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                   ]),
               slivers: [
                 SliverToBoxAdapter(
-                  child: DigitCard(children: [
+                  child: DigitCard(
+                    margin: const EdgeInsets.all(spacer2),
+                      children: [
                     DigitTextBlock(
                         padding: const EdgeInsets.only(top: spacer2),
                         heading: localizations.translate(
