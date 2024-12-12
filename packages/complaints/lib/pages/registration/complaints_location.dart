@@ -1,14 +1,15 @@
-
+import 'dart:math';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
-
-
 
 import '../../models/pgr_address.dart';
 import '/blocs/complaints_registration/complaints_registration.dart';
@@ -16,7 +17,6 @@ import '/utils/i18_key_constants.dart' as i18;
 import '/utils/utils.dart';
 import '/widgets/header/back_navigation_help_header.dart';
 import '/widgets/localized.dart';
-
 
 @RoutePage()
 class ComplaintsLocationPage extends LocalizedStatefulWidget {
@@ -45,6 +45,7 @@ class ComplaintsLocationPageState
     final theme = Theme.of(context);
     final bloc = context.read<ComplaintsRegistrationBloc>();
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -77,148 +78,157 @@ class ComplaintsLocationPageState
               ComplaintsRegistrationState>(
             builder: (context, state) {
               return ScrollableContent(
-                enableFixedButton: true,
+                enableFixedDigitButton: true,
                 header: const Column(
                   children: [
                     BackNavigationHelpHeaderWidget(),
                   ],
                 ),
                 footer: DigitCard(
-                  margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                  padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                  child: DigitElevatedButton(
-                    onPressed: () {
-                      form.markAllAsTouched();
+                    cardType: CardType.primary,
+                    margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                    children: [
+                      DigitButton(
+                        label:
+                            localizations.translate(i18.complaints.actionLabel),
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          form.markAllAsTouched();
 
-                      if (!form.valid) return;
-                      FocusManager.instance.primaryFocus?.unfocus();
+                          if (!form.valid) return;
+                          FocusManager.instance.primaryFocus?.unfocus();
 
-                      final addressLine1 =
-                          form.control(_addressLine1Key).value as String?;
-                      final addressLine2 =
-                          form.control(_addressLine2Key).value as String?;
-                      final landmark =
-                          form.control(_landmarkKey).value as String?;
-                      final postalCode =
-                          form.control(_postalCodeKey).value as String?;
+                          final addressLine1 =
+                              form.control(_addressLine1Key).value as String?;
+                          final addressLine2 =
+                              form.control(_addressLine2Key).value as String?;
+                          final landmark =
+                              form.control(_landmarkKey).value as String?;
+                          final postalCode =
+                              form.control(_postalCodeKey).value as String?;
 
-                      state.whenOrNull(
-                        create: (
-                          loading,
-                          complaintType,
-                          _,
-                          addressModel,
-                          complaintsDetailsModel,
-                        ) {
-                          bloc.add(ComplaintsRegistrationEvent.saveAddress(
-                            addressModel: PgrAddressModel(
-                              buildingName: addressLine1,
-                              street: addressLine2,
-                              landmark: landmark,
-                              pincode: postalCode,
-                              geoLocation: GeoLocation(
-                                latitude: form.control(_latKey).value,
-                                longitude: form.control(_lngKey).value,
-                              ),
-                            ),
-                          ));
+                          state.whenOrNull(
+                            create: (
+                              loading,
+                              complaintType,
+                              _,
+                              addressModel,
+                              complaintsDetailsModel,
+                            ) {
+                              bloc.add(ComplaintsRegistrationEvent.saveAddress(
+                                addressModel: PgrAddressModel(
+                                  buildingName: addressLine1,
+                                  street: addressLine2,
+                                  landmark: landmark,
+                                  pincode: postalCode,
+                                  geoLocation: GeoLocation(
+                                    latitude: form.control(_latKey).value,
+                                    longitude: form.control(_lngKey).value,
+                                  ),
+                                ),
+                              ));
+                            },
+                          );
+
+                          router.push(ComplaintsDetailsRoute());
                         },
-                      );
-
-                      router.push(ComplaintsDetailsRoute());
-                    },
-                    child: Center(
-                      child: Text(
-                        localizations.translate(i18.complaints.actionLabel),
                       ),
-                    ),
-                  ),
-                ),
+                    ]),
                 children: [
                   DigitCard(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: kPadding),
-                          child: Text(
-                            localizations.translate(
-                              i18.complaints.complaintsLocationLabel,
-                            ),
-                            style: theme.textTheme.displayMedium,
-                          ),
-                        ),
-                        Column(children: [
-                          DigitTextFormField(
-                            formControlName: _addressLine1Key,
+                    margin: const EdgeInsets.all(spacer2),
+                      cardType: CardType.primary, children: [
+                    Text(
+                      localizations.translate(
+                        i18.complaints.complaintsLocationLabel,
+                      ),
+                      style: textTheme.headingXl,
+                    ),
+                    ReactiveWrapperField<String>(
+                        formControlName: _addressLine1Key,
+                        showErrors: (control) => control.invalid,
+                        validationMessages: {
+                          'required': (_) => localizations.translate(
+                                i18.common.min2CharsRequired,
+                              ),
+                          'maxLength': (object) => localizations
+                              .translate(i18.common.maxCharsRequired)
+                              .replaceAll('{}', maxLength.toString()),
+                        },
+                        builder: (field) {
+                          return LabeledField(
                             label: localizations.translate(
                               i18.householdLocation
                                   .householdAddressLine1LabelText,
                             ),
-                            validationMessages: {
-                              'required': (_) => localizations.translate(
-                                    i18.common.min2CharsRequired,
-                                  ),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', maxLength.toString()),
-                            },
-                          ),
-                          DigitTextFormField(
-                            formControlName: _addressLine2Key,
+                            child: DigitTextFormInput(
+                              errorMessage: field.errorText,
+                              initialValue: field.value,
+                              onChange: (value) => form
+                                  .control(_addressLine1Key)
+                                  .value = value,
+                            ),
+                          );
+                        }),
+                    ReactiveWrapperField<String>(
+                        formControlName: _addressLine2Key,
+                        builder: (field) {
+                          return LabeledField(
                             label: localizations.translate(
                               i18.householdLocation
                                   .householdAddressLine2LabelText,
                             ),
-                            validationMessages: {
-                              'required': (_) => localizations.translate(
-                                    i18.common.min2CharsRequired,
-                                  ),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', maxLength.toString()),
-                            },
-                            padding: const EdgeInsets.only(top: kPadding / 2),
-                          ),
-                          DigitTextFormField(
-                            formControlName: _landmarkKey,
+                            padding: const EdgeInsets.only(top: spacer2 / 2),
+                            child: DigitTextFormInput(
+                              maxLength: maxLength,
+                              initialValue: field.value,
+                              onChange: (value) => form
+                                  .control(_addressLine2Key)
+                                  .value = value,
+                              errorMessage: field.errorText,
+                            ),
+                          );
+                        }),
+                    ReactiveWrapperField<String>(
+                        formControlName: _landmarkKey,
+                        builder: (field) {
+                          return LabeledField(
                             label: localizations.translate(
                               i18.householdLocation.landmarkFormLabel,
                             ),
-                            validationMessages: {
-                              'required': (_) => localizations.translate(
-                                    i18.common.min2CharsRequired,
-                                  ),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', maxLength.toString()),
-                            },
-                            padding: const EdgeInsets.only(top: kPadding / 2),
-                          ),
-                          DigitTextFormField(
-                            keyboardType: TextInputType.text,
-                            formControlName: _postalCodeKey,
+                            padding: const EdgeInsets.only(top: spacer2 / 2),
+                            child: DigitTextFormInput(
+                              initialValue: field.value,
+                              onChange: (value) => form
+                                  .control(_landmarkKey)
+                                  .value = value,
+                              errorMessage: field.errorText,
+                            ),
+                          );
+                        }),
+                    ReactiveWrapperField<String>(
+                        formControlName: _postalCodeKey,
+                        builder: (field) {
+                          return LabeledField(
                             label: localizations.translate(
                               i18.householdLocation.postalCodeFormLabel,
                             ),
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            validationMessages: {
-                              'required': (_) => localizations.translate(
-                                    i18.common.min2CharsRequired,
-                                  ),
-                              'maxLength': (object) => localizations
-                                  .translate(i18.common.maxCharsRequired)
-                                  .replaceAll('{}', '6'),
-                            },
-                            padding: const EdgeInsets.only(top: kPadding / 3.5),
-                          ),
-                        ]),
-                      ],
-                    ),
-                  ),
+                            padding: const EdgeInsets.only(top: spacer2 / 3.5),
+                            child: DigitTextFormInput(
+                              keyboardType: TextInputType.text,
+                              initialValue: field.value,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              onChange: (value) => form
+                                  .control(_postalCodeKey)
+                                  .value = value,
+                            ),
+                          );
+                        }),
+                  ]),
                 ],
               );
             },
@@ -240,9 +250,8 @@ class ComplaintsLocationPageState
         value: addressModel?.buildingName,
         disabled: shouldDisableForm,
         validators: [
-
-          CustomValidator.requiredMin,
-
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -250,9 +259,8 @@ class ComplaintsLocationPageState
         value: addressModel?.street,
         disabled: shouldDisableForm,
         validators: [
-
-          CustomValidator.requiredMin,
-
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -260,9 +268,8 @@ class ComplaintsLocationPageState
         value: addressModel?.landmark,
         disabled: shouldDisableForm,
         validators: [
-
-          CustomValidator.requiredMin,
-
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(maxLength),
         ],
       ),
@@ -270,18 +277,16 @@ class ComplaintsLocationPageState
         value: addressModel?.pincode,
         disabled: shouldDisableForm,
         validators: [
-
-          CustomValidator.requiredMin,
-
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
           Validators.maxLength(6),
         ],
       ),
       _latKey: FormControl<double>(
         value: addressModel?.geoLocation?.latitude,
         validators: [
-
-          CustomValidator.requiredMin,
-
+          Validators.delegate(
+                  (validator) => CustomValidator.requiredMin(validator)),
         ],
       ),
       _lngKey: FormControl<double>(

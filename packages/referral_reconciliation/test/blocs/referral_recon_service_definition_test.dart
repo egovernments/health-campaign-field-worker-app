@@ -26,14 +26,10 @@ void main() {
     registerFallbackValue(FakeServiceDefinitionSearchModel());
   });
   group('ReferralReconServiceBloc', () {
-    // Declare variables for MockInventorySingleton and FacilityBloc
-    late MockReferralReconSingleton mockReferralReconSingleton;
     late ReferralReconServiceDefinitionBloc serviceBloc;
     late MockServiceDataRepository serviceDefinitionDataRepository;
 
     setUp(() {
-      // Initialize MockReferralReconSingleton and ReferralReconServiceBloc before each test
-      mockReferralReconSingleton = MockReferralReconSingleton();
       serviceDefinitionDataRepository = MockServiceDataRepository();
       serviceBloc = ReferralReconServiceDefinitionBloc(
         const ReferralReconServiceDefinitionState.empty(),

@@ -48,7 +48,7 @@ class _ReferralReconProjectFacilitySelectionPageState
           body: ReactiveFormConsumer(
             builder: (context, form, _) {
               final filteredProjectFacilities =
-                  (widget.projectFacilities ?? []).isNotEmpty
+                  (widget.projectFacilities).isNotEmpty
                       ? widget.projectFacilities.where((element) {
                           final query =
                               form.control(_facilityName).value as String?;

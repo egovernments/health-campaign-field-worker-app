@@ -2,19 +2,19 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:complaints/complaints.dart';
 import 'package:complaints/router/complaints_router.gm.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:recase/recase.dart';
-
 
 
 import '/utils/i18_key_constants.dart' as i18;
 import '/widgets/header/back_navigation_help_header.dart';
 import '/widgets/localized.dart';
-
 
 @RoutePage()
 class ComplaintTypePage extends LocalizedStatefulWidget {
@@ -36,6 +36,7 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
     final bloc = context.read<ComplaintsRegistrationBloc>();
     final router = context.router;
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -55,147 +56,134 @@ class ComplaintTypePageState extends LocalizedState<ComplaintTypePage> {
               header: const Column(children: [
                 BackNavigationHelpHeaderWidget(),
               ]),
-              enableFixedButton: true,
+              enableFixedDigitButton: true,
               footer: DigitCard(
-                margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                child: DigitElevatedButton(
-                  onPressed: () async {
-                    var complaintType = form.control(_complaintType).value;
-                    var otherComplaintTypeValue =
-                        form.control(_otherComplaintType).value;
+                  cardType: CardType.primary,
+                  margin: const EdgeInsets.only(top: spacer2),
+                  children: [
+                    DigitButton(
+                      mainAxisSize: MainAxisSize.max,
+                      label: localizations.translate(i18.complaints.actionLabel),
+                      type: DigitButtonType.primary,
+                      size: DigitButtonSize.large,
+                      onPressed: () async {
+                        var complaintType = form.control(_complaintType).value;
+                        var otherComplaintTypeValue =
+                            form.control(_otherComplaintType).value;
 
-                    if (complaintType == "Other") {
-                      form.control(_otherComplaintType).setValidators(
-                        [Validators.required],
-                        autoValidate: true,
-                      );
-                    } else {
-                      form.control(_otherComplaintType).setValidators(
-                        [],
-                        autoValidate: true,
-                      );
-                    }
+                        if (complaintType == "Other") {
+                          form.control(_otherComplaintType).setValidators(
+                            [Validators.required],
+                            autoValidate: true,
+                          );
+                        } else {
+                          form.control(_otherComplaintType).setValidators(
+                            [],
+                            autoValidate: true,
+                          );
+                        }
 
-                    setState(() {
-                      form.markAllAsTouched();
-                    });
+                        setState(() {
+                          form.markAllAsTouched();
+                        });
 
-                    if (!form.valid) return;
+                        if (!form.valid) return;
 
-                    state.whenOrNull(
-                      create: (
-
-                          loading,
-                          complaintType,
-                          _,
-                          addressModel,
-                          complaintsDetailsModel,
+                        state.whenOrNull(
+                          create: (
+                            loading,
+                            complaintType,
+                            _,
+                            addressModel,
+                            complaintsDetailsModel,
                           ) {
-
-                        bloc.add(
-                          ComplaintsRegistrationEvent.saveComplaintType(
-                            complaintType: form.control(_complaintType).value,
-                            otherComplaintDescription: otherComplaintTypeValue,
-                          ),
+                            bloc.add(
+                              ComplaintsRegistrationEvent.saveComplaintType(
+                                complaintType:
+                                    form.control(_complaintType).value,
+                                otherComplaintDescription:
+                                    otherComplaintTypeValue,
+                              ),
+                            );
+                          },
                         );
-                      },
-                    );
 
-                    router.push(ComplaintsLocationRoute());
-                  },
-                  child: Center(
-                    child: Text(
-                      localizations.translate(i18.complaints.actionLabel),
+                        router.push(ComplaintsLocationRoute());
+                      },
                     ),
-                  ),
-                ),
-              ),
+                  ]),
               slivers: [
                 SliverToBoxAdapter(
                   child: DigitCard(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: kPadding),
-                        child: Text(
-                          localizations.translate(
-                            i18.complaints.complaintsTypeHeading,
-                          ),
-                          style: theme.textTheme.displayMedium,
-                        ),
+                    margin: const EdgeInsets.all(spacer2),
+                      cardType: CardType.primary, children: [
+                    Text(
+                      localizations.translate(
+                        i18.complaints.complaintsTypeHeading,
                       ),
-                      LabeledField(
-                        label: localizations.translate(
-                          i18.complaints.complaintsTypeLabel,
-                        ),
-                        child: RadioGroup<String>.builder(
-
-                          groupValue:
-                            form.control(_complaintType).value ?? "",
-
-                          onChanged: (changedValue) {
-                            if (form.control(_complaintType).disabled) return;
-
-                            setState(() {
-
-                              form.control(_complaintType).value =
-                              changedValue;
-                            });
-                            },
-                          textStyle: TextStyle(
-                            color: form.control(_complaintType).disabled
-                                  ? theme.colorScheme.shadow
-                                  : theme.colorScheme.onBackground,
-
-                          ),
-                          items: ComplaintsSingleton().complaintTypes ?? [],
-                          itemBuilder: (item) => RadioButtonBuilder(
-                            localizations.translate(
-                              item.snakeCase.toUpperCase().trim(),
+                      style: textTheme.headingXl,
+                    ),
+                    LabeledField(
+                      label: localizations.translate(
+                        i18.complaints.complaintsTypeLabel,
+                      ),
+                      child: RadioList(
+                        containerPadding: const EdgeInsets.only(bottom: spacer4),
+                        radioDigitButtons: (ComplaintsSingleton().complaintTypes?.isNotEmpty ?? false)
+                            ? ComplaintsSingleton().complaintTypes!
+                            .map<RadioButtonModel>(
+                              (item) => RadioButtonModel(
+                            code: item,
+                            name: localizations.translate(
+                              item.toString().snakeCase.toUpperCase().trim(),
                             ),
                           ),
-                        ),
+                        ).toList():
+                        <RadioButtonModel>[],
+                        groupValue:
+                            form.control(_complaintType).value ?? "",
+                        onChanged: (changedValue) {
+                          if (form.control(_complaintType).disabled) return;
+                          setState(() {
+                            form.control(_complaintType).value =
+                                changedValue.code;
+                          });
+                        },
                       ),
-                      if (form.control(_complaintType).value == "Other") ...[
-                        DigitTextFormField(
+                    ),
+                    if (form.control(_complaintType).value == "Other") ...[
+                      ReactiveWrapperField<String>(
                           formControlName: _otherComplaintType,
-                          label: "",
-                          maxLength: 100,
                           validationMessages: {
                             'required': (object) => localizations.translate(
-                              i18.complaints.validationRequiredError,
-                            ),
-
+                                  i18.complaints.validationRequiredError,
+                                ),
                           },
-                        ),
-                      ],
-                      if (form.touched &&
-                          form.control(_complaintType).invalid) ...[
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                              top: 5,
-                              bottom: 5,
-                            ),
-                            child: Text(
-                              localizations.translate(
-                                i18.complaints.validationRadioRequiredError,
-                              ),
-                              style: TextStyle(
-                                color: DigitTheme.instance.colors.lavaRed,
-                              ),
-                            ),
+                          showErrors: (control)=>control.invalid && control.touched,
+                          builder: (field) {
+                            return DigitTextFormInput(
+                              charCount: true,
+                              errorMessage: field.errorText,
+                              initialValue: field.value,
+                              onChange: (value) => form.control(_otherComplaintType).value=value,
+                            );
+                          }),
+                    ],
+                    if (form.touched &&
+                        form.control(_complaintType).invalid) ...[
+                      Align(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          localizations.translate(
+                            i18.complaints.validationRadioRequiredError,
+                          ),
+                          style: TextStyle(
+                            color: theme.colorTheme.alert.error,
                           ),
                         ),
-                      ],
-                      const SizedBox(height: 16),
+                      ),
                     ],
-                  ),
-                ),
+                  ]),
                 ),
               ],
             );

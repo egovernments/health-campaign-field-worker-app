@@ -3,12 +3,12 @@ import 'dart:async'; // Import the dart:async library for asynchronous operation
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/typedefs.dart';
 import 'package:collection/collection.dart'; // Import the collection package for collection utilities
-import 'package:digit_components/models/digit_table_model.dart'; // Import the digit_table_model.dart file from the digit_components package
-import 'package:digit_components/theme/colors.dart'; // Import the colors.dart file from the digit_components package
-import 'package:digit_components/theme/digit_theme.dart'; // Import the digit_theme.dart file from the digit_components package
-import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_dss/digit_dss.dart'; // Import the digit_dss.dart file from the digit_dss package
+import 'package:digit_ui_components/theme/colors.dart';
+import 'package:digit_ui_components/theme/digit_theme.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'; // Import the flutter_bloc package for state management
 import 'package:freezed_annotation/freezed_annotation.dart'; // Import the freezed_annotation package for code generation
@@ -80,11 +80,11 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
               ),
             );
             List<String> attendeesIndividualIds = [];
-            registers.forEach((r) {
+            for (var r in registers) {
               r.attendees?.where((a) => a.individualId != null).forEach((att) {
                 attendeesIndividualIds.add(att.individualId.toString());
               });
-            });
+            }
             final individuals =
                 await individualDataRepository.search(IndividualSearchModel(
               id: attendeesIndividualIds,
@@ -177,7 +177,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
       for (DashboardResponse chart in tableCharts) {
         if ((chart.data ?? []).isNotEmpty) {
           // Create table headers
-          final List<TableHeader> tableHeaderList = chart.data?.first.plots
+          final List<DigitTableColumn> tableHeaderList = chart.data?.first.plots
                   ?.where((p) =>
                       p.name != DSSEnums.serialNumber.toValue() &&
                       p.name != DSSEnums.startDate.toValue() &&
@@ -185,10 +185,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                       p.name != null)
                   .map((e) {
                 final headerData = transformToLocaleCode(e.name ?? '');
-                return TableHeader(
-                  headerData ?? '',
-                  cellKey: e.name,
-                );
+                return DigitTableColumn(header: headerData, cellValue: e.name!);
               }).toList() ??
               [];
 
@@ -200,7 +197,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                     p.name != DSSEnums.startDate.toValue() &&
                     p.name != DSSEnums.endDate.toValue())
                 .mapIndexed(
-                  (i, plot) => TableData(
+                  (i, plot) => DigitTableData(
                     plot.symbol == DSSEnums.number.toValue() ||
                             plot.symbol == DSSEnums.percentage.toValue() ||
                             plot.symbol == DSSEnums.amount.toValue()
@@ -220,17 +217,17 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
                                 : double.parse(plot.value.toString())
                                     .toStringAsFixed(2)
                         : plot.label.toString(),
-                    cellKey: plot.name,
+                    cellKey: plot.name!,
                     style: DigitTheme.instance.mobileTheme.textTheme.bodyMedium
                         ?.apply(
                       color: i == 0
-                          ? const DigitColors().burningOrange
-                          : const DigitColors().woodsmokeBlack,
+                          ? const DigitColors().light.primary1
+                          : const DigitColors().light.textPrimary,
                     ),
                   ),
                 )
                 .toList();
-            return TableDataRow(rowTableData ?? []);
+            return DigitTableRow(tableRow: rowTableData!);
           }).toList();
           tableWrapperList.add(TableWrapper(
             headerList: tableHeaderList,
@@ -300,8 +297,8 @@ class MetricWrapper {
 
 // Class for wrapping table data
 class TableWrapper {
-  final List<TableHeader> headerList; // List of table headers
-  final List<TableDataRow> tableData; // List of table data rows
+  final List<DigitTableColumn> headerList; // List of table headers
+  final List<DigitTableRow> tableData; // List of table data rows
 
   TableWrapper({
     required this.headerList,

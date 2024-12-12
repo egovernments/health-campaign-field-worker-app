@@ -1,9 +1,11 @@
 
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:group_radio_button/group_radio_button.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import '/blocs/complaints_inbox/complaints_inbox.dart';
@@ -36,6 +38,7 @@ class ComplaintsInboxSortPageState
     final theme = Theme.of(context);
     final bloc = context.read<ComplaintsInboxBloc>();
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.onPrimary,
@@ -52,22 +55,20 @@ class ComplaintsInboxSortPageState
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                foregroundColor: theme.colorScheme.onBackground,
-                                padding: EdgeInsets.zero,
-                              ),
-                              onPressed: () => context.router.pop(),
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.close),
-                                ],
+                            Padding(
+                              padding: EdgeInsets.zero,
+                              child: DigitButton(
+                                  label: "",
+                                  onPressed: () => context.router.pop(),
+                                  type: DigitButtonType.tertiary,
+                                  size: DigitButtonSize.large,
+                                  prefixIcon: Icons.close,
                               ),
                             ),
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 20),
+                          padding: const EdgeInsets.only(left: spacer5),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,83 +77,69 @@ class ComplaintsInboxSortPageState
                                 localizations.translate(
                                   i18.complaints.complaintInboxSortHeading,
                                 ),
-                                style: theme.textTheme.displayMedium,
+                                style: textTheme.headingXl,
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                    footer: SizedBox(
-                      child: DigitCard(
-                        margin: const EdgeInsets.fromLTRB(0, kPadding, 0, 0),
-                        padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: DigitElevatedButton(
-                                onPressed: () {
-                                  formGroup.markAllAsTouched();
+                    footer: DigitCard(
+                      cardType: CardType.primary,
+                      margin: const EdgeInsets.fromLTRB(0, spacer2, 0, 0),
+                      padding: const EdgeInsets.all(spacer2),
+                      children: [DigitButton(
+                        type: DigitButtonType.primary,
+                        size: DigitButtonSize.large,
+                        label: localizations
+                            .translate(i18.complaints.sortCTA),
+                        mainAxisSize: MainAxisSize.max,
+                        onPressed: () {
+                          formGroup.markAllAsTouched();
 
-                                  var sortOrder =
-                                      formGroup.control(_sortOrder).value;
+                          var sortOrder =
+                              formGroup.control(_sortOrder).value;
 
-                                  if (!formGroup.valid || sortOrder == null) {
-                                    return;
-                                  }
+                          if (!formGroup.valid || sortOrder == null) {
+                            return;
+                          }
 
-                                  bloc.add(
-                                    ComplaintInboxSortComplaintsEvent(
-                                      sortOrder,
-                                    ),
-                                  );
-                                  router.pop();
-                                },
-                                child: Center(
-                                  child: Text(
-                                    localizations
-                                        .translate(i18.complaints.sortCTA),
-                                  ),
-                                ),
-                              ),
+                          bloc.add(
+                            ComplaintInboxSortComplaintsEvent(
+                              sortOrder,
                             ),
-                          ],
-                        ),
-                      ),
+                          );
+                          router.pop();
+                        },
+                      ),]
                     ),
                     children: [
-                      Column(
-                        children: [
-                          Column(
-                            children: [
-                              BlocBuilder<ComplaintsInboxBloc,
-                                  ComplaintInboxState>(
-                                builder: (context, state) {
-                                  // TODO(neel): Use Reactive components if possible
+                      BlocBuilder<ComplaintsInboxBloc,
+                          ComplaintInboxState>(
+                        builder: (context, state) {
 
-                                  return RadioGroup<String>.builder(
-                                    groupValue:
-                                        formGroup.control(_sortOrder).value ??
-                                            "",
-                                    onChanged: (changedValue) {
-                                      setState(() {
-                                        formGroup.control(_sortOrder).value =
-                                            changedValue;
-                                      });
-                                    },
-                                    items: sortOrders,
-                                    itemBuilder: (item) => RadioButtonBuilder(
-                                      localizations.translate(item.trim()),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                          return Padding(
+                            padding: const EdgeInsets.only(top: spacer2),
+                            child: RadioList(
+                              radioDigitButtons: sortOrders
+                                .asMap()
+                                .entries
+                                .map(
+                                  (item)=>RadioButtonModel(
+                                      code: item.value,
+                                      name: localizations.translate(item.value.trim()),
+                                  )
+                              ).toList(),
+                              groupValue:
+                                  formGroup.control(_sortOrder).value ??
+                                      "",
+                              onChanged: (changedValue) {
+                                formGroup.control(_sortOrder).value =
+                                    changedValue.code;
+                              },
+                            ),
+                          );
+                        },
                       ),
                     ],
                   );

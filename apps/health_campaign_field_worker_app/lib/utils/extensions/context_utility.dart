@@ -226,4 +226,16 @@ extension ContextUtilityExtensions on BuildContext {
       throw AppException('Could not fetch ${T.runtimeType}');
     }
   }
+
+  // sync refresh
+  void syncRefresh() {
+    final syncBloc = _get<SyncBloc>();
+    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
+  }
+
+  // insert sync count
+  Stream<SyncState> syncCount() {
+    final syncBloc = _get<SyncBloc>();
+    return syncBloc.stream;
+  }
 }

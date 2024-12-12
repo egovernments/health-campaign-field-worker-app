@@ -1,5 +1,8 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 
 import '/blocs/localization/app_localization.dart';
@@ -26,36 +29,35 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.all(kPadding / 2),
+      padding: const EdgeInsets.all(spacer2),
       child: Row(
         children: [
           Expanded(
             child: Row(
               children: [
                 if (showBackNavigation)
-                  Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        context.router.maybePop();
-                        handleBack != null ? handleBack!() : null;
-                      },
-                      icon: const Icon(Icons.arrow_left_sharp),
-                      label: Text(
-                        ComplaintsLocalization.of(context).translate(
-                          i18.common.coreCommonBack,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+
+                  DigitBackButton(label: ComplaintsLocalization.of(context).translate(
+                    i18.common.coreCommonBack,
+                  ),
+                    digitBackButtonThemeData:
+                    const DigitBackButtonThemeData().copyWith(
+                      context: context,
+                      backDigitButtonIcon: Icon(
+                        Icons.arrow_left,
+                        size:Theme.of(context).spacerTheme.spacer5,
+                        color: Theme.of(context).colorTheme.primary.primary2,
                       ),
                     ),
-                  ),
+                    handleBack: () {
+                      context.router.maybePop();
+                      handleBack != null ? handleBack!() : null;
+                    },
+                  )
               ],
             ),
           ),
-          SizedBox(width: showHelp ? kPadding * 2 : 0),
+          SizedBox(width: showHelp ? spacer2 * 2 : 0),
           if (showHelp)
             TextButton(
               style: TextButton.styleFrom(padding: EdgeInsets.zero),

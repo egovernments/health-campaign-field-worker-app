@@ -6,7 +6,6 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:digit_components/digit_components.dart';
 
 import '../../../models/entities/address_type.dart';
 import '../../../models/entities/beneficiary_type.dart';
@@ -133,13 +132,8 @@ class LocalSqlDataStore extends _$LocalSqlDataStore {
       if (from < 5) {
         //Add column for projectType in Project Table
         try {
-          AppLogger.instance.info('Applying migration $from to $to');
           await m.addColumn(project, project.projectType);
         } catch (e) {
-          AppLogger.instance.error(
-            title: 'migration',
-            message: e.toString(),
-          );
         }
       }
     });

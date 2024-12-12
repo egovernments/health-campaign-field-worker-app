@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:digit_components/widgets/digit_elevated_button.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:survey_form/blocs/app_localization.dart';
@@ -76,10 +76,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: 300,
-          child: DigitElevatedButton(
-            child: const Text("Acknowledgement Page"),
+          child: DigitButton(
+            label: "Acknowledgement Page",
+            size: DigitButtonSize.large,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) =>
@@ -90,6 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             languages),
                       )));
             },
+            type: DigitButtonType.primary,
           ),
         ),
       ),

@@ -23,7 +23,7 @@ class NoResultCard extends StatelessWidget {
         child: Column(
           children: [
             SvgPicture.asset(
-              noResultSvg,
+              Constants.noResultSvg,
               width: 340,
               height: 200,
             ),

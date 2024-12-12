@@ -2,8 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
-import 'package:digit_ui_components/blocs/fetch_location_bloc.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_chip.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
@@ -123,11 +123,13 @@ class _SearchBeneficiaryPageState
                       BlocBuilder<LocationBloc, LocationState>(
                         builder: (context, locationState) {
                           return Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               locationState.latitude != null
                                   ? Padding(
                                       padding: const EdgeInsets.all(spacer2),
-                                      child: CustomSwitch(
+                                      child: DigitSwitch(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         label: localizations.translate(
@@ -186,10 +188,10 @@ class _SearchBeneficiaryPageState
                                       alignment: Alignment.topLeft,
                                       child: Padding(
                                         padding: const EdgeInsets.all(spacer2),
-                                        child: Button(
+                                        child: DigitButton(
                                           label: getFilterIconNLabel()['label'],
-                                          size: ButtonSize.medium,
-                                          type: ButtonType.tertiary,
+                                          size: DigitButtonSize.medium,
+                                          type: DigitButtonType.tertiary,
                                           suffixIcon:
                                               getFilterIconNLabel()['icon'],
                                           onPressed: () => showFilterDialog(),
@@ -237,13 +239,17 @@ class _SearchBeneficiaryPageState
                       ),
                       if (searchHouseholdsState.resultsNotFound &&
                           !searchHouseholdsState.loading)
-                        InfoCard(
-                          type: InfoType.info,
-                          description: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoDescription,
-                          ),
-                          title: localizations.translate(
-                            i18.searchBeneficiary.beneficiaryInfoTitle,
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: spacer2, top: spacer2, right: spacer2),
+                          child: InfoCard(
+                            type: InfoType.info,
+                            description: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoDescription,
+                            ),
+                            title: localizations.translate(
+                              i18.searchBeneficiary.beneficiaryInfoTitle,
+                            ),
                           ),
                         ),
                     ],
@@ -358,15 +364,15 @@ class _SearchBeneficiaryPageState
         ),
         bottomNavigationBar: DigitCard(
             margin: const EdgeInsets.only(top: spacer2),
-            padding: const EdgeInsets.all(spacer2),
+            padding: const EdgeInsets.all(spacer4),
             children: [
-              Button(
+              DigitButton(
                 label: localizations.translate(
                   i18.searchBeneficiary.beneficiaryAddActionLabel,
                 ),
                 mainAxisSize: MainAxisSize.max,
-                type: ButtonType.primary,
-                size: ButtonSize.large,
+                type: DigitButtonType.primary,
+                size: DigitButtonSize.large,
                 isDisabled: searchHouseholdsState.searchQuery != null &&
                         searchHouseholdsState.searchQuery!.isNotEmpty
                     ? false
@@ -386,9 +392,9 @@ class _SearchBeneficiaryPageState
                   blocWrapper.clearEvent();
                 },
               ),
-              Button(
-                type: ButtonType.secondary,
-                size: ButtonSize.large,
+              DigitButton(
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
                 mainAxisSize: MainAxisSize.max,
                 onPressed: () {
                   blocWrapper.clearEvent();

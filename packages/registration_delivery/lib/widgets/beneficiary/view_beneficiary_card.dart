@@ -156,11 +156,6 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
           (taskData ?? []).isNotEmpty ? taskData?.last : null,
           sideEffects,
         );
-        final isSideEffectRecorded = recordedSideEffect(
-          currentCycle,
-          (taskData ?? []).isNotEmpty ? taskData?.last : null,
-          sideEffects,
-        );
         final isBeneficiaryRefused = checkIfBeneficiaryRefused(taskData);
         final isBeneficiaryReferred = checkIfBeneficiaryReferred(
           referralData,
@@ -287,7 +282,7 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         projectBeneficiary?.clientReferenceId);
 
     return DigitCard(
-        margin: const EdgeInsets.only(top: spacer2, bottom: spacer2),
+        margin: const EdgeInsets.all(spacer2),
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -323,16 +318,17 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
                 ),
               ),
               Flexible(
-                child: Button(
+                child: DigitButton(
                   label:
                       localizations.translate(i18.searchBeneficiary.iconLabel),
                   onPressed: widget.onOpenPressed,
-                  type: ButtonType.secondary,
-                  size: ButtonSize.medium,
+                  type: DigitButtonType.secondary,
+                  size: DigitButtonSize.medium,
                 ),
               ),
             ],
           ),
+          if(isCardExpanded)
           Offstage(
             offstage: !isCardExpanded,
             child: DigitTable(

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -86,16 +87,16 @@ class _ReferralReasonChecklistPageState
               orElse: () => Text(state.runtimeType.toString()),
               serviceDefinitionFetch: (value) {
                 return ScrollableContent(
-                  enableFixedButton: true,
+                  enableFixedDigitButton: true,
                   footer: DigitCard(
                       cardType: CardType.primary,
                       padding: EdgeInsets.all(theme.spacerTheme.spacer2),
                       children: [
-                        Button(
-                          size: ButtonSize.large,
+                        DigitButton(
+                          size: DigitButtonSize.large,
                           label: localizations
                               .translate(i18.common.coreCommonSubmit),
-                          type: ButtonType.primary,
+                          type: DigitButtonType.primary,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
                             final router = context.router;
@@ -141,13 +142,13 @@ class _ReferralReasonChecklistPageState
                                       i18.checklist.checklistDialogDescription,
                                     ),
                                     actions: [
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.checklist
                                               .checklistDialogPrimaryAction,
                                         ),
-                                        type: ButtonType.primary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.large,
                                         onPressed: () {
                                           List<ServiceAttributesModel>
                                               attributes = [];
@@ -231,13 +232,13 @@ class _ReferralReasonChecklistPageState
                                           ).pop(true);
                                         },
                                       ),
-                                      Button(
+                                      DigitButton(
                                         label: localizations.translate(
                                           i18.checklist
                                               .checklistDialogSecondaryAction,
                                         ),
-                                        type: ButtonType.secondary,
-                                        size: ButtonSize.large,
+                                        type: DigitButtonType.secondary,
+                                        size: DigitButtonSize.large,
                                         onPressed: () {
                                           Navigator.of(
                                             context,
@@ -503,7 +504,7 @@ class _ReferralReasonChecklistPageState
                     child: Padding(
                       padding: EdgeInsets.only(left: theme.spacerTheme.spacer2),
                       child: RadioList(
-                        radioButtons: item.values != null
+                        radioDigitButtons: item.values != null
                             ? item.values!
                                 .where((e) => e != i18.checklist.notSelectedKey)
                                 .map((e) => RadioButtonModel(

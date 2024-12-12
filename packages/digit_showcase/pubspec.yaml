@@ -1,6 +1,6 @@
 name: digit_showcase
 description: Customized showcase view
-version: 1.0.0
+version: 1.0.1
 homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/digit_showcase"
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^2.0.0
+  flutter_lints: ^4.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

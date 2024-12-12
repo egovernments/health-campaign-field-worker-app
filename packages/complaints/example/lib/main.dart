@@ -2,18 +2,19 @@ import 'dart:convert';
 
 import 'package:complaints/blocs/localization/app_localization.dart';
 import 'package:complaints/complaints.dart';
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
 }
-class Language{
+
+class Language {
   late String label;
   late String value;
 
-  Language(this.label,this.value);
+  Language(this.label, this.value);
 }
 
 class Localization {
@@ -24,14 +25,12 @@ class Localization {
   late String module;
 
   late String locale;
-
 }
 
-Future<dynamic> loadLocalizedStrings() async{
+Future<dynamic> loadLocalizedStrings() async {
   final String jsonString =
-  await rootBundle.loadString('lib/localization_strings.json');
+      await rootBundle.loadString('lib/localization_strings.json');
   final decode = json.decode(jsonString);
-
 
   List<dynamic> localizationList;
   localizationList = decode.map((e) {
@@ -56,17 +55,15 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
       home: MyHomePage(title: "Complaints Package Demo"),
-      locale: Locale('en','MZ'),
-      supportedLocales: [const Locale('en','MZ')],
+      locale: Locale('en', 'MZ'),
+      supportedLocales: [const Locale('en', 'MZ')],
       localizationsDelegates: [
-        ComplaintsLocalization.getDelegate(loadLocalizedStrings(), [
-          Language("English", "en_MZ")
-        ]),
+        ComplaintsLocalization.getDelegate(
+            loadLocalizedStrings(), [Language("English", "en_MZ")]),
         // Add other localizations delegates if needed
       ],
     );
@@ -77,14 +74,11 @@ class MyHomePage extends StatefulWidget {
   final String title;
   MyHomePage({super.key, required this.title});
 
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
   @override
   void initState() {
     super.initState();
@@ -94,30 +88,23 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text("PGR-Complaints Example"),
-      ),
-      body: Center(
-        child :DigitOutLineButton(
-        onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (BuildContext context) =>
-                  ComplaintsAcknowledgementPage(),
-            ),
-          );
-        },
-        label: "Demo Acknowledgemnet",
-        buttonStyle: OutlinedButton.styleFrom(
-          shape: const BeveledRectangleBorder(),
-          padding: const EdgeInsets.all(14),
-          side: BorderSide(
-            width: 1.0,
-            color: theme.colorScheme.primary,
-          ),
+        appBar: AppBar(
+          title: Text("PGR-Complaints Example"),
         ),
-      ),
-    )
-    );
+        body: Center(
+          child: DigitButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (BuildContext context) =>
+                      ComplaintsAcknowledgementPage(),
+                ),
+              );
+            },
+            label: "Demo Acknowledgemnet",
+            type: DigitButtonType.secondary,
+            size: DigitButtonSize.large,
+          ),
+        ));
   }
 }

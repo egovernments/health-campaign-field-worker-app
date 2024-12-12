@@ -42,7 +42,7 @@ class HouseholdAcknowledgementPageState
                 i18.acknowledgementSuccess.acknowledgementLabelText,
               ),
               actions: [
-                Button(
+                DigitButton(
                     label: localizations.translate(
                       i18.householdDetails.viewHouseHoldDetailsAction,
                     ),
@@ -57,9 +57,9 @@ class HouseholdAcknowledgementPageState
                         BeneficiaryWrapperRoute(wrapper: wrapper),
                       );
                     },
-                    type: ButtonType.primary,
-                    size: ButtonSize.large),
-                Button(
+                    type: DigitButtonType.primary,
+                    size: DigitButtonSize.large),
+                DigitButton(
                     label: localizations
                         .translate(i18.acknowledgementSuccess.actionLabelText),
                     onPressed: () {
@@ -70,8 +70,8 @@ class HouseholdAcknowledgementPageState
                       // Pop twice to navigate back to the previous screen
                       parent.popUntilRoot();
                     },
-                    type: ButtonType.secondary,
-                    size: ButtonSize.large),
+                    type: DigitButtonType.secondary,
+                    size: DigitButtonSize.large),
               ],
             );
           },
