@@ -2060,14 +2060,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.0"
-  super_annotations:
-    dependency: "direct main"
-    description:
-      name: super_annotations
-      sha256: "6ccb4a2066de1ae3d1869184350b641b0b66fa6b98e158abeffdc9c47a3bf49c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.1"
   survey_form:
     dependency: "direct main"
     description:
