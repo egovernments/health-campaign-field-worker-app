@@ -311,7 +311,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                             left: spacer1,
                                             right: spacer1,
                                           ),
-                                          height: spacer6,
+                                          height: spacer9,
                                           decoration: BoxDecoration(
                                             color: DigitTheme
                                                 .instance.colorScheme.surface,
@@ -326,7 +326,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                             ),
                                           ),
                                           padding:
-                                              const EdgeInsets.all(spacer1),
+                                              const EdgeInsets.all(spacer2),
                                           child: Row(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.end,
@@ -353,6 +353,9 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                                 ),
                                               ),
                                               IconButton(
+                                                padding: const EdgeInsets.only(
+                                                  bottom: spacer2,
+                                                ),
                                                 icon: Icon(
                                                   Icons.delete,
                                                   color:
