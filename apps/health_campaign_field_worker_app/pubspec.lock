@@ -441,11 +441,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: "04a6e7117382f8a8689b3e363bee6c3de8c9ea4332e664148fe01bd576eb1126"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -2079,9 +2078,10 @@ packages:
   sync_service:
     dependency: "direct main"
     description:
-      path: "../../packages/sync_service"
-      relative: true
-    source: path
+      name: sync_service
+      sha256: ba4720b48bf4a80c3299118000bf7851dae871480b75ab95f0e5a830cddc2e39
+      url: "https://pub.dev"
+    source: hosted
     version: "0.0.1-dev.1"
   synchronized:
     dependency: transitive
@@ -2404,5 +2404,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.1 <4.0.0"
   flutter: ">=3.22.0"
