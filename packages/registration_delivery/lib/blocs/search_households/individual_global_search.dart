@@ -141,14 +141,6 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         null,
       );
 
-      final List<String> individualClientReferenceIds = householdMembersList
-          .map((e) => e.individualClientReferenceId.toString())
-          .toList();
-
-      individualsList = await individual.search(
-        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
-      );
-
       late List<String> houseHoldClientReferenceIds = [];
 
       houseHoldClientReferenceIds = householdMembersList
@@ -158,6 +150,33 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       householdList = await household.search(HouseholdSearchModel(
         clientReferenceId: houseHoldClientReferenceIds,
       ));
+
+      householdMembersList = await fetchHouseholdMembersBulk(
+        null,
+        houseHoldClientReferenceIds,
+      );
+
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembersList
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
+
+      final List<String> individualClientReferenceIds = householdMembersList
+          .map((e) => e.individualClientReferenceId.toString())
+          .toList();
+
+      projectBeneficiariesList = await projectBeneficiary.search(
+          ProjectBeneficiarySearchModel(
+              projectId: [RegistrationDeliverySingleton().projectId.toString()],
+              beneficiaryClientReferenceId:
+                  individualClientReferenceIds.map((e) => e).toList()));
+
+      individualsList = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
+      );
 
       finalResults.forEach((element) {
         taskList.add(element);
@@ -193,7 +212,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
               individualClientReferenceIds.map((e) => e.toString()).toList()));
 
       // Search for individual results using the extracted IDs and search text.
-      final List<HouseholdMemberModel> householdMembers =
+      List<HouseholdMemberModel> householdMembers =
           await fetchHouseholdMembersBulk(
         individualClientReferenceIds,
         null,
@@ -204,6 +223,19 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
             .map((e) => e.householdClientReferenceId.toString())
             .toList(),
       ));
+
+      householdMembers = await fetchHouseholdMembersBulk(
+        null,
+        householdList.map((e) => e.clientReferenceId).toList(),
+      );
+
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembers
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
 
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(

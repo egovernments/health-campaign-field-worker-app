@@ -64,7 +64,7 @@ bool checkIfBeneficiaryRefused(
 ) {
   final isBeneficiaryRefused = (tasks != null &&
       (tasks).isNotEmpty &&
-      tasks.last.status == Status.administeredFailed.toValue());
+      tasks.last.status == Status.beneficiaryRefused.toValue());
 
   return isBeneficiaryRefused;
 }
@@ -409,27 +409,46 @@ class RegistrationDeliverySingleton {
   }
 
   String? get tenantId => _tenantId;
+
   String? get loggedInUserUuid => _loggedInUserUuid;
+
   double? get maxRadius => _maxRadius;
+
   String? get projectId => _projectId;
+
   BeneficiaryType? get beneficiaryType => _beneficiaryType;
+
   ProjectTypeModel? get projectType => _projectType;
+
   ProjectModel? get selectedProject => _selectedProject;
+
   BoundaryModel? get boundary => _boundaryModel;
+
   PersistenceConfiguration? get persistenceConfiguration =>
       _persistenceConfiguration;
+
   List<String>? get genderOptions => _genderOptions;
+
   List<String>? get idTypeOptions => _idTypeOptions;
+
   List<String>? get householdDeletionReasonOptions =>
       _householdDeletionReasonOptions;
+
   List<String>? get householdMemberDeletionReasonOptions =>
       _householdMemberDeletionReasonOptions;
+
   List<String>? get deliveryCommentOptions => _deliveryCommentOptions;
+
   List<String>? get symptomsTypes => _symptomsTypes;
+
   List<String>? get searchHouseHoldFilter => _searchHouseHoldFilter;
+
   List<String>? get referralReasons => _referralReasons;
+
   List<String>? get houseStructureTypes => _houseStructureTypes;
+
   List<String>? get refusalReasons => _refusalReasons;
+
   UserModel? get loggedInUser => _loggedInUser;
 }
 
