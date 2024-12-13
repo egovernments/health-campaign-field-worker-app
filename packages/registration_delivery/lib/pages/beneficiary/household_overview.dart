@@ -102,8 +102,7 @@ class _HouseholdOverviewPageState
                                             vertical: spacer2),
                                         child: DigitButton(
                                           label: localizations.translate(
-                                            '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.memberCard
-                                                .deliverDetailsUpdateLabel}',
+                                            '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.memberCard.deliverDetailsUpdateLabel}',
                                           ),
                                           isDisabled: state
                                                       .householdMemberWrapper

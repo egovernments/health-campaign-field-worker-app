@@ -383,6 +383,10 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             .map((
                           e,
                         ) {
+                          String? description = e.additionalDetails?.entries
+                              .where((a) => a.key == 'helpText')
+                              .first
+                              .value;
                           int index = (initialAttributes ?? []).indexOf(e);
                           return Column(children: [
                             if (e.dataType == 'String' &&
@@ -412,6 +416,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         label: localizations.translate(
                                           '${value.selectedServiceDefinition?.code}.${e.code}',
                                         ),
+                                        description: description != null
+                                            ? localizations.translate(
+                                                '${value.selectedServiceDefinition?.code}.$description',
+                                              )
+                                            : null,
                                         isRequired: e.required ?? false,
                                         child: DigitTextFormInput(
                                           onChange: (value) {
@@ -460,6 +469,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                             '${value.selectedServiceDefinition?.code}.${e.code}',
                                           )
                                           .trim(),
+                                      description: description != null
+                                          ? localizations.translate(
+                                              '${value.selectedServiceDefinition?.code}.$description',
+                                            )
+                                          : null,
                                       isRequired: e.required ?? false,
                                       child: DigitTextFormInput(
                                         onChange: (value) {
@@ -490,6 +504,11 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                     label: localizations.translate(
                                       '${value.selectedServiceDefinition?.code}.${e.code}',
                                     ),
+                                    description: description != null
+                                        ? localizations.translate(
+                                            '${value.selectedServiceDefinition?.code}.$description',
+                                          )
+                                        : null,
                                     isRequired: e.required ?? false,
                                     child:
                                         BlocBuilder<ServiceBloc, ServiceState>(
