@@ -250,8 +250,7 @@ class BeneficiaryDetailsPageState
                         ),
                         children: [
                           DigitCard(
-                              margin: const EdgeInsets.only(
-                                  top: spacer2, bottom: spacer2),
+                              margin: const EdgeInsets.all(spacer2),
                               children: [
                                 Text(
                                   localizations.translate(i18.beneficiaryDetails
@@ -394,8 +393,7 @@ class BeneficiaryDetailsPageState
                                   [])
                               .isNotEmpty)
                             DigitCard(
-                                margin: const EdgeInsets.only(
-                                    top: spacer2, bottom: spacer2),
+                                margin: const EdgeInsets.all(spacer2),
                                 children: [
                                   Column(
                                     children: RegistrationDeliverySingleton()

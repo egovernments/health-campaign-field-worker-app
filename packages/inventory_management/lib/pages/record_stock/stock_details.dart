@@ -566,8 +566,8 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                                         rootNavigator: true,
                                                       ).pop(false);
                                                     },
-                                                    type:
-                                                        DigitButtonType.primary,
+                                                    type: DigitButtonType
+                                                        .secondary,
                                                     size: DigitButtonSize.large,
                                                   ),
                                                 ],
