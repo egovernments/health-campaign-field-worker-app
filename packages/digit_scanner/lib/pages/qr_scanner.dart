@@ -424,9 +424,15 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                     initializeCameras();
                                   });
                                 },
-                                child:  Align(
+                                child: Align(
                                   alignment: Alignment.topRight,
-                                  child: Icon(Icons.close, color: Theme.of(context).colorTheme.text.primary,),
+                                  child: Icon(
+                                    Icons.close,
+                                    color: Theme.of(context)
+                                        .colorTheme
+                                        .text
+                                        .primary,
+                                  ),
                                 ),
                               ),
                               footer: Padding(
@@ -502,15 +508,18 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                                     formControlName: _manualCodeFormKey,
                                     builder: (field) {
                                       return InputField(
-                                        label: localizations.translate(
-                                          i18.scanner.resourceCode,
-                                        ),
-                                        type: InputType.text,
-                                      );
+                                          label: localizations.translate(
+                                            i18.scanner.resourceCode,
+                                          ),
+                                          type: InputType.text,
+                                          onChange: (value) {
+                                            form
+                                                .control(_manualCodeFormKey)
+                                                .value = value;
+                                          });
                                     },
                                   ),
                                 ])
-
                               ],
                             );
                           });
