@@ -9,14 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "61.0.0"
-  _flutterfire_internals:
-    dependency: transitive
-    description:
-      name: _flutterfire_internals
-      sha256: "37a42d06068e2fe3deddb2da079a8c4d105f241225ba27b7122b37e9865fd8f7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.35"
   analyzer:
     dependency: transitive
     description:
@@ -380,10 +372,12 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../dart_mappable_builder"
-      relative: true
-    source: path
-    version: "4.2.3"
+      path: "packages/dart_mappable_builder"
+      ref: master
+      resolved-ref: "5595f37310a63a92b2c1c7e386c74fe39df5555d"
+      url: "https://github.com/egovernments/health-campaign-field-worker-app/"
+    source: git
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -423,13 +417,6 @@ packages:
       relative: true
     source: path
     version: "1.0.5-dev.1"
-  digit_firebase_services:
-    dependency: "direct overridden"
-    description:
-      path: "../digit_firebase_services"
-      relative: true
-    source: path
-    version: "0.0.1"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -449,8 +436,8 @@ packages:
     dependency: "direct main"
     description:
       path: "flutter/digit-ui-components/digit_components"
-      ref: develop
-      resolved-ref: e34fbbd8ca46b85c86e2c8c2a031f16d8237d81f
+      ref: hcm_changes
+      resolved-ref: c5dd67a70d57a01979932e7ceeb4720af0828cb9
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+7"
@@ -566,46 +553,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.9.3+2"
-  firebase_core:
-    dependency: transitive
-    description:
-      name: firebase_core
-      sha256: "26de145bb9688a90962faec6f838247377b0b0d32cc0abecd9a4e43525fc856c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.32.0"
-  firebase_core_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_core_platform_interface
-      sha256: b94b217e3ad745e784960603d33d99471621ecca151c99c670869b76e50ad2a6
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.3.1"
-  firebase_core_web:
-    dependency: transitive
-    description:
-      name: firebase_core_web
-      sha256: "362e52457ed2b7b180964769c1e04d1e0ea0259fdf7025fdfedd019d4ae2bd88"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.17.5"
-  firebase_crashlytics:
-    dependency: transitive
-    description:
-      name: firebase_crashlytics
-      sha256: "9897c01efaa950d2f6da8317d12452749a74dc45f33b46390a14cfe28067f271"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.7"
-  firebase_crashlytics_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_crashlytics_platform_interface
-      sha256: "16a71e08fbf6e00382816e1b13397898c29a54fa0ad969c2c2a3b82a704877f0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.6.35"
   fixnum:
     dependency: transitive
     description:
@@ -1535,7 +1482,7 @@ packages:
     source: hosted
     version: "1.2.0"
   survey_form:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       path: "../survey_form"
       relative: true
@@ -1822,5 +1769,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.0 <4.0.0"
+  dart: ">=3.4.0 <3.9.0"
   flutter: ">=3.22.0"
