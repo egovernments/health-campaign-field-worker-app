@@ -31,7 +31,7 @@ dependencies:
   digit_ui_components:
     git:
       url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
-      ref: version_update
+      ref: develop
       path: ./flutter/digit-ui-components/digit_components
   survey_form:
     path: ../

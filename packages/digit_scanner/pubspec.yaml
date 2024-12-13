@@ -40,7 +40,7 @@ dependencies:
   digit_ui_components:
     git:
       url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
-      ref: version_update
+      ref: develop
       path: ./flutter/digit-ui-components/digit_components
   reactive_forms: ^17.0.0
   gs1_barcode_parser: ^1.0.5
