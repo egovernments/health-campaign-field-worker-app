@@ -14,19 +14,19 @@ import '../../../widgets/table_card/table_card.dart';
 
 // This function builds a table with the given data and headers
 Widget buildTableContent(
-    DeliverInterventionState deliverInterventionState,
-    BuildContext context,
-    List<ProductVariantModel>? variant,
-    IndividualModel? individualModel,
-    HouseholdModel? householdModel,
-    ) {
+  DeliverInterventionState deliverInterventionState,
+  BuildContext context,
+  List<ProductVariantModel>? variant,
+  IndividualModel? individualModel,
+  HouseholdModel? householdModel,
+) {
   // Calculate the current cycle. If deliverInterventionState.cycle is negative, set it to 0.
   final currentCycle =
-  deliverInterventionState.cycle >= 0 ? deliverInterventionState.cycle : 0;
+      deliverInterventionState.cycle >= 0 ? deliverInterventionState.cycle : 0;
 
   // Calculate the current dose. If deliverInterventionState.dose is negative, set it to 0.
   final currentDose =
-  deliverInterventionState.dose >= 0 ? deliverInterventionState.dose : 0;
+      deliverInterventionState.dose >= 0 ? deliverInterventionState.dose : 0;
   final localizations = RegistrationDeliveryLocalization.of(context);
 
   // Defining a list of table headers for resource popup
@@ -36,7 +36,8 @@ Widget buildTableContent(
       cellValue: 'dose',
     ),
     DigitTableColumn(
-      header: localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
+      header:
+          localizations.translate(i18.beneficiaryDetails.beneficiaryResources),
       cellValue: 'resources',
     ),
   ];
@@ -44,11 +45,12 @@ Widget buildTableContent(
   // Calculate the height of the container based on the number of items in the table
 
   final ProjectTypeModel projectType =
-  RegistrationDeliverySingleton().projectType!;
+      RegistrationDeliverySingleton().projectType!;
   final item =
-  projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
+      projectType.cycles?[currentCycle - 1].deliveries?[currentDose - 1];
   final productVariants =
-      fetchProductVariant(item, individualModel, householdModel)?.productVariants;
+      fetchProductVariant(item, individualModel, householdModel)
+          ?.productVariants;
   final numRows = productVariants?.length ?? 0;
   const rowHeight = 84;
   const paddingHeight = (spacer2 * 2);
@@ -75,58 +77,63 @@ Widget buildTableContent(
             element: {
               localizations.translate(
                 i18.beneficiaryDetails.beneficiaryAge,
-              ): fetchProductVariant(item, individualModel, householdModel)?.condition != null
-                  ? localizations.translate(
-                  fetchProductVariant(item, individualModel, householdModel)!.condition!)
+              ): fetchProductVariant(item, individualModel, householdModel)
+                          ?.condition !=
+                      null
+                  ? localizations.translate(fetchProductVariant(
+                          item, individualModel, householdModel)!
+                      .condition!)
                   : null,
             },
           ),
         ),
         const DigitDivider(),
         // Build the DigitTable with the data
-        fetchProductVariant(item, individualModel, householdModel)?.productVariants != null
+        fetchProductVariant(item, individualModel, householdModel)
+                    ?.productVariants !=
+                null
             ? DigitTable(
-          enableBorder: true,
-          showSelectedState: false,
-          showPagination: false,
-          columns: columnListResource,
-          rows: [
-            ...fetchProductVariant(item, individualModel, householdModel )!
-                .productVariants!
-                .map(
-                  (e) {
-                // Retrieve the SKU value for the product variant.
-                final value = variant
-                    ?.firstWhereOrNull(
-                      (element) => element.id == e.productVariantId,
-                )
-                    ?.sku;
-                final quantity = e.quantity;
+                enableBorder: true,
+                showSelectedState: false,
+                showPagination: false,
+                columns: columnListResource,
+                rows: [
+                  ...fetchProductVariant(item, individualModel, householdModel)!
+                      .productVariants!
+                      .map(
+                    (e) {
+                      // Retrieve the SKU value for the product variant.
+                      final value = variant
+                          ?.firstWhereOrNull(
+                            (element) => element.id == e.productVariantId,
+                          )
+                          ?.sku;
+                      final quantity = e.quantity;
 
-                return DigitTableRow(
-                    tableRow: [
-                      // Display the dose information in the first column if it's the first row,
-                      // otherwise, display an empty cell.
+                      return DigitTableRow(tableRow: [
+                        // Display the dose information in the first column if it's the first row,
+                        // otherwise, display an empty cell.
 
-                      fetchProductVariant(item, individualModel, householdModel)
-                          ?.productVariants
-                          ?.indexOf(e) ==
-                          0
-                          ? DigitTableData(
-                        '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
-                        cellKey: 'dose',
-                      )
-                          : DigitTableData('',cellKey: ''),
-                      // Display the SKU value in the second column.
-                      DigitTableData(
-                        '$quantity - ${localizations.translate(value.toString())}',
-                        cellKey: 'resources',
-                      ),
-                    ]);
-              },
-            ),
-          ],
-        )
+                        fetchProductVariant(
+                                        item, individualModel, householdModel)
+                                    ?.productVariants
+                                    ?.indexOf(e) ==
+                                0
+                            ? DigitTableData(
+                                '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
+                                cellKey: 'dose',
+                              )
+                            : DigitTableData('', cellKey: ''),
+                        // Display the SKU value in the second column.
+                        DigitTableData(
+                          '$quantity - ${localizations.translate(value.toString())}',
+                          cellKey: 'resources',
+                        ),
+                      ]);
+                    },
+                  ),
+                ],
+              )
             : Text(localizations.translate(i18.common.noProjectSelected))
       ],
     ),

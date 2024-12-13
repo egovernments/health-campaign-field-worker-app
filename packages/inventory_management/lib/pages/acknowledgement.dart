@@ -54,24 +54,13 @@ class AcknowledgementPageState
         //     : null,
         actions: [
           DigitButton(
-              label: localizations.translate(
-                  i18.acknowledgementSuccess.acknowledgementLabelText),
+              label: localizations
+                  .translate(i18.acknowledgementSuccess.actionLabelText),
               onPressed: () {
                 context.router.maybePop();
               },
               type: DigitButtonType.primary,
               size: DigitButtonSize.large),
-          if (!widget.isDataRecordSuccess)
-            DigitButton(
-                label: localizations
-                    .translate(i18.acknowledgementSuccess.actionLabelText),
-                onPressed: () {
-                  final parent = context.router.parent() as StackRouter;
-                  // Pop twice to navigate back to the previous screen
-                  parent.popUntilRoot();
-                },
-                type: DigitButtonType.secondary,
-                size: DigitButtonSize.large),
         ],
         // action: () {
         //   context.router.maybePop();

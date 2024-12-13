@@ -45,6 +45,8 @@ class InventoryReportDetailsPageState
   static const _facilityKey = 'facilityKey';
   String? selectedFacilityId;
 
+  TextEditingController controller1 = TextEditingController();
+
   /// Handles the selection of a facility and product variant from the form and triggers the loading of the corresponding inventory report data.
   ///
   /// This function takes a [FormGroup] and an [InventoryReportBloc] as parameters.
@@ -123,8 +125,9 @@ class InventoryReportDetailsPageState
             DigitButton(
               size: DigitButtonSize.large,
               type: DigitButtonType.secondary,
+              mainAxisSize: MainAxisSize.max,
               onPressed: () => context.router.popUntilRoot(),
-              label:  localizations.translate(
+              label: localizations.translate(
                 i18.inventoryReportDetails.backToHomeButtonLabel,
               ),
             ),
@@ -190,40 +193,84 @@ class InventoryReportDetailsPageState
                                 return Column(
                                   children: [
                                     DigitCard(
-                                        children: [
-                                          if (isWareHouseManager)
-                                            BlocConsumer<FacilityBloc,
-                                                FacilityState>(
-                                              listener: (context, state) =>
-                                                  state.whenOrNull(
-                                                empty: () =>
-                                                    NoFacilitiesAssignedDialog
-                                                        .show(
-                                                  context,
-                                                  localizations,
-                                                ),
+                                      margin: const EdgeInsets.all(spacer2),
+                                      children: [
+                                        if (isWareHouseManager)
+                                          BlocConsumer<FacilityBloc,
+                                              FacilityState>(
+                                            listener: (context, state) =>
+                                                state.whenOrNull(
+                                              empty: () =>
+                                                  NoFacilitiesAssignedDialog
+                                                      .show(
+                                                context,
+                                                localizations,
                                               ),
-                                              builder: (context, state) {
-                                                final facilities =
-                                                    state.whenOrNull(
-                                                          fetched: (facilities,
-                                                                  allFacilities) =>
-                                                              facilities,
-                                                        ) ??
-                                                        [];
+                                            ),
+                                            builder: (context, state) {
+                                              final facilities =
+                                                  state.whenOrNull(
+                                                        fetched: (facilities,
+                                                                allFacilities) =>
+                                                            facilities,
+                                                      ) ??
+                                                      [];
 
-                                                return InkWell(
-                                                  onTap: () {
-                                                    handleFacilitySelection(
-                                                        form, facilities);
-                                                  },
-                                                  child: IgnorePointer(
-                                                    child: ReactiveWrapperField(
-                                                    formControlName: _facilityKey,
-                                                    builder: (field){
+                                              return InkWell(
+                                                onTap: () async {
+                                                  if (mounted) {
+                                                    final stockReconciliationBloc =
+                                                        context.read<
+                                                            StockReconciliationBloc>();
+
+                                                    final facility = await context
+                                                            .router
+                                                            .push(InventoryFacilitySelectionRoute(
+                                                                facilities:
+                                                                    facilities))
+                                                        as FacilityModel?;
+
+                                                    if (facility == null) {
+                                                      return;
+                                                    }
+                                                    form
+                                                            .control(_facilityKey)
+                                                            .value =
+                                                        localizations.translate(
+                                                      'FAC_${facility.id}',
+                                                    );
+
+                                                    setState(() {
+                                                      selectedFacilityId =
+                                                          facility.id;
+                                                    });
+
+                                                    controller1.text =
+                                                        localizations.translate(
+                                                            'FAC_${facility.id}');
+                                                    stockReconciliationBloc.add(
+                                                      StockReconciliationSelectFacilityEvent(
+                                                        facility,
+                                                      ),
+                                                    );
+
+                                                    if (mounted) {
+                                                      handleSelection(
+                                                          form,
+                                                          context.read<
+                                                              InventoryReportBloc>());
+                                                    }
+                                                  }
+                                                },
+                                                child: IgnorePointer(
+                                                  child: ReactiveWrapperField(
+                                                    formControlName:
+                                                        _facilityKey,
+                                                    builder: (field) {
                                                       return InputField(
                                                         type: InputType.search,
                                                         isRequired: true,
+                                                        controller: controller1,
                                                         label: localizations
                                                             .translate(
                                                           i18.stockReconciliationDetails
@@ -232,83 +279,90 @@ class InventoryReportDetailsPageState
                                                       );
                                                     },
                                                   ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          BlocBuilder<
-                                              InventoryProductVariantBloc,
-                                              InventoryProductVariantState>(
-                                            builder: (context, state) {
-                                              return state.maybeWhen(
-                                                orElse: () => const Offstage(),
-                                                loading: () => const Center(
-                                                  child:
-                                                      CircularProgressIndicator(),
                                                 ),
-                                                empty: () => Center(
-                                                  child: Text(
-                                                    i18.stockDetails
-                                                        .noProductsFound,
-                                                  ),
-                                                ),
-                                                fetched: (productVariants) {
-                                                  return ReactiveWrapperField(
-                                                    formControlName:
-                                                    _productVariantKey,
-                                                    validationMessages: {
-                                                      'required': (object) =>
-                                                          localizations.translate(
-                                                            i18.common
-                                                                .corecommonRequired,
-                                                          ),
-                                                    },
-                                                    builder: (field) {
-                                                      return LabeledField(
-                                                        isRequired: true,
-                                                        label:
-                                                        localizations.translate(
-                                                          i18.stockReconciliationDetails
-                                                              .productLabel,
-                                                        ),
-                                                        child: DigitDropdown(
-                                                          emptyItemText:
-                                                          localizations.translate(
-                                                            i18.common.noMatchFound,
-                                                          ),
-                                                          items: productVariants.map((
-                                                              variant) {
-                                                            return DropdownItem(
-                                                              name: localizations
-                                                                  .translate(
-                                                                variant.sku ??
-                                                                    variant.id,
-                                                              ),
-                                                              code: variant.id,
-                                                            );
-                                                          }).toList(),
-                                                          onSelect: (value) {
-                                                            /// Find the selected product variant model by matching the id
-                                                            final selectedVariant = productVariants.firstWhere(
-                                                                  (variant) => variant.id == value.code,
-                                                            );
-                                                            /// Update the form control with the selected product variant model
-                                                            field.control.value = selectedVariant;
-
-                                                            handleSelection(
-                                                                form,
-                                                                context.read<
-                                                                    InventoryReportBloc>());
-                                                          },
-                                                        ),
-                                                      );
-                                                    },
-                                                  );
-                                                },
                                               );
                                             },
                                           ),
-                                        ],
+                                        BlocBuilder<InventoryProductVariantBloc,
+                                            InventoryProductVariantState>(
+                                          builder: (context, state) {
+                                            return state.maybeWhen(
+                                              orElse: () => const Offstage(),
+                                              loading: () => const Center(
+                                                child:
+                                                    CircularProgressIndicator(),
+                                              ),
+                                              empty: () => Center(
+                                                child: Text(
+                                                  i18.stockDetails
+                                                      .noProductsFound,
+                                                ),
+                                              ),
+                                              fetched: (productVariants) {
+                                                return ReactiveWrapperField(
+                                                  formControlName:
+                                                      _productVariantKey,
+                                                  validationMessages: {
+                                                    'required': (object) =>
+                                                        localizations.translate(
+                                                          i18.common
+                                                              .corecommonRequired,
+                                                        ),
+                                                  },
+                                                  builder: (field) {
+                                                    return LabeledField(
+                                                      isRequired: true,
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.stockReconciliationDetails
+                                                            .productLabel,
+                                                      ),
+                                                      child: DigitDropdown(
+                                                        emptyItemText:
+                                                            localizations
+                                                                .translate(
+                                                          i18.common
+                                                              .noMatchFound,
+                                                        ),
+                                                        items: productVariants
+                                                            .map((variant) {
+                                                          return DropdownItem(
+                                                            name: localizations
+                                                                .translate(
+                                                              variant.sku ??
+                                                                  variant.id,
+                                                            ),
+                                                            code: variant.id,
+                                                          );
+                                                        }).toList(),
+                                                        onSelect: (value) {
+                                                          /// Find the selected product variant model by matching the id
+                                                          final selectedVariant =
+                                                              productVariants
+                                                                  .firstWhere(
+                                                            (variant) =>
+                                                                variant.id ==
+                                                                value.code,
+                                                          );
+
+                                                          /// Update the form control with the selected product variant model
+                                                          field.control.value =
+                                                              selectedVariant;
+
+                                                          handleSelection(
+                                                              form,
+                                                              context.read<
+                                                                  InventoryReportBloc>());
+                                                        },
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ],
                                     ),
                                     Expanded(
                                       child: Align(
@@ -328,8 +382,7 @@ class InventoryReportDetailsPageState
                                             if (data.isEmpty) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(
-                                                  spacer4
-                                                ),
+                                                    spacer4),
                                                 child: _NoReportContent(
                                                   title: title,
                                                   message: noRecordsMessage,
@@ -438,8 +491,7 @@ class InventoryReportDetailsPageState
                                             if (data.isEmpty) {
                                               return Padding(
                                                 padding: const EdgeInsets.all(
-                                                  spacer4
-                                                ),
+                                                    spacer4),
                                                 child: _NoReportContent(
                                                   title: title,
                                                   message: noRecordsMessage,
@@ -734,29 +786,7 @@ class InventoryReportDetailsPageState
   }
 
   handleFacilitySelection(
-      FormGroup form, List<FacilityModel> facilities) async {
-    final stockReconciliationBloc = context.read<StockReconciliationBloc>();
-
-    final facility = await context.router
-            .push(InventoryFacilitySelectionRoute(facilities: facilities))
-        as FacilityModel?;
-
-    if (facility == null) {
-      return;
-    }
-    form.control(_facilityKey).value = localizations.translate(
-      'FAC_${facility.id}',
-    );
-    stockReconciliationBloc.add(
-      StockReconciliationSelectFacilityEvent(
-        facility,
-      ),
-    );
-
-    if (mounted) {
-      handleSelection(form, context.read<InventoryReportBloc>());
-    }
-  }
+      FormGroup form, List<FacilityModel> facilities) async {}
 }
 
 class _ReportDetailsContent extends StatelessWidget {

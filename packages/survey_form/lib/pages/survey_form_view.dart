@@ -746,7 +746,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         .map((item) => RadioButtonModel(
                                               code: item,
                                               name: localizations.translate(
-                                                'CORE_COMMON_${item.trim().toUpperCase()}',
+                                                item.trim().toUpperCase(),
                                               ),
                                             ))
                                         .toList()

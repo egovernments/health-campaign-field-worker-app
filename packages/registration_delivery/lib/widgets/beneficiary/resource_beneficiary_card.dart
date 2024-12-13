@@ -42,6 +42,7 @@ class ResourceBeneficiaryCardState
             fetched: (productVariants) {
               return SelectionCard<ProductVariantModel>(
                 equalWidthOptions: true,
+                showParentContainer: true,
                 options: productVariants,
                 onSelectionChanged: (selectedOptions) {
                   if (selectedOptions.isNotEmpty) {
