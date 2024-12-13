@@ -383,10 +383,10 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                             .map((
                           e,
                         ) {
-                          String? description = e.additionalDetails?.entries
+                          String? description = e.additionalFields?.fields
                               .where((a) => a.key == 'helpText')
-                              .first
-                              .value;
+                              .firstOrNull
+                              ?.value;
                           int index = (initialAttributes ?? []).indexOf(e);
                           return Column(children: [
                             if (e.dataType == 'String' &&
