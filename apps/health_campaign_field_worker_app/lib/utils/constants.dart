@@ -35,12 +35,15 @@ class Constants {
   late Future<Isar> _isar;
   late String _version;
   static final Constants _instance = Constants._();
+
   Constants._() {
     _isar = openIsar();
   }
+
   factory Constants() {
     return _instance;
   }
+
   Future initialize(version) async {
     await initializeAllMappers();
     setInitialDataOfPackages();
@@ -302,6 +305,7 @@ final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 class KeyValue {
   String label;
   dynamic key;
+
   KeyValue(this.label, this.key);
 }
 
@@ -310,6 +314,7 @@ class StatusKeys {
   bool isBeneficiaryRefused;
   bool isBeneficiaryReferred;
   bool isStatusReset;
+
   StatusKeys(this.isNotEligible, this.isBeneficiaryRefused,
       this.isBeneficiaryReferred, this.isStatusReset);
 }
@@ -355,6 +360,7 @@ class DownloadBeneficiary {
   String? prefixLabel;
   String? suffixLabel;
   AppConfiguration? appConfiguartion;
+
   DownloadBeneficiary({
     required this.title,
     required this.projectId,
