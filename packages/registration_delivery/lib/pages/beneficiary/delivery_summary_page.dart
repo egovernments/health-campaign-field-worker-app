@@ -188,30 +188,26 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 withDivider: true,
                                 items: [
                                   LabelValueItem(
-                                      label: localizations.translate(
-                                          i18.householdLocation.villageLabel),
-                                      value: deliverState
-                                              .householdMemberWrapper
-                                              ?.household
-                                              ?.address
-                                              ?.locality
-                                              ?.code
-                                              .split('_')
-                                              .last
-                                              .titleCase ??
-                                          localizations.translate(
-                                              i18.common.coreCommonNA),
-                                      isInline: true,
-                                       labelFlex: 5,
+                                    label: localizations.translate(
+                                        i18.householdLocation.villageLabel),
+                                    value: deliverState.householdMemberWrapper
+                                            ?.household?.address?.locality?.code
+                                            .split('_')
+                                            .last
+                                            .titleCase ??
+                                        localizations
+                                            .translate(i18.common.coreCommonNA),
+                                    isInline: true,
+                                    labelFlex: 5,
                                   ),
                                   LabelValueItem(
-                                      label: localizations.translate(i18
-                                          .householdLocation.landmarkFormLabel),
-                                      value: deliverState.householdMemberWrapper
-                                              ?.household?.address?.landmark ??
-                                          localizations.translate(
-                                              i18.common.coreCommonNA),
-                                      isInline: true,
+                                    label: localizations.translate(i18
+                                        .householdLocation.landmarkFormLabel),
+                                    value: deliverState.householdMemberWrapper
+                                            ?.household?.address?.landmark ??
+                                        localizations
+                                            .translate(i18.common.coreCommonNA),
+                                    isInline: true,
                                     labelFlex: 5,
                                   ),
                                 ]),
@@ -226,54 +222,54 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                 withDivider: true,
                                 items: [
                                   LabelValueItem(
-                                      label: localizations.translate(
-                                          i18.beneficiaryDetails.totalMembers),
-                                      value: deliverState.householdMemberWrapper
-                                              ?.household?.memberCount
-                                              .toString() ??
-                                          '0',
-                                      isInline: true,
+                                    label: localizations.translate(
+                                        i18.beneficiaryDetails.totalMembers),
+                                    value: deliverState.householdMemberWrapper
+                                            ?.household?.memberCount
+                                            .toString() ??
+                                        '0',
+                                    isInline: true,
                                     labelFlex: 5,
                                   ),
                                   LabelValueItem(
-                                      label: localizations.translate(i18
-                                          .householdDetails
-                                          .noOfPregnantWomenCountLabel),
-                                      value: deliverState
-                                              .householdMemberWrapper
-                                              ?.household
-                                              ?.additionalFields
-                                              ?.fields
-                                              .where((h) =>
-                                                  h.key ==
-                                                  AdditionalFieldsType
-                                                      .pregnantWomen
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                          '0',
-                                      isInline: true,
+                                    label: localizations.translate(i18
+                                        .householdDetails
+                                        .noOfPregnantWomenCountLabel),
+                                    value: deliverState
+                                            .householdMemberWrapper
+                                            ?.household
+                                            ?.additionalFields
+                                            ?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType
+                                                    .pregnantWomen
+                                                    .toValue())
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        '0',
+                                    isInline: true,
                                     labelFlex: 5,
                                   ),
                                   LabelValueItem(
-                                      label: localizations.translate(i18
-                                          .householdDetails
-                                          .noOfChildrenBelow5YearsLabel),
-                                      value: deliverState
-                                              .householdMemberWrapper
-                                              ?.household
-                                              ?.additionalFields
-                                              ?.fields
-                                              .where((h) =>
-                                                  h.key ==
-                                                  AdditionalFieldsType.children
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                          '0',
-                                      isInline: true,
+                                    label: localizations.translate(i18
+                                        .householdDetails
+                                        .noOfChildrenBelow5YearsLabel),
+                                    value: deliverState
+                                            .householdMemberWrapper
+                                            ?.household
+                                            ?.additionalFields
+                                            ?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType.children
+                                                    .toValue())
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        '0',
+                                    isInline: true,
                                     labelFlex: 5,
                                   ),
                                 ]),
@@ -282,53 +278,53 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                           margin: const EdgeInsets.all(spacer2),
                           children: [
                             LabelValueSummary(
-                              padding: EdgeInsets.zero,
+                                padding: EdgeInsets.zero,
                                 heading: localizations.translate(
                                     i18.householdDetails.houseDetailsLabel),
                                 withDivider: true,
                                 items: [
                                   LabelValueItem(
-                                      label: localizations.translate(
-                                          i18.householdDetails.noOfRoomsLabel),
-                                      value: deliverState
-                                              .householdMemberWrapper
-                                              ?.household
-                                              ?.additionalFields
-                                              ?.fields
-                                              .where((h) =>
-                                                  h.key ==
-                                                  AdditionalFieldsType.noOfRooms
-                                                      .toValue())
-                                              .firstOrNull
-                                              ?.value
-                                              .toString() ??
-                                          '0',
-                                      isInline: true,
+                                    label: localizations.translate(
+                                        i18.householdDetails.noOfRoomsLabel),
+                                    value: deliverState
+                                            .householdMemberWrapper
+                                            ?.household
+                                            ?.additionalFields
+                                            ?.fields
+                                            .where((h) =>
+                                                h.key ==
+                                                AdditionalFieldsType.noOfRooms
+                                                    .toValue())
+                                            .firstOrNull
+                                            ?.value
+                                            .toString() ??
+                                        '0',
+                                    isInline: true,
                                     labelFlex: 5,
                                   ),
                                   LabelValueItem(
-                                      label: localizations.translate(
-                                          i18.householdDetails.typeOfStructure),
-                                      value: (deliverState
-                                                  .householdMemberWrapper
-                                                  ?.household
-                                                  ?.additionalFields
-                                                  ?.fields
-                                                  .where((h) =>
-                                                      h.key ==
-                                                      AdditionalFieldsType
-                                                          .houseStructureTypes
-                                                          .toValue())
-                                                  .firstOrNull
-                                                  ?.value ??
-                                              [])
-                                          .toString()
-                                          .split('|')
-                                          .map((item) =>
-                                              getLocalizedMessage(item))
-                                          .toList()
-                                          .join(', '),
-                                      isInline: true,
+                                    label: localizations.translate(
+                                        i18.householdDetails.typeOfStructure),
+                                    value: (deliverState
+                                                .householdMemberWrapper
+                                                ?.household
+                                                ?.additionalFields
+                                                ?.fields
+                                                .where((h) =>
+                                                    h.key ==
+                                                    AdditionalFieldsType
+                                                        .houseStructureTypes
+                                                        .toValue())
+                                                .firstOrNull
+                                                ?.value ??
+                                            [])
+                                        .toString()
+                                        .split('|')
+                                        .map(
+                                            (item) => getLocalizedMessage(item))
+                                        .toList()
+                                        .join(', '),
+                                    isInline: true,
                                     labelFlex: 5,
                                   ),
                                 ]),
@@ -362,7 +358,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                               LabelValueSummary(
                                   padding: EdgeInsets.zero,
                                   heading: localizations.translate(
-                                      '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
+                                      '${RegistrationDeliverySingleton().selectedProject?.projectType?.toUpperCase()}_${i18.deliverIntervention.deliveryDetailsLabel}_${deliverState.oldTask?.status}'),
                                   withDivider: true,
                                   items: [
                                     LabelValueItem(
@@ -375,7 +371,7 @@ class DeliverySummaryPageState extends LocalizedState<DeliverySummaryPage> {
                                                       .toValue()
                                           ? i18.deliverIntervention
                                               .reasonForRefusalLabel
-                                          : '${RegistrationDeliverySingleton().selectedProject?.name.toUpperCase()}_${i18.deliverIntervention.typeOfResourceUsed}'),
+                                          : '${RegistrationDeliverySingleton().selectedProject?.projectType?.toUpperCase()}_${i18.deliverIntervention.typeOfResourceUsed}'),
                                       value: deliverState.oldTask?.status ==
                                                   Status.administeredFailed
                                                       .toValue() ||
