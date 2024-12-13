@@ -21,7 +21,7 @@ dependencies:
   digit_ui_components:
     git:
       url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
-      ref: develop
+      ref: hcm_changes
       path: ./flutter/digit-ui-components/digit_components
   digit_components: ^1.0.2
   auto_route: ^8.3.0
