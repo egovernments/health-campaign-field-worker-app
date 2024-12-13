@@ -715,6 +715,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
       return Align(
         alignment: Alignment.topLeft,
         child: LabeledField(
+            charCondition: true,
             label: localizations.translate(
               '${selectedServiceDefinition?.code}.${item.code}',
             ),
@@ -746,7 +747,7 @@ class SurveyFormViewPageState extends LocalizedState<SurveyFormViewPage> {
                                         .map((item) => RadioButtonModel(
                                               code: item,
                                               name: localizations.translate(
-                                                item.trim().toUpperCase(),
+                                                '${selectedServiceDefinition?.code}.${item.trim()}',
                                               ),
                                             ))
                                         .toList()

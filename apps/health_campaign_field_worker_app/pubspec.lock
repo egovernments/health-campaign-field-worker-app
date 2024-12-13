@@ -441,10 +441,11 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      path: "../../packages/dart_mappable_builder"
-      relative: true
-    source: path
-    version: "4.2.3"
+      name: dart_mappable_builder
+      sha256: "04a6e7117382f8a8689b3e363bee6c3de8c9ea4332e664148fe01bd576eb1126"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.3.0"
   dart_style:
     dependency: transitive
     description:
@@ -554,8 +555,8 @@ packages:
     dependency: "direct main"
     description:
       path: "flutter/digit-ui-components/digit_components"
-      ref: develop
-      resolved-ref: e34fbbd8ca46b85c86e2c8c2a031f16d8237d81f
+      ref: hcm_changes
+      resolved-ref: c5dd67a70d57a01979932e7ceeb4720af0828cb9
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+7"
