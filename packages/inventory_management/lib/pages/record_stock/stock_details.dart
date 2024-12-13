@@ -4,6 +4,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/utils/component_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
@@ -89,6 +90,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     bool isWareHouseMgr = InventorySingleton().isWareHouseMgr;
 
@@ -594,7 +596,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                             children: [
                               Text(
                                 localizations.translate(pageTitle),
-                                style: theme.textTheme.displayMedium,
+                                style: textTheme.headingXl,
                               ),
                               BlocBuilder<InventoryProductVariantBloc,
                                   InventoryProductVariantState>(
@@ -1066,7 +1068,7 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             child: IconButton(
                                               alignment: Alignment.centerRight,
                                               color:
-                                                  theme.colorScheme.secondary,
+                                                  theme.colorTheme.primary.primary1,
                                               icon: const Icon(Icons.edit),
                                               onPressed: () {
                                                 //[TODO: Add route to auto_route]

@@ -63,6 +63,7 @@ class _ReferralReasonChecklistPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return PopScope(
       canPop: false,
@@ -298,7 +299,7 @@ class _ReferralReasonChecklistPageState
                             '${localizations.translate(
                               value.selectedServiceDefinition!.code.toString(),
                             )} ${localizations.translate(i18.checklist.checklist)}',
-                            style: theme.textTheme.displayMedium,
+                            style: textTheme.headingXl,
                             textAlign: TextAlign.left,
                           ),
                         ),
@@ -395,7 +396,7 @@ class _ReferralReasonChecklistPageState
                                         '${localizations.translate(
                                           '${value.selectedServiceDefinition?.code}.${e.code}',
                                         )} ${e.required == true ? '*' : ''}',
-                                        style: theme.textTheme.headlineSmall,
+                                        style: textTheme.headingS,
                                       ),
                                     ],
                                   ),
@@ -490,6 +491,7 @@ class _ReferralReasonChecklistPageState
     BuildContext context,
   ) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     /* Check the data type of the attribute*/
     if (item.dataType == 'SingleValueList') {
@@ -522,7 +524,7 @@ class _ReferralReasonChecklistPageState
                 '${localizations.translate(
                   '${selectedServiceDefinition?.code}.${item.code}',
                 )} ${item.required == true ? '*' : ''}',
-                style: theme.textTheme.headlineSmall,
+                style: textTheme.headingS,
               ),
             ),
           ),
@@ -611,7 +613,7 @@ class _ReferralReasonChecklistPageState
                             i18.common.corecommonRequired,
                           ),
                           style: TextStyle(
-                            color: theme.colorScheme.error,
+                            color: theme.colorTheme.alert.error,
                           ),
                         ),
                       ),
@@ -717,7 +719,7 @@ class _ReferralReasonChecklistPageState
                   '${localizations.translate(
                     '${selectedServiceDefinition?.code}.${item.code}',
                   )} ${item.required == true ? '*' : ''}',
-                  style: theme.textTheme.headlineSmall,
+                  style: textTheme.headingS,
                 ),
               ],
             ),

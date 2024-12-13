@@ -39,6 +39,7 @@ class InventoryFacilitySelectionPageState
       color: theme.colorScheme.outline,
       width: 1.0,
     );
+    final textTheme = theme.digitTextTheme(context);
 
     return SafeArea(
       child: ReactiveFormBuilder(
@@ -80,7 +81,7 @@ class InventoryFacilitySelectionPageState
                                     localizations.translate(
                                       i18.common.facilitySearchHeaderLabel,
                                     ),
-                                    style: theme.textTheme.displayMedium,
+                                    style: textTheme.headingXl,
                                     textAlign: TextAlign.left,
                                   ),
                                 ),

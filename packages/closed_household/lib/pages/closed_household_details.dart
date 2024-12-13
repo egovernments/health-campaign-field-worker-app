@@ -56,6 +56,7 @@ class ClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -151,7 +152,7 @@ class ClosedHouseholdDetailsPageState
                       heading: localizations.translate(
                         i18.closeHousehold.closeHouseHoldDetailLabel,
                       ),
-                      headingStyle: theme.textTheme.displayMedium,
+                      headingStyle: textTheme.headingXl,
                       description: localizations.translate(
                         i18.closeHousehold.closeHouseHoldDetailDescLabel,
                       ),
