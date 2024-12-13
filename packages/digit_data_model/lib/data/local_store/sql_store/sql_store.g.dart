@@ -36953,6 +36953,13 @@ class $SideEffectTable extends SideEffect
   late final GeneratedColumn<String> taskClientReferenceId =
       GeneratedColumn<String>('task_client_reference_id', aliasedName, true,
           type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _projectBeneficiaryClientReferenceIdMeta =
+      const VerificationMeta('projectBeneficiaryClientReferenceId');
+  @override
+  late final GeneratedColumn<String> projectBeneficiaryClientReferenceId =
+      GeneratedColumn<String>(
+          'project_beneficiary_client_reference_id', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _reAttemptsMeta =
       const VerificationMeta('reAttempts');
   @override
@@ -37062,6 +37069,7 @@ class $SideEffectTable extends SideEffect
         id,
         projectId,
         taskClientReferenceId,
+        projectBeneficiaryClientReferenceId,
         reAttempts,
         symptoms,
         auditCreatedBy,
@@ -37101,6 +37109,13 @@ class $SideEffectTable extends SideEffect
           _taskClientReferenceIdMeta,
           taskClientReferenceId.isAcceptableOrUnknown(
               data['task_client_reference_id']!, _taskClientReferenceIdMeta));
+    }
+    if (data.containsKey('project_beneficiary_client_reference_id')) {
+      context.handle(
+          _projectBeneficiaryClientReferenceIdMeta,
+          projectBeneficiaryClientReferenceId.isAcceptableOrUnknown(
+              data['project_beneficiary_client_reference_id']!,
+              _projectBeneficiaryClientReferenceIdMeta));
     }
     if (data.containsKey('re_attempts')) {
       context.handle(
@@ -37210,6 +37225,9 @@ class $SideEffectTable extends SideEffect
       taskClientReferenceId: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}task_client_reference_id']),
+      projectBeneficiaryClientReferenceId: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}project_beneficiary_client_reference_id']),
       reAttempts: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}re_attempts']),
       symptoms: attachedDatabase.typeMapping
@@ -37255,6 +37273,7 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
   final String? id;
   final String? projectId;
   final String? taskClientReferenceId;
+  final String? projectBeneficiaryClientReferenceId;
   final int? reAttempts;
   final String? symptoms;
   final String? auditCreatedBy;
@@ -37275,6 +37294,7 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       {this.id,
       this.projectId,
       this.taskClientReferenceId,
+      this.projectBeneficiaryClientReferenceId,
       this.reAttempts,
       this.symptoms,
       this.auditCreatedBy,
@@ -37302,6 +37322,10 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
     }
     if (!nullToAbsent || taskClientReferenceId != null) {
       map['task_client_reference_id'] = Variable<String>(taskClientReferenceId);
+    }
+    if (!nullToAbsent || projectBeneficiaryClientReferenceId != null) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String>(projectBeneficiaryClientReferenceId);
     }
     if (!nullToAbsent || reAttempts != null) {
       map['re_attempts'] = Variable<int>(reAttempts);
@@ -37361,6 +37385,10 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       taskClientReferenceId: taskClientReferenceId == null && nullToAbsent
           ? const Value.absent()
           : Value(taskClientReferenceId),
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId == null && nullToAbsent
+              ? const Value.absent()
+              : Value(projectBeneficiaryClientReferenceId),
       reAttempts: reAttempts == null && nullToAbsent
           ? const Value.absent()
           : Value(reAttempts),
@@ -37418,6 +37446,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       projectId: serializer.fromJson<String?>(json['projectId']),
       taskClientReferenceId:
           serializer.fromJson<String?>(json['taskClientReferenceId']),
+      projectBeneficiaryClientReferenceId: serializer
+          .fromJson<String?>(json['projectBeneficiaryClientReferenceId']),
       reAttempts: serializer.fromJson<int?>(json['reAttempts']),
       symptoms: serializer.fromJson<String?>(json['symptoms']),
       auditCreatedBy: serializer.fromJson<String?>(json['auditCreatedBy']),
@@ -37445,6 +37475,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       'projectId': serializer.toJson<String?>(projectId),
       'taskClientReferenceId':
           serializer.toJson<String?>(taskClientReferenceId),
+      'projectBeneficiaryClientReferenceId':
+          serializer.toJson<String?>(projectBeneficiaryClientReferenceId),
       'reAttempts': serializer.toJson<int?>(reAttempts),
       'symptoms': serializer.toJson<String?>(symptoms),
       'auditCreatedBy': serializer.toJson<String?>(auditCreatedBy),
@@ -37468,6 +37500,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
           {Value<String?> id = const Value.absent(),
           Value<String?> projectId = const Value.absent(),
           Value<String?> taskClientReferenceId = const Value.absent(),
+          Value<String?> projectBeneficiaryClientReferenceId =
+              const Value.absent(),
           Value<int?> reAttempts = const Value.absent(),
           Value<String?> symptoms = const Value.absent(),
           Value<String?> auditCreatedBy = const Value.absent(),
@@ -37490,6 +37524,10 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
         taskClientReferenceId: taskClientReferenceId.present
             ? taskClientReferenceId.value
             : this.taskClientReferenceId,
+        projectBeneficiaryClientReferenceId:
+            projectBeneficiaryClientReferenceId.present
+                ? projectBeneficiaryClientReferenceId.value
+                : this.projectBeneficiaryClientReferenceId,
         reAttempts: reAttempts.present ? reAttempts.value : this.reAttempts,
         symptoms: symptoms.present ? symptoms.value : this.symptoms,
         auditCreatedBy:
@@ -37532,6 +37570,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
           ..write('id: $id, ')
           ..write('projectId: $projectId, ')
           ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
           ..write('reAttempts: $reAttempts, ')
           ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -37557,6 +37597,7 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
       id,
       projectId,
       taskClientReferenceId,
+      projectBeneficiaryClientReferenceId,
       reAttempts,
       symptoms,
       auditCreatedBy,
@@ -37580,6 +37621,8 @@ class SideEffectData extends DataClass implements Insertable<SideEffectData> {
           other.id == this.id &&
           other.projectId == this.projectId &&
           other.taskClientReferenceId == this.taskClientReferenceId &&
+          other.projectBeneficiaryClientReferenceId ==
+              this.projectBeneficiaryClientReferenceId &&
           other.reAttempts == this.reAttempts &&
           other.symptoms == this.symptoms &&
           other.auditCreatedBy == this.auditCreatedBy &&
@@ -37602,6 +37645,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
   final Value<String?> id;
   final Value<String?> projectId;
   final Value<String?> taskClientReferenceId;
+  final Value<String?> projectBeneficiaryClientReferenceId;
   final Value<int?> reAttempts;
   final Value<String?> symptoms;
   final Value<String?> auditCreatedBy;
@@ -37623,6 +37667,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     this.id = const Value.absent(),
     this.projectId = const Value.absent(),
     this.taskClientReferenceId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
     this.reAttempts = const Value.absent(),
     this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -37645,6 +37690,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     this.id = const Value.absent(),
     this.projectId = const Value.absent(),
     this.taskClientReferenceId = const Value.absent(),
+    this.projectBeneficiaryClientReferenceId = const Value.absent(),
     this.reAttempts = const Value.absent(),
     this.symptoms = const Value.absent(),
     this.auditCreatedBy = const Value.absent(),
@@ -37667,6 +37713,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     Expression<String>? id,
     Expression<String>? projectId,
     Expression<String>? taskClientReferenceId,
+    Expression<String>? projectBeneficiaryClientReferenceId,
     Expression<int>? reAttempts,
     Expression<String>? symptoms,
     Expression<String>? auditCreatedBy,
@@ -37690,6 +37737,9 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
       if (projectId != null) 'project_id': projectId,
       if (taskClientReferenceId != null)
         'task_client_reference_id': taskClientReferenceId,
+      if (projectBeneficiaryClientReferenceId != null)
+        'project_beneficiary_client_reference_id':
+            projectBeneficiaryClientReferenceId,
       if (reAttempts != null) 're_attempts': reAttempts,
       if (symptoms != null) 'symptoms': symptoms,
       if (auditCreatedBy != null) 'audit_created_by': auditCreatedBy,
@@ -37716,6 +37766,7 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
       {Value<String?>? id,
       Value<String?>? projectId,
       Value<String?>? taskClientReferenceId,
+      Value<String?>? projectBeneficiaryClientReferenceId,
       Value<int?>? reAttempts,
       Value<String?>? symptoms,
       Value<String?>? auditCreatedBy,
@@ -37738,6 +37789,9 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
       projectId: projectId ?? this.projectId,
       taskClientReferenceId:
           taskClientReferenceId ?? this.taskClientReferenceId,
+      projectBeneficiaryClientReferenceId:
+          projectBeneficiaryClientReferenceId ??
+              this.projectBeneficiaryClientReferenceId,
       reAttempts: reAttempts ?? this.reAttempts,
       symptoms: symptoms ?? this.symptoms,
       auditCreatedBy: auditCreatedBy ?? this.auditCreatedBy,
@@ -37770,6 +37824,10 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
     if (taskClientReferenceId.present) {
       map['task_client_reference_id'] =
           Variable<String>(taskClientReferenceId.value);
+    }
+    if (projectBeneficiaryClientReferenceId.present) {
+      map['project_beneficiary_client_reference_id'] =
+          Variable<String>(projectBeneficiaryClientReferenceId.value);
     }
     if (reAttempts.present) {
       map['re_attempts'] = Variable<int>(reAttempts.value);
@@ -37831,6 +37889,8 @@ class SideEffectCompanion extends UpdateCompanion<SideEffectData> {
           ..write('id: $id, ')
           ..write('projectId: $projectId, ')
           ..write('taskClientReferenceId: $taskClientReferenceId, ')
+          ..write(
+              'projectBeneficiaryClientReferenceId: $projectBeneficiaryClientReferenceId, ')
           ..write('reAttempts: $reAttempts, ')
           ..write('symptoms: $symptoms, ')
           ..write('auditCreatedBy: $auditCreatedBy, ')
@@ -54112,6 +54172,7 @@ typedef $$SideEffectTableInsertCompanionBuilder = SideEffectCompanion Function({
   Value<String?> id,
   Value<String?> projectId,
   Value<String?> taskClientReferenceId,
+  Value<String?> projectBeneficiaryClientReferenceId,
   Value<int?> reAttempts,
   Value<String?> symptoms,
   Value<String?> auditCreatedBy,
@@ -54134,6 +54195,7 @@ typedef $$SideEffectTableUpdateCompanionBuilder = SideEffectCompanion Function({
   Value<String?> id,
   Value<String?> projectId,
   Value<String?> taskClientReferenceId,
+  Value<String?> projectBeneficiaryClientReferenceId,
   Value<int?> reAttempts,
   Value<String?> symptoms,
   Value<String?> auditCreatedBy,
@@ -54176,6 +54238,8 @@ class $$SideEffectTableTableManager extends RootTableManager<
             Value<String?> id = const Value.absent(),
             Value<String?> projectId = const Value.absent(),
             Value<String?> taskClientReferenceId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
             Value<int?> reAttempts = const Value.absent(),
             Value<String?> symptoms = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -54198,6 +54262,8 @@ class $$SideEffectTableTableManager extends RootTableManager<
             id: id,
             projectId: projectId,
             taskClientReferenceId: taskClientReferenceId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
             reAttempts: reAttempts,
             symptoms: symptoms,
             auditCreatedBy: auditCreatedBy,
@@ -54220,6 +54286,8 @@ class $$SideEffectTableTableManager extends RootTableManager<
             Value<String?> id = const Value.absent(),
             Value<String?> projectId = const Value.absent(),
             Value<String?> taskClientReferenceId = const Value.absent(),
+            Value<String?> projectBeneficiaryClientReferenceId =
+                const Value.absent(),
             Value<int?> reAttempts = const Value.absent(),
             Value<String?> symptoms = const Value.absent(),
             Value<String?> auditCreatedBy = const Value.absent(),
@@ -54242,6 +54310,8 @@ class $$SideEffectTableTableManager extends RootTableManager<
             id: id,
             projectId: projectId,
             taskClientReferenceId: taskClientReferenceId,
+            projectBeneficiaryClientReferenceId:
+                projectBeneficiaryClientReferenceId,
             reAttempts: reAttempts,
             symptoms: symptoms,
             auditCreatedBy: auditCreatedBy,
@@ -54292,6 +54362,12 @@ class $$SideEffectTableFilterComposer
       column: $state.table.taskClientReferenceId,
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
+
+  ColumnFilters<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnFilters(column, joinBuilders: joinBuilders));
 
   ColumnFilters<int> get reAttempts => $state.composableBuilder(
       column: $state.table.reAttempts,
@@ -54391,6 +54467,12 @@ class $$SideEffectTableOrderingComposer
       column: $state.table.taskClientReferenceId,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<String> get projectBeneficiaryClientReferenceId =>
+      $state.composableBuilder(
+          column: $state.table.projectBeneficiaryClientReferenceId,
+          builder: (column, joinBuilders) =>
+              ColumnOrderings(column, joinBuilders: joinBuilders));
 
   ColumnOrderings<int> get reAttempts => $state.composableBuilder(
       column: $state.table.reAttempts,

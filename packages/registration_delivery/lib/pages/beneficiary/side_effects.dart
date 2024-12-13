@@ -160,6 +160,11 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                                                           .tasks
                                                                           .last
                                                                           .clientReferenceId,
+                                                                  projectBeneficiaryClientReferenceId:
+                                                                      widget
+                                                                          .tasks
+                                                                          .last
+                                                                          .projectBeneficiaryClientReferenceId,
                                                                   projectId:
                                                                       RegistrationDeliverySingleton()
                                                                           .projectId,
