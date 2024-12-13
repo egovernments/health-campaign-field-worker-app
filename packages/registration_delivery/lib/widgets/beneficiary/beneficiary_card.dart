@@ -36,39 +36,39 @@ class BeneficiaryCard extends StatelessWidget {
             style: theme.textTheme.headlineSmall,
           ),
         ),
-        if(status != null)
-        Offstage(
-          offstage: status == null,
-          child: status == Status.visited.toValue() ||
-                  status == Status.registered.toValue() ||
-                  status == Status.administeredSuccess.toValue() ||
-                  status == Status.delivered.toValue()
-              ? DigitButton(
-                  prefixIcon: Icons.check_circle,
-                  label: RegistrationDeliveryLocalization.of(context)
-        .translate(status.toString() ==
-    Status.administeredSuccess.toValue()
-    ? '${RegistrationDeliverySingleton().selectedProject!.name}_${status.toString()}'
-        : status.toString())),
-                  textColor: theme.colorScheme.onSurfaceVariant,
-                  iconColor: theme.colorScheme.onSurfaceVariant,
-                  isDisabled: true,
-                  onPressed: () {},
-                  type: DigitButtonType.tertiary,
-                  size: DigitButtonSize.medium,
-                )
-              : DigitButton(
-                  prefixIcon: Icons.info_rounded,
-                  label: RegistrationDeliveryLocalization.of(context)
-                      .translate(status.toString()),
-                  textColor: theme.colorScheme.error,
-                  iconColor: theme.colorScheme.error,
-                  type: DigitButtonType.tertiary,
-                  size: DigitButtonSize.medium,
-                  isDisabled: true,
-                  onPressed: () {},
-                ),
-        ),
+        if (status != null)
+          Offstage(
+            offstage: status == null,
+            child: status == Status.visited.toValue() ||
+                    status == Status.registered.toValue() ||
+                    status == Status.administeredSuccess.toValue() ||
+                    status == Status.delivered.toValue()
+                ? DigitButton(
+                    prefixIcon: Icons.check_circle,
+                    label: RegistrationDeliveryLocalization.of(context)
+                        .translate(status.toString() ==
+                                Status.administeredSuccess.toValue()
+                            ? '${RegistrationDeliverySingleton().selectedProject!.name}_${status.toString()}'
+                            : status.toString()),
+                    textColor: theme.colorScheme.onSurfaceVariant,
+                    iconColor: theme.colorScheme.onSurfaceVariant,
+                    isDisabled: true,
+                    onPressed: () {},
+                    type: DigitButtonType.tertiary,
+                    size: DigitButtonSize.medium,
+                  )
+                : DigitButton(
+                    prefixIcon: Icons.info_rounded,
+                    label: RegistrationDeliveryLocalization.of(context)
+                        .translate(status.toString()),
+                    textColor: theme.colorScheme.error,
+                    iconColor: theme.colorScheme.error,
+                    type: DigitButtonType.tertiary,
+                    size: DigitButtonSize.medium,
+                    isDisabled: true,
+                    onPressed: () {},
+                  ),
+          ),
         if (subtitle != null)
           Padding(
             padding: const EdgeInsets.all(4),
