@@ -6,13 +6,13 @@ import 'package:closed_household/blocs/app_localization.dart'
     as closed_household_localization;
 import 'package:complaints/blocs/localization/app_localization.dart'
     as complaints_localization;
-import 'package:digit_components/blocs/localization.dart'
-    as component_localization;
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_dss/blocs/app_localization.dart'
     as digit_dss_localization;
 import 'package:digit_scanner/blocs/app_localization.dart'
     as scanner_localization;
+import 'package:digit_ui_components/services/AppLocalization.dart'
+    as component_localization;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:inventory_management/blocs/app_localization.dart'
     as inventory_localization;
@@ -20,7 +20,6 @@ import 'package:referral_reconciliation/blocs/app_localization.dart'
     as referral_reconciliation_localization;
 import 'package:registration_delivery/blocs/app_localization.dart'
     as registration_delivery_localization;
-import 'package:digit_components/blocs/localization.dart' as component_localization;
 import 'package:survey_form/blocs/app_localization.dart'
     as survey_form_localization;
 

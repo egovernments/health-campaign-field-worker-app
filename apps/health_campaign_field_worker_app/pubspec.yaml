@@ -23,7 +23,6 @@ dependencies:
       url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
       ref: hcm_changes
       path: ./flutter/digit-ui-components/digit_components
-  digit_components: ^1.0.2
   auto_route: ^8.3.0
   flutter_bloc: ^8.1.5
   collection: ^1.18.0

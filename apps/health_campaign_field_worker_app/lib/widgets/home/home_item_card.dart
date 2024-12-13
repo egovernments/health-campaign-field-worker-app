@@ -1,4 +1,4 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -28,44 +28,46 @@ class HomeItemCard extends StatelessWidget {
 
     return DigitCard(
       onPressed: onPressed,
-      padding: const EdgeInsets.all(kPadding / 2).copyWith(top: kPadding / 2),
-      margin: const EdgeInsets.all(kPadding),
-      child: Align(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            if (enableCustomIcon)
-              SvgPicture.asset(
-                customIcon,
-                width: customIconSize ?? 25,
-                height: customIconSize ?? 25,
-              ),
-            if (!enableCustomIcon)
-              Icon(
-                icon,
-                color: onPressed == null
-                    ? theme.disabledColor
-                    : theme.colorScheme.secondary,
-                size: 40,
-              ),
-            Wrap(
-              children: [
-                Text(
-                  AppLocalizations.of(context).translate(
-                    label,
-                  ),
-                  style: theme.textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                  // overflow: TextOverflow.ellipsis,
+      // padding: const EdgeInsets.all(kPadding / 2).copyWith(top: kPadding / 2),
+      // margin: const EdgeInsets.all(kPadding),
+      children: [
+        Align(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              if (enableCustomIcon)
+                SvgPicture.asset(
+                  customIcon,
+                  width: customIconSize ?? 25,
+                  height: customIconSize ?? 25,
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
+              if (!enableCustomIcon)
+                Icon(
+                  icon,
+                  color: onPressed == null
+                      ? theme.disabledColor
+                      : theme.colorScheme.secondary,
+                  size: 40,
+                ),
+              Wrap(
+                children: [
+                  Text(
+                    AppLocalizations.of(context).translate(
+                      label,
+                    ),
+                    style: theme.textTheme.bodyMedium,
+                    textAlign: TextAlign.center,
+                    // overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }

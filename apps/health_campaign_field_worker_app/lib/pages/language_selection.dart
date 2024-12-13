@@ -1,6 +1,5 @@
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_row_card/digit_row_card_model.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/molecules/language_selection_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -58,21 +57,18 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
                   listener: (context, state) {
                     if (state.loading && !isDialogVisible) {
                       isDialogVisible = true;
-                      DigitComponentsUtils().showLocalizationLoadingDialog(
-                        context,
-                        DigitSyncDialogType.inProgress,
-                      );
+                      DigitComponentsUtils.showDialog(
+                          context, '', DialogType.inProgress);
                     } else if (!state.loading && isDialogVisible) {
                       isDialogVisible = false;
-                      DigitComponentsUtils()
-                          .hideDialog(context);
+                      DigitComponentsUtils.hideDialog(context);
                     }
                     if (!state.loading &&
                         !isDialogVisible &&
                         state.retryModule != null) {
                       DigitSyncDialog.show(
                         context,
-                        type: DigitSyncDialogType.failed,
+                        type: DialogType.failed,
                         label: i18.common.failedToFetch,
                         primaryAction: DigitDialogActions(
                           label: AppLocalizations.of(context).translate(
@@ -155,14 +151,8 @@ class _LanguageSelectionPageState extends State<LanguageSelectionPage> {
     setState(() {});
     context.read<LocalizationBloc>().add(
           LocalizationEvent.onLoadLocalization(
-            module: 'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList
-        .map((e)
-    =>
-        e.name.toString()
-    )
-        .join(',')
-        .toString()
-  }',
+            module:
+                'hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.map((e) => e.name.toString()).join(',').toString()}',
             tenantId: tenantId,
             locale: locale,
             path: Constants.localizationApiPath,

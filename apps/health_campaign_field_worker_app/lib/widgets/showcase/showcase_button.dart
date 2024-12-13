@@ -1,6 +1,6 @@
 import 'package:complaints/router/complaints_router.gm.dart';
-import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_showcase/showcase_widget.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 import '../../blocs/localization/app_localization.dart';
@@ -44,10 +44,10 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
-              kPadding,
-              kPadding,
-              kPadding / 2,
-              kPadding,
+              spacer2,
+              spacer2,
+              spacer1,
+              spacer2,
             ),
             child: Text(
               AppLocalizations.of(context).translate(i18.common.coreCommonHelp),

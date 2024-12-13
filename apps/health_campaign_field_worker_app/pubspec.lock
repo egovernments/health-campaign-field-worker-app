@@ -441,11 +441,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: "04a6e7117382f8a8689b3e363bee6c3de8c9ea4332e664148fe01bd576eb1126"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.3.0"
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.3"
   dart_style:
     dependency: transitive
     description:
@@ -502,13 +501,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.1"
-  digit_components:
-    dependency: "direct main"
-    description:
-      path: "../../packages/digit_components"
-      relative: true
-    source: path
-    version: "1.0.2+1"
   digit_data_model:
     dependency: "direct main"
     description:
@@ -624,14 +616,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.0"
-  easy_stepper:
-    dependency: transitive
-    description:
-      name: easy_stepper
-      sha256: "63f66314a509ec690c8152a41288961fd96ba9e92ef184299f068a5e78bd16ad"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.8.5+1"
   equatable:
     dependency: transitive
     description:
@@ -842,14 +826,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.13"
-  flutter_focus_watcher:
-    dependency: transitive
-    description:
-      name: flutter_focus_watcher
-      sha256: a72ee539ae0237961308a25839887ca93a0b1cb6f87b0d492b139c8fccff8e79
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
   flutter_keyboard_visibility:
     dependency: "direct main"
     description:
@@ -1036,14 +1012,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_typeahead:
-    dependency: transitive
-    description:
-      name: flutter_typeahead
-      sha256: b9942bd5b7611a6ec3f0730c477146cffa4cd4b051077983ba67ddfc9e7ee818
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1738,14 +1706,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.0.0"
-  pointer_interceptor:
-    dependency: transitive
-    description:
-      name: pointer_interceptor
-      sha256: adf7a637f97c077041d36801b43be08559fd4322d2127b3f20bb7be1b9eebc22
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.3+7"
   pool:
     dependency: transitive
     description:
@@ -1810,14 +1770,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
-  reactive_flutter_typeahead:
-    dependency: transitive
-    description:
-      name: reactive_flutter_typeahead
-      sha256: a5dbca4b537bd9dde245d4228e1a6ce937c05cd77c57ed45b9c05135540d5f1a
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   reactive_forms:
     dependency: "direct main"
     description:
@@ -1848,14 +1800,6 @@ packages:
       relative: true
     source: path
     version: "1.0.4-dev.5"
-  remove_emoji_input_formatter:
-    dependency: transitive
-    description:
-      name: remove_emoji_input_formatter
-      sha256: "82d195984f890de7a8fea936c698848e78c1a67ccefe18db3baf9f7a3bc0177f"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.1+1"
   rxdart:
     dependency: transitive
     description:
