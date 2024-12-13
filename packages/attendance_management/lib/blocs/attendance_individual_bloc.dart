@@ -174,7 +174,9 @@ class AttendanceIndividualBloc
                                 "latitude": event.latitude,
                                 "longitude": event.longitude,
                               }
-                            : null),
+                            : {
+                          EnumValues.boundaryCode.toValue(): AttendanceSingleton().boundary?.code,
+                        }),
                 AttendanceLogModel(
                     individualId: e.individualId,
                     registerId: e.registerId,
