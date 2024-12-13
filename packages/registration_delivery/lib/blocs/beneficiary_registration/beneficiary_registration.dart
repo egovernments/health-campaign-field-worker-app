@@ -408,6 +408,11 @@ class BeneficiaryRegistrationBloc
       editHousehold: (value) async {
         emit(value.copyWith(loading: true));
         try {
+          final HouseholdModel? existingHousehold =
+              (await householdRepository.search(HouseholdSearchModel(
+            clientReferenceId: [value.householdModel.clientReferenceId],
+          )))
+                  .firstOrNull;
           await householdRepository.update(
             event.household.copyWith(
               clientAuditDetails: ClientAuditDetails(
@@ -425,6 +430,10 @@ class BeneficiaryRegistrationBloc
                 relatedClientReferenceId:
                     value.householdModel.clientReferenceId,
               ),
+              id: existingHousehold?.id,
+              rowVersion: existingHousehold?.rowVersion ?? 1,
+              nonRecoverableError:
+                  existingHousehold?.nonRecoverableError ?? false,
             ),
           );
           final projectBeneficiary = await projectBeneficiaryRepository.search(
@@ -491,6 +500,11 @@ class BeneficiaryRegistrationBloc
           }
 
           for (var element in value.individualModel) {
+            final IndividualModel? existingIndividual =
+                (await individualRepository.search(IndividualSearchModel(
+              clientReferenceId: [element.clientReferenceId],
+            )))
+                    .firstOrNull;
             await individualRepository.update(
               element.copyWith(
                 address: [
@@ -502,6 +516,10 @@ class BeneficiaryRegistrationBloc
                       );
                     }),
                 ],
+                id: existingIndividual?.id,
+                rowVersion: existingIndividual?.rowVersion ?? 1,
+                nonRecoverableError:
+                    existingIndividual?.nonRecoverableError ?? false,
               ),
             );
           }
@@ -547,7 +565,17 @@ class BeneficiaryRegistrationBloc
               ],
             ),
           );
-          await individualRepository.update(individual);
+          final IndividualModel? existingIndividual =
+              (await individualRepository.search(IndividualSearchModel(
+            clientReferenceId: [individual.clientReferenceId],
+          )))
+                  .firstOrNull;
+          await individualRepository.update(individual.copyWith(
+            id: existingIndividual?.id,
+            rowVersion: existingIndividual?.rowVersion ?? 1,
+            nonRecoverableError:
+                existingIndividual?.nonRecoverableError ?? false,
+          ));
           if (projectBeneficiary.isNotEmpty) {
             if (projectBeneficiary.first.tag != event.tag) {
               await projectBeneficiaryRepository

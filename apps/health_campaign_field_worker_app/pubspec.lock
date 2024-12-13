@@ -555,7 +555,7 @@ packages:
     description:
       path: "flutter/digit-ui-components/digit_components"
       ref: hcm_changes
-      resolved-ref: c5dd67a70d57a01979932e7ceeb4720af0828cb9
+      resolved-ref: "05e86809fdbef4e443616a5c266043c353924953"
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+7"
