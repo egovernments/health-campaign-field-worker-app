@@ -535,7 +535,7 @@ packages:
       path: "../../packages/digit_location_tracker"
       relative: true
     source: path
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   digit_scanner:
     dependency: "direct main"
     description:
