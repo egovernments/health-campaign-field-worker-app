@@ -102,8 +102,8 @@ class _HouseholdOverviewPageState
                                             vertical: spacer2),
                                         child: DigitButton(
                                           label: localizations.translate(
-                                            i18.memberCard
-                                                .deliverDetailsUpdateLabel,
+                                            '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.memberCard
+                                                .deliverDetailsUpdateLabel}',
                                           ),
                                           isDisabled: state
                                                       .householdMemberWrapper
@@ -143,8 +143,7 @@ class _HouseholdOverviewPageState
                                       )
                                     : DigitButton(
                                         label: localizations.translate(
-                                          i18.householdOverView
-                                              .householdOverViewActionText,
+                                          '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.householdOverView.householdOverViewActionText}',
                                         ),
                                         type: DigitButtonType.primary,
                                         size: DigitButtonSize.large,
@@ -835,7 +834,11 @@ class _HouseholdOverviewPageState
 
     if ((state.householdMemberWrapper.projectBeneficiaries ?? []).isNotEmpty) {
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
-          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()
+          ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
+                  Status.administeredSuccess.toValue()
+              ? '${RegistrationDeliverySingleton().selectedProject!.name}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
+              : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
+                  .toValue()
           : Status.registered.toValue();
 
       color = state.householdMemberWrapper.tasks?.isNotEmpty ?? false

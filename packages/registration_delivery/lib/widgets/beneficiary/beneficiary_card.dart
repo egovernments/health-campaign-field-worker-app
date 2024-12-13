@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:registration_delivery/blocs/app_localization.dart';
 
 import '../../models/entities/status.dart';
+import '../../utils/utils.dart';
 
 class BeneficiaryCard extends StatelessWidget {
   final String title;
@@ -45,7 +46,10 @@ class BeneficiaryCard extends StatelessWidget {
               ? DigitButton(
                   prefixIcon: Icons.check_circle,
                   label: RegistrationDeliveryLocalization.of(context)
-                      .translate(status.toString()),
+        .translate(status.toString() ==
+    Status.administeredSuccess.toValue()
+    ? '${RegistrationDeliverySingleton().selectedProject!.name}_${status.toString()}'
+        : status.toString())),
                   textColor: theme.colorScheme.onSurfaceVariant,
                   iconColor: theme.colorScheme.onSurfaceVariant,
                   isDisabled: true,
