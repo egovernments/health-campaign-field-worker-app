@@ -14,7 +14,7 @@ dependencies:
   digit_ui_components:
     git:
       url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
-      ref: version_update
+      ref: develop
       path: ./flutter/digit-ui-components/digit_components
   flutter_bloc: ^8.1.5
   reactive_forms: ^17.0.0

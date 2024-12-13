@@ -55,7 +55,7 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
               setState(() {
                 isLoading = true;
               });
-              DigitLoaders.showLoadingDialog(context: context);
+              DigitLoaders.inlineLoader();
             }
           },
           fetched: (

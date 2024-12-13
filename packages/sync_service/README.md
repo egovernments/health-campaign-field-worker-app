@@ -1,39 +1,53 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Sync Service Package
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+The `sync_service` provides access to sync service related configurations and listeners -
+SyncEntityMapperListener, syncDownRetryCount, persistenceConfiguration
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+SyncBloc: Handles refresh and syncup
 
-## Getting started
+Data:
+The `SyncEntityMapperListener` is an abstract class that defines methods for handling sync entity
+mapping. This class provides methods for writing to the entity database, getting the sync count,
+handling entity responses, and updating entities.
+The `SyncService` class provides methods to perform sync operations - performSync, writeToEntityDB,
+getPendingSyncRecordsCount, filterEntityByBandwidth, filterOpLogByBandwidth, SyncError class
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Repositories -
+RepositoryType - provides methods to get the remote and local repositories for a given data model
+type - getRemoteForType, getLocalForType
+PerformSyncDown - provides a method to perform a sync down operation.
+PerformSyncUp - provides a method to perform a sync up operation.
+
+Models: Bandwidth Model
+
+## Getting Started
+
+To use this package, add the following dependency to your `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  sync_service: ^latest
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+Here are some examples of how to use the DataModel package in your project:
+
+Extend the `SyncUpOperation` implement the required methods.
 
 ```dart
-const like = 'sample';
+    class CustomSyncRegistry implements SyncUpOperation {
+  CustomSyncRegistry({
+    this.remote
+  });
+}
 ```
 
-## Additional information
+Extend the `SyncEntityMapperListener` class and implement the required methods.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+    class SyncServiceMapper extends SyncEntityMapperListener {
+}
+```

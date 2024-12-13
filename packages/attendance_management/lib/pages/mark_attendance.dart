@@ -301,8 +301,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                         },
                         loading: () {
                           return Center(
-                            child:
-                                DigitLoaders.circularLoader(context: context),
+                            child: DigitLoaders.inlineLoader(),
                           );
                         },
                       );
