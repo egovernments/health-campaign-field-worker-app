@@ -1,6 +1,6 @@
 name: digit_location_tracker
 description: "A comprehensive package to enable location_tracking in the application"
-version: 0.0.1-dev.1
+version: 0.0.1-dev.2
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/master/packages/digit_location_tracker
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
