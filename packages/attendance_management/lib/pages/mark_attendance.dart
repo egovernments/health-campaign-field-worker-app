@@ -268,6 +268,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   children: [
                                     tableData.isNotEmpty
                                         ? table.DigitTable(
+                                            showSelectedState: false,
                                             tableHeight: viewOnly
                                                 ? MediaQuery.of(context)
                                                         .size
