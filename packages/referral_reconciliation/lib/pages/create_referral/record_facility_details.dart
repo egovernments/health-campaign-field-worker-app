@@ -59,6 +59,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     // final router = context.router;
 
     return BlocConsumer<ProjectFacilityBloc, ProjectFacilityState>(
@@ -198,7 +199,7 @@ class _ReferralFacilityPageState extends LocalizedState<ReferralFacilityPage> {
                                                     .facilityDetails,
                                               ),
                                               style:
-                                                  theme.textTheme.displayMedium,
+                                                  textTheme.headingXl,
                                             ),
                                           ),
                                         ],

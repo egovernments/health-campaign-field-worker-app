@@ -57,6 +57,7 @@ class _SearchReferralReconciliationsPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
     return KeyboardVisibilityBuilder(
         builder: (context, isKeyboardVisible) => BlocProvider<
                 SearchReferralsBloc>(
@@ -106,7 +107,7 @@ class _SearchReferralReconciliationsPageState
                                                   .searchReferralsHeader,
                                             ),
                                             style:
-                                                theme.textTheme.displayMedium,
+                                                textTheme.headingXl,
                                             textAlign: TextAlign.left,
                                           ),
                                         ),

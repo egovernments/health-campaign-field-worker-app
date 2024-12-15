@@ -64,6 +64,7 @@ class _RecordReferralDetailsPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return BlocBuilder<ReferralReconServiceDefinitionBloc,
         ReferralReconServiceDefinitionState>(
@@ -810,7 +811,7 @@ class _RecordReferralDetailsPageState
                                                     .referralDetails,
                                               ),
                                               style:
-                                                  theme.textTheme.displayMedium,
+                                                 textTheme.headingXl,
                                             ),
                                           ),
                                         ],

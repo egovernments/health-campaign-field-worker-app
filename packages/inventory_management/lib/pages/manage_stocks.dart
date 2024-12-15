@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -45,7 +47,7 @@ class ManageStocksPageState extends LocalizedState<ManageStocksPage> {
                   alignment: Alignment.topLeft,
                   child: Text(
                     localizations.translate(i18.manageStock.label),
-                    style: theme.textTheme.displayMedium,
+                    style: textTheme.headingXl,
                     textAlign: TextAlign.center,
                   ),
                 ),

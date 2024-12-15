@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_divider.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/atoms/label_value_list.dart';
@@ -293,9 +294,7 @@ class StockReconciliationPageState
                                       i18.stockReconciliationDetails
                                           .reconciliationPageTitle,
                                     ),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .displayMedium,
+                                    style: Theme.of(context).digitTextTheme(context).headingXl,
                                   ),
                                   if (InventorySingleton().isWareHouseMgr!)
                                     BlocConsumer<FacilityBloc, FacilityState>(
