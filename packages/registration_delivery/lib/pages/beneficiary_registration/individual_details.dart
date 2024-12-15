@@ -579,7 +579,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       localizations.translate(
                                         i18.deliverIntervention.voucherCode,
                                       ),
-                                      style: theme.textTheme.headlineSmall,
+                                      style: textTheme.headingS,
                                     ),
                                   ),
                                   Flexible(
@@ -594,7 +594,7 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                       bottom: spacer2 * 2,
                                     ),
                                     child: IconButton(
-                                      color: theme.colorScheme.secondary,
+                                      color: theme.colorTheme.primary.primary1,
                                       icon: const Icon(Icons.edit),
                                       onPressed: () {
                                         Navigator.of(context).push(

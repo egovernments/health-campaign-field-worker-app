@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/menu_card.dart';
 import 'package:flutter/material.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -31,6 +32,7 @@ class InventoryReportSelectionPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme =  theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -49,7 +51,7 @@ class InventoryReportSelectionPageState
                   alignment: Alignment.topLeft,
                   child: Text(
                     localizations.translate(i18.inventoryReportSelection.label),
-                    style: theme.textTheme.displayMedium,
+                    style: textTheme.headingXl,
                     textAlign: TextAlign.center,
                   ),
                 ),

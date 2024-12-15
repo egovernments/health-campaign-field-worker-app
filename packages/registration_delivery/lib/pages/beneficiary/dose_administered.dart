@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
 import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
@@ -56,6 +57,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
     final theme = Theme.of(context);
     final localizations = RegistrationDeliveryLocalization.of(context);
     final overViewBloc = context.read<HouseholdOverviewBloc>().state;
+    final textTheme = theme.digitTextTheme(context);
     // Define a list of TableHeader objects for the header of a table
     final headerListResource = [
       DigitTableColumn(
@@ -312,7 +314,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                             localizations.translate(
                               i18.deliverIntervention.wasTheDoseAdministered,
                             ),
-                            style: theme.textTheme.displayMedium,
+                            style: textTheme.headingXl,
                           ),
                           ReactiveWrapperField(
                             formControlName: _doseAdministeredKey,
@@ -409,8 +411,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                                   i18.beneficiaryDetails
                                                       .resourcesTobeProvided,
                                                 ),
-                                                style: theme
-                                                    .textTheme.displayMedium,
+                                                style: textTheme.headingXl,
                                               ),
                                             ),
                                           ),

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +45,7 @@ class RecordPastDeliveryDetailsPageState
     final theme = Theme.of(context);
     final localizations = RegistrationDeliveryLocalization.of(context);
     final router = context.router;
+    final textTheme = theme.digitTextTheme(context);
 
     final futureTaskList = widget.tasks
         ?.where((task) => task.status == Status.delivered.toValue())
@@ -256,7 +258,7 @@ class RecordPastDeliveryDetailsPageState
                             localizations.translate(
                               i18.deliverIntervention.recordPastDeliveryDeatils,
                             ),
-                            style: theme.textTheme.displayMedium,
+                            style: DigitTheme.instance.mobileTheme.textTheme.displayMedium,
                           ),
                         ),
                         ...(futureTaskList?.asMap().entries.map((entry) {

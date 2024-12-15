@@ -32,6 +32,7 @@ class _ReferralReasonChecklistPreviewPageState
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return Scaffold(
       body: ScrollableContent(
@@ -100,8 +101,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                   e.createdAt.toString(),
                                                 ),
                                               ),
-                                              style: theme
-                                                  .textTheme.headlineMedium,
+                                              style: textTheme.headingM,
                                             ),
                                           ),
                                           Row(
@@ -167,7 +167,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                 item2?.code ?? '',
                                               ),
                                               style:
-                                                  theme.textTheme.displayMedium,
+                                                  textTheme.headingXl,
                                             ),
                                           ),
                                           ...(value2.attributes ?? [])
@@ -192,8 +192,7 @@ class _ReferralReasonChecklistPreviewPageState
                                                               .translate(
                                                             "${item2?.code ?? ''}.${e.attributeCode!}",
                                                           ),
-                                                          style: theme.textTheme
-                                                              .headlineSmall,
+                                                          style: textTheme.headingS,
                                                         ),
                                                       ),
                                                       Container(

@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/input_wrapper.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
@@ -69,6 +70,7 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final recordStockBloc = BlocProvider.of<RecordStockBloc>(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return InventorySingleton().projectId.isEmpty
         ? Center(
@@ -252,7 +254,7 @@ class WarehouseDetailsPageState extends LocalizedState<WarehouseDetailsPage> {
                                               i18.warehouseDetails
                                                   .warehouseDetailsLabel,
                                             ),
-                                      style: theme.textTheme.displayMedium,
+                                      style: textTheme.headingXl,
                                     ),
                                     ReactiveWrapperField(
                                         formControlName: _dateOfEntryKey,
