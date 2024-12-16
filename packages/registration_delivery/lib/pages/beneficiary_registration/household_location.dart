@@ -43,6 +43,7 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
   static const maxLength = 64;
+  static const _buildingNameKey = 'buildingName';
 
   @override
   void initState() {
@@ -192,6 +193,11 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                   tenantId:
                                       RegistrationDeliverySingleton().tenantId,
                                   rowVersion: 1,
+                                  buildingName: (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? form.control(_buildingNameKey).value
+                                      : null,
                                   auditDetails: AuditDetails(
                                     createdBy: RegistrationDeliverySingleton()
                                         .loggedInUserUuid!,
@@ -248,6 +254,11 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                                   type: AddressType.correspondence,
                                   latitude: form.control(_latKey).value,
                                   longitude: form.control(_lngKey).value,
+                                  buildingName: (RegistrationDeliverySingleton()
+                                              .householdType ==
+                                          HouseholdType.community)
+                                      ? form.control(_buildingNameKey).value
+                                      : null,
                                   locationAccuracy:
                                       form.control(_accuracyKey).value,
                                 );
@@ -335,6 +346,27 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         ),
                       ),
                     ),
+                    if (RegistrationDeliverySingleton().householdType ==
+                        HouseholdType.community)
+                      householdLocationShowcaseData.buildingName.buildWith(
+                          child: ReactiveWrapperField(
+                              formControlName: _buildingNameKey,
+                              validationMessages: {
+                                'required': (_) => localizations.translate(
+                                      i18.common.min2CharsRequired,
+                                    ),
+                              },
+                              builder: (field) => LabeledField(
+                                  label: localizations.translate(
+                                      i18.householdLocation.buildingNameLabel),
+                                  isRequired: true,
+                                  child: DigitTextFormInput(
+                                    errorMessage: field.errorText,
+                                    onChange: (value) {
+                                      form.control(_buildingNameKey).value =
+                                          value;
+                                    },
+                                  )))),
                     householdLocationShowcaseData.addressLine1.buildWith(
                       child: ReactiveWrapperField(
                         formControlName: _addressLine1Key,
@@ -494,6 +526,11 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
       _accuracyKey: FormControl<double>(
         value: addressModel?.locationAccuracy,
       ),
+      if (RegistrationDeliverySingleton().householdType ==
+          HouseholdType.community)
+        _buildingNameKey: FormControl<String>(
+          validators: [Validators.required],
+        ),
     });
   }
 }

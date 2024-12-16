@@ -308,6 +308,8 @@ class IndividualDetails {
 class HouseholdLocation {
   const HouseholdLocation();
 
+  String get buildingNameLabel => 'CLF_BUILDING_NAME_LABEL_TEXT';
+
   String get clfLocationLabelText => 'CLF_LOCATION_LABEL_TEXT';
 
   String get householdLocationLabelText => 'HOUSEHOLD_LOCATION_LABEL_TEXT';
@@ -757,6 +759,10 @@ String get registerNewHousehold {
 
 class HouseholdLocationShowcase {
   const HouseholdLocationShowcase();
+
+  String get buildingName {
+    return 'HOUSEHOLD_LOCATION_SHOWCASE_BUILDING_NAME';
+  }
 
   String get administrativeArea {
     return 'HOUSEHOLD_LOCATION_SHOWCASE_ADMINISTRATIVE_AREA';
