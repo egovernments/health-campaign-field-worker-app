@@ -1,18 +1,11 @@
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:digit_data_model/utils/typedefs.dart'
     hide ProductVariantDataRepository;
-import 'package:drift/drift.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-
-import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
-
-import 'package:registration_delivery/utils/typedefs.dart';
-
 import '../../utils/environment_config.dart';
 
 part 'custom_enumeration_summary_report.freezed.dart';
@@ -64,10 +57,10 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       userId,
     );
 
-    Map<int?, List<HouseholdModel>> dateVsHousehold = {};
-    Map<int?, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
-    Map<int?, List<TaskModel>> dateVsClosedHouseholdTask = {};
-    Set<int?> uniqueDates = {};
+    Map<int, List<HouseholdModel>> dateVsHousehold = {};
+    Map<int, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
+    Map<int, List<TaskModel>> dateVsClosedHouseholdTask = {};
+    Set<int> uniqueDates = {};
 
     // for (var i = 0; i < maxLength; i++) {
     //   if (i < householdList.length) {
@@ -97,9 +90,9 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     //     }
     //   }
     // }
-    Map<int?, int> dateVsHouseholdCount = {};
-    Map<int?, int> dateVsProjectBeneficiaryCount = {};
-    Map<int?, int> dateVsClosedHouseholdTaskCount = {};
+    Map<int, int> dateVsHouseholdCount = {};
+    Map<int, int> dateVsProjectBeneficiaryCount = {};
+    Map<int, int> dateVsClosedHouseholdTaskCount = {};
 
     // populate the day vs list of elements registered on that day
     addToMap(householdList, dateVsHousehold);
@@ -113,7 +106,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     populateDateVsCountMap(
         dateVsClosedHouseholdTask, dateVsClosedHouseholdTaskCount);
 
-    Map<int?, Map<String, int>> dateVsEntityVsCountMap = {};
+    Map<int, Map<String, int>> dateVsEntityVsCountMap = {};
 
     // get a set of unique dates
     getUniqueSetOfDates(
@@ -137,11 +130,11 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
   }
 
   void popoulateDateVsEntityCountMap(
-    Map<int?, Map<String, int?>> dateVsEntityVsCountMap,
-    Map<int?, int> dateVsHouseholdCount,
-    Map<int?, int> dateVsProjectBeneficiaryCount,
-    Map<int?, int> dateVsClosedHouseholdTaskCount,
-    Set<int?> uniqueDates,
+    Map<int, Map<String, int?>> dateVsEntityVsCountMap,
+    Map<int, int> dateVsHouseholdCount,
+    Map<int, int> dateVsProjectBeneficiaryCount,
+    Map<int, int> dateVsClosedHouseholdTaskCount,
+    Set<int> uniqueDates,
   ) {
     for (var date in uniqueDates) {
       Map<String, int?> elementVsCount = {};
@@ -195,7 +188,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
 //   }
 // }
 
-  void addToMap(List list, Map<int?, List> map) {
+  void addToMap(List<dynamic> list, Map<int, List<dynamic>> map) {
     for (var element in list) {
       var key = element.clientAuditDetails?.createdTime;
       if (key != null) {
@@ -208,17 +201,17 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     }
   }
 
-  void populateDateVsCountMap(Map<int?, List> map, Map<int?, int> dateVsCount) {
+  void populateDateVsCountMap(Map<int, List> map, Map<int?, int> dateVsCount) {
     map.forEach((key, value) {
       dateVsCount[key] = value.length;
     });
   }
 
   void getUniqueSetOfDates(
-    Map<int?, List<HouseholdModel>> dateVsHousehold,
-    Map<int?, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary,
-    Map<int?, List<TaskModel>> dateVsClosedHouseholdTask,
-    Set<int?> uniqueDates,
+    Map<int, List<HouseholdModel>> dateVsHousehold,
+    Map<int, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary,
+    Map<int, List<TaskModel>> dateVsClosedHouseholdTask,
+    Set<int> uniqueDates,
   ) {
     uniqueDates.addAll(dateVsHousehold.keys.toSet());
     uniqueDates.addAll(dateVsProjectBeneficiary.keys.toSet());
@@ -253,6 +246,6 @@ class CustomEnumerationSummaryReportState
       CustomEnumerationSummaryReportEmptyState;
 
   const factory CustomEnumerationSummaryReportState.summaryData({
-    @Default({}) Map<int?, Map<String, int>> summaryData,
+    @Default({}) Map<int, Map<String, int>> summaryData,
   }) = CustomEnumerationSummaryReportSummaryDataState;
 }

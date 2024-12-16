@@ -16,6 +16,7 @@ import '../../../router/app_router.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18Local;
 
+@RoutePage()
 class CustomEumerationSummaryReportDetailsPage extends LocalizedStatefulWidget {
   const CustomEumerationSummaryReportDetailsPage({
     Key? key,
@@ -26,23 +27,23 @@ class CustomEumerationSummaryReportDetailsPage extends LocalizedStatefulWidget {
   State<CustomEumerationSummaryReportDetailsPage> createState() =>
       _CustomEumerationSummaryReportDetailsState();
 
-/* created a wrapper  Router which handles the BlocProvider 
-and attached the event to load the data*/
-  @override
-  Widget wrappedRoute(BuildContext context) {
-    return BlocProvider(
-      create: (context) {
-        return CustomEnumerationSummaryReportBloc(
-          householdRepository:
-              context.repository<HouseholdModel, HouseholdSearchModel>(),
-          taskRepository: context.repository<TaskModel, TaskSearchModel>(),
-          projectBeneficiaryRepository: context.repository<
-              ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
-        );
-      },
-      child: this,
-    );
-  }
+// /* created a wrapper  Router which handles the BlocProvider
+// and attached the event to load the data*/
+//   @override
+//   Widget wrappedRoute(BuildContext context) {
+//     return BlocProvider(
+//       create: (context) {
+//         return CustomEnumerationSummaryReportBloc(
+//           householdRepository:
+//               context.repository<HouseholdModel, HouseholdSearchModel>(),
+//           taskRepository: context.repository<TaskModel, TaskSearchModel>(),
+//           projectBeneficiaryRepository: context.repository<
+//               ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
+//         );
+//       },
+//       child: this,
+//     );
+//   }
 }
 
 class _CustomEumerationSummaryReportDetailsState
@@ -62,11 +63,10 @@ class _CustomEumerationSummaryReportDetailsState
   }
 
   static const _householdKey = 'householdKey';
-  static const _treatedPercentageKey = 'treatedPercentageKey';
-  static const _treatedKey = 'treatedKey';
+  static const _projectBeneficiaryKey = 'treatedPercentageKey';
+  static const _closedHouseholdKey = 'treatedKey';
   static const _dateKey = 'dateKey';
-  static const _drugOneKey = 'drugOneKey';
-  static const _drugTwoKey = 'drugTwoKey';
+
   static const _title = "Summary Report";
 
   FormGroup _form() {
@@ -114,70 +114,52 @@ class _CustomEumerationSummaryReportDetailsState
                             ),
                             DigitGridColumn(
                               label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_HOUSEHOLD_DATA_LIST",
+                                i18Local.inventoryReportDetails
+                                    .householdRegisteredLabel,
                               ),
                               key: _householdKey,
                               width: 170,
                             ),
                             DigitGridColumn(
-                              label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_INDIVIDUAL_DATA_LIST",
-                              ),
-                              key: _treatedPercentageKey,
-                              width: 140,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_TASK_DATA_LIST",
-                              ),
-                              key: _treatedKey,
+                              label: localizations.translate(i18Local
+                                  .inventoryReportDetails
+                                  .projectBeneficiaryRegisteredLabel),
+                              key: _projectBeneficiaryKey,
                               width: 120,
                             ),
                             DigitGridColumn(
-                              label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_DRUG_ONE",
-                              ),
-                              key: _drugOneKey,
-                              width: 130,
-                            ),
-                            DigitGridColumn(
-                              label: localizations.translate(
-                                "PERFORMANCE_SUMMARY_DRUG_TWO",
-                              ),
-                              key: _drugTwoKey,
+                              label: localizations.translate(i18Local
+                                  .inventoryReportDetails
+                                  .closedHouseholdRegisteredLabel),
+                              key: _closedHouseholdKey,
                               width: 130,
                             ),
                           ],
                           rows: [
-                            for (final entry in performanceSumamryReportState
-                                .summaryData.entries) ...[
+                            for (final entry
+                                in customEnumerationSumamryReportState
+                                    .summaryData.entries) ...[
                               DigitGridRow(
                                 [
                                   DigitGridCell(
                                     key: _dateKey,
-                                    value: entry.key,
+                                    value: DigitDateUtils.getDateFromTimestamp(
+                                        entry.key,
+                                        dateFormat: 'dd/MM/yyyy'),
                                   ),
                                   DigitGridCell(
                                     key: _householdKey,
-                                    value:
-                                        entry.value.householdCount.toString(),
+                                    value: entry.value["Household"].toString(),
                                   ),
                                   DigitGridCell(
-                                    key: _treatedKey,
-                                    value: entry.value.taskCount.toString(),
-                                  ),
-                                  DigitGridCell(
-                                    key: _treatedPercentageKey,
-                                    value: entry.value.treatedPercentage
+                                    key: _projectBeneficiaryKey,
+                                    value: entry.value["ProjectBeneficiary"]
                                         .toString(),
                                   ),
                                   DigitGridCell(
-                                    key: _drugOneKey,
-                                    value: entry.value.drugOne.toString(),
-                                  ),
-                                  DigitGridCell(
-                                    key: _drugTwoKey,
-                                    value: entry.value.drugTwo.toString(),
+                                    key: _closedHouseholdKey,
+                                    value: entry.value["ClosedHousehold"]
+                                        .toString(),
                                   ),
                                 ],
                               ),

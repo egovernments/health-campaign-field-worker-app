@@ -30,6 +30,7 @@ const stockDetailsIssuedShowcase = StockDetailsIssuedShowcase();
 const selectChecklistShowcase = SelectChecklistShowcase();
 const stockDetailsReturnedShowcase = StockDetailsReturnedShowcase();
 const stockReconciliationShowcase = StockReconciliationShowcase();
+const inventoryReportDetails = InventoryReportDetails();
 
 const checklistDataShowcase = ChecklistDataShowcase();
 const checklistListShowcase = ChecklistListShowcase();
@@ -872,6 +873,26 @@ class StockReconciliationShowcase {
 
   String get comments {
     return 'STOCK_RECONCILIATION_SHOWCASE_COMMENTS';
+  }
+}
+
+class InventoryReportDetails {
+  const InventoryReportDetails();
+
+  String get dateLabel {
+    return 'INVENTORY_REPORT_DETAILS_DATE_LABEL';
+  }
+
+  String get householdRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_HOUSEHOLD_REGISTERED_LABEL';
+  }
+
+  String get projectBeneficiaryRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_CLOSED_HOUSEHOLD_REGISTERED_LABEL';
+  }
+
+  String get closedHouseholdRegisteredLabel {
+    return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
   }
 }
 

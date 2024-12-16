@@ -357,7 +357,7 @@ mixin _$CustomEnumerationSummaryReportState {
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<int?, Map<String, int>> summaryData)
+    required TResult Function(Map<int, Map<String, int>> summaryData)
         summaryData,
   }) =>
       throw _privateConstructorUsedError;
@@ -365,14 +365,14 @@ mixin _$CustomEnumerationSummaryReportState {
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult? Function(Map<int, Map<String, int>> summaryData)? summaryData,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult Function(Map<int, Map<String, int>> summaryData)? summaryData,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -474,7 +474,7 @@ class _$CustomEnumerationSummaryReportLoadingStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<int?, Map<String, int>> summaryData)
+    required TResult Function(Map<int, Map<String, int>> summaryData)
         summaryData,
   }) {
     return loading();
@@ -485,7 +485,7 @@ class _$CustomEnumerationSummaryReportLoadingStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult? Function(Map<int, Map<String, int>> summaryData)? summaryData,
   }) {
     return loading?.call();
   }
@@ -495,7 +495,7 @@ class _$CustomEnumerationSummaryReportLoadingStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult Function(Map<int, Map<String, int>> summaryData)? summaryData,
     required TResult orElse(),
   }) {
     if (loading != null) {
@@ -597,7 +597,7 @@ class _$CustomEnumerationSummaryReportEmptyStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<int?, Map<String, int>> summaryData)
+    required TResult Function(Map<int, Map<String, int>> summaryData)
         summaryData,
   }) {
     return empty();
@@ -608,7 +608,7 @@ class _$CustomEnumerationSummaryReportEmptyStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult? Function(Map<int, Map<String, int>> summaryData)? summaryData,
   }) {
     return empty?.call();
   }
@@ -618,7 +618,7 @@ class _$CustomEnumerationSummaryReportEmptyStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult Function(Map<int, Map<String, int>> summaryData)? summaryData,
     required TResult orElse(),
   }) {
     if (empty != null) {
@@ -684,7 +684,7 @@ abstract class _$$CustomEnumerationSummaryReportSummaryDataStateImplCopyWith<
               then) =
       __$$CustomEnumerationSummaryReportSummaryDataStateImplCopyWithImpl<$Res>;
   @useResult
-  $Res call({Map<int?, Map<String, int>> summaryData});
+  $Res call({Map<int, Map<String, int>> summaryData});
 }
 
 /// @nodoc
@@ -707,7 +707,7 @@ class __$$CustomEnumerationSummaryReportSummaryDataStateImplCopyWithImpl<$Res>
       summaryData: null == summaryData
           ? _value._summaryData
           : summaryData // ignore: cast_nullable_to_non_nullable
-              as Map<int?, Map<String, int>>,
+              as Map<int, Map<String, int>>,
     ));
   }
 }
@@ -717,13 +717,13 @@ class __$$CustomEnumerationSummaryReportSummaryDataStateImplCopyWithImpl<$Res>
 class _$CustomEnumerationSummaryReportSummaryDataStateImpl
     implements CustomEnumerationSummaryReportSummaryDataState {
   const _$CustomEnumerationSummaryReportSummaryDataStateImpl(
-      {final Map<int?, Map<String, int>> summaryData = const {}})
+      {final Map<int, Map<String, int>> summaryData = const {}})
       : _summaryData = summaryData;
 
-  final Map<int?, Map<String, int>> _summaryData;
+  final Map<int, Map<String, int>> _summaryData;
   @override
   @JsonKey()
-  Map<int?, Map<String, int>> get summaryData {
+  Map<int, Map<String, int>> get summaryData {
     if (_summaryData is EqualUnmodifiableMapView) return _summaryData;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableMapView(_summaryData);
@@ -762,7 +762,7 @@ class _$CustomEnumerationSummaryReportSummaryDataStateImpl
   TResult when<TResult extends Object?>({
     required TResult Function() loading,
     required TResult Function() empty,
-    required TResult Function(Map<int?, Map<String, int>> summaryData)
+    required TResult Function(Map<int, Map<String, int>> summaryData)
         summaryData,
   }) {
     return summaryData(this.summaryData);
@@ -773,7 +773,7 @@ class _$CustomEnumerationSummaryReportSummaryDataStateImpl
   TResult? whenOrNull<TResult extends Object?>({
     TResult? Function()? loading,
     TResult? Function()? empty,
-    TResult? Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult? Function(Map<int, Map<String, int>> summaryData)? summaryData,
   }) {
     return summaryData?.call(this.summaryData);
   }
@@ -783,7 +783,7 @@ class _$CustomEnumerationSummaryReportSummaryDataStateImpl
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? loading,
     TResult Function()? empty,
-    TResult Function(Map<int?, Map<String, int>> summaryData)? summaryData,
+    TResult Function(Map<int, Map<String, int>> summaryData)? summaryData,
     required TResult orElse(),
   }) {
     if (summaryData != null) {
@@ -837,10 +837,10 @@ class _$CustomEnumerationSummaryReportSummaryDataStateImpl
 abstract class CustomEnumerationSummaryReportSummaryDataState
     implements CustomEnumerationSummaryReportState {
   const factory CustomEnumerationSummaryReportSummaryDataState(
-          {final Map<int?, Map<String, int>> summaryData}) =
+          {final Map<int, Map<String, int>> summaryData}) =
       _$CustomEnumerationSummaryReportSummaryDataStateImpl;
 
-  Map<int?, Map<String, int>> get summaryData;
+  Map<int, Map<String, int>> get summaryData;
   @JsonKey(ignore: true)
   _$$CustomEnumerationSummaryReportSummaryDataStateImplCopyWith<
           _$CustomEnumerationSummaryReportSummaryDataStateImpl>

@@ -101,6 +101,19 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    CustomEumerationSummaryReportDetailsRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<CustomEumerationSummaryReportDetailsRouteArgs>(
+              orElse: () =>
+                  const CustomEumerationSummaryReportDetailsRouteArgs());
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: CustomEumerationSummaryReportDetailsPage(
+          key: args.key,
+          appLocalizations: args.appLocalizations,
+        ),
+      );
+    },
     CustomHouseHoldDetailsRoute.name: (routeData) {
       final args = routeData.argsAs<CustomHouseHoldDetailsRouteArgs>(
           orElse: () => const CustomHouseHoldDetailsRouteArgs());
@@ -567,6 +580,45 @@ class CustomDeliverInterventionRouteArgs {
   @override
   String toString() {
     return 'CustomDeliverInterventionRouteArgs{key: $key, appLocalizations: $appLocalizations, isEditing: $isEditing}';
+  }
+}
+
+/// generated route for
+/// [CustomEumerationSummaryReportDetailsPage]
+class CustomEumerationSummaryReportDetailsRoute
+    extends PageRouteInfo<CustomEumerationSummaryReportDetailsRouteArgs> {
+  CustomEumerationSummaryReportDetailsRoute({
+    Key? key,
+    AppLocalizations? appLocalizations,
+    List<PageRouteInfo>? children,
+  }) : super(
+          CustomEumerationSummaryReportDetailsRoute.name,
+          args: CustomEumerationSummaryReportDetailsRouteArgs(
+            key: key,
+            appLocalizations: appLocalizations,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'CustomEumerationSummaryReportDetailsRoute';
+
+  static const PageInfo<CustomEumerationSummaryReportDetailsRouteArgs> page =
+      PageInfo<CustomEumerationSummaryReportDetailsRouteArgs>(name);
+}
+
+class CustomEumerationSummaryReportDetailsRouteArgs {
+  const CustomEumerationSummaryReportDetailsRouteArgs({
+    this.key,
+    this.appLocalizations,
+  });
+
+  final Key? key;
+
+  final AppLocalizations? appLocalizations;
+
+  @override
+  String toString() {
+    return 'CustomEumerationSummaryReportDetailsRouteArgs{key: $key, appLocalizations: $appLocalizations}';
   }
 }
 
