@@ -35,7 +35,6 @@ class CustomClosedHouseholdDetailsPageState
   static const _latKey = 'lat';
   static const _lngKey = 'lng';
   static const _accuracyKey = 'accuracy';
-  static const _reasonKey = 'reason';
   static const maxLength = 64;
 
   @override
@@ -56,8 +55,6 @@ class CustomClosedHouseholdDetailsPageState
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bloc = context.read<ClosedHouseholdBloc>();
-    final reasonOptions = ["closed", "refusal", "funeral", "others"];
-    //#TODO : Move To MDMS
 
     return Scaffold(
       body: ReactiveFormBuilder(
@@ -121,20 +118,6 @@ class CustomClosedHouseholdDetailsPageState
                               ),
                             );
 
-                        final reason =
-                            form.control(_reasonKey).value as String?;
-                        if (reason == null || reason.trim().isEmpty) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                localizations
-                                    .translate(i18.common.corecommonRequired),
-                              ),
-                              backgroundColor: Colors.red,
-                            ),
-                          );
-                          return;
-                        }
                         context.router
                             .push(CustomClosedHouseholdSummaryRoute());
                       },
@@ -221,7 +204,6 @@ class CustomClosedHouseholdDetailsPageState
           Validators.maxLength(200),
         ],
       ),
-      _reasonKey: FormControl<String>(validators: []),
       _latKey: FormControl<double>(validators: []),
       _lngKey: FormControl<double>(),
       _accuracyKey: FormControl<double>(),
