@@ -55,7 +55,7 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
               setState(() {
                 isLoading = true;
               });
-              DigitLoaders.inlineLoader();
+              DigitLoaders.overlayLoader(context: context);
             }
           },
           fetched: (
@@ -139,6 +139,9 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                                         : const NeverScrollableScrollPhysics(),
                                     rows: table.tableData,
                                     columns: table.headerList,
+                                    tableHeight:
+                                        MediaQuery.of(context).size.height * .3,
+                                    showSelectedState: false,
                                   ),
                                 ))
                             .toList(),
