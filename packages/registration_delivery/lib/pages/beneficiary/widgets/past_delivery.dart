@@ -69,11 +69,13 @@ Widget buildTableContent(
     width: MediaQuery.of(context).size.width / 1.25,
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      // mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: spacer1),
           child: DigitTableCard(
+            topPadding: const EdgeInsets.only(top: 0.0),
+            fraction: 2.5,
             element: {
               localizations.translate(
                 i18.beneficiaryDetails.beneficiaryAge,
@@ -89,52 +91,54 @@ Widget buildTableContent(
         ),
         const DigitDivider(),
         // Build the DigitTable with the data
-        fetchProductVariant(item, individualModel, householdModel)
-                    ?.productVariants !=
-                null
-            ? DigitTable(
-                enableBorder: true,
-                showSelectedState: false,
-                showPagination: false,
-                columns: columnListResource,
-                rows: [
-                  ...fetchProductVariant(item, individualModel, householdModel)!
-                      .productVariants!
-                      .map(
-                    (e) {
-                      // Retrieve the SKU value for the product variant.
-                      final value = variant
-                          ?.firstWhereOrNull(
-                            (element) => element.id == e.productVariantId,
+        if (fetchProductVariant(item, individualModel, householdModel)
+                ?.productVariants !=
+            null)
+          DigitTable(
+            enableBorder: true,
+            withRowDividers: true,
+            withColumnDividers: true,
+            showSelectedState: false,
+            showPagination: false,
+            columns: columnListResource,
+            rows: [
+              ...fetchProductVariant(item, individualModel, householdModel)!
+                  .productVariants!
+                  .map(
+                (e) {
+                  // Retrieve the SKU value for the product variant.
+                  final value = variant
+                      ?.firstWhereOrNull(
+                        (element) => element.id == e.productVariantId,
+                      )
+                      ?.sku;
+                  final quantity = e.quantity;
+
+                  return DigitTableRow(tableRow: [
+                    // Display the dose information in the first column if it's the first row,
+                    // otherwise, display an empty cell.
+
+                    fetchProductVariant(item, individualModel, householdModel)
+                                ?.productVariants
+                                ?.indexOf(e) ==
+                            0
+                        ? DigitTableData(
+                            '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
+                            cellKey: 'dose',
                           )
-                          ?.sku;
-                      final quantity = e.quantity;
-
-                      return DigitTableRow(tableRow: [
-                        // Display the dose information in the first column if it's the first row,
-                        // otherwise, display an empty cell.
-
-                        fetchProductVariant(
-                                        item, individualModel, householdModel)
-                                    ?.productVariants
-                                    ?.indexOf(e) ==
-                                0
-                            ? DigitTableData(
-                                '${localizations.translate(i18.deliverIntervention.dose)} ${deliverInterventionState.dose}',
-                                cellKey: 'dose',
-                              )
-                            : DigitTableData('', cellKey: ''),
-                        // Display the SKU value in the second column.
-                        DigitTableData(
-                          '$quantity - ${localizations.translate(value.toString())}',
-                          cellKey: 'resources',
-                        ),
-                      ]);
-                    },
-                  ),
-                ],
-              )
-            : Text(localizations.translate(i18.common.noProjectSelected))
+                        : DigitTableData('', cellKey: ''),
+                    // Display the SKU value in the second column.
+                    DigitTableData(
+                      '$quantity - ${localizations.translate(value.toString())}',
+                      cellKey: 'resources',
+                    ),
+                  ]);
+                },
+              ),
+            ],
+          )
+        else
+          Text(localizations.translate(i18.common.noProjectSelected))
       ],
     ),
   );

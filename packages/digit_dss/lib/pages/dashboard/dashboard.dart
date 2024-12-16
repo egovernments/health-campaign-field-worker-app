@@ -142,6 +142,7 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                                     tableHeight:
                                         MediaQuery.of(context).size.height * .3,
                                     showSelectedState: false,
+                                    showPagination: false,
                                   ),
                                 ))
                             .toList(),
