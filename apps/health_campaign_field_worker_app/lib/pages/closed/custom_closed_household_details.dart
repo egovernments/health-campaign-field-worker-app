@@ -101,6 +101,8 @@ class CustomClosedHouseholdDetailsPageState
                   builder: (context, locationState) {
                     return DigitElevatedButton(
                       onPressed: () {
+                        form.markAllAsTouched();
+                        if (!form.valid) return;
                         final String? householdHeadName = form
                             .control(_householdHeadNameKey)
                             .value as String?;
