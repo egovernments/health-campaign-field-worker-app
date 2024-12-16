@@ -1,4 +1,4 @@
-import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_ui_components/digit_components.dart';
 import 'package:flutter/material.dart';
 
 class ProgressIndicatorContainer extends StatelessWidget {
@@ -67,7 +67,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
         if (subLabel != null)
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(kPadding),
+              padding: const EdgeInsets.all(spacer2),
               child: Text(
                 subLabel ?? '',
                 style: TextStyle(

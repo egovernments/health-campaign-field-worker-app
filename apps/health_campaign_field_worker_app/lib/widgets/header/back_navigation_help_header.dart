@@ -1,4 +1,7 @@
-import 'package:digit_components/digit_components.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/ComponentTheme/back_button_theme.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_back_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,24 +41,23 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
             child: Row(
               children: [
                 if (context.router.canPop() && showBackNavigation)
-                  Flexible(
-                    child: TextButton.icon(
-                      style: TextButton.styleFrom(
-                        foregroundColor: theme.colorScheme.onSurface,
-                        padding: EdgeInsets.zero,
-                      ),
-                      onPressed: () {
-                        context.router.maybePop();
-                        handleback != null ? handleback!() : null;
-                      },
-                      icon: const Icon(Icons.arrow_left_sharp),
-                      label: Text(
-                        AppLocalizations.of(context).translate(
-                          i18.common.coreCommonBack,
-                        ),
-                        overflow: TextOverflow.ellipsis,
+                  DigitBackButton(
+                    label: AppLocalizations.of(context).translate(
+                      i18.common.coreCommonBack,
+                    ),
+                    digitBackButtonThemeData:
+                        const DigitBackButtonThemeData().copyWith(
+                      context: context,
+                      backDigitButtonIcon: Icon(
+                        Icons.arrow_left,
+                        size: Theme.of(context).spacerTheme.spacer5,
+                        color: Theme.of(context).colorTheme.primary.primary2,
                       ),
                     ),
+                    handleBack: () {
+                      context.router.maybePop();
+                      handleback != null ? handleback!() : null;
+                    },
                   ),
                 SizedBox(width: showBackNavigation ? 16 : 0),
                 if (showLogoutCTA)
@@ -85,12 +87,7 @@ class BackNavigationHelpHeaderWidget extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      kPadding,
-                      kPadding,
-                      kPadding / 1,
-                      kPadding,
-                    ),
+                    padding: const EdgeInsets.all(spacer2),
                     child: Text(
                       AppLocalizations.of(context)
                           .translate(i18.common.coreCommonHelp),

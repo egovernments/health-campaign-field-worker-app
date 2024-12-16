@@ -1,0 +1,63 @@
+[
+  {
+    "code": "BENEFICIARY_SEARCH_CLF_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Search CLF",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_INSTITUTE_NAME_LABEL",
+    "locale": "en_MZ",
+    "message": "Institute Name",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_INSTITUTE_TYPE_LABEL",
+    "locale": "en_MZ",
+    "message": "Institute Type",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HOUSEHOLD_OVER_VIEW_CLF_LABEL",
+    "locale": "en_MZ",
+    "message": "Beneficiaries",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "HOME_COMMUNAL_LIVING_FACILITIES_LABEL",
+    "locale": "en_MZ",
+    "message": "Institution",
+    "module": ""
+
+  },
+  {
+    "code": "BENEFICIARY_SEARCH_COMMUNITY_PROXIMITY_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Nearby CLF",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_CLF_SEARCH_HINT_TEXT",
+    "locale": "en_MZ",
+    "message": "To start, enter the name of the communal living facility",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "CLF_LOCATION_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "CLF Location",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_ADD_CLF_ACTION_LABEL",
+    "locale": "en_MZ",
+    "message": "Register New CLF",
+    "module": "hcm-beneficiary"
+  },
+  {
+    "code": "BENEFICIARY_CLF_INFO_TITLE",
+    "locale": "en_MZ",
+    "message": "Click on Register New CLF button to add details",
+    "module": "hcm-beneficiary"
+  }
+]

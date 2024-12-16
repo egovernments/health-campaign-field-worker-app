@@ -1,8 +1,8 @@
 import 'package:complaints/data/repositories/remote/pgr_service.dart';
 import 'package:complaints/models/pgr_complaints.dart';
 import 'package:complaints/models/pgr_complaints_response.dart';
-import 'package:digit_components/utils/app_logger.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/utils/app_logger.dart';
 import 'package:sync_service/data/repositories/sync/sync_up.dart';
 
 class CustomSyncRegistry implements SyncUpOperation {

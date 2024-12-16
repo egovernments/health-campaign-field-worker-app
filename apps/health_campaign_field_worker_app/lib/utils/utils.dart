@@ -7,12 +7,13 @@ import 'package:attendance_management/attendance_management.dart'
     as attendance_mappers;
 import 'package:complaints/complaints.init.dart' as complaints_mappers;
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:digit_components/theme/digit_theme.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_dialog.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data_model.init.dart' as data_model_mappers;
 import 'package:digit_dss/digit_dss.dart' as dss_mappers;
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/show_pop_up.dart';
 import 'package:disable_battery_optimization/disable_battery_optimization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
@@ -102,14 +103,10 @@ performBackgroundService({
     if (isRunning) {
       if (!isBackground && context != null) {
         if (context.mounted) {
-          DigitToast.show(
-            context,
-            options: DigitToastOptions(
-              'Background Service Stopped',
-              true,
-              DigitTheme.instance.mobileTheme,
-            ),
-          );
+          Toast.showToast(
+              type: ToastType.info,
+              context,
+              message: 'Background Service Stopped');
         }
       }
     }
@@ -118,13 +115,10 @@ performBackgroundService({
       service.startService();
       if (context != null && context.mounted) {
         requestDisableBatteryOptimization();
-        DigitToast.show(
+        Toast.showToast(
           context,
-          options: DigitToastOptions(
-            'Background Service Started',
-            false,
-            DigitTheme.instance.mobileTheme,
-          ),
+          type: ToastType.info,
+          message: 'Background Service Started',
         );
       }
     }
@@ -246,7 +240,7 @@ void showDownloadDialog(
     case DigitProgressDialogType.checkFailed:
       DigitSyncDialog.show(
         context,
-        type: DigitSyncDialogType.failed,
+        type: DialogType.failed,
         label: model.title,
         primaryAction: DigitDialogActions(
           label: model.primaryButtonLabel ?? '',
@@ -280,10 +274,10 @@ void showDownloadDialog(
     case DigitProgressDialogType.dataFound:
     case DigitProgressDialogType.pendingSync:
     case DigitProgressDialogType.insufficientStorage:
-      DigitDialog.show(
-        context,
-        options: DigitDialogOptions(
-          titleText: model.title,
+      showCustomPopup(
+        context: context,
+        builder: (popupContext) => Popup(
+          title: model.title,
           titleIcon: Icon(
             dialogType == DigitProgressDialogType.insufficientStorage
                 ? Icons.warning
@@ -292,53 +286,59 @@ void showDownloadDialog(
                 ? DigitTheme.instance.colorScheme.error
                 : DigitTheme.instance.colorScheme.surfaceTint,
           ),
-          contentText: model.content,
-          primaryAction: DigitDialogActions(
-            label: model.primaryButtonLabel ?? '',
-            action: (ctx) {
-              if (dialogType == DigitProgressDialogType.pendingSync) {
-                Navigator.of(context, rootNavigator: true).pop();
-                context.router.replaceAll([HomeRoute()]);
-              } else {
-                if ((model.totalCount ?? 0) > 0) {
-                  context.read<BeneficiaryDownSyncBloc>().add(
-                        DownSyncBeneficiaryEvent(
-                          projectId: context.projectId,
-                          boundaryCode: model.boundary,
-                          // Batch Size need to be defined based on Internet speed.
-                          batchSize: model.batchSize ?? 1,
-                          initialServerCount: model.totalCount ?? 0,
-                          boundaryName: model.boundaryName,
-                        ),
-                      );
+          onOutsideTap: () {
+            Navigator.of(popupContext).pop();
+          },
+          description: model.content,
+          type: PopUpType.alert,
+          actions: [
+            DigitButton(
+              label: model.primaryButtonLabel ?? '',
+              onPressed: () {
+                if (dialogType == DigitProgressDialogType.pendingSync) {
+                  Navigator.of(popupContext, rootNavigator: true).pop();
+                  context.router.replaceAll([HomeRoute()]);
                 } else {
-                  Navigator.of(context, rootNavigator: true).pop();
-                  context.read<BeneficiaryDownSyncBloc>().add(
-                        const DownSyncResetStateEvent(),
-                      );
+                  if ((model.totalCount ?? 0) > 0) {
+                    context.read<BeneficiaryDownSyncBloc>().add(
+                          DownSyncBeneficiaryEvent(
+                            projectId: context.projectId,
+                            boundaryCode: model.boundary,
+                            // Batch Size need to be defined based on Internet speed.
+                            batchSize: model.batchSize ?? 1,
+                            initialServerCount: model.totalCount ?? 0,
+                            boundaryName: model.boundaryName,
+                          ),
+                        );
+                  } else {
+                    Navigator.of(popupContext, rootNavigator: true).pop();
+                    context.read<BeneficiaryDownSyncBloc>().add(
+                          const DownSyncResetStateEvent(),
+                        );
+                  }
                 }
-              }
-            },
-          ),
-          secondaryAction: model.secondaryButtonLabel != null
-              ? DigitDialogActions(
-                  label: model.secondaryButtonLabel ?? '',
-                  action: (ctx) async {
-                    await LocalSecureStore.instance.setManualSyncTrigger(false);
-                    if (context.mounted) {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      context.router.replaceAll([HomeRoute()]);
-                    }
-                  },
-                )
-              : null,
+              },
+              type: DigitButtonType.primary,
+              size: DigitButtonSize.large,
+            ),
+            if (model.secondaryButtonLabel != null)
+              DigitButton(
+                label: model.secondaryButtonLabel ?? '',
+                onPressed: () {
+                  Navigator.of(popupContext)
+                      .pop(); // Use popupContext to close the popup
+                },
+                type: DigitButtonType.secondary,
+                size: DigitButtonSize.large,
+              ),
+          ],
         ),
       );
     case DigitProgressDialogType.inProgress:
-      DigitDialog.show(
-        context,
-        options: DigitDialogOptions(
-          title: StreamBuilder<double>(
+      showCustomPopup(
+        context: context,
+        builder: (popupContext) => DigitCard(children: [
+          StreamBuilder<double>(
             stream: downloadProgressController?.stream,
             builder: (context, snapshot) {
               return ProgressIndicatorContainer(
@@ -353,15 +353,15 @@ void showDownloadDialog(
                 subLabel: model.title,
               );
             },
-          ),
-        ),
+          )
+        ]),
       );
     default:
       return;
   }
 }
 
-//Function to read the localizations from ISAR,
+// Function to read the localizations from ISAR,
 getLocalizationString(Isar isar, String selectedLocale) async {
   List<dynamic> localizationValues = [];
 
