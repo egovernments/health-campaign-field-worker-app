@@ -274,28 +274,33 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                               Column(
                                                 children: symptomTypesOptions
                                                     .mapIndexed(
-                                                      (i, e) => DigitCheckbox(
-                                                        label: localizations
-                                                            .translate(
-                                                          e.key,
+                                                      (i, e) => Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(spacer2),
+                                                        child: DigitCheckbox(
+                                                          label: localizations
+                                                              .translate(
+                                                            e.key,
+                                                          ),
+                                                          value:
+                                                              symptomsValues[i],
+                                                          onChanged: (value) {
+                                                            stateSetter(
+                                                              () {
+                                                                symptomsValues[
+                                                                        i] =
+                                                                    !symptomsValues[
+                                                                        i];
+                                                                symptomsSelected =
+                                                                    symptomsValues
+                                                                        .any(
+                                                                  (e) => e,
+                                                                );
+                                                              },
+                                                            );
+                                                          },
                                                         ),
-                                                        value:
-                                                            symptomsValues[i],
-                                                        onChanged: (value) {
-                                                          stateSetter(
-                                                            () {
-                                                              symptomsValues[
-                                                                      i] =
-                                                                  !symptomsValues[
-                                                                      i];
-                                                              symptomsSelected =
-                                                                  symptomsValues
-                                                                      .any(
-                                                                (e) => e,
-                                                              );
-                                                            },
-                                                          );
-                                                        },
                                                       ),
                                                     )
                                                     .toList(),

@@ -216,7 +216,7 @@ class _DigitScannerPageState extends LocalizedState<DigitScannerPage> {
                           child: DigitCard(
                             margin: const EdgeInsets.only(top: spacer1),
                             padding: const EdgeInsets.fromLTRB(
-                                spacer3, spacer1, spacer3, 0),
+                                spacer3, spacer1, spacer3, spacer1),
                             children: [
                               DigitButton(
                                 label: localizations

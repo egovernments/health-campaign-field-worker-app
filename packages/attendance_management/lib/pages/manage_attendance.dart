@@ -199,8 +199,8 @@ class _ManageAttendancePageState extends State<ManageAttendancePage> {
                               ...list,
                               if (list.length > 1)
                                 PoweredByDigit(
-                                    version: AttendanceSingleton()
-                                        .appVersion), // Show here if more than one register
+                                    version: AttendanceSingleton().appVersion),
+                              // Show here if more than one register
                             ],
                           ),
                           registerLoading: () => const Center(
@@ -278,7 +278,8 @@ class RegisterCard extends StatelessWidget {
           LabelValueSummary(
             padding: EdgeInsets.all(theme.spacerTheme.spacer3),
             items: data.keys.map((e) {
-              return LabelValueItem(label: e, value: data[e]?.toString() ?? '');
+              return LabelValueItem(
+                  label: e, labelFlex: 5, value: data[e]?.toString() ?? '');
             }).toList(),
           ),
           show
