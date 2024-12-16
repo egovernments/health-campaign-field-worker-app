@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:digit_components/utils/date_utils.dart';
 import 'package:digit_data_model/utils/typedefs.dart'
     hide ProductVariantDataRepository;
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -57,10 +58,10 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       userId,
     );
 
-    Map<int, List<HouseholdModel>> dateVsHousehold = {};
-    Map<int, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
-    Map<int, List<TaskModel>> dateVsClosedHouseholdTask = {};
-    Set<int> uniqueDates = {};
+    Map<String, List<HouseholdModel>> dateVsHousehold = {};
+    Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary = {};
+    Map<String, List<TaskModel>> dateVsClosedHouseholdTask = {};
+    Set<String> uniqueDates = {};
 
     // for (var i = 0; i < maxLength; i++) {
     //   if (i < householdList.length) {
@@ -90,23 +91,31 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     //     }
     //   }
     // }
-    Map<int, int> dateVsHouseholdCount = {};
-    Map<int, int> dateVsProjectBeneficiaryCount = {};
-    Map<int, int> dateVsClosedHouseholdTaskCount = {};
+    Map<String, int> dateVsHouseholdCount = {};
+    Map<String, int> dateVsProjectBeneficiaryCount = {};
+    Map<String, int> dateVsClosedHouseholdTaskCount = {};
 
-    // populate the day vs list of elements registered on that day
-    addToMap(householdList, dateVsHousehold);
-    addToMap(projectBeneficiaryList, dateVsProjectBeneficiary);
-    addToMap(closedHouseholdTaskList, dateVsClosedHouseholdTask);
+    for (var element in householdList) {
+      var dateKey = DigitDateUtils.getDateFromTimestamp(
+        element.clientAuditDetails!.createdTime,
+      );
 
-    // populate the day vs count for that day map
-    populateDateVsCountMap(dateVsHousehold, dateVsHouseholdCount);
-    populateDateVsCountMap(
-        dateVsProjectBeneficiary, dateVsProjectBeneficiaryCount);
-    populateDateVsCountMap(
-        dateVsClosedHouseholdTask, dateVsClosedHouseholdTaskCount);
+      dateVsHousehold.putIfAbsent(dateKey, () => []).add(element);
+    }
+    for (var element in projectBeneficiaryList) {
+      var dateKey = DigitDateUtils.getDateFromTimestamp(
+        element.clientAuditDetails!.createdTime,
+      );
 
-    Map<int, Map<String, int>> dateVsEntityVsCountMap = {};
+      dateVsProjectBeneficiary.putIfAbsent(dateKey, () => []).add(element);
+    }
+    for (var element in closedHouseholdTaskList) {
+      var dateKey = DigitDateUtils.getDateFromTimestamp(
+        element.clientAuditDetails!.createdTime,
+      );
+
+      dateVsClosedHouseholdTask.putIfAbsent(dateKey, () => []).add(element);
+    }
 
     // get a set of unique dates
     getUniqueSetOfDates(
@@ -116,6 +125,15 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       uniqueDates,
     );
 
+    // populate the day vs count for that day map
+    populateDateVsCountMap(dateVsHousehold, dateVsHouseholdCount);
+    populateDateVsCountMap(
+        dateVsProjectBeneficiary, dateVsProjectBeneficiaryCount);
+    populateDateVsCountMap(
+        dateVsClosedHouseholdTask, dateVsClosedHouseholdTaskCount);
+
+    Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
+
     popoulateDateVsEntityCountMap(
       dateVsEntityVsCountMap,
       dateVsHouseholdCount,
@@ -124,94 +142,51 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       uniqueDates,
     );
 
-    emit(const CustomEnumerationSummaryReportSummaryDataState(
-      summaryData: {},
+    emit(CustomEnumerationSummaryReportSummaryDataState(
+      summaryData: dateVsEntityVsCountMap,
     ));
   }
 
   void popoulateDateVsEntityCountMap(
-    Map<int, Map<String, int?>> dateVsEntityVsCountMap,
-    Map<int, int> dateVsHouseholdCount,
-    Map<int, int> dateVsProjectBeneficiaryCount,
-    Map<int, int> dateVsClosedHouseholdTaskCount,
-    Set<int> uniqueDates,
+    Map<String, Map<String, int>> dateVsEntityVsCountMap,
+    Map<String, int> dateVsHouseholdCount,
+    Map<String, int> dateVsProjectBeneficiaryCount,
+    Map<String, int> dateVsClosedHouseholdTaskCount,
+    Set<String> uniqueDates,
   ) {
     for (var date in uniqueDates) {
-      Map<String, int?> elementVsCount = {};
+      Map<String, int> elementVsCount = {};
       if (dateVsHouseholdCount.containsKey(date) &&
           dateVsHouseholdCount[date] != null) {
         var count = dateVsHouseholdCount[date];
-        elementVsCount["Household"] = count;
+        elementVsCount["Household"] = count ?? 0;
       }
       if (dateVsProjectBeneficiaryCount.containsKey(date) &&
           dateVsProjectBeneficiaryCount[date] != null) {
         var count = dateVsProjectBeneficiaryCount[date];
-        elementVsCount["ProjectBeneficiary"] = count;
+        elementVsCount["ProjectBeneficiary"] = count ?? 0;
       }
       if (dateVsClosedHouseholdTaskCount.containsKey(date) &&
           dateVsClosedHouseholdTaskCount[date] != null) {
         var count = dateVsClosedHouseholdTaskCount[date];
-        elementVsCount["ClosedHousehold"] = count;
+        elementVsCount["ClosedHousehold"] = count ?? 0;
       }
       dateVsEntityVsCountMap[date] = elementVsCount;
     }
   }
 
-//   void populateDateVsEntityCountMap(
-//   Map<int?, Map<String, int?>> dateVsEntityVsCountMap,
-//   Map<int?, int> dateVsHouseholdCount,
-//   Map<int?, int> dateVsProjectBeneficiaryCount,
-//   Map<int?, int> dateVsClosedHouseholdTaskCount,
-//   Set<int?> uniqueDates,
-// ) {
-//   // List of the maps to check and their corresponding keys
-//   var counts = {
-//     "Household": dateVsHouseholdCount,
-//     "ProjectBeneficiary": dateVsProjectBeneficiaryCount,
-//     "ClosedHousehold": dateVsClosedHouseholdTaskCount
-//   };
-
-//   // Loop through each unique date
-//   for (var date in uniqueDates) {
-//     Map<String, int?> elementVsCount = {};
-
-//     // Loop through each count map and check if the date exists
-//     counts.forEach((entity, countMap) {
-//       var count = countMap[date];
-//       if (count != null) {
-//         elementVsCount[entity] = count;
-//       }
-//     });
-
-//     // Assign the result to the final map
-//     dateVsEntityVsCountMap[date] = elementVsCount;
-//   }
-// }
-
-  void addToMap(List<dynamic> list, Map<int, List<dynamic>> map) {
-    for (var element in list) {
-      var key = element.clientAuditDetails?.createdTime;
-      if (key != null) {
-        if (map.containsKey(key)) {
-          map[key]?.add(element);
-        } else {
-          map[key] = [element];
-        }
-      }
-    }
-  }
-
-  void populateDateVsCountMap(Map<int, List> map, Map<int?, int> dateVsCount) {
+  void populateDateVsCountMap(
+      Map<String, List> map, Map<String, int> dateVsCount) {
     map.forEach((key, value) {
       dateVsCount[key] = value.length;
     });
   }
 
   void getUniqueSetOfDates(
-    Map<int, List<HouseholdModel>> dateVsHousehold,
-    Map<int, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary,
-    Map<int, List<TaskModel>> dateVsClosedHouseholdTask,
-    Set<int> uniqueDates,
+    Map<String, List<HouseholdModel>> dateVsHousehold,
+    Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiary,
+    Map<String, List<TaskModel>> dateVsClosedHouseholdTask,
+    Set<String> uniqueDates,
   ) {
     uniqueDates.addAll(dateVsHousehold.keys.toSet());
     uniqueDates.addAll(dateVsProjectBeneficiary.keys.toSet());
@@ -246,6 +221,6 @@ class CustomEnumerationSummaryReportState
       CustomEnumerationSummaryReportEmptyState;
 
   const factory CustomEnumerationSummaryReportState.summaryData({
-    @Default({}) Map<int, Map<String, int>> summaryData,
+    @Default({}) Map<String, Map<String, int>> summaryData,
   }) = CustomEnumerationSummaryReportSummaryDataState;
 }

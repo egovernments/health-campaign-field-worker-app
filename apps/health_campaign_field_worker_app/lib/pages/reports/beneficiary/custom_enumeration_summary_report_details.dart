@@ -143,9 +143,7 @@ class _CustomEumerationSummaryReportDetailsState
                                 [
                                   DigitGridCell(
                                     key: _dateKey,
-                                    value: DigitDateUtils.getDateFromTimestamp(
-                                        entry.key,
-                                        dateFormat: 'dd/MM/yyyy'),
+                                    value: entry.key,
                                   ),
                                   DigitGridCell(
                                     key: _householdKey,
