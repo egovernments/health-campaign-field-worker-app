@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import '../../data/repositories/local/custom_task.dart';
+import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
 
 part 'custom_distribution_summary_report.freezed.dart';
@@ -41,34 +43,38 @@ class CustomDistributionSummaryReportBloc extends Bloc<
     final userId = event.userId;
 
     //  read all closed household task from db which are created by userId
-    successfulTaskList = await (taskRepository as TaskLocalRepository).search(
+    successfulTaskList =
+        await (taskRepository as CustomTaskLocalRepository).progressBarSearch(
       TaskSearchModel(status: Status.administeredSuccess.toValue()),
       userId,
     );
 
-    Set<String> projectBeneficiaryClientReferenceId = successfulTaskList
+    Set<String> projectBeneficiaryClientReferenceIds = successfulTaskList
         .map((e) => e.projectBeneficiaryClientReferenceId ?? "")
-        .toList()
+        .toSet()
         .where((element) => element.isNotEmpty)
         .toSet();
 
-    // //  read all projectBeneficiaries from db which are created by userId
-    // projectBeneficiaryList = await (projectBeneficiaryRepository
-    //         as ProjectBeneficiaryLocalRepository)
-    //     .search(
-    //         ProjectBeneficiarySearchModel(
-    //             tenantId: envConfig.variables.tenantId,
-    //             clientReferenceId: projectBeneficiaryClientReferenceId),
-    //         userId);
+    //  read all projectBeneficiaries from db which are created by userId
+    projectBeneficiaryList = await (projectBeneficiaryRepository
+            as ProjectBeneficiaryLocalRepository)
+        .search(ProjectBeneficiarySearchModel(
+            tenantId: envConfig.variables.tenantId,
+            clientReferenceId: projectBeneficiaryClientReferenceIds.toList()));
+
+    Set<String> pbBeneficiaryClientReferenceIds = projectBeneficiaryList
+        .map((e) => e.beneficiaryClientReferenceId ?? "")
+        .toSet()
+        .where((element) => element.isNotEmpty)
+        .toSet();
 
     //  read all households from db which are created by userId
-    householdList = await (householdRepository as HouseholdLocalRepository)
-        .search(
-            HouseholdSearchModel(
-                tenantId: envConfig.variables.tenantId,
-                clientReferenceId:
-                    projectBeneficiaryClientReferenceId.toList()),
-            userId);
+    householdList =
+        await (householdRepository as HouseholdLocalRepository).search(
+      HouseholdSearchModel(
+          tenantId: envConfig.variables.tenantId,
+          clientReferenceId: pbBeneficiaryClientReferenceIds.toList()),
+    );
 
     Map<String, List<HouseholdModel>> dateVsHouseholds = {};
     Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiaries = {};
@@ -86,13 +92,7 @@ class CustomDistributionSummaryReportBloc extends Bloc<
 
       dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
     }
-    // for (var element in projectBeneficiaryList) {
-    //   var dateKey = DigitDateUtils.getDateFromTimestamp(
-    //     element.clientAuditDetails!.createdTime,
-    //   );
 
-    //   dateVsProjectBeneficiaries.putIfAbsent(dateKey, () => []).add(element);
-    // }
     for (var element in successfulTaskList) {
       var dateKey = DigitDateUtils.getDateFromTimestamp(
         element.clientAuditDetails!.createdTime,
@@ -167,17 +167,17 @@ class CustomDistributionSummaryReportBloc extends Bloc<
       if (dateVsHouseholdCount.containsKey(date) &&
           dateVsHouseholdCount[date] != null) {
         var count = dateVsHouseholdCount[date];
-        elementVsCount["Household"] = count ?? 0;
+        elementVsCount[Constants.household] = count ?? 0;
       }
       if (dateVsBeneficiaryImpactedCount.containsKey(date) &&
           dateVsBeneficiaryImpactedCount[date] != null) {
         var count = dateVsBeneficiaryImpactedCount[date];
-        elementVsCount["ProjectBeneficiary"] = count ?? 0;
+        elementVsCount[Constants.projectBeneficiary] = count ?? 0;
       }
       if (dateVsBedNetDistributedCount.containsKey(date) &&
           dateVsBedNetDistributedCount[date] != null) {
         var count = dateVsBedNetDistributedCount[date];
-        elementVsCount["BednetDistributed"] = count ?? 0;
+        elementVsCount[Constants.bednetDistributed] = count ?? 0;
       }
       dateVsEntityVsCountMap[date] = elementVsCount;
     }
@@ -206,7 +206,7 @@ class CustomDistributionSummaryReportBloc extends Bloc<
 
   int resourceDistributed(List<TaskResourceModel>? taskResources) {
     int resourceDistributed = 0;
-    RegExp intPattern = RegExp(r'^[0-9]$');
+    RegExp intPattern = RegExp(r'^\d+$');
     RegExp doublePattern = RegExp(r'^\d+\.\d+$');
     if (taskResources != null) {
       for (var resource in taskResources) {

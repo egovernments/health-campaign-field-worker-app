@@ -894,6 +894,18 @@ class InventoryReportDetails {
   String get closedHouseholdRegisteredLabel {
     return 'ENUMERATION_SUMMARY_PROJECT_BENEFICIARY_REGISTERED_LABEL';
   }
+
+  String get householdDistributedLabel {
+    return 'DISTRIBUTION_SUMMARY_HOUSEHOLD_DISTRIBUTED_LABEL';
+  }
+
+  String get projectBeneficiaryImpactedLabel {
+    return 'DISTRIBUTION_SUMMARY_PROJECT_BENEFICIARY_IMPACTED_LABEL';
+  }
+
+  String get bednetDistributedLabel {
+    return 'DISTRIBUTION_SUMMARY_BEDNET_DISTRIBUTED_LABEL';
+  }
 }
 
 class StockDetailsReturnedShowcase {

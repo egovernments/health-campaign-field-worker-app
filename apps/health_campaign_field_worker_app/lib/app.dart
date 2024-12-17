@@ -16,6 +16,7 @@ import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
 import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
+import 'blocs/summary_reports/custom_distribution_summary_report.dart';
 import 'blocs/summary_reports/custom_enumeration_summary_report.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
@@ -132,6 +133,16 @@ class MainApplicationState extends State<MainApplication>
               ),
               BlocProvider(
                 create: (context) => CustomEnumerationSummaryReportBloc(
+                  householdRepository: context
+                      .repository<HouseholdModel, HouseholdSearchModel>(),
+                  taskRepository:
+                      context.repository<TaskModel, TaskSearchModel>(),
+                  projectBeneficiaryRepository: context.repository<
+                      ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
+                ),
+              ),
+              BlocProvider(
+                create: (context) => CustomDistributionSummaryReportBloc(
                   householdRepository: context
                       .repository<HouseholdModel, HouseholdSearchModel>(),
                   taskRepository:

@@ -7,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:registration_delivery/models/entities/status.dart';
 import 'package:registration_delivery/registration_delivery.dart';
+import '../../data/repositories/local/custom_task.dart';
+import '../../utils/constants.dart';
 import '../../utils/environment_config.dart';
 
 part 'custom_enumeration_summary_report.freezed.dart';
@@ -53,7 +55,7 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
             userId);
     //  read all closed household task from db which are created by userId
     closedHouseholdTaskList =
-        await (taskRepository as TaskLocalRepository).search(
+        await (taskRepository as CustomTaskLocalRepository).progressBarSearch(
       TaskSearchModel(status: Status.closeHousehold.toValue()),
       userId,
     );
@@ -63,34 +65,6 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
     Map<String, List<TaskModel>> dateVsClosedHouseholdTask = {};
     Set<String> uniqueDates = {};
 
-    // for (var i = 0; i < maxLength; i++) {
-    //   if (i < householdList.length) {
-    //     var element = householdList[i];
-    //     var key = element.clientAuditDetails?.createdTime;
-    //     if (dateVsHousehold.containsKey(key)) {
-    //       dateVsHousehold[key]?.add(element);
-    //     } else {
-    //       dateVsHousehold[key] = [element];
-    //     }
-    //   } else if (i < projectBeneficiaryList.length) {
-    //     var projectBeneficiary = projectBeneficiaryList[i];
-    //     var key = projectBeneficiary.clientAuditDetails?.createdTime;
-    //     if (dateVsProjectBeneficiary.containsKey(key)) {
-    //       dateVsProjectBeneficiary[key]?.add(projectBeneficiary);
-    //     } else {
-    //       dateVsProjectBeneficiary[key] = [projectBeneficiary];
-    //     }
-    //   } else if (i < closedHouseholdTaskList.length) {
-    //     var closeHousehold = closedHouseholdTaskList[i];
-    //     var key = closeHousehold.clientAuditDetails?.createdTime;
-
-    //     if (dateVsClosedHouseholdTask.containsKey(key)) {
-    //       dateVsClosedHouseholdTask[key]?.add(closeHousehold);
-    //     } else {
-    //       dateVsClosedHouseholdTask[key] = [closeHousehold];
-    //     }
-    //   }
-    // }
     Map<String, int> dateVsHouseholdCount = {};
     Map<String, int> dateVsProjectBeneficiaryCount = {};
     Map<String, int> dateVsClosedHouseholdTaskCount = {};
@@ -159,17 +133,17 @@ class CustomEnumerationSummaryReportBloc extends Bloc<
       if (dateVsHouseholdCount.containsKey(date) &&
           dateVsHouseholdCount[date] != null) {
         var count = dateVsHouseholdCount[date];
-        elementVsCount["Household"] = count ?? 0;
+        elementVsCount[Constants.household] = count ?? 0;
       }
       if (dateVsProjectBeneficiaryCount.containsKey(date) &&
           dateVsProjectBeneficiaryCount[date] != null) {
         var count = dateVsProjectBeneficiaryCount[date];
-        elementVsCount["ProjectBeneficiary"] = count ?? 0;
+        elementVsCount[Constants.projectBeneficiary] = count ?? 0;
       }
       if (dateVsClosedHouseholdTaskCount.containsKey(date) &&
           dateVsClosedHouseholdTaskCount[date] != null) {
         var count = dateVsClosedHouseholdTaskCount[date];
-        elementVsCount["ClosedHousehold"] = count ?? 0;
+        elementVsCount[Constants.closedHousehold] = count ?? 0;
       }
       dateVsEntityVsCountMap[date] = elementVsCount;
     }

@@ -12,7 +12,6 @@ import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 
 import '../../../blocs/summary_reports/custom_distribution_summary_report.dart';
-import '../../../blocs/summary_reports/custom_enumeration_summary_report.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18Local;
@@ -28,24 +27,6 @@ class CustomDistributionSummaryReportDetailsPage
   @override
   State<CustomDistributionSummaryReportDetailsPage> createState() =>
       _CustomDistributionSummaryReportDetailsState();
-
-// /* created a wrapper  Router which handles the BlocProvider
-// and attached the event to load the data*/
-//   @override
-//   Widget wrappedRoute(BuildContext context) {
-//     return BlocProvider(
-//       create: (context) {
-//         return CustomEnumerationSummaryReportBloc(
-//           householdRepository:
-//               context.repository<HouseholdModel, HouseholdSearchModel>(),
-//           taskRepository: context.repository<TaskModel, TaskSearchModel>(),
-//           projectBeneficiaryRepository: context.repository<
-//               ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
-//         );
-//       },
-//       child: this,
-//     );
-//   }
 }
 
 class _CustomDistributionSummaryReportDetailsState
@@ -58,15 +39,15 @@ class _CustomDistributionSummaryReportDetailsState
   }
 
   void _loadData() {
-    final bloc = BlocProvider.of<CustomEnumerationSummaryReportBloc>(context);
-    bloc.add(CustomEnumerationSummaryReportLoadDataEvent(
+    final bloc = BlocProvider.of<CustomDistributionSummaryReportBloc>(context);
+    bloc.add(CustomDistributionSummaryReportLoadDataEvent(
       userId: context.loggedInUserUuid,
     ));
   }
 
   static const _householdKey = 'householdKey';
-  static const _projectBeneficiaryKey = 'treatedPercentageKey';
-  static const _closedHouseholdKey = 'treatedKey';
+  static const _projectBeneficiaryKey = 'projectBeneficiaryKey';
+  static const _bednetDistributedKey = 'bednetDistributedKey';
   static const _dateKey = 'dateKey';
 
   static const _title = "Summary Report";
@@ -117,23 +98,23 @@ class _CustomDistributionSummaryReportDetailsState
                             DigitGridColumn(
                               label: localizations.translate(
                                 i18Local.inventoryReportDetails
-                                    .householdRegisteredLabel,
+                                    .householdDistributedLabel,
                               ),
                               key: _householdKey,
-                              width: 170,
+                              width: 130,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
-                                  .projectBeneficiaryRegisteredLabel),
+                                  .projectBeneficiaryImpactedLabel),
                               key: _projectBeneficiaryKey,
                               width: 120,
                             ),
                             DigitGridColumn(
                               label: localizations.translate(i18Local
                                   .inventoryReportDetails
-                                  .closedHouseholdRegisteredLabel),
-                              key: _closedHouseholdKey,
+                                  .bednetDistributedLabel),
+                              key: _bednetDistributedKey,
                               width: 130,
                             ),
                           ],
@@ -149,16 +130,19 @@ class _CustomDistributionSummaryReportDetailsState
                                   ),
                                   DigitGridCell(
                                     key: _householdKey,
-                                    value: entry.value["Household"].toString(),
-                                  ),
-                                  DigitGridCell(
-                                    key: _projectBeneficiaryKey,
-                                    value: entry.value["ProjectBeneficiary"]
+                                    value: entry.value[Constants.household]
                                         .toString(),
                                   ),
                                   DigitGridCell(
-                                    key: _closedHouseholdKey,
-                                    value: entry.value["ClosedHousehold"]
+                                    key: _projectBeneficiaryKey,
+                                    value: entry
+                                        .value[Constants.projectBeneficiary]
+                                        .toString(),
+                                  ),
+                                  DigitGridCell(
+                                    key: _bednetDistributedKey,
+                                    value: entry
+                                        .value[Constants.bednetDistributed]
                                         .toString(),
                                   ),
                                 ],

@@ -26,24 +26,6 @@ class CustomEumerationSummaryReportDetailsPage extends LocalizedStatefulWidget {
   @override
   State<CustomEumerationSummaryReportDetailsPage> createState() =>
       _CustomEumerationSummaryReportDetailsState();
-
-// /* created a wrapper  Router which handles the BlocProvider
-// and attached the event to load the data*/
-//   @override
-//   Widget wrappedRoute(BuildContext context) {
-//     return BlocProvider(
-//       create: (context) {
-//         return CustomEnumerationSummaryReportBloc(
-//           householdRepository:
-//               context.repository<HouseholdModel, HouseholdSearchModel>(),
-//           taskRepository: context.repository<TaskModel, TaskSearchModel>(),
-//           projectBeneficiaryRepository: context.repository<
-//               ProjectBeneficiaryModel, ProjectBeneficiarySearchModel>(),
-//         );
-//       },
-//       child: this,
-//     );
-//   }
 }
 
 class _CustomEumerationSummaryReportDetailsState
@@ -63,8 +45,8 @@ class _CustomEumerationSummaryReportDetailsState
   }
 
   static const _householdKey = 'householdKey';
-  static const _projectBeneficiaryKey = 'treatedPercentageKey';
-  static const _closedHouseholdKey = 'treatedKey';
+  static const _projectBeneficiaryKey = 'projectBeneficiaryKey';
+  static const _closedHouseholdKey = 'closedHouseholdKey';
   static const _dateKey = 'dateKey';
 
   static const _title = "Summary Report";
@@ -147,16 +129,19 @@ class _CustomEumerationSummaryReportDetailsState
                                   ),
                                   DigitGridCell(
                                     key: _householdKey,
-                                    value: entry.value["Household"].toString(),
+                                    value: entry.value[Constants.household]
+                                        .toString(),
                                   ),
                                   DigitGridCell(
                                     key: _projectBeneficiaryKey,
-                                    value: entry.value["ProjectBeneficiary"]
+                                    value: entry
+                                        .value[Constants.projectBeneficiary]
                                         .toString(),
                                   ),
                                   DigitGridCell(
                                     key: _closedHouseholdKey,
-                                    value: entry.value["ClosedHousehold"]
+                                    value: entry
+                                        .value[Constants.closedHousehold]
                                         .toString(),
                                   ),
                                 ],
