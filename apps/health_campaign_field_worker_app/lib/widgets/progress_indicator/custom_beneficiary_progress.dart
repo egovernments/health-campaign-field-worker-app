@@ -142,7 +142,8 @@ class CustomBeneficiaryProgressBarState
             plannedStartDate: gte.millisecondsSinceEpoch,
             projectId: projectId,
           );
-          List<TaskModel> results = await repository.search(taskSearchQuery);
+          List<TaskModel> results =
+              await repository.progressBarSearch(taskSearchQuery);
 
           if (mounted) {
             setState(() {
