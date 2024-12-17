@@ -40,59 +40,43 @@ class CustomDistributionSummaryReportBloc extends Bloc<
 
     final userId = event.userId;
 
-    //  read all households from db which are created by userId
-    householdList = await (householdRepository as HouseholdLocalRepository)
-        .search(HouseholdSearchModel(tenantId: envConfig.variables.tenantId),
-            userId);
-
-    //  read all projectBeneficiaries from db which are created by userId
-    projectBeneficiaryList = await (projectBeneficiaryRepository
-            as ProjectBeneficiaryLocalRepository)
-        .search(
-            ProjectBeneficiarySearchModel(
-                tenantId: envConfig.variables.tenantId),
-            userId);
     //  read all closed household task from db which are created by userId
     successfulTaskList = await (taskRepository as TaskLocalRepository).search(
       TaskSearchModel(status: Status.administeredSuccess.toValue()),
       userId,
     );
 
+    Set<String> projectBeneficiaryClientReferenceId = successfulTaskList
+        .map((e) => e.projectBeneficiaryClientReferenceId ?? "")
+        .toList()
+        .where((element) => element.isNotEmpty)
+        .toSet();
+
+    // //  read all projectBeneficiaries from db which are created by userId
+    // projectBeneficiaryList = await (projectBeneficiaryRepository
+    //         as ProjectBeneficiaryLocalRepository)
+    //     .search(
+    //         ProjectBeneficiarySearchModel(
+    //             tenantId: envConfig.variables.tenantId,
+    //             clientReferenceId: projectBeneficiaryClientReferenceId),
+    //         userId);
+
+    //  read all households from db which are created by userId
+    householdList = await (householdRepository as HouseholdLocalRepository)
+        .search(
+            HouseholdSearchModel(
+                tenantId: envConfig.variables.tenantId,
+                clientReferenceId:
+                    projectBeneficiaryClientReferenceId.toList()),
+            userId);
+
     Map<String, List<HouseholdModel>> dateVsHouseholds = {};
     Map<String, List<ProjectBeneficiaryModel>> dateVsProjectBeneficiaries = {};
     Map<String, List<TaskModel>> dateVsSuccessfulTasks = {};
     Set<String> uniqueDates = {};
 
-    // for (var i = 0; i < maxLength; i++) {
-    //   if (i < householdList.length) {
-    //     var element = householdList[i];
-    //     var key = element.clientAuditDetails?.createdTime;
-    //     if (dateVsHousehold.containsKey(key)) {
-    //       dateVsHousehold[key]?.add(element);
-    //     } else {
-    //       dateVsHousehold[key] = [element];
-    //     }
-    //   } else if (i < projectBeneficiaryList.length) {
-    //     var projectBeneficiary = projectBeneficiaryList[i];
-    //     var key = projectBeneficiary.clientAuditDetails?.createdTime;
-    //     if (dateVsProjectBeneficiary.containsKey(key)) {
-    //       dateVsProjectBeneficiary[key]?.add(projectBeneficiary);
-    //     } else {
-    //       dateVsProjectBeneficiary[key] = [projectBeneficiary];
-    //     }
-    //   } else if (i < closedHouseholdTaskList.length) {
-    //     var closeHousehold = closedHouseholdTaskList[i];
-    //     var key = closeHousehold.clientAuditDetails?.createdTime;
-
-    //     if (dateVsClosedHouseholdTask.containsKey(key)) {
-    //       dateVsClosedHouseholdTask[key]?.add(closeHousehold);
-    //     } else {
-    //       dateVsClosedHouseholdTask[key] = [closeHousehold];
-    //     }
-    //   }
-    // }
     Map<String, int> dateVsHouseholdCount = {};
-    Map<String, int> dateVsProjectBeneficiaryCount = {};
+    Map<String, int> dateVsBeneficiaryImpactedCount = {};
     Map<String, int> dateVsBedNetDistributedCount = {};
 
     for (var element in householdList) {
@@ -102,13 +86,13 @@ class CustomDistributionSummaryReportBloc extends Bloc<
 
       dateVsHouseholds.putIfAbsent(dateKey, () => []).add(element);
     }
-    for (var element in projectBeneficiaryList) {
-      var dateKey = DigitDateUtils.getDateFromTimestamp(
-        element.clientAuditDetails!.createdTime,
-      );
+    // for (var element in projectBeneficiaryList) {
+    //   var dateKey = DigitDateUtils.getDateFromTimestamp(
+    //     element.clientAuditDetails!.createdTime,
+    //   );
 
-      dateVsProjectBeneficiaries.putIfAbsent(dateKey, () => []).add(element);
-    }
+    //   dateVsProjectBeneficiaries.putIfAbsent(dateKey, () => []).add(element);
+    // }
     for (var element in successfulTaskList) {
       var dateKey = DigitDateUtils.getDateFromTimestamp(
         element.clientAuditDetails!.createdTime,
@@ -127,17 +111,20 @@ class CustomDistributionSummaryReportBloc extends Bloc<
 
     // populate the day vs count for that day map
     populateDateVsCountMap(dateVsHouseholds, dateVsHouseholdCount);
-    populateDateVsCountMap(
-        dateVsProjectBeneficiaries, dateVsProjectBeneficiaryCount);
+    // populateDateVsCountMap(
+    //     dateVsProjectBeneficiaries, dateVsProjectBeneficiaryCount);
     populateDateVsBednetDistributedMap(
         dateVsSuccessfulTasks, dateVsBedNetDistributedCount);
+
+    populateDateVsBeneficiaryImpactedMap(
+        dateVsHouseholds, dateVsBeneficiaryImpactedCount);
 
     Map<String, Map<String, int>> dateVsEntityVsCountMap = {};
 
     popoulateDateVsEntityCountMap(
       dateVsEntityVsCountMap,
       dateVsHouseholdCount,
-      dateVsProjectBeneficiaryCount,
+      dateVsBeneficiaryImpactedCount,
       dateVsBedNetDistributedCount,
       uniqueDates,
     );
@@ -147,10 +134,31 @@ class CustomDistributionSummaryReportBloc extends Bloc<
     ));
   }
 
+  void populateDateVsBeneficiaryImpactedMap(
+      Map<String, List<HouseholdModel>> dateVsHousehold,
+      Map<String, int> dateVsBeneficiaryImpactedCount) {
+    dateVsHousehold.forEach((key, value) {
+      int memberCount = 0;
+      memberCount = getMembersCount(value);
+
+      dateVsBeneficiaryImpactedCount[key] = memberCount;
+    });
+  }
+
+  int getMembersCount(List<HouseholdModel> households) {
+    int memberCount = 0;
+
+    for (var household in households) {
+      memberCount = memberCount + (household.memberCount ?? 0);
+    }
+
+    return memberCount;
+  }
+
   void popoulateDateVsEntityCountMap(
     Map<String, Map<String, int>> dateVsEntityVsCountMap,
     Map<String, int> dateVsHouseholdCount,
-    Map<String, int> dateVsProjectBeneficiaryCount,
+    Map<String, int> dateVsBeneficiaryImpactedCount,
     Map<String, int> dateVsBedNetDistributedCount,
     Set<String> uniqueDates,
   ) {
@@ -161,9 +169,9 @@ class CustomDistributionSummaryReportBloc extends Bloc<
         var count = dateVsHouseholdCount[date];
         elementVsCount["Household"] = count ?? 0;
       }
-      if (dateVsProjectBeneficiaryCount.containsKey(date) &&
-          dateVsProjectBeneficiaryCount[date] != null) {
-        var count = dateVsProjectBeneficiaryCount[date];
+      if (dateVsBeneficiaryImpactedCount.containsKey(date) &&
+          dateVsBeneficiaryImpactedCount[date] != null) {
+        var count = dateVsBeneficiaryImpactedCount[date];
         elementVsCount["ProjectBeneficiary"] = count ?? 0;
       }
       if (dateVsBedNetDistributedCount.containsKey(date) &&

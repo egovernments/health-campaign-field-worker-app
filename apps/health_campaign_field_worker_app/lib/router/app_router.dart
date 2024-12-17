@@ -38,6 +38,8 @@ import '../pages/beneficiary/custom_deliver_intervention.dart';
 import '../pages/beneficiary/dose_administered_verification.dart';
 import '../pages/closed/custom_closed_household_details.dart';
 import '../pages/reports/beneficiary/custom_enumeration_summary_report_details.dart';
+import '../pages/reports/beneficiary/custom_distribution_summary_report_details.dart';
+
 export 'package:auto_route/auto_route.dart';
 
 part 'app_router.gr.dart';
@@ -322,9 +324,14 @@ class AppRouter extends _$AppRouter {
               ),
             ]),
 
+        //Enumeration and distribution Summary reports
         AutoRoute(
           page: CustomEumerationSummaryReportDetailsRoute.page,
           path: 'custom-enumeration-report',
+        ),
+        AutoRoute(
+          page: CustomDistributionSummaryReportDetailsRoute.page,
+          path: 'custom-distribution-report',
         ),
 
         AutoRoute(page: AcknowledgementRoute.page, path: 'acknowledgement'),

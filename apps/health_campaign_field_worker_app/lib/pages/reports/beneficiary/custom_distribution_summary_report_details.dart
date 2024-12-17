@@ -11,21 +11,23 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/widgets/back_navigation_help_header.dart';
 
+import '../../../blocs/summary_reports/custom_distribution_summary_report.dart';
 import '../../../blocs/summary_reports/custom_enumeration_summary_report.dart';
 import '../../../router/app_router.dart';
 import '../../../utils/utils.dart';
 import '../../../utils/i18_key_constants.dart' as i18Local;
 
 @RoutePage()
-class CustomEumerationSummaryReportDetailsPage extends LocalizedStatefulWidget {
-  const CustomEumerationSummaryReportDetailsPage({
+class CustomDistributionSummaryReportDetailsPage
+    extends LocalizedStatefulWidget {
+  const CustomDistributionSummaryReportDetailsPage({
     Key? key,
     super.appLocalizations,
   }) : super(key: key);
 
   @override
-  State<CustomEumerationSummaryReportDetailsPage> createState() =>
-      _CustomEumerationSummaryReportDetailsState();
+  State<CustomDistributionSummaryReportDetailsPage> createState() =>
+      _CustomDistributionSummaryReportDetailsState();
 
 // /* created a wrapper  Router which handles the BlocProvider
 // and attached the event to load the data*/
@@ -46,8 +48,8 @@ class CustomEumerationSummaryReportDetailsPage extends LocalizedStatefulWidget {
 //   }
 }
 
-class _CustomEumerationSummaryReportDetailsState
-    extends LocalizedState<CustomEumerationSummaryReportDetailsPage> {
+class _CustomDistributionSummaryReportDetailsState
+    extends LocalizedState<CustomDistributionSummaryReportDetailsPage> {
   @override
   void initState() {
     super.initState();
@@ -76,9 +78,9 @@ class _CustomEumerationSummaryReportDetailsState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<CustomEnumerationSummaryReportBloc,
-          CustomEnumerationSummaryReportState>(
-        builder: (context, customEnumerationSumamryReportState) {
+      body: BlocBuilder<CustomDistributionSummaryReportBloc,
+          CustomDistributionSummaryReportState>(
+        builder: (context, customDistributionSumamryReportState) {
           return ScrollableContent(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -94,8 +96,8 @@ class _CustomEumerationSummaryReportDetailsState
                   ),
                 ),
               ),
-              if (customEnumerationSumamryReportState
-                  is CustomEnumerationSummaryReportSummaryDataState)
+              if (customDistributionSumamryReportState
+                  is CustomDistributionSummaryReportSummaryDataState)
                 ReactiveFormBuilder(
                   form: _form,
                   builder: (ctx, form, child) {
@@ -137,7 +139,7 @@ class _CustomEumerationSummaryReportDetailsState
                           ],
                           rows: [
                             for (final entry
-                                in customEnumerationSumamryReportState
+                                in customDistributionSumamryReportState
                                     .summaryData.entries) ...[
                               DigitGridRow(
                                 [
