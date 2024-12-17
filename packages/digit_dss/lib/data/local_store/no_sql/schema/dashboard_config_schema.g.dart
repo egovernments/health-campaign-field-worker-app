@@ -28,6 +28,11 @@ const DashboardConfigSchemaSchema = CollectionSchema(
       id: 1,
       name: r'enableDashboard',
       type: IsarType.bool,
+    ),
+    r'projectTypeCode': PropertySchema(
+      id: 2,
+      name: r'projectTypeCode',
+      type: IsarType.string,
     )
   },
   estimateSize: _dashboardConfigSchemaEstimateSize,
@@ -66,6 +71,12 @@ int _dashboardConfigSchemaEstimateSize(
       }
     }
   }
+  {
+    final value = object.projectTypeCode;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -82,6 +93,7 @@ void _dashboardConfigSchemaSerialize(
     object.charts,
   );
   writer.writeBool(offsets[1], object.enableDashboard);
+  writer.writeString(offsets[2], object.projectTypeCode);
 }
 
 DashboardConfigSchema _dashboardConfigSchemaDeserialize(
@@ -99,6 +111,7 @@ DashboardConfigSchema _dashboardConfigSchemaDeserialize(
   );
   object.enableDashboard = reader.readBoolOrNull(offsets[1]);
   object.id = id;
+  object.projectTypeCode = reader.readStringOrNull(offsets[2]);
   return object;
 }
 
@@ -118,6 +131,8 @@ P _dashboardConfigSchemaDeserializeProp<P>(
       )) as P;
     case 1:
       return (reader.readBoolOrNull(offset)) as P;
+    case 2:
+      return (reader.readStringOrNull(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -410,6 +425,162 @@ extension DashboardConfigSchemaQueryFilter on QueryBuilder<
       ));
     });
   }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'projectTypeCode',
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'projectTypeCode',
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'projectTypeCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'projectTypeCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'projectTypeCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'projectTypeCode',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'projectTypeCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'projectTypeCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+          QAfterFilterCondition>
+      projectTypeCodeContains(String value, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'projectTypeCode',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+          QAfterFilterCondition>
+      projectTypeCodeMatches(String pattern, {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'projectTypeCode',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'projectTypeCode',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema,
+      QAfterFilterCondition> projectTypeCodeIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'projectTypeCode',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension DashboardConfigSchemaQueryObject on QueryBuilder<
@@ -439,6 +610,20 @@ extension DashboardConfigSchemaQuerySortBy
       sortByEnableDashboardDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'enableDashboard', Sort.desc);
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema, QAfterSortBy>
+      sortByProjectTypeCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'projectTypeCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema, QAfterSortBy>
+      sortByProjectTypeCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'projectTypeCode', Sort.desc);
     });
   }
 }
@@ -472,6 +657,20 @@ extension DashboardConfigSchemaQuerySortThenBy
       return query.addSortBy(r'id', Sort.desc);
     });
   }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema, QAfterSortBy>
+      thenByProjectTypeCode() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'projectTypeCode', Sort.asc);
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema, QAfterSortBy>
+      thenByProjectTypeCodeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'projectTypeCode', Sort.desc);
+    });
+  }
 }
 
 extension DashboardConfigSchemaQueryWhereDistinct
@@ -480,6 +679,14 @@ extension DashboardConfigSchemaQueryWhereDistinct
       distinctByEnableDashboard() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'enableDashboard');
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, DashboardConfigSchema, QDistinct>
+      distinctByProjectTypeCode({bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'projectTypeCode',
+          caseSensitive: caseSensitive);
     });
   }
 }
@@ -503,6 +710,13 @@ extension DashboardConfigSchemaQueryProperty on QueryBuilder<
       enableDashboardProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'enableDashboard');
+    });
+  }
+
+  QueryBuilder<DashboardConfigSchema, String?, QQueryOperations>
+      projectTypeCodeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'projectTypeCode');
     });
   }
 }
