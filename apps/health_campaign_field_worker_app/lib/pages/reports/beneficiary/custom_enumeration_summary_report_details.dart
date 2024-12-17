@@ -80,6 +80,13 @@ class _CustomEumerationSummaryReportDetailsState
           CustomEnumerationSummaryReportState>(
         builder: (context, customEnumerationSumamryReportState) {
           return ScrollableContent(
+            footer: DigitElevatedButton(
+              child: Text(localizations
+                  .translate(i18Local.acknowledgementSuccess.goToHome)),
+              onPressed: () {
+                context.router.popUntilRouteWithName(HomeRoute.name);
+              },
+            ),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BackNavigationHelpHeaderWidget(),
