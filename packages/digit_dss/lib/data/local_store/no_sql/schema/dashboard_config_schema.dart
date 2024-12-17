@@ -11,6 +11,9 @@ class DashboardConfigSchema {
 
   @Name("charts")
   late List<DashboardChartConfigSchema>? charts;
+
+  @Name("projectTypeCode")
+  late String? projectTypeCode;
 }
 
 @embedded

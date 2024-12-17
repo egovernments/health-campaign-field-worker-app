@@ -196,6 +196,8 @@ mixin _$DashboardConfigWrapper {
   bool get enableDashboard => throw _privateConstructorUsedError;
   @JsonKey(name: 'charts')
   List<ChartConfigModel>? get charts => throw _privateConstructorUsedError;
+  @JsonKey(name: 'projectTypeCode')
+  String get projectTypeCode => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -211,7 +213,8 @@ abstract class $DashboardConfigWrapperCopyWith<$Res> {
   @useResult
   $Res call(
       {@JsonKey(name: 'enableDashboard') bool enableDashboard,
-      @JsonKey(name: 'charts') List<ChartConfigModel>? charts});
+      @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
+      @JsonKey(name: 'projectTypeCode') String projectTypeCode});
 }
 
 /// @nodoc
@@ -230,6 +233,7 @@ class _$DashboardConfigWrapperCopyWithImpl<$Res,
   $Res call({
     Object? enableDashboard = null,
     Object? charts = freezed,
+    Object? projectTypeCode = null,
   }) {
     return _then(_value.copyWith(
       enableDashboard: null == enableDashboard
@@ -240,6 +244,10 @@ class _$DashboardConfigWrapperCopyWithImpl<$Res,
           ? _value.charts
           : charts // ignore: cast_nullable_to_non_nullable
               as List<ChartConfigModel>?,
+      projectTypeCode: null == projectTypeCode
+          ? _value.projectTypeCode
+          : projectTypeCode // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -255,7 +263,8 @@ abstract class _$$DashboardConfigWrapperImplCopyWith<$Res>
   @useResult
   $Res call(
       {@JsonKey(name: 'enableDashboard') bool enableDashboard,
-      @JsonKey(name: 'charts') List<ChartConfigModel>? charts});
+      @JsonKey(name: 'charts') List<ChartConfigModel>? charts,
+      @JsonKey(name: 'projectTypeCode') String projectTypeCode});
 }
 
 /// @nodoc
@@ -273,6 +282,7 @@ class __$$DashboardConfigWrapperImplCopyWithImpl<$Res>
   $Res call({
     Object? enableDashboard = null,
     Object? charts = freezed,
+    Object? projectTypeCode = null,
   }) {
     return _then(_$DashboardConfigWrapperImpl(
       enableDashboard: null == enableDashboard
@@ -283,6 +293,10 @@ class __$$DashboardConfigWrapperImplCopyWithImpl<$Res>
           ? _value._charts
           : charts // ignore: cast_nullable_to_non_nullable
               as List<ChartConfigModel>?,
+      projectTypeCode: null == projectTypeCode
+          ? _value.projectTypeCode
+          : projectTypeCode // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -292,7 +306,8 @@ class __$$DashboardConfigWrapperImplCopyWithImpl<$Res>
 class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
   const _$DashboardConfigWrapperImpl(
       {@JsonKey(name: 'enableDashboard') required this.enableDashboard,
-      @JsonKey(name: 'charts') final List<ChartConfigModel>? charts})
+      @JsonKey(name: 'charts') final List<ChartConfigModel>? charts,
+      @JsonKey(name: 'projectTypeCode') required this.projectTypeCode})
       : _charts = charts;
 
   factory _$DashboardConfigWrapperImpl.fromJson(Map<String, dynamic> json) =>
@@ -313,8 +328,12 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
   }
 
   @override
+  @JsonKey(name: 'projectTypeCode')
+  final String projectTypeCode;
+
+  @override
   String toString() {
-    return 'DashboardConfigWrapper(enableDashboard: $enableDashboard, charts: $charts)';
+    return 'DashboardConfigWrapper(enableDashboard: $enableDashboard, charts: $charts, projectTypeCode: $projectTypeCode)';
   }
 
   @override
@@ -324,13 +343,15 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
             other is _$DashboardConfigWrapperImpl &&
             (identical(other.enableDashboard, enableDashboard) ||
                 other.enableDashboard == enableDashboard) &&
-            const DeepCollectionEquality().equals(other._charts, _charts));
+            const DeepCollectionEquality().equals(other._charts, _charts) &&
+            (identical(other.projectTypeCode, projectTypeCode) ||
+                other.projectTypeCode == projectTypeCode));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, enableDashboard,
-      const DeepCollectionEquality().hash(_charts));
+      const DeepCollectionEquality().hash(_charts), projectTypeCode);
 
   @JsonKey(ignore: true)
   @override
@@ -350,8 +371,9 @@ class _$DashboardConfigWrapperImpl implements _DashboardConfigWrapper {
 abstract class _DashboardConfigWrapper implements DashboardConfigWrapper {
   const factory _DashboardConfigWrapper(
       {@JsonKey(name: 'enableDashboard') required final bool enableDashboard,
-      @JsonKey(name: 'charts')
-      final List<ChartConfigModel>? charts}) = _$DashboardConfigWrapperImpl;
+      @JsonKey(name: 'charts') final List<ChartConfigModel>? charts,
+      @JsonKey(name: 'projectTypeCode')
+      required final String projectTypeCode}) = _$DashboardConfigWrapperImpl;
 
   factory _DashboardConfigWrapper.fromJson(Map<String, dynamic> json) =
       _$DashboardConfigWrapperImpl.fromJson;
@@ -362,6 +384,9 @@ abstract class _DashboardConfigWrapper implements DashboardConfigWrapper {
   @override
   @JsonKey(name: 'charts')
   List<ChartConfigModel>? get charts;
+  @override
+  @JsonKey(name: 'projectTypeCode')
+  String get projectTypeCode;
   @override
   @JsonKey(ignore: true)
   _$$DashboardConfigWrapperImplCopyWith<_$DashboardConfigWrapperImpl>
