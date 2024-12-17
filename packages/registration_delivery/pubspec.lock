@@ -414,7 +414,7 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.5-dev.1"
+    version: "1.0.5"
   digit_firebase_services:
     dependency: "direct overridden"
     description:
@@ -432,17 +432,16 @@ packages:
   digit_showcase:
     dependency: "direct main"
     description:
-      name: digit_showcase
-      sha256: "75b67298f1860ad757827b15af752b677f934b5275b887e36b15e25a5285e498"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0"
+      path: "../digit_showcase"
+      relative: true
+    source: path
+    version: "1.0.1"
   digit_ui_components:
     dependency: "direct main"
     description:
       path: "flutter/digit-ui-components/digit_components"
-      ref: hcm_changes
-      resolved-ref: c5dd67a70d57a01979932e7ceeb4720af0828cb9
+      ref: develop
+      resolved-ref: "2cf22645849e58166fe78633d949569e1f138e97"
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+7"
@@ -1517,7 +1516,7 @@ packages:
       path: "../survey_form"
       relative: true
     source: path
-    version: "0.0.1-dev.2"
+    version: "1.0.0"
   synchronized:
     dependency: transitive
     description:

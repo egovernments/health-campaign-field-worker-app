@@ -71,7 +71,7 @@ packages:
       path: "../../packages/attendance_management"
       relative: true
     source: path
-    version: "1.0.3-dev.1"
+    version: "1.0.3"
   audioplayers:
     dependency: transitive
     description:
@@ -342,7 +342,7 @@ packages:
       path: "../../packages/closed_household"
       relative: true
     source: path
-    version: "1.0.2-dev.1"
+    version: "1.0.3"
   code_builder:
     dependency: transitive
     description:
@@ -365,7 +365,7 @@ packages:
       path: "../../packages/complaints"
       relative: true
     source: path
-    version: "0.0.1-dev.1"
+    version: "1.0.0"
   connectivity_plus:
     dependency: "direct main"
     description:
@@ -514,14 +514,14 @@ packages:
       path: "../../packages/digit_data_model"
       relative: true
     source: path
-    version: "1.0.5-dev.1"
+    version: "1.0.5"
   digit_dss:
     dependency: "direct main"
     description:
       path: "../../packages/digit_dss"
       relative: true
     source: path
-    version: "1.0.2"
+    version: "1.0.3"
   digit_firebase_services:
     dependency: "direct main"
     description:
@@ -535,7 +535,7 @@ packages:
       path: "../../packages/digit_location_tracker"
       relative: true
     source: path
-    version: "0.0.1-dev.2"
+    version: "1.0.0"
   digit_scanner:
     dependency: "direct main"
     description:
@@ -554,8 +554,8 @@ packages:
     dependency: "direct main"
     description:
       path: "flutter/digit-ui-components/digit_components"
-      ref: hcm_changes
-      resolved-ref: "05e86809fdbef4e443616a5c266043c353924953"
+      ref: develop
+      resolved-ref: "2cf22645849e58166fe78633d949569e1f138e97"
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+7"
@@ -1352,7 +1352,7 @@ packages:
       path: "../../packages/inventory_management"
       relative: true
     source: path
-    version: "1.0.3+5"
+    version: "1.0.4"
   io:
     dependency: transitive
     description:
@@ -1839,7 +1839,7 @@ packages:
       path: "../../packages/referral_reconciliation"
       relative: true
     source: path
-    version: "1.0.3-dev.1"
+    version: "1.0.3"
   registration_delivery:
     dependency: "direct main"
     description:
@@ -2066,7 +2066,7 @@ packages:
       path: "../../packages/survey_form"
       relative: true
     source: path
-    version: "0.0.1-dev.2"
+    version: "1.0.0"
   sync_http:
     dependency: transitive
     description:
@@ -2078,10 +2078,9 @@ packages:
   sync_service:
     dependency: "direct main"
     description:
-      name: sync_service
-      sha256: ba4720b48bf4a80c3299118000bf7851dae871480b75ab95f0e5a830cddc2e39
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/sync_service"
+      relative: true
+    source: path
     version: "0.0.1-dev.1"
   synchronized:
     dependency: transitive
@@ -2404,5 +2403,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.4.1 <4.0.0"
+  dart: ">=3.4.0 <4.0.0"
   flutter: ">=3.22.0"

@@ -439,6 +439,7 @@ class DoseAdministeredPageState extends LocalizedState<DoseAdministeredPage> {
                                           DigitTable(
                                             enableBorder: true,
                                             showPagination: false,
+                                            showSelectedState: false,
                                             columns: headerListResource,
                                             rows: tableDataRows,
                                             tableHeight:

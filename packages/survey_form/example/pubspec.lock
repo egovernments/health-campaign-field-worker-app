@@ -279,13 +279,13 @@ packages:
       path: "../../digit_data_model"
       relative: true
     source: path
-    version: "1.0.5-dev.1"
+    version: "1.0.5"
   digit_ui_components:
     dependency: "direct main"
     description:
       path: "flutter/digit-ui-components/digit_components"
-      ref: hcm_changes
-      resolved-ref: c5dd67a70d57a01979932e7ceeb4720af0828cb9
+      ref: develop
+      resolved-ref: "2cf22645849e58166fe78633d949569e1f138e97"
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+7"
@@ -1112,7 +1112,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1-dev.2"
+    version: "1.0.0"
   term_glyph:
     dependency: transitive
     description:

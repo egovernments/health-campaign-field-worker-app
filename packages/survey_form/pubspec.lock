@@ -342,7 +342,7 @@ packages:
       path: "../digit_data_model"
       relative: true
     source: path
-    version: "1.0.5-dev.1"
+    version: "1.0.5"
   digit_firebase_services:
     dependency: "direct overridden"
     description:
@@ -354,8 +354,8 @@ packages:
     dependency: "direct main"
     description:
       path: "flutter/digit-ui-components/digit_components"
-      ref: hcm_changes
-      resolved-ref: "05e86809fdbef4e443616a5c266043c353924953"
+      ref: develop
+      resolved-ref: "2cf22645849e58166fe78633d949569e1f138e97"
       url: "https://github.com/egovernments/DIGIT-UI-LIBRARIES"
     source: git
     version: "0.0.1+7"

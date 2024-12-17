@@ -1,6 +1,6 @@
 name: closed_household
 description: This package enables health facility workers to mark household closed and update.
-version: 1.0.2-dev.1
+version: 1.0.3
 homepage: https://github.com/egovernments/health-campaign-field-worker-app/tree/develop/packages/closed_household
 repository: https://github.com/egovernments/health-campaign-field-worker-app
 
@@ -14,7 +14,7 @@ dependencies:
   digit_ui_components:
     git:
       url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
-      ref: hcm_changes
+      ref: develop
       path: ./flutter/digit-ui-components/digit_components
   flutter_bloc: ^8.1.1
   freezed_annotation: ^2.1.0

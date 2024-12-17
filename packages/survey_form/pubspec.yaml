@@ -1,6 +1,6 @@
 name: survey_form
 description: "This package enables supervisors to monitor certain activities and record observations according to defined set of questions."
-version: 0.0.1-dev.2
+version: 1.0.0
 homepage: "https://github.com/egovernments/health-campaign-field-worker-app/tree/checklist-package/packages/survey_form"
 repository: "https://github.com/egovernments/health-campaign-field-worker-app"
 
@@ -14,7 +14,7 @@ dependencies:
   digit_ui_components:
     git:
       url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
-      ref: hcm_changes
+      ref: develop
       path: ./flutter/digit-ui-components/digit_components
   flutter_bloc: ^8.1.5
   freezed_annotation: ^2.4.1
