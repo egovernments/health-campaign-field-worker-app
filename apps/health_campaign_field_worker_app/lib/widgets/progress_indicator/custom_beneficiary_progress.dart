@@ -65,7 +65,8 @@ class CustomBeneficiaryProgressBarState
       59,
       999,
     );
-    // Info : handles only registrar and distributor as , progress bar is enabled only for them currently
+    // Info : handles only registrar and distributor as , progress bar is enabled only for them currently,
+    // if both roles , then whatever is first will show up
     if (context.isRegistrar) {
       projectBeneficiaryRepository.listenToChanges(
         query: ProjectBeneficiarySearchModel(
@@ -108,7 +109,7 @@ class CustomBeneficiaryProgressBarState
           }
         },
       );
-    } else {
+    } else if (context.isCommunityDistributor) {
       repository.listenToChanges(
         query: TaskSearchModel(
           projectId: projectId,
