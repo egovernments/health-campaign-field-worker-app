@@ -32,6 +32,10 @@
     {
       "name": "Attendance Staff",
       "value": "ATTENDANCE_STAFF"
+    },
+    {
+      "name": "Attendance Staff",
+      "value": "ATTENDANCE_STAFF"
     }
   ],
   "isEnum": true
