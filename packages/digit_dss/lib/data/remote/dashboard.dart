@@ -136,6 +136,7 @@ class DashboardRemoteRepository {
   ) async {
     final dashboardConfig = DashboardConfigSchema()
       ..enableDashboard = dashboardConfigWrapper.enableDashboard
+      ..projectTypeCode = dashboardConfigWrapper.projectTypeCode
       ..charts = dashboardConfigWrapper.charts?.map((chart) {
         final dssChart = DashboardChartConfigSchema()
           ..name = chart.name
