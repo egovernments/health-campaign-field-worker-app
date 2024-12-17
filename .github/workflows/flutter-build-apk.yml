@@ -2,9 +2,9 @@ name: Build APK Workflow
 
 on:
   push:
-    branches: ['develop', 'master']  # This specifies that the workflow will run on any push to the 'main' branch
+    branches: [ 'develop', 'master' ]  # This specifies that the workflow will run on any push to the 'develop' or 'master' branches
   pull_request:
-    branches: ['develop', 'master']  # Optionally, run on pull requests targeting the 'main' branch
+    branches: [ 'develop', 'master' ]  # Optionally, run on pull requests targeting the 'develop' or 'master' branches
 
 jobs:
   build-apk:
@@ -14,10 +14,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'  # Specify the Java distribution
 
       - name: Flutter action

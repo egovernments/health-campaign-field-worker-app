@@ -281,80 +281,78 @@ class ViewBeneficiaryCardState extends LocalizedState<ViewBeneficiaryCard> {
         t.projectBeneficiaryClientReferenceId ==
         projectBeneficiary?.clientReferenceId);
 
-    return DigitCard(
-        margin: const EdgeInsets.all(spacer2),
+    return DigitCard(margin: const EdgeInsets.all(spacer2), children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width / 1.8,
-                child: BeneficiaryCard(
-                  description: [
-                    householdMember.household?.address?.doorNo,
-                    householdMember.household?.address?.addressLine1,
-                    householdMember.household?.address?.addressLine2,
-                    householdMember.household?.address?.landmark,
-                    householdMember.household?.address?.city,
-                    householdMember.household?.address?.pincode,
-                  ].whereNotNull().take(2).join(' '),
-                  subtitle: widget.distance != null
-                      ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
-                      : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
-                  status: getStatus(
-                      tasks ?? [],
-                      householdMember.projectBeneficiaries ?? [],
-                      RegistrationDeliverySingleton().beneficiaryType ==
-                              BeneficiaryType.individual
-                          ? isNotEligible
-                          : false,
-                      isBeneficiaryRefused),
-                  title: [
-                    householdMember.headOfHousehold?.name?.givenName ??
-                        localizations.translate(i18.common.coreCommonNA),
-                    householdMember.headOfHousehold?.name?.familyName,
-                  ].whereNotNull().join(''),
-                ),
-              ),
-              Flexible(
-                child: DigitButton(
-                  label:
-                      localizations.translate(i18.searchBeneficiary.iconLabel),
-                  onPressed: widget.onOpenPressed,
-                  type: DigitButtonType.secondary,
-                  size: DigitButtonSize.medium,
-                ),
-              ),
-            ],
-          ),
-          if(isCardExpanded)
-          Offstage(
-            offstage: !isCardExpanded,
-            child: DigitTable(
-              enableBorder: true,
-              showPagination: false,
-              columns: filteredHeaderList,
-              rows: tableData ?? [],
+          SizedBox(
+            width: MediaQuery.of(context).size.width / 1.8,
+            child: BeneficiaryCard(
+              description: [
+                householdMember.household?.address?.doorNo,
+                householdMember.household?.address?.addressLine1,
+                householdMember.household?.address?.addressLine2,
+                householdMember.household?.address?.landmark,
+                householdMember.household?.address?.city,
+                householdMember.household?.address?.pincode,
+              ].whereNotNull().take(2).join(' '),
+              subtitle: widget.distance != null
+                  ? '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}\n${((widget.distance!) * 1000).round() > 999 ? '(${((widget.distance!).round())} km)' : '(${((widget.distance!) * 1000).round()} mts) ${localizations.translate(i18.beneficiaryDetails.fromCurrentLocation)}'}'
+                  : '${householdMember.members?.length ?? 1} ${householdMember.members?.length == 1 ? localizations.translate(i18.beneficiaryDetails.householdMemberSingular) : localizations.translate(i18.beneficiaryDetails.householdMemberPlural)}',
+              status: getStatus(
+                  tasks ?? [],
+                  householdMember.projectBeneficiaries ?? [],
+                  RegistrationDeliverySingleton().beneficiaryType ==
+                          BeneficiaryType.individual
+                      ? isNotEligible
+                      : false,
+                  isBeneficiaryRefused),
+              title: [
+                householdMember.headOfHousehold?.name?.givenName ??
+                    localizations.translate(i18.common.coreCommonNA),
+                householdMember.headOfHousehold?.name?.familyName,
+              ].whereNotNull().join(''),
             ),
           ),
-          Container(
-            height: 24,
-            margin: const EdgeInsets.all(4),
-            child: Center(
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: Icon(
-                  isCardExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  size: 24,
-                ),
-                onPressed: () => isCardExpanded = !isCardExpanded,
-              ),
+          Flexible(
+            child: DigitButton(
+              label: localizations.translate(i18.searchBeneficiary.iconLabel),
+              onPressed: widget.onOpenPressed,
+              type: DigitButtonType.secondary,
+              size: DigitButtonSize.medium,
             ),
           ),
-        ]);
+        ],
+      ),
+      if (isCardExpanded)
+        Offstage(
+          offstage: !isCardExpanded,
+          child: DigitTable(
+            enableBorder: true,
+            showPagination: false,
+            showSelectedState: false,
+            columns: filteredHeaderList,
+            rows: tableData ?? [],
+          ),
+        ),
+      Container(
+        height: 24,
+        margin: const EdgeInsets.all(4),
+        child: Center(
+          child: IconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(
+              isCardExpanded
+                  ? Icons.keyboard_arrow_up
+                  : Icons.keyboard_arrow_down,
+              size: 24,
+            ),
+            onPressed: () => isCardExpanded = !isCardExpanded,
+          ),
+        ),
+      ),
+    ]);
   }
 
   String getTableCellText(
