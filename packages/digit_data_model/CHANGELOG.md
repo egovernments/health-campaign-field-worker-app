@@ -1,18 +1,23 @@
 ## 1.0.4-dev.9-uniqueId
+
 * Stock and facility related changes
-  * Added dateOfEntry in stock table
-  * Added name in facility table
+    * Added dateOfEntry in stock model
+    * Added name in facility model
 
 ## 1.0.4-dev.8-uniqueId
+
 * Changed additionalDetails of ServiceModel to Map<String, dynamic>
 
 ## 1.0.4-dev.7-uniqueId
+
 * Modified identifierType of unique beneficiary id
 
 ## 1.0.4-dev.6-uniqueId
+
 * Added additionalDetails field to service definition attributes model
 
 ## 1.0.4-dev.5-uniqueId
+
 * Added identifierType enum entity
 * Added identifierType and id as primary key to identifier table
 
@@ -41,11 +46,11 @@
 ## 1.0.3-dev.4
 
 * Updated individual local search results with user uuid mapping
-  
+
 ## 1.0.3-dev.3
 
-* Created localization table 
-  - Creation of the localization table.
+* Created localization table
+    - Creation of the localization table.
 
 ## 1.0.3-dev.2
 
@@ -79,7 +84,7 @@
 
 ## 0.0.0-dev.2
 
-* Boundary v2 Integrated, to use Boundary v1  0.0.0-dev.1 version can be used
+* Boundary v2 Integrated, to use Boundary v1 0.0.0-dev.1 version can be used
     - Integration of Boundary v2 with the option to use Boundary v1 version 0.0.0-dev.1.
 
 ## 0.0.0-dev.1
