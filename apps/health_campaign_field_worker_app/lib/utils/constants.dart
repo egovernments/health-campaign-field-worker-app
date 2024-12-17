@@ -1,4 +1,5 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/closed_household.dart';
 import 'package:digit_components/utils/app_logger.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
@@ -255,6 +256,7 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

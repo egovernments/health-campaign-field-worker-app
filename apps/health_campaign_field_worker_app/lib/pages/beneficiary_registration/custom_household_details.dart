@@ -339,13 +339,12 @@ class CustomHouseHoldDetailsPageState
                               ),
                             ),
                             //[TODO: Use pregnant women form value based on project config
-
+                            // Info removed maximum value 30 , as mentioned in ticket
                             householdDetailsShowcaseData
                                 .numberOfMembersLivingInHousehold
                                 .buildWith(
                               child: DigitIntegerFormPicker(
                                 minimum: 1,
-                                maximum: 30,
                                 form: form,
                                 formControlName: _memberCountKey,
                                 label: localizations.translate(
