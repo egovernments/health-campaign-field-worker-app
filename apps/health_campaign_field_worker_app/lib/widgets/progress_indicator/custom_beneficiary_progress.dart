@@ -66,50 +66,7 @@ class CustomBeneficiaryProgressBarState
       999,
     );
     // Info : handles only registrar and distributor as , progress bar is enabled only for them currently,
-    // if both roles , then whatever is first will show up
-    if (context.isRegistrar) {
-      projectBeneficiaryRepository.listenToChanges(
-        query: ProjectBeneficiarySearchModel(
-          beneficiaryRegistrationDateLte: lte,
-          beneficiaryRegistrationDateGte: gte,
-          projectId: [projectId!],
-        ),
-        listener: (data) async {
-          final now = DateTime.now();
-          final gte = DateTime(
-            now.year,
-            now.month,
-            now.day,
-          );
-
-          final lte = DateTime(
-            now.year,
-            now.month,
-            now.day,
-            23,
-            59,
-            59,
-            999,
-          );
-
-          ProjectBeneficiarySearchModel projectBeneficiarySearchQuery =
-              ProjectBeneficiarySearchModel(
-            beneficiaryRegistrationDateLte: lte,
-            beneficiaryRegistrationDateGte: gte,
-            projectId: [projectId],
-          );
-          List<ProjectBeneficiaryModel> results =
-              await projectBeneficiaryRepository.search(
-                  projectBeneficiarySearchQuery, loggedInUserUuid);
-
-          if (mounted) {
-            setState(() {
-              current = results.length;
-            });
-          }
-        },
-      );
-    } else if (context.isCommunityDistributor) {
+    if (context.isCommunityDistributor) {
       repository.listenToChanges(
         query: TaskSearchModel(
           projectId: projectId,
@@ -153,6 +110,48 @@ class CustomBeneficiaryProgressBarState
           }
         },
       );
+    } else {
+      projectBeneficiaryRepository.listenToChanges(
+        query: ProjectBeneficiarySearchModel(
+          beneficiaryRegistrationDateLte: lte,
+          beneficiaryRegistrationDateGte: gte,
+          projectId: [projectId!],
+        ),
+        listener: (data) async {
+          final now = DateTime.now();
+          final gte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+          );
+
+          final lte = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            23,
+            59,
+            59,
+            999,
+          );
+
+          ProjectBeneficiarySearchModel projectBeneficiarySearchQuery =
+              ProjectBeneficiarySearchModel(
+            beneficiaryRegistrationDateLte: lte,
+            beneficiaryRegistrationDateGte: gte,
+            projectId: [projectId],
+          );
+          List<ProjectBeneficiaryModel> results =
+              await projectBeneficiaryRepository.search(
+                  projectBeneficiarySearchQuery, loggedInUserUuid);
+
+          if (mounted) {
+            setState(() {
+              current = results.length;
+            });
+          }
+        },
+      );
     }
 
     super.didChangeDependencies();
@@ -161,7 +160,7 @@ class CustomBeneficiaryProgressBarState
   @override
   Widget build(BuildContext context) {
     // Todo : verify this once as discussion going on
-    final target = context.isRegistrar ? 50.0 : 325.0;
+    final target = context.isCommunityDistributor ? 325.0 : 50.0;
 
     return DigitCard(
       child: ProgressIndicatorContainer(
