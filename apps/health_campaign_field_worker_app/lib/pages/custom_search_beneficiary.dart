@@ -19,6 +19,7 @@ import 'package:registration_delivery/widgets/localized.dart';
 import 'package:registration_delivery/widgets/status_filter/status_filter.dart';
 
 import '../utils/extensions/extensions.dart';
+import '../widgets/beneficiary/custom_view_beneficiary_card.dart';
 import 'custom_qr_scanner.dart';
 
 @RoutePage()
@@ -299,7 +300,7 @@ class _CustomSearchBeneficiaryPageStateState
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: kPadding),
-                            child: ViewBeneficiaryCard(
+                            child: CustomViewBeneficiaryCard(
                               distance: isProximityEnabled ? distance : null,
                               householdMember: i,
                               onOpenPressed: () async {
