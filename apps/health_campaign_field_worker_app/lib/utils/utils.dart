@@ -100,7 +100,7 @@ performBackgroundService({
 
   if (stopService) {
     if (isRunning) {
-      if (!isBackground && context != null) {
+      if (!isBackground && context != null && context.mounted) {
         if (context.mounted) {
           DigitToast.show(
             context,

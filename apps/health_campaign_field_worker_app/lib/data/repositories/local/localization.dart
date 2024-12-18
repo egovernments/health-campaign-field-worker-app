@@ -104,9 +104,10 @@ class LocalizationLocalRepository {
 
   FutureOr create(
       List<LocalizationCompanion> result, LocalSqlDataStore sql) async {
+    if (result.isEmpty) return;
     return retryLocalCallOperation(() async {
       return sql.batch((batch) {
-        batch.insertAll(sql.localization, result);
+        batch.insertAllOnConflictUpdate(sql.localization, result);
       });
     });
   }
