@@ -1,3 +1,7 @@
+## 1.0.5+2
+
+* Action label and status change with projectType
+
 ## 1.0.5+1
 
 * householdOverViewActionText localization fix
