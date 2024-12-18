@@ -1856,10 +1856,10 @@ packages:
     dependency: "direct main"
     description:
       name: registration_delivery
-      sha256: "8f6843cb5e1acd5e44026b663a28e80086e791107b9131487c7e3a38e43b1229"
+      sha256: d40054149a0dc54872c11547a25addbd09a139d3f76b6bc50e58b1741a7d8002
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.5"
+    version: "1.0.5+1"
   remove_emoji_input_formatter:
     dependency: transitive
     description:
