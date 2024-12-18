@@ -23,7 +23,7 @@ jobs:
       - name: Flutter action
         uses: subosito/flutter-action@v2.8.0
         with:
-          flutter-version: "3.22.2"
+          flutter-version: "3.16.5"
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
