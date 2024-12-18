@@ -5,6 +5,8 @@ import 'package:attendance_management/attendance_management.dart'
 
 import 'package:inventory_management/inventory_management.init.dart'
     as inventory_mappers;
+import 'package:registration_delivery/models/entities/status.dart';
+import 'package:registration_delivery/models/entities/task.dart';
 
 import 'package:registration_delivery/registration_delivery.init.dart'
     as registration_delivery_mappers;
@@ -50,6 +52,31 @@ class CustomValidator {
             control.value.toString().trim().isEmpty
         ? null
         : {'required': true};
+  }
+
+  static Map<String, dynamic>? requiredMin3(
+    AbstractControl<dynamic> control,
+  ) {
+    return control.value == null ||
+            control.value.toString().trim().length >= 3 ||
+            control.value.toString().trim().isEmpty
+        ? null
+        : {'min3': true};
+  }
+
+  static Map<String, dynamic>? validIndividualName(
+    AbstractControl<dynamic> control,
+  ) {
+    const pattern = r'^[a-zA-Z ]*$';
+
+    if (control.value == null || control.value.toString().trim().isEmpty) {
+      return null;
+    } else if (RegExp(pattern).hasMatch(control.value.toString())) {
+      return null;
+    } else if (control.value.toString().length < 3) {
+      return {'validName': true};
+    }
+    return {'validName': true};
   }
 
   static Map<String, dynamic>? validMobileNumber(
@@ -392,6 +419,16 @@ int getSyncCount(List<OpLog> oplogs) {
   }).length;
 
   return count;
+}
+
+bool checkIfClosedHousehold(
+  List<TaskModel>? tasks,
+) {
+  final isClosedHousehold = (tasks != null &&
+      (tasks ?? []).isNotEmpty &&
+      tasks.last.status == Status.closeHousehold.toValue());
+
+  return isClosedHousehold;
 }
 
 class LocalizationParams {

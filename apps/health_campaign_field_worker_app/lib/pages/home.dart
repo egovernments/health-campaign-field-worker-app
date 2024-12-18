@@ -1,5 +1,7 @@
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:closed_household/utils/utils.dart';
 
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
@@ -35,6 +37,7 @@ import '../utils/utils.dart';
 import '../widgets/header/back_navigation_help_header.dart';
 import '../widgets/home/home_item_card.dart';
 import '../widgets/localized.dart';
+import '../widgets/progress_indicator/custom_beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
 
@@ -96,7 +99,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     //[TODO: Add below roles to enum]
     if (!(roles.contains(RolesType.distributor.toValue()) ||
-        roles.contains(RolesType.registrar.toValue()))) {
+        roles.contains(RolesType.registrar.toValue()) ||
+        roles.contains(RolesType.communityDistributor.toValue()))) {
       skipProgressBar = true;
     }
 
@@ -152,13 +156,22 @@ class _HomePageState extends LocalizedState<HomePage> {
             ],
             header: Column(
               children: [
-                BackNavigationHelpHeaderWidget(
+                const BackNavigationHelpHeaderWidget(
                   showBackNavigation: false,
                   showHelp: false,
-                  showcaseButton: ShowcaseButton(
-                    showcaseFor: showcaseKeys.toSet().toList(),
-                  ),
                 ),
+                skipProgressBar
+                    ? const SizedBox.shrink()
+                    : homeShowcaseData.distributorProgressBar.buildWith(
+                        child: CustomBeneficiaryProgressBar(
+                          label: localizations.translate(
+                            i18.home.progressIndicatorTitle,
+                          ),
+                          prefixLabel: localizations.translate(
+                            i18.home.progressIndicatorPrefixLabel,
+                          ),
+                        ),
+                      ),
               ],
             ),
             footer: PoweredByDigit(
@@ -362,6 +375,19 @@ class _HomePageState extends LocalizedState<HomePage> {
         ),
       ),
 
+      i18.home.closedHouseHoldLabel: homeShowcaseData.closedHouseHold.buildWith(
+        child: HomeItemCard(
+          icon: Icons.home,
+          enableCustomIcon: true,
+          customIcon:
+              'assets/icons/svg/mychecklist.svg', //add in constants foe closed households
+          label: i18.home.closedHouseHoldLabel,
+          onPressed: () async {
+            await context.router.push(const ClosedHouseholdWrapperRoute());
+          },
+        ),
+      ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -423,6 +449,8 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
       i18.home.db: homeShowcaseData.db.showcaseKey,
+      i18.home.closedHouseHoldLabel:
+          homeShowcaseData.closedHouseHold.showcaseKey
     };
 
     final homeItemsLabel = <String>[
@@ -437,6 +465,7 @@ class _HomePageState extends LocalizedState<HomePage> {
 
       i18.home.syncDataLabel,
       i18.home.db,
+      i18.home.closedHouseHoldLabel
     ];
 
     final List<String> filteredLabels = homeItemsLabel
@@ -445,11 +474,12 @@ class _HomePageState extends LocalizedState<HomePage> {
                 .map((e) => e.displayName)
                 .toList()
                 .contains(element) ||
-            element == i18.home.db)
+            element == i18.home.db ||
+            element == i18.home.closedHouseHoldLabel)
         .toList();
 
     final showcaseKeys = filteredLabels
-        .where((f) => f != i18.home.db)
+        .where((f) => f != i18.home.db || f != i18.home.closedHouseHoldLabel)
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
@@ -594,6 +624,11 @@ void setPackagesSingleton(BuildContext context) {
               appConfiguration.symptomsTypes!.map((e) => e.code).toList(),
           referralReasons:
               appConfiguration.referralReasons!.map((e) => e.code).toList(),
+        );
+        ClosedHouseholdSingleton().setInitialData(
+          loggedInUserUuid: context.loggedInUserUuid,
+          projectId: context.projectId,
+          beneficiaryType: context.beneficiaryType,
         );
       });
 }

@@ -1,4 +1,6 @@
 import 'package:attendance_management/attendance_management.dart';
+import 'package:closed_household/closed_household.dart';
+import 'package:digit_components/utils/app_logger.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:collection/collection.dart';
@@ -16,8 +18,11 @@ import '../data/local_store/no_sql/schema/project_types.dart';
 import '../data/local_store/no_sql/schema/row_versions.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
 import '../data/repositories/remote/downsync.dart';
+import '../firebase_options.dart';
 import 'environment_config.dart';
 import 'utils.dart';
+import 'package:digit_firebase_services/digit_firebase_services.dart'
+    as firebase_services;
 
 class Constants {
   late Future<Isar> _isar;
@@ -71,6 +76,10 @@ class Constants {
   static const String defaultDateTimeFormat = 'dd/MM/yyyy hh:mm a';
   static const String checklistViewDateFormat = 'dd/MM/yyyy hh:mm a';
   static const String healthFacilityChecklistPrefix = 'HF_RF';
+  static const String curlyBraces = '{}';
+  static const String smallBraces = '()';
+  static const String intTwo = '2';
+  static const String comma = ',';
 
   static List<LocalRepository> getLocalRepositories(
     LocalSqlDataStore sql,
@@ -128,8 +137,16 @@ class Constants {
     final appConfigs = await isar.appConfigurations.where().findAll();
     final config = appConfigs.firstOrNull;
 
-    final enableCrashlytics =
-        config?.firebaseConfig?.enableCrashlytics ?? false;
+    final enableCrashlytics = config?.firebaseConfig?.enableCrashlytics ?? true;
+
+    if (enableCrashlytics) {
+      firebase_services.initialize(
+        options: DefaultFirebaseOptions.currentPlatform,
+        onErrorMessage: (value) {
+          AppLogger.instance.error(title: 'CRASHLYTICS', message: value);
+        },
+      );
+    }
 
     _version = version;
   }
@@ -191,13 +208,27 @@ class Constants {
     return remoteRepositories;
   }
 
+  // static String getEndPoint({
+  //   required AppInitialized state,
+  //   required String service,
+  //   required String action,
+  //   required String entityName,
+  // }) {
+  //   final actionResult = state.serviceRegistryList
+  //       .firstWhereOrNull((element) => element.service == service)
+  //       ?.actions
+  //       .firstWhereOrNull((element) => element.entityName == entityName)
+  //       ?.path;
+
+  //   return actionResult ?? '';
+  // }
   static String getEndPoint({
-    required AppInitialized state,
+    required List<ServiceRegistry> serviceRegistry,
     required String service,
     required String action,
     required String entityName,
   }) {
-    final actionResult = state.serviceRegistryList
+    final actionResult = serviceRegistry
         .firstWhereOrNull((element) => element.service == service)
         ?.actions
         .firstWhereOrNull((element) => element.entityName == entityName)
@@ -225,6 +256,7 @@ class Constants {
     InventorySingleton().setTenantId(tenantId: envConfig.variables.tenantId);
 
     AttendanceSingleton().setTenantId(envConfig.variables.tenantId);
+    ClosedHouseholdSingleton().setTenantId(envConfig.variables.tenantId);
   }
 }
 

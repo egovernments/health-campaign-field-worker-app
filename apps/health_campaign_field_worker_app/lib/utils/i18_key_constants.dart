@@ -13,6 +13,10 @@ const syncDialog = SyncDialog();
 const homeShowcase = HomeShowcase();
 const privacyPolicy = PrivacyPolicy();
 
+const memberCard = MemberCard();
+const householdOverView = HouseholdOverView();
+const deliverIntervention = DeliverIntervention();
+
 const householdLocationShowcase = HouseholdLocationShowcase();
 const householdLocation = HouseholdLocation();
 const searchBeneficiary = SearchBeneficiary();
@@ -33,6 +37,64 @@ const complaintTypeShowcase = ComplaintTypeShowcase();
 const complaintsDetailsShowcase = ComplaintsDetailsShowcase();
 const complaintsDetailsViewShowcase = ComplaintsDetailsViewShowcase();
 const complaintsInboxShowcase = ComplaintsInboxShowcase();
+
+class MemberCard {
+  const MemberCard();
+
+  String get deliverDetailsUpdateLabel => "DELIVER_DETAILS_UPDATE_LABEL";
+}
+
+class HouseholdOverView {
+  const HouseholdOverView();
+
+  String get householdOverViewActionText => "HOUSEHOLD_OVER_VIEW_ACTION_TEXT";
+
+  String get householdOverViewEditLabel => "HOUSEHOLD_OVERVIEW_EDIT_LABEL";
+
+  String get householdOverViewEditIconText =>
+      "HOUSEHOLD_OVERVIEW_EDIT_ICON_BUTTON";
+
+  String get householdOverViewLabel => "HOUSEHOLD_OVER_VIEW_LABEL";
+
+  String get householdOverViewHouseholdHeadNameLabel =>
+      "HOUSEHOLD_OVER_VIEW_HOUSEHOLD_HEAD_NAME_LABEL";
+
+  String get householdOverViewActionCardTitle =>
+      "HOUSEHOLD_OVERVIEW_PRIMARY_ACTION_CARD_TITLE";
+
+  String get householdOverViewPrimaryActionLabel =>
+      "HOUSEHOLD_OVERVIEW_PRIMARY_ACTION_LABEL";
+
+  String get householdOverViewSecondaryActionLabel =>
+      "HOUSEHOLD_OVERVIEW_SECONDARY_ACTION_LABEL";
+
+  String get householdOverViewAddActionText =>
+      "HOUSEHOLD_OVERVIEW_ADD_ACTION_TEXT";
+
+  String get householdOverViewNotRegisteredIconLabel =>
+      "HOUSEHOLD_OVER_VIEW_NOT_REGISTERED_ICON_LABEL";
+}
+
+class DeliverIntervention {
+  const DeliverIntervention();
+
+  String get memberCountText => "MEMBER_COUNT_TEXT";
+  String get bednetCountText => "BEDNET_COUNT_TEXT";
+
+  String get doseGivenCareGiver => 'DELIVER_INTERVENTION_DOSE_GIVEN_CARE_GIVER';
+  String get infoWrittenInChildCard =>
+      'DELIVER_INTERVENTION_DOSE_INFO_IN_CHILD_CARD_ADDED';
+  String get healthTalkGivenOnSPAQ =>
+      'DELIVER_INTERVENTION_DOSE_HEALTH_TALK_GIVEN_SPAQ';
+  String get wasTheDoseAdministered => 'WAS_THE_DOSE_ADMINISTERED_LABEL';
+  String get bednetScanLessThanCount => 'NET_SCANNED_LESS_THAN_COUNT_LABEL';
+  String get bednetScanMoreThanCount => 'NET_SCANNED_MORE_THAN_COUNT_LABEL';
+  String get informationBulletOne => 'INFORMATION_BULLET_ONE';
+  String get informationBulletTwo => 'INFORMATION_BULLET_TWO';
+  String get informationBulletThree => 'INFORMATION_BULLET_THREE';
+  String get informationBulletFour => 'INFORMATION_BULLET_FOUR';
+  String get scanValidResource => 'SCAN_VALID_RESOURCE';
+}
 
 class Common {
   const Common();
@@ -103,6 +165,7 @@ class Common {
   String get coreCommonRequiredItems => 'CORE_COMMON_REQUIRED_ITEMS';
 
   String get min2CharsRequired => 'MIN_2_CHARS_REQUIRED';
+  String get min3CharsRequired => 'MIN_REQUIRED_3';
 
   String get maxCharsRequired => 'MAX_CHARS_ALLOWED';
 
@@ -577,6 +640,7 @@ class ForgotPassword {
 class Home {
   const Home();
 
+  String get closedHouseHoldLabel => 'HOME_CLOSE_HOUSEHOLD_LABEL';
   String get beneficiaryLabel => 'HOME_BENEFICIARY_LABEL';
 
   String get manageStockLabel => 'HOME_MANAGE_STOCK_LABEL';
@@ -966,6 +1030,7 @@ class IndividualDetails {
   String get yearsAndMonthsErrorText => 'ERR_YEARS_AND_MONTHS';
 
   String get linkVoucherToIndividual => 'LINK_VOUCHER_TO_INDIVIDUAL';
+  String get individualNameValidation => "VALID_INDIVIDUAL_NAME";
 }
 
 class BeneficiaryDetails {

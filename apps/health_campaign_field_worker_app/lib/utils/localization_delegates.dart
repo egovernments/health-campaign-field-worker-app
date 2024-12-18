@@ -11,7 +11,8 @@ import 'package:registration_delivery/blocs/app_localization.dart'
 import 'package:digit_data_model/data/local_store/sql_store/sql_store.dart';
 import 'package:digit_components/blocs/localization.dart'
     as component_localization;
-
+import 'package:closed_household/blocs/app_localization.dart'
+    as closed_household_localization;
 import '../blocs/localization/app_localization.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 
@@ -53,5 +54,9 @@ getAppLocalizationDelegates({
       LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
       appConfig.languages!,
     ),
+    closed_household_localization.ClosedHouseholdLocalization.getDelegate(
+      LocalizationLocalRepository().returnLocalizationFromSQL(sql) as Future,
+      appConfig.languages!,
+    )
   ];
 }

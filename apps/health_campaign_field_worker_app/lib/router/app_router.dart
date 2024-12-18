@@ -1,5 +1,7 @@
 import 'package:attendance_management/router/attendance_router.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
+import 'package:closed_household/router/closed_household_router.dart';
+import 'package:closed_household/router/closed_household_router.gm.dart';
 import 'package:inventory_management/router/inventory_router.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
 import 'package:registration_delivery/router/registration_delivery_router.dart';
@@ -11,6 +13,7 @@ import 'package:flutter/material.dart';
 import '../blocs/localization/app_localization.dart';
 import '../pages/acknowledgement.dart';
 import '../pages/authenticated.dart';
+import '../pages/beneficiary_registration/custom_beneficiary_acknowledgement.dart';
 import '../pages/boundary_selection.dart';
 import '../pages/home.dart';
 import '../pages/language_selection.dart';
@@ -21,6 +24,18 @@ import '../pages/project_selection.dart';
 import '../pages/qr_details_page.dart';
 import '../pages/reports/beneficiary/beneficaries_report.dart';
 import '../pages/unauthenticated.dart';
+import '../pages/beneficiary_registration/custom_household_location.dart';
+import 'package:registration_delivery/blocs/app_localization.dart';
+import 'package:registration_delivery/registration_delivery.dart';
+import '../pages/beneficiary_registration/custom_household_details.dart';
+import '../pages/custom_search_beneficiary.dart';
+import '../pages/beneficiary_registration/custom_individual_details.dart';
+import '../pages/beneficiary_registration/custom_summary_page.dart';
+import '../pages/beneficiary/custom_household_overview.dart';
+import '../pages/closed/custom_closed_household_summary.dart';
+import '../pages/beneficiary/custom_deliver_intervention.dart';
+import '../pages/beneficiary/dose_administered_verification.dart';
+import '../pages/closed/custom_closed_household_details.dart';
 import '../pages/inventory/custom_stock_details.dart';
 import '../pages/inventory/custom_warehouse_details.dart';
 import 'package:inventory_management/blocs/app_localization.dart';
@@ -35,6 +50,7 @@ part 'app_router.gr.dart';
     RegistrationDeliveryRoute,
     InventoryRoute,
     AttendanceRoute,
+    ClosedHouseholdPackageRoute
   ],
 )
 class AppRouter extends _$AppRouter {
@@ -68,6 +84,34 @@ class AppRouter extends _$AppRouter {
         ),
 
         // INFO : Need to add Router of package Here
+        // Closed-Household Route
+        AutoRoute(
+            page: ClosedHouseholdWrapperRoute.page,
+            path: 'closed-household-wrapper',
+            children: [
+              AutoRoute(
+                page: ClosedHouseholdDetailsRoute.page,
+                path: 'closed-household-details',
+              ),
+              AutoRoute(
+                page: CustomClosedHouseholdDetailsRoute.page,
+                path: 'custom-closed-household-details',
+                initial: true,
+              ),
+              AutoRoute(
+                  page: ClosedHouseholdSummaryRoute.page,
+                  path: 'closed-household-summary'),
+              AutoRoute(
+                  page: CustomClosedHouseholdSummaryRoute.page,
+                  path: 'custom-closed-household-summary'),
+              RedirectRoute(
+                  path: 'closed-household-summary',
+                  redirectTo: 'custom-closed-household-summary'),
+              AutoRoute(
+                  page: ClosedHouseholdAcknowledgementRoute.page,
+                  path: 'closed-household-acknowledgement'),
+            ]),
+
         // Attendance Route
         AutoRoute(
           page: ManageAttendanceRoute.page,
@@ -144,10 +188,18 @@ class AppRouter extends _$AppRouter {
             path: 'registration-delivery-wrapper',
             children: [
               AutoRoute(
-                  initial: true,
-                  page: SearchBeneficiaryRoute.page,
-                  path: 'search-beneficiary'),
-
+                page: SearchBeneficiaryRoute.page,
+                path: 'search-beneficiary',
+              ),
+              AutoRoute(
+                initial: true,
+                page: CustomSearchBeneficiaryRoute.page,
+                path: 'custom-search-beneficiary',
+              ),
+              RedirectRoute(
+                path: 'search-beneficiary',
+                redirectTo: 'custom-search-beneficiary',
+              ),
               AutoRoute(
                 page: FacilitySelectionRoute.page,
                 path: 'select-facilities',
@@ -159,20 +211,66 @@ class AppRouter extends _$AppRouter {
                 path: 'beneficiary-registration',
                 children: [
                   AutoRoute(
-                      page: IndividualDetailsRoute.page,
-                      path: 'individual-details'),
+                    page: IndividualDetailsRoute.page,
+                    path: 'individual-details',
+                  ),
                   AutoRoute(
-                      page: HouseHoldDetailsRoute.page,
-                      path: 'household-details'),
+                    page: CustomIndividualDetailsRoute.page,
+                    path: 'custom-individual-details',
+                  ),
+                  RedirectRoute(
+                    path: 'individual-details',
+                    redirectTo: 'custom-individual-details',
+                  ),
+                  AutoRoute(
+                    page: HouseHoldDetailsRoute.page,
+                    path: 'household-details',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseHoldDetailsRoute.page,
+                    path: 'custom-household-details',
+                  ),
+                  RedirectRoute(
+                    path: 'household-details',
+                    redirectTo: 'custom-household-details',
+                  ),
                   AutoRoute(
                     page: HouseholdLocationRoute.page,
                     path: 'household-location',
+                  ),
+                  AutoRoute(
+                    page: CustomHouseholdLocationRoute.page,
+                    path: 'custom-household-location',
                     initial: true,
+                  ),
+                  RedirectRoute(
+                    path: 'household-location',
+                    redirectTo: 'custom-household-location',
+                  ),
+                  AutoRoute(
+                    page: SummaryRoute.page,
+                    path: 'beneficiary-summary',
+                  ),
+                  AutoRoute(
+                    page: CustomSummaryRoute.page,
+                    path: 'custom-beneficiary-summary',
+                  ),
+                  RedirectRoute(
+                    path: 'beneficiary-summary',
+                    redirectTo: 'custom-beneficiary-summary',
+                  ),
+                  AutoRoute(
+                    page: DoseAdministeredVerificationRoute.page,
+                    path: 'dose-administered-verification',
                   ),
                   AutoRoute(
                     page: BeneficiaryAcknowledgementRoute.page,
                     path: 'beneficiary-acknowledgement',
                   ),
+                  AutoRoute(
+                    page: CustomBeneficiaryAcknowledgementRoute.page,
+                    path: 'custom-beneficiary-acknowledgement',
+                  )
                 ],
               ),
               AutoRoute(
@@ -182,8 +280,15 @@ class AppRouter extends _$AppRouter {
                   AutoRoute(
                     page: HouseholdOverviewRoute.page,
                     path: 'overview',
+                    // initial: true,
+                  ),
+                  AutoRoute(
+                    page: CustomHouseholdOverviewRoute.page,
+                    path: 'custom-overview',
                     initial: true,
                   ),
+                  RedirectRoute(
+                      path: 'overview', redirectTo: 'custom-overview'),
                   AutoRoute(
                     page: BeneficiaryDetailsRoute.page,
                     path: 'beneficiary-details',
@@ -192,6 +297,16 @@ class AppRouter extends _$AppRouter {
                     page: DeliverInterventionRoute.page,
                     path: 'deliver-intervention',
                   ),
+                  AutoRoute(
+                    page: CustomDeliverInterventionRoute.page,
+                    path: 'custom-deliver-intervention',
+                  ),
+                  RedirectRoute(
+                    path: 'deliver-intervention',
+                    redirectTo: 'custom-deliver-intervention',
+                  ),
+                  AutoRoute(
+                      page: DeliverySummaryRoute.page, path: 'deliver-summary'),
                   AutoRoute(
                     page: SideEffectsRoute.page,
                     path: 'side-effects',

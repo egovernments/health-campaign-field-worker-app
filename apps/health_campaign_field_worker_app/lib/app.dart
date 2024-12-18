@@ -1,3 +1,5 @@
+import 'package:attendance_management/attendance_management.dart';
+import 'package:digit_dss/digit_dss.dart';
 import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -247,6 +249,21 @@ class MainApplicationState extends State<MainApplication>
                                 RemoteRepository<IndividualModel,
                                     IndividualSearchModel>>(),
                             context: context,
+                            attendanceLogLocalRepository: ctx.read<
+                                LocalRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
+                            attendanceLogRemoteRepository: ctx.read<
+                                RemoteRepository<AttendanceLogModel,
+                                    AttendanceLogSearchModel>>(),
+                            attendanceLocalRepository: ctx.read<
+                                LocalRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
+                            attendanceRemoteRepository: ctx.read<
+                                RemoteRepository<AttendanceRegisterModel,
+                                    AttendanceRegisterSearchModel>>(),
+                            dashboardRemoteRepository:
+                                DashboardRemoteRepository(widget.client),
+
                             // Info can any package here
                           ),
                         ),

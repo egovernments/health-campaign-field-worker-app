@@ -118,6 +118,7 @@ extension ContextUtilityExtensions on BuildContext {
     // INFO: Set Boundary for packages
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     RegistrationDeliverySingleton().setBoundary(boundary: selectedBoundary);
+    ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
 
     return selectedBoundary;
   }
@@ -127,6 +128,42 @@ extension ContextUtilityExtensions on BuildContext {
       return boundary;
     } catch (_) {
       return null;
+    }
+  }
+
+  bool get isRegistrar {
+    UserRequestModel loggedInUser;
+
+    try {
+      loggedInUser = this.loggedInUser;
+    } catch (_) {
+      return false;
+    }
+
+    for (final role in loggedInUser.roles) {
+      switch (role.code) {
+        case "REGISTRAR":
+          return true;
+        default:
+          break;
+      }
+    }
+
+    return false;
+  }
+
+  bool get isCommunityDistributor {
+    try {
+      bool communityDistributor = loggedInUserRoles
+          .where(
+            (role) => role.code == RolesType.communityDistributor.toValue(),
+          )
+          .toList()
+          .isNotEmpty;
+
+      return communityDistributor;
+    } catch (_) {
+      return false;
     }
   }
 

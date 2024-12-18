@@ -28,6 +28,14 @@
     {
       "name": "Registrar",
       "value": "REGISTRAR"
+    },
+    {
+      "name": "Community Distributor",
+      "value": "COMMUNITY_DISTRIBUTOR"
+    },
+    {
+      "name": "Attendance Staff",
+      "value": "ATTENDANCE_STAFF"
     }
   ],
   "isEnum": true
