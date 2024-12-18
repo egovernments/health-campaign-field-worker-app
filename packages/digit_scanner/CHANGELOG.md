@@ -2,7 +2,7 @@
 
 * Updated to latest package versions
 * Updated flutter version to 3.22
-*
+* Migrated to digit_ui_components
 
 ## 1.0.3+1
 

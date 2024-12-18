@@ -1,4 +1,4 @@
-## 1.0.4
+## 1.0.5
 
 * Upgrade to Flutter 3.22
 * Updated latest version's of digit_data_model, survey_form, digit_scanner

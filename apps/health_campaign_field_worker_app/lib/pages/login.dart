@@ -234,7 +234,7 @@ class _LoginPageState extends LocalizedState<LoginPage> {
         ),
         _password: FormControl<String>(
           validators: [Validators.required],
-          value: '',
+          value: 'eGov@123',
         ),
         _privacyCheck: FormControl<bool>(
           value: false,

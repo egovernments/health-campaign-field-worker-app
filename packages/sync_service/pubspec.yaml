@@ -27,7 +27,7 @@ dependencies:
   flutter_background_service: ^5.0.5
   provider: ^6.1.2
   flutter_secure_storage: ^9.2.2
-  digit_data_model: ^1.0.4
+  digit_data_model: ^1.0.5
 
 dev_dependencies:
   flutter_test:
@@ -42,7 +42,7 @@ dev_dependencies:
   dart_mappable_builder:
     git:
       url: https://github.com/egovernments/health-campaign-field-worker-app/
-      ref: master
+      ref: 1.6-final-dev
       path: ./packages/dart_mappable_builder
 
 # For information on the generic Dart part of this file, see the

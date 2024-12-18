@@ -5,6 +5,7 @@ import 'package:digit_scanner/blocs/scanner.dart';
 import 'package:digit_scanner/pages/qr_scanner.dart';
 import 'package:digit_ui_components/digit_components.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/date_utils.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_dob_picker.dart';
 import 'package:digit_ui_components/widgets/atoms/selection_card.dart';
 import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
@@ -120,7 +121,11 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                           size: DigitButtonSize.large,
                           mainAxisSize: MainAxisSize.max,
                           onPressed: () async {
-                            if (form.control(_dobKey).value == null) {
+                            final age = DigitDateUtils.calculateAge(
+                              form.control(_dobKey).value as DateTime,
+                            );
+                            if ((age.years == 0 && age.months == 0) ||
+                                age.years >= 150 && age.months > 0) {
                               form.control(_dobKey).setErrors({'': true});
                             }
                             if (form.control(_idTypeKey).value == null) {
@@ -492,11 +497,20 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
                                     .translate(i18.common.corecommonRequired)
                                 : null,
                             initialDate: before150Years,
+                            initialValue: getInitialDateValue(form),
                             onChangeOfFormControl: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  form.control(_dobKey).setErrors({'': false});
-                                });
+                              if (value == null) {
+                                form.control(_dobKey).setErrors({'': true});
+                              } else {
+                                DigitDOBAgeConvertor age =
+                                    DigitDateUtils.calculateAge(value);
+                                if ((age.years == 0 && age.months == 0) ||
+                                    age.months > 11 ||
+                                    (age.years >= 150 && age.months >= 0)) {
+                                  form.control(_dobKey).setErrors({'': true});
+                                } else {
+                                  form.control(_dobKey).removeError('');
+                                }
                               }
                               // Handle changes to the control's value here
                               form.control(_dobKey).value = value;
@@ -835,5 +849,14 @@ class IndividualDetailsPageState extends LocalizedState<IndividualDetailsPage> {
     return options?.map((e) => e).firstWhereOrNull(
           (element) => element.toLowerCase() == individual?.gender?.name,
         );
+  }
+
+  getInitialDateValue(FormGroup form) {
+    var date = form.control(_dobKey).value != null
+        ? DateFormat(Constants().dateTimeExtFormat)
+            .format(form.control(_dobKey).value)
+        : null;
+
+    return date;
   }
 }

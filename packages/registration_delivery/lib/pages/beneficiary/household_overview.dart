@@ -104,6 +104,7 @@ class _HouseholdOverviewPageState
                                           label: localizations.translate(
                                             '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.memberCard.deliverDetailsUpdateLabel}',
                                           ),
+                                          capitalizeLetters: false,
                                           isDisabled: state
                                                       .householdMemberWrapper
                                                       .tasks

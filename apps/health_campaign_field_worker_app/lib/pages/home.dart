@@ -547,6 +547,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
+    if (!context.selectedProject.name.contains('IRS')) {
+      filteredLabels.remove(i18.home.dashboard);
+    }
+
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 

@@ -38,11 +38,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   digit_scanner:
     path: ../../digit_scanner
-  digit_ui_components:
-    git:
-      url: https://github.com/egovernments/DIGIT-UI-LIBRARIES
-      ref: develop
-      path: ./flutter/digit-ui-components/digit_components
+  digit_ui_components: ^0.0.2-dev.4
 
 dev_dependencies:
   flutter_test:

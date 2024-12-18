@@ -16,7 +16,6 @@ import '../../../widgets/localized.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../widgets/back_navigation_help_header.dart';
-import '../widgets/showcase/showcase_button.dart';
 
 @RoutePage()
 class ClosedHouseholdSummaryPage extends LocalizedStatefulWidget {
@@ -55,7 +54,6 @@ class ClosedHouseholdSummaryPageState
               enableFixedDigitButton: true,
               header: const BackNavigationHelpHeaderWidget(
                 showHelp: false,
-                showcaseButton: ShowcaseButton(),
               ),
               footer: DigitCard(
                   margin: const EdgeInsets.only(top: spacer2),
@@ -123,11 +121,9 @@ class ClosedHouseholdSummaryPageState
             SliverToBoxAdapter(
               child: Column(
                 children: [
-                  DigitCard(
-                      margin: const EdgeInsets.all(spacer2),
-                      children: [
+                  DigitCard(margin: const EdgeInsets.all(spacer2), children: [
                     LabelValueSummary(
-                      padding: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
                         heading: localizations.translate(
                             i18.closeHousehold.closeHouseholdSummaryLabel),
                         withDivider: false,
@@ -171,22 +167,25 @@ class ClosedHouseholdSummaryPageState
                       builder: (context, state) {
                     if (state.qrCodes.isNotEmpty) {
                       return DigitCard(
-                        margin: const EdgeInsets.all(spacer2),
+                          margin: const EdgeInsets.all(spacer2),
                           children: [
-                        LabelValueSummary(
-                          heading: localizations.translate(i18.closeHousehold
-                              .closeHouseholdVoucherSummaryLabel),
-                          withDivider: false,
-                          items: [
-                            LabelValueItem(
-                              label: localizations.translate(i18.closeHousehold
-                                  .closeHouseholdVoucherCodeLabel),
-                              value: state.qrCodes.first,
-                              labelFlex: 5,
+                            LabelValueSummary(
+                              padding: EdgeInsets.zero,
+                              heading: localizations.translate(i18
+                                  .closeHousehold
+                                  .closeHouseholdVoucherSummaryLabel),
+                              withDivider: false,
+                              items: [
+                                LabelValueItem(
+                                  label: localizations.translate(i18
+                                      .closeHousehold
+                                      .closeHouseholdVoucherCodeLabel),
+                                  value: state.qrCodes.first,
+                                  labelFlex: 5,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ]);
+                          ]);
                     } else {
                       return const SizedBox();
                     }

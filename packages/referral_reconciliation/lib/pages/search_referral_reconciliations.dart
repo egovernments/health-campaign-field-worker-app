@@ -1,18 +1,18 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:digit_data_model/data_model.dart';
+import 'package:digit_scanner/blocs/scanner.dart';
+import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:digit_ui_components/enum/app_enums.dart';
 import 'package:digit_ui_components/theme/digit_extended_theme.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_button.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
 import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
 import 'package:digit_ui_components/widgets/scrollable_content.dart';
-import 'package:survey_form/survey_form.dart';
-import 'package:digit_data_model/data_model.dart';
-import 'package:digit_scanner/blocs/scanner.dart';
-import 'package:digit_scanner/router/digit_scanner_router.gm.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:referral_reconciliation/utils/extensions/extensions.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../blocs/search_referral_reconciliations.dart';
 import '../models/entities/hf_referral.dart';
@@ -106,8 +106,7 @@ class _SearchReferralReconciliationsPageState
                                               i18.referralReconciliation
                                                   .searchReferralsHeader,
                                             ),
-                                            style:
-                                                textTheme.headingXl,
+                                            style: textTheme.headingXl,
                                             textAlign: TextAlign.left,
                                           ),
                                         ),
@@ -144,7 +143,8 @@ class _SearchReferralReconciliationsPageState
                                       SizedBox(
                                           height:
                                               theme.spacerTheme.spacer2 * 2),
-                                      if (searchState.resultsNotFound)
+                                      if (searchState.resultsNotFound &&
+                                          searchController.text.isNotEmpty)
                                         InfoCard(
                                           title: localizations.translate(i18
                                               .referralReconciliation
