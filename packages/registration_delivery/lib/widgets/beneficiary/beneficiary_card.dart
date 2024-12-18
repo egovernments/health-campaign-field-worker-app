@@ -48,7 +48,7 @@ class BeneficiaryCard extends StatelessWidget {
                     label: RegistrationDeliveryLocalization.of(context)
                         .translate(status.toString() ==
                                 Status.administeredSuccess.toValue()
-                            ? '${RegistrationDeliverySingleton().selectedProject!.name}_${status.toString()}'
+                            ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${status.toString()}'
                             : status.toString()),
                     capitalizeLetters: false,
                     textColor: theme.colorScheme.onSurfaceVariant,

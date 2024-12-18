@@ -102,7 +102,7 @@ class _HouseholdOverviewPageState
                                             vertical: spacer2),
                                         child: DigitButton(
                                           label: localizations.translate(
-                                            '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.memberCard.deliverDetailsUpdateLabel}',
+                                            '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.memberCard.deliverDetailsUpdateLabel}',
                                           ),
                                           capitalizeLetters: false,
                                           isDisabled: state
@@ -143,7 +143,7 @@ class _HouseholdOverviewPageState
                                       )
                                     : DigitButton(
                                         label: localizations.translate(
-                                          '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.householdOverView.householdOverViewActionText}',
+                                          '${RegistrationDeliverySingleton().selectedProject!.projectType}_${i18.householdOverView.householdOverViewActionText}',
                                         ),
                                         capitalizeLetters: false,
                                         type: DigitButtonType.primary,
@@ -837,7 +837,7 @@ class _HouseholdOverviewPageState
       textLabel = state.householdMemberWrapper.tasks?.isNotEmpty ?? false
           ? getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue() ==
                   Status.administeredSuccess.toValue()
-              ? '${RegistrationDeliverySingleton().selectedProject!.name}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
+              ? '${RegistrationDeliverySingleton().selectedProject!.projectType}_${getTaskStatus(state.householdMemberWrapper.tasks ?? []).toValue()}'
               : getTaskStatus(state.householdMemberWrapper.tasks ?? [])
                   .toValue()
           : Status.registered.toValue();
