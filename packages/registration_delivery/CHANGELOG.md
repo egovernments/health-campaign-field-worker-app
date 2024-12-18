@@ -1,3 +1,7 @@
+## 1.0.5+1
+
+* householdOverViewActionText localization fix
+
 ## 1.0.5
 
 * Upgrade to Flutter 3.22

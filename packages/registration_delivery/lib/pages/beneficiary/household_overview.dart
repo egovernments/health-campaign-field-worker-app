@@ -145,6 +145,7 @@ class _HouseholdOverviewPageState
                                         label: localizations.translate(
                                           '${RegistrationDeliverySingleton().selectedProject!.name}_${i18.householdOverView.householdOverViewActionText}',
                                         ),
+                                        capitalizeLetters: false,
                                         type: DigitButtonType.primary,
                                         size: DigitButtonSize.large,
                                         mainAxisSize: MainAxisSize.max,

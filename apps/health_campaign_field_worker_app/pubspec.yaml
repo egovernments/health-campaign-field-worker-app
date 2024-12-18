@@ -63,7 +63,7 @@ dependencies:
   inventory_management: ^1.0.4
   referral_reconciliation: ^1.0.3
   digit_data_model: ^1.0.5
-  registration_delivery: ^1.0.5
+  registration_delivery: ^1.0.5+1
   disable_battery_optimization: ^1.1.1
   digit_dss: ^1.0.3
   closed_household: ^1.0.3
