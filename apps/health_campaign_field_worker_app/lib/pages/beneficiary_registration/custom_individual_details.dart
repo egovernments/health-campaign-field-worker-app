@@ -122,6 +122,20 @@ class CustomIndividualDetailsPageState
                             form.control(_genderKey).setErrors({'': true});
                           });
                         }
+                        final scannerBloc = context.read<DigitScannerBloc>();
+                        if (scannerBloc.state.qrCodes.isEmpty) {
+                          DigitToast.show(
+                            context,
+                            options: DigitToastOptions(
+                              localizations.translate(
+                                i18Local.individualDetails
+                                    .scanVoucherAndLinkToIndividual,
+                              ),
+                              true,
+                              theme,
+                            ),
+                          );
+                        }
                         final userId =
                             RegistrationDeliverySingleton().loggedInUserUuid;
                         final projectId =
