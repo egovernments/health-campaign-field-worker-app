@@ -40,6 +40,8 @@ import '../widgets/localized.dart';
 import '../widgets/progress_indicator/custom_beneficiary_progress.dart';
 import '../widgets/showcase/config/showcase_constants.dart';
 import '../widgets/showcase/showcase_button.dart';
+import 'reports/beneficiary/custom_distribution_summary_report_details.dart';
+import 'reports/beneficiary/custom_enumeration_summary_report_details.dart';
 
 @RoutePage()
 class HomePage extends LocalizedStatefulWidget {
@@ -360,6 +362,25 @@ class _HomePageState extends LocalizedState<HomePage> {
           label: i18.home.viewReportsLabel,
           onPressed: () {
             context.router.push(InventoryReportSelectionRoute());
+          },
+        ),
+      ),
+
+      i18.home.viewSummaryReportsLabel:
+          homeShowcaseData.summaryReport.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.viewSummaryReportsLabel,
+          onPressed: () {
+            if (context.isCommunityDistributor) {
+              context.router.push(
+                CustomDistributionSummaryReportDetailsRoute(),
+              );
+            } else {
+              context.router.push(
+                CustomEumerationSummaryReportDetailsRoute(),
+              );
+            }
           },
         ),
       ),
