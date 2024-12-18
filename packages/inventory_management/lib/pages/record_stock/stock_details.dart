@@ -950,7 +950,6 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                           i18.stockDetails
                                               .quantityOfProductIndicatedOnWaybillLabel,
                                         ),
-                                        initialValue: '0',
                                         onChange: (val) {
                                           if (val == '') {
                                             field.control.value = '0';
@@ -1067,8 +1066,8 @@ class StockDetailsPageState extends LocalizedState<StockDetailsPage> {
                                             ),
                                             child: IconButton(
                                               alignment: Alignment.centerRight,
-                                              color:
-                                                  theme.colorTheme.primary.primary1,
+                                              color: theme
+                                                  .colorTheme.primary.primary1,
                                               icon: const Icon(Icons.edit),
                                               onPressed: () {
                                                 //[TODO: Add route to auto_route]

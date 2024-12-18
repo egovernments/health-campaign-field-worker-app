@@ -50,6 +50,7 @@ class BeneficiaryCard extends StatelessWidget {
                                 Status.administeredSuccess.toValue()
                             ? '${RegistrationDeliverySingleton().selectedProject!.name}_${status.toString()}'
                             : status.toString()),
+                    capitalizeLetters: false,
                     textColor: theme.colorScheme.onSurfaceVariant,
                     iconColor: theme.colorScheme.onSurfaceVariant,
                     isDisabled: true,

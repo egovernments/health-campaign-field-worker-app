@@ -79,14 +79,14 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
           clientReferenceId:
               individualClientReferenceIds.map((e) => e.toString()).toList()));
 
-      final List<HouseholdMemberModel> householdMembers =
-          await fetchHouseholdMembersBulk(
+      householdMembersList = await fetchHouseholdMembersBulk(
         individualClientReferenceIds,
         null,
       );
 
-      final houseHoldIds =
-          householdMembers.map((e) => e.householdClientReferenceId!).toList();
+      final houseHoldIds = householdMembersList
+          .map((e) => e.householdClientReferenceId!)
+          .toList();
 
       householdList = await household.search(
         HouseholdSearchModel(
@@ -94,11 +94,31 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
         ),
       );
 
+      individualsList = await individual.search(
+        IndividualSearchModel(
+          clientReferenceId: householdMembersList
+              .map((e) => e.individualClientReferenceId.toString())
+              .toList(),
+        ),
+      );
+
+      individualClientReferenceIds = householdMembersList
+          .map((e) => e.individualClientReferenceId.toString())
+          .toList();
+
       projectBeneficiariesList = await projectBeneficiary.search(
           ProjectBeneficiarySearchModel(
-              projectId: [RegistrationDeliverySingleton().projectId.toString()],
+              projectId: [
+            event.globalSearchParams.filter!.contains(Status.registered.name)
+                ? RegistrationDeliverySingleton().projectId.toString()
+                : ''
+          ],
               beneficiaryClientReferenceId:
                   individualClientReferenceIds.map((e) => e).toList()));
+
+      individualsList = await individual.search(
+        IndividualSearchModel(clientReferenceId: individualClientReferenceIds),
+      );
 
       List<dynamic> tasksRelated = await _processTasksAndRelatedData(
           projectBeneficiariesList, taskList, sideEffectsList, referralsList);
@@ -108,7 +128,7 @@ class IndividualGlobalSearchBloc extends SearchHouseholdsBloc {
       referralsList = tasksRelated[2];
 
       await _processHouseholdEntries(
-          householdMembers,
+          householdMembersList,
           householdList,
           individualsList,
           projectBeneficiariesList,

@@ -218,6 +218,7 @@ class _SearchBeneficiaryPageState
                                                   label:
                                                       '${localizations.translate(getStatus(selectedFilters[index]))}'
                                                       ' (${searchHouseholdsState.totalResults})',
+                                                  capitalizedFirstLetter: false,
                                                   onItemDelete: () {
                                                     setState(() {
                                                       selectedFilters.remove(

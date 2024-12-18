@@ -28,8 +28,8 @@ jobs:
       - name: Set up Android SDK
         uses: android-actions/setup-android@v2
         with:
-          api-level: 30
-          build-tools: 30.0.3
+          api-level: 33
+          build-tools: 33.0.2
 
       - name: Install Dependencies
         run: flutter pub get

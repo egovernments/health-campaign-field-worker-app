@@ -157,7 +157,8 @@ class InventoryReportDetailsPageState
                     child: Text(
                       title,
                       maxLines: 1,
-                      style: Theme.of(context).digitTextTheme(context).headingXl,
+                      style:
+                          Theme.of(context).digitTextTheme(context).headingXl,
                     ),
                   ),
                 ),
