@@ -124,7 +124,7 @@ class CustomIndividualDetailsPageState
                         }
                         final scannerBloc = context.read<DigitScannerBloc>();
                         if (scannerBloc.state.qrCodes.isEmpty) {
-                          DigitToast.show(
+                          await DigitToast.show(
                             context,
                             options: DigitToastOptions(
                               localizations.translate(
