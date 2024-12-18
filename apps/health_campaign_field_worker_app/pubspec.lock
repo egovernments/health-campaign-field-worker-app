@@ -427,11 +427,10 @@ packages:
   dart_mappable_builder:
     dependency: "direct dev"
     description:
-      name: dart_mappable_builder
-      sha256: ab5cf9086862d3fceb9773e945b5f95cc5471a28c782a4fc451bd400a4e0c64e
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.2.3"
+      path: "../../packages/dart_mappable_builder"
+      relative: true
+    source: path
+    version: "4.2.0"
   dart_style:
     dependency: transitive
     description:
@@ -515,10 +514,9 @@ packages:
   digit_firebase_services:
     dependency: "direct main"
     description:
-      name: digit_firebase_services
-      sha256: ce76521d797e123b6fc95c9dfad7d4a918a93b97f57aecd0e1d517b46190909d
-      url: "https://pub.dev"
-    source: hosted
+      path: "../../packages/digit_firebase_services"
+      relative: true
+    source: path
     version: "0.0.1"
   digit_scanner:
     dependency: "direct main"

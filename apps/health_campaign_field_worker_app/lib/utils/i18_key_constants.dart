@@ -1034,6 +1034,9 @@ class IndividualDetails {
       'SCAN_AND_LINK_VOUCHER_TO_INDIVIDUAL';
 
   String get individualNameValidation => "VALID_INDIVIDUAL_NAME";
+
+  String get voucherCodeScanMoreThanLimit =>
+      "VOUCHER_CODE_SCAN_MORE_THAN_LIMIT";
 }
 
 class BeneficiaryDetails {
