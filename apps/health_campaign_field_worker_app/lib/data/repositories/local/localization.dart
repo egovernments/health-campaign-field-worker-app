@@ -66,9 +66,12 @@ class LocalizationLocalRepository {
 
       return result.map((row) {
         final data = row.readTableOrNull(sql.localization);
+        if (data == null) {
+          throw StateError('No data found for localization');
+        }
 
         return Localization()
-          ..code = data!.code
+          ..code = data.code
           ..locale = data.locale
           ..module = data.module
           ..message = data.message;
@@ -93,8 +96,13 @@ class LocalizationLocalRepository {
 
       return results.map((e) {
         final data = e.readTableOrNull(sql.localization);
+
+        if (data == null) {
+          throw StateError('No data found for localization');
+        }
+
         return Localization()
-          ..code = data!.code
+          ..code = data.code
           ..locale = data.locale
           ..module = data.module
           ..message = data.message;
