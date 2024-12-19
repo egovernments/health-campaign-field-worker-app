@@ -60,6 +60,14 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    if (!project.hasProperty('USE_GOOGLE_SERVICES')) {
+        tasks.whenTaskAdded { task ->
+            if (task.name.contains("GoogleServices")) {
+                task.enabled = false
+            }
+        }
+    }
 }
 
 flutter {
