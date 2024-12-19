@@ -232,6 +232,18 @@ class _CustomDigitScannerPageState
                                     localizations,
                                     widget.quantity,
                                   );
+                                } else if (state.qrCodes.length >
+                                    widget.quantity) {
+                                  await DigitToast.show(
+                                    context,
+                                    options: DigitToastOptions(
+                                      localizations.translate(i18Local
+                                          .deliverIntervention
+                                          .bednetScanMoreThanCount),
+                                      true,
+                                      theme,
+                                    ),
+                                  );
                                 } else {
                                   final bloc = context.read<DigitScannerBloc>();
                                   bloc.add(DigitScannerEvent.handleScanner(
