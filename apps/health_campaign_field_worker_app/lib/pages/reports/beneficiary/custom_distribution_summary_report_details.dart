@@ -63,6 +63,16 @@ class _CustomDistributionSummaryReportDetailsState
           CustomDistributionSummaryReportState>(
         builder: (context, customDistributionSumamryReportState) {
           return ScrollableContent(
+            footer: Padding(
+              padding: const EdgeInsets.fromLTRB(kPadding, 0, kPadding, 0),
+              child: DigitElevatedButton(
+                child: Text(localizations
+                    .translate(i18Local.acknowledgementSuccess.goToHome)),
+                onPressed: () {
+                  context.router.popUntilRouteWithName(HomeRoute.name);
+                },
+              ),
+            ),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const BackNavigationHelpHeaderWidget(),
