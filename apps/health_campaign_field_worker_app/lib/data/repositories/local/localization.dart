@@ -115,7 +115,7 @@ class LocalizationLocalRepository {
     if (result.isEmpty) return;
     return retryLocalCallOperation(() async {
       return sql.batch((batch) {
-        batch.insertAllOnConflictUpdate(sql.localization, result);
+        batch.insertAll(sql.localization, result);
       });
     });
   }
