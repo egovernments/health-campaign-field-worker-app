@@ -116,7 +116,14 @@ class HouseDetailsPageState extends LocalizedState<HouseDetailsPage> {
                                         createdTime:
                                             context.millisecondsSinceEpoch(),
                                       ),
-                                      memberCount: householdModel?.memberCount,
+
+                                      ///[TODO]: NEED TO FIX THIS
+                                      memberCount:
+                                          (RegistrationDeliverySingleton()
+                                                      .householdType ==
+                                                  HouseholdType.community)
+                                              ? 0
+                                              : householdModel?.memberCount,
                                       clientAuditDetails: ClientAuditDetails(
                                         createdBy:
                                             RegistrationDeliverySingleton()

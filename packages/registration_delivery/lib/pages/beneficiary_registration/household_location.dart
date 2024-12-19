@@ -346,6 +346,8 @@ class HouseholdLocationPageState extends LocalizedState<HouseholdLocationPage> {
                         ),
                       ),
                     ),
+
+                    ///[TODO]: NEED TO REMOVE THIS
                     if (RegistrationDeliverySingleton().householdType ==
                         HouseholdType.community)
                       householdLocationShowcaseData.buildingName.buildWith(
