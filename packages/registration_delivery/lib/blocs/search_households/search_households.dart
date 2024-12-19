@@ -100,7 +100,7 @@ class SearchHouseholdsBloc
               },
             )?.individualClientReferenceId,
       );
-      final tasks = await fetchTaskbyProjectBeneficiary(projectBeneficiaries);
+      final tasks = await fetchTaskByProjectBeneficiary(projectBeneficiaries);
 
       final sideEffects =
           await sideEffectDataRepository.search(SideEffectSearchModel(
@@ -189,7 +189,7 @@ class SearchHouseholdsBloc
   }
 
   // Fetch the task
-  Future<List<TaskModel>> fetchTaskbyProjectBeneficiary(
+  Future<List<TaskModel>> fetchTaskByProjectBeneficiary(
     List<ProjectBeneficiaryModel> projectBeneficiaries,
   ) async {
     return await taskDataRepository.search(TaskSearchModel(

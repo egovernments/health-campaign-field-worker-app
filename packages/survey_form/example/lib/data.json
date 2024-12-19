@@ -1,0 +1,20 @@
+[
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_ACTION_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Go Back",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_DESCRIPTION_TEXT",
+    "locale": "en_MZ",
+    "message": "The data has been recorded successfully.",
+    "module": "hcm-acknowledgement"
+  },
+  {
+    "code": "ACKNOWLEDGEMENT_SUCCESS_LABEL_TEXT",
+    "locale": "en_MZ",
+    "message": "Data recorded successfully",
+    "module": "hcm-acknowledgement"
+  }
+]

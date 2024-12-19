@@ -111,7 +111,7 @@ class DigitTable extends StatelessWidget {
       color: index == selectedIndex
           ? DigitTheme.instance.colorScheme.tertiary
           : index % 2 == 0
-              ? DigitTheme.instance.colorScheme.background
+              ? DigitTheme.instance.colorScheme.surface
               : DigitTheme.instance.colorScheme.surface,
       child: Row(
         mainAxisAlignment: centerData == null
@@ -175,7 +175,7 @@ class DigitTable extends StatelessWidget {
             color: selectedIndex == index
                 ? DigitTheme.instance.colorScheme.tertiary
                 : index % 2 == 0
-                    ? DigitTheme.instance.colorScheme.background
+                    ? DigitTheme.instance.colorScheme.surface
                     : DigitTheme.instance.colorScheme.surface,
             border: Border(
               left: tableCellBorder,

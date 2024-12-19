@@ -146,7 +146,7 @@ abstract class OpLogManager<T extends EntityModel> {
       });
     } catch (e) {
       if (kDebugMode) {
-        print('error in isar ${e}');
+        print('error in isar $e');
       }
       rethrow;
     }

@@ -3,6 +3,7 @@ import 'package:digit_data_model/data_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/utils.dart';
+import 'package:survey_form/survey_form.dart';
 
 import '../../blocs/delivery_intervention/deliver_intervention.dart';
 import '../../blocs/household_overview/household_overview.dart';
@@ -55,9 +56,6 @@ class BeneficiaryWrapperPage extends StatelessWidget {
         LocalRepository<ProjectFacilityModel, ProjectFacilitySearchModel>>();
     final referral =
         context.repository<ReferralModel, ReferralSearchModel>(context);
-
-    final serviceDefinationRepo = context.repository<ServiceDefinitionModel,
-        ServiceDefinitionSearchModel>(context);
 
     return MultiBlocProvider(
       providers: [

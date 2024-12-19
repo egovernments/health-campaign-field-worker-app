@@ -9,7 +9,7 @@ enum DetectorViewMode { liveFeed, gallery }
 
 class DetectorView extends StatefulWidget {
   const DetectorView({
-    Key? key,
+    super.key,
     required this.title,
     required this.onImage,
     this.customPaint,
@@ -21,7 +21,7 @@ class DetectorView extends StatefulWidget {
     this.onCameraLensDirectionChanged,
     required this.cameraController,
     required this.cameras,
-  }) : super(key: key);
+  });
 
   final String title;
   final CustomPaint? customPaint;

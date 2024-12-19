@@ -104,6 +104,8 @@ extension ContextUtilityExtensions on BuildContext {
     ClosedHouseholdSingleton().setBoundary(boundary: selectedBoundary);
     InventorySingleton().setBoundaryName(boundaryName: selectedBoundary.name!);
     ReferralReconSingleton().setBoundary(boundary: selectedBoundary);
+    SurveyFormSingleton().setBoundary(boundary: selectedBoundary);
+    ComplaintsSingleton().setBoundary(boundary: selectedBoundary);
     AttendanceSingleton().setBoundary(boundary: selectedBoundary);
     LocationTrackerSingleton()
         .setBoundaryName(boundaryName: selectedBoundary.code!);
@@ -223,5 +225,17 @@ extension ContextUtilityExtensions on BuildContext {
     } catch (error) {
       throw AppException('Could not fetch ${T.runtimeType}');
     }
+  }
+
+  // sync refresh
+  void syncRefresh() {
+    final syncBloc = _get<SyncBloc>();
+    syncBloc.add(SyncRefreshEvent(loggedInUserUuid));
+  }
+
+  // insert sync count
+  Stream<SyncState> syncCount() {
+    final syncBloc = _get<SyncBloc>();
+    return syncBloc.stream;
   }
 }

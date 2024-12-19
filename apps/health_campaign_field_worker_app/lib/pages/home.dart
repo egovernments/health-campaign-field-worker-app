@@ -4,6 +4,8 @@ import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/router/attendance_router.gm.dart';
 import 'package:closed_household/closed_household.dart';
 import 'package:closed_household/router/closed_household_router.gm.dart';
+import 'package:complaints/complaints.dart';
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_components/widgets/atoms/digit_toaster.dart';
@@ -22,15 +24,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:inventory_management/inventory_management.dart';
 import 'package:inventory_management/router/inventory_router.gm.dart';
+import 'package:recase/recase.dart';
 import 'package:referral_reconciliation/referral_reconciliation.dart';
 import 'package:referral_reconciliation/router/referral_reconciliation_router.gm.dart';
 import 'package:registration_delivery/registration_delivery.dart';
 import 'package:registration_delivery/router/registration_delivery_router.gm.dart';
+import 'package:survey_form/router/survey_form_router.gm.dart';
+import 'package:survey_form/survey_form.dart';
+import 'package:sync_service/blocs/sync/sync.dart';
 
 import '../blocs/app_initialization/app_initialization.dart';
 import '../blocs/auth/auth.dart';
 import '../blocs/localization/localization.dart';
-import '../blocs/sync/sync.dart';
 import '../data/local_store/app_shared_preferences.dart';
 import '../data/local_store/no_sql/schema/app_configuration.dart';
 import '../data/local_store/no_sql/schema/service_registry.dart';
@@ -61,7 +66,7 @@ class HomePage extends LocalizedStatefulWidget {
 class _HomePageState extends LocalizedState<HomePage> {
   bool skipProgressBar = false;
   final storage = const FlutterSecureStorage();
-  late StreamSubscription<ConnectivityResult> subscription;
+  late StreamSubscription<List<ConnectivityResult>> subscription;
 
   @override
   initState() {
@@ -69,14 +74,10 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     subscription = Connectivity()
         .onConnectivityChanged
-        .listen((ConnectivityResult resSyncBlocult) async {
-      var connectivityResult = await (Connectivity().checkConnectivity());
-
-      if (connectivityResult != ConnectivityResult.none) {
+        .listen((List<ConnectivityResult> result) async {
+      if (result.firstOrNull == ConnectivityResult.none) {
         if (context.mounted) {
-          context
-              .read<SyncBloc>()
-              .add(SyncRefreshEvent(context.loggedInUserUuid));
+          context.syncRefresh();
         }
       }
     });
@@ -117,172 +118,166 @@ class _HomePageState extends LocalizedState<HomePage> {
     ];
 
     return Scaffold(
-      backgroundColor: DigitTheme.instance.colorScheme.background,
-      body: BlocListener<SyncBloc, SyncState>(
-        listener: (context, state) {
-          state.maybeWhen(
-            orElse: () {},
-            pendingSync: (count) {
-              final debouncer = Debouncer(seconds: 5);
-              debouncer.run(() async {
-                if (count != 0) {
-                  await localSecureStore.setManualSyncTrigger(false);
-                  if (context.mounted) {
-                    await performBackgroundService(
-                      isBackground: false,
-                      stopService: false,
-                      context: context,
-                    );
-                  }
-                } else {
-                  await localSecureStore.setManualSyncTrigger(true);
-                }
-              });
-            },
-          );
-        },
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: ScrollableContent(
-            slivers: [
-              SliverGrid(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    return homeItems.elementAt(index);
-                  },
-                  childCount: homeItems.length,
-                ),
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: 145,
-                  childAspectRatio: 104 / 128,
+      backgroundColor: DigitTheme.instance.colorScheme.surface,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: ScrollableContent(
+          slivers: [
+            SliverGrid(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return homeItems.elementAt(index);
+                },
+                childCount: homeItems.length,
+              ),
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 145,
+                childAspectRatio: 104 / 128,
+              ),
+            ),
+          ],
+          header: Column(
+            children: [
+              BackNavigationHelpHeaderWidget(
+                showBackNavigation: false,
+                showHelp: false,
+                showcaseButton: ShowcaseButton(
+                  showcaseFor: showcaseKeys.toSet().toList(),
                 ),
               ),
-            ],
-            header: Column(
-              children: [
-                BackNavigationHelpHeaderWidget(
-                  showBackNavigation: false,
-                  showHelp: false,
-                  showcaseButton: ShowcaseButton(
-                    showcaseFor: showcaseKeys.toSet().toList(),
-                  ),
-                ),
-                skipProgressBar
-                    ? const SizedBox.shrink()
-                    : homeShowcaseData.distributorProgressBar.buildWith(
-                        child: BeneficiaryProgressBar(
-                          label: localizations.translate(
-                            i18.home.progressIndicatorTitle,
-                          ),
-                          prefixLabel: localizations.translate(
-                            i18.home.progressIndicatorPrefixLabel,
-                          ),
+              skipProgressBar
+                  ? const SizedBox.shrink()
+                  : homeShowcaseData.distributorProgressBar.buildWith(
+                      child: BeneficiaryProgressBar(
+                        label: localizations.translate(
+                          i18.home.progressIndicatorTitle,
+                        ),
+                        prefixLabel: localizations.translate(
+                          i18.home.progressIndicatorPrefixLabel,
                         ),
                       ),
-              ],
-            ),
-            footer: PoweredByDigit(
-              version: Constants().version,
-            ),
-            children: [
-              const SizedBox(height: kPadding * 2),
-              BlocConsumer<SyncBloc, SyncState>(
-                listener: (context, state) {
-                  state.maybeWhen(
-                    orElse: () => null,
-                    syncInProgress: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        DigitSyncDialog.show(
-                          context,
-                          type: DigitSyncDialogType.inProgress,
-                          label: localizations.translate(
-                            i18.syncDialog.syncInProgressTitle,
-                          ),
-                          barrierDismissible: false,
-                        );
-                      }
-                    },
-                    completedSync: () async {
-                      Navigator.of(context, rootNavigator: true).pop();
-                      await localSecureStore.setManualSyncTrigger(false);
-                      if (context.mounted) {
-                        DigitSyncDialog.show(
-                          context,
-                          type: DigitSyncDialogType.complete,
-                          label: localizations.translate(
-                            i18.syncDialog.dataSyncedTitle,
-                          ),
-                          primaryAction: DigitDialogActions(
-                            label: localizations.translate(
-                              i18.syncDialog.closeButtonLabel,
-                            ),
-                            action: (ctx) {
-                              Navigator.pop(ctx);
-                            },
-                          ),
-                        );
-                      }
-                    },
-                    failedSync: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.syncFailedTitle,
-                          ),
-                        );
-                      }
-                    },
-                    failedDownSync: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.downSyncFailedTitle,
-                          ),
-                        );
-                      }
-                    },
-                    failedUpSync: () async {
-                      await localSecureStore.setManualSyncTrigger(true);
-                      if (context.mounted) {
-                        _showSyncFailedDialog(
-                          context,
-                          message: localizations.translate(
-                            i18.syncDialog.upSyncFailedTitle,
-                          ),
-                        );
-                      }
-                    },
-                  );
-                },
-                builder: (context, state) {
-                  return state.maybeWhen(
-                    orElse: () => const Offstage(),
-                    pendingSync: (count) {
-                      return count == 0
-                          ? const Offstage()
-                          : DigitInfoCard(
-                              icon: Icons.info,
-                              backgroundColor:
-                                  theme.colorScheme.tertiaryContainer,
-                              iconColor: theme.colorScheme.surfaceTint,
-                              description: localizations
-                                  .translate(i18.home.dataSyncInfoContent)
-                                  .replaceAll('{}', count.toString()),
-                              title: localizations.translate(
-                                i18.home.dataSyncInfoLabel,
-                              ),
-                            );
-                    },
-                  );
-                },
-              ),
+                    ),
             ],
           ),
+          footer: PoweredByDigit(
+            version: Constants().version,
+          ),
+          children: [
+            const SizedBox(height: kPadding * 2),
+            // INFO : Need to add sync bloc of package Here
+            BlocConsumer<SyncBloc, SyncState>(
+              listener: (context, state) {
+                state.maybeWhen(
+                  orElse: () => null,
+                  pendingSync: (count) {
+                    final debouncer = Debouncer(seconds: 5);
+                    debouncer.run(() async {
+                      if (count != 0) {
+                        await localSecureStore.setManualSyncTrigger(false);
+                        if (context.mounted) {
+                          await performBackgroundService(
+                            isBackground: false,
+                            stopService: false,
+                            context: context,
+                          );
+                        }
+                      } else {
+                        await localSecureStore.setManualSyncTrigger(true);
+                      }
+                    });
+                  },
+                  syncInProgress: () async {
+                    await localSecureStore.setManualSyncTrigger(false);
+                    if (context.mounted) {
+                      DigitSyncDialog.show(
+                        context,
+                        type: DigitSyncDialogType.inProgress,
+                        label: localizations.translate(
+                          i18.syncDialog.syncInProgressTitle,
+                        ),
+                        barrierDismissible: false,
+                      );
+                    }
+                  },
+                  completedSync: () async {
+                    Navigator.of(context, rootNavigator: true).pop();
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      DigitSyncDialog.show(
+                        context,
+                        type: DigitSyncDialogType.complete,
+                        label: localizations.translate(
+                          i18.syncDialog.dataSyncedTitle,
+                        ),
+                        primaryAction: DigitDialogActions(
+                          label: localizations.translate(
+                            i18.syncDialog.closeButtonLabel,
+                          ),
+                          action: (ctx) {
+                            Navigator.pop(ctx);
+                          },
+                        ),
+                      );
+                    }
+                  },
+                  failedSync: () async {
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      _showSyncFailedDialog(
+                        context,
+                        message: localizations.translate(
+                          i18.syncDialog.syncFailedTitle,
+                        ),
+                      );
+                    }
+                  },
+                  failedDownSync: () async {
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      _showSyncFailedDialog(
+                        context,
+                        message: localizations.translate(
+                          i18.syncDialog.downSyncFailedTitle,
+                        ),
+                      );
+                    }
+                  },
+                  failedUpSync: () async {
+                    await localSecureStore.setManualSyncTrigger(true);
+                    if (context.mounted) {
+                      _showSyncFailedDialog(
+                        context,
+                        message: localizations.translate(
+                          i18.syncDialog.upSyncFailedTitle,
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+              builder: (context, state) {
+                return state.maybeWhen(
+                  orElse: () => const Offstage(),
+                  pendingSync: (count) {
+                    return count == 0
+                        ? const Offstage()
+                        : DigitInfoCard(
+                            icon: Icons.info,
+                            backgroundColor:
+                                theme.colorScheme.tertiaryContainer,
+                            iconColor: theme.colorScheme.surfaceTint,
+                            description: localizations
+                                .translate(i18.home.dataSyncInfoContent)
+                                .replaceAll('{}', count.toString()),
+                            title: localizations.translate(
+                              i18.home.dataSyncInfoLabel,
+                            ),
+                          );
+                  },
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -325,6 +320,16 @@ class _HomePageState extends LocalizedState<HomePage> {
 
     final Map<String, Widget> homeItemsMap = {
       // INFO : Need to add home items of package Here
+      i18.home.fileComplaint:
+          homeShowcaseData.distributorFileComplaint.buildWith(
+        child: HomeItemCard(
+          icon: Icons.announcement,
+          label: i18.home.fileComplaint,
+          onPressed: () =>
+              context.router.push(const ComplaintsInboxWrapperRoute()),
+        ),
+      ),
+
       i18.home.dashboard: homeShowcaseData.dashBoard.buildWith(
         child: HomeItemCard(
           icon: Icons.bar_chart_sharp,
@@ -386,24 +391,16 @@ class _HomePageState extends LocalizedState<HomePage> {
           },
         ),
       ),
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.buildWith(
+      i18.home.mySurveyForm: homeShowcaseData.supervisorMySurveyForm.buildWith(
         child: HomeItemCard(
           enableCustomIcon: true,
-          customIcon: myChecklistSvg,
+          customIcon: mySurveyFormSvg,
           icon: Icons.checklist,
-          label: i18.home.myCheckList,
-          onPressed: () => context.router.push(ChecklistWrapperRoute()),
+          label: i18.home.mySurveyForm,
+          onPressed: () => context.router.push(SurveyFormWrapperRoute()),
         ),
       ),
-      i18.home.fileComplaint:
-          homeShowcaseData.distributorFileComplaint.buildWith(
-        child: HomeItemCard(
-          icon: Icons.announcement,
-          label: i18.home.fileComplaint,
-          onPressed: () =>
-              context.router.push(const ComplaintsInboxWrapperRoute()),
-        ),
-      ),
+
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.buildWith(
         child: StreamBuilder<Map<String, dynamic>?>(
           stream: FlutterBackgroundService().on('serviceRunning'),
@@ -504,7 +501,8 @@ class _HomePageState extends LocalizedState<HomePage> {
           homeShowcaseData.warehouseManagerManageStock.showcaseKey,
       i18.home.stockReconciliationLabel:
           homeShowcaseData.wareHouseManagerStockReconciliation.showcaseKey,
-      i18.home.myCheckList: homeShowcaseData.supervisorMyChecklist.showcaseKey,
+      i18.home.mySurveyForm:
+          homeShowcaseData.supervisorMySurveyForm.showcaseKey,
       i18.home.fileComplaint:
           homeShowcaseData.distributorFileComplaint.showcaseKey,
       i18.home.syncDataLabel: homeShowcaseData.distributorSyncData.showcaseKey,
@@ -525,7 +523,7 @@ class _HomePageState extends LocalizedState<HomePage> {
       i18.home.closedHouseHoldLabel,
       i18.home.manageStockLabel,
       i18.home.stockReconciliationLabel,
-      i18.home.myCheckList,
+      i18.home.mySurveyForm,
       i18.home.fileComplaint,
       i18.home.syncDataLabel,
       i18.home.viewReportsLabel,
@@ -549,6 +547,10 @@ class _HomePageState extends LocalizedState<HomePage> {
         .map((label) => homeItemsShowcaseMap[label]!)
         .toList();
 
+    if (!context.selectedProject.name.contains('IRS')) {
+      filteredLabels.remove(i18.home.dashboard);
+    }
+
     final List<Widget> widgetList =
         filteredLabels.map((label) => homeItemsMap[label]!).toList();
 
@@ -567,6 +569,8 @@ class _HomePageState extends LocalizedState<HomePage> {
               userId: context.loggedInUserUuid,
               localRepositories: [
                 // INFO : Need to add local repo of package Here
+                context.read<
+                    LocalRepository<PgrServiceModel, PgrServiceSearchModel>>(),
                 context.read<
                     LocalRepository<IndividualModel, IndividualSearchModel>>(),
                 context.read<
@@ -648,6 +652,16 @@ void setPackagesSingleton(BuildContext context) {
       ) {
         loadLocalization(context, appConfiguration);
         // INFO : Need to add singleton of package Here
+        ComplaintsSingleton().setInitialData(
+          tenantId: envConfig.variables.tenantId,
+          loggedInUserUuid: context.loggedInUserUuid,
+          userMobileNumber: context.loggedInUser.mobileNumber,
+          loggedInUserName: context.loggedInUser.name,
+          complaintTypes:
+              appConfiguration.complaintTypes!.map((e) => e.code).toList(),
+          userName: context.loggedInUser.name ?? '',
+        );
+
         RegistrationDeliverySingleton().setInitialData(
           loggedInUser: context.loggedInUserModel,
           loggedInUserUuid: context.loggedInUserUuid,
@@ -697,6 +711,26 @@ void setPackagesSingleton(BuildContext context) {
           loggedInIndividualId: context.loggedInIndividualId ?? '',
           loggedInUserUuid: context.loggedInUserUuid,
           appVersion: Constants().version,
+        );
+
+        SurveyFormSingleton().setInitialData(
+          projectId: context.projectId,
+          projectName: context.selectedProject.name,
+          loggedInIndividualId: context.loggedInIndividualId ?? '',
+          loggedInUserUuid: context.loggedInUserUuid,
+          appVersion: Constants().version,
+          isHealthFacilityWorker: context.loggedInUserRoles
+              .where((role) =>
+                  role.code == RolesType.healthFacilityWorker.toValue())
+              .toList()
+              .isNotEmpty,
+          roles: context.read<AuthBloc>().state.maybeMap(
+              orElse: () => const Offstage(),
+              authenticated: (res) {
+                return res.userModel.roles
+                    .map((e) => e.code.snakeCase.toUpperCase())
+                    .toList();
+              }),
         );
 
         ReferralReconSingleton().setInitialData(

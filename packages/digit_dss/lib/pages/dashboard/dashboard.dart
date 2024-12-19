@@ -1,9 +1,14 @@
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
 import 'package:digit_dss/blocs/dashboard.dart';
 import 'package:digit_dss/widgets/back_navigation_help_header.dart';
+import 'package:digit_ui_components/enum/app_enums.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_info_card.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_toast.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart';
+import 'package:digit_ui_components/widgets/powered_by_digit.dart';
+import 'package:digit_ui_components/widgets/scrollable_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,7 +55,7 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
               setState(() {
                 isLoading = true;
               });
-              Loaders.showLoadingDialog(context);
+              DigitLoaders.overlayLoader(context: context);
             }
           },
           fetched: (
@@ -61,12 +66,12 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
           ) {
             Navigator.of(context, rootNavigator: true).pop();
             if (isNetworkError == true) {
-              DigitToast.show(context,
-                  options: DigitToastOptions(
+              Toast.showToast(
+                context,
+                message:
                     localizations.translate(i18.dashboard.someErrorOccured),
-                    true,
-                    DigitTheme.instance.mobileTheme,
-                  ));
+                type: ToastType.error,
+              );
             }
 
             setState(() {
@@ -78,11 +83,11 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
             setState(() {
               isLoading = false;
             });
-            DigitToast.show(context,
-                options: DigitToastOptions(
-                    localizations.translate(i18.dashboard.someErrorOccured),
-                    true,
-                    DigitTheme.instance.mobileTheme));
+            Toast.showToast(
+              context,
+              message: localizations.translate(i18.dashboard.someErrorOccured),
+              type: ToastType.error,
+            );
           });
     }, builder: (context, dashboardState) {
       return RefreshIndicator(
@@ -92,21 +97,7 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
               fetched:
                   (metricData, tableData, selectedDate, isNetworkError) async {
                 bool isConnected = await getIsConnected();
-                if (isConnected) {
-                  context.read<DashboardBloc>().add(DashboardRefreshEvent(
-                        projectId: DashboardSingleton().projectId,
-                        syncFromServer: true,
-                        selectedDate: selectedDate ?? DateTime.now(),
-                      ));
-                } else {
-                  DigitToast.show(context,
-                      options: DigitToastOptions(
-                        localizations
-                            .translate(i18.dashboard.networkFailureError),
-                        true,
-                        DigitTheme.instance.mobileTheme,
-                      ));
-                }
+                fetchData(isConnected, selectedDate);
               });
 
           return Future<void>.delayed(const Duration(seconds: 1));
@@ -141,35 +132,29 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
                           ),
                         ...(tableData ?? [])
                             .map((table) => Padding(
-                                  padding: const EdgeInsets.all(kPadding),
+                                  padding: const EdgeInsets.all(spacer1),
                                   child: DigitTable(
-                                    headerList: table.headerList.map((header) {
-                                      return TableHeader(
-                                        localizations.translate(header.label),
-                                        cellKey: header.cellKey,
-                                      );
-                                    }).toList(),
-                                    tableData: table.tableData,
-                                    height: ((table.tableData.length) + 1) * 65,
-                                    columnWidth:
-                                        MediaQuery.of(context).size.width / 2,
-                                    columnRowFixedHeight: 65,
-                                    scrollPhysics: (table.tableData.length ??
-                                                0) >
-                                            5
+                                    scrollPhysics: (table.tableData.length) > 5
                                         ? const ClampingScrollPhysics()
                                         : const NeverScrollableScrollPhysics(),
+                                    rows: table.tableData,
+                                    columns: table.headerList,
+                                    tableHeight:
+                                        MediaQuery.of(context).size.height * .3,
+                                    showSelectedState: false,
+                                    showPagination: false,
                                   ),
                                 ))
                             .toList(),
                         if ((tableData ?? []).isNotEmpty)
                           Align(
                             alignment: Alignment.center,
-                            child: DigitInfoCard(
+                            child: InfoCard(
                               title: localizations
                                   .translate(i18.dashboard.noteHeader),
                               description: localizations
                                   .translate(i18.dashboard.noteDescription),
+                              type: InfoType.info,
                             ),
                           )
                       ],
@@ -180,5 +165,21 @@ class UserDashboardPageState extends LocalizedState<UserDashboardPage> {
         ),
       );
     });
+  }
+
+  void fetchData(bool isConnected, DateTime? selectedDate) {
+    if (isConnected) {
+      context.read<DashboardBloc>().add(DashboardRefreshEvent(
+            projectId: DashboardSingleton().projectId,
+            syncFromServer: true,
+            selectedDate: selectedDate ?? DateTime.now(),
+          ));
+    } else {
+      Toast.showToast(
+        context,
+        message: localizations.translate(i18.dashboard.networkFailureError),
+        type: ToastType.error,
+      );
+    }
   }
 }

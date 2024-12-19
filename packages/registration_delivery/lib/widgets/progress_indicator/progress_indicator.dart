@@ -1,4 +1,4 @@
-import 'package:digit_components/theme/digit_theme.dart';
+import 'package:digit_ui_components/theme/spacers.dart';
 import 'package:flutter/material.dart';
 
 class ProgressIndicatorContainer extends StatelessWidget {
@@ -32,7 +32,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         Padding(
-          padding: const EdgeInsets.all(kPadding * 2),
+          padding: const EdgeInsets.all(spacer2 * 2),
           child: Column(
             children: [
               LinearProgressIndicator(
@@ -44,7 +44,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
                 minHeight: 7.0,
               ),
               Padding(
-                padding: const EdgeInsets.only(top: kPadding + 4),
+                padding: const EdgeInsets.only(top: spacer2 + 4),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -67,7 +67,7 @@ class ProgressIndicatorContainer extends StatelessWidget {
         if (subLabel != null)
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(kPadding),
+              padding: const EdgeInsets.all(spacer2),
               child: Text(
                 subLabel ?? '',
                 style: TextStyle(

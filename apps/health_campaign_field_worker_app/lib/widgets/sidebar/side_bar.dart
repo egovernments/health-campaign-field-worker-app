@@ -13,6 +13,7 @@ import '../../blocs/localization/localization.dart';
 import '../../models/data_model.dart';
 import '../../models/entities/roles_type.dart';
 import '../../router/app_router.dart';
+import '../../utils/environment_config.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 
@@ -33,13 +34,12 @@ class SideBar extends StatelessWidget {
         : false;
 
     return BlocBuilder<AuthBloc, AuthState>(builder: (context, state) {
-      return Column(
-        children: [
+      return SingleChildScrollView(
+        child: Column(children: [
           Container(
             color: theme.colorScheme.secondary.withOpacity(0.12),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
-              height: 280,
               child: state.maybeMap(
                 authenticated: (value) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -110,9 +110,7 @@ class SideBar extends StatelessWidget {
                   i18.common.coreCommonlanguage,
                 ),
                 icon: Icons.language,
-                onPressed: () {
-
-                },
+                onPressed: () {},
                 content: Offstage(
                   offstage: languages == null,
                   child: BlocBuilder<LocalizationBloc, LocalizationState>(
@@ -130,14 +128,8 @@ class SideBar extends StatelessWidget {
                                   context
                                       .read<LocalizationBloc>()
                                       .add(LocalizationEvent.onLoadLocalization(
-                                        module: localizationModulesList
-                                            .interfaces
-                                            .where((element) =>
-                                                element.type ==
-                                                Modules.localizationModule)
-                                            .map((e) => e.name.toString())
-                                            .join(',')
-                                            .toString(),
+                                        module:
+                                            "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                         tenantId:
                                             appConfig.tenantId ?? "default",
                                         locale: value.value.toString(),
@@ -185,9 +177,9 @@ class SideBar extends StatelessWidget {
               onPressed: () async {
                 final connectivityResult =
                     await (Connectivity().checkConnectivity());
-                final isOnline =
-                    connectivityResult == ConnectivityResult.wifi ||
-                        connectivityResult == ConnectivityResult.mobile;
+                final isOnline = connectivityResult.firstOrNull ==
+                        ConnectivityResult.wifi ||
+                    connectivityResult.firstOrNull == ConnectivityResult.mobile;
 
                 if (isOnline) {
                   if (context.mounted) {
@@ -242,7 +234,7 @@ class SideBar extends StatelessWidget {
           PoweredByDigit(
             version: Constants().version,
           ),
-        ],
+        ]),
       );
     });
   }

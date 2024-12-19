@@ -18,6 +18,7 @@ import 'package:registration_delivery/models/entities/household.dart';
 import 'package:registration_delivery/models/entities/household_member.dart';
 import 'package:registration_delivery/models/entities/project_beneficiary.dart';
 import 'package:registration_delivery/models/entities/task.dart';
+import 'package:survey_form/survey_form.dart';
 
 import 'blocs/app_initialization/app_initialization.dart';
 import 'blocs/auth/auth.dart';
@@ -25,6 +26,8 @@ import 'blocs/localization/localization.dart';
 import 'blocs/project/project.dart';
 import 'data/local_store/app_shared_preferences.dart';
 import 'data/network_manager.dart';
+import 'data/remote_client.dart';
+import 'data/repositories/remote/bandwidth_check.dart';
 import 'data/repositories/remote/localization.dart';
 import 'data/repositories/remote/mdms.dart';
 import 'router/app_navigator_observer.dart';
@@ -181,13 +184,8 @@ class MainApplicationState extends State<MainApplication>
                                   widget.sql)
                                 ..add(
                                   LocalizationEvent.onLoadLocalization(
-                                    module: localizationModulesList.interfaces
-                                        .where((element) =>
-                                            element.type ==
-                                            Modules.localizationModule)
-                                        .map((e) => e.name.toString())
-                                        .join(',')
-                                        .toString(),
+                                    module:
+                                        "hcm-boundary-${envConfig.variables.hierarchyType.toLowerCase()},${localizationModulesList.interfaces.where((element) => element.type == Modules.localizationModule).map((e) => e.name.toString()).join(',')}",
                                     tenantId: appConfig.tenantId.toString(),
                                     locale: firstLanguage,
                                     path: Constants.localizationApiPath,
@@ -201,6 +199,11 @@ class MainApplicationState extends State<MainApplication>
                         ),
                         BlocProvider(
                           create: (ctx) => ProjectBloc(
+                            bandwidthCheckRepository: BandwidthCheckRepository(
+                              DioClient().dio,
+                              bandwidthPath:
+                                  envConfig.variables.checkBandwidthApiPath,
+                            ),
                             mdmsRepository: MdmsRepository(widget.client),
                             dashboardRemoteRepository:
                                 DashboardRemoteRepository(widget.client),

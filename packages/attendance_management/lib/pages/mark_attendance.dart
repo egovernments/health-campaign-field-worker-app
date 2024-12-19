@@ -3,11 +3,18 @@ import 'dart:async';
 import 'package:attendance_management/attendance_management.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/models/digit_table_model.dart';
-import 'package:digit_components/widgets/atoms/digit_toaster.dart';
-import 'package:digit_components/widgets/digit_sync_dialog.dart';
 import 'package:digit_data_model/data/data_repository.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/services/location_bloc.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/utils/component_utils.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_loader.dart';
+import 'package:digit_ui_components/widgets/atoms/digit_search_bar.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/atoms/table_cell.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_table.dart'
+    as table;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -32,12 +39,12 @@ class MarkAttendancePage extends LocalizedStatefulWidget {
   final int? session;
 
   const MarkAttendancePage({
-    required this.exitTime,
-    required this.entryTime,
-    required this.dateTime,
     required this.attendees,
     required this.registerId,
     required this.tenantId,
+    required this.dateTime,
+    required this.entryTime,
+    required this.exitTime,
     this.session,
     super.key,
     super.appLocalizations,
@@ -57,7 +64,6 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
   void initState() {
     controller = TextEditingController();
     controller.addListener(searchByName);
-    context.read<LocationBloc>().add(const LoadLocationEvent());
     individualLogBloc = AttendanceIndividualBloc(
       const AttendanceIndividualState.loading(),
       attendanceLogDataRepository: context
@@ -141,7 +147,7 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                           limitData,
                           viewOnly,
                         ) {
-                          List<TableDataRow> tableData = [];
+                          List<DigitTableRow> tableData = [];
 
                           tableData = attendanceSearchModelList != null
                               ? getAttendanceData(
@@ -150,76 +156,58 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                   attendanceCollectionModel!, viewOnly);
 
                           return ScrollableContent(
-                            enableFixedButton: true,
+                            enableFixedDigitButton: true,
                             footer: viewOnly
                                 ? const SizedBox.shrink()
-                                : SizedBox(
-                                    height: 140,
-                                    child: Card(
-                                      margin: const EdgeInsets.all(0),
-                                      child: Container(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            kPadding, 0, kPadding, 0),
-                                        child: Column(
-                                          children: [
-                                            DigitOutlineIconButton(
-                                              buttonStyle:
-                                                  OutlinedButton.styleFrom(
-                                                shape:
-                                                    const RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.zero,
-                                                ),
-                                              ),
-                                              onPressed: () {
-                                                checkIfAllAttendeesMarked(
-                                                  state,
-                                                  localizations,
-                                                  theme,
-                                                  EnumValues.draft.toValue(),
-                                                  locationState.latitude,
-                                                  locationState.longitude,
-                                                  context,
-                                                );
-                                              },
-                                              icon: Icons.drafts_outlined,
-                                              label: localizations.translate(
-                                                i18.attendance
-                                                    .saveAndMarkLaterLabel,
-                                              ),
-                                            ),
-                                            DigitElevatedButton(
-                                              onPressed: !viewOnly
-                                                  ? () {
-                                                      checkIfAllAttendeesMarked(
-                                                        state,
-                                                        localizations,
-                                                        theme,
-                                                        EnumValues.submit
-                                                            .toValue(),
-                                                        locationState.latitude,
-                                                        locationState.longitude,
-                                                        context,
-                                                      );
-                                                    }
-                                                  : () {
-                                                      // context.router.pop();
-                                                    },
-                                              child: Text(
-                                                localizations.translate(
-                                                  (!viewOnly)
-                                                      ? i18.common
-                                                          .coreCommonSubmit
-                                                      : i18.attendance
-                                                          .closeButton,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                : DigitCard(
+                                    margin: EdgeInsets.only(
+                                        top: theme.spacerTheme.spacer4),
+                                    children: [
+                                        DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.secondary,
+                                          mainAxisSize: MainAxisSize.max,
+                                          onPressed: () {
+                                            checkIfAllAttendeesMarked(
+                                              state,
+                                              localizations,
+                                              theme,
+                                              EnumValues.draft.toValue(),
+                                              locationState.latitude,
+                                              locationState.longitude,
+                                              context,
+                                            );
+                                          },
+                                          prefixIcon: Icons.drafts_outlined,
+                                          label: localizations.translate(
+                                            i18.attendance
+                                                .saveAndMarkLaterLabel,
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
+                                        DigitButton(
+                                          size: DigitButtonSize.large,
+                                          type: DigitButtonType.primary,
+                                          mainAxisSize: MainAxisSize.max,
+                                          onPressed: !viewOnly
+                                              ? () {
+                                                  checkIfAllAttendeesMarked(
+                                                    state,
+                                                    localizations,
+                                                    theme,
+                                                    EnumValues.submit.toValue(),
+                                                    locationState.latitude,
+                                                    locationState.longitude,
+                                                    context,
+                                                  );
+                                                }
+                                              : () {},
+                                          label: localizations.translate(
+                                            (!viewOnly)
+                                                ? i18.common.coreCommonSubmit
+                                                : i18.attendance.closeButton,
+                                          ),
+                                        ),
+                                      ]),
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             header: const BackNavigationHelpHeaderWidget(
@@ -227,8 +215,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                             ),
                             children: [
                               Padding(
-                                padding: const EdgeInsets.only(
-                                  left: kPadding * 2,
+                                padding: EdgeInsets.only(
+                                  left: theme.spacerTheme.spacer2 * 2,
                                 ),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
@@ -242,8 +230,10 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    left: kPadding * 2, top: 4, bottom: 16),
+                                padding: EdgeInsets.only(
+                                    left: theme.spacerTheme.spacer2 * 2,
+                                    top: theme.spacerTheme.spacer1,
+                                    bottom: theme.spacerTheme.spacer4),
                                 child: SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Text(
@@ -261,7 +251,8 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding:
+                                    EdgeInsets.all(theme.spacerTheme.spacer3),
                                 child: DigitSearchBar(
                                   controller: controller,
                                   hintText: localizations
@@ -272,42 +263,46 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                                 ),
                               ),
                               DigitCard(
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  margin:
+                                      EdgeInsets.all(theme.spacerTheme.spacer3),
                                   children: [
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.only(bottom: 8.0),
-                                      child: tableData.isNotEmpty
-                                          ? DigitTable(
-                                              height: tableData.length > 2
-                                                  ? (tableData.length + 1) * 57
-                                                  : (tableData.length + 1) * 65,
-                                              headerList: headerList(
-                                                widget.dateTime,
-                                                localizations,
-                                              ),
-                                              tableData: tableData,
-                                              columnWidth: 140,
-                                              scrollPhysics:
-                                                  const NeverScrollableScrollPhysics(),
-                                            )
-                                          : NoResultCard(
-                                              align: Alignment.center,
-                                              label: localizations.translate(
-                                                i18.common.noResultsFound,
-                                              ),
+                                    tableData.isNotEmpty
+                                        ? table.DigitTable(
+                                            showSelectedState: false,
+                                            tableHeight: viewOnly
+                                                ? MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .55
+                                                : MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    .4,
+                                            tableWidth: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            showPagination: false,
+                                            showRowsPerPage: false,
+                                            withColumnDividers: false,
+                                            columns: headerList(
+                                              widget.dateTime,
+                                              localizations,
                                             ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                            rows: tableData,
+                                          )
+                                        : NoResultCard(
+                                            align: Alignment.center,
+                                            label: localizations.translate(
+                                              i18.common.noResultsFound,
+                                            ),
+                                          ),
+                                  ]),
                             ],
                           );
                         },
                         loading: () {
                           return Center(
-                            child: Loaders.circularLoader(context),
+                            child: DigitLoaders.inlineLoader(),
                           );
                         },
                       );
@@ -318,20 +313,20 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
             )));
   }
 
-  List<TableDataRow> getAttendanceData(
+  List<DigitTableRow> getAttendanceData(
     List<AttendeeModel>? list,
     bool viewOnly,
   ) {
     return list!.map((e) => getAttendanceRow(e, viewOnly)).toList();
   }
 
-  TableDataRow getAttendanceRow(AttendeeModel tableDataModel, bool viewOnly) {
-    return TableDataRow([
-      TableData(
+  DigitTableRow getAttendanceRow(AttendeeModel tableDataModel, bool viewOnly) {
+    return DigitTableRow(tableRow: [
+      DigitTableData(
         tableDataModel.name.toString(),
-        cellKey: tableDataModel.name,
+        cellKey: tableDataModel.name ?? '',
       ),
-      TableData(
+      DigitTableData(
         '',
         cellKey: tableDataModel.status.toString(),
         widget: CircularButton(
@@ -353,26 +348,26 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
           },
         ),
       ),
-      TableData(
+      DigitTableData(
         tableDataModel.individualNumber.toString(),
-        cellKey: tableDataModel.individualNumber,
+        cellKey: tableDataModel.individualNumber ?? "",
       ),
     ]);
   }
 
-  List<TableHeader> headerList(DateTime s, dynamic localizations) {
+  List<DigitTableColumn> headerList(DateTime s, dynamic localizations) {
     return [
-      TableHeader(
-        localizations.translate(i18.attendance.tableHeaderName),
-        cellKey: 'name',
+      DigitTableColumn(
+        header: localizations.translate(i18.attendance.tableHeaderName),
+        cellValue: 'name',
       ),
-      TableHeader(
-        localizations.translate(i18.attendance.tableHeaderAttendance),
-        cellKey: 'date',
+      DigitTableColumn(
+        header: localizations.translate(i18.attendance.tableHeaderAttendance),
+        cellValue: 'date',
       ),
-      TableHeader(
-        localizations.translate(i18.attendance.tableHeaderUserId),
-        cellKey: "userId",
+      DigitTableColumn(
+        header: localizations.translate(i18.attendance.tableHeaderUserId),
+        cellValue: "userId",
       ),
     ];
   }
@@ -414,11 +409,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   SizedBox(
                     width: 100,
                     height: 40,
-                    child: DigitElevatedButton(
-                      child: Text(
-                        k.translate(
-                          i18.attendance.closeButton,
-                        ),
+                    child: DigitButton(
+                      size: DigitButtonSize.large,
+                      type: DigitButtonType.primary,
+                      mainAxisSize: MainAxisSize.max,
+                      label: k.translate(
+                        i18.attendance.closeButton,
                       ),
                       onPressed: () {
                         context.router.maybePop();
@@ -443,12 +439,12 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
       double? longitude,
       BuildContext context) {
     context.read<LocationBloc>().add(const LoadLocationEvent());
-    DigitComponentsUtils().showLocationCapturingDialog(
+    DigitComponentsUtils.showDialog(
         context,
         localizations.translate(i18.common.locationCapturing),
-        DigitSyncDialogType.inProgress);
+        DialogType.inProgress);
     Future.delayed(const Duration(seconds: 2), () async {
-      DigitComponentsUtils().hideDialog(context);
+      DigitComponentsUtils.hideDialog(context);
       state.maybeWhen(
           orElse: () {},
           loaded: (
@@ -466,14 +462,11 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                 ((attendanceCollectionModel ?? [])
                         .every((a) => a.status == -1 || a.status == null) &&
                     type == EnumValues.draft.toValue())) {
-              DigitToast.show(
+              Toast.showToast(
                 context,
-                options: DigitToastOptions(
-                  localizations
-                      .translate(i18.attendance.pleaseMarkAttForIndividuals),
-                  true,
-                  theme,
-                ),
+                message: localizations
+                    .translate(i18.attendance.pleaseMarkAttForIndividuals),
+                type: ToastType.error,
               );
             } else {
               if (type == EnumValues.draft.toValue()) {
@@ -486,48 +479,61 @@ class _MarkAttendancePageState extends State<MarkAttendancePage> {
                   latitude: latitude,
                   longitude: longitude,
                 ));
-                DigitToast.show(
+                Toast.showToast(
                   context,
-                  options: DigitToastOptions(
-                    localizations.translate(i18.attendance.draftSavedMessage),
-                    false,
-                    theme,
-                  ),
+                  message:
+                      localizations.translate(i18.attendance.draftSavedMessage),
+                  type: ToastType.success,
                 );
               } else {
-                DigitDialog.show(context,
-                    options: DigitDialogOptions(
-                      titleText: localizations.translate(
-                        i18.attendance.confirmationLabel,
-                      ),
-                      contentText:
-                          '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
-                      primaryAction: DigitDialogActions(
-                        label: localizations.translate(
-                          i18.attendance.proceed,
+                showDialog(
+                    context: context,
+                    builder: (BuildContext ctx) {
+                      return Popup(
+                        title: localizations.translate(
+                          i18.attendance.confirmationLabel,
                         ),
-                        action: (context) {
-                          individualLogBloc?.add(SaveAsDraftEvent(
-                            entryTime: widget.entryTime,
-                            exitTime: widget.exitTime,
-                            selectedDate: widget.dateTime,
-                            isSingleSession: widget.session == null,
-                            createOplog: type != EnumValues.draft.toValue(),
-                            latitude: latitude,
-                            longitude: longitude,
-                          ));
-                          Navigator.of(context).pop();
-                          navigateToAcknowledgement(localizations);
-                        },
-                      ),
-                      secondaryAction: DigitDialogActions(
-                        label: localizations
-                            .translate(i18.common.coreCommonGoback),
-                        action: (context) {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                    ));
+                        description:
+                            '${localizations.translate(i18.attendance.confirmationDesc)} \n\n${localizations.translate(i18.attendance.confirmationDescNote)}',
+                        actions: [
+                          DigitButton(
+                            label: localizations.translate(
+                              i18.attendance.proceed,
+                            ),
+                            type: DigitButtonType.primary,
+                            size: DigitButtonSize.large,
+                            onPressed: () {
+                              individualLogBloc?.add(SaveAsDraftEvent(
+                                entryTime: widget.entryTime,
+                                exitTime: widget.exitTime,
+                                selectedDate: widget.dateTime,
+                                isSingleSession: widget.session == null,
+                                createOplog: type != EnumValues.draft.toValue(),
+                                latitude: latitude,
+                                longitude: longitude,
+                              ));
+                              Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pop(true);
+                              navigateToAcknowledgement(localizations);
+                            },
+                          ),
+                          DigitButton(
+                            label: localizations
+                                .translate(i18.common.coreCommonGoback),
+                            type: DigitButtonType.secondary,
+                            size: DigitButtonSize.large,
+                            onPressed: () {
+                              Navigator.of(
+                                context,
+                                rootNavigator: true,
+                              ).pop(false);
+                            },
+                          )
+                        ],
+                      );
+                    });
               }
             }
           });

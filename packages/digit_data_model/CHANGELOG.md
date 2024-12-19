@@ -1,7 +1,17 @@
+## 1.0.5
+
+* Upgrade to Flutter 3.22
+* Added project_type in Project Table
+* Changed isActive to bool in Service Attribute table
+
+## 1.0.5-dev.1
+
+* Merged pgr and survey_form package changes
+
 ## 1.0.4+1
 
 * Bug Fix:
-  * Updated syncRetryCount,syncRetryInterval and errorPath to dynamic
+    * Updated syncRetryCount,syncRetryInterval and errorPath to dynamic
 
 ## 1.0.4
 
@@ -22,10 +32,24 @@
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
 
+## 1.0.4-dev.4
+
+* synced with 1.0.4-dev.3 changes
+
 ## 1.0.4-dev.3
 
 * Updated oplog transactions to synchronous - fix for write transaction lock
 * Same change in 1.0.3-hotfix, 1.0.4-dev.3
+
+## 1.0.4-dev.2
+
+* Removed Service and Service Definition models
+    - Removed Service repositories and Service blocs to integrate in checklist package
+
+## 1.0.4-dev.1
+
+* Separated PGR Package
+* Moved Models, Bloc, Repositories related to PGR Package
 
 ## 1.0.3
 
@@ -35,11 +59,11 @@
 ## 1.0.3-dev.4
 
 * Updated individual local search results with user uuid mapping
-  
+
 ## 1.0.3-dev.3
 
-* Created localization table 
-  - Creation of the localization table.
+* Created localization table
+    - Creation of the localization table.
 
 ## 1.0.3-dev.2
 
@@ -73,7 +97,7 @@
 
 ## 0.0.0-dev.2
 
-* Boundary v2 Integrated, to use Boundary v1  0.0.0-dev.1 version can be used
+* Boundary v2 Integrated, to use Boundary v1 0.0.0-dev.1 version can be used
     - Integration of Boundary v2 with the option to use Boundary v1 version 0.0.0-dev.1.
 
 ## 0.0.0-dev.1

@@ -1,7 +1,10 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:collection/collection.dart';
-import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/atoms/pop_up_card.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:registration_delivery/utils/extensions/extensions.dart';
@@ -16,8 +19,8 @@ import '../../utils/constants.dart';
 import '../../utils/i18_key_constants.dart' as i18;
 import '../../utils/utils.dart';
 import '../../widgets/back_navigation_help_header.dart';
-import '../../widgets/localized.dart';
 import '../../widgets/component_wrapper/product_variant_bloc_wrapper.dart';
+import '../../widgets/localized.dart';
 
 @RoutePage()
 class SideEffectsPage extends LocalizedStatefulWidget {
@@ -58,6 +61,7 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final textTheme = theme.digitTextTheme(context);
 
     return ProductVariantBlocWrapper(
       child: BlocBuilder<ProductVariantBloc, ProductVariantState>(
@@ -78,272 +82,256 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
                                   showHelp: false,
                                 ),
                                 footer: DigitCard(
-                                  margin: const EdgeInsets.fromLTRB(
-                                      0, kPadding, 0, 0),
-                                  padding: const EdgeInsets.fromLTRB(
-                                      kPadding, 0, kPadding, 0),
-                                  child: DigitElevatedButton(
-                                    onPressed: () async {
-                                      if (symptomsValues.any((e) => e)) {
-                                        setState(() {
-                                          symptomsSelected = true;
-                                        });
-
-                                        final shouldSubmit =
-                                            await DigitDialog.show<bool>(
-                                          context,
-                                          options: DigitDialogOptions(
-                                            titleText: localizations.translate(
-                                              i18.deliverIntervention
-                                                  .dialogTitle,
-                                            ),
-                                            contentText:
-                                                localizations.translate(
-                                              i18.deliverIntervention
-                                                  .dialogContent,
-                                            ),
-                                            primaryAction: DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonSubmit,
-                                              ),
-                                              action: (ctx) {
-                                                final List<String> symptoms =
-                                                    [];
-
-                                                for (int i = 0;
-                                                    i < symptomsValues.length;
-                                                    i++) {
-                                                  if (symptomsValues[i]) {
-                                                    symptoms.add(
-                                                      symptomsTypes[i],
-                                                    );
-                                                  }
-                                                }
-
-                                                final clientReferenceId =
-                                                    IdGen.i.identifier;
-                                                context
-                                                    .read<SideEffectsBloc>()
-                                                    .add(
-                                                      SideEffectsSubmitEvent(
-                                                        SideEffectModel(
-                                                          id: null,
-                                                          taskClientReferenceId:
-                                                              widget.tasks.last
-                                                                  .clientReferenceId,
-                                                          projectId:
-                                                              RegistrationDeliverySingleton()
-                                                                  .projectId,
-                                                          symptoms: symptoms,
-                                                          clientReferenceId:
-                                                              clientReferenceId,
-                                                          tenantId:
-                                                              RegistrationDeliverySingleton()
-                                                                  .tenantId,
-                                                          rowVersion: 1,
-                                                          auditDetails:
-                                                              AuditDetails(
-                                                            createdBy:
-                                                                RegistrationDeliverySingleton()
-                                                                    .loggedInUserUuid!,
-                                                            createdTime: context
-                                                                .millisecondsSinceEpoch(),
-                                                            lastModifiedBy:
-                                                                RegistrationDeliverySingleton()
-                                                                    .loggedInUserUuid,
-                                                            lastModifiedTime:
-                                                                context
-                                                                    .millisecondsSinceEpoch(),
-                                                          ),
-                                                          clientAuditDetails:
-                                                              ClientAuditDetails(
-                                                            createdBy:
-                                                                RegistrationDeliverySingleton()
-                                                                    .loggedInUserUuid!,
-                                                            createdTime: context
-                                                                .millisecondsSinceEpoch(),
-                                                            lastModifiedBy:
-                                                                RegistrationDeliverySingleton()
-                                                                    .loggedInUserUuid,
-                                                            lastModifiedTime:
-                                                                context
-                                                                    .millisecondsSinceEpoch(),
-                                                          ),
-                                                        ),
-                                                        false,
-                                                      ),
-                                                    );
-                                                Navigator.of(
-                                                  context,
-                                                  rootNavigator: true,
-                                                ).pop(true);
-                                              },
-                                            ),
-                                            secondaryAction: DigitDialogActions(
-                                              label: localizations.translate(
-                                                i18.common.coreCommonCancel,
-                                              ),
-                                              action: (context) => Navigator.of(
-                                                context,
-                                                rootNavigator: true,
-                                              ).pop(false),
-                                            ),
-                                          ),
-                                        );
-
-                                        if (shouldSubmit ?? false) {
-                                          final reloadState = context
-                                              .read<HouseholdOverviewBloc>();
-
-                                          Future.delayed(
-                                            const Duration(milliseconds: 500),
-                                            () {
-                                              reloadState.add(
-                                                HouseholdOverviewReloadEvent(
-                                                  projectId:
-                                                      RegistrationDeliverySingleton()
-                                                          .projectId!,
-                                                  projectBeneficiaryType:
-                                                      RegistrationDeliverySingleton()
-                                                          .beneficiaryType!,
-                                                ),
-                                              );
-                                            },
-                                          ).then((value) => context.router.push(
-                                                HouseholdAcknowledgementRoute(
-                                                  enableViewHousehold: true,
-                                                ),
-                                              ));
-                                        }
-                                      } else {
-                                        setState(() {
-                                          symptomsSelected = false;
-                                        });
-                                      }
-                                    },
-                                    child: Center(
-                                      child: Text(
-                                        localizations.translate(
+                                    margin: const EdgeInsets.only(top: spacer2),
+                                    padding: const EdgeInsets.all(spacer2),
+                                    children: [
+                                      DigitButton(
+                                        label: localizations.translate(
                                           i18.common.coreCommonNext,
                                         ),
+                                        type: DigitButtonType.primary,
+                                        size: DigitButtonSize.large,
+                                        mainAxisSize: MainAxisSize.max,
+                                        onPressed: () async {
+                                          if (symptomsValues.any((e) => e)) {
+                                            setState(() {
+                                              symptomsSelected = true;
+                                            });
+
+                                            final shouldSubmit =
+                                                await showDialog<bool>(
+                                              context: context,
+                                              builder: (ctx) => Popup(
+                                                title: localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogTitle,
+                                                ),
+                                                description:
+                                                    localizations.translate(
+                                                  i18.deliverIntervention
+                                                      .dialogContent,
+                                                ),
+                                                actions: [
+                                                  DigitButton(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonSubmit,
+                                                      ),
+                                                      onPressed: () {
+                                                        final List<String>
+                                                            symptoms = [];
+
+                                                        for (int i = 0;
+                                                            i <
+                                                                symptomsValues
+                                                                    .length;
+                                                            i++) {
+                                                          if (symptomsValues[
+                                                              i]) {
+                                                            symptoms.add(
+                                                              symptomsTypes[i],
+                                                            );
+                                                          }
+                                                        }
+
+                                                        final clientReferenceId =
+                                                            IdGen.i.identifier;
+                                                        context
+                                                            .read<
+                                                                SideEffectsBloc>()
+                                                            .add(
+                                                              SideEffectsSubmitEvent(
+                                                                SideEffectModel(
+                                                                  id: null,
+                                                                  additionalFields:
+                                                                      SideEffectAdditionalFields(
+                                                                    version: 1,
+                                                                    fields: [
+                                                                      AdditionalField(
+                                                                          "boundaryCode",
+                                                                          RegistrationDeliverySingleton()
+                                                                              .boundary
+                                                                              ?.code),
+                                                                    ],
+                                                                  ),
+                                                                  taskClientReferenceId:
+                                                                      widget
+                                                                          .tasks
+                                                                          .last
+                                                                          .clientReferenceId,
+                                                                  projectBeneficiaryClientReferenceId:
+                                                                      widget
+                                                                          .tasks
+                                                                          .last
+                                                                          .projectBeneficiaryClientReferenceId,
+                                                                  projectId:
+                                                                      RegistrationDeliverySingleton()
+                                                                          .projectId,
+                                                                  symptoms:
+                                                                      symptoms,
+                                                                  clientReferenceId:
+                                                                      clientReferenceId,
+                                                                  tenantId:
+                                                                      RegistrationDeliverySingleton()
+                                                                          .tenantId,
+                                                                  rowVersion: 1,
+                                                                  auditDetails:
+                                                                      AuditDetails(
+                                                                    createdBy:
+                                                                        RegistrationDeliverySingleton()
+                                                                            .loggedInUserUuid!,
+                                                                    createdTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                    lastModifiedBy:
+                                                                        RegistrationDeliverySingleton()
+                                                                            .loggedInUserUuid,
+                                                                    lastModifiedTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                  ),
+                                                                  clientAuditDetails:
+                                                                      ClientAuditDetails(
+                                                                    createdBy:
+                                                                        RegistrationDeliverySingleton()
+                                                                            .loggedInUserUuid!,
+                                                                    createdTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                    lastModifiedBy:
+                                                                        RegistrationDeliverySingleton()
+                                                                            .loggedInUserUuid,
+                                                                    lastModifiedTime:
+                                                                        context
+                                                                            .millisecondsSinceEpoch(),
+                                                                  ),
+                                                                ),
+                                                                false,
+                                                              ),
+                                                            );
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        ).pop(true);
+                                                      },
+                                                      type: DigitButtonType
+                                                          .primary,
+                                                      size: DigitButtonSize
+                                                          .large),
+                                                  DigitButton(
+                                                      label: localizations
+                                                          .translate(
+                                                        i18.common
+                                                            .coreCommonCancel,
+                                                      ),
+                                                      onPressed: () =>
+                                                          Navigator.of(
+                                                            context,
+                                                            rootNavigator: true,
+                                                          ).pop(false),
+                                                      type: DigitButtonType
+                                                          .secondary,
+                                                      size:
+                                                          DigitButtonSize.large)
+                                                ],
+                                              ),
+                                            );
+
+                                            if (shouldSubmit ?? false) {
+                                              submitSideEffects();
+                                            }
+                                          } else {
+                                            setState(() {
+                                              symptomsSelected = false;
+                                            });
+                                          }
+                                        },
                                       ),
-                                    ),
-                                  ),
-                                ),
+                                    ]),
                                 slivers: [
                                   SliverToBoxAdapter(
-                                    child: DigitCard(
-                                      padding: const EdgeInsets.only(
-                                        left: kPadding * 2,
-                                        right: kPadding * 2,
-                                        top: kPadding * 2,
-                                        bottom: kPadding * 2,
+                                    child: DigitCard(children: [
+                                      Text(
+                                        localizations.translate(
+                                          i18.adverseEvents.sideEffectsLabel,
+                                        ),
+                                        style: textTheme.headingXl,
                                       ),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
+                                      Text(
+                                        '${localizations.translate(
+                                          i18.adverseEvents.selectSymptomsLabel,
+                                        )}*',
+                                        style: textTheme.headingS,
+                                      ),
+                                      StatefulBuilder(
+                                        builder: (
+                                          BuildContext context,
+                                          StateSetter stateSetter,
+                                        ) {
+                                          return Column(
                                             children: [
-                                              Expanded(
-                                                child: Text(
-                                                  localizations.translate(
-                                                    i18.adverseEvents
-                                                        .sideEffectsLabel,
-                                                  ),
-                                                  style: theme
-                                                      .textTheme.displayMedium,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Align(
-                                            alignment: Alignment.topLeft,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                right: kPadding * 2,
-                                                top: kPadding * 2,
-                                                bottom: kPadding * 2,
-                                              ),
-                                              child: Text(
-                                                '${localizations.translate(
-                                                  i18.adverseEvents
-                                                      .selectSymptomsLabel,
-                                                )}*',
-                                                style: theme
-                                                    .textTheme.headlineSmall,
-                                              ),
-                                            ),
-                                          ),
-                                          StatefulBuilder(
-                                            builder: (
-                                              BuildContext context,
-                                              StateSetter stateSetter,
-                                            ) {
-                                              return Column(
-                                                children: [
-                                                  Column(
-                                                    children:
-                                                        symptomTypesOptions
-                                                            .mapIndexed(
-                                                              (i, e) =>
-                                                                  DigitCheckboxTile(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .zero,
-                                                                label: localizations
-                                                                    .translate(
-                                                                  e.key,
-                                                                ),
-                                                                value:
-                                                                    symptomsValues[
-                                                                        i],
-                                                                onChanged:
-                                                                    (value) {
-                                                                  stateSetter(
-                                                                    () {
-                                                                      symptomsValues[
-                                                                              i] =
-                                                                          !symptomsValues[
-                                                                              i];
-                                                                      symptomsSelected =
-                                                                          symptomsValues
-                                                                              .any(
-                                                                        (e) =>
-                                                                            e,
-                                                                      );
-                                                                    },
-                                                                  );
-                                                                },
-                                                              ),
-                                                            )
-                                                            .toList(),
-                                                  ),
-                                                  Visibility(
-                                                    visible: !symptomsSelected,
-                                                    child: Align(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      child: Text(
-                                                        localizations.translate(
-                                                          i18.common
-                                                              .coreCommonRequiredItems,
+                                              Column(
+                                                children: symptomTypesOptions
+                                                    .mapIndexed(
+                                                      (i, e) => Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(spacer2),
+                                                        child: DigitCheckbox(
+                                                          label: localizations
+                                                              .translate(
+                                                            e.key,
+                                                          ),
+                                                          value:
+                                                              symptomsValues[i],
+                                                          onChanged: (value) {
+                                                            stateSetter(
+                                                              () {
+                                                                symptomsValues[
+                                                                        i] =
+                                                                    !symptomsValues[
+                                                                        i];
+                                                                symptomsSelected =
+                                                                    symptomsValues
+                                                                        .any(
+                                                                  (e) => e,
+                                                                );
+                                                              },
+                                                            );
+                                                          },
                                                         ),
-                                                        style: TextStyle(
-                                                          color: theme
-                                                              .colorScheme
-                                                              .error,
-                                                        ),
+                                                      ),
+                                                    )
+                                                    .toList(),
+                                              ),
+                                              Visibility(
+                                                visible: !symptomsSelected,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: spacer2),
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerLeft,
+                                                    child: Text(
+                                                      localizations.translate(
+                                                        i18.common
+                                                            .coreCommonRequiredItems,
+                                                      ),
+                                                      style: TextStyle(
+                                                        color: theme.colorTheme
+                                                            .alert.error,
                                                       ),
                                                     ),
                                                   ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        ],
+                                                ),
+                                              ),
+                                            ],
+                                          );
+                                        },
                                       ),
-                                    ),
+                                    ]),
                                   ),
                                 ],
                               ),
@@ -357,5 +345,26 @@ class SideEffectsPageState extends LocalizedState<SideEffectsPage> {
         },
       ),
     );
+  }
+
+  void submitSideEffects() async {
+    final reloadState = context.read<HouseholdOverviewBloc>();
+
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        reloadState.add(
+          HouseholdOverviewReloadEvent(
+            projectId: RegistrationDeliverySingleton().projectId!,
+            projectBeneficiaryType:
+                RegistrationDeliverySingleton().beneficiaryType!,
+          ),
+        );
+      },
+    ).then((value) => context.router.push(
+          HouseholdAcknowledgementRoute(
+            enableViewHousehold: true,
+          ),
+        ));
   }
 }

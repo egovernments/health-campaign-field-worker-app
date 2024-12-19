@@ -1,3 +1,4 @@
+import 'package:complaints/router/complaints_router.gm.dart';
 import 'package:digit_components/theme/digit_theme.dart';
 import 'package:digit_showcase/showcase_widget.dart';
 import 'package:flutter/material.dart';
@@ -71,18 +72,6 @@ class _ShowcaseButtonState extends LocalizedState<ShowcaseButton> {
         );
       case "StockReconciliationRoute":
         return stockReconciliationShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ChecklistRoute.name:
-        return selectChecklistShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ChecklistBoundaryViewRoute.name:
-        return checklistDataShowcaseData.showcaseData.map(
-          (e) => e.showcaseKey,
-        );
-      case ChecklistPreviewRoute.name:
-        return checklistListShowcaseData.showcaseData.map(
           (e) => e.showcaseKey,
         );
       case ComplaintTypeRoute.name:

@@ -1,10 +1,11 @@
 import 'package:attendance_management/blocs/date_session_bloc.dart';
 import 'package:attendance_management/utils/extensions/extensions.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:digit_components/digit_components.dart';
-import 'package:digit_components/utils/date_utils.dart';
-import 'package:digit_components/widgets/atoms/digit_radio_button_list.dart';
 import 'package:digit_data_model/data_model.dart';
+import 'package:digit_ui_components/digit_components.dart';
+import 'package:digit_ui_components/models/RadioButtonModel.dart';
+import 'package:digit_ui_components/theme/digit_extended_theme.dart';
+import 'package:digit_ui_components/widgets/molecules/digit_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -17,7 +18,6 @@ import '../models/entities/attendance_log.dart';
 import '../models/entities/attendance_register.dart';
 import '../models/entities/enum_values.dart';
 import '../router/attendance_router.gm.dart';
-import '../utils/constants.dart';
 import '../utils/date_util_attendance.dart';
 import '../widgets/back_navigation_help_header.dart';
 
@@ -71,8 +71,8 @@ class _AttendanceDateSessionSelectionPageState
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final localizations = AttendanceLocalization.of(context);
-
     return Scaffold(
         body: BlocProvider<DateSessionBloc>(
             create: (context) => sessionBloc
@@ -99,228 +99,275 @@ class _AttendanceDateSessionSelectionPageState
                                 showHelp: true,
                                 showLogoutCTA: false,
                               ),
-                              enableFixedButton: true,
+                              enableFixedDigitButton: true,
                               footer: DigitCard(
-                                  margin: const EdgeInsets.fromLTRB(
-                                      0, kPadding, 0, 0),
-                                  padding: const EdgeInsets.fromLTRB(
-                                      kPadding, 0, kPadding, 0),
-                                  child: ReactiveValueListenableBuilder(
-                                      formControlName: _dateOfSession,
-                                      builder: (context, value, _) {
-                                        return DigitElevatedButton(
-                                          child: Text(localizations.translate(
-                                            isAttendanceCompleted(
-                                                    value.value as DateTime)
-                                                ? i18.attendance.viewAttendance
-                                                : i18.attendance.markAttendance,
-                                          )),
-                                          onPressed: () async {
-                                            if (selectedRegister
+                                  padding:
+                                      EdgeInsets.all(theme.spacerTheme.spacer2),
+                                  children: [
+                                    DigitButton(
+                                      size: DigitButtonSize.large,
+                                      type: DigitButtonType.primary,
+                                      mainAxisSize: MainAxisSize.max,
+                                      label: localizations.translate(
+                                        isAttendanceCompleted(form
+                                                .control(_dateOfSession)
+                                                .value as DateTime)
+                                            ? i18.attendance.viewAttendance
+                                            : i18.attendance.markAttendance,
+                                      ),
+                                      onPressed: () async {
+                                        form.markAllAsTouched();
+                                        if (selectedRegister.additionalDetails?[
+                                                    EnumValues.sessions
+                                                        .toValue()] ==
+                                                2 &&
+                                            form.control(_sessionRadio).value ==
+                                                null) {
+                                          form
+                                              .control(_sessionRadio)
+                                              .setErrors({'': true});
+
+                                          form
+                                              .control(_sessionRadio)
+                                              .setValidators(
+                                                  [Validators.required]);
+
+                                          // Ensure form control is updated after changing validators
+                                          form
+                                              .control(_sessionRadio)
+                                              .updateValueAndValidity();
+                                        } else {
+                                          if (!form.valid) {
+                                            return;
+                                          } else {
+                                            final session = form
+                                                .control(_sessionRadio)
+                                                .value;
+                                            DateTime dateSession = form
+                                                .control(_dateOfSession)
+                                                .value;
+
+                                            final entryTime = selectedRegister
                                                             .additionalDetails?[
                                                         EnumValues.sessions
                                                             .toValue()] ==
-                                                    2 &&
-                                                form
-                                                        .control(_sessionRadio)
-                                                        .value ==
-                                                    null) {
+                                                    2
+                                                ? AttendanceDateTimeManagement
+                                                    .getMillisecondEpoch(
+                                                    dateSession,
+                                                    form
+                                                                .control(
+                                                                    _sessionRadio)
+                                                                .value !=
+                                                            null
+                                                        ? int.parse(form
+                                                            .control(
+                                                                _sessionRadio)
+                                                            .value)
+                                                        : 0,
+                                                    "entryTime",
+                                                  )
+                                                : (DateTime(
+                                                        dateSession.year,
+                                                        dateSession.month,
+                                                        dateSession.day,
+                                                        9)
+                                                    .millisecondsSinceEpoch);
+
+                                            final exitTime = selectedRegister
+                                                            .additionalDetails?[
+                                                        EnumValues.sessions
+                                                            .toValue()] ==
+                                                    2
+                                                ? AttendanceDateTimeManagement
+                                                    .getMillisecondEpoch(
+                                                    dateSession,
+                                                    form
+                                                                .control(
+                                                                    _sessionRadio)
+                                                                .value !=
+                                                            null
+                                                        ? int.parse(form
+                                                            .control(
+                                                                _sessionRadio)
+                                                            .value)
+                                                        : 1,
+                                                    "exitTime",
+                                                  )
+                                                : (DateTime(
+                                                        dateSession.year,
+                                                        dateSession.month,
+                                                        dateSession.day,
+                                                        18)
+                                                    .millisecondsSinceEpoch);
+
+                                            final submit =
+                                                await context.router.push(
+                                              MarkAttendanceRoute(
+                                                attendees: selectedRegister
+                                                            .attendees !=
+                                                        null
+                                                    //Filtering attendees based on current time and enrollment date of the attendee
+                                                    ? (selectedRegister
+                                                                .attendees ??
+                                                            [])
+                                                        .where((att) =>
+                                                            att.enrollmentDate !=
+                                                                null &&
+                                                            att.enrollmentDate! <=
+                                                                entryTime)
+                                                        .toList()
+                                                    : [],
+                                                dateTime: dateSession,
+                                                session: session != null
+                                                    ? int.parse(session)
+                                                    : null,
+                                                entryTime: entryTime,
+                                                exitTime: exitTime,
+                                                registerId: selectedRegister.id,
+                                                tenantId: selectedRegister
+                                                    .tenantId
+                                                    .toString(),
+                                              ),
+                                            );
+                                            if (submit == null) {
                                               form
                                                   .control(_sessionRadio)
-                                                  .setErrors({'': true});
-                                            } else {
-                                              form.markAllAsTouched();
-
-                                              if (!form.valid) {
-                                                return;
-                                              } else {
-                                                final session = form
-                                                    .control(_sessionRadio)
-                                                    .value as KeyValue?;
-                                                DateTime dateSession = form
-                                                    .control(_dateOfSession)
-                                                    .value;
-
-                                                final entryTime = selectedRegister
-                                                                .additionalDetails?[
-                                                            EnumValues.sessions
-                                                                .toValue()] ==
-                                                        2
-                                                    ? AttendanceDateTimeManagement
-                                                        .getMillisecondEpoch(
-                                                        dateSession,
-                                                        form
-                                                                    .control(
-                                                                        _sessionRadio)
-                                                                    .value !=
-                                                                null
-                                                            ? form
-                                                                .control(
-                                                                    _sessionRadio)
-                                                                .value
-                                                                .key
-                                                            : 0,
-                                                        "entryTime",
-                                                      )
-                                                    : (DateTime(
-                                                            dateSession.year,
-                                                            dateSession.month,
-                                                            dateSession.day,
-                                                            9)
-                                                        .millisecondsSinceEpoch);
-
-                                                final exitTime = selectedRegister
-                                                                .additionalDetails?[
-                                                            EnumValues.sessions
-                                                                .toValue()] ==
-                                                        2
-                                                    ? AttendanceDateTimeManagement
-                                                        .getMillisecondEpoch(
-                                                        dateSession,
-                                                        form
-                                                                    .control(
-                                                                        _sessionRadio)
-                                                                    .value !=
-                                                                null
-                                                            ? form
-                                                                .control(
-                                                                    _sessionRadio)
-                                                                .value
-                                                                .key
-                                                            : 1,
-                                                        "exitTime",
-                                                      )
-                                                    : (DateTime(
-                                                            dateSession.year,
-                                                            dateSession.month,
-                                                            dateSession.day,
-                                                            18)
-                                                        .millisecondsSinceEpoch);
-
-                                                final submit =
-                                                    await context.router.push(
-                                                  MarkAttendanceRoute(
-                                                    attendees: selectedRegister
-                                                                .attendees !=
-                                                            null
-                                                        //Filtering attendees based on current time and enrollment date of the attendee
-                                                        ? (selectedRegister
-                                                                    .attendees ??
-                                                                [])
-                                                            .where((att) =>
-                                                                att.enrollmentDate !=
-                                                                    null &&
-                                                                att.enrollmentDate! <=
-                                                                    entryTime)
-                                                            .toList()
-                                                        : [],
-                                                    dateTime: dateSession,
-                                                    session: session?.key,
-                                                    entryTime: entryTime,
-                                                    exitTime: exitTime,
-                                                    registerId:
-                                                        selectedRegister.id,
-                                                    tenantId: selectedRegister
-                                                        .tenantId
-                                                        .toString(),
-                                                  ),
-                                                );
-                                                if (submit == null) {
-                                                  form
-                                                      .control(_sessionRadio)
-                                                      .value = null;
-                                                }
-                                              }
+                                                  .value = null;
                                             }
-                                          },
-                                        );
-                                      })),
+                                          }
+                                        }
+                                      },
+                                    )
+                                  ]),
                               children: [
-                                DigitCard(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        localizations.translate(
-                                          i18.attendance.selectSession,
-                                        ),
-                                        style: DigitTheme.instance.mobileTheme
-                                            .textTheme.displayMedium,
-                                      ),
-                                      DigitDateFormPicker(
-                                        start: selectedRegister.startDate !=
-                                                null
-                                            ? DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    selectedRegister.startDate!)
-                                            : null,
-                                        end: selectedRegister.endDate != null
-                                            ? selectedRegister.endDate! <
-                                                    DateTime.now()
-                                                        .millisecondsSinceEpoch
+                                DigitCard(children: [
+                                  Text(
+                                    localizations.translate(
+                                      i18.attendance.selectSession,
+                                    ),
+                                    style: DigitTheme.instance.mobileTheme
+                                        .textTheme.displayMedium,
+                                  ),
+                                  ReactiveWrapperField(
+                                      formControlName: _dateOfSession,
+                                      builder: (field) {
+                                        return LabeledField(
+                                          label: localizations.translate(
+                                            i18.attendance.dateOfSession,
+                                          ),
+                                          child: DigitDateFormInput(
+                                            onChange: (val) => {
+                                              form
+                                                  .control(_dateOfSession)
+                                                  .markAsTouched(),
+                                              form
+                                                      .control(_dateOfSession)
+                                                      .value =
+                                                  AttendanceDateTimeManagement
+                                                      .getFormattedDateToDateTime(
+                                                          val),
+                                            },
+                                            initialValue:
+                                                AttendanceDateTimeManagement
+                                                    .getDateString(form
+                                                        .control(_dateOfSession)
+                                                        .value),
+                                            firstDate: selectedRegister
+                                                        .startDate !=
+                                                    null
                                                 ? DateTime
                                                     .fromMillisecondsSinceEpoch(
                                                         selectedRegister
-                                                            .endDate!)
-                                                : DateTime.now()
-                                            : null,
-                                        label: localizations.translate(
-                                          i18.attendance.dateOfSession,
-                                        ),
-                                        formControlName: _dateOfSession,
-                                        cancelText: localizations.translate(
-                                            i18.common.coreCommonCancel),
-                                        confirmText: localizations
-                                            .translate(i18.common.coreCommonOk),
-                                      ),
-                                      if (selectedRegister.additionalDetails?[
-                                              EnumValues.sessions.toValue()] ==
-                                          2)
-                                        DigitRadioButtonList<KeyValue>(
-                                          labelText: localizations.translate(i18
-                                              .attendance.sessionDescForRadio),
-                                          labelStyle: DigitTheme
-                                              .instance
-                                              .mobileTheme
-                                              .textTheme
-                                              .headlineSmall
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            fontSize: 16,
+                                                            .startDate!)
+                                                : null,
+                                            lastDate: selectedRegister
+                                                        .endDate !=
+                                                    null
+                                                ? selectedRegister.endDate! <
+                                                        DateTime.now()
+                                                            .millisecondsSinceEpoch
+                                                    ? DateTime
+                                                        .fromMillisecondsSinceEpoch(
+                                                            selectedRegister
+                                                                .endDate!)
+                                                    : DateTime.now()
+                                                : null,
+                                            cancelText: localizations.translate(
+                                                i18.common.coreCommonCancel),
+                                            confirmText:
+                                                localizations.translate(
+                                                    i18.common.coreCommonOk),
                                           ),
-                                          isRequired: true,
-                                          errorMessage: localizations.translate(
-                                              i18.attendance.plzSelectSession),
-                                          formControlName: _sessionRadio,
-                                          options: [
-                                            KeyValue(
-                                                i18.attendance.morningSession,
-                                                0),
-                                            KeyValue(
-                                                i18.attendance.eveningSession,
-                                                1),
-                                          ],
-                                          valueMapper: (value) {
-                                            return localizations
-                                                .translate(value.label);
-                                          },
-                                        ),
-                                    ],
-                                  ),
-                                ),
+                                        );
+                                      }),
+                                  if (selectedRegister.additionalDetails?[
+                                          EnumValues.sessions.toValue()] ==
+                                      2)
+                                    ReactiveWrapperField<String>(
+                                        formControlName: _sessionRadio,
+                                        validationMessages: {
+                                          'required': (_) =>
+                                              localizations.translate(i18
+                                                  .attendance.plzSelectSession),
+                                        },
+                                        showErrors: (control) =>
+                                            control.invalid && control.touched,
+                                        // Ensures error is shown if invalid and touched
+                                        builder: (field) {
+                                          return LabeledField(
+                                            isRequired: true,
+                                            label: localizations.translate(i18
+                                                .attendance
+                                                .sessionDescForRadio),
+                                            child: RadioList(
+                                                onChanged: (val) {
+                                                  form
+                                                      .control(_sessionRadio)
+                                                      .markAsTouched();
+                                                  form
+                                                      .control(_sessionRadio)
+                                                      .value = val.code;
+                                                },
+                                                groupValue: form
+                                                        .control(_sessionRadio)
+                                                        .value ??
+                                                    "",
+                                                errorMessage: field.errorText,
+                                                radioDigitButtons: [
+                                                  RadioButtonModel(
+                                                      code: "0",
+                                                      name: localizations
+                                                          .translate(
+                                                        i18.attendance
+                                                            .morningSession,
+                                                      )),
+                                                  RadioButtonModel(
+                                                      code: "1",
+                                                      name: localizations
+                                                          .translate(
+                                                        i18.attendance
+                                                            .eveningSession,
+                                                      ))
+                                                ]),
+                                          );
+                                        }),
+                                ]),
                                 if (showInfoCard(
                                   selectedRegister,
                                   DateTime.now(),
                                 ))
-                                  DigitInfoCard(
-                                    title: localizations.translate(
-                                      i18.attendance.missedAttendanceHeader,
+                                  DigitCard(children: [
+                                    InfoCard(
+                                      title: localizations.translate(
+                                        i18.attendance.missedAttendanceHeader,
+                                      ),
+                                      type: InfoType.info,
+                                      description: localizations.translate(
+                                        getMissedDays(context),
+                                      ),
                                     ),
-                                    description: localizations.translate(
-                                      getMissedDays(context),
-                                    ),
-                                  )
+                                  ])
                                 else
                                   const SizedBox(),
                               ],
@@ -335,7 +382,7 @@ class _AttendanceDateSessionSelectionPageState
     return fb.group(<String, Object>{
       _dateOfSession:
           FormControl<DateTime>(value: DateTime.now(), validators: []),
-      _sessionRadio: FormControl<KeyValue>(value: null),
+      _sessionRadio: FormControl<String>(value: null, validators: []),
     });
   }
 
@@ -378,11 +425,13 @@ class _AttendanceDateSessionSelectionPageState
     if ((register.attendanceLog ?? []).isNotEmpty) {
       final selectDateCompleted = register.attendanceLog
           ?.where((l) =>
-              DigitDateUtils.getFilteredDate(l.keys.first.toString()) ==
-              DigitDateUtils.getFilteredDate(selectedDate.toString()))
-          .first
-          .values
-          .first;
+              AttendanceDateTimeManagement.getFilteredDate(
+                  l.keys.first.toString()) ==
+              AttendanceDateTimeManagement.getFilteredDate(
+                  selectedDate.toString()))
+          .firstOrNull
+          ?.values
+          .firstOrNull;
 
       return selectDateCompleted;
     }

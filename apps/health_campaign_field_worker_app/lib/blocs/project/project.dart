@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:core';
 
 import 'package:attendance_management/attendance_management.dart';
+import 'package:survey_form/survey_form.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:digit_components/digit_components.dart';
 import 'package:digit_data_model/data_model.dart';
@@ -19,10 +20,12 @@ import '../../data/local_store/no_sql/schema/app_configuration.dart';
 import '../../data/local_store/no_sql/schema/row_versions.dart';
 import '../../data/local_store/no_sql/schema/service_registry.dart';
 import '../../data/local_store/secure_store/secure_store.dart';
+import '../../data/repositories/remote/bandwidth_check.dart';
 import '../../data/repositories/remote/mdms.dart';
 import '../../models/app_config/app_config_model.dart';
 import '../../models/auth/auth_model.dart';
 import '../../models/entities/roles_type.dart';
+import '../../utils/background_service.dart';
 import '../../utils/environment_config.dart';
 import '../../utils/utils.dart';
 
@@ -34,6 +37,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final LocalSecureStore localSecureStore;
   final Isar isar;
   final MdmsRepository mdmsRepository;
+
+  final BandwidthCheckRepository bandwidthCheckRepository;
 
   /// Project Staff Repositories
   final RemoteRepository<ProjectStaffModel, ProjectStaffSearchModel>
@@ -76,6 +81,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   final RemoteRepository<StockModel, StockSearchModel> stockRemoteRepository;
   final LocalRepository<StockModel, StockSearchModel> stockLocalRepository;
 
+  /// Service Definition Repositories
   final RemoteRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
       serviceDefinitionRemoteRepository;
   final LocalRepository<ServiceDefinitionModel, ServiceDefinitionSearchModel>
@@ -103,6 +109,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
   ProjectBloc({
     LocalSecureStore? localSecureStore,
+    required this.bandwidthCheckRepository,
     required this.projectStaffRemoteRepository,
     required this.projectRemoteRepository,
     required this.projectStaffLocalRepository,
@@ -154,8 +161,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       title: 'ProjectBloc',
     );
 
-    final isOnline = connectivityResult == ConnectivityResult.wifi ||
-        connectivityResult == ConnectivityResult.mobile;
+    final isOnline = connectivityResult.firstOrNull == ConnectivityResult.wifi ||
+        connectivityResult.firstOrNull == ConnectivityResult.mobile;
     final selectedProject = await localSecureStore.selectedProject;
     final isProjectSetUpComplete = await localSecureStore
         .isProjectSetUpComplete(selectedProject?.id ?? "noProjectId");
@@ -169,6 +176,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
   }
 
   FutureOr<void> _loadOnline(ProjectEmitter emit) async {
+    final batchSize = await _getBatchSize();
     final userObject = await localSecureStore.userRequestModel;
     final uuid = userObject?.uuid;
 
@@ -288,8 +296,11 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     }
 
     if (projects.isNotEmpty) {
+
+      // INFO : Need to add project load functions
+
       try {
-        await _loadProjectFacilities(projects);
+        await _loadProjectFacilities(projects, batchSize);
       } catch (_) {
         emit(
           state.copyWith(
@@ -360,7 +371,8 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
     );
   }
 
-  FutureOr<void> _loadProjectFacilities(List<ProjectModel> projects) async {
+  FutureOr<void> _loadProjectFacilities(
+      List<ProjectModel> projects, int batchSize) async {
     final projectFacilities = await projectFacilityRemoteRepository.search(
       ProjectFacilitySearchModel(
         projectId: projects.map((e) => e.id).toList(),
@@ -371,6 +383,7 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
 
     final facilities = await facilityRemoteRepository.search(
       FacilitySearchModel(tenantId: envConfig.variables.tenantId),
+      limit: batchSize,
     );
 
     await facilityLocalRepository.bulkCreate(facilities);
@@ -584,8 +597,6 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
         loading: false,
         syncError: ProjectSyncErrorType.boundary,
       ));
-
-      return;
     }
 
     emit(state.copyWith(
@@ -593,6 +604,25 @@ class ProjectBloc extends Bloc<ProjectEvent, ProjectState> {
       loading: false,
       syncError: null,
     ));
+  }
+
+  FutureOr<int> _getBatchSize() async {
+    try {
+      final configs = await isar.appConfigurations.where().findAll();
+
+      final double speed = await bandwidthCheckRepository.pingBandwidthCheck(
+        bandWidthCheckModel: null,
+      );
+
+      int configuredBatchSize = getBatchSizeToBandwidth(
+        speed,
+        configs,
+        isDownSync: true,
+      );
+      return configuredBatchSize;
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 

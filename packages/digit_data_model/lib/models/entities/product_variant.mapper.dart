@@ -1,7 +1,7 @@
 // coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint
-// ignore_for_file: unused_element, unnecessary_cast
+// ignore_for_file: unused_element, unnecessary_cast, override_on_non_overriding_member
 // ignore_for_file: strict_raw_type, inference_failure_on_untyped_parameter
 
 part of 'product_variant.dart';
@@ -119,10 +119,8 @@ mixin ProductVariantSearchModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProductVariantSearchModelMapper.ensureInitialized()
-                .isValueEqual(this as ProductVariantSearchModel, other));
+    return ProductVariantSearchModelMapper.ensureInitialized()
+        .equalsValue(this as ProductVariantSearchModel, other);
   }
 
   @override
@@ -342,10 +340,8 @@ mixin ProductVariantModelMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProductVariantModelMapper.ensureInitialized()
-                .isValueEqual(this as ProductVariantModel, other));
+    return ProductVariantModelMapper.ensureInitialized()
+        .equalsValue(this as ProductVariantModel, other);
   }
 
   @override
@@ -547,10 +543,8 @@ mixin ProductVariantAdditionalFieldsMappable {
 
   @override
   bool operator ==(Object other) {
-    return identical(this, other) ||
-        (runtimeType == other.runtimeType &&
-            ProductVariantAdditionalFieldsMapper.ensureInitialized()
-                .isValueEqual(this as ProductVariantAdditionalFields, other));
+    return ProductVariantAdditionalFieldsMapper.ensureInitialized()
+        .equalsValue(this as ProductVariantAdditionalFields, other);
   }
 
   @override

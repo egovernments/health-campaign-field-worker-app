@@ -1,0 +1,68 @@
+[
+  {
+    "code": "COMPLAINTS_INBOX_HEADING",
+    "locale": "en_US",
+    "message": "Complaints Inbox",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_SEARCH_CTA",
+    "locale": "en_US",
+    "message": "Search",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_FILTER_CTA",
+    "locale": "en_US",
+    "message": "Filter",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_INBOX_SORT_CTA",
+    "locale": "en_US",
+    "message": "Sort",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_NO_COMPLAINTS_EXIST",
+    "locale": "en_US",
+    "message": "No Complaints Exist",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_FILE_COMPLAINT_ACTION",
+    "locale": "en_MZ",
+    "message": "File Complaint",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_LABEL",
+    "locale": "en_MZ",
+    "message": "File Complaint",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_MAIN",
+    "locale": "en_MZ",
+    "message": "Complaint No.",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_SUB_LABEL_SUB",
+    "locale": "en_MZ",
+    "message": "(Please sync the data to generate)",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_ACTION",
+    "locale": "en_MZ",
+    "message": "Back to Complaints",
+    "module": "hcm-common"
+  },
+  {
+    "code": "COMPLAINTS_ACKNOWLEDGEMENT_DESCRIPTION",
+    "locale": "en_MZ",
+    "message": "The complaint has been registered successfully and sent to the concerned person.",
+    "module": "hcm-common"
+  }
+]
